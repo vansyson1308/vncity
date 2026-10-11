@@ -76,6 +76,30 @@ họa sĩ muốn, PCG đã làm được), CARLA (mô phỏng xe tự lái, quá
 4. Thí điểm khảo sát một đoạn phố Cầu Giấy, dựng kit quét đầu tiên.
 5. Mass motorbike traffic.
 
+## 7. Ảnh đường phố thật
+
+**Khổ:** ở mặt đất, phố chưa giống Hà Nội. **Tập:** ta có hình học nhưng không có diện mạo thật
+của từng mặt tiền. **Diệt:** có ảnh thật cho từng mặt tiền. **Đạo:** ảnh đường phố mở, biết tư thế
+máy ảnh, rồi chiếu lên đúng bức tường hoặc dựng lại 3D từ ảnh.
+
+| Nguồn | Giấy phép | Cầu Giấy | Ghi chú |
+| --- | --- | --- | --- |
+| Google Street View | Điều khoản Google cấm tải, lưu, dựng lại, kể cả phi thương mại | – | Không dùng |
+| KartaView | CC BY-SA 4.0 | 344 ảnh, 107 ảnh cầu 360° (2019–2023) | Đã tích hợp; GPS điện thoại, 67/107 ảnh không có hướng |
+| Mapillary | CC BY-SA 4.0 | Chưa kiểm tra (cần token miễn phí) | Có tư thế đã qua SfM (`computed_geometry`, `computed_compass_angle`) và đám mây điểm: chính là thứ còn thiếu |
+| Panoramax | Mở | 0 ảnh | – |
+| Wikimedia Commons | CC, theo từng ảnh | Có ảnh gắn tọa độ quanh Chùa Hà | Ảnh lẻ, không đủ cho dựng mặt tiền |
+
+Kết quả đo được: kéo ảnh về làn đường và lấy hướng từ chuỗi / la bàn / bầu trời đã giúp chiếu
+được ảnh thật lên 297 tòa, nhưng ảnh chưa nắn thẳng vào mặt tường. Gốc rễ còn lại là **tư thế
+máy ảnh chưa đủ chính xác** (cần cỡ 0,5 m và 1–2°, đang ở mức vài mét và vài độ). Thứ tự xử lý:
+
+1. Token Mapillary (miễn phí) để lấy thêm ảnh có tư thế đã qua SfM.
+2. Chạy SfM (OpenSfM/COLMAP) trên các chuỗi KartaView để căn tương đối giữa các ảnh, rồi căn
+   cả đám điểm vào footprint.
+3. Tự chụp: một vòng xe máy với Insta360 (GPS + IMU) qua Cầu Giấy, xử lý bằng cùng pipeline.
+   Dự án phi thương mại, riêng tư; vẫn nên làm mờ mặt người và biển số như KartaView.
+
 ## Nguồn
 
 - https://developers.google.com/maps/documentation/tile/policies
@@ -96,3 +120,5 @@ họa sĩ muốn, PCG đã làm được), CARLA (mô phỏng xe tự lái, quá
 - https://www.cgchannel.com/2026/07/esri-releases-cityengine-2026/
 - https://english.luatvietnam.vn/decree-no-288-2025-nd-cp-dated-november-5-2025-of-the-government-providing-the-management-of-unmanned-aircraft-and-other-aerial-vehicles-418028-doc1.html
 - https://hethongphapluat.com/luat-bao-ve-du-lieu-ca-nhan-2025/dieu-32
+- https://wiki.openstreetmap.org/wiki/KartaView
+- https://www.mapillary.com/developer/api-documentation

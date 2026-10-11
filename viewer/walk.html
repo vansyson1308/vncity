@@ -44,6 +44,10 @@ a { color: var(--accent); }
 #loading { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); font-size: 15px; z-index: 5; }
 #loading div { display: grid; gap: 8px; justify-items: center; text-align: center; padding: 0 16px; }
 #loading b { font-size: 20px; font-weight: 800; }
+#photo-btn { font: 600 13px/1 var(--f-ui); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--hud-line); background: var(--accent); color: #fff; cursor: pointer; }
+#photo-btn:disabled { background: transparent; color: var(--hud-muted); cursor: default; }
+#photo-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#photo-info { color: var(--hud-muted); min-width: 0; overflow-wrap: anywhere; }
 #stick { position: fixed; left: 24px; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--hud-line); background: var(--hud-bg); touch-action: none; }
 #stick i { position: absolute; left: 35px; top: 35px; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); opacity: 0.8; }
 @media (hover: hover) and (pointer: fine) { #stick { display: none; } }
@@ -54,7 +58,7 @@ a { color: var(--accent); }
 
 <div class="hud tl">
   <h1>Cầu Giấy <span>1:1</span></h1>
-  <div class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> đi bộ · giữ <kbd>Shift</kbd> để chạy · kéo chuột để xoay · cuộn để đổi khoảng cách</div>
+  <div class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> đi bộ · giữ <kbd>Shift</kbd> để chạy · kéo chuột để xoay · cuộn để đổi khoảng cách · <kbd>P</kbd> ảnh thật 360°</div>
 </div>
 
 <div class="hud bl">
@@ -64,6 +68,7 @@ a { color: var(--accent); }
     <span id="hour-out">15:30</span>
   </div>
   <div id="where">Đang xác định vị trí…</div>
+  <div class="row"><button id="photo-btn" type="button" disabled>Ảnh thật 360° (P)</button><span id="photo-info"></span></div>
 </div>
 <div id="stick" aria-hidden="true"><i></i></div>
 
@@ -254,6 +259,7 @@ function put(kind, x, y, h, yaw, sx, sy, sz, color) {
   (chunk(x, y).inst[kind] ||= []).push({ m: M.clone().compose(P, Q, S), c: color });
 }
 const poles = [], treeCells = new Set(), poleCells = new Set();
+const photoEdges = new Set();  // "<building id>_<edge index>" covered by a real photo facade
 const spawnEdges = [];          // shopfronts on everyday streets: where a walk should start
 
 function addBuilding(raw, ox, oy) {
@@ -281,10 +287,13 @@ function addBuilding(raw, ox, oy) {
   buildings.push(b); addToGrid(b);
 
   // facades along streets
-  for (const e of raw.street_edges) {
+  for (const [ei, e] of raw.street_edges.entries()) {
+    const photo = photoEdges.has(`${raw.id}_${ei}`);
     const ax = e.a[0] + ox, ay = e.a[1] + oy, bx = e.b[0] + ox, by = e.b[1] + oy;
     const L = e.len, dx = (bx - ax) / L, dy = (by - ay) / L, nx = dy, ny = -dx;
-    const yaw = Math.atan2(-dy, dx) ;          // three yaw so local +x runs along the facade
+    // three yaw so local +x runs along the facade: data (dx, dy) is three (dx, 0, -dy), and a
+    // rotation by yaw about +Y takes +x to (cos yaw, 0, -sin yaw).
+    const yaw = Math.atan2(dy, dx);
     const mx = (ax + bx) / 2, my = (ay + by) / 2;
     const at = (t, off) => [ax + dx * t + nx * off, ay + dy * t + ny * off];
     const floors = Math.max(1, Math.min(raw.floors, Math.floor((top - base) / FLOOR_M)));
@@ -293,12 +302,14 @@ function addBuilding(raw, ox, oy) {
       spawnEdges.push({ x: mx + nx * 2.2, y: my + ny * 2.2, dx, dy });
 
     if (!tall && shopRoad && L >= 2.4) {
-      // ground floor: open shop or roller shutter, sign board above
+      // ground floor: open shop or roller shutter, sign board above (a photo facade shows the real one)
       const [sx, sy] = at(L / 2, 0.04);
-      if (r() < 0.45) put("shutter", sx, sy, 1.55, yaw, L * 0.86, 3.1, 1);
-      else put("shopdark", sx, sy, 1.5, yaw, L * 0.86, 3.0, 1);
-      const [gx, gy] = at(L / 2, 0.22);
-      put(`sign${Math.floor(r() * SIGNS.length)}`, gx, gy, 3.45, yaw, Math.min(L * 0.92, 9), 0.75, 0.16);
+      const kind = r() < 0.45 ? "shutter" : "shopdark", sign = Math.floor(r() * SIGNS.length);
+      if (!photo) {
+        put(kind, sx, sy, kind === "shutter" ? 1.55 : 1.5, yaw, L * 0.86, kind === "shutter" ? 3.1 : 3.0, 1);
+        const [gx, gy] = at(L / 2, 0.22);
+        put(`sign${sign}`, gx, gy, 3.45, yaw, Math.min(L * 0.92, 9), 0.75, 0.16);
+      }
       // motorbikes parked nose-in, stools for street food
       if (MAIN_ROADS.has(e.road) || e.road === "residential" || e.road === "unclassified") {
         const n = Math.floor(r() * Math.min(5, L / 0.8));
@@ -317,7 +328,7 @@ function addBuilding(raw, ox, oy) {
     }
     // upper floors
     const winCount = Math.max(1, Math.floor(L / 2.4));
-    for (let f = tall ? 0 : 1; f < floors; f++) {
+    for (let f = tall ? 0 : 1; f < floors && !photo; f++) {
       const h0 = base + f * FLOOR_M;
       for (let w = 0; w < winCount; w++) {
         const t = (w + 0.5) * (L / winCount);
@@ -465,7 +476,12 @@ function buildChunks() {
       geo.setAttribute("position", new THREE.Float32BufferAttribute(c.cables, 3));
       g.add(new THREE.LineSegments(geo, cableMat));
     }
-    c.group = g; c.wall = c.roof = c.inst = c.cables = null;   // release the build arrays
+    for (const f of c.photo || []) g.add(photoFacade(f));
+    for (const p of c.panos || []) {
+      const post = new THREE.Mesh(panoMarkerGeo, panoMarkerMat), head = new THREE.Mesh(panoHeadGeo, panoMarkerMat);
+      post.position.set(p.x, 0, -p.y); head.position.copy(post.position); g.add(post, head);
+    }
+    c.group = g; c.wall = c.roof = c.inst = c.cables = c.photo = c.panos = null;   // release the build arrays
     scene.add(g);
   }
 }
@@ -558,6 +574,71 @@ stick.addEventListener("pointermove", (e) => {
 });
 stick.addEventListener("pointerup", () => { stickVec = [0, 0]; knob.style.transform = ""; });
 
+// ---------- real photos (KartaView 360°, CC BY-SA 4.0) ----------
+const texLoader = new THREE.TextureLoader();
+let panos = [];
+function photoFacade(f) {
+  // A quad on the real wall, 6 cm proud of it, textured by projecting the panorama onto it.
+  const [ax, ay] = f.a, [bx, by] = f.b, L = Math.hypot(bx - ax, by - ay);
+  const nx = (by - ay) / L, ny = -(bx - ax) / L, h = f.height_m;
+  const g = new THREE.PlaneGeometry(L, h);
+  const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ roughness: 0.9, alphaTest: 0.5, side: THREE.DoubleSide }));
+  m.position.set((ax + bx) / 2 + nx * 0.06, h / 2, -((ay + by) / 2 + ny * 0.06));
+  m.rotation.y = Math.atan2(by - ay, bx - ax);
+  m.receiveShadow = true;
+  m.visible = false;   // hidden until its photo arrives, so no blank quad covers the wall
+  texLoader.load(f.file, (t) => {
+    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+    m.material.map = t; m.material.needsUpdate = true; m.visible = true;
+  });
+  return m;
+}
+const panoMarkerGeo = new THREE.CylinderGeometry(0.05, 0.05, 2.6, 6).translate(0, 1.3, 0);
+const panoMarkerMat = new THREE.MeshBasicMaterial({ color: 0x2fa8ff });
+const panoHeadGeo = new THREE.SphereGeometry(0.22, 12, 8).translate(0, 2.7, 0);
+
+// Street-view mode: stand where the camera stood and look around the real photo.
+const sphere = new THREE.Mesh(new THREE.SphereGeometry(400, 96, 48).scale(-1, 1, 1),
+  new THREE.MeshBasicMaterial({ fog: false, depthWrite: false }));
+sphere.visible = false; sphere.renderOrder = -1;
+scene.add(sphere);
+let photoMode = null, nearPano = null;
+function nearestPano() {
+  let best = null, bd = 25;
+  for (const p of panos) { const d = Math.hypot(p.x - player.x, p.y - player.y); if (d < bd) { bd = d; best = p; } }
+  return best && { pano: best, d: bd };
+}
+function enterPhoto(p) {
+  photoMode = { pano: p, yaw, pitch };
+  $("photo-info").textContent = `Đang tải ảnh chụp ${p.shot.slice(0, 10)}…`;
+  texLoader.load(p.file, (t) => {
+    if (photoMode?.pano !== p) return;
+    t.colorSpace = THREE.SRGBColorSpace;
+    sphere.material.map = t; sphere.material.needsUpdate = true;
+    // Image centre faces the capture heading; u grows clockwise. -X is the sphere's u=0.5.
+    const h = THREE.MathUtils.degToRad(p.heading);
+    sphere.rotation.y = Math.atan2(-Math.cos(h), -Math.sin(h));
+    sphere.position.set(p.x, panosCamH, -p.y);
+    for (const o of scene.children) if (o !== sphere && o !== sun && o !== sun.target && !o.isLight) { o.userData.wasVisible = o.visible; o.visible = false; }
+    sphere.visible = true;
+    const unsure = p.pose_quality === "uncertain" || p.pose_quality === "none";
+    $("photo-info").textContent = `Ảnh thật chụp ${p.shot.slice(0, 10)} · KartaView, CC BY-SA 4.0${unsure ? " · hướng ảnh chưa xác định chắc, có thể lệch so với phố" : ""} · P hoặc Esc để quay lại`;
+    $("photo-btn").textContent = "Quay lại phố (P)";
+  }, undefined, () => { $("photo-info").textContent = "Không tải được ảnh này."; photoMode = null; });
+}
+function exitPhoto() {
+  if (!photoMode) return;
+  for (const o of scene.children) if (o !== sphere && "wasVisible" in o.userData) { o.visible = o.userData.wasVisible; delete o.userData.wasVisible; }
+  sphere.visible = false;
+  photoMode = null;
+  $("photo-btn").textContent = "Ảnh thật 360° (P)";
+  cullChunks();
+}
+function togglePhoto() { if (photoMode) exitPhoto(); else if (nearPano) enterPhoto(nearPano.pano); }
+$("photo-btn").addEventListener("click", togglePhoto);
+addEventListener("keydown", (e) => { if (e.code === "KeyP") togglePhoto(); if (e.code === "Escape") exitPhoto(); });
+let panosCamH = 1.8;
+
 // ---------- main ----------
 let manifest, player = { x: 0, y: 0, h: 0, heading: 0 }, lastWhere = 0;
 async function main() {
@@ -565,6 +646,11 @@ async function main() {
   const tile = manifest.tile_size_m;
   const lat0 = manifest.georeference.origin_lat, lon0 = manifest.georeference.origin_lon;
   let done = 0; const total = manifest.tiles.length;
+  const optional = async (url) => { try { const r = await fetch(url); return r.ok ? await r.json() : null; } catch { return null; } };
+  const [facadeIdx, panoIdx] = await Promise.all([optional("facades.json"), optional("panos.json")]);
+  for (const f of facadeIdx?.facades || []) photoEdges.add(`${f.building}_${f.edge}`);
+  panos = panoIdx?.panos || [];
+  if (panoIdx) panosCamH = panoIdx.camera_height_m;
   await Promise.all(manifest.tiles.map(async (t) => {
     const [ox, oy] = t.origin_m;
     const name = `bld_${t.key[0]}_${t.key[1]}.json`;
@@ -589,6 +675,11 @@ async function main() {
   await new Promise((r) => setTimeout(r, 0));
 
   cables();
+  for (const f of facadeIdx?.facades || []) {
+    const c = chunk((f.a[0] + f.b[0]) / 2, (f.a[1] + f.b[1]) / 2);
+    (c.photo ||= []).push(f);
+  }
+  for (const p of panos) (chunk(p.x, p.y).panos ||= []).push(p);
   buildChunks();
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000), std({ color: 0x8c877d, roughness: 1 }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
@@ -603,6 +694,14 @@ async function main() {
   }
   if (best) { player.x = best.x; player.y = best.y; yaw = Math.atan2(-best.dx, best.dy); }
   else { player.x = tx; player.y = ty; }
+  // Prefer starting where a real 360° photo was taken, facing the way it was shot, so the
+  // real-photo view (P) is one key away.
+  const trusted = panos.filter((q) => q.pose_quality !== "uncertain" && q.pose_quality !== "none" && !blocked(q.x, q.y));
+  if (trusted.length) {
+    const q = trusted.reduce((m, c) => (Math.hypot(c.x - tx, c.y - ty) < Math.hypot(m.x - tx, m.y - ty) ? c : m));
+    player.x = q.x; player.y = q.y;
+    yaw = -THREE.MathUtils.degToRad(q.heading);   // camera view direction is (-sin yaw, cos yaw) in data axes
+  }
   player.heading = yaw;
 
   cullChunks();
@@ -622,6 +721,12 @@ function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h
 
 let phase = 0;
 function step(dt, t, tile, lat0, lon0) {
+  if (photoMode) {
+    const p = photoMode.pano;
+    camera.position.set(p.x, panosCamH, -p.y);
+    camera.lookAt(p.x - Math.sin(yaw) * Math.cos(-pitch), panosCamH + Math.sin(-pitch), -p.y - Math.cos(yaw) * Math.cos(-pitch));
+    return;
+  }
   let fx = 0, fz = 0;
   if (keys.has("KeyW") || keys.has("ArrowUp")) fz += 1;
   if (keys.has("KeyS") || keys.has("ArrowDown")) fz -= 1;
@@ -668,6 +773,9 @@ function step(dt, t, tile, lat0, lon0) {
   if (t - lastWhere > 0.5) {
     lastWhere = t;
     cullChunks();
+    nearPano = nearestPano();
+    $("photo-btn").disabled = !nearPano;
+    $("photo-info").textContent = nearPano ? `Điểm chụp thật cách ${nearPano.d.toFixed(0)} m (cột xanh)` : (panos.length ? `${panos.length} điểm chụp 360° quanh khu vực: tìm cột xanh` : "");
     const lat = lat0 + player.y / 110574, lon = lon0 + player.x / (111320 * Math.cos(lat0 * Math.PI / 180));
     const nb = nearestBuilding(player.x, player.y);
     const label = nb ? `${nb.name ? `<b>${nb.name.replace(/[<>&]/g, "")}</b> · ` : ""}nhà cao ${nb.height.toFixed(0)} m (${{ observed: "đo trong dữ liệu", derived_floors: "từ số tầng", derived_raster: "từ raster 2.5D", estimated: "ước lượng" }[nb.source]})` : "giữa phố";

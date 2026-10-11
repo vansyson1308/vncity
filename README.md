@@ -43,6 +43,36 @@ bóng đổ trên máy yếu. Lựa chọn công nghệ cho bản Unreal: [docs/
 và nguồn của nó. Ô được gửi dưới dạng base64 (`.glb.txt`) vì nhiều nơi lưu trữ không phục vụ
 `.glb` và chặn `fetch` tới URL `data:`.
 
+## Ảnh đường phố thật (`streetview.py`)
+
+Ảnh 360° mở của [KartaView](https://kartaview.org) (CC BY-SA 4.0, mặt người và biển số đã được
+KartaView làm mờ) cho diện mạo thật ở mặt đất mà dữ liệu bản đồ không có.
+
+```bash
+./venv/bin/python streetview.py harvest   --name caugiay   # danh sách ảnh trong khu vực
+./venv/bin/python streetview.py download  --name caugiay   # ảnh cầu 360° đầy đủ (~23 MB/ảnh)
+./venv/bin/python streetview.py sequences --name caugiay   # chuỗi chụp, để suy hướng di chuyển
+./venv/bin/python streetview.py pose      --name caugiay   # sửa tư thế GPS điện thoại
+./venv/bin/python streetview.py facades   --name caugiay   # chiếu ảnh lên mặt tiền (thử nghiệm)
+./venv/bin/python streetview.py viewer    --name caugiay --site site/caugiay
+```
+
+`pose` kéo mỗi ảnh về làn đường bên phải gần nhất, vì người chụp luôn đi trên đường. Hướng
+lấy theo thứ tự tin cậy: hướng di chuyển trong chuỗi, la bàn ghi kèm, rồi chỗ bầu trời lộ ra so
+với mô hình khối nhà. KartaView để trống hướng khi thiết bị không ghi; trống được giữ là trống,
+không bị đọc thành hướng Bắc. Mỗi ảnh mang nhãn `quality`; ảnh `uncertain` không dùng để dán
+mặt tiền.
+
+Trong `walk.html`, cột xanh đánh dấu điểm chụp; đứng gần rồi bấm `P` để nhìn ảnh 360° tại đúng
+chỗ đó.
+
+Cầu Giấy (11/10/2026): 344 ảnh, 107 ảnh cầu 360°, 72 chuỗi (59 chuỗi chỉ một ảnh). Sau `pose`:
+56 ảnh có hướng từ chuỗi, 31 từ la bàn, 23 từ bầu trời, 5 chưa chắc. `facades` cho 332 mặt tiền
+trên 297 tòa, nhưng kiểm tra bằng mắt cho thấy đa số chưa nắn thẳng được: sai số tư thế còn vài
+mét và vài độ, footprint máy học và chiều cao ước lượng cũng lệch. Vì vậy mặt tiền ảnh chưa được
+bật trong bản chơi. Cần căn ảnh bằng chính hình ảnh (SfM) mới đủ chính xác; xem
+[docs/research-2026-10.md](docs/research-2026-10.md#7-ảnh-đường-phố-thật).
+
 ## Đầu ra (`out/<name>/`)
 
 | File | Nội dung |
