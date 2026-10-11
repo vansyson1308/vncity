@@ -1,36 +1,43 @@
-"""Real street-level appearance from open 360° imagery (KartaView, CC BY-SA 4.0).
+"""Real street-level appearance from open 360° imagery (KartaView and Mapillary, CC BY-SA 4.0).
 
   harvest   list every KartaView photo in the area (metadata only)
-  download  fetch the equirectangular 360° panoramas (faces and plates already blurred by KartaView)
-  sequences fetch each capture's full sequence (travel direction comes from its neighbours)
-  pose      correct phone-GPS poses: snap each capture to its lane; heading from travel direction,
-            the recorded compass, or where the sky shows against the block model
+  mapillary list Mapillary 360° images in the area with their SfM poses (needs MAPILLARY_TOKEN)
+  download  fetch the equirectangular 360° panoramas (faces and plates already blurred by the source)
+  sequences fetch each KartaView capture's full sequence (travel direction comes from its neighbours)
+  pose      correct KartaView phone-GPS poses: snap each capture to its lane; heading from travel
+            direction, the recorded compass, or where the sky shows against the block model.
+            Mapillary images keep the pose Mapillary's own SfM computed.
   facades   project panoramas onto the street-facing walls built by build.py -> photo facade textures
+  check     draw the street walls over panoramas and tile the facade textures, to judge alignment
   viewer    write web-sized panoramas + index for viewer/walk.html's real-photo mode
 
 Usage:
   python streetview.py harvest  --name caugiay
+  MAPILLARY_TOKEN=MLY|... python streetview.py mapillary --name caugiay
   python streetview.py download --name caugiay
   python streetview.py sequences --name caugiay
   python streetview.py pose     --name caugiay
   python streetview.py facades  --name caugiay
-  python streetview.py viewer   --name caugiay --site site/caugiay
+  python streetview.py check    --name caugiay
+  python streetview.py viewer   --name caugiay --site site/caugiay [--facades]
 """
 
 import argparse
 import glob
 import json
 import math
+import os
 import pathlib
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
 import numpy as np
 import pyproj
 import shapely
-from PIL import Image
+from PIL import Image, ImageDraw
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from build import ROAD_WIDTH  # noqa: E402  (same width table as the road meshes)
@@ -39,6 +46,11 @@ Image.MAX_IMAGE_PIXELS = 200_000_000  # KartaView panoramas are 13000 x 6500
 API = "https://api.openstreetcam.org"
 STORAGE = "https://{storage}.openstreetcam.org/files/photo/{path}"
 UA = {"User-Agent": "vncity/0.1 (github.com/vansyson1308/vncity)"}
+MLY_GRAPH = "https://graph.mapillary.com"
+MLY_TILE = "https://tiles.mapillary.com/maps/vtp/{layer}/2/14/{x}/{y}?access_token={token}"
+MLY_FIELDS = ("id,camera_type,captured_at,sequence,geometry,computed_geometry,"
+              "compass_angle,computed_compass_angle,computed_rotation")
+MLY_SPACING_M = 8.0        # keep one Mapillary panorama per this distance: cars capture every ~2 m
 
 CAMERA_HEIGHT_M = 1.8      # handheld / helmet capture; KartaView does not record it
 MAX_RANGE_M = 30.0         # farther facades are too small in a 13000 px panorama
@@ -53,17 +65,26 @@ SKY_RANGE_M = 70.0
 MIN_SKY_MARGIN = 0.08      # correlation gap between the two road directions to trust the sky
 
 
-def get_json(url, data=None, tries=4):
+def get_bytes(url, data=None, headers=None, tries=4):
     for i in range(tries):
         try:
             body = urllib.parse.urlencode(data).encode() if data else None
-            req = urllib.request.Request(url, data=body, headers=UA)
+            req = urllib.request.Request(url, data=body, headers=UA | (headers or {}))
             with urllib.request.urlopen(req, timeout=180) as r:
-                return json.load(r)
-        except Exception:
+                return r.read()
+        except urllib.error.HTTPError as e:
+            if e.code < 500 and e.code != 429:      # a refused token or bad query will not heal
+                raise SystemExit(f"{e.code} from {url.split('?')[0]}: {e.read()[:300].decode(errors='replace')}")
             if i == tries - 1:
                 raise
-            time.sleep(2 ** (i + 1))
+        except OSError:
+            if i == tries - 1:
+                raise
+        time.sleep(2 ** (i + 1))
+
+
+def get_json(url, data=None, headers=None):
+    return json.loads(get_bytes(url, data, headers))
 
 
 def area(name, data):
@@ -98,18 +119,36 @@ def harvest(a):
 
 def download(a):
     src = pathlib.Path(a.data) / a.name
-    photos = json.loads((src / "kartaview.json").read_text())
     pano_dir = src / "panos"
     pano_dir.mkdir(exist_ok=True)
-    todo = [p for p in photos if p["projection"] == "SPHERE"]
-    for i, p in enumerate(todo, 1):
-        dst = pano_dir / f"{p['id']}.jpg"
-        if dst.exists():
-            continue
-        storage, path = p["name"].split("/files/photo/")
-        url = STORAGE.format(storage=storage, path=path.replace("/proc/", "/wrapped_proc/"))
-        fetch_file(url, dst)
-        print(f"{i}/{len(todo)} {dst.name}", flush=True)
+    if (src / "kartaview.json").exists():
+        photos = json.loads((src / "kartaview.json").read_text())
+        todo = [p for p in photos if p["projection"] == "SPHERE"]
+        for i, p in enumerate(todo, 1):
+            dst = pano_dir / f"{p['id']}.jpg"
+            if dst.exists():
+                continue
+            storage, path = p["name"].split("/files/photo/")
+            url = STORAGE.format(storage=storage, path=path.replace("/proc/", "/wrapped_proc/"))
+            fetch_file(url, dst)
+            print(f"KartaView {i}/{len(todo)} {dst.name}", flush=True)
+    if (src / "mapillary.json").exists():
+        todo = [p for p in json.loads((src / "mapillary.json").read_text())["images"]
+                if p["selected"] and not (pano_dir / f"{p['id']}.jpg").exists()]
+        done = 0
+        for i in range(0, len(todo), 50):        # image URLs are signed and expire: ask right before use
+            batch = todo[i:i + 50]
+            urls = {int(r["id"]): r.get("thumb_original_url") for r in mly_graph(
+                "images", {"image_ids": ",".join(str(p["mly_id"]) for p in batch),
+                           "fields": "id,thumb_original_url", "limit": len(batch)}).get("data", [])}
+            if not any(urls.values()):
+                raise SystemExit("Mapillary returned no image URLs: the token's app needs read access "
+                                 "(mapillary.com/dashboard/developers)")
+            for p in batch:
+                if urls.get(p["mly_id"]):
+                    fetch_file(urls[p["mly_id"]], pano_dir / f"{p['id']}.jpg")
+                    done += 1
+                    print(f"Mapillary {done}/{len(todo)} {p['id']}", flush=True)
 
 
 def fetch_file(url, dst, tries=5):
@@ -129,19 +168,127 @@ def fetch_file(url, dst, tries=5):
             time.sleep(2 ** (i + 1))
 
 
+def mly_token():
+    tok = os.environ.get("MAPILLARY_TOKEN")
+    if not tok:
+        raise SystemExit("set MAPILLARY_TOKEN to a client token from mapillary.com/dashboard/developers")
+    return tok
+
+
+def mly_graph(path, params):
+    return get_json(f"{MLY_GRAPH}/{path}?{urllib.parse.urlencode(params)}",
+                    headers={"Authorization": f"OAuth {mly_token()}"})
+
+
+def mly_tile_panos(layer, w, s, e, n):
+    """360° images in the bbox from Mapillary's z14 coverage tiles. `mly1_computed_public` carries
+    the SfM position and compass angle, `mly1_public` the recorded GPS and compass. Tile
+    coordinates are quantised to 1/4096 of a tile, about 0.55 m at Hà Nội's latitude."""
+    import mapbox_vector_tile
+
+    z = 14
+    N = 2 ** z
+    tx = lambda lon: int((lon + 180) / 360 * N)
+    ty = lambda lat: int((1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * N)
+    out = {}
+    for x in range(tx(w), tx(e) + 1):
+        for y in range(ty(n), ty(s) + 1):
+            raw = get_bytes(MLY_TILE.format(layer=layer, x=x, y=y, token=mly_token()))
+            tile = mapbox_vector_tile.decode(raw, default_options={"y_coord_down": True}).get("image")
+            for f in (tile or {}).get("features", []):
+                px, py = f["geometry"]["coordinates"]
+                lon = (x + px / tile["extent"]) / N * 360 - 180
+                lat = math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * (y + py / tile["extent"]) / N))))
+                if f["properties"].get("is_pano") and w <= lon <= e and s <= lat <= n:
+                    out[int(f["properties"]["id"])] = f["properties"] | {"lng": lon, "lat": lat}
+            print(f"{layer} {z}/{x}/{y}: {len(out)} panoramas so far", flush=True)
+    return out
+
+
+def mapillary(a):
+    """List Mapillary 360° images with the pose Mapillary's structure-from-motion computed.
+
+    Mapillary reconstructs each upload with OpenSfM, so `computed_geometry` and
+    `computed_compass_angle` come from matching the images to each other, not from one phone
+    fix. Only images with such a pose are kept for download; one per MLY_SPACING_M, newest first."""
+    w, s, e, n = area(a.name, a.data)
+    gps = mly_tile_panos("mly1_public", w, s, e, n)
+    sfm = mly_tile_panos("mly1_computed_public", w, s, e, n)
+    ids = sorted(gps.keys() | sfm.keys())
+    meta = {}
+    for i in range(0, len(ids), 50):
+        batch = ids[i:i + 50]
+        for r in mly_graph("images", {"image_ids": ",".join(map(str, batch)), "fields": MLY_FIELDS,
+                                      "limit": len(batch)}).get("data", []):
+            meta[int(r["id"])] = r
+        print(f"Graph API: {len(meta)}/{min(i + 50, len(ids))} images described", flush=True)
+    if not meta:
+        print("WARNING: the Graph API described none of these images. Poses below come from the "
+              "coverage tiles only, and `download` will need the token's app to have read access.")
+    images = []
+    for i in ids:
+        g, c, m = gps.get(i), sfm.get(i), meta.get(i, {})
+        t = g or c
+        if m.get("camera_type") not in (None, "spherical", "equirectangular"):
+            continue
+        rec = {"id": f"mly_{i}", "mly_id": i, "sequence": m.get("sequence") or t["sequence_id"],
+               "captured_at": m.get("captured_at") or t["captured_at"],
+               "camera_type": m.get("camera_type"), "quality_score": t.get("quality_score"),
+               "gps": None, "sfm": None}
+        if "geometry" in m:
+            lng, lat = m["geometry"]["coordinates"]
+            rec["gps"] = {"lng": lng, "lat": lat, "compass": m.get("compass_angle"), "from": "graph"}
+        elif g:
+            rec["gps"] = {"lng": g["lng"], "lat": g["lat"], "compass": g.get("compass_angle"), "from": "tile"}
+        if "computed_geometry" in m and m.get("computed_compass_angle") is not None:
+            lng, lat = m["computed_geometry"]["coordinates"]
+            rec["sfm"] = {"lng": lng, "lat": lat, "heading": m["computed_compass_angle"],
+                          "rotation": m.get("computed_rotation"), "from": "graph"}
+        elif c and c.get("compass_angle") is not None:
+            rec["sfm"] = {"lng": c["lng"], "lat": c["lat"], "heading": c["compass_angle"], "from": "tile"}
+        images.append(rec)
+
+    # thin to one per MLY_SPACING_M: SfM pose from the Graph API first, then newest capture
+    lat0 = (s + n) / 2
+    xy = lambda r: (r["sfm"]["lng"] * 111_320 * math.cos(math.radians(lat0)), r["sfm"]["lat"] * 110_574)
+    ranked = sorted((r for r in images if r["sfm"]), reverse=True,
+                    key=lambda r: (r["sfm"]["from"] == "graph", (r["quality_score"] or 0) >= 0.5, r["captured_at"]))
+    kept = []
+    grid = {}
+    for r in ranked:
+        x, y = xy(r)
+        cx, cy = int(x // MLY_SPACING_M), int(y // MLY_SPACING_M)
+        near = [q for dx in (-1, 0, 1) for dy in (-1, 0, 1) for q in grid.get((cx + dx, cy + dy), [])]
+        r["selected"] = all(math.hypot(x - qx, y - qy) >= MLY_SPACING_M for qx, qy in near)
+        if r["selected"]:
+            grid.setdefault((cx, cy), []).append((x, y))
+            kept.append(r)
+    for r in images:
+        r.setdefault("selected", False)
+    out = pathlib.Path(a.data) / a.name / "mapillary.json"
+    out.write_text(json.dumps({"source": "Mapillary (CC BY-SA 4.0)", "spacing_m": MLY_SPACING_M,
+                               "images": images}, indent=1))
+    years = sorted({time.gmtime(r["captured_at"] / 1000).tm_year for r in kept})
+    print(f"{len(images)} Mapillary 360° images in the area, {sum(bool(r['sfm']) for r in images)} with "
+          f"an SfM pose ({sum(bool(r['sfm']) and r['sfm']['from'] == 'graph' for r in images)} from the "
+          f"Graph API); {len(kept)} kept for download, {len({r['sequence'] for r in kept})} sequences, "
+          f"{years[0] if years else '-'}-{years[-1] if years else '-'} -> {out}")
+
+
 def local_tf(manifest):
     crs = pyproj.CRS.from_proj4(manifest["georeference"]["projection"])
     return pyproj.Transformer.from_crs("EPSG:4326", crs, always_xy=True)
 
 
-def load_panos(src, tf, recorded=False):
-    """Downloaded panoramas in local metres; corrected poses from `pose` unless `recorded`."""
+def load_panos(src, tf, recorded=False, sources=("kartaview", "mapillary")):
+    """Downloaded panoramas in local metres. KartaView poses are corrected by `pose` unless
+    `recorded`; Mapillary images carry the pose of Mapillary's SfM."""
     poses = {}
     pose_file = src / "pano_poses.json"
     if not recorded and pose_file.exists():
         poses = {p["id"]: p for p in json.loads(pose_file.read_text())["poses"]}
     panos = []
-    for p in json.loads((src / "kartaview.json").read_text()):
+    for p in json.loads((src / "kartaview.json").read_text()) if "kartaview" in sources and (src / "kartaview.json").exists() else []:
         f = src / "panos" / f"{p['id']}.jpg"
         if p["projection"] != "SPHERE" or not f.exists():
             continue
@@ -153,7 +300,17 @@ def load_panos(src, tf, recorded=False):
             q = poses[p["id"]]
             x, y, heading, quality = q["x"], q["y"], q["heading"], q["quality"]
         panos.append({"id": p["id"], "x": x, "y": y, "heading": heading, "pose_quality": quality,
-                      "shot": p["shot_date"], "file": f, "sequence": p["sequence_id"]})
+                      "shot": p["shot_date"], "file": f, "sequence": p["sequence_id"], "source": "KartaView"})
+    mly = src / "mapillary.json"
+    for p in json.loads(mly.read_text())["images"] if "mapillary" in sources and mly.exists() else []:
+        f = src / "panos" / f"{p['id']}.jpg"
+        if not p["sfm"] or not f.exists():
+            continue
+        x, y = tf.transform(p["sfm"]["lng"], p["sfm"]["lat"])
+        panos.append({"id": p["id"], "x": x, "y": y, "heading": p["sfm"]["heading"],
+                      "pose_quality": f"sfm-{p['sfm']['from']}", "file": f, "sequence": p["sequence"],
+                      "shot": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(p["captured_at"] / 1000)),
+                      "source": "Mapillary"})
     return panos
 
 
@@ -277,7 +434,7 @@ def pose(a):
     segs = wall_segments(out_dir)
     ang = lambda h1, h2: abs((h1 - h2 + 180) % 360 - 180)
     out, moved = [], []
-    for p in load_panos(src, tf, recorded=True):
+    for p in load_panos(src, tf, recorded=True, sources=("kartaview",)):
         rec = {"id": p["id"], "recorded": [round(p["x"], 2), round(p["y"], 2), p["heading"]]}
         prior, prior_src = travel.get(p["id"]), "travel"
         if prior is None and p["heading"] is not None:
@@ -347,6 +504,10 @@ def sample_equirect(img, cam, heading, pts):
     return px.astype(np.uint8), valid
 
 
+def credit(sources):
+    return f"{', '.join(sorted(sources))} (CC BY-SA 4.0)"
+
+
 def facades(a):
     out = pathlib.Path(a.out) / a.name
     src = pathlib.Path(a.data) / a.name
@@ -398,7 +559,7 @@ def facades(a):
                             if owners[j] != b["id"]]
                     if hits:
                         continue
-                    score = dist / front
+                    score = dist / front * (1.0 if panos[i]["pose_quality"].startswith("sfm") else 2.0)
                     if best is None or score < best[0]:
                         best = (score, i, dist, front)
                 if best is None:
@@ -428,15 +589,91 @@ def facades(a):
                 Image.fromarray(rgba.reshape(th, tw, 4), "RGBA").save(out / "facades" / name, optimize=True)
                 chosen.append({"building": b["id"], "edge": k, "a": a2.round(2).tolist(),
                                "b": b2.round(2).tolist(), "height_m": round(top, 2),
-                               "file": f"facades/{name}", "pano": p["id"], "shot": p["shot"],
+                               "file": f"facades/{name}", "pano": p["id"], "source": p["source"], "shot": p["shot"],
                                "distance_m": round(dist, 1), "frontality": round(front, 2),
                                "coverage": round(coverage, 2)})
     (out / "facades.json").write_text(json.dumps(
-        {"source": "KartaView (CC BY-SA 4.0)", "camera_height_m": CAMERA_HEIGHT_M,
+        {"source": credit({c["source"] for c in chosen}), "camera_height_m": CAMERA_HEIGHT_M,
          "facades": chosen}, indent=1))
     total = sum(len(json.load(open(f))["buildings"]) for f in glob.glob(str(out / "tiles" / "bld_*.json")))
     print(f"{len(chosen)} photo facades from {len(panos)} panoramas "
           f"({len({c['building'] for c in chosen})} of {total} buildings)")
+
+
+def equirect_px(cam, heading, pts, w, h):
+    """Pixel (col, row) of world points `pts` in a w x h panorama; inverse of sample_equirect."""
+    v = pts - cam
+    rel = (np.degrees(np.arctan2(v[:, 0], v[:, 1])) - heading + 180.0) % 360.0 - 180.0
+    pitch = np.degrees(np.arctan2(v[:, 2], np.hypot(v[:, 0], v[:, 1])))
+    return np.column_stack([((rel / 360.0) + 0.5) * (w - 1), (0.5 - pitch / 180.0) * (h - 1)])
+
+
+def check(a):
+    """Visual check of pose against the block model.
+
+    check/<pano>.jpg: the panorama with every visible wall within MAX_RANGE_M drawn over it
+    (yellow = foot of the wall, red = MAX_FACADE_H_M or the roof, cyan = corners). With a right
+    pose the yellow line sits where the wall meets the pavement and cyan lines on building corners.
+    facades_sheet.jpg: the facade textures `facades` produced, to see whether they look frontal."""
+    out = pathlib.Path(a.out) / a.name
+    src = pathlib.Path(a.data) / a.name
+    tf = local_tf(json.loads((out / "manifest.json").read_text()))
+    panos = {str(p["id"]): p for p in load_panos(src, tf) if p["heading"] is not None}
+    polys, owners = [], []
+    for f in sorted(glob.glob(str(out / "tiles" / "bld_*.json"))):
+        d = json.load(open(f))
+        for b in d["buildings"]:
+            polys.append(np.asarray(b["footprint"]) + d["origin_m"])
+            owners.append(b["height_m"])
+    tree = shapely.STRtree([shapely.Polygon(fp) for fp in polys])
+    fac = json.loads((out / "facades.json").read_text())["facades"] if (out / "facades.json").exists() else []
+    if a.ids:
+        ids = a.ids.split(",")
+    else:   # the panoramas that textured the most facades
+        used = {}
+        for c in fac:
+            used[str(c["pano"])] = used.get(str(c["pano"]), 0) + 1
+        ids = sorted(used, key=used.get, reverse=True)[:a.count] or list(panos)[:a.count]
+    (out / "check").mkdir(exist_ok=True)
+    for pid in ids:
+        p = panos.get(pid)
+        if p is None:
+            continue
+        im = Image.open(p["file"]).convert("RGB").resize((4096, 2048))
+        dr = ImageDraw.Draw(im)
+        cam = np.array([p["x"], p["y"], CAMERA_HEIGHT_M])
+        for j in tree.query(shapely.Point(cam[:2]).buffer(MAX_RANGE_M)):
+            fp, top = polys[j], min(owners[j], MAX_FACADE_H_M)
+            for q0, q1 in zip(fp[:-1], fp[1:]):
+                mid = (q0 + q1) / 2
+                sight = shapely.LineString([cam[:2], mid + (cam[:2] - mid) / max(np.hypot(*(cam[:2] - mid)), 1e-6) * 0.3])
+                if any(k != j for k in tree.query(sight, predicate="intersects")):
+                    continue    # hidden behind another building
+                t = np.linspace(0, 1, 40)[:, None]
+                line = q0 + (q1 - q0) * t
+                for z, col in ((0.0, (255, 230, 0)), (top, (255, 40, 40))):
+                    px = equirect_px(cam, p["heading"], np.column_stack([line, np.full(len(t), z)]), *im.size)
+                    for u, v in zip(px[:-1], px[1:]):
+                        if abs(u[0] - v[0]) < im.size[0] / 2:           # skip the seam wrap
+                            dr.line([tuple(u), tuple(v)], fill=col, width=3)
+                px = equirect_px(cam, p["heading"], np.array([[*q0, 0.0], [*q0, top]]), *im.size)
+                dr.line([tuple(px[0]), tuple(px[1])], fill=(0, 230, 255), width=3)
+        dr.text((12, 12), f"{p['source']} {pid} pose {p['pose_quality']} heading {p['heading']:.1f}",
+                fill=(255, 255, 255))
+        im.save(out / "check" / f"{pid}.jpg", quality=85)
+        print(f"check/{pid}.jpg", flush=True)
+    if fac:
+        cell, cols = 256, 8
+        shown = fac[:cols * 8]
+        sheet = Image.new("RGB", (cols * cell, -(-len(shown) // cols) * cell), (40, 40, 40))
+        for i, c in enumerate(shown):
+            t = Image.open(out / c["file"]).convert("RGBA")
+            t.thumbnail((cell - 8, cell - 24))
+            sheet.paste(t, (i % cols * cell + 4, i // cols * cell + 20), t)
+            ImageDraw.Draw(sheet).text((i % cols * cell + 4, i // cols * cell + 4),
+                                       f"{c['pano']} {c['distance_m']} m", fill=(255, 255, 255))
+        sheet.save(out / "facades_sheet.jpg", quality=85)
+        print(f"facades_sheet.jpg: {len(shown)} of {len(fac)} facades")
 
 
 def viewer(a):
@@ -454,13 +691,13 @@ def viewer(a):
             im.resize((a.width, a.width // 2), Image.LANCZOS).save(dst, quality=82, optimize=True)
         index.append({"id": p["id"], "x": round(p["x"], 2), "y": round(p["y"], 2),
                       "heading": p["heading"] if p["heading"] is not None else 0.0,
-                      "pose_quality": p["pose_quality"], "shot": p["shot"],
+                      "pose_quality": p["pose_quality"], "shot": p["shot"], "source": p["source"],
                       "file": f"panos/{p['id']}.jpg"})
-    (site / "panos.json").write_text(json.dumps({"source": "KartaView (CC BY-SA 4.0)",
+    (site / "panos.json").write_text(json.dumps({"source": credit({p["source"] for p in panos}),
                                                  "camera_height_m": CAMERA_HEIGHT_M,
                                                  "panos": index}))
     fac = out / "facades.json"
-    if fac.exists():
+    if a.facades and fac.exists():     # only once `check` shows the photos sit on the walls
         (site / "facades").mkdir(exist_ok=True)
         for c in json.loads(fac.read_text())["facades"]:
             (site / c["file"]).write_bytes((out / c["file"]).read_bytes())
@@ -470,16 +707,20 @@ def viewer(a):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("command", choices=["harvest", "download", "sequences", "pose", "facades", "viewer"])
+    ap.add_argument("command", choices=["harvest", "mapillary", "download", "sequences", "pose", "facades",
+                                        "check", "viewer"])
     ap.add_argument("--name", required=True)
     ap.add_argument("--data", default="data")
     ap.add_argument("--out", default="out")
     ap.add_argument("--site", default="site")
     ap.add_argument("--radius", type=int, default=600, help="harvest query radius (m)")
     ap.add_argument("--width", type=int, default=4096, help="web panorama width (px)")
+    ap.add_argument("--ids", help="check: comma-separated panorama ids")
+    ap.add_argument("--facades", action="store_true", help="viewer: ship the photo facades too")
+    ap.add_argument("--count", type=int, default=12, help="check: number of panoramas")
     a = ap.parse_args()
-    {"harvest": harvest, "download": download, "sequences": sequences, "pose": pose,
-     "facades": facades, "viewer": viewer}[a.command](a)
+    {"harvest": harvest, "mapillary": mapillary, "download": download, "sequences": sequences, "pose": pose,
+     "facades": facades, "check": check, "viewer": viewer}[a.command](a)
 
 
 if __name__ == "__main__":

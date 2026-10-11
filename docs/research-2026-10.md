@@ -86,7 +86,7 @@ máy ảnh, rồi chiếu lên đúng bức tường hoặc dựng lại 3D từ
 | --- | --- | --- | --- |
 | Google Street View | Điều khoản Google cấm tải, lưu, dựng lại, kể cả phi thương mại | – | Không dùng |
 | KartaView | CC BY-SA 4.0 | 344 ảnh, 107 ảnh cầu 360° (2019–2023) | Đã tích hợp; GPS điện thoại, 67/107 ảnh không có hướng |
-| Mapillary | CC BY-SA 4.0 | Chưa kiểm tra (cần token miễn phí) | Có tư thế đã qua SfM (`computed_geometry`, `computed_compass_angle`) và đám mây điểm: chính là thứ còn thiếu |
+| Mapillary | CC BY-SA 4.0 | 4.319 ảnh 360°, 2.068 có tư thế SfM (2022–2025) | Đã tích hợp (`streetview.py mapillary`); tư thế SfM lấy được qua tileset `mly1_computed_public`, nhưng Graph API chưa trả ảnh với token hiện tại |
 | Panoramax | Mở | 0 ảnh | – |
 | Wikimedia Commons | CC, theo từng ảnh | Có ảnh gắn tọa độ quanh Chùa Hà | Ảnh lẻ, không đủ cho dựng mặt tiền |
 
@@ -94,7 +94,12 @@ Kết quả đo được: kéo ảnh về làn đường và lấy hướng từ
 được ảnh thật lên 297 tòa, nhưng ảnh chưa nắn thẳng vào mặt tường. Gốc rễ còn lại là **tư thế
 máy ảnh chưa đủ chính xác** (cần cỡ 0,5 m và 1–2°, đang ở mức vài mét và vài độ). Thứ tự xử lý:
 
-1. Token Mapillary (miễn phí) để lấy thêm ảnh có tư thế đã qua SfM.
+1. Mapillary (11/10/2026): đã tìm được 4.319 ảnh 360° trong Cầu Giấy qua vector tile, 2.068 ảnh
+   có tư thế SfM. SfM dời vị trí trung vị 2,0 m so với GPS. Graph API v4 trả `{"data": []}` cho mọi
+   truy vấn ảnh (theo bbox, theo id, kể cả ở Paris) với token hiện tại, nên chưa có
+   `thumb_original_url` để tải ảnh. Việc tiếp theo: bật quyền read cho ứng dụng Mapillary, tải ảnh,
+   rồi dùng `streetview.py check` xem tường có nằm đúng trên ảnh không. Nếu tọa độ SfM vẫn lệch
+   cỡ mét so với footprint, căn thêm bằng `computed_rotation` và đám mây điểm `sfm_cluster`.
 2. Chạy SfM (OpenSfM/COLMAP) trên các chuỗi KartaView để căn tương đối giữa các ảnh, rồi căn
    cả đám điểm vào footprint.
 3. Tự chụp: một vòng xe máy với Insta360 (GPS + IMU) qua Cầu Giấy, xử lý bằng cùng pipeline.

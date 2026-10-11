@@ -574,7 +574,7 @@ stick.addEventListener("pointermove", (e) => {
 });
 stick.addEventListener("pointerup", () => { stickVec = [0, 0]; knob.style.transform = ""; });
 
-// ---------- real photos (KartaView 360°, CC BY-SA 4.0) ----------
+// ---------- real photos (KartaView / Mapillary 360°, CC BY-SA 4.0) ----------
 const texLoader = new THREE.TextureLoader();
 let panos = [];
 function photoFacade(f) {
@@ -622,7 +622,7 @@ function enterPhoto(p) {
     for (const o of scene.children) if (o !== sphere && o !== sun && o !== sun.target && !o.isLight) { o.userData.wasVisible = o.visible; o.visible = false; }
     sphere.visible = true;
     const unsure = p.pose_quality === "uncertain" || p.pose_quality === "none";
-    $("photo-info").textContent = `Ảnh thật chụp ${p.shot.slice(0, 10)} · KartaView, CC BY-SA 4.0${unsure ? " · hướng ảnh chưa xác định chắc, có thể lệch so với phố" : ""} · P hoặc Esc để quay lại`;
+    $("photo-info").textContent = `Ảnh thật chụp ${p.shot.slice(0, 10)} · ${p.source || "KartaView"}, CC BY-SA 4.0${unsure ? " · hướng ảnh chưa xác định chắc, có thể lệch so với phố" : ""} · P hoặc Esc để quay lại`;
     $("photo-btn").textContent = "Quay lại phố (P)";
   }, undefined, () => { $("photo-info").textContent = "Không tải được ảnh này."; photoMode = null; });
 }
