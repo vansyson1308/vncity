@@ -5,6 +5,7 @@ Outputs (under out/<name>/):
   tiles/bld_X_Y.glb        extruded buildings of one tile (vertex colour = height provenance)
   tiles/bld_X_Y.json       per-building attributes + triangle range inside the tile mesh
   tiles/road_X_Y.glb       road / rail ribbons clipped to the tile
+  tiles/walk_X_Y.glb       raised sidewalks between carriageway and building line
   terrain/heightmap.png    16-bit heightmap from Copernicus GLO-30 (a DSM, see manifest)
   preview.png              top-down overview coloured by height provenance
 
@@ -52,8 +53,20 @@ PROVENANCE_RGBA = {
     "derived_raster": (163, 113, 247, 255),  # sampled from a 2.5D height raster
     "estimated": (150, 150, 150, 255),   # area heuristic, replace before shipping
 }
+# Sidewalk width (m) beside each carriageway edge, by road class. Narrow alleys (ngõ)
+# have none: houses open straight onto the lane.
+# Assumed from typical Hanoi streets (main roads 5-8 m); not measured per street.
+SIDEWALK_WIDTH = {
+    "motorway": 0.0, "trunk": 5.0, "primary": 6.0, "secondary": 5.0, "tertiary": 4.0,
+    "residential": 2.0, "unclassified": 2.0,
+}
+CURB_M = 0.15
 ROAD_RGBA = (60, 60, 64, 255)
 RAIL_RGBA = (120, 85, 60, 255)
+WALK_RGBA = (168, 72, 58, 255)  # red terracotta paving common on Hanoi sidewalks
+# Probe distances (m) from a facade's midpoint outwards when deciding if it faces a street.
+FRONTAGE_PROBES = (2.0, 6.0, 12.0)
+MIN_FRONTAGE_M = 2.0
 Y_UP = np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]], dtype=float)
 
 
@@ -111,7 +124,6 @@ def sample_raster(src, geom_wgs84):
 
 
 def extrude(poly, base, top):
-    poly = shapely.make_valid(poly.simplify(0.05))
     meshes = []
     for p in polygons(poly):
         if p.area < 1.0:
@@ -127,7 +139,7 @@ def extrude(poly, base, top):
 
 PROV_CODES = list(PROVENANCE_RGBA)
 BCOLS = ["id", "name", "class", "height", "num_floors", "min_height", "is_underground", "sources", "wkb"]
-RCOLS = ["subtype", "class", "width_rules", "wkb"]
+RCOLS = ["id", "subtype", "class", "width_rules", "wkb"]
 W = {}  # per-worker state, filled by init_worker
 
 
@@ -164,9 +176,10 @@ def tile_buildings(ix, iy, ox, oy):
             skipped["non_positive_height"] += 1
             continue
         c = g.centroid
+        local = shapely.make_valid(shapely.affinity.translate(pg, -ox, -oy).simplify(0.05))
         out.append({
             "id": row["id"], "name": row["name"], "class": row["class"],
-            "geom": shapely.affinity.translate(pg, -ox, -oy), "base": base, "top": h,
+            "geom": local, "base": base, "top": h,
             "height_m": round(h, 2), "height_source": prov, "min_height_m": base,
             "area_m2": round(pg.area, 1), "lon": round(c.x, 7), "lat": round(c.y, 7),
             "sources": sorted({x["dataset"] for x in (row["sources"] or [])}),
@@ -174,14 +187,20 @@ def tile_buildings(ix, iy, ox, oy):
     return out, skipped
 
 
-def tile_roads(ix, iy, ox, oy, size):
+def roads_around(ix, iy, ox, oy, size, margin=30.0):
+    """Road ribbons (tile-local) for this tile plus a margin, so facades and sidewalks at a
+    tile edge still see the street across the border. Each segment appears once."""
     rows = W["con"].execute(
-        f"SELECT {', '.join(RCOLS)} FROM '{W['work'] / 'roads.parquet'}' WHERE ix = ? AND iy = ?",
-        [ix, iy]).fetchall()
-    tile_box = box(ox, oy, ox + size, oy + size)
-    out = []
+        f"SELECT {', '.join(RCOLS)} FROM '{W['work'] / 'roads.parquet'}' "
+        "WHERE ix BETWEEN ? AND ? AND iy BETWEEN ? AND ?",
+        [ix - 1, ix + 1, iy - 1, iy + 1]).fetchall()
+    reach = box(ox - margin, oy - margin, ox + size + margin, oy + size + margin)
+    out, seen = [], set()
     for r in rows:
         row = dict(zip(RCOLS, r))
+        if row["id"] in seen:
+            continue
+        seen.add(row["id"])
         line = project(wkb.loads(bytes(row["wkb"])), W["tf"]).intersection(W["area"])
         if row["subtype"] == "rail":
             width = RAIL_WIDTH
@@ -189,10 +208,47 @@ def tile_roads(ix, iy, ox, oy, size):
             rules = row["width_rules"] or []
             width = next((x["value"] for x in rules if x["value"]), None) or \
                 ROAD_WIDTH.get(row["class"] or "unknown", ROAD_WIDTH["unknown"])
-        ribbon = line.buffer(width / 2, cap_style="flat").intersection(tile_box)
-        for p in polygons(ribbon):  # empty when the clip left only points
-            out.append((row["subtype"], shapely.affinity.translate(p, -ox, -oy)))
+        ribbon = line.buffer(width / 2, cap_style="flat").intersection(reach)
+        if ribbon.is_empty:  # the clip left only points of this segment
+            continue
+        out.append({"subtype": row["subtype"], "class": row["class"] or "unknown",
+                    "ribbon": shapely.affinity.translate(ribbon, -ox, -oy)})
     return out
+
+
+def sidewalks(roads, buildings, size):
+    """Raised walk between each carriageway and the building line, clipped to the tile."""
+    bands = [r["ribbon"].buffer(SIDEWALK_WIDTH[r["class"]], join_style="mitre")
+             for r in roads if r["subtype"] == "road" and SIDEWALK_WIDTH.get(r["class"], 0) > 0]
+    if not bands:
+        return []
+    walk = shapely.union_all(bands)
+    walk = walk.difference(shapely.union_all([r["ribbon"] for r in roads]))
+    if buildings:
+        walk = walk.difference(shapely.union_all([b["geom"] for b in buildings]))
+    return polygons(walk.intersection(box(0, 0, size, size)))
+
+
+def street_edges(poly, roads, tree):
+    """Footprint edges that face a carriageway: where facades, shopfronts and signs go."""
+    edges = []
+    ring = shapely.geometry.polygon.orient(poly, 1.0).exterior  # counter-clockwise
+    pts = np.asarray(ring.coords)
+    for (x0, y0), (x1, y1) in zip(pts[:-1], pts[1:]):
+        dx, dy = x1 - x0, y1 - y0
+        length = math.hypot(dx, dy)
+        if length < MIN_FRONTAGE_M:
+            continue
+        nx, ny = dy / length, -dx / length  # outward normal of a CCW ring
+        mx, my = (x0 + x1) / 2, (y0 + y1) / 2
+        for d in FRONTAGE_PROBES:
+            hits = tree.query(shapely.Point(mx + nx * d, my + ny * d), predicate="intersects")
+            if len(hits):
+                edges.append({"a": [round(x0, 2), round(y0, 2)], "b": [round(x1, 2), round(y1, 2)],
+                              "len": round(length, 2), "road": roads[hits[0]]["class"],
+                              "setback_m": d})
+                break
+    return edges
 
 
 def build_tile(key):
@@ -204,6 +260,9 @@ def build_tile(key):
            "provenance": Counter(), "skipped": Counter(), "points": [], "outlines": [], "roads": []}
 
     buildings, res["skipped"] = tile_buildings(ix, iy, ox, oy)
+    roads = roads_around(ix, iy, ox, oy, size)
+    carriageways = [r for r in roads if r["subtype"] == "road"]
+    tree = shapely.STRtree([r["ribbon"] for r in carriageways])
     parts, attrs, face = [], [], 0
     for b in buildings:
         ms = extrude(b["geom"], b["base"], b["top"])
@@ -213,9 +272,13 @@ def build_tile(key):
         m = trimesh.util.concatenate(ms)
         m.visual.vertex_colors = np.tile(PROVENANCE_RGBA[b["height_source"]], (len(m.vertices), 1))
         parts.append(m)
+        main = max(polygons(b["geom"]), key=lambda p: p.area)
         attrs.append({k: b[k] for k in ("id", "name", "class", "height_m", "height_source",
                                         "min_height_m", "area_m2", "lon", "lat", "sources")}
-                     | {"face_start": face, "face_count": len(m.faces)})
+                     | {"face_start": face, "face_count": len(m.faces),
+                        "floors": max(1, round((b["top"] - b["base"]) / FLOOR_M)),
+                        "footprint": np.round(np.asarray(main.exterior.coords), 2).tolist(),
+                        "street_edges": street_edges(main, carriageways, tree)})
         face += len(m.faces)
         res["provenance"][b["height_source"]] += 1
         code = PROV_CODES.index(b["height_source"])
@@ -235,21 +298,39 @@ def build_tile(key):
         res["triangles"] += len(mesh.faces)
         res["files"] += [f"{name}.glb", f"{name}.json"]
 
+    tile_box = box(0, 0, size, size)
     parts = []
-    for subtype, p in tile_roads(ix, iy, ox, oy, size):
-        try:
-            m = trimesh.creation.extrude_polygon(p, 0.08)
-        except Exception:
-            continue
-        m.visual.vertex_colors = np.tile(RAIL_RGBA if subtype == "rail" else ROAD_RGBA,
-                                         (len(m.vertices), 1))
-        parts.append(m)
-        if W["detail_preview"]:
-            res["roads"].append(np.asarray(p.exterior.coords) + (ox, oy))
+    for r in roads:
+        for p in polygons(r["ribbon"].intersection(tile_box)):
+            try:
+                m = trimesh.creation.extrude_polygon(p, 0.08)
+            except Exception:
+                continue
+            m.visual.vertex_colors = np.tile(RAIL_RGBA if r["subtype"] == "rail" else ROAD_RGBA,
+                                             (len(m.vertices), 1))
+            parts.append(m)
+            if W["detail_preview"]:
+                res["roads"].append(np.asarray(p.exterior.coords) + (ox, oy))
     if parts:
         mesh = trimesh.util.concatenate(parts)
         mesh.apply_transform(Y_UP)
         name = f"road_{ix}_{iy}"
+        export_glb(mesh, name, (ox, oy), out_dir / f"{name}.glb")
+        res["triangles"] += len(mesh.faces)
+        res["files"].append(f"{name}.glb")
+
+    parts = []
+    for p in sidewalks(roads, buildings, size):
+        try:
+            m = trimesh.creation.extrude_polygon(p, CURB_M)
+        except Exception:
+            continue
+        m.visual.vertex_colors = np.tile(WALK_RGBA, (len(m.vertices), 1))
+        parts.append(m)
+    if parts:
+        mesh = trimesh.util.concatenate(parts)
+        mesh.apply_transform(Y_UP)
+        name = f"walk_{ix}_{iy}"
         export_glb(mesh, name, (ox, oy), out_dir / f"{name}.glb")
         res["triangles"] += len(mesh.faces)
         res["files"].append(f"{name}.glb")

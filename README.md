@@ -33,6 +33,12 @@ Số đo trên máy 4 nhân, 16 GB RAM (Overture 2026-09-23.0):
 python -m http.server -d site/caugiay
 ```
 
+`viewer/walk.html` là bản chơi thử **góc nhìn thứ ba**: đi bộ trên vỉa hè thật của khu vực
+(WASD, Shift để chạy, kéo chuột để xoay, thanh giờ đặt mặt trời theo vĩ độ Hà Nội). Mặt tiền,
+cửa cuốn, biển hiệu, ban công, điều hòa, téc nước, cây, cột điện và dây, xe máy đỗ, ghế nhựa
+đều sinh trong trình duyệt từ "công thức mặt tiền" của từng tòa. Thêm `#lite` vào URL để tắt
+bóng đổ trên máy yếu. Lựa chọn công nghệ cho bản Unreal: [docs/research-2026-10.md](docs/research-2026-10.md).
+
 `viewer/index.html` là trình xem three.js: xoay quanh khu vực, bấm vào một tòa để xem chiều cao
 và nguồn của nó. Ô được gửi dưới dạng base64 (`.glb.txt`) vì nhiều nơi lưu trữ không phục vụ
 `.glb` và chặn `fetch` tới URL `data:`.
@@ -43,8 +49,9 @@ và nguồn của nó. Ô được gửi dưới dạng base64 (`.glb.txt`) vì 
 | --- | --- |
 | `manifest.json` | gốc toạ độ (lat/lon), phép chiếu, danh sách ô, thống kê nguồn chiều cao, giấy phép |
 | `tiles/bld_X_Y.glb` | tòa nhà đùn khối của một ô; màu đỉnh = nguồn chiều cao |
-| `tiles/bld_X_Y.json` | thuộc tính từng tòa + `face_start`/`face_count` trong mesh của ô |
+| `tiles/bld_X_Y.json` | thuộc tính từng tòa + `face_start`/`face_count` trong mesh của ô; `footprint`, `floors` và `street_edges` (cạnh quay ra phố, loại đường) cho việc sinh mặt tiền |
 | `tiles/road_X_Y.glb` | dải đường bộ / đường sắt đã cắt theo ô |
+| `tiles/walk_X_Y.glb` | vỉa hè nâng 15 cm giữa lòng đường và chỉ giới nhà (độ rộng giả định theo cấp đường) |
 | `terrain/heightmap.png` | heightmap 16-bit; manifest ghi Z scale cho UE Landscape |
 | `preview.png` | ảnh nhìn từ trên xuống |
 
