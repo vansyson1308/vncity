@@ -1,0 +1,387 @@
+<title>Hà Nội 1:1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a full-bleed 3D street block first, then a single reading column of findings. */
+:root {
+  --bg: #eef0ec;          /* lime-washed wall */
+  --surface: #f8f9f6;
+  --fg: #1d2420;
+  --muted: #5b655f;
+  --line: #cfd5cf;
+  --ochre: #8a5a00;       /* text-safe "vàng Hà Nội" */
+  --ochre-fill: #e3b04b;  /* colonial facade yellow */
+  --shutter: #2f6b4f;     /* green shutters */
+  --warn: #9b3b1f;
+  --scene: #dfe3dd;
+  --f-display: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --f-data: "Roboto Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --s-1: 0.8125rem; --s0: 1rem; --s1: 1.25rem; --s2: 1.75rem; --s3: clamp(2.2rem, 6vw, 3.6rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131714; --surface: #1b211d; --fg: #e5e8e2; --muted: #9aa59e; --line: #2e3631;
+    --ochre: #e8b960; --ochre-fill: #e3b04b; --shutter: #6fbf95; --warn: #f08c6a; --scene: #1a1f1b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131714; --surface: #1b211d; --fg: #e5e8e2; --muted: #9aa59e; --line: #2e3631;
+  --ochre: #e8b960; --ochre-fill: #e3b04b; --shutter: #6fbf95; --warn: #f08c6a; --scene: #1a1f1b;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--f-body); font-size: var(--s0); line-height: 1.6; padding: 0 16px; padding-block: 24px 64px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 28px; }
+header { display: grid; gap: 8px; }
+.eyebrow { font-family: var(--f-data); font-size: var(--s-1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ochre); }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: var(--s3); line-height: 1.05; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h1 .ratio { color: var(--ochre); font-family: var(--f-data); font-weight: 500; }
+.lede { max-width: 68ch; color: var(--muted); font-size: var(--s1); line-height: 1.5; margin: 0; }
+
+.viewer { position: relative; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--scene); }
+#scene { display: block; width: 100%; height: clamp(420px, 68vh, 760px); touch-action: none; }
+.hud { position: absolute; inset: 12px 12px auto 12px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; pointer-events: none; }
+.hud > * { pointer-events: auto; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+button.chip { font: 500 var(--s-1)/1 var(--f-body); padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+button.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button.chip:focus-visible { outline: 2px solid var(--ochre); outline-offset: 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: var(--s-1); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.status { position: absolute; left: 12px; bottom: 12px; font-family: var(--f-data); font-size: var(--s-1); color: var(--muted); background: var(--surface); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--line); }
+.inspect { position: absolute; right: 12px; bottom: 12px; width: min(340px, calc(100% - 24px)); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font-size: var(--s-1); display: grid; gap: 6px; }
+.inspect h3 { margin: 0; font-size: var(--s0); }
+.inspect dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0; }
+.inspect dt { color: var(--muted); }
+.inspect dd { margin: 0; font-family: var(--f-data); min-width: 0; overflow-wrap: anywhere; }
+.inspect a { color: var(--ochre); }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-family: var(--f-body); font-weight: 500; color: #fff; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.stat { background: var(--surface); padding: 14px 16px; display: grid; gap: 2px; }
+.stat b { font-family: var(--f-data); font-size: var(--s2); font-weight: 500; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: var(--s-1); }
+.stat.alert b { color: var(--warn); }
+
+article { display: grid; gap: 36px; }
+section { display: grid; gap: 12px; max-width: 74ch; }
+section.wide { max-width: none; }
+h2 { font-family: var(--f-display); font-weight: 700; font-size: var(--s2); line-height: 1.2; margin: 0; text-wrap: balance; }
+h2 small { display: block; font-family: var(--f-data); font-size: var(--s-1); font-weight: 400; color: var(--ochre); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+p { margin: 0; }
+ul, ol { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+code { font-family: var(--f-data); font-size: 0.9em; background: var(--surface); border: 1px solid var(--line); padding: 0 4px; border-radius: 3px; }
+.verdict { border-left: 4px solid var(--warn); padding: 4px 0 4px 16px; display: grid; gap: 8px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: var(--s-1); }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-data); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); background: var(--surface); }
+tr:last-child td { border-bottom: 0; }
+.ok { color: var(--shutter); font-weight: 500; }
+.gap { color: var(--warn); font-weight: 500; }
+.figure { display: grid; gap: 8px; }
+.figure img { border: 1px solid var(--line); border-radius: 6px; background: #f4f4f1; }
+.figure figcaption { color: var(--muted); font-size: var(--s-1); }
+.phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.phase { border-top: 3px solid var(--line); padding-top: 10px; display: grid; gap: 6px; align-content: start; }
+.phase.done { border-top-color: var(--shutter); }
+.phase b { font-size: var(--s0); }
+.phase span { color: var(--muted); font-size: var(--s-1); }
+pre { margin: 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font: var(--s-1)/1.5 var(--f-data); }
+footer { color: var(--muted); font-size: var(--s-1); border-top: 1px solid var(--line); padding-top: 16px; }
+a { color: var(--ochre); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Nghiên cứu bản sao số · Hà Nội · tỷ lệ thật</div>
+    <h1>Hà Nội <span class="ratio">1:1</span></h1>
+    <p class="lede">Khu Cầu Giấy dựng lại từ dữ liệu bản đồ mở, đúng vị trí từng tòa nhà và từng con phố. Xoay, phóng to, rồi bấm vào một tòa nhà để xem chiều cao của nó lấy từ đâu.</p>
+  </header>
+
+  <div class="viewer">
+    <canvas id="scene" aria-label="Mô hình 3D khu Cầu Giấy"></canvas>
+    <div class="hud">
+      <div class="chip-row" role="group" aria-label="Kiểu tô màu">
+        <button class="chip" id="mode-prov" aria-pressed="true">Nguồn chiều cao</button>
+        <button class="chip" id="mode-street" aria-pressed="false">Phối cảnh phố</button>
+        <button class="chip" id="reset-view" aria-pressed="false">Về góc nhìn đầu</button>
+      </div>
+      <div class="legend" id="legend">
+        <span><i style="background:#2ea043"></i>Đo trong dữ liệu</span>
+        <span><i style="background:#1f6feb"></i>Từ số tầng</span>
+        <span><i style="background:#a371f7"></i>Từ raster 2.5D</span>
+        <span><i style="background:#969696"></i>Ước lượng</span>
+      </div>
+    </div>
+    <div class="status" id="status">Đang tải mô hình…</div>
+    <div class="inspect" id="inspect" hidden>
+      <h3 id="i-title">Tòa nhà</h3>
+      <dl id="i-body"></dl>
+    </div>
+  </div>
+
+  <div class="stats" id="stats">
+    <div class="stat"><b>8.912</b><span>tòa nhà khu Cầu Giấy (2,1 × 1,3 km)</span></div>
+    <div class="stat"><b>1.701</b><span>đoạn đường, đường sắt</span></div>
+    <div class="stat alert"><b>99,2%</b><span>chiều cao đang là ước lượng</span></div>
+    <div class="stat"><b>2.509.832</b><span>tòa nhà toàn TP Hà Nội, chỉ 0,41% có chiều cao hoặc số tầng</span></div>
+  </div>
+
+  <article>
+    <section>
+      <h2><small>Kết luận</small>Không reverse Google Earth. Ghép dữ liệu mở rồi tự đo phần còn thiếu.</h2>
+      <div class="verdict">
+        <p>Chính sách Map Tiles API của Google cấm dùng Photorealistic 3D Tiles ngoại tuyến, cấm trích xuất dữ liệu địa lý, và cấm cả mô hình 3D được "dò theo hoặc suy ra" từ tiles đó, kể cả dựng tay. Một game thương mại dùng mesh lấy từ Google Earth có thể bị gỡ khỏi store bất cứ lúc nào. Vì vậy mình không làm hướng này.</p>
+        <p>REA trong repo này là công cụ phân tích phần mềm (binary, JavaScript, .NET, Android, website). Nó không có bộ đọc glTF, 3D Tiles hay protobuf, và dùng nó để bóc dữ liệu bản đồ của Google cũng vướng đúng chính sách trên.</p>
+      </div>
+      <p>Hướng làm thay thế: dựng khung thành phố từ dữ liệu mở có giấy phép rõ ràng, gắn nhãn nguồn gốc cho từng con số, rồi dồn công đo đạc vào đúng những chỗ dữ liệu mở còn trống. Mô hình phía trên là kết quả bước đầu tiên.</p>
+    </section>
+
+    <section class="wide">
+      <h2><small>Nguồn dữ liệu</small>Mỗi lớp của thành phố lấy từ đâu</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Lớp</th><th>Nguồn</th><th>Giấy phép</th><th>Tình trạng ở Hà Nội</th></tr></thead>
+          <tbody>
+            <tr><td>Footprint tòa nhà</td><td>Overture Maps (gộp OpenStreetMap, Microsoft, Google Open Buildings)</td><td>ODbL / CDLA, ghi theo từng tòa</td><td class="ok">Đã kiểm chứng: 8.912 tòa ở Cầu Giấy</td></tr>
+            <tr><td>Chiều cao</td><td>Overture <code>height</code>, <code>num_floors</code></td><td>như trên</td><td class="gap">Chỉ 70 / 8.912 tòa có số liệu</td></tr>
+            <tr><td>Chiều cao (bổ sung)</td><td>Google Open Buildings 2.5D Temporal, xuất qua Earth Engine</td><td>Chọn CC BY 4.0 hoặc ODbL</td><td>Khu vực Đông Nam Á, 4 m, trần 100 m, đến 2023. Cần tài khoản Earth Engine</td></tr>
+            <tr><td>Đường, đường sắt</td><td>Overture transportation</td><td>ODbL</td><td class="ok">1.701 đoạn ở Cầu Giấy, có cấp đường, độ rộng, cầu vượt</td></tr>
+            <tr><td>Địa hình</td><td>Copernicus DEM GLO-30</td><td>Miễn phí, ghi nguồn</td><td>30 m, là DSM nên có lẫn mái nhà, cây. Hà Nội phẳng nên đủ dùng</td></tr>
+            <tr><td>Mặt tiền, biển hiệu</td><td>Ảnh tự chụp ngoài phố, Mapillary để tham khảo</td><td>Của mình / CC BY-SA</td><td class="gap">Chưa có. Đây là phần tốn công nhất</td></tr>
+            <tr><td>Công trình biểu tượng</td><td>Dựng tay từ ảnh tự chụp, bản vẽ công khai</td><td>Của mình</td><td class="gap">Chưa có. Tòa trên 100 m vượt trần dữ liệu 2.5D</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2><small>Độ chính xác</small>Sai lệch nằm ở đâu</h2>
+      <ul>
+        <li><b>Vị trí và hình dáng mặt bằng</b> khá sát thực tế: phép chiếu Transverse Mercator đặt tâm tại khu vực, sai số do phép chiếu dưới 1 m kể cả ở rìa Hà Nội. Sai số lớn hơn đến từ chính footprint. Trên toàn Hà Nội, 70% footprint do máy học của Google vẽ từ ảnh vệ tinh, 21% của Microsoft, chỉ 8,5% do người vẽ trên OpenStreetMap. Footprint máy học hay gộp dãy nhà ống liền kề thành một khối.</li>
+        <li><b>Chiều cao</b> hiện sai nhiều nhất. 99,2% tòa nhà đang dùng luật ước lượng theo diện tích (nhà ống dưới 150 m² lấy 4 tầng × 3,3 m). Ngay cả số tầng cũng chỉ là xấp xỉ: Landmark 72 có 72 tầng, nhân 3,3 m ra khoảng 238 m, trong khi tòa thật cao hơn 300 m. Mọi tòa đều mang nhãn nguồn gốc, nên ta đo được tiến độ: mục tiêu là đẩy tỷ lệ "ước lượng" về gần 0 ở các khu chơi chính.</li>
+        <li><b>Giống y hệt 100%</b> thì không dữ liệu nào cho được, kể cả Google. Cách thực tế: đúng tuyệt đối về vị trí, hướng phố, chiều cao, màu tường; còn chi tiết mặt tiền thì dùng bộ asset nhà phố Hà Nội có biến thể, cộng dựng tay các công trình nổi tiếng.</li>
+      </ul>
+    </section>
+
+    <section class="wide">
+      <h2><small>Toàn thành phố</small>Hà Nội, theo ranh giới hành chính mới</h2>
+      <figure class="figure" id="hn-figure">
+        <img src="hanoi_preview.png" alt="Bản đồ toàn bộ tòa nhà Hà Nội tô theo nguồn chiều cao" loading="lazy">
+        <figcaption id="hn-caption">2.509.832 tòa nhà và 301.549 đoạn đường trong ranh giới Thành phố Hà Nội (VN-HN), tô theo nguồn chiều cao. Gần như toàn bộ là màu xám: chiều cao ước lượng. Vệt xanh nằm ở nội thành, nơi OpenStreetMap có số tầng.</figcaption>
+      </figure>
+      <p>Toàn bộ đã được dựng thành mesh: 3.512 ô 1 km, 53,2 triệu tam giác, 2,2 GB file glb, chạy trong 17 phút trên 4 nhân CPU. Heightmap 2.542 × 3.032 điểm ảnh, điểm cao nhất 1.273 m ở khu Ba Vì. Bản toàn thành phố quá nặng để xem trên web nên trang này chỉ hiển thị khu Cầu Giấy ở dạng 3D.</p>
+    </section>
+
+    <section>
+      <h2><small>Mục tiêu hình ảnh</small>Từ khối hộp đến ngõ phố như Project Long Quân</h2>
+      <p>Mô hình phía trên chỉ là bộ khung: đúng vị trí, đúng hướng phố, đúng kích thước khu đất. Còn cái làm nên phối cảnh trong video demo (vỉa hè gạch đỏ, nhà ống có ban công và cửa xếp, téc nước trên mái, dây điện chằng chịt, xe máy dựng dọc phố, ghế nhựa, biển hiệu, bóng nắng xuyên qua tán cây) là lớp asset dựng lên trên bộ khung đó. Lớp này làm theo ba tầng chi tiết:</p>
+      <ul>
+        <li><b>Khu chơi chính</b> (vài km² quanh nơi diễn ra nhiệm vụ): dựng mặt tiền theo ảnh tự chụp của từng con phố, đặt đồ vật bằng tay, chất lượng ngang video.</li>
+        <li><b>Phần còn lại của nội thành</b>: Unreal PCG đọc "công thức" của từng tòa (số tầng, bề rộng mặt tiền, cạnh nào quay ra phố, loại nhà) rồi ghép bộ mô-đun nhà phố Hà Nội. Vỉa hè, bó vỉa, cột điện, cây, xe máy rải theo cấp đường.</li>
+        <li><b>Nhìn xa</b>: chính các khối hộp đã dựng ở đây, dùng làm HLOD.</li>
+      </ul>
+      <p>Ánh sáng dùng Lumen và Virtual Shadow Maps. Vị trí mặt trời tính theo vĩ độ thật của Hà Nội (khoảng 21° Bắc), lấy từ gốc tọa độ trong manifest. Bước code tiếp theo của pipeline là xuất "công thức mặt tiền" cho từng tòa nhà.</p>
+    </section>
+
+    <section>
+      <h2><small>Đưa vào Unreal Engine 5</small>Từ ô lưới đến World Partition</h2>
+      <ol>
+        <li>Mỗi ô (500 m cho Cầu Giấy, 1 km cho toàn Hà Nội) là một cặp file <code>bld_X_Y.glb</code> và <code>road_X_Y.glb</code>, kèm <code>bld_X_Y.json</code> chứa thuộc tính từng tòa và dải tam giác của nó trong mesh. Game tra được "người chơi đang đứng ở tòa nào".</li>
+        <li>Import bằng Interchange (glTF), bật World Partition, mỗi ô thành một actor đặt theo <code>origin_m</code> trong <code>manifest.json</code>.</li>
+        <li>Đặt Cesium for Unreal Georeference đúng gốc trong manifest để quy đổi kinh độ, vĩ độ sang tọa độ game khi cần đặt nhiệm vụ theo địa chỉ thật. Chỉ dùng nó cho phép quy đổi, không dùng tiles của Google làm mẫu dựng.</li>
+        <li>Heightmap 16-bit ở <code>terrain/heightmap.png</code>, manifest ghi sẵn Z scale cho Landscape.</li>
+        <li>Nối Claude Code với editor qua một MCP server cho Unreal (UEMCP dùng Python remote execution, không cần biên dịch plugin), để Claude tự import ô, đặt actor, chạy PCG rải cây, cột điện, xe máy.</li>
+      </ol>
+    </section>
+
+    <section class="wide">
+      <h2><small>Lộ trình</small>Các bước tiếp theo</h2>
+      <div class="phases">
+        <div class="phase done"><b>0. Khung thành phố</b><span>Footprint, đường, địa hình cho Cầu Giấy và toàn Hà Nội, mỗi tòa có nhãn nguồn gốc. Đã xong: 2,5 triệu tòa, 3.512 ô.</span></div>
+        <div class="phase"><b>1. Chiều cao thật</b><span>Xuất raster Open Buildings 2.5D cho Hà Nội, chạy lại với <code>--heights-tif</code>. Đo tay các tòa trên 100 m.</span></div>
+        <div class="phase"><b>2. Bộ nhà phố Hà Nội</b><span>Mô-đun nhà ống, chung cư cũ, biệt thự Pháp: ban công, biển hiệu, điều hòa, dây điện. Sinh mặt tiền theo footprint.</span></div>
+        <div class="phase"><b>3. Khảo sát khu chơi chính</b><span>Chụp ảnh mặt tiền ngoài phố theo từng tuyến. Bay flycam chỉ qua đơn vị có giấy phép theo Nghị định 288/2025/NĐ-CP.</span></div>
+        <div class="phase"><b>4. Gameplay</b><span>Mạng giao thông từ dữ liệu đường cho xe máy, ô tô AI. Nhiệm vụ gắn với địa chỉ thật.</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2><small>Pháp lý cần lưu ý</small>Trước khi phát hành</h2>
+      <ul>
+        <li>Dữ liệu gốc OpenStreetMap theo ODbL: phải ghi nguồn trong game. Nếu công bố chính cơ sở dữ liệu đã chỉnh sửa thì phải chia sẻ theo ODbL; bản thân game là "sản phẩm tạo ra" nên không bị buộc mở mã.</li>
+        <li>Logo, tên thương hiệu trên biển hiệu thật cần xin phép hoặc đổi tên kiểu GTA.</li>
+        <li>Phát hành tại Việt Nam: game chịu quy định về trò chơi điện tử (Nghị định 147/2024/NĐ-CP), và bất kỳ bản đồ quốc gia nào xuất hiện trong game phải thể hiện đúng chủ quyền.</li>
+      </ul>
+    </section>
+
+    <section class="wide">
+      <h2><small>Chạy lại pipeline</small>Hai lệnh cho một khu vực bất kỳ</h2>
+<pre>python fetch.py --name caugiay --bbox 105.785,21.028,105.805,21.040
+python build.py --name caugiay --tile 500
+
+python fetch.py --name hanoi --region VN-HN      # toàn TP Hà Nội
+python fetch.py --name saigon --region VN-SG     # TP Hồ Chí Minh
+python build.py --name hanoi --tile 1000 --heights-tif open_buildings_2_5d.tif</pre>
+    </section>
+  </article>
+
+  <footer>Dữ liệu: © Overture Maps Foundation và cộng đồng OpenStreetMap (ODbL), Microsoft, Google Open Buildings; Copernicus DEM GLO-30 © DLR, Airbus, ESA. Bản phát hành Overture 2026-09-23.0.</footer>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const PROV = {
+  observed: ["Đo trong dữ liệu", "#2ea043"],
+  derived_floors: ["Từ số tầng", "#1f6feb"],
+  derived_raster: ["Từ raster 2.5D", "#a371f7"],
+  estimated: ["Ước lượng", "#969696"],
+};
+const canvas = document.getElementById("scene");
+const statusEl = document.getElementById("status");
+const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 5, 20000);
+const START = { pos: new THREE.Vector3(-900, 900, 1300), target: new THREE.Vector3(0, 0, -50) };
+camera.position.copy(START.pos);
+const controls = new OrbitControls(camera, canvas);
+controls.target.copy(START.target);
+controls.maxPolarAngle = Math.PI * 0.49;
+// Render on demand: a frame only when the view or the scene changes.
+let framePending = false;
+function requestRender() {
+  if (framePending) return;
+  framePending = true;
+  requestAnimationFrame(() => { framePending = false; renderer.render(scene, camera); });
+}
+controls.addEventListener("change", requestRender);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f86, 1.6));
+const sun = new THREE.DirectionalLight(0xfff1d6, 2.2);
+sun.position.set(-600, 1200, 400);
+scene.add(sun);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(4000, 3000), new THREE.MeshLambertMaterial());
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.05;
+scene.add(ground);
+
+const provMat = new THREE.MeshLambertMaterial({ vertexColors: true });
+const streetMat = new THREE.MeshLambertMaterial({ color: 0xe3b04b });
+const roadMat = new THREE.MeshLambertMaterial({ vertexColors: true });
+const buildingMeshes = [];
+let mode = "prov";
+
+function applyTheme() {
+  scene.background = new THREE.Color(css("--scene"));
+  ground.material.color = new THREE.Color(css("--bg"));
+  requestRender();
+}
+applyTheme();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+function resize() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  requestRender();
+}
+new ResizeObserver(resize).observe(canvas);
+
+const loader = new GLTFLoader();
+// Tiles ship as base64 text: the page may fetch its own files but not data: URLs.
+async function fetchGlb(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+  const bin = atob((await res.text()).trim());
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+async function load() {
+  const manifest = await (await fetch("manifest.json")).json();
+  let done = 0;
+  const files = manifest.tiles.flatMap((t) => t.files.filter((f) => f.endsWith(".glb")));
+  await Promise.all(manifest.tiles.map(async (t) => {
+    const name = `bld_${t.key[0]}_${t.key[1]}`;
+    const attrs = t.files.includes(`${name}.json`)
+      ? fetch(`tiles/${name}.json`).then((r) => r.json()) : Promise.resolve(null);
+    for (const f of t.files.filter((x) => x.endsWith(".glb"))) {
+      const gltf = await loader.parseAsync(await fetchGlb(`tiles/${f}.txt`), "");
+      const isBld = f.startsWith("bld_");
+      gltf.scene.traverse((o) => {
+        if (!o.isMesh) return;
+        o.material = isBld ? (mode === "prov" ? provMat : streetMat) : roadMat;
+        if (isBld) { o.userData.attrsPromise = attrs; buildingMeshes.push(o); }
+      });
+      scene.add(gltf.scene);
+      requestRender();
+      statusEl.textContent = `Đã tải ${++done}/${files.length} ô lưới`;
+    }
+  }));
+  statusEl.textContent = `${manifest.buildings.count.toLocaleString("vi-VN")} tòa nhà · ${(manifest.triangles / 1000).toFixed(0)}k tam giác · ô ${manifest.tile_size_m} m`;
+}
+load().catch((e) => { statusEl.textContent = `Không tải được mô hình: ${e.message}`; });
+
+function setMode(m) {
+  mode = m;
+  for (const o of buildingMeshes) o.material = m === "prov" ? provMat : streetMat;
+  document.getElementById("mode-prov").setAttribute("aria-pressed", m === "prov");
+  document.getElementById("mode-street").setAttribute("aria-pressed", m === "street");
+  document.getElementById("legend").hidden = m !== "prov";
+  requestRender();
+}
+document.getElementById("mode-prov").onclick = () => setMode("prov");
+document.getElementById("mode-street").onclick = () => setMode("street");
+document.getElementById("reset-view").onclick = () => { camera.position.copy(START.pos); controls.target.copy(START.target); controls.update(); };
+
+// Picking: face index -> building via the per-tile triangle ranges.
+const ray = new THREE.Raycaster();
+let down = null;
+canvas.addEventListener("pointerdown", (e) => { down = [e.clientX, e.clientY]; });
+canvas.addEventListener("pointerup", async (e) => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+  const r = canvas.getBoundingClientRect();
+  ray.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
+  const hit = ray.intersectObjects(buildingMeshes, false)[0];
+  const panel = document.getElementById("inspect");
+  if (!hit) { panel.hidden = true; return; }
+  const data = await hit.object.userData.attrsPromise;
+  const b = data && data.buildings.find((x) => hit.faceIndex >= x.face_start && hit.faceIndex < x.face_start + x.face_count);
+  if (!b) { panel.hidden = true; return; }
+  const [label, color] = PROV[b.height_source];
+  document.getElementById("i-title").textContent = b.name || "Tòa nhà không tên";
+  const rows = [
+    ["Chiều cao", `${b.height_m.toFixed(1)} m`],
+    ["Nguồn", `<span class="pill" style="background:${color}">${label}</span>`],
+    ["Diện tích", `${b.area_m2.toLocaleString("vi-VN")} m²`],
+    ["Tọa độ", `${b.lat.toFixed(5)}, ${b.lon.toFixed(5)}`],
+    ["Dữ liệu", b.sources.join(", ") || "không rõ"],
+    ["Overture ID", b.id],
+    ["Đối chiếu", `<a href="https://www.openstreetmap.org/#map=19/${b.lat}/${b.lon}" target="_blank" rel="noopener">Mở trên OpenStreetMap</a>`],
+  ];
+  document.getElementById("i-body").innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+  panel.hidden = false;
+});
+
+requestRender();
+</script>
