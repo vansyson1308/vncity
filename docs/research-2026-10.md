@@ -91,17 +91,28 @@ máy ảnh, rồi chiếu lên đúng bức tường hoặc dựng lại 3D từ
 | Wikimedia Commons | CC, theo từng ảnh | Có ảnh gắn tọa độ quanh Chùa Hà | Ảnh lẻ, không đủ cho dựng mặt tiền |
 
 Kết quả đo được: kéo ảnh về làn đường và lấy hướng từ chuỗi / la bàn / bầu trời đã giúp chiếu
-được ảnh thật lên 297 tòa, nhưng ảnh chưa nắn thẳng vào mặt tường. Gốc rễ còn lại là **tư thế
-máy ảnh chưa đủ chính xác** (cần cỡ 0,5 m và 1–2°, đang ở mức vài mét và vài độ). Thứ tự xử lý:
+được ảnh thật lên 297 tòa, nhưng ảnh chưa nắn thẳng vào mặt tường.
 
-1. Mapillary (11/10/2026): đã tìm được 4.319 ảnh 360° trong Cầu Giấy qua vector tile, 2.068 ảnh
-   có tư thế SfM. SfM dời vị trí trung vị 2,0 m so với GPS. Graph API v4 trả `{"data": []}` cho mọi
-   truy vấn ảnh (theo bbox, theo id, kể cả ở Paris) với token hiện tại, nên chưa có
-   `thumb_original_url` để tải ảnh. Việc tiếp theo: bật quyền read cho ứng dụng Mapillary, tải ảnh,
-   rồi dùng `streetview.py check` xem tường có nằm đúng trên ảnh không. Nếu tọa độ SfM vẫn lệch
-   cỡ mét so với footprint, căn thêm bằng `computed_rotation` và đám mây điểm `sfm_cluster`.
-2. Chạy SfM (OpenSfM/COLMAP) trên các chuỗi KartaView để căn tương đối giữa các ảnh, rồi căn
-   cả đám điểm vào footprint.
+**Xem lại gốc rễ (12/10/2026).** Dựng độ sâu từ chính panorama (Depth Anything V2) rồi đặt đám
+điểm lên bản đồ cho thấy lỗi không chỉ ở tư thế máy ảnh: trong ngõ, footprint Overture thiếu hẳn
+dãy nhà hai bên. Ảnh cho thấy ngõ rộng ~3 m liền tường, còn bản đồ chỉ có vài khối rời, nên khớp
+ảnh vào footprint (thử bằng chamfer trên tường nhìn thấy) cho ra vị trí vô nghĩa, có lúc đặt máy
+ảnh vào giữa một tòa nhà. Ép ảnh thật lên khối hộp sai là đi ngược nguyên tắc. Đạo được sửa lại:
+**nơi có ảnh thì ảnh là thế giới.** Mỗi panorama thành một không gian 3D dựng từ độ sâu của chính
+nó, nhân vật đi trong đó và va chạm với tường trong ảnh; khối hộp chỉ là phần nền cho nơi chưa có
+ảnh.
+
+Giới hạn của một ảnh đơn: chỉ đúng tuyệt đối khi nhìn từ chỗ đặt máy; bước ra xa thì phía sau mỗi
+vật lộ khoảng trống, vì ảnh không thấy chỗ đó. Bản chơi giữ camera gần điểm chụp (như camera cố
+định của game nền dựng sẵn). Muốn đi lại tự do thì cần nhiều ảnh chồng nhau quanh một chỗ, tức
+là dựng lại thật (photogrammetry hoặc Gaussian splatting từ chuỗi ảnh dày). Thứ tự:
+
+1. Mapillary: đã tìm được 4.319 ảnh 360° trong Cầu Giấy qua vector tile, 2.068 ảnh có tư thế SfM,
+   cách nhau ~2 m dọc phố, đủ dày để không gian ảnh nối nhau thành phố liền và để dựng lại 3D đa
+   ảnh. Graph API v4 trả `{"data": []}` cho mọi truy vấn ảnh (theo bbox, theo id, kể cả ở Paris)
+   với token hiện tại, nên chưa tải được ảnh. Cần bật quyền read cho ứng dụng Mapillary.
+2. Từ chuỗi ảnh dày: dựng lại đa ảnh (OpenSfM/COLMAP rồi MVS hoặc 3D Gaussian splatting) cho
+   vài con phố, thay cho không gian ảnh đơn.
 3. Tự chụp: một vòng xe máy với Insta360 (GPS + IMU) qua Cầu Giấy, xử lý bằng cùng pipeline.
    Dự án phi thương mại, riêng tư; vẫn nên làm mờ mặt người và biển số như KartaView.
 
@@ -127,3 +138,4 @@ máy ảnh chưa đủ chính xác** (cần cỡ 0,5 m và 1–2°, đang ở m�
 - https://hethongphapluat.com/luat-bao-ve-du-lieu-ca-nhan-2025/dieu-32
 - https://wiki.openstreetmap.org/wiki/KartaView
 - https://www.mapillary.com/developer/api-documentation
+- https://github.com/DepthAnything/Depth-Anything-V2

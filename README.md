@@ -55,6 +55,7 @@ MAPILLARY_TOKEN='MLY|...' ./venv/bin/python streetview.py mapillary --name caugi
 ./venv/bin/python streetview.py download  --name caugiay   # ảnh cầu 360° đầy đủ của cả hai nguồn
 ./venv/bin/python streetview.py sequences --name caugiay   # chuỗi chụp KartaView, để suy hướng di chuyển
 ./venv/bin/python streetview.py pose      --name caugiay   # sửa tư thế GPS điện thoại (KartaView)
+./venv/bin/python streetview.py depth     --name caugiay   # độ sâu từ chính ảnh -> phố thật dựng 3D
 ./venv/bin/python streetview.py facades   --name caugiay   # chiếu ảnh lên mặt tiền (thử nghiệm)
 ./venv/bin/python streetview.py check     --name caugiay   # vẽ tường đè lên panorama + ảnh ghép mặt tiền
 ./venv/bin/python streetview.py viewer    --name caugiay --site site/caugiay [--facades]
@@ -79,10 +80,33 @@ hạn dùng. `facades` ưu tiên ảnh có tư thế SfM.
 đường vàng nằm đúng chỗ tường chạm vỉa hè và đường xanh trùng góc nhà. `viewer` chỉ chép mặt tiền
 ảnh sang trang khi có `--facades`, tức là sau khi `check` đã đạt.
 
-Trong `walk.html`, cột xanh đánh dấu điểm chụp; đứng gần rồi bấm `P` để nhìn ảnh 360° tại đúng
-chỗ đó.
+### Không gian ảnh thật
 
-Cầu Giấy (11/10/2026):
+Nguyên tắc: nơi có ảnh thật thì thế giới game phải là chính con phố trong ảnh, không phải khối
+hộp đoán ra từ bản đồ. `depth` ước lượng khoảng cách tới từng điểm ảnh của panorama bằng
+[Depth Anything V2](https://github.com/DepthAnything/Depth-Anything-V2) (bản Small; bản metric
+outdoor cho khoảng cách, bản relative để nhận bầu trời, vì bản metric đặt trời trắng đục chỉ cách
+vài mét). Mô hình chạy trên CPU, ~30 giây một ảnh; cài riêng bằng `requirements-depth.txt`.
+Thang đo được chỉnh sao cho mặt đường nằm dưới máy ảnh `CAMERA_HEIGHT_M`, và mặt đường gần đó
+được ép phẳng. Kết quả ghi vào `data/<name>/depth/<ảnh>.png`: centimet trong kênh R và G, loại
+điểm trong kênh B (bề mặt, trời, hay giá chụp).
+
+Trong `walk.html`, đi tới gần một cột xanh (điểm chụp) thì phố hộp nhường chỗ cho chính panorama
+đó dựng thành lưới 3D theo độ sâu: tường, cửa cuốn, dây điện, xe đỗ đúng khoảng cách đo từ ảnh.
+Nhân vật đi lại bên trong và va chạm với tường thật trong ảnh, không phải với footprint. Mép vật
+thể (mái nhà trên nền trời, xe trên nền đường) được đẩy ra làm nền phía sau thay vì kéo dãn. Ảnh
+chỉ đúng tuyệt đối khi nhìn từ chỗ đặt máy, nên camera giữ trong vòng 0,9 m quanh điểm chụp và
+quay theo nhân vật, giống camera cố định của các game nền dựng sẵn. Cách điểm chụp hơn ~6 m, phố
+hộp hiện dần trở lại; quá 10 m là hết. `#pano=<id>` trên URL đưa người chơi tới điểm chụp đó; `P`
+vẫn mở ảnh 360° phẳng tại chỗ.
+
+Cầu Giấy (11–12/10/2026):
+
+- Không gian ảnh thật: cả 107 ảnh cầu KartaView đều có độ sâu (~35 giây/ảnh trên CPU 4 nhân,
+  7 MB độ sâu cho trang web). Kiểm tra bằng mắt trong Chromium ở phố rộng và hai ngõ: mặt đường,
+  ô tô, ghế nhựa, cửa sắt, biển số nhà hiện đúng chỗ quanh nhân vật, nhân vật nhỏ dần khi đi sâu
+  vào ngõ, tường trong ảnh chặn được nhân vật. Còn lại: mảnh vỡ nhỏ ở mép vật thể gần máy ảnh,
+  và ảnh chỉ sắc nét như chính panorama (3072 px cho 360°).
 
 - KartaView: 344 ảnh, 107 ảnh cầu 360°, 72 chuỗi. Sau `pose`: 48 ảnh có hướng từ chuỗi, 31 từ la
   bàn, 23 từ bầu trời, 5 chưa chắc. `facades` cho 332 mặt tiền trên 297 tòa. `check` cho thấy

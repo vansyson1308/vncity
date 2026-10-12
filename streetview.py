@@ -481,6 +481,118 @@ def pose(a):
     print(f"snapped {len(moved)}/{len(out)}; median shift {np.median(moved) if moved else 0:.1f} m")
 
 
+DEPTH_MODEL = "depth-anything/Depth-Anything-V2-Metric-Outdoor-Small-hf"   # range
+SKY_MODEL = "depth-anything/Depth-Anything-V2-Small-hf"     # relative: puts the sky at zero disparity
+DEPTH_W, DEPTH_H = 1024, 512
+SKY_DEPTH_M = 400.0
+RIG_LAT_DEG = -45.0        # below this the panorama shows the capture rig (rider, bike, roof), not the street
+
+
+def encode_depth(rng, cls):
+    """Depth that survives a browser canvas: centimetres in R (high byte) and G (low byte),
+    class in B (0 = surface, 128 = sky, 255 = no data)."""
+    cm = np.clip(np.round(rng * 100), 1, 65535).astype(np.uint16)
+    return np.dstack([(cm >> 8).astype(np.uint8), (cm & 255).astype(np.uint8),
+                      np.select([cls == 1, cls == 2], [128, 255], 0).astype(np.uint8)])
+
+
+def decode_depth(rgb):
+    rgb = rgb.astype(np.int32)
+    return (rgb[..., 0] * 256 + rgb[..., 1]) / 100.0, np.select([rgb[..., 2] > 192, rgb[..., 2] > 64], [2, 1], 0)
+
+
+def pano_depth(pano, models):
+    """Metric range along each ray of an equirect panorama (DEPTH_H x DEPTH_W), and a sky mask.
+
+    Depth Anything V2 sees overlapping 100° perspective views (a ring at the horizon, rings at
+    ±50°); each output ray takes the log-range of the views it falls in, weighted to the one
+    that sees it most centrally. The metric model puts textureless sky a few metres away, so the
+    sky comes from the relative model instead, which gives it zero disparity."""
+    import torch
+
+    H, W, _ = pano.shape
+    lon = (np.arange(DEPTH_W) + 0.5) / DEPTH_W * 2 * np.pi - np.pi
+    lat = np.pi / 2 - (np.arange(DEPTH_H) + 0.5) / DEPTH_H * np.pi
+    LON, LAT = np.meshgrid(lon, lat)
+    rays = np.stack([np.cos(LAT) * np.sin(LON), np.sin(LAT), np.cos(LAT) * np.cos(LON)], -1)   # x right, y up, z ahead
+    acc, skyacc, wsum = np.zeros((DEPTH_H, DEPTH_W)), np.zeros((DEPTH_H, DEPTH_W)), np.zeros((DEPTH_H, DEPTH_W))
+    n, fov = 518, 100
+    f = n / 2 / np.tan(np.radians(fov / 2))
+    u, v = np.meshgrid(np.arange(n) - n / 2 + 0.5, np.arange(n) - n / 2 + 0.5)
+    cam_rays = np.stack([u, -v, np.full_like(u, f)], -1)
+    cam_rays /= np.linalg.norm(cam_rays, axis=-1, keepdims=True)
+    views = [(y, 0) for y in range(0, 360, 45)] + [(y, p) for p in (50, -50) for y in range(0, 360, 90)]
+    for yaw, pitch in views:
+        cp, sp = np.cos(np.radians(pitch)), np.sin(np.radians(pitch))
+        cy, sy = np.cos(np.radians(yaw)), np.sin(np.radians(yaw))
+        R = np.array([[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]]) @ np.array([[1, 0, 0], [0, cp, sp], [0, -sp, cp]])
+        w = cam_rays @ R.T
+        lo, la = np.arctan2(w[..., 0], w[..., 2]), np.arcsin(np.clip(w[..., 1], -1, 1))
+        view = pano[np.clip(((0.5 - la / np.pi) * (H - 1)).round().astype(int), 0, H - 1),
+                    (((lo / (2 * np.pi)) + 0.5) * (W - 1)).round().astype(int) % W]
+        out = []
+        for model, proc in models:
+            with torch.no_grad():
+                pd = model(**proc(images=Image.fromarray(view), return_tensors="pt")).predicted_depth
+            out.append(torch.nn.functional.interpolate(pd[None], size=(n, n), mode="bicubic")[0, 0].numpy())
+        z, disp = out
+        is_sky = (disp < 0.03 * max(np.percentile(disp, 95), 1e-6)).astype(float)
+        c = rays @ R                                    # output rays in this view's camera frame
+        cz = np.maximum(c[..., 2], 1e-3)
+        px, py = f * c[..., 0] / cz + n / 2 - 0.5, -f * c[..., 1] / cz + n / 2 - 0.5
+        ok = (c[..., 2] > 0.2) & (px >= 0) & (px <= n - 1) & (py >= 0) & (py <= n - 1)
+        iy, ix = np.clip(py.round().astype(int), 0, n - 1), np.clip(px.round().astype(int), 0, n - 1)
+        wt = np.where(ok, np.clip(c[..., 2], 0, 1) ** 8, 0)
+        acc += wt * np.log(np.maximum(z[iy, ix] / cz, 0.1))    # z-depth -> range along the ray
+        skyacc += wt * is_sky[iy, ix]
+        wsum += wt
+    wsum = np.maximum(wsum, 1e-9)
+    return np.exp(acc / wsum), skyacc / wsum > 0.5, rays, LAT
+
+
+def depth(a):
+    """Per-panorama depth: the real street as 3D, from the photo itself.
+
+    The model's metric scale is off for 360° crops, so range is rescaled until the ground in
+    front of the camera lies CAMERA_HEIGHT_M below it, and ground within 25 cm of that plane is
+    snapped onto it (the walker's feet stand on it in walk.html). Sky gets SKY_DEPTH_M; the
+    capture rig below RIG_LAT_DEG and KartaView's blue fill are marked as no data."""
+    from transformers import AutoImageProcessor, AutoModelForDepthEstimation
+    import torch
+
+    torch.set_num_threads(os.cpu_count() or 4)
+    src = pathlib.Path(a.data) / a.name
+    out = src / "depth"
+    out.mkdir(exist_ok=True)
+    tf = local_tf(json.loads((pathlib.Path(a.out) / a.name / "manifest.json").read_text()))
+    models = [(AutoModelForDepthEstimation.from_pretrained(m).eval(), AutoImageProcessor.from_pretrained(m))
+              for m in (DEPTH_MODEL, SKY_MODEL)]
+    todo = [p for p in load_panos(src, tf) if not (out / f"{p['id']}.png").exists()]
+    for i, p in enumerate(todo, 1):
+        pano = np.asarray(Image.open(p["file"]).convert("RGB").resize((4096, 2048)))
+        rng, sky, rays, LAT = pano_depth(pano, models)
+        img = np.asarray(Image.fromarray(pano).resize((DEPTH_W, DEPTH_H))).astype(float)
+        mx = img.max(-1)
+        up = LAT > np.radians(3)
+        rig = ~up & ((LAT < np.radians(RIG_LAT_DEG)) | (mx < 10) | ((img[..., 2] > img[..., 0] + 40) & (LAT < np.radians(-30))))
+        y = rays[..., 1] * rng
+        band = (LAT < np.radians(-20)) & (LAT > np.radians(RIG_LAT_DEG)) & ~rig
+        scale = float(np.clip(CAMERA_HEIGHT_M / max(-np.median(y[band]), 1e-3), 0.15, 1.5)) if band.any() else 1.0
+        rng = rng * scale
+        y = rays[..., 1] * rng
+        sky = (sky & up) | (up & (mx < 10))      # KartaView leaves the zenith black
+        to_ground = np.where(rays[..., 1] < -0.05, -CAMERA_HEIGHT_M / np.minimum(rays[..., 1], -0.05), np.inf)
+        ground = (rays[..., 1] < -0.05) & (np.abs(y + CAMERA_HEIGHT_M) < 0.25)
+        rng = np.where(ground, to_ground, rng)
+        rng = np.where(sky, SKY_DEPTH_M, rng)
+        cls = np.where(rig, 2, np.where(sky, 1, 0))
+        tmp = out / f"{p['id']}.part"         # renamed when complete: an interrupted run never leaves half a file
+        Image.fromarray(encode_depth(rng, cls)).save(tmp, format="PNG", optimize=True)
+        tmp.rename(out / f"{p['id']}.png")
+        print(f"{i}/{len(todo)} {p['id']}: scale {scale:.2f}, median range "
+              f"{np.median(rng[cls == 0]):.1f} m, sky {sky.mean():.0%}", flush=True)
+
+
 def sample_equirect(img, cam, heading, pts):
     """Colours seen from `cam` (x, y, z metres) looking at world points `pts` (N x 3).
 
@@ -689,10 +801,16 @@ def viewer(a):
         if not dst.exists():
             im = Image.open(p["file"]).convert("RGB")
             im.resize((a.width, a.width // 2), Image.LANCZOS).save(dst, quality=82, optimize=True)
-        index.append({"id": p["id"], "x": round(p["x"], 2), "y": round(p["y"], 2),
-                      "heading": p["heading"] if p["heading"] is not None else 0.0,
-                      "pose_quality": p["pose_quality"], "shot": p["shot"], "source": p["source"],
-                      "file": f"panos/{p['id']}.jpg"})
+        rec = {"id": p["id"], "x": round(p["x"], 2), "y": round(p["y"], 2),
+               "heading": p["heading"] if p["heading"] is not None else 0.0,
+               "pose_quality": p["pose_quality"], "shot": p["shot"], "source": p["source"],
+               "file": f"panos/{p['id']}.jpg"}
+        dep = src / "depth" / f"{p['id']}.png"
+        if dep.exists():     # half resolution is plenty for the browser mesh; keep exact codes (no filtering)
+            (site / "depth").mkdir(exist_ok=True)
+            Image.fromarray(np.asarray(Image.open(dep))[::2, ::2]).save(site / "depth" / dep.name, optimize=True)
+            rec["depth"] = f"depth/{dep.name}"
+        index.append(rec)
     (site / "panos.json").write_text(json.dumps({"source": credit({p["source"] for p in panos}),
                                                  "camera_height_m": CAMERA_HEIGHT_M,
                                                  "panos": index}))
@@ -707,8 +825,8 @@ def viewer(a):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("command", choices=["harvest", "mapillary", "download", "sequences", "pose", "facades",
-                                        "check", "viewer"])
+    ap.add_argument("command", choices=["harvest", "mapillary", "download", "sequences", "pose", "depth",
+                                        "facades", "check", "viewer"])
     ap.add_argument("--name", required=True)
     ap.add_argument("--data", default="data")
     ap.add_argument("--out", default="out")
@@ -719,7 +837,8 @@ def main():
     ap.add_argument("--facades", action="store_true", help="viewer: ship the photo facades too")
     ap.add_argument("--count", type=int, default=12, help="check: number of panoramas")
     a = ap.parse_args()
-    {"harvest": harvest, "mapillary": mapillary, "download": download, "sequences": sequences, "pose": pose,
+    {"harvest": harvest, "mapillary": mapillary, "download": download, "sequences": sequences,
+     "pose": pose, "depth": depth,
      "facades": facades, "check": check, "viewer": viewer}[a.command](a)
 
 

@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Dạo phố Cầu Giấy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,7 +97,9 @@ const MAIN_ROADS = new Set(["trunk", "primary", "secondary", "tertiary"]);
 const SHOP_ROADS = new Set(["trunk", "primary", "secondary", "tertiary", "residential", "unclassified", "service", "living_street"]);
 
 const $ = (id) => document.getElementById(id);
-const LITE = location.hash === "#lite";        // no shadows, 1x pixels: for weak GPUs and phones
+const HASH = new URLSearchParams(location.hash.slice(1));
+const LITE = HASH.has("lite");                  // no shadows, 1x pixels: for weak GPUs and phones
+
 const loadMsg = (t) => { $("load-msg").textContent = t; };
 
 // ---------- deterministic randomness per building ----------
@@ -639,6 +642,124 @@ $("photo-btn").addEventListener("click", togglePhoto);
 addEventListener("keydown", (e) => { if (e.code === "KeyP") togglePhoto(); if (e.code === "Escape") exitPhoto(); });
 let panosCamH = 1.8;
 
+// ---------- photo space: the real street rebuilt in 3D from one panorama ----------
+// Near a capture point the block world gives way to the panorama itself, lifted into 3D with
+// the depth `streetview.py depth` estimated from the photo: real walls, shopfronts, wires and
+// parked bikes at their measured distance. The walker moves inside it and collides with the
+// photo's walls. Inside PS_IN metres it is all photo; past PS_OUT the block world is back.
+const PS_IN = 5.5, PS_OUT = 10;
+const PS_CAM_R = 0.9;      // the camera keeps this close to where the photo was taken
+const PS_RIG_LAT = THREE.MathUtils.degToRad(-38);   // below: the capture rig (rider's hands, handlebar, car roof)
+const photoScene = new THREE.Scene();
+photoScene.add(new THREE.HemisphereLight(0xe8eef2, 0x6b6257, 1.5));
+const psSun = new THREE.DirectionalLight(0xfff0d8, 1.4);
+photoScene.add(psSun, psSun.target);
+const blob = new THREE.Mesh(new THREE.CircleGeometry(0.42, 24).rotateX(-Math.PI / 2),
+  new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false, fog: false }));
+photoScene.add(blob);
+let ps = null, psT = 0, psLoading = null;
+async function decodeDepth(url) {
+  // R*256+G = centimetres, B = class (0 surface, 128 sky, 255 no data): read the bytes untouched
+  const bmp = await createImageBitmap(await (await fetch(url)).blob(), { colorSpaceConversion: "none", premultiplyAlpha: "none" });
+  const c = document.createElement("canvas"); c.width = bmp.width; c.height = bmp.height;
+  const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(bmp, 0, 0);
+  const px = g.getImageData(0, 0, c.width, c.height).data;
+  const W = c.width, H = c.height, range = new Float32Array(W * H), cls = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) {
+    range[i] = (px[4 * i] * 256 + px[4 * i + 1]) / 100;
+    cls[i] = px[4 * i + 2] > 192 ? 2 : px[4 * i + 2] > 64 ? 1 : 0;
+  }
+  return { W, H, range, cls };
+}
+function photoMesh(p, d, tex) {
+  const GW = d.W, GH = d.H, h = THREE.MathUtils.degToRad(p.heading), ch = Math.cos(h), sh = Math.sin(h);
+  const pos = new Float32Array((GW + 1) * (GH + 1) * 3), uv = new Float32Array((GW + 1) * (GH + 1) * 2);
+  const r = new Float32Array((GW + 1) * (GH + 1)), k = new Uint8Array((GW + 1) * (GH + 1));
+  for (let j = 0; j <= GH; j++) for (let i = 0; i <= GW; i++) {
+    const v = j * (GW + 1) + i;
+    const col = Math.min(d.W - 1, Math.floor((i / GW) * d.W)) % d.W, row = Math.min(d.H - 1, Math.floor((j / GH) * d.H));
+    const lon = (i / GW) * 2 * Math.PI - Math.PI, lat = Math.PI / 2 - (j / GH) * Math.PI;
+    const rig = lat < PS_RIG_LAT;     // the capture rig fills the view below: lay the road ring above it on the ground
+    k[v] = rig ? 0 : d.cls[row * d.W + col];
+    r[v] = rig ? panosCamH / -Math.sin(lat) : k[v] === 1 ? 400 : d.range[row * d.W + col];
+    // camera frame: x right, y up, z along the capture heading -> data east/north
+    const x = Math.cos(lat) * Math.sin(lon) * r[v], y = Math.sin(lat) * r[v], z = Math.cos(lat) * Math.cos(lon) * r[v];
+    const E = x * ch + z * sh, N = -x * sh + z * ch;
+    pos.set([p.x + E, panosCamH + y, -(p.y + N)], 3 * v);
+    uv.set([i / GW, rig ? 0.5 + PS_RIG_LAT / Math.PI : 1 - j / GH], 2 * v);
+  }
+  const idx = [], xpos = [], xuv = [];
+  let nv = (GW + 1) * (GH + 1);
+  for (let j = 0; j < GH; j++) for (let i = 0; i < GW; i++) {
+    const q = [j * (GW + 1) + i, j * (GW + 1) + i + 1, (j + 1) * (GW + 1) + i, (j + 1) * (GW + 1) + i + 1];
+    if (q.some((v) => k[v] === 2)) continue;
+    const rs = q.map((v) => r[v]), lo = Math.min(...rs), hi = Math.max(...rs);
+    if (hi - lo <= 0.25 * lo) { idx.push(q[0], q[2], q[1], q[1], q[2], q[3]); continue; }
+    // A step in range between neighbouring rays is an object edge seen from the capture point
+    // (a roofline against the sky, a car against the road). Stretched across, it would smear the
+    // object onto what lies behind; dropped, it would leave a hole when seen from a step aside.
+    // Instead this quad gets its own copy pushed back to the far side, extending the background.
+    for (const v of q) {
+      const s = hi / r[v];
+      xpos.push(p.x + (pos[3 * v] - p.x) * s, panosCamH + (pos[3 * v + 1] - panosCamH) * s, -p.y + (pos[3 * v + 2] + p.y) * s);
+      xuv.push(uv[2 * v], uv[2 * v + 1]);
+    }
+    idx.push(nv, nv + 2, nv + 1, nv + 1, nv + 2, nv + 3); nv += 4;
+  }
+  const geo = new THREE.BufferGeometry();
+  const allPos = new Float32Array(pos.length + xpos.length); allPos.set(pos); allPos.set(xpos, pos.length);
+  const allUv = new Float32Array(uv.length + xuv.length); allUv.set(uv); allUv.set(xuv, uv.length);
+  geo.setAttribute("position", new THREE.BufferAttribute(allPos, 3));
+  geo.setAttribute("uv", new THREE.BufferAttribute(allUv, 2));
+  geo.setIndex(idx);
+  tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, fog: false, toneMapped: false, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
+  mesh.frustumCulled = false;
+  // what the mesh leaves open shows the photo's own mean horizon colour, not a white hole
+  const c = document.createElement("canvas"); c.width = 64; c.height = 32;
+  const g = c.getContext("2d"); g.drawImage(tex.image, 0, 0, 64, 32);
+  const band = g.getImageData(0, 15, 64, 2).data;
+  const rgb = [0, 1, 2].map((c3) => { let s = 0; for (let i = c3; i < band.length; i += 4) s += band[i]; return s / (band.length / 4) / 255; });
+  // free distance per heading bin: the nearest thing between knee and head height
+  const free = new Float32Array(d.W).fill(60);
+  for (let row = 0; row < d.H; row++) {
+    const lat = Math.PI / 2 - ((row + 0.5) / d.H) * Math.PI;
+    for (let col = 0; col < d.W; col++) {
+      const i = row * d.W + col; if (d.cls[i] !== 0 || lat < PS_RIG_LAT) continue;
+      const hgt = panosCamH + Math.sin(lat) * d.range[i], hor = Math.cos(lat) * d.range[i];
+      // within arm's reach of the camera is the capture rig itself (handlebar, rider), not the street
+      if (hgt > 0.4 && hgt < 2.2 && hor > 0.8 && hor < free[col]) free[col] = hor;
+    }
+  }
+  return { pano: p, mesh, free, W: d.W, clear: new THREE.Color().setRGB(...rgb, THREE.SRGBColorSpace) };
+}
+function photoFree(x, y) {
+  const p = ps.pano, E = x - p.x, N = y - p.y, rr = Math.hypot(E, N);
+  if (rr < 0.3) return true;
+  const rel = Math.atan2(E, N) - THREE.MathUtils.degToRad(p.heading);
+  const c0 = Math.floor((((rel / (2 * Math.PI)) + 0.5) % 1 + 1) % 1 * ps.W);
+  const span = Math.ceil((BODY_R / rr) / (2 * Math.PI) * ps.W);
+  for (let c = c0 - span; c <= c0 + span; c++) if (rr > ps.free[(c + ps.W) % ps.W] - BODY_R - 0.1) return false;
+  return true;
+}
+function canStand(x, y) {
+  // inside a photo space the photo's walls are the walls; the blocks may be missing or misplaced
+  if (ps && Math.hypot(x - ps.pano.x, y - ps.pano.y) < PS_OUT - 1) return photoFree(x, y);
+  return !blocked(x, y);
+}
+function updatePhotoSpace() {
+  let best = null, bd = PS_OUT;
+  for (const p of panos) if (p.depth) { const d = Math.hypot(p.x - player.x, p.y - player.y); if (d < bd) { bd = d; best = p; } }
+  const cur = ps ? Math.hypot(ps.pano.x - player.x, ps.pano.y - player.y) : Infinity;
+  if (!best || (ps && (best === ps.pano || cur < bd + 1.5)) || psLoading === best) return;
+  psLoading = best;
+  Promise.all([texLoader.loadAsync(best.file), decodeDepth(best.depth)]).then(([tex, d]) => {
+    if (psLoading !== best) { tex.dispose(); return; }
+    if (ps) { photoScene.remove(ps.mesh); ps.mesh.geometry.dispose(); ps.mesh.material.map.dispose(); ps.mesh.material.dispose(); }
+    ps = photoMesh(best, d, tex); photoScene.add(ps.mesh); psLoading = null;
+  }).catch(() => { psLoading = null; });
+}
+
 // ---------- main ----------
 let manifest, player = { x: 0, y: 0, h: 0, heading: 0 }, lastWhere = 0;
 async function main() {
@@ -697,10 +818,13 @@ async function main() {
   // Prefer starting where a real 360° photo was taken, facing the way it was shot, so the
   // real-photo view (P) is one key away.
   const trusted = panos.filter((q) => q.pose_quality !== "uncertain" && q.pose_quality !== "none" && !blocked(q.x, q.y));
-  if (trusted.length) {
-    const q = trusted.reduce((m, c) => (Math.hypot(c.x - tx, c.y - ty) < Math.hypot(m.x - tx, m.y - ty) ? c : m));
-    player.x = q.x; player.y = q.y;
+  const asked = panos.find((q) => String(q.id) === HASH.get("pano"));    // #pano=<id>: start at that capture
+  if (asked || trusted.length) {
+    const q = asked || trusted.reduce((m, c) => (Math.hypot(c.x - tx, c.y - ty) < Math.hypot(m.x - tx, m.y - ty) ? c : m));
     yaw = -THREE.MathUtils.degToRad(q.heading);   // camera view direction is (-sin yaw, cos yaw) in data axes
+    // with a photo space, stand a few steps ahead so the camera can sit where the photo was taken
+    const ahead = q.depth ? 2.6 : 0;
+    player.x = q.x - Math.sin(yaw) * ahead; player.y = q.y + Math.cos(yaw) * ahead;
   }
   player.heading = yaw;
 
@@ -708,18 +832,22 @@ async function main() {
   setHour(parseFloat($("hour").value));
   $("loading").hidden = true;
   addEventListener("resize", resize); resize();
+  renderer.autoClear = false;
+  updatePhotoSpace();
   let last = performance.now(), frames = 0, fpsT = last;
   renderer.setAnimationLoop((now) => {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (++frames && now - fpsT > 1000) { document.body.dataset.fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
     step(dt, now / 1000, tile, lat0, lon0);
-    renderer.render(scene, camera);
+    renderer.setClearColor(ps && psT >= 1 ? ps.clear : scene.fog.color); renderer.clear();
+    if (psT < 1 || photoMode) renderer.render(scene, camera);
+    if (psT > 0 && !photoMode) { renderer.clearDepth(); renderer.render(photoScene, camera); }
   });
 }
 
 function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
 
-let phase = 0;
+let phase = 0, viewFwd = [0, 1];
 function step(dt, t, tile, lat0, lon0) {
   if (photoMode) {
     const p = photoMode.pano;
@@ -737,19 +865,28 @@ function step(dt, t, tile, lat0, lon0) {
   const speed = (keys.has("ShiftLeft") || keys.has("ShiftRight") ? RUN_MS : WALK_MS) * mag;
   if (mag > 0.05) {
     // camera-relative direction in data coordinates (north = +y)
-    const fwd = [-Math.sin(yaw), Math.cos(yaw)], right = [Math.cos(yaw), Math.sin(yaw)];
+    const fwd = viewFwd, right = [viewFwd[1], -viewFwd[0]];
     let mx = fwd[0] * fz + right[0] * fx, my = fwd[1] * fz + right[1] * fx;
     const l = Math.hypot(mx, my); mx /= l; my /= l;
     const nx = player.x + mx * speed * dt, ny = player.y + my * speed * dt;
-    if (!blocked(nx, ny)) { player.x = nx; player.y = ny; }
-    else if (!blocked(nx, player.y)) player.x = nx;
-    else if (!blocked(player.x, ny)) player.y = ny;
+    if (canStand(nx, ny)) { player.x = nx; player.y = ny; }
+    else if (canStand(nx, player.y)) player.x = nx;
+    else if (canStand(player.x, ny)) player.y = ny;
     const target = Math.atan2(mx, my);
     let d = target - player.heading; d = Math.atan2(Math.sin(d), Math.cos(d));
     player.heading += d * Math.min(1, dt * 10);
     phase += dt * speed * 4.2;
   } else phase *= 0.9;
-  const gh = groundAt(player.x, player.y, tile);
+  // photo space: fade with distance from the capture point; its ground is the camera's ground
+  const dPs = ps ? Math.hypot(player.x - ps.pano.x, player.y - ps.pano.y) : Infinity;
+  psT = THREE.MathUtils.smoothstep(PS_OUT - dPs, 0, PS_OUT - PS_IN);
+  if (ps) {
+    ps.mesh.material.opacity = psT; ps.mesh.material.transparent = psT < 1; ps.mesh.visible = psT > 0;
+  }
+  const inPhoto = psT > 0.5;
+  if (inPhoto !== (walker.parent === photoScene)) (inPhoto ? photoScene : scene).add(walker);
+  blob.visible = inPhoto; blob.position.set(player.x, 0.01, -player.y);
+  const gh = inPhoto ? 0 : groundAt(player.x, player.y, tile);
   player.h += (gh - player.h) * Math.min(1, dt * 14);
   walker.position.set(player.x, player.h, -player.y);
   walker.rotation.y = player.heading + Math.PI;
@@ -762,23 +899,41 @@ function step(dt, t, tile, lat0, lon0) {
   let dd = dist;
   for (let s = 0.5; s <= dist; s += 0.5) {
     const cx = player.x + Math.sin(yaw) * Math.cos(pitch) * s, cy = player.y - Math.cos(yaw) * Math.cos(pitch) * s;
-    if (blocked(cx, cy)) { dd = Math.max(1.2, s - 0.5); break; }
+    if (!canStand(cx, cy)) { dd = Math.max(1.2, s - 0.5); break; }
   }
-  camera.position.set(head.x + Math.sin(yaw) * Math.cos(pitch) * dd, head.y + Math.sin(pitch) * dd, head.z + Math.cos(yaw) * Math.cos(pitch) * dd);
+  const cam = new THREE.Vector3(head.x + Math.sin(yaw) * Math.cos(pitch) * dd, head.y + Math.sin(pitch) * dd, head.z + Math.cos(yaw) * Math.cos(pitch) * dd);
+  if (ps && psT > 0) {
+    // Photo space: a photo is exact only from where it was taken. Seen from a step aside, the
+    // space behind every car and pillar opens up. So, like the fixed cameras of pre-rendered
+    // games, the camera keeps within PS_CAM_R of the capture point and turns to follow the
+    // walker, who moves inside the real street and is hidden by its real walls.
+    const C = new THREE.Vector3(ps.pano.x, panosCamH, -ps.pano.y);
+    const off = cam.clone().sub(C), hl = Math.hypot(off.x, off.z);
+    if (hl > PS_CAM_R) { off.x *= PS_CAM_R / hl; off.z *= PS_CAM_R / hl; }
+    off.y = THREE.MathUtils.clamp(off.y, -0.3, 0.5);
+    cam.lerp(C.add(off), psT);
+  }
+  camera.position.copy(cam);
   camera.lookAt(head);
+  const vf = Math.hypot(head.x - cam.x, head.z - cam.z);
+  if (vf > 0.3) viewFwd = [(head.x - cam.x) / vf, -(head.z - cam.z) / vf];   // walking follows what the camera sees
 
   sun.position.copy(walker.position).addScaledVector(sunDir, 160);
   sun.target.position.copy(walker.position);
+  psSun.position.copy(sun.position); psSun.target.position.copy(walker.position);
 
   if (t - lastWhere > 0.5) {
     lastWhere = t;
     cullChunks();
     nearPano = nearestPano();
+    updatePhotoSpace();
     $("photo-btn").disabled = !nearPano;
-    $("photo-info").textContent = nearPano ? `Điểm chụp thật cách ${nearPano.d.toFixed(0)} m (cột xanh)` : (panos.length ? `${panos.length} điểm chụp 360° quanh khu vực: tìm cột xanh` : "");
+    $("photo-info").textContent = inPhoto
+      ? `Không gian ảnh thật: dựng 3D từ ảnh ${ps.pano.source || "KartaView"} chụp ${ps.pano.shot.slice(0, 10)} (CC BY-SA 4.0), độ sâu ước lượng từ chính ảnh`
+      : nearPano ? `Điểm chụp thật cách ${nearPano.d.toFixed(0)} m (cột xanh): lại gần để bước vào phố thật` : (panos.length ? `${panos.length} điểm chụp 360° quanh khu vực: tìm cột xanh` : "");
     const lat = lat0 + player.y / 110574, lon = lon0 + player.x / (111320 * Math.cos(lat0 * Math.PI / 180));
-    const nb = nearestBuilding(player.x, player.y);
-    const label = nb ? `${nb.name ? `<b>${nb.name.replace(/[<>&]/g, "")}</b> · ` : ""}nhà cao ${nb.height.toFixed(0)} m (${{ observed: "đo trong dữ liệu", derived_floors: "từ số tầng", derived_raster: "từ raster 2.5D", estimated: "ước lượng" }[nb.source]})` : "giữa phố";
+    const nb = inPhoto ? null : nearestBuilding(player.x, player.y);    // the blocks say nothing inside a photo
+    const label = inPhoto ? "trong ảnh thật" : nb ? `${nb.name ? `<b>${nb.name.replace(/[<>&]/g, "")}</b> · ` : ""}nhà cao ${nb.height.toFixed(0)} m (${{ observed: "đo trong dữ liệu", derived_floors: "từ số tầng", derived_raster: "từ raster 2.5D", estimated: "ước lượng" }[nb.source]})` : "giữa phố";
     $("where").innerHTML = `<span class="mono">${lat.toFixed(5)}, ${lon.toFixed(5)}</span> · ${label} · <a href="https://www.openstreetmap.org/#map=19/${lat.toFixed(6)}/${lon.toFixed(6)}" target="_blank" rel="noopener">đối chiếu bản đồ</a>`;
   }
 }
