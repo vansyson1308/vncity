@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "events.schema.json",
+  "title": "City events",
+  "description": "Calendar and live events: festivals, weather events, real-world feeds.",
+  "x-collection": "events",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "events"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "trigger"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "trigger": {
+            "type": "object",
+            "properties": {
+              "lunar_date": {
+                "type": "string",
+                "pattern": "^\\d{1,2}-\\d{1,2}$",
+                "description": "Day-month of the lunar calendar, e.g. 1-1 for Tet."
+              },
+              "solar_date": {
+                "type": "string",
+                "pattern": "^\\d{1,2}-\\d{1,2}$",
+                "description": "Day-month, e.g. 2-9."
+              },
+              "weekday": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 6
+                }
+              },
+              "live_feed": {
+                "type": "string",
+                "description": "Live adapter id, e.g. weather.storm."
+              },
+              "hours": {
+                "$ref": "common.schema.json#/$defs/hour_range"
+              },
+              "duration_days": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "world_changes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          },
+          "missions": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

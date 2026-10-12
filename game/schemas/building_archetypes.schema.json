@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "building_archetypes.schema.json",
+  "title": "Building archetypes",
+  "description": "Hanoi building families used to dress extruded footprints with facade kits (PCG). The pipeline classifies every building into one of these.",
+  "x-collection": "building_archetypes",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "building_archetypes"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "era",
+          "floors",
+          "facade"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "era": {
+            "enum": [
+              "pre_1873",
+              "colonial_1873_1954",
+              "socialist_1954_1986",
+              "doi_moi_1986_2005",
+              "contemporary_2005_plus"
+            ]
+          },
+          "floors": {
+            "type": "object",
+            "required": [
+              "min",
+              "max"
+            ],
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "footprint_m2": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number",
+                "minimum": 0
+              },
+              "max": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          },
+          "frontage_m": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number",
+                "minimum": 0
+              },
+              "max": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          },
+          "facade": {
+            "type": "object",
+            "required": [
+              "kit"
+            ],
+            "properties": {
+              "kit": {
+                "type": "string",
+                "description": "Facade kit asset id in UE (e.g. /Game/Hanoi/Kits/NhaOng)."
+              },
+              "ground_floor": {
+                "enum": [
+                  "shopfront",
+                  "residential_gate",
+                  "garage",
+                  "lobby",
+                  "temple_gate",
+                  "market_stalls",
+                  "blank"
+                ]
+              },
+              "palette": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$"
+                }
+              },
+              "features": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "roof": {
+                "enum": [
+                  "flat_terrace",
+                  "tiled_pitched",
+                  "corrugated",
+                  "dome",
+                  "curved_temple",
+                  "mansard"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "classification_hints": {
+            "type": "object",
+            "description": "Rules used by pipeline/semantics.py.",
+            "properties": {
+              "overture_classes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "districts": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              },
+              "max_height_m": {
+                "type": "number"
+              },
+              "min_height_m": {
+                "type": "number"
+              },
+              "name_keywords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

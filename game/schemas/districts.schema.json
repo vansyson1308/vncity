@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "districts.schema.json",
+  "title": "Districts and neighbourhoods",
+  "description": "Gameplay zones with a recognisable identity. Geometry comes from the city pipeline (Overture divisions); this adds look, sound and population rules.",
+  "x-collection": "districts",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "districts"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "center",
+          "identity"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "center": {
+            "$ref": "common.schema.json#/$defs/geo"
+          },
+          "overture_division_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "identity": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "era_mix": {
+            "type": "object",
+            "description": "Share of building archetypes to bias procedural facades (archetype id -> weight).",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "density": {
+            "enum": [
+              "very_high",
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "ambient_audio": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "population_profile": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          },
+          "traffic_profile": {
+            "type": "object",
+            "properties": {
+              "motorbike_share": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "car_share": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "peak_hours": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/hour_range"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

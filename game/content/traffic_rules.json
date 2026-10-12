@@ -1,0 +1,155 @@
+{
+  "collection": "traffic_rules",
+  "items": [
+    {
+      "id": "vuot_den_do",
+      "tags": ["signal", "camera"],
+      "name": {"vi": "Vượt đèn đỏ (không chấp hành tín hiệu đèn)", "en": "Running a red light"},
+      "detection": {"trigger": "vehicle_crosses_stop_line_while_signal_red", "base_notice_chance": 0.7, "camera_enforced": true},
+      "fine_vnd": {"motorbike": 5000000, "car": 19000000},
+      "heat": 3,
+      "licence_points": 4,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, Điều 7 (xe máy 4-6 triệu) và Điều 6 (ô tô 18-20 triệu), trừ 4 điểm GPLX. Game dùng mức giữa khung."
+    },
+    {
+      "id": "khong_doi_mu_bao_hiem",
+      "tags": ["helmet", "most_common"],
+      "name": {"vi": "Không đội mũ bảo hiểm hoặc không cài quai đúng quy cách", "en": "No helmet or unbuckled helmet"},
+      "detection": {"trigger": "rider_or_passenger_without_buckled_certified_helmet", "base_notice_chance": 0.6, "camera_enforced": true},
+      "fine_vnd": {"motorbike": 500000},
+      "heat": 1,
+      "licence_points": 0,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, Điều 7 (người điều khiển và người ngồi sau, 400-600 nghìn). Mũ không đạt chuẩn có thể bị coi như không đội."
+    },
+    {
+      "id": "di_nguoc_chieu",
+      "tags": ["direction", "one_way", "fine_unverified"],
+      "name": {"vi": "Đi ngược chiều đường một chiều", "en": "Riding the wrong way on a one-way street"},
+      "detection": {"trigger": "travel_against_oneway_edge_more_than_15m", "base_notice_chance": 0.55, "camera_enforced": true},
+      "fine_vnd": {"motorbike": 5000000, "car": 19000000},
+      "heat": 3,
+      "licence_points": 4,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, Điều 6 và Điều 7 (mức theo hiểu biết hiện tại: xe máy 4-6 triệu, ô tô 18-20 triệu, trừ 4 điểm). Cần đối chiếu văn bản gốc."
+    },
+    {
+      "id": "di_vao_pho_di_bo_duong_cam",
+      "tags": ["sign", "walking_street", "fine_unverified"],
+      "name": {"vi": "Đi vào phố đi bộ, đường có biển cấm", "en": "Entering a pedestrian zone or no-entry street"},
+      "detection": {"trigger": "vehicle_enters_restricted_edge_during_active_hours", "base_notice_chance": 0.8, "camera_enforced": false},
+      "fine_vnd": {"motorbike": 1500000, "car": 5000000},
+      "heat": 2,
+      "licence_points": 0,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, nhóm hành vi không chấp hành biển báo cấm đi vào. Mức trong game là ước tính, cần kiểm tra."
+    },
+    {
+      "id": "dung_do_sai_quy_dinh",
+      "tags": ["parking", "fine_unverified"],
+      "name": {"vi": "Dừng, đỗ xe sai quy định", "en": "Illegal stopping or parking"},
+      "detection": {"trigger": "parked_over_60s_in_no_parking_zone_or_on_carriageway", "base_notice_chance": 0.35, "camera_enforced": true},
+      "fine_vnd": {"motorbike": 500000, "car": 900000},
+      "heat": 1,
+      "licence_points": 0,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, Điều 6 và Điều 7. Mức ước tính, cần kiểm tra. Xe có thể bị cẩu về bãi tạm giữ."
+    },
+    {
+      "id": "cho_qua_so_nguoi",
+      "tags": ["passengers", "fine_unverified"],
+      "name": {"vi": "Xe máy chở từ hai người trở lên (chở ba)", "en": "Carrying two or more passengers on a motorbike"},
+      "detection": {"trigger": "motorbike_occupants_gt_2_without_exemption", "base_notice_chance": 0.5, "camera_enforced": false},
+      "fine_vnd": {"motorbike": 500000},
+      "heat": 1,
+      "licence_points": 0,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, Điều 7 (khoảng 400-600 nghìn, trừ trường hợp chở người bệnh đi cấp cứu, trẻ em dưới 12 tuổi, người già yếu hoặc khuyết tật theo luật). Cần kiểm tra."
+    },
+    {
+      "id": "dung_dien_thoai_khi_lai",
+      "tags": ["distraction", "phone", "fine_unverified"],
+      "name": {"vi": "Dùng điện thoại khi đang lái xe", "en": "Using a phone while riding or driving"},
+      "detection": {"trigger": "phone_ui_open_while_speed_gt_5kmh", "base_notice_chance": 0.45, "camera_enforced": true},
+      "fine_vnd": {"motorbike": 900000, "car": 5000000},
+      "heat": 2,
+      "licence_points": 4,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, Điều 6 và Điều 7 (theo hiểu biết: xe máy 800 nghìn-1 triệu, ô tô 4-6 triệu). Gameplay: mở app nhận cuốc khi xe đang chạy sẽ kích hoạt lỗi này, phải tấp vào lề."
+    },
+    {
+      "id": "nong_do_con_muc_1",
+      "tags": ["alcohol", "checkpoint"],
+      "name": {"vi": "Có nồng độ cồn (mức 1: chưa vượt 0,25 mg/l khí thở)", "en": "Blood alcohol, level 1 (up to 0.25 mg/l breath)"},
+      "detection": {"trigger": "breath_test_at_checkpoint_bac_level_1", "base_notice_chance": 1.0, "camera_enforced": false},
+      "fine_vnd": {"motorbike": 2500000, "car": 7000000},
+      "heat": 3,
+      "licence_points": 4,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, Điều 6 và Điều 7: xe máy 2-3 triệu, ô tô 6-8 triệu, trừ 4 điểm. Việt Nam cấm tuyệt đối nồng độ cồn khi lái xe."
+    },
+    {
+      "id": "nong_do_con_muc_3",
+      "tags": ["alcohol", "checkpoint", "severe"],
+      "name": {"vi": "Nồng độ cồn mức 3 (vượt 0,4 mg/l khí thở)", "en": "Blood alcohol, level 3 (above 0.4 mg/l breath)"},
+      "detection": {"trigger": "breath_test_at_checkpoint_bac_level_3", "base_notice_chance": 1.0, "camera_enforced": false},
+      "fine_vnd": {"motorbike": 9000000, "car": 35000000},
+      "heat": 5,
+      "licence_points": 12,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP: xe máy 8-10 triệu, ô tô 30-40 triệu, tước GPLX 22-24 tháng (game quy thành trừ hết 12 điểm và tạm giữ xe)."
+    },
+    {
+      "id": "vuot_toc_do_10_20",
+      "tags": ["speed", "camera", "fine_unverified"],
+      "name": {"vi": "Chạy quá tốc độ quy định từ 10 đến 20 km/h", "en": "Speeding by 10-20 km/h"},
+      "detection": {"trigger": "speed_over_edge_limit_by_10_to_20", "base_notice_chance": 0.5, "camera_enforced": true},
+      "fine_vnd": {"motorbike": 900000, "car": 5000000},
+      "heat": 2,
+      "licence_points": 2,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, Điều 6 và Điều 7 (theo hiểu biết: xe máy 800 nghìn-1 triệu, ô tô 4-6 triệu). Cần kiểm tra số điểm trừ với xe máy."
+    },
+    {
+      "id": "di_sai_lan_vao_lan_o_to",
+      "tags": ["lane", "fine_unverified"],
+      "name": {"vi": "Đi không đúng làn (xe máy vào làn ô tô, làn buýt)", "en": "Wrong lane (motorbike in car or bus lane)"},
+      "detection": {"trigger": "motorbike_on_car_only_lane_more_than_50m", "base_notice_chance": 0.4, "camera_enforced": true},
+      "fine_vnd": {"motorbike": 700000, "car": 5000000},
+      "heat": 1,
+      "licence_points": 2,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, nhóm hành vi đi không đúng phần đường, làn đường. Mức ước tính, cần kiểm tra."
+    },
+    {
+      "id": "khong_co_giay_phep_lai_xe",
+      "tags": ["licence", "fine_unverified"],
+      "name": {"vi": "Điều khiển xe khi chưa có giấy phép lái xe", "en": "Driving without a licence"},
+      "detection": {"trigger": "document_check_without_valid_licence", "base_notice_chance": 1.0, "camera_enforced": false},
+      "fine_vnd": {"motorbike": 3000000, "car": 19000000},
+      "heat": 3,
+      "licence_points": 0,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP (theo hiểu biết: xe máy đến 125 cm³ khoảng 2-4 triệu, ô tô 18-20 triệu), kèm tạm giữ xe. Khôi gặp lỗi này nếu lái xe trước khi thi A1."
+    },
+    {
+      "id": "khong_mang_giay_to",
+      "tags": ["documents", "fine_unverified"],
+      "name": {"vi": "Không mang giấy phép lái xe, đăng ký xe", "en": "Not carrying licence or registration"},
+      "detection": {"trigger": "document_check_missing_items", "base_notice_chance": 1.0, "camera_enforced": false},
+      "fine_vnd": {"motorbike": 250000, "car": 350000},
+      "heat": 1,
+      "licence_points": 0,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP. Có thể xuất trình bản điện tử trên VNeID theo quy định hiện hành (cần kiểm tra)."
+    },
+    {
+      "id": "di_tren_via_he",
+      "tags": ["pavement", "fine_unverified"],
+      "name": {"vi": "Đi xe trên vỉa hè", "en": "Riding on the pavement"},
+      "detection": {"trigger": "vehicle_on_sidewalk_mesh_more_than_10m", "base_notice_chance": 0.4, "camera_enforced": false},
+      "fine_vnd": {"motorbike": 500000, "car": 5000000},
+      "heat": 1,
+      "licence_points": 0,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP, nhóm hành vi điều khiển xe trên hè phố. Mức ước tính, cần kiểm tra."
+    },
+    {
+      "id": "bam_coi_ban_dem",
+      "tags": ["noise", "night", "fine_unverified"],
+      "name": {"vi": "Bấm còi trong khu dân cư từ 22 giờ đến 5 giờ", "en": "Using the horn in residential areas 10 p.m. - 5 a.m."},
+      "detection": {"trigger": "horn_used_in_residential_zone_between_22_and_5", "base_notice_chance": 0.25, "camera_enforced": false},
+      "fine_vnd": {"motorbike": 500000, "car": 900000},
+      "heat": 1,
+      "licence_points": 0,
+      "legal_basis": "Nghị định 168/2024/NĐ-CP (nhóm hành vi sử dụng còi sai quy định). Mức ước tính, cần kiểm tra."
+    }
+  ]
+}

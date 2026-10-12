@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "landmarks.schema.json",
+  "title": "Landmarks",
+  "description": "Hero locations modelled by hand (or photogrammetry) instead of procedurally. Must be instantly recognisable.",
+  "x-collection": "landmarks",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "landmarks"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "location",
+          "kind",
+          "modelling"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "location": {
+            "$ref": "common.schema.json#/$defs/geo"
+          },
+          "district": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "kind": {
+            "enum": [
+              "lake",
+              "temple",
+              "pagoda",
+              "church",
+              "bridge",
+              "colonial_building",
+              "monument",
+              "market",
+              "street",
+              "station",
+              "museum",
+              "park",
+              "gate",
+              "modern_tower",
+              "theatre",
+              "other"
+            ]
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "built_year": {
+            "type": "integer"
+          },
+          "overture_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Overture building/place ids replaced by the hero asset."
+          },
+          "modelling": {
+            "type": "object",
+            "required": [
+              "method",
+              "priority"
+            ],
+            "properties": {
+              "method": {
+                "enum": [
+                  "hand_modelled",
+                  "photogrammetry",
+                  "gaussian_splat_reference",
+                  "procedural_plus_kit"
+                ]
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+              },
+              "reference_sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "opening_hours": {
+            "$ref": "common.schema.json#/$defs/hour_range"
+          },
+          "activities": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

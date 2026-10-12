@@ -19,12 +19,29 @@ import urllib.request
 
 import duckdb
 
-RELEASE = "2026-09-23.0"
-OVERTURE = f"s3://overturemaps-us-west-2/release/{RELEASE}"
+# Pinned for reproducible builds; override with OVERTURE_RELEASE (see live/update_city.py).
+RELEASE = os.environ.get("OVERTURE_RELEASE", "2026-09-23.0")
+OVERTURE_ROOT = "s3://overturemaps-us-west-2/release"
 DEM_URL = (
     "https://copernicus-dem-30m.s3.amazonaws.com/"
     "Copernicus_DSM_COG_10_{lat}_00_{lon}_00_DEM/Copernicus_DSM_COG_10_{lat}_00_{lon}_00_DEM.tif"
 )
+
+
+def load_extensions(con, *names):
+    """INSTALL/LOAD extensions; fall back to the PyPI packaged builds (duckdb-extension-<name>)
+    when extensions.duckdb.org is unreachable. Signature checks stay on either way."""
+    for name in names:
+        try:
+            con.sql(f"INSTALL {name}; LOAD {name};")
+        except duckdb.Error:
+            import glob
+            import importlib.util
+            spec = importlib.util.find_spec(f"duckdb_extension_{name}")
+            if spec is None:
+                raise
+            path = glob.glob(f"{spec.submodule_search_locations[0]}/extensions/*/{name}.duckdb_extension")[0]
+            con.sql(f"INSTALL '{path}'; LOAD {name};")
 
 
 def connect():
@@ -32,7 +49,7 @@ def connect():
     for k in ("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"):
         os.environ.pop(k, None)
     con = duckdb.connect()
-    con.sql("INSTALL httpfs; LOAD httpfs; INSTALL spatial; LOAD spatial;")
+    load_extensions(con, "httpfs", "spatial")
     con.sql(
         "SET s3_region='us-west-2'; SET s3_access_key_id=''; "
         "SET s3_secret_access_key=''; SET s3_session_token='';"
@@ -40,8 +57,9 @@ def connect():
     return con
 
 
-def overture(theme, kind):
-    return f"read_parquet('{OVERTURE}/theme={theme}/type={kind}/*', hive_partitioning=1)"
+def overture(theme, kind, release=None):
+    return (f"read_parquet('{OVERTURE_ROOT}/{release or RELEASE}/theme={theme}/type={kind}/*', "
+            "hive_partitioning=1)")
 
 
 def bbox_filter(w, s, e, n):

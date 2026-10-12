@@ -1,0 +1,940 @@
+{
+  "collection": "dialogues",
+  "items": [
+    {
+      "id": "dlg_s01_la_dong",
+      "context": "5 giờ sáng, đầu ngõ Hàng Chiếu. Bà Tâm hết lá dong gói xôi.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ba_tam_xoi",
+          "text": {
+            "vi": "Cháu ơi! Bà hết lá dong rồi, thằng cháu bà ốm không đi lấy được. Ra chợ Long Biên hàng lá của bà Nhung lấy hộ bà hai bó, trước sáu giờ nhé, không thì khách đi làm qua mất.",
+            "en": "Dear! I've run out of dong leaves and my grandson's sick. Go to Mrs Nhung's leaf stall at Long Biên market and fetch me two bundles before six, or the commuters will have gone by."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Dạ, bà gửi tiền hay cháu ứng trước ạ?",
+            "en": "Sure, do you give me the money or shall I pay first?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ba_tam_xoi",
+          "text": {
+            "vi": "Ứng trước đi, về bà trả, bà cho thêm gói xôi xéo nhiều hành phi.",
+            "en": "Pay first, I'll settle up, and you get a xôi xéo with extra fried shallots."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s01_xong",
+      "context": "Bà Tâm nhận lá dong.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ba_tam_xoi",
+          "text": {
+            "vi": "Giỏi! Sáu giờ kém năm. Đây tiền lá, tiền xe, gói xôi. Mà này, bà nghe nói cô Kim Long hôm qua lại vào nhà ông Tư Hàng Bạc đấy. Bà nói thế thôi.",
+            "en": "Good lad! Five to six. Here's for the leaves, the ride, and your xôi. By the way, I hear the Kim Long girl went into old Tư's house on Hàng Bạc yesterday. Just saying."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s02_co_tuong",
+      "context": "Ghế đá Lê Thái Tổ, 15 giờ. Làng cờ bờ hồ.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_bao_co_tuong",
+          "text": {
+            "vi": "Chàng trai muốn thử à? Ngồi xuống. Ở đây có ba luật: không cá cược, không cãi nhau, không nghe lão Thắng mách nước.",
+            "en": "Fancy a go, young man? Sit. Three rules here: no betting, no arguing, no listening to old Thắng's advice."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bác Thắng xích lô ạ? Cháu biết bác ấy.",
+            "en": "Mr Thắng the cyclo driver? I know him."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_bao_co_tuong",
+          "text": {
+            "vi": "Thắng được hai ông kia thì mới đến lượt tôi. Tôi chấp anh một xe.",
+            "en": "Beat those two first, then it's my turn. I'll spot you a chariot."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s02_thang",
+      "context": "Khôi thắng cụ Bảo.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_bao_co_tuong",
+          "text": {
+            "vi": "...Pháo đầu, mã nhảy, xe chiếu. Hừm. Hừm. Anh học ai?",
+            "en": "...Central cannon, horse leap, chariot check. Hmm. Hmm. Who taught you?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bố cháu dạy. Hồi cháu năm tuổi, trên cái chiếu ở gác Hàng Chiếu.",
+            "en": "My father. When I was five, on a mat in the Hàng Chiếu attic."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_bao_co_tuong",
+          "text": {
+            "vi": "Ông Khải! Hèn gì nước pháo lừa giống thế. Ông ấy thua tôi hai trăm ván, thắng một ván, khoe cả năm. Đây, trà. Tôi thua thì tôi mời.",
+            "en": "Khải! No wonder that cannon trick looked familiar. He lost two hundred games to me, won one and bragged for a year. Here, tea. Loser pays."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s03_mark_qua_duong",
+      "context": "Ngã tư Đinh Tiên Hoàng - Hàng Gai. Mark không dám sang đường.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:mark",
+          "text": {
+            "vi": "Khôi, mate, I've been standing on this corner for twenty minutes. There are no gaps. The gaps are a myth.",
+            "en": "Khôi, mate, I've been standing on this corner for twenty minutes. There are no gaps. The gaps are a myth."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Có quy tắc đấy. Đi chậm, đều, không chạy, không lùi lại. Nhìn vào người lái. Họ sẽ đi vòng qua anh như nước chảy qua đá.",
+            "en": "There is a rule. Walk slowly and steadily, don't run, don't step back. Look at the riders. They'll flow around you like water round a rock."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:mark",
+          "text": {
+            "vi": "In English please.",
+            "en": "In English please."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Walk slowly. Don't stop. Don't run. Be a rock in a river.",
+            "en": "Walk slowly. Don't stop. Don't run. Be a rock in a river."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:mark",
+          "text": {
+            "vi": "Be a rock. Be a rock. Okay. If I die, tell my mum the pho was worth it.",
+            "en": "Be a rock. Be a rock. Okay. If I die, tell my mum the pho was worth it."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s03_duong_tau",
+      "tags": [
+        "safety"
+      ],
+      "context": "Đầu ngõ phố đường tàu. Khôi giữ Mark ở khoảng cách an toàn.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:mark",
+          "text": {
+            "vi": "And now the train street! I saw it on Instagram, people having coffee while the train passes like, this close!",
+            "en": "And now the train street! I saw it on Instagram, people having coffee while the train passes like, this close!"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Đường ray là chỗ nguy hiểm, chính quyền đã nhiều lần hạn chế cà phê đường tàu vì an toàn. Ta đứng ở đầu ngõ, chỗ có người gác, chụp bằng ống tele.",
+            "en": "The tracks are dangerous; the authorities have repeatedly restricted train-street cafés for safety. We stay at the end of the lane where the flagman is and use a telephoto."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:mark",
+          "text": {
+            "vi": "You're no fun.",
+            "en": "You're no fun."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Anh từng chụp hiện trường tai nạn tàu. Tin anh đi, thế này là vui nhất rồi.",
+            "en": "I've photographed a train accident. Trust me, this is the most fun version."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:amb_tieu_thuong_cho",
+          "text": {
+            "vi": "Tàu sắp qua đấy, các anh lùi vào trong vạch đi! Lùi nữa!",
+            "en": "Train's coming, step back behind the line! Further!"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s04_khong_gps",
+      "context": "Góc Ô Quan Chưởng. Chú Cường chặn Minh.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:chu_cuong",
+          "text": {
+            "vi": "Này này, thằng áo xanh. Mày chạy app hay vào đây giành khách của bọn tao?",
+            "en": "Oi, green jacket. You an app rider or here to poach our customers?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Cháu chở khách đến rồi đi chú ạ, cháu không đứng đón.",
+            "en": "I drop off and leave, uncle. I don't wait for pickups here."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:chu_cuong",
+          "text": {
+            "vi": "Bọn app chúng mày tắt điện thoại là mù đường. Thách mày: năm địa chỉ trong phố cổ, không bản đồ, không hỏi đường, hai mươi phút. Làm được thì góc này mày muốn đỗ lúc nào thì đỗ.",
+            "en": "You app lot go blind when the phone's off. I dare you: five Old Quarter addresses, no map, no asking, twenty minutes. Pull it off and you can park on this corner whenever you like."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Thế cháu không làm được thì sao ạ?",
+            "en": "And if I can't?"
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:chu_cuong",
+          "text": {
+            "vi": "Thì mày mời cả hội trà đá một tuần, và gọi tao là đại ca.",
+            "en": "Then you buy the whole crew iced tea for a week and call me boss."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Chú đọc địa chỉ đi.",
+            "en": "Read me the addresses."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s04_xong",
+      "context": "Minh hoàn thành thử thách của chú Cường.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:chu_cuong",
+          "text": {
+            "vi": "Mười tám phút. Cả đường tắt qua ngõ Tạm Thương mày cũng biết. Ai dạy mày?",
+            "en": "Eighteen minutes. You even know the Tạm Thương shortcut. Who taught you?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Cháu giao phở cho Phở Thọ ạ. Ông Thọ bảo: 'Đi phố cổ phải đi bằng mũi.'",
+            "en": "I deliver for Phở Thọ. Old Thọ says: 'You navigate the Old Quarter by nose.'"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:chu_cuong",
+          "text": {
+            "vi": "Lão Thọ. Hừ. Được. Góc này của mày. Nhưng mày mà đón khách của bọn tao thì...",
+            "en": "Old Thọ. Hmph. Fine. The corner's yours. But if you poach our customers..."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Thì cháu mời trà đá ạ.",
+            "en": "Then I buy the iced tea."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:chu_cuong",
+          "text": {
+            "vi": "(phì cười) Thằng ranh.",
+            "en": "(snorting with laughter) Cheeky brat."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s05_anh_cuoi",
+      "context": "Chân cầu Long Biên, 5 giờ sáng. Cặp đôi mất thợ ảnh.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_co_dau_chu_re",
+          "text": {
+            "vi": "Anh ơi, thợ ảnh của bọn em ốm đột xuất, mà hôm nay là ngày duy nhất bọn em xin nghỉ được. Anh chụp giúp được không ạ? Cầu Long Biên, lúc mặt trời mọc.",
+            "en": "Excuse me, our photographer got sick and today's the only day we could both get off work. Could you shoot for us? Long Biên bridge at sunrise."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Anh chụp tin tức, chụp lũ lụt. Chưa chụp đám cưới bao giờ.",
+            "en": "I shoot news and floods. Never a wedding."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:amb_co_dau_chu_re",
+          "text": {
+            "vi": "Thì lũ lụt với đám cưới cũng giống nhau mà anh, đều là ngày ai cũng khóc.",
+            "en": "Floods and weddings are the same, really: everyone cries."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(cười) Được. Một điều kiện: tàu qua thì tất cả đứng sát lan can, không ai đứng trên đường ray.",
+            "en": "(laughing) Deal. One condition: when a train comes, everyone stands by the railing; nobody on the tracks."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s05_xong",
+      "context": "Sau buổi chụp ảnh cưới.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_co_dau_chu_re",
+          "text": {
+            "vi": "Trời ơi anh ơi, tấm này đẹp quá. Mặt trời ngay sau lưng bọn em, có cả bà gánh chuối đi qua!",
+            "en": "Oh wow, this one's gorgeous. The sun right behind us, and a lady with a banana yoke walking past!"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bố anh chụp ảnh cưới bốn mươi năm. Hôm nay anh mới hiểu vì sao ông không chán.",
+            "en": "My father shot weddings for forty years. Today I understand why he never got bored."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s06_dieu",
+      "context": "Bãi giữa sông Hồng, chiều. Ông Thắng mang diều sáo tự làm.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_thang",
+          "text": {
+            "vi": "Diều sáo này tớ tự vót tre, căng giấy dó. Sáo làm bằng ống nứa, gió lên là kêu u u như trâu gọi bạn.",
+            "en": "I whittled the bamboo for this flute kite myself and stretched dó paper over it. The flutes are reed tubes; when the wind rises they hum like buffalo calling."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Ngày xưa ở quê cháu thả diều ngoài đê, lên Hà Nội cứ tưởng không còn chỗ thả.",
+            "en": "Back home I flew kites on the dyke. I thought Hanoi had nowhere left for it."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_thang",
+          "text": {
+            "vi": "Bãi giữa đấy. Gió sông lộng. Hai luật: tránh xa dây điện, và nhường bọn trẻ con chỗ đẹp.",
+            "en": "That's what the sandbank's for. Big river wind. Two rules: stay away from power lines, and give the kids the best spot."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:amb_hoc_sinh",
+          "text": {
+            "vi": "Chú ơi diều cháu mắc vào cây chuối rồi! Chú gỡ giúp cháu với!",
+            "en": "Mister, my kite's stuck in the banana tree! Can you help?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s06_xong",
+      "context": "Diều bay cao.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_thang",
+          "text": {
+            "vi": "Nghe không? U... u... Gió hôm nay cấp ba, hướng đông nam. Đúng gió thả diều.",
+            "en": "Hear that? Hummm... Force three, south-easterly today. Proper kite wind."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Lần đầu từ khi lên Hà Nội, cháu không nghĩ đến tiền trong mười phút liền.",
+            "en": "First time since I came to Hanoi I haven't thought about money for ten whole minutes."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s07_xe_chet_may",
+      "context": "Tiệm sửa xe Đức Còi, sáng hôm sau trận mưa ngập.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Minh! Sau trận mưa hôm qua cả ngõ mang xe đến. Mười một cái chết máy, ba cái ngậm nước vào máy. Mày ở lại phụ tao đến tối.",
+            "en": "Minh! After yesterday's rain the whole alley brought their bikes. Eleven dead, three with water in the engine. Stay and help me till tonight."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Anh trả em bao nhiêu?",
+            "en": "How much are you paying?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Ba mươi nghìn một xe, xe nào khách khen thì thêm. Học là chính.",
+            "en": "Thirty thousand a bike, extra if the customer's happy. The learning's the real pay."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s07_xong",
+      "context": "Cuối ngày ở tiệm sửa xe.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Mười một cái. Mày nghe tiếng máy bắt đầu đúng rồi đấy.",
+            "en": "Eleven. You're starting to hear engines properly."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Anh, em hỏi thật, anh định về quê thật ạ?",
+            "en": "Can I ask, are you really moving back to the countryside?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Tao bán tiệm. Một trăm hai mươi triệu, cả đồ nghề, cả khách quen. Người khác trả cao hơn, nhưng tao muốn bán cho người biết sửa xe chứ không phải người chỉ biết bán xe. Mày gom đủ tiền thì bảo tao.",
+            "en": "I'm selling the shop. A hundred and twenty million, tools and regulars included. Others offered more, but I want someone who fixes bikes, not someone who only sells them. When you've got the money, tell me."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Một trăm hai mươi triệu... Anh cho em thời gian.",
+            "en": "A hundred and twenty million... Give me time."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Nhãn nhà tao còn chưa ra hoa. Không vội.",
+            "en": "My longan trees haven't even flowered yet. No rush."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s08_tem_phieu",
+      "tags": [
+        "history",
+        "subsidy_era"
+      ],
+      "context": "Phở Thọ, buổi chiều. Cụ Thọ nhắc đến sổ tem phiếu.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Lan. Trên nóc tủ có quyển sổ mua hàng thời bao cấp. Tem gạo, tem thịt, tem vải. Mất mấy tờ, chắc bà đem cho bà con lúc đói.",
+            "en": "Lan. On top of the wardrobe there's the old ration book. Rice, meat, cloth coupons. A few are missing; your grandma probably gave them to relatives in the hungry years."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Tem phiếu ạ? Bảo tàng đang sưu tầm làm triển lãm đấy ông.",
+            "en": "Ration coupons? The museum is collecting them for an exhibition."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Thì tìm cho đủ. Mấy bà đồng nát, mấy hàng sách cũ Đinh Lễ hay có. Thời ấy một lạng thịt phải xếp hàng từ bốn giờ sáng. Ông nấu phở bằng xương, vì thịt không có.",
+            "en": "Then complete it. The scrap ladies and the old book stalls on Đinh Lễ often have them. Back then you queued from four a.m. for a few ounces of meat. I made pho from bones because there was no meat."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Phở không có thịt hả ông?",
+            "en": "Pho without meat, Grandpa?"
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Phở không người lái. Thời ấy gọi thế đấy.",
+            "en": "'Pilotless pho.' That's what we called it."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s08_xong",
+      "context": "Lan tìm đủ tem phiếu.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Đủ năm tờ rồi ông ơi. Có cả tem dầu hỏa năm tám tư.",
+            "en": "All five, Grandpa. Even a 1984 kerosene coupon."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Năm tám tư. Con Hạnh lên ba. Ngồi xếp hàng với bố, ngủ gục trên cái rổ. (lặng đi) Đem cho bảo tàng đi. Để bọn trẻ biết.",
+            "en": "Eighty-four. Hạnh was three. She queued with me and fell asleep on the basket. (falls silent) Give them to the museum. Let the young ones know."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s09_bien_hieu",
+      "context": "Linh gọi Khôi gấp: dãy nhà Hàng Thiếc sắp thay mặt tiền.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:linh_bao_ton",
+          "text": {
+            "vi": "Anh Khôi! SOS! Mấy nhà Hàng Thiếc sáng mai ốp lại mặt tiền nhôm kính. Sáu cái biển kẻ tay từ những năm tám mươi sẽ mất. Anh chụp giúp em trước khi họ tháo được không?",
+            "en": "Khôi! SOS! Some Hàng Thiếc houses are getting aluminium-and-glass façades tomorrow morning. Six hand-painted signs from the eighties will vanish. Can you shoot them before they come down?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Chủ nhà có biết không?",
+            "en": "Do the owners know?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:linh_bao_ton",
+          "text": {
+            "vi": "Họ biết. Nhà họ, họ có quyền sửa. Em chỉ muốn giữ lại hình ảnh. Bảo tồn không phải là bắt mọi người sống trong bảo tàng.",
+            "en": "They know. Their houses, their right to renovate. I just want to keep the images. Conservation isn't forcing people to live in a museum."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Em nói giống bố anh.",
+            "en": "You sound like my father."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s09_xong",
+      "context": "Một chủ nhà Hàng Thiếc thấy Khôi chụp biển.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_tieu_thuong_cho",
+          "text": {
+            "vi": "Anh chụp cái biển 'Gò hàn - Đúc đồng' nhà tôi à? Bố tôi kẻ biển này năm tám sáu đấy. Tháo ra tôi cất trên gác, chứ ai nỡ vứt.",
+            "en": "You're photographing my 'Metalwork - Bronze casting' sign? My father painted it in eighty-six. When it comes down I'll keep it in the attic; who could throw it away?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bác cho cháu chụp cả bác đứng cạnh biển nhé.",
+            "en": "May I photograph you standing beside it?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s10_ho_tay",
+      "context": "Phòng trọ. Tuấn đã đăng ký giải đua xe đạp cho cả hai.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Minh, tao đăng ký cho hai đứa giải đua xe đạp vòng Hồ Tây của câu lạc bộ rồi. Năm giờ sáng Chủ nhật. Giải nhất một triệu.",
+            "en": "Minh, I've signed us both up for the club's West Lake cycling race. Five a.m. Sunday. First prize, a million."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Mày nặng chín mươi hai cân, đạp nổi mười bảy cây số à?",
+            "en": "You weigh ninety-two kilos. Can you even pedal seventeen kilometres?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Tao không đạp để thắng, tao đạp để có content. 'Shipper béo chinh phục Hồ Tây'. Mày đạp để thắng, chia tao năm trăm.",
+            "en": "I'm not riding to win, I'm riding for content. 'Chubby courier conquers West Lake.' You ride to win and give me five hundred."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Mượn xe đạp đua ở đâu ra?",
+            "en": "And where do we get road bikes?"
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Chị Vân homestay cho mượn, với điều kiện đạp đúng luật, không leo vỉa hè.",
+            "en": "Vân at the homestay will lend us hers, as long as we ride by the rules and stay off the pavement."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s10_xong",
+      "context": "Vạch đích đường Thanh Niên, 5:50 sáng.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "(thở dốc) Mày... về... thứ mấy?",
+            "en": "(gasping) Where... did you... finish?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Thứ hai. Một ông Hàn Quốc bảy mươi tuổi về nhất.",
+            "en": "Second. A seventy-year-old Korean man won."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Tao về... bét... nhưng video được ba nghìn lượt xem. Kỷ lục.",
+            "en": "I came... last... but the video got three thousand views. A record."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s11_ba_lac",
+      "tags": [
+        "kindness"
+      ],
+      "context": "Đêm Trung thu, phố Hàng Mã đông nghẹt. Một cụ bà lạc đường.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_ba_tap_the_duc",
+          "text": {
+            "vi": "Cháu ơi... đây là đâu? Bà đi mua đèn cho thằng cháu, mà sao phố nào cũng đỏ thế này...",
+            "en": "Dear... where am I? I came to buy a lantern for my grandson, but every street is so red..."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Bà ơi, đây là Hàng Mã ạ. Nhà bà ở đâu, cháu đưa bà về.",
+            "en": "Granny, this is Hàng Mã. Where do you live? I'll take you home."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:amb_ba_tap_the_duc",
+          "text": {
+            "vi": "Nhà bà... có cây bàng to. Gần cửa hàng mậu dịch. Bà ở tầng ba, nhà B... B gì nhỉ.",
+            "en": "My house... there's a big tropical almond tree. Near the state store. Third floor, block B... B what was it."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Chọn cách tìm manh mối)",
+            "en": "(Choose how to find clues)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Hỏi tên: 'Bà tên gì ạ? Con cháu bà tên gì?'",
+                "en": "Ask: 'What's your name? Your children's names?'"
+              },
+              "goto": "l05"
+            },
+            {
+              "text": {
+                "vi": "Xin phép xem trong túi bà có giấy tờ gì không",
+                "en": "Ask permission to check her bag for papers"
+              },
+              "goto": "l06"
+            }
+          ]
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:amb_ba_tap_the_duc",
+          "text": {
+            "vi": "Bà là Liên. Thằng con bà tên Quang, nó làm ở bệnh viện Bạch Mai.",
+            "en": "I'm Liên. My son's Quang, he works at Bạch Mai hospital."
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:amb_ba_tap_the_duc",
+          "text": {
+            "vi": "Đây, cháu xem. Bà có cái thẻ hưu...",
+            "en": "Here, have a look. I've got my pension card..."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Cửa hàng mậu dịch, nhà B, cây bàng... Tập thể Kim Liên! Bà ngồi vững nhé, cháu đi chậm thôi. Bà đội mũ vào cho cháu.",
+            "en": "State store, block B, almond tree... Kim Liên housing! Hold on tight, I'll go slowly. Put this helmet on for me."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s11_xong",
+      "context": "Chân cầu thang nhà B, tập thể Kim Liên.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Anh ơi, anh có phải anh Quang không ạ? Cháu gặp bà ở Hàng Mã...",
+            "en": "Excuse me, are you Quang? I found your mother on Hàng Mã..."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:amb_dan_van_phong",
+          "text": {
+            "vi": "Mẹ! Trời ơi mẹ đi đâu, cả nhà tìm từ chiều, báo cả công an phường rồi! Em ơi, cảm ơn em, em cho anh xin số, anh gửi em...",
+            "en": "Mum! Where did you go, we've searched since the afternoon, we told the ward police! Thank you so much, give me your number, let me send you something..."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Chọn)",
+            "en": "(Choose)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "'Thôi anh ạ, em không lấy tiền đâu.'",
+                "en": "'No need, I won't take money.'"
+              },
+              "goto": "l04",
+              "effect": {
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 15
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "'Anh cho em xin tiền xe thôi ạ.'",
+                "en": "'Just the fare, if that's okay.'"
+              },
+              "goto": "l05",
+              "effect": {
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 5
+                },
+                "money_vnd": 60000
+              }
+            }
+          ]
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:amb_ba_tap_the_duc",
+          "text": {
+            "vi": "Thằng bé tốt quá. Cầm cái đèn ông sao này về cho em cháu.",
+            "en": "What a good boy. Take this star lantern for your little brother."
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:amb_dan_van_phong",
+          "text": {
+            "vi": "Tất nhiên rồi em, cầm lấy cả cái đèn này nữa, coi như anh cảm ơn.",
+            "en": "Of course, and take this lantern too, as thanks."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(một mình, nhìn đèn ông sao) Thằng em mình ở quê... năm nay lại không về được Trung thu.",
+            "en": "(alone, looking at the lantern) My little brother back home... another Mid-Autumn I can't be there."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s12_mu_bao_hiem",
+      "context": "Thượng úy Hải gặp Minh sau ba tháng không vi phạm.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:thuong_uy_hai",
+          "text": {
+            "vi": "Anh Minh. Ba tháng nay hồ sơ của anh không có lỗi nào. Tôi hơi bất ngờ.",
+            "en": "Mr Minh. Three months without a single offence. I'm a little surprised."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Em tu rồi anh ạ. Năm triệu một lần vượt đèn, em đau lắm.",
+            "en": "I've reformed. Five million for one red light, that hurt."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:thuong_uy_hai",
+          "text": {
+            "vi": "Đội tôi tặng mũ bảo hiểm cho học sinh một trường tiểu học ở Hoàn Kiếm. Cần người chở hai trăm mũ ra cổng trường trước giờ tan học, và hướng dẫn các cháu cài quai. Không có lương, có giấy khen.",
+            "en": "My team is giving helmets to pupils at a primary school in Hoàn Kiếm. We need someone to bring two hundred helmets to the gate before school's out and show the kids how to buckle them. No pay, but a certificate."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Giấy khen em treo cạnh biên bản phạt cho cân ạ.",
+            "en": "I'll hang it next to my ticket, to balance things out."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s12_xong",
+      "context": "Cổng trường tiểu học, giờ tan học.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_hoc_sinh",
+          "text": {
+            "vi": "Chú ơi, mũ cháu màu hồng có tai mèo! Chú cài cho cháu đi, phải nghe 'tách' mới được à chú?",
+            "en": "Mister, my helmet is pink with cat ears! Buckle it for me; does it have to go 'click'?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Phải nghe 'tách' cháu ạ. Không tách là không an toàn. Chú cũng mới học đấy.",
+            "en": "It has to go 'click'. No click, not safe. I only just learned that too."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:thuong_uy_hai",
+          "text": {
+            "vi": "Cảm ơn anh. Lần sau gặp ở chốt, hy vọng chỉ để chào nhau.",
+            "en": "Thank you. Next time we meet at a checkpoint, let's hope it's just to say hello."
+          }
+        }
+      ]
+    }
+  ]
+}

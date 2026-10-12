@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "characters.schema.json",
+  "title": "Characters",
+  "description": "Protagonists, story characters and ambient archetypes.",
+  "x-collection": "characters",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "characters"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "role",
+          "bio"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "role": {
+            "enum": [
+              "protagonist",
+              "story",
+              "contact",
+              "vendor",
+              "ambient_archetype"
+            ]
+          },
+          "age": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 110
+          },
+          "gender": {
+            "enum": [
+              "female",
+              "male",
+              "nonbinary",
+              "unspecified"
+            ]
+          },
+          "bio": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "home": {
+            "$ref": "common.schema.json#/$defs/geo"
+          },
+          "district": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "occupation": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "personality": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "voice": {
+            "type": "object",
+            "properties": {
+              "accent": {
+                "enum": [
+                  "hanoi",
+                  "northern_rural",
+                  "central",
+                  "southern",
+                  "foreign"
+                ]
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "appearance": {
+            "type": "object",
+            "properties": {
+              "outfit": {
+                "type": "string"
+              },
+              "metahuman_preset": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "schedule": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "hours",
+                "activity"
+              ],
+              "properties": {
+                "hours": {
+                  "$ref": "common.schema.json#/$defs/hour_range"
+                },
+                "activity": {
+                  "type": "string"
+                },
+                "location": {
+                  "$ref": "common.schema.json#/$defs/geo"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "skills": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "with",
+                "kind"
+              ],
+              "properties": {
+                "with": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

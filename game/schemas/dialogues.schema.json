@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dialogues.schema.json",
+  "title": "Dialogues",
+  "description": "Dialogue trees and barks. Lines carry speaker refs so voice casting can be generated.",
+  "x-collection": "dialogues",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "dialogues"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "lines"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "context": {
+            "type": "string"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "speaker",
+                "text"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "speaker": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                },
+                "text": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "emotion": {
+                  "type": "string"
+                },
+                "choices": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "text",
+                      "goto"
+                    ],
+                    "properties": {
+                      "text": {
+                        "$ref": "common.schema.json#/$defs/text"
+                      },
+                      "goto": {
+                        "$ref": "common.schema.json#/$defs/id"
+                      },
+                      "effect": {
+                        "$ref": "common.schema.json#/$defs/reward"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "goto": {
+                  "$ref": "common.schema.json#/$defs/id"
+                }
+              },
+              "additionalProperties": false
+            },
+            "minItems": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

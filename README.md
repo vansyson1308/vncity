@@ -1,4 +1,49 @@
-# vncity: bản sao số thành phố Việt Nam cho Unreal Engine 5
+# Hanoi City
+
+Một thế giới mở kiểu GTA5 đặt ở Hà Nội, không bạo lực: nhìn là nhận ra Hà Nội, dựng từ dữ liệu
+thật và cập nhật theo dữ liệu thật. Repo này chứa **mọi thứ trước khi cắm vào Unreal Engine 5**:
+pipeline dựng thành phố, dữ liệu thiết kế game, và harness để nạp tất cả vào UE 5.8.
+
+| Thư mục | Nội dung |
+| --- | --- |
+| `fetch.py`, `build.py` | Lấy dữ liệu mở (Overture Maps, Copernicus DEM) và dựng khối 3D theo ô |
+| `pipeline/` | Lớp ngữ nghĩa: 13 kiểu nhà Hà Nội, mặt tiền hướng phố, đồ thị giao thông, đạo cụ đường phố cho PCG |
+| `live/` | Thời tiết thật (hoặc khí hậu nướng sẵn), cập nhật bản đồ khi Overture ra bản mới |
+| `game/schemas`, `game/content` | Thiết kế game dạng dữ liệu: quận, công trình, nhân vật, xe, việc làm, nhiệm vụ, hội thoại, sự kiện, luật giao thông |
+| `ue5/` | Project UE 5.8, plugin `HanoiCity` (C++), script import Python |
+| `tools/` | Kiểm tra nội dung, sinh USTRUCT từ schema, xuất bản xem trước web |
+| `docs/` | Nghiên cứu, kiến trúc, giấy phép dữ liệu, hướng dẫn tích hợp UE5, lộ trình, tài liệu thiết kế game |
+
+Đọc trước: [docs/02-kien-truc.md](docs/02-kien-truc.md), rồi [docs/06-lo-trinh.md](docs/06-lo-trinh.md).
+
+## Chạy nhanh
+
+```bash
+python -m venv venv && ./venv/bin/pip install -r requirements.txt -r requirements-dev.txt
+
+# Cả pipeline cho phố cổ + hồ Gươm (~5 phút, phần lớn là tải dữ liệu)
+./venv/bin/python -m pipeline.run --name hoankiem --bbox 105.840,21.020,105.860,21.042
+
+./venv/bin/python tools/validate.py      # nội dung game khớp schema, tham chiếu đúng
+./venv/bin/python -m pytest -q           # kiểm thử
+./venv/bin/python -m live.weather        # thời tiết Hà Nội ngay lúc này
+```
+
+Kết quả trên khung Hoàn Kiếm (Overture 2026-09-23.0): 17.688 tòa nhà được phân loại theo 13 kiểu
+nhà Hà Nội, 2.285 nút / 111 km đường xe chạy được (98,9% liên thông, 134 nút có đèn tín hiệu),
+khoảng 63.000 đạo cụ đường phố (biển hiệu theo cửa hàng thật, xe máy đỗ, ghế nhựa, hàng rong, cây,
+cột điện và bó dây). Xem trước 3D: `tools/export_web_demo.py` + `viewer/city.html`.
+
+![Phố cổ và hồ Gươm, bản xem trước 3D](docs/img/preview_3d_day.png)
+
+![Lớp ngữ nghĩa phố cổ: kiểu nhà, mặt tiền, đạo cụ](docs/img/semantic_old_quarter.png)
+
+Nếu máy không tải được extension DuckDB từ extensions.duckdb.org, cài bản đóng gói trên PyPI:
+`pip install duckdb==1.5.5 duckdb-extension-httpfs duckdb-extension-spatial` (vẫn kiểm tra chữ ký).
+
+---
+
+## Pipeline khối thành phố (fetch.py, build.py)
 
 Pipeline dựng khung thành phố tỷ lệ 1:1 từ dữ liệu mở (không dùng dữ liệu Google Earth).
 
@@ -60,8 +105,9 @@ Theo thứ tự ưu tiên:
 2. `derived_floors`: `num_floors × 3,3 m`.
 3. `derived_raster`: trung vị raster chiều cao trong footprint (`--heights-tif`, ví dụ Google
    Open Buildings 2.5D Temporal xuất từ Earth Engine, đơn vị mét).
-4. `estimated`: luật theo diện tích footprint (nhà ống < 150 m² → 4 tầng…). Phải thay trước
-   khi phát hành.
+4. `estimated_archetype`: số tầng điển hình của kiểu nhà Hà Nội mà `pipeline/semantics.py` gán
+   cho tòa nhà (ví dụ nhà ống phố cổ 2-4 tầng, khu tập thể 4-5 tầng).
+5. `estimated`: luật theo diện tích footprint, chỉ dùng khi chưa chạy `pipeline.semantics`.
 
 ## Giấy phép
 
