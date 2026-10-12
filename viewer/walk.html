@@ -511,6 +511,39 @@ function makeWalker() {
 const walker = makeWalker();
 scene.add(walker);
 
+// The walker is a real-looking person once models/walker.glb.txt arrives: Microsoft Rocketbox
+// avatar Male_Adult_09 with motion-captured idle / walk / run (MIT, see assets/ROCKETBOX_LICENSE.md;
+// converted by tools/character). Until then, and if it fails, the block figure stands in.
+let person = null;
+async function loadPerson() {
+  const gltf = await loader.parseAsync(await fetchGlb("models/walker.glb.txt"), "");
+  const body = gltf.scene;
+  body.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false; } });
+  // run on the spot: the root keeps its vertical bob, its drift across the ground is removed
+  const root = body.getObjectByName("Bip01"), rest = root.position.toArray();
+  const up = rest.map(Math.abs).indexOf(Math.max(...rest.map(Math.abs)));
+  for (const clip of gltf.animations) for (const t of clip.tracks) {
+    if (t.name !== "Bip01.position") continue;
+    for (let i = 0; i < t.values.length; i += 3) for (let a = 0; a < 3; a++) if (a !== up) t.values[i + a] = rest[a];
+  }
+  const mixer = new THREE.AnimationMixer(body), actions = {};
+  for (const clip of gltf.animations) { actions[clip.name] = mixer.clipAction(clip); actions[clip.name].play(); actions[clip.name].setEffectiveWeight(0); }
+  for (const c of walker.children) c.visible = false;
+  walker.add(body);
+  person = { mixer, actions, speed: 0 };
+}
+function animatePerson(dt, speed) {
+  // blend idle -> walk -> run by the speed actually covered, and pace each gait to it
+  person.speed += (speed - person.speed) * Math.min(1, dt * 8);
+  const s = person.speed, run = THREE.MathUtils.clamp((s - WALK_MS) / (RUN_MS - WALK_MS), 0, 1);
+  const walk = Math.min(1, s / WALK_MS) * (1 - run);
+  const { idle, walk: w, run: r } = person.actions;
+  idle.setEffectiveWeight(1 - Math.min(1, s / WALK_MS)); w.setEffectiveWeight(walk); r.setEffectiveWeight(run);
+  w.timeScale = THREE.MathUtils.clamp(s / 1.35, 0.6, 1.6);    // the captured walk covers ~1.35 m/s
+  r.timeScale = THREE.MathUtils.clamp(s / 3.9, 0.7, 1.3);     // the captured run ~3.9 m/s
+  person.mixer.update(dt);
+}
+
 // ---------- collision ----------
 function inside(poly, x, y) {
   let c = false;
@@ -651,8 +684,9 @@ const PS_IN = 5.5, PS_OUT = 10;
 const PS_CAM_R = 0.9;      // the camera keeps this close to where the photo was taken
 const PS_RIG_LAT = THREE.MathUtils.degToRad(-38);   // below: the capture rig (rider's hands, handlebar, car roof)
 const photoScene = new THREE.Scene();
-photoScene.add(new THREE.HemisphereLight(0xe8eef2, 0x6b6257, 1.5));
-const psSun = new THREE.DirectionalLight(0xfff0d8, 1.4);
+const pmrem = new THREE.PMREMGenerator(renderer);
+photoScene.add(new THREE.HemisphereLight(0xe8eef2, 0x6b6257, 0.5));
+const psSun = new THREE.DirectionalLight(0xfff0d8, 0.6);
 photoScene.add(psSun, psSun.target);
 const blob = new THREE.Mesh(new THREE.CircleGeometry(0.42, 24).rotateX(-Math.PI / 2),
   new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false, fog: false }));
@@ -680,7 +714,8 @@ function photoMesh(p, d, tex) {
     const col = Math.min(d.W - 1, Math.floor((i / GW) * d.W)) % d.W, row = Math.min(d.H - 1, Math.floor((j / GH) * d.H));
     const lon = (i / GW) * 2 * Math.PI - Math.PI, lat = Math.PI / 2 - (j / GH) * Math.PI;
     const rig = lat < PS_RIG_LAT;     // the capture rig fills the view below: lay the road ring above it on the ground
-    k[v] = rig ? 0 : d.cls[row * d.W + col];
+    // "no data" above the rig line is mostly just very dark pixels (a shop interior, a shadow): keep them
+    k[v] = rig || d.cls[row * d.W + col] === 2 ? 0 : d.cls[row * d.W + col];
     r[v] = rig ? panosCamH / -Math.sin(lat) : k[v] === 1 ? 400 : d.range[row * d.W + col];
     // camera frame: x right, y up, z along the capture heading -> data east/north
     const x = Math.cos(lat) * Math.sin(lon) * r[v], y = Math.sin(lat) * r[v], z = Math.cos(lat) * Math.cos(lon) * r[v];
@@ -692,7 +727,6 @@ function photoMesh(p, d, tex) {
   let nv = (GW + 1) * (GH + 1);
   for (let j = 0; j < GH; j++) for (let i = 0; i < GW; i++) {
     const q = [j * (GW + 1) + i, j * (GW + 1) + i + 1, (j + 1) * (GW + 1) + i, (j + 1) * (GW + 1) + i + 1];
-    if (q.some((v) => k[v] === 2)) continue;
     const rs = q.map((v) => r[v]), lo = Math.min(...rs), hi = Math.max(...rs);
     if (hi - lo <= 0.25 * lo) { idx.push(q[0], q[2], q[1], q[1], q[2], q[3]); continue; }
     // A step in range between neighbouring rays is an object edge seen from the capture point
@@ -748,15 +782,22 @@ function canStand(x, y) {
   return !blocked(x, y);
 }
 function updatePhotoSpace() {
+  if (montage) { if (ps?.pano !== montage.pano && psLoading !== montage.pano) loadPhotoSpace(montage.pano); return; }
   let best = null, bd = PS_OUT;
   for (const p of panos) if (p.depth) { const d = Math.hypot(p.x - player.x, p.y - player.y); if (d < bd) { bd = d; best = p; } }
   const cur = ps ? Math.hypot(ps.pano.x - player.x, ps.pano.y - player.y) : Infinity;
   if (!best || (ps && (best === ps.pano || cur < bd + 1.5)) || psLoading === best) return;
+  loadPhotoSpace(best);
+}
+function loadPhotoSpace(best) {
   psLoading = best;
   Promise.all([texLoader.loadAsync(best.file), decodeDepth(best.depth)]).then(([tex, d]) => {
     if (psLoading !== best) { tex.dispose(); return; }
     if (ps) { photoScene.remove(ps.mesh); ps.mesh.geometry.dispose(); ps.mesh.material.map.dispose(); ps.mesh.material.dispose(); }
     ps = photoMesh(best, d, tex); photoScene.add(ps.mesh); psLoading = null;
+    // the person is lit by the very street they stand in: the panorama as image-based light
+    photoScene.environment?.dispose();
+    photoScene.environment = pmrem.fromEquirectangular(tex).texture;
   }).catch(() => { psLoading = null; });
 }
 
@@ -827,6 +868,9 @@ async function main() {
     player.x = q.x - Math.sin(yaw) * ahead; player.y = q.y + Math.cos(yaw) * ahead;
   }
   player.heading = yaw;
+  const tourJson = HASH.has("tour") || HASH.has("record") ? await optional("tour.json") : null;
+  if (tourJson?.scenes) startMontage(tourJson);
+  else if (tourJson) startTour(tourJson);
 
   cullChunks();
   setHour(parseFloat($("hour").value));
@@ -834,20 +878,139 @@ async function main() {
   addEventListener("resize", resize); resize();
   renderer.autoClear = false;
   updatePhotoSpace();
+  const personReady = loadPerson().catch((e) => console.warn("walker model:", e.message));
+  const draw = () => {
+    renderer.setClearColor(ps && psT >= 1 ? ps.clear : scene.fog.color); renderer.clear();
+    if (psT < 1 || photoMode) renderer.render(scene, camera);
+    if (psT > 0 && !photoMode) { renderer.clearDepth(); renderer.render(photoScene, camera); }
+  };
+  if (HASH.has("record")) {
+    // Recording: the caller asks for each frame, simulation time advances by exactly dt, and a
+    // photo space that is still loading is waited for, so the video never shows a half state.
+    let simT = 0;
+    window.vncity = {
+      async frame(dt) {
+        await personReady;
+        while (psLoading) await new Promise((r) => setTimeout(r, 50));
+        simT += dt; step(dt, simT, tile, lat0, lon0);
+        if (psLoading) {                       // a new street arrived mid-step: lay the frame out again
+          while (psLoading) await new Promise((r) => setTimeout(r, 50));
+          step(0, simT, tile, lat0, lon0);
+        }
+        draw();
+        return renderer.domElement.toDataURL("image/jpeg", 0.92);
+      },
+      get done() { return montage ? montage.done : !tour || tour.done; },
+      get progress() { return montage ? (montage.k + 1) / montage.scenes.length : tour ? tour.s / tour.cum[tour.cum.length - 1] : 1; },
+      get scene() { return montage && { k: montage.k, id: String(montage.pano.id), shot: montage.pano.shot, source: montage.pano.source }; },
+    };
+    return;
+  }
   let last = performance.now(), frames = 0, fpsT = last;
   renderer.setAnimationLoop((now) => {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (++frames && now - fpsT > 1000) { document.body.dataset.fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
     step(dt, now / 1000, tile, lat0, lon0);
-    renderer.setClearColor(ps && psT >= 1 ? ps.clear : scene.fog.color); renderer.clear();
-    if (psT < 1 || photoMode) renderer.render(scene, camera);
-    if (psT > 0 && !photoMode) { renderer.clearDepth(); renderer.render(photoScene, camera); }
+    draw();
   });
 }
 
 function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
 
-let phase = 0, viewFwd = [0, 1];
+let phase = 0, viewFwd = [0, 1], moved = 0;
+
+// ---------- tour: #tour runs the route `streetview.py tour` wrote, #record steps it frame by frame ----------
+const TOUR_MS = 3.9;     // an easy run
+let tour = null;
+function startTour(t) {
+  const path = t.path, cum = [0];
+  for (let i = 1; i < path.length; i++) cum.push(cum[i - 1] + Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]));
+  tour = { path, cum, s: 0, done: false, stops: t.stops };
+  [player.x, player.y] = path[0];
+  const [dx, dy] = [path[1][0] - path[0][0], path[1][1] - path[0][1]];
+  player.heading = Math.atan2(dx, dy); yaw = Math.atan2(-dx, dy);
+}
+// A montage (tour.json "scenes") is a run through one capture after another, cut like a film:
+// in each the camera stands exactly where the photo was taken, so every pixel of the street is
+// the photo itself, and the person runs away down the street or comes running up to the lens,
+// stopping short of whatever the photo shows in the way.
+let montage = null;
+function startMontage(t) {
+  montage = { scenes: t.scenes, k: -1, done: false };
+  nextScene();
+}
+function nextScene() {
+  const m = montage;
+  m.k++;
+  if (m.k >= m.scenes.length) {
+    m.done = true; m.k = m.scenes.length - 1;
+    if (!HASH.has("record")) montage = null;          // the film is over: the keys are yours again
+    return;
+  }
+  const sc = m.scenes[m.k];
+  m.pano = panos.find((q) => String(q.id) === String(sc.pano));
+  m.toward = sc.dir === "toward"; m.path = null; m.s = 0; m.rest = 0;
+  [player.x, player.y] = [m.pano.x, m.pano.y];
+  if (person) person.speed = 0;
+  updatePhotoSpace();
+}
+function scenePath() {
+  // the longest free run along the street the photo looks down (or the opposite way)
+  const m = montage, p = m.pano, h = THREE.MathUtils.degToRad(p.heading);
+  let best = null;
+  for (const sgn of [1, -1]) {
+    const dir = [Math.sin(h) * sgn, Math.cos(h) * sgn];
+    let r = 1.2;
+    while (r < 12 && photoFree(p.x + dir[0] * r, p.y + dir[1] * r)) r += 0.25;
+    if (!best || r > best.r + 1) best = { dir, r };
+  }
+  const at = (r) => [p.x + best.dir[0] * r, p.y + best.dir[1] * r], far = Math.max(3, best.r - 0.8);
+  m.path = m.toward ? [at(far), at(2.2)] : [at(1.4), at(far)];
+  m.len = Math.hypot(m.path[1][0] - m.path[0][0], m.path[1][1] - m.path[0][1]);
+  [player.x, player.y] = m.path[0];
+  player.heading = Math.atan2(m.path[1][0] - m.path[0][0], m.path[1][1] - m.path[0][1]);
+}
+function montageStep(dt) {
+  const m = montage;
+  moved = 0;
+  if (m.done || !ps || ps.pano !== m.pano) return;                 // the next street is still loading
+  if (!m.path) scenePath();
+  const left = m.len - m.s;
+  if (left > 0.01) {
+    const speed = TOUR_MS * Math.min(1, 0.35 + m.s / 3) * Math.min(1, 0.25 + left / 3);   // start off, ease to a stop
+    const step = Math.min(left, speed * dt);
+    m.s += step; moved = step / Math.max(dt, 1e-3);
+    const f = m.s / m.len;
+    player.x = m.path[0][0] + (m.path[1][0] - m.path[0][0]) * f;
+    player.y = m.path[0][1] + (m.path[1][1] - m.path[0][1]) * f;
+    phase += dt * moved * 4.2;
+  } else if ((m.rest += dt) > 1.1) nextScene();
+}
+function tourAt(s) {
+  const { path, cum } = tour;
+  let i = 1; while (i < cum.length - 1 && cum[i] < s) i++;
+  const f = Math.min(1, Math.max(0, (s - cum[i - 1]) / Math.max(cum[i] - cum[i - 1], 1e-6)));
+  return [path[i - 1][0] + (path[i][0] - path[i - 1][0]) * f, path[i - 1][1] + (path[i][1] - path[i - 1][1]) * f];
+}
+function tourStep(dt) {
+  // the route lies on road centrelines and through each capture point: no collision needed
+  const total = tour.cum[tour.cum.length - 1];
+  const speed = tour.s < total ? TOUR_MS * Math.min(1, 0.4 + tour.s / 6) : 0;   // ease into the run
+  tour.s = Math.min(total, tour.s + speed * dt);
+  tour.done = tour.s >= total;
+  if (tour.done && !HASH.has("record")) { tour = null; moved = 0; return; }   // the run is over: the keys are yours again
+  const [x, y] = tourAt(tour.s), [ax, ay] = tourAt(Math.min(total, tour.s + 2.5));
+  moved = Math.hypot(x - player.x, y - player.y) / Math.max(dt, 1e-3);
+  phase += dt * moved * 4.2;
+  player.x = x; player.y = y;
+  if (Math.hypot(ax - x, ay - y) > 0.2) {
+    const target = Math.atan2(ax - x, ay - y);
+    let d = target - player.heading; d = Math.atan2(Math.sin(d), Math.cos(d));
+    player.heading += d * Math.min(1, dt * 6);
+    let dy2 = Math.atan2(-(ax - x), ay - y) - yaw; dy2 = Math.atan2(Math.sin(dy2), Math.cos(dy2));
+    yaw += dy2 * Math.min(1, dt * 2);                       // the camera swings round behind, unhurried
+  }
+}
 function step(dt, t, tile, lat0, lon0) {
   if (photoMode) {
     const p = photoMode.pano;
@@ -856,6 +1019,9 @@ function step(dt, t, tile, lat0, lon0) {
     return;
   }
   let fx = 0, fz = 0;
+  if (montage) montageStep(dt);
+  else if (tour) tourStep(dt);
+  else {
   if (keys.has("KeyW") || keys.has("ArrowUp")) fz += 1;
   if (keys.has("KeyS") || keys.has("ArrowDown")) fz -= 1;
   if (keys.has("KeyA") || keys.has("ArrowLeft")) fx -= 1;
@@ -868,7 +1034,7 @@ function step(dt, t, tile, lat0, lon0) {
     const fwd = viewFwd, right = [viewFwd[1], -viewFwd[0]];
     let mx = fwd[0] * fz + right[0] * fx, my = fwd[1] * fz + right[1] * fx;
     const l = Math.hypot(mx, my); mx /= l; my /= l;
-    const nx = player.x + mx * speed * dt, ny = player.y + my * speed * dt;
+    const nx = player.x + mx * speed * dt, ny = player.y + my * speed * dt, ox = player.x, oy = player.y;
     if (canStand(nx, ny)) { player.x = nx; player.y = ny; }
     else if (canStand(nx, player.y)) player.x = nx;
     else if (canStand(player.x, ny)) player.y = ny;
@@ -876,10 +1042,12 @@ function step(dt, t, tile, lat0, lon0) {
     let d = target - player.heading; d = Math.atan2(Math.sin(d), Math.cos(d));
     player.heading += d * Math.min(1, dt * 10);
     phase += dt * speed * 4.2;
-  } else phase *= 0.9;
+    moved = Math.hypot(player.x - ox, player.y - oy) / Math.max(dt, 1e-3);
+  } else { phase *= 0.9; moved = 0; }
+  }
   // photo space: fade with distance from the capture point; its ground is the camera's ground
   const dPs = ps ? Math.hypot(player.x - ps.pano.x, player.y - ps.pano.y) : Infinity;
-  psT = THREE.MathUtils.smoothstep(PS_OUT - dPs, 0, PS_OUT - PS_IN);
+  psT = montage ? (ps?.pano === montage.pano ? 1 : 0) : THREE.MathUtils.smoothstep(PS_OUT - dPs, 0, PS_OUT - PS_IN);
   if (ps) {
     ps.mesh.material.opacity = psT; ps.mesh.material.transparent = psT < 1; ps.mesh.visible = psT > 0;
   }
@@ -890,7 +1058,8 @@ function step(dt, t, tile, lat0, lon0) {
   player.h += (gh - player.h) * Math.min(1, dt * 14);
   walker.position.set(player.x, player.h, -player.y);
   walker.rotation.y = player.heading + Math.PI;
-  const swing = Math.sin(phase) * Math.min(0.7, speed / 3);
+  if (person) animatePerson(dt, moved);
+  const swing = Math.sin(phase) * Math.min(0.7, moved / 3);
   walker.userData.legs[0].rotation.x = swing; walker.userData.legs[1].rotation.x = -swing;
   walker.userData.arms[0].rotation.x = -swing * 0.8; walker.userData.arms[1].rotation.x = swing * 0.8;
 
@@ -913,6 +1082,7 @@ function step(dt, t, tile, lat0, lon0) {
     off.y = THREE.MathUtils.clamp(off.y, -0.3, 0.5);
     cam.lerp(C.add(off), psT);
   }
+  if (montage && psT === 1) cam.set(ps.pano.x, panosCamH, -ps.pano.y);   // the lens of the real camera
   camera.position.copy(cam);
   camera.lookAt(head);
   const vf = Math.hypot(head.x - cam.x, head.z - cam.z);

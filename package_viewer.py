@@ -38,6 +38,10 @@ def main():
             shutil.copy(f, dst / "tiles" / f.name)
         elif f.suffix == ".glb":
             (dst / "tiles" / f"{f.name}.txt").write_text(base64.b64encode(f.read_bytes()).decode())
+    # the walker: Rocketbox avatar (MIT), shipped as base64 like the tiles
+    (dst / "models").mkdir()
+    (dst / "models" / "walker.glb.txt").write_text(base64.b64encode((HERE / "viewer" / "assets" / "walker.glb").read_bytes()).decode())
+    shutil.copy(HERE / "viewer" / "assets" / "ROCKETBOX_LICENSE.md", dst / "models" / "ROCKETBOX_LICENSE.md")
     if a.overview:
         shutil.copy(a.overview, dst / "hanoi_preview.png")
     print(f"viewer written to {dst}")

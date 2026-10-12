@@ -788,6 +788,97 @@ def check(a):
         print(f"facades_sheet.jpg: {len(shown)} of {len(fac)} facades")
 
 
+def tour(a):
+    """A run through the given captures, along the road network between them -> <site>/tour.json.
+
+    viewer/walk.html#tour follows it (and #record steps it frame by frame for a video). Between
+    two captures the path is the shortest one over the road centrelines, so it never cuts through
+    a block; at each capture it passes through the exact spot the photo was taken from."""
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.csgraph import dijkstra
+
+    src = pathlib.Path(a.data) / a.name
+    site = pathlib.Path(a.site)
+    tf = local_tf(json.loads((pathlib.Path(a.out) / a.name / "manifest.json").read_text()))
+    panos = {str(p["id"]): p for p in json.loads((site / "panos.json").read_text())["panos"]}
+    stops = [panos[i] for i in a.ids.split(",")]
+    if a.montage:      # one scene per capture, the camera at the real lens; runs alternate away / toward it
+        import duckdb
+
+        named, names = [], []         # street name for the caption: the nearest named road within 12 m
+        for n, w in duckdb.sql(f"SELECT name, wkb FROM '{src / 'roads.parquet'}' "
+                               "WHERE subtype = 'road' AND name IS NOT NULL").fetchall():
+            g = shapely.from_wkb(bytes(w))
+            named.append(shapely.transform(g, lambda xy: np.column_stack(tf.transform(xy[:, 0], xy[:, 1]))))
+            names.append(n)
+        ntree = shapely.STRtree(named)
+        def street(s_):
+            pt = shapely.Point(s_["x"], s_["y"])
+            k = ntree.nearest(pt)
+            return names[k] if named[k].distance(pt) < 12 else None
+        scenes = [{"pano": s_["id"], "dir": "away" if k % 2 == 0 else "toward", "street": street(s_)}
+                  for k, s_ in enumerate(stops)]
+        (site / "tour.json").write_text(json.dumps({"scenes": scenes}))
+        print(f"montage of {len(scenes)} captures -> {site / 'tour.json'}")
+        return
+    # graph over road vertices (0.1 m grid joins segments that share an end)
+    key, xy, edges = {}, [], []
+    def node(x, y):
+        k = (round(x * 10), round(y * 10))
+        if k not in key:
+            key[k] = len(xy)
+            xy.append((x, y))
+        return key[k]
+    lines = road_lines(src, tf)
+    for line, _, _ in lines:
+        c = np.asarray(line.coords)
+        for p0, p1 in zip(c[:-1], c[1:]):
+            edges.append((node(*p0), node(*p1), float(np.hypot(*(p1 - p0)))))
+    # each stop joins the graph at its foot on the nearest road
+    tree = shapely.STRtree([l[0] for l in lines])
+    feet = []
+    for s_ in stops:
+        pt = shapely.Point(s_["x"], s_["y"])
+        line = lines[tree.nearest(pt)][0]
+        d = line.project(pt)
+        c = np.asarray(line.coords)
+        cum = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(c, axis=0).T))])
+        k = min(int(np.searchsorted(cum, d, side="right")) - 1, len(c) - 2)
+        f = line.interpolate(d)
+        fn = node(f.x, f.y)
+        for end in (k, k + 1):
+            edges.append((fn, node(*c[end]), float(np.hypot(c[end][0] - f.x, c[end][1] - f.y))))
+        feet.append(fn)
+    n = len(xy)
+    i, j, w = map(np.array, zip(*edges))
+    g = coo_matrix((np.r_[w, w] + 1e-6, (np.r_[i, j], np.r_[j, i])), shape=(n, n)).tocsr()
+    path = [(stops[0]["x"], stops[0]["y"])]
+    for s0, s1, f0, f1 in zip(stops[:-1], stops[1:], feet[:-1], feet[1:]):
+        dist, prev = dijkstra(g, indices=f0, return_predecessors=True)
+        if not np.isfinite(dist[f1]):
+            raise SystemExit(f"no road path from {s0['id']} to {s1['id']}")
+        seq, v = [], f1
+        while v != f0 and v >= 0:
+            seq.append(v)
+            v = prev[v]
+        seq.append(f0)
+        path += [xy[v] for v in reversed(seq)] + [(s1["x"], s1["y"])]
+    # drop repeats, then round the corners (Chaikin) so the run turns like a person, not a robot
+    pts = [path[0]]
+    for q in path[1:]:
+        if math.hypot(q[0] - pts[-1][0], q[1] - pts[-1][1]) > 0.3:
+            pts.append(q)
+    pts = np.array(pts)
+    for _ in range(2):
+        q = 0.75 * pts[:-1] + 0.25 * pts[1:]
+        r = 0.25 * pts[:-1] + 0.75 * pts[1:]
+        pts = np.vstack([pts[:1], np.column_stack([q, r]).reshape(-1, 2), pts[-1:]])
+    length = float(np.hypot(*np.diff(pts, axis=0).T).sum())
+    (site / "tour.json").write_text(json.dumps({"stops": [s_["id"] for s_ in stops],
+                                                "path": pts.round(2).tolist(), "length_m": round(length, 1)}))
+    print(f"tour through {len(stops)} captures: {length:.0f} m, {len(pts)} points -> {site / 'tour.json'}")
+
+
 def viewer(a):
     out = pathlib.Path(a.out) / a.name
     src = pathlib.Path(a.data) / a.name
@@ -826,20 +917,21 @@ def viewer(a):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("command", choices=["harvest", "mapillary", "download", "sequences", "pose", "depth",
-                                        "facades", "check", "viewer"])
+                                        "facades", "check", "viewer", "tour"])
     ap.add_argument("--name", required=True)
     ap.add_argument("--data", default="data")
     ap.add_argument("--out", default="out")
     ap.add_argument("--site", default="site")
     ap.add_argument("--radius", type=int, default=600, help="harvest query radius (m)")
     ap.add_argument("--width", type=int, default=4096, help="web panorama width (px)")
-    ap.add_argument("--ids", help="check: comma-separated panorama ids")
+    ap.add_argument("--ids", help="check / tour: comma-separated panorama ids (tour: in running order)")
     ap.add_argument("--facades", action="store_true", help="viewer: ship the photo facades too")
+    ap.add_argument("--montage", action="store_true", help="tour: a cut per capture instead of one run along the roads")
     ap.add_argument("--count", type=int, default=12, help="check: number of panoramas")
     a = ap.parse_args()
     {"harvest": harvest, "mapillary": mapillary, "download": download, "sequences": sequences,
      "pose": pose, "depth": depth,
-     "facades": facades, "check": check, "viewer": viewer}[a.command](a)
+     "facades": facades, "check": check, "viewer": viewer, "tour": tour}[a.command](a)
 
 
 if __name__ == "__main__":

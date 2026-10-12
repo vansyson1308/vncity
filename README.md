@@ -59,6 +59,7 @@ MAPILLARY_TOKEN='MLY|...' ./venv/bin/python streetview.py mapillary --name caugi
 ./venv/bin/python streetview.py facades   --name caugiay   # chiếu ảnh lên mặt tiền (thử nghiệm)
 ./venv/bin/python streetview.py check     --name caugiay   # vẽ tường đè lên panorama + ảnh ghép mặt tiền
 ./venv/bin/python streetview.py viewer    --name caugiay --site site/caugiay [--facades]
+./venv/bin/python streetview.py tour      --name caugiay --site site/caugiay --montage --ids <id>,<id>,...
 ```
 
 `pose` kéo mỗi ảnh KartaView về làn đường bên phải gần nhất, vì người chụp luôn đi trên đường.
@@ -99,6 +100,28 @@ chỉ đúng tuyệt đối khi nhìn từ chỗ đặt máy, nên camera giữ 
 quay theo nhân vật, giống camera cố định của các game nền dựng sẵn. Cách điểm chụp hơn ~6 m, phố
 hộp hiện dần trở lại; quá 10 m là hết. `#pano=<id>` trên URL đưa người chơi tới điểm chụp đó; `P`
 vẫn mở ảnh 360° phẳng tại chỗ.
+
+### Nhân vật và video
+
+Nhân vật là `Male_Adult_09` của Microsoft Rocketbox (MIT): người thật quét dựng, áo phông, quần
+jean, với chuyển động đứng / đi / chạy quay bằng motion capture. Trình duyệt pha trộn ba chuyển
+động theo tốc độ thực và chỉnh nhịp bước theo tốc độ đó. Trong không gian ảnh, nhân vật được chiếu
+sáng bằng chính panorama (image-based lighting), nên màu da, áo hợp với ánh sáng con phố. Cách dựng
+lại nhân vật: [tools/character](tools/character/README.md).
+
+`tour` ghi `tour.json` cho `walk.html#tour`. Với `--montage`, mỗi điểm chụp là một cảnh: camera
+đứng đúng chỗ máy ảnh thật nên mọi điểm ảnh của con phố là ảnh gốc, nhân vật lần lượt chạy xa dần
+hoặc chạy lại phía ống kính và dừng trước vật cản có trong ảnh. Không có `--montage` thì là một
+đường chạy liền theo mạng đường. Quay video:
+
+```bash
+python -m http.server 8765 -d site/caugiay &
+node tools/video/record.mjs /tmp/frames 30                 # walk.html#record, từng khung một
+./venv/bin/python tools/video/compose.py /tmp/frames site/caugiay/tour.json out.mp4 30
+```
+
+`#record` cho trang chạy theo nhịp khung hình (không theo đồng hồ) và đợi ảnh tải xong, nên video
+mượt kể cả khi máy dựng chậm. `compose.py` thêm tên phố, ngày chụp, ghi nguồn ảnh và chuyển cảnh.
 
 Cầu Giấy (11–12/10/2026):
 
