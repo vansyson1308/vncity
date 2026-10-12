@@ -687,7 +687,7 @@ let panosCamH = 1.8;
 // parked bikes at their measured distance. The walker moves inside it and collides with the
 // photo's walls. Inside PS_IN metres it is all photo; past PS_OUT the block world is back.
 const PS_IN = 5.5, PS_OUT = 10;
-const PS_CAM_R = 0.9;      // the camera keeps this close to where the photo was taken
+const PS_CAM_R = 0.5;      // the camera keeps this close to where the photo was taken
 const PS_RIG_LAT = THREE.MathUtils.degToRad(-38);   // below: the capture rig (rider's hands, handlebar, car roof)
 const photoScene = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
@@ -822,6 +822,13 @@ function photoMesh(p, d, tex) {
   tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
   const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, fog: false, toneMapped: false, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
   mesh.frustumCulled = false;
+  // A step off the lens opens slivers behind rooflines; far behind everything, the panorama as
+  // seen from the lens fills them (it is sky there, and at 300 m the offset is invisible).
+  const backdrop = new THREE.Mesh(new THREE.SphereGeometry(300, 64, 32).scale(-1, 1, 1),
+    new THREE.MeshBasicMaterial({ map: tex, fog: false, toneMapped: false, depthWrite: false }));
+  backdrop.rotation.y = Math.atan2(-Math.cos(h), -Math.sin(h));   // same orientation as the P view
+  backdrop.position.set(p.x, panosCamH, -p.y); backdrop.renderOrder = -1;
+  mesh.add(backdrop);
   // what the mesh leaves open shows the photo's own mean horizon colour, not a white hole
   const c = document.createElement("canvas"); c.width = 64; c.height = 32;
   const g = c.getContext("2d"); g.drawImage(tex.image, 0, 0, 64, 32);
@@ -881,7 +888,11 @@ function loadPhotoSpace(best) {
   psLoading = best;
   Promise.all([texLoader.loadAsync(best.file), decodeDepth(best.depth)]).then(([tex, d]) => {
     if (psLoading !== best) { tex.dispose(); return; }
-    if (ps) { photoScene.remove(ps.mesh); ps.mesh.geometry.dispose(); ps.mesh.material.map.dispose(); ps.mesh.material.dispose(); }
+    if (ps) {
+      photoScene.remove(ps.mesh);
+      ps.mesh.traverse((o) => { if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); } });
+      ps.mesh.material.map.dispose();       // shared with the backdrop
+    }
     ps = photoMesh(best, d, tex); photoScene.add(ps.mesh); psLoading = null;
     // the person is lit by the very street they stand in: the panorama as image-based light
     photoScene.environment?.dispose();
@@ -955,7 +966,7 @@ async function main() {
     const ahead = q.depth ? 2.6 : 0;
     player.x = q.x - Math.sin(yaw) * ahead; player.y = q.y + Math.cos(yaw) * ahead;
   }
-  player.heading = yaw;
+  player.heading = -yaw;                        // face the way the camera looks
   const tourJson = HASH.has("tour") || HASH.has("record") ? await optional("tour.json") : null;
   if (tourJson?.scenes) startMontage(tourJson);
   else if (tourJson) startTour(tourJson);
@@ -1153,7 +1164,8 @@ function step(dt, t, tile, lat0, lon0) {
   const dPs = ps ? Math.hypot(player.x - ps.pano.x, player.y - ps.pano.y) : Infinity;
   psT = montage ? (ps?.pano === montage.pano ? 1 : 0) : THREE.MathUtils.smoothstep(PS_OUT - dPs, 0, PS_OUT - PS_IN);
   if (ps) {
-    ps.mesh.material.opacity = psT; ps.mesh.material.transparent = psT < 1; ps.mesh.visible = psT > 0;
+    for (const o of [ps.mesh, ...ps.mesh.children]) { o.material.opacity = psT; o.material.transparent = psT < 1; }
+    ps.mesh.visible = psT > 0;
   }
   const inPhoto = psT > 0.5;
   if (inPhoto !== (walker.parent === photoScene)) (inPhoto ? photoScene : scene).add(walker);

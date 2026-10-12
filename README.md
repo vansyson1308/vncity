@@ -98,7 +98,7 @@ Trong `walk.html`, đi tới gần một cột xanh (điểm chụp) thì phố 
 đó dựng thành lưới 3D theo độ sâu: tường, cửa cuốn, dây điện, xe đỗ đúng khoảng cách đo từ ảnh.
 Nhân vật đi lại bên trong và va chạm với tường thật trong ảnh, không phải với footprint. Mép vật
 thể (mái nhà trên nền trời, xe trên nền đường) được đẩy ra làm nền phía sau thay vì kéo dãn. Ảnh
-chỉ đúng tuyệt đối khi nhìn từ chỗ đặt máy, nên camera giữ trong vòng 0,9 m quanh điểm chụp và
+chỉ đúng tuyệt đối khi nhìn từ chỗ đặt máy, nên camera giữ trong vòng 0,5 m quanh điểm chụp và
 quay theo nhân vật, giống camera cố định của các game nền dựng sẵn. Cách điểm chụp hơn ~6 m, phố
 hộp hiện dần trở lại; quá 10 m là hết. `#pano=<id>` trên URL đưa người chơi tới điểm chụp đó; `P`
 vẫn mở ảnh 360° phẳng tại chỗ.
