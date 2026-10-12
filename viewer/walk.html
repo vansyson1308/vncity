@@ -532,15 +532,21 @@ async function loadPerson() {
   walker.add(body);
   person = { mixer, actions, speed: 0 };
 }
+// Ground speed of each captured gait, measured from the planted foot (toes in stance move back
+// at exactly this speed): pacing a clip to speed / GAIT keeps the feet from sliding.
+const GAIT = { walk: 1.0, jog: 2.5, run: 3.25 };
 function animatePerson(dt, speed) {
-  // blend idle -> walk -> run by the speed actually covered, and pace each gait to it
   person.speed += (speed - person.speed) * Math.min(1, dt * 8);
-  const s = person.speed, run = THREE.MathUtils.clamp((s - WALK_MS) / (RUN_MS - WALK_MS), 0, 1);
-  const walk = Math.min(1, s / WALK_MS) * (1 - run);
-  const { idle, walk: w, run: r } = person.actions;
-  idle.setEffectiveWeight(1 - Math.min(1, s / WALK_MS)); w.setEffectiveWeight(walk); r.setEffectiveWeight(run);
-  w.timeScale = THREE.MathUtils.clamp(s / 1.35, 0.6, 1.6);    // the captured walk covers ~1.35 m/s
-  r.timeScale = THREE.MathUtils.clamp(s / 3.9, 0.7, 1.3);     // the captured run ~3.9 m/s
+  const s = person.speed, { idle, walk, jog, run } = person.actions;
+  // idle -> walk -> jog -> run, crossfaded by speed
+  const wi = Math.max(0, 1 - s / GAIT.walk);
+  const ww = s <= GAIT.walk ? s / GAIT.walk : Math.max(0, 1 - (s - GAIT.walk) / (GAIT.jog - GAIT.walk));
+  const wj = s <= GAIT.walk ? 0 : s <= GAIT.jog ? (s - GAIT.walk) / (GAIT.jog - GAIT.walk) : Math.max(0, 1 - (s - GAIT.jog) / (GAIT.run - GAIT.jog));
+  const wr = s <= GAIT.jog ? 0 : Math.min(1, (s - GAIT.jog) / (GAIT.run - GAIT.jog));
+  idle.setEffectiveWeight(wi); walk.setEffectiveWeight(ww); jog.setEffectiveWeight(wj); run.setEffectiveWeight(wr);
+  // the clips must stay in step with each other while blending: one shared phase rate
+  const rate = (g) => THREE.MathUtils.clamp(Math.max(s, 0.3) / GAIT[g], 0.4, 1.6);
+  walk.timeScale = rate("walk"); jog.timeScale = rate("jog"); run.timeScale = rate("run");
   person.mixer.update(dt);
 }
 
@@ -688,8 +694,16 @@ const pmrem = new THREE.PMREMGenerator(renderer);
 photoScene.add(new THREE.HemisphereLight(0xe8eef2, 0x6b6257, 0.5));
 const psSun = new THREE.DirectionalLight(0xfff0d8, 0.6);
 photoScene.add(psSun, psSun.target);
-const blob = new THREE.Mesh(new THREE.CircleGeometry(0.42, 24).rotateX(-Math.PI / 2),
-  new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false, fog: false }));
+// Contact shadow: the soft darkening where feet meet the ground. No cast sun shadow: estimating the
+// sun from one photo proved unreliable, and a hard shadow pointing the wrong way gives the person
+// away faster than none under Hà Nội's mostly overcast sky.
+const blob = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.1).rotateX(-Math.PI / 2),
+  new THREE.MeshBasicMaterial({ map: canvasTex(64, 64, (g, w2, h2) => {
+    const grd = g.createRadialGradient(w2 / 2, h2 / 2, 0, w2 / 2, h2 / 2, w2 / 2);
+    grd.addColorStop(0, "rgba(0,0,0,0.55)"); grd.addColorStop(0.35, "rgba(0,0,0,0.3)"); grd.addColorStop(1, "rgba(0,0,0,0)");
+    g.fillStyle = grd; g.fillRect(0, 0, w2, h2);
+  }), transparent: true, depthWrite: false, fog: false, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 }));
+blob.renderOrder = 1;
 photoScene.add(blob);
 let ps = null, psT = 0, psLoading = null;
 async function decodeDepth(url) {
@@ -705,23 +719,82 @@ async function decodeDepth(url) {
   }
   return { W, H, range, cls };
 }
+function levelGround(d) {
+  // A handheld or helmet camera is rarely level, and streets slope: find the road in the photo
+  // itself (RANSAC plane through points 1.5-14 m away below the horizon), then return the rotation
+  // that lays it flat and the scale that puts the lens panosCamH above it. Without this the
+  // person stands on an imagined plane and floats or sinks a few metres down the street.
+  const pts = [];
+  for (let row = Math.floor(d.H / 2); row < d.H; row += 2) {
+    const lat = Math.PI / 2 - ((row + 0.5) / d.H) * Math.PI;
+    if (lat > -0.08 || lat < -1.22) continue;          // down to -70°: a camera tipped back sees the road low
+    for (let col = 0; col < d.W; col += 3) {
+      const i = row * d.W + col; if (d.cls[i] !== 0) continue;
+      const lon = ((col + 0.5) / d.W) * 2 * Math.PI - Math.PI, rr = d.range[i], hor = Math.cos(lat) * rr;
+      if (hor > 1.5 && hor < 14) pts.push([Math.cos(lat) * Math.sin(lon) * rr, Math.sin(lat) * rr, Math.cos(lat) * Math.cos(lon) * rr]);
+    }
+  }
+  const none = { R: new THREE.Matrix3(), s: 1, tilt: 0 };
+  if (pts.length < 50) return none;
+  let seed = 12345; const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  let best = null;
+  for (let it = 0; it < 900; it++) {
+    const [a, b, c] = [0, 1, 2].map(() => pts[Math.floor(rnd() * pts.length)]);
+    const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], v = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+    let n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const l = Math.hypot(...n); if (l < 1e-6) continue;
+    n = n.map((q) => q / l); if (n[1] < 0) n = n.map((q) => -q);
+    if (n[1] < 0.82) continue;     // within ~35° of level: helmet cameras tip back 25° and more
+    const off = n[0] * a[0] + n[1] * a[1] + n[2] * a[2];
+    let cnt = 0; for (const q of pts) if (Math.abs(n[0] * q[0] + n[1] * q[1] + n[2] * q[2] - off) < 0.06) cnt++;
+    if (!best || cnt > best.cnt) best = { n, off, cnt };
+  }
+  if (!best || best.cnt < 0.06 * pts.length) return none;      // walls and shops outnumber the road
+  // refine: least squares y = ax + bz + c over the inliers
+  let S = [0, 0, 0, 0, 0, 0, 0, 0, 0], T = [0, 0, 0];
+  for (const q of pts) {
+    if (Math.abs(best.n[0] * q[0] + best.n[1] * q[1] + best.n[2] * q[2] - best.off) > 0.06) continue;
+    const row = [q[0], q[2], 1];
+    for (let i = 0; i < 3; i++) { T[i] += row[i] * q[1]; for (let j = 0; j < 3; j++) S[3 * i + j] += row[i] * row[j]; }
+  }
+  const M = new THREE.Matrix3().set(...S).invert();
+  const [A, B, C] = new THREE.Vector3(...T).applyMatrix3(M).toArray();
+  const n = new THREE.Vector3(-A, 1, -B).normalize(), hCam = -C * n.y;           // lens height above the road
+  if (!(hCam > 0.3)) return none;
+  const q = new THREE.Quaternion().setFromUnitVectors(n, new THREE.Vector3(0, 1, 0));
+  return { R: new THREE.Matrix3().setFromMatrix4(new THREE.Matrix4().makeRotationFromQuaternion(q)), s: panosCamH / hCam, tilt: THREE.MathUtils.radToDeg(Math.acos(n.y)) };
+}
 function photoMesh(p, d, tex) {
   const GW = d.W, GH = d.H, h = THREE.MathUtils.degToRad(p.heading), ch = Math.cos(h), sh = Math.sin(h);
+  const lv = levelGround(d), dir = new THREE.Vector3(), back = lv.R.clone().transpose();
   const pos = new Float32Array((GW + 1) * (GH + 1) * 3), uv = new Float32Array((GW + 1) * (GH + 1) * 2);
   const r = new Float32Array((GW + 1) * (GH + 1)), k = new Uint8Array((GW + 1) * (GH + 1));
   for (let j = 0; j <= GH; j++) for (let i = 0; i <= GW; i++) {
     const v = j * (GW + 1) + i;
     const col = Math.min(d.W - 1, Math.floor((i / GW) * d.W)) % d.W, row = Math.min(d.H - 1, Math.floor((j / GH) * d.H));
     const lon = (i / GW) * 2 * Math.PI - Math.PI, lat = Math.PI / 2 - (j / GH) * Math.PI;
-    const rig = lat < PS_RIG_LAT;     // the capture rig fills the view below: lay the road ring above it on the ground
+    // the ray in the levelled camera frame (x right, y up, z along the capture heading)
+    dir.set(Math.cos(lat) * Math.sin(lon), Math.sin(lat), Math.cos(lat) * Math.cos(lon)).applyMatrix3(lv.R);
+    // The capture rig (rider, handlebar) hangs straight below the lens, so it is cut by true
+    // vertical, not by the tilted photo's rows: lay the road there instead.
+    const rig = dir.y < Math.sin(PS_RIG_LAT);
     // "no data" above the rig line is mostly just very dark pixels (a shop interior, a shadow): keep them
     k[v] = rig || d.cls[row * d.W + col] === 2 ? 0 : d.cls[row * d.W + col];
-    r[v] = rig ? panosCamH / -Math.sin(lat) : k[v] === 1 ? 400 : d.range[row * d.W + col];
-    // camera frame: x right, y up, z along the capture heading -> data east/north
-    const x = Math.cos(lat) * Math.sin(lon) * r[v], y = Math.sin(lat) * r[v], z = Math.cos(lat) * Math.cos(lon) * r[v];
+    const toRoad = dir.y < -0.02 ? panosCamH / -dir.y : Infinity;
+    r[v] = rig ? toRoad : k[v] === 1 ? 400 : d.range[row * d.W + col] * lv.s;
+    // The estimated road is bumpy by a few centimetres; feet planted on it would sink into the
+    // bumps. Anything within 35 cm of the road plane is laid flat onto it.
+    if (!rig && k[v] === 0 && Math.abs(panosCamH + dir.y * r[v]) < 0.35 && toRoad < Infinity) r[v] = toRoad;
+    if (!Number.isFinite(r[v])) r[v] = 400;
+    const x = dir.x * r[v], y = dir.y * r[v], z = dir.z * r[v];
     const E = x * ch + z * sh, N = -x * sh + z * ch;
     pos.set([p.x + E, panosCamH + y, -(p.y + N)], 3 * v);
-    uv.set([i / GW, rig ? 0.5 + PS_RIG_LAT / Math.PI : 1 - j / GH], 2 * v);
+    // under the rig the photo has no road: carry the road seen at the rig line, same bearing, inward
+    if (rig) {
+      const az = Math.atan2(dir.x, dir.z), c = Math.cos(PS_RIG_LAT);
+      const o = new THREE.Vector3(c * Math.sin(az), Math.sin(PS_RIG_LAT), c * Math.cos(az)).applyMatrix3(back);
+      uv.set([(Math.atan2(o.x, o.z) + Math.PI) / (2 * Math.PI), 0.5 + Math.asin(THREE.MathUtils.clamp(o.y, -1, 1)) / Math.PI], 2 * v);
+    } else uv.set([i / GW, 0.5 + lat / Math.PI], 2 * v);
   }
   const idx = [], xpos = [], xuv = [];
   let nv = (GW + 1) * (GH + 1);
@@ -759,13 +832,28 @@ function photoMesh(p, d, tex) {
   for (let row = 0; row < d.H; row++) {
     const lat = Math.PI / 2 - ((row + 0.5) / d.H) * Math.PI;
     for (let col = 0; col < d.W; col++) {
-      const i = row * d.W + col; if (d.cls[i] !== 0 || lat < PS_RIG_LAT) continue;
-      const hgt = panosCamH + Math.sin(lat) * d.range[i], hor = Math.cos(lat) * d.range[i];
+      const i = row * d.W + col; if (d.cls[i] !== 0) continue;
+      const lon = ((col + 0.5) / d.W) * 2 * Math.PI - Math.PI;
+      dir.set(Math.cos(lat) * Math.sin(lon), Math.sin(lat), Math.cos(lat) * Math.cos(lon)).applyMatrix3(lv.R);
+      if (dir.y < Math.sin(PS_RIG_LAT)) continue;
+      const rr = d.range[i] * lv.s, hgt = panosCamH + dir.y * rr, hor = Math.hypot(dir.x, dir.z) * rr;
       // within arm's reach of the camera is the capture rig itself (handlebar, rider), not the street
       if (hgt > 0.4 && hgt < 2.2 && hor > 0.8 && hor < free[col]) free[col] = hor;
     }
   }
-  return { pano: p, mesh, free, W: d.W, clear: new THREE.Color().setRGB(...rgb, THREE.SRGBColorSpace) };
+  return { pano: p, mesh, free, W: d.W, level: lv, clear: new THREE.Color().setRGB(...rgb, THREE.SRGBColorSpace) };
+}
+function envFromPano(tex, headingDeg) {
+  // three samples an equirect environment with u = atan2(z, x) / 2π + 0.5; the panorama's centre
+  // looks along the capture heading, so slide the image until that centre sits at the heading
+  const hd = THREE.MathUtils.degToRad(headingDeg);
+  const shift = ((Math.atan2(-Math.cos(hd), Math.sin(hd)) / (2 * Math.PI)) % 1 + 1) % 1;   // u_target - 0.5
+  const c = document.createElement("canvas"); c.width = 1024; c.height = 512;
+  const g = c.getContext("2d"), dx = Math.round(shift * 1024);
+  g.drawImage(tex.image, dx, 0, 1024, 512); g.drawImage(tex.image, dx - 1024, 0, 1024, 512);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.mapping = THREE.EquirectangularReflectionMapping;
+  return t;
 }
 function photoFree(x, y) {
   const p = ps.pano, E = x - p.x, N = y - p.y, rr = Math.hypot(E, N);
@@ -797,7 +885,7 @@ function loadPhotoSpace(best) {
     ps = photoMesh(best, d, tex); photoScene.add(ps.mesh); psLoading = null;
     // the person is lit by the very street they stand in: the panorama as image-based light
     photoScene.environment?.dispose();
-    photoScene.environment = pmrem.fromEquirectangular(tex).texture;
+    photoScene.environment = pmrem.fromEquirectangular(envFromPano(tex, best.heading)).texture;
   }).catch(() => { psLoading = null; });
 }
 
@@ -882,7 +970,12 @@ async function main() {
   const draw = () => {
     renderer.setClearColor(ps && psT >= 1 ? ps.clear : scene.fog.color); renderer.clear();
     if (psT < 1 || photoMode) renderer.render(scene, camera);
-    if (psT > 0 && !photoMode) { renderer.clearDepth(); renderer.render(photoScene, camera); }
+    if (psT > 0 && !photoMode) {
+      renderer.clearDepth();
+      renderer.toneMapping = THREE.NoToneMapping;          // photo radiance in, photo radiance out
+      renderer.render(photoScene, camera);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    }
   };
   if (HASH.has("record")) {
     // Recording: the caller asks for each frame, simulation time advances by exactly dt, and a
@@ -902,7 +995,10 @@ async function main() {
       },
       get done() { return montage ? montage.done : !tour || tour.done; },
       get progress() { return montage ? (montage.k + 1) / montage.scenes.length : tour ? tour.s / tour.cum[tour.cum.length - 1] : 1; },
-      get scene() { return montage && { k: montage.k, id: String(montage.pano.id), shot: montage.pano.shot, source: montage.pano.source }; },
+      get scene() {
+        return montage && { k: montage.k, id: String(montage.pano.id), shot: montage.pano.shot, source: montage.pano.source,
+          tilt: ps?.level?.tilt, scale: ps?.level?.s };
+      },
     };
     return;
   }
@@ -920,7 +1016,7 @@ function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h
 let phase = 0, viewFwd = [0, 1], moved = 0;
 
 // ---------- tour: #tour runs the route `streetview.py tour` wrote, #record steps it frame by frame ----------
-const TOUR_MS = 3.9;     // an easy run
+const TOUR_MS = GAIT.run;     // the captured run, at its own pace
 let tour = null;
 function startTour(t) {
   const path = t.path, cum = [0];
@@ -955,17 +1051,25 @@ function nextScene() {
   updatePhotoSpace();
 }
 function scenePath() {
-  // the longest free run along the street the photo looks down (or the opposite way)
-  const m = montage, p = m.pano, h = THREE.MathUtils.degToRad(p.heading);
-  let best = null;
-  for (const sgn of [1, -1]) {
-    const dir = [Math.sin(h) * sgn, Math.cos(h) * sgn];
+  // Run along the open street the photo shows: of the headings within 35° of the camera's
+  // forward and backward, the one with the longest clear corridor (body-wide) wins.
+  const m = montage, p = m.pano, h0 = THREE.MathUtils.degToRad(p.heading);
+  const reach = (a) => {
+    const dir = [Math.sin(a), Math.cos(a)];
     let r = 1.2;
-    while (r < 12 && photoFree(p.x + dir[0] * r, p.y + dir[1] * r)) r += 0.25;
-    if (!best || r > best.r + 1) best = { dir, r };
+    while (r < 10.5 && photoFree(p.x + dir[0] * r, p.y + dir[1] * r)) r += 0.25;   // the levelled road holds best near the lens
+    return r;
+  };
+  let best = null;
+  for (const base of [0, Math.PI]) for (let off = -35; off <= 35; off += 2.5) {
+    const a = h0 + base + THREE.MathUtils.degToRad(off), r = reach(a) - Math.abs(off) * 0.02;   // prefer straight down the street
+    if (!best || r > best.r) best = { a, r };
   }
-  const at = (r) => [p.x + best.dir[0] * r, p.y + best.dir[1] * r], far = Math.max(3, best.r - 0.8);
-  m.path = m.toward ? [at(far), at(2.2)] : [at(1.4), at(far)];
+  const dir = [Math.sin(best.a), Math.cos(best.a)];
+  const at = (r) => [p.x + dir[0] * r, p.y + dir[1] * r], far = Math.max(3, best.r - 0.6);
+  // keep 3 m clear of the lens: below it is the capture rig (rider, handlebar, a car's bonnet)
+  const near = 3, far2 = Math.max(far, near + 3);
+  m.path = m.toward ? [at(far2), at(near)] : [at(near), at(far2)];
   m.len = Math.hypot(m.path[1][0] - m.path[0][0], m.path[1][1] - m.path[0][1]);
   [player.x, player.y] = m.path[0];
   player.heading = Math.atan2(m.path[1][0] - m.path[0][0], m.path[1][1] - m.path[0][1]);
@@ -1053,11 +1157,16 @@ function step(dt, t, tile, lat0, lon0) {
   }
   const inPhoto = psT > 0.5;
   if (inPhoto !== (walker.parent === photoScene)) (inPhoto ? photoScene : scene).add(walker);
-  blob.visible = inPhoto; blob.position.set(player.x, 0.01, -player.y);
-  const gh = inPhoto ? 0 : groundAt(player.x, player.y, tile);
+  const gh = inPhoto ? 0.01 : groundAt(player.x, player.y, tile);     // the photo's road is laid on the plane
+  blob.visible = inPhoto;
+  blob.position.set(player.x, gh + 0.01, -player.y);
   player.h += (gh - player.h) * Math.min(1, dt * 14);
+  if (montage && dt === 0) player.h = gh;
   walker.position.set(player.x, player.h, -player.y);
-  walker.rotation.y = player.heading + Math.PI;
+  // heading is clockwise from north in data axes (x east, y north = three -z). A model facing three
+  // +z (the avatar) turned by θ faces (sin θ, cos θ) in three = (sin θ, -cos θ) in data, so θ = π - h;
+  // the block figure faces -z, so θ = -h.
+  walker.rotation.y = (person ? Math.PI : 0) - player.heading;
   if (person) animatePerson(dt, moved);
   const swing = Math.sin(phase) * Math.min(0.7, moved / 3);
   walker.userData.legs[0].rotation.x = swing; walker.userData.legs[1].rotation.x = -swing;
@@ -1083,14 +1192,19 @@ function step(dt, t, tile, lat0, lon0) {
     cam.lerp(C.add(off), psT);
   }
   if (montage && psT === 1) cam.set(ps.pano.x, panosCamH, -ps.pano.y);   // the lens of the real camera
+  // filming: a 46° lens held level keeps the frame clear of the capture rig below the panorama
+  const fov = montage && psT === 1 ? 46 : 62;
+  if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
   camera.position.copy(cam);
-  camera.lookAt(head);
+  // filming from the lens, keep the view about level, as a person holding a camera would
+  camera.lookAt(montage && psT === 1 ? head.clone().setY(Math.max(head.y, panosCamH - 0.15)) : head);
   const vf = Math.hypot(head.x - cam.x, head.z - cam.z);
   if (vf > 0.3) viewFwd = [(head.x - cam.x) / vf, -(head.z - cam.z) / vf];   // walking follows what the camera sees
 
   sun.position.copy(walker.position).addScaledVector(sunDir, 160);
   sun.target.position.copy(walker.position);
-  psSun.position.copy(sun.position); psSun.target.position.copy(walker.position);
+  psSun.position.copy(walker.position).add(new THREE.Vector3(0, 10, 0));   // soft top light: Hà Nội's usual overcast
+  psSun.target.position.copy(walker.position);
 
   if (t - lastWhere > 0.5) {
     lastWhere = t;

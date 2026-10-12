@@ -88,8 +88,10 @@ hộp đoán ra từ bản đồ. `depth` ước lượng khoảng cách tới t
 [Depth Anything V2](https://github.com/DepthAnything/Depth-Anything-V2) (bản Small; bản metric
 outdoor cho khoảng cách, bản relative để nhận bầu trời, vì bản metric đặt trời trắng đục chỉ cách
 vài mét). Mô hình chạy trên CPU, ~30 giây một ảnh; cài riêng bằng `requirements-depth.txt`.
-Thang đo được chỉnh sao cho mặt đường nằm dưới máy ảnh `CAMERA_HEIGHT_M`, và mặt đường gần đó
-được ép phẳng. Kết quả ghi vào `data/<name>/depth/<ảnh>.png`: centimet trong kênh R và G, loại
+Thang đo được chỉnh sơ bộ sao cho mặt đường nằm dưới máy ảnh `CAMERA_HEIGHT_M`. Trong trình duyệt,
+mặt đường thật của từng ảnh được tìm lại bằng RANSAC: máy ảnh đội trên mũ bảo hiểm thường ngả
+13–27°. Cả cảnh được xoay cho mặt đường nằm ngang, máy ảnh cao đúng 1,8 m trên mặt đường đó, rồi
+mặt đường được ép phẳng. Kết quả ghi vào `data/<name>/depth/<ảnh>.png`: centimet trong kênh R và G, loại
 điểm trong kênh B (bề mặt, trời, hay giá chụp).
 
 Trong `walk.html`, đi tới gần một cột xanh (điểm chụp) thì phố hộp nhường chỗ cho chính panorama
@@ -104,10 +106,24 @@ vẫn mở ảnh 360° phẳng tại chỗ.
 ### Nhân vật và video
 
 Nhân vật là `Male_Adult_09` của Microsoft Rocketbox (MIT): người thật quét dựng, áo phông, quần
-jean, với chuyển động đứng / đi / chạy quay bằng motion capture. Trình duyệt pha trộn ba chuyển
-động theo tốc độ thực và chỉnh nhịp bước theo tốc độ đó. Trong không gian ảnh, nhân vật được chiếu
-sáng bằng chính panorama (image-based lighting), nên màu da, áo hợp với ánh sáng con phố. Cách dựng
-lại nhân vật: [tools/character](tools/character/README.md).
+jean, với chuyển động đứng / đi / chạy chậm / chạy quay bằng motion capture. Để nhân vật thuộc về
+con phố trong ảnh chứ không dán đè lên ảnh:
+
+- **Chân không trượt.** Tốc độ của mỗi kiểu bước được đo từ bàn chân đang chạm đất trong chính
+  clip (đi 1,0 m/s, chạy chậm 2,5 m/s, chạy 3,25 m/s); clip được phát nhanh chậm đúng theo tốc độ
+  di chuyển thật.
+- **Chân chạm đất.** Ảnh được cân bằng theo mặt đường thật (xem trên). Mặt đường ước lượng gồ ghề
+  vài centimet, đủ để lấp mất bàn chân, nên mọi điểm trong vòng 35 cm quanh mặt đường được ép
+  phẳng; nhân vật đứng đúng trên mặt phẳng đó, có bóng tiếp xúc mềm dưới chân. Ở ngõ dốc, mặt
+  phẳng chỉ khớp được trong khoảng 10 m quanh máy ảnh.
+- **Đúng hướng.** Nhân vật chạy theo hành lang thông thoáng dài nhất mà ảnh cho thấy (trong ±35°
+  quanh hướng phố), quay mặt theo hướng chạy.
+- **Cùng ánh sáng với ảnh.** Nhân vật được chiếu bằng chính panorama (image-based lighting, xoay
+  cho khớp hướng chụp), và lớp ảnh lẫn nhân vật cùng đi qua một đường màu, không tone mapping
+  riêng cho nhân vật. Không đổ bóng nắng: ước lượng mặt trời từ một ảnh không đáng tin, bóng đổ
+  sai hướng còn lộ hơn không có bóng, và phần lớn ảnh Hà Nội là trời âm u.
+
+Cách dựng lại nhân vật: [tools/character](tools/character/README.md).
 
 `tour` ghi `tour.json` cho `walk.html#tour`. Với `--montage`, mỗi điểm chụp là một cảnh: camera
 đứng đúng chỗ máy ảnh thật nên mọi điểm ảnh của con phố là ảnh gốc, nhân vật lần lượt chạy xa dần
@@ -121,7 +137,10 @@ node tools/video/record.mjs /tmp/frames 30                 # walk.html#record, t
 ```
 
 `#record` cho trang chạy theo nhịp khung hình (không theo đồng hồ) và đợi ảnh tải xong, nên video
-mượt kể cả khi máy dựng chậm. `compose.py` thêm tên phố, ngày chụp, ghi nguồn ảnh và chuyển cảnh.
+mượt kể cả khi máy dựng chậm. Khi quay, nên dựng trang với panorama 8192 px (`viewer --width 8192`,
+giới hạn texture của WebGL) cho ảnh nét ngang nhân vật. `compose.py` thêm tên phố, ngày chụp, ghi
+nguồn ảnh và chuyển cảnh. Cảnh quay từ nóc ô tô (thấy nắp capo) và cảnh nắng gắt nên bỏ khỏi
+`--ids`: nhân vật sẽ đứng lên xe, hoặc thiếu bóng nắng mà ảnh có.
 
 Cầu Giấy (11–12/10/2026):
 

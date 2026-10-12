@@ -554,8 +554,8 @@ def depth(a):
     """Per-panorama depth: the real street as 3D, from the photo itself.
 
     The model's metric scale is off for 360° crops, so range is rescaled until the ground in
-    front of the camera lies CAMERA_HEIGHT_M below it, and ground within 25 cm of that plane is
-    snapped onto it (the walker's feet stand on it in walk.html). Sky gets SKY_DEPTH_M; the
+    front of the camera lies about CAMERA_HEIGHT_M below it. The road itself is left as estimated:
+    walk.html fits its true plane (the camera is rarely level) before laying it flat. Sky gets SKY_DEPTH_M; the
     capture rig below RIG_LAT_DEG and KartaView's blue fill are marked as no data."""
     from transformers import AutoImageProcessor, AutoModelForDepthEstimation
     import torch
@@ -567,7 +567,10 @@ def depth(a):
     tf = local_tf(json.loads((pathlib.Path(a.out) / a.name / "manifest.json").read_text()))
     models = [(AutoModelForDepthEstimation.from_pretrained(m).eval(), AutoImageProcessor.from_pretrained(m))
               for m in (DEPTH_MODEL, SKY_MODEL)]
-    todo = [p for p in load_panos(src, tf) if not (out / f"{p['id']}.png").exists()]
+    todo = [p for p in load_panos(src, tf) if a.force or not (out / f"{p['id']}.png").exists()]
+    if a.ids:      # these first (or only these)
+        want = a.ids.split(",")
+        todo = sorted((p for p in todo if str(p["id"]) in want), key=lambda p: want.index(str(p["id"])))
     for i, p in enumerate(todo, 1):
         pano = np.asarray(Image.open(p["file"]).convert("RGB").resize((4096, 2048)))
         rng, sky, rays, LAT = pano_depth(pano, models)
@@ -579,11 +582,7 @@ def depth(a):
         band = (LAT < np.radians(-20)) & (LAT > np.radians(RIG_LAT_DEG)) & ~rig
         scale = float(np.clip(CAMERA_HEIGHT_M / max(-np.median(y[band]), 1e-3), 0.15, 1.5)) if band.any() else 1.0
         rng = rng * scale
-        y = rays[..., 1] * rng
         sky = (sky & up) | (up & (mx < 10))      # KartaView leaves the zenith black
-        to_ground = np.where(rays[..., 1] < -0.05, -CAMERA_HEIGHT_M / np.minimum(rays[..., 1], -0.05), np.inf)
-        ground = (rays[..., 1] < -0.05) & (np.abs(y + CAMERA_HEIGHT_M) < 0.25)
-        rng = np.where(ground, to_ground, rng)
         rng = np.where(sky, SKY_DEPTH_M, rng)
         cls = np.where(rig, 2, np.where(sky, 1, 0))
         tmp = out / f"{p['id']}.part"         # renamed when complete: an interrupted run never leaves half a file
@@ -926,6 +925,7 @@ def main():
     ap.add_argument("--width", type=int, default=4096, help="web panorama width (px)")
     ap.add_argument("--ids", help="check / tour: comma-separated panorama ids (tour: in running order)")
     ap.add_argument("--facades", action="store_true", help="viewer: ship the photo facades too")
+    ap.add_argument("--force", action="store_true", help="depth: recompute existing depth maps")
     ap.add_argument("--montage", action="store_true", help="tour: a cut per capture instead of one run along the roads")
     ap.add_argument("--count", type=int, default=12, help="check: number of panoramas")
     a = ap.parse_args()
