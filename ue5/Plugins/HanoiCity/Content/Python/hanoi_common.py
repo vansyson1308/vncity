@@ -109,10 +109,26 @@ def ensure_data_table(folder, name, struct):
     return asset_tools().create_asset(name, folder, unreal.DataTable, factory)
 
 
+def load_all_partitioned_actors():
+    """World Partition only lists loaded actors; load every actor so re-runs find old City/* ones."""
+    try:
+        lib = unreal.WorldPartitionBlueprintLibrary
+        res = lib.get_actor_descs()  # bool + out array: Python may return the array, a tuple or None
+        descs = (res[-1] if isinstance(res, tuple) else res) or []
+        guids = [d.get_editor_property("guid") for d in descs]
+        if guids:
+            lib.load_actors(guids)
+    except Exception as e:  # not a partitioned world, or the API moved: verify on first open
+        warn(f"could not load World Partition actors before cleanup ({e}); "
+             "load the whole map (World Partition window) before re-running if City/* duplicates")
+
+
 def remove_actors_in_folder(folder):
-    """Delete level actors whose outliner folder starts with folder (makes re-runs idempotent)."""
+    """Delete level actors whose outliner folder is folder or below it (re-runs are idempotent)."""
+    load_all_partitioned_actors()
     sub = actor_subsystem()
-    doomed = [a for a in sub.get_all_level_actors() if str(a.get_folder_path()).startswith(folder)]
+    doomed = [a for a in sub.get_all_level_actors()
+              if str(a.get_folder_path()) == folder or str(a.get_folder_path()).startswith(folder + "/")]
     if doomed:
         sub.destroy_actors(doomed)
     return len(doomed)

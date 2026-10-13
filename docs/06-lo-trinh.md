@@ -1,6 +1,6 @@
 # Lộ trình
 
-Trạng thái tính đến 12/10/2026. "Xong" nghĩa là có code chạy được và kiểm thử, hoặc có dữ liệu qua
+Trạng thái tính đến 13/10/2026 (sau QC cuối, xem `07-qc-checklist.md`). "Xong" nghĩa là có code chạy được và kiểm thử, hoặc có dữ liệu qua
 kiểm tra tự động. Những gì cần UE5 để chạy thử được đánh dấu riêng.
 
 ## Đã có trong repo
@@ -17,9 +17,9 @@ kiểm tra tự động. Những gì cần UE5 để chạy thử được đán
 | Cập nhật bản đồ theo release Overture | Xong | `live/update_city.py` báo ô nào cần dựng lại |
 | Kiểm tra tọa độ công trình biểu tượng | Xong | 24/44 khớp dữ liệu thật trong 300 m; còn lại cần người kiểm |
 | Schema dữ liệu game (14 bộ) | Xong | `game/schemas` |
-| Nội dung game | Bản đầu | 359 mục: 13 quận, 44 công trình, 47 nhân vật, 26 xe, 24 việc làm, 24 nhiệm vụ, 57 hội thoại… |
+| Nội dung game | Bản đầu, đã QC | 363 mục: 13 quận, 44 công trình, 47 nhân vật, 26 xe, 24 việc làm, 24 nhiệm vụ, 57 hội thoại… |
 | Cốt truyện | Bản nháp v0 | Mở đầu + chương 1 chơi được dạng dữ liệu; 5 hồi dàn ý. Chờ chủ dự án định hướng |
-| Harness UE 5.8 | Viết xong, **chưa biên dịch** | Plugin C++, sinh USTRUCT từ schema, script import; danh sách API cần kiểm ở `05-tich-hop-ue5.md` mục 7 |
+| Harness UE 5.8 | Viết xong, đã soát kỹ, **chưa biên dịch** | Plugin C++, sinh USTRUCT từ schema, script import, runtime đọc đủ tham số nhiệm vụ; danh sách API cần kiểm ở `05-tich-hop-ue5.md` mục 7 |
 | Xem trước 3D trên web | Xong | `viewer/city.html` |
 
 ## Việc tiếp theo, theo thứ tự

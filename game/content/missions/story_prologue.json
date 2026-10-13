@@ -61,7 +61,7 @@
           },
           "next": "don_khach",
           "fail_if": [
-            "nga_xe_3_lan"
+            "event:nga_xe_3_lan"
           ]
         },
         {
@@ -164,7 +164,7 @@
         }
       ],
       "reward": {
-        "money_vnd": 52000,
+        "money_vnd": 32000,
         "reputation": {
           "cong_dong_tai_xe_vo": 5
         },
@@ -363,7 +363,7 @@
           },
           "next": "co_hanh_den",
           "fail_if": [
-            "khach_bo_ve_qua_4"
+            "event:khach_bo_ve_qua_4"
           ]
         },
         {
@@ -477,7 +477,8 @@
           },
           "params": {
             "until_hour": 5.5,
-            "skip_allowed": true
+            "skip_allowed": true,
+            "hour": 5.5
           },
           "next": "ra_bo_ho"
         },

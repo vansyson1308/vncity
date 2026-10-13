@@ -58,8 +58,9 @@ dùng bảng màu "Đông Nam Á chung chung" (tre, mái lá) cho nội đô.
 - Tham chiếu hình ảnh: ảnh tự chụp của đội, Wikimedia Commons, Mapillary CC BY-SA (chỉ để xem).
 - Thời tiết, bụi mịn, mưa ngập lấy từ nguồn dữ liệu sống (`live_feed` trong `events.json`).
 - Giao thông: đồ thị đường `traffic/graph.json`, tuyến buýt từ GTFS Hà Nội (CC BY 4.0).
-- Toạ độ địa danh hiện là ước lượng, gắn tag `coords_unverified`; pipeline sẽ khớp với Overture
-  places trước khi khóa.
+- Toạ độ địa danh: 24/44 địa danh đã được `pipeline/verify_landmarks.py` khớp với Overture (tag
+  `coords_verified_overture`, không sửa tay); 20 địa danh còn lại là ước lượng, gắn tag
+  `coords_unverified`, phải khớp trước khi khóa.
 
 ## Địa điểm trang nghiêm
 

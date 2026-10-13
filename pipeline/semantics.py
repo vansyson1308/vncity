@@ -58,7 +58,13 @@ ZONES = {
 }
 CORE_ZONES = ("old_quarter", "french_quarter", "ba_dinh_villas")
 
-RELIGIOUS = re.compile(r"\b(chùa|đền|đình|miếu|nhà thờ|thánh đường|phủ|quán|từ đường|nghè|am)\b", re.I)
+# "phủ", "quán" and "am" are also ordinary words (Điện Biên Phủ, quán ăn), so they only count
+# at the start of a name or in fixed phrases.
+RELIGIOUS = re.compile(r"\b(chùa|đền|đình|miếu|nhà thờ|thánh đường|từ đường|nghè|hội quán)\b"
+                       r"|^(phủ|am)\b|\b(quán thánh|vũ quán)\b", re.I)
+# Stations, schools, offices named after a temple or street ("Ga Chùa Hà") are not temples.
+CIVIC_NAME = re.compile(r"^(nhà ga|ga|bến xe|trường|bệnh viện|ủy ban|uỷ ban|trụ sở|văn phòng|trạm)\b|\bstation\b",
+                        re.I)
 MARKET = re.compile(r"\bchợ\b", re.I)
 WORKS = re.compile(r"\b(xí nghiệp|nhà máy|kho|xưởng|công ty cơ khí|depot|toa xe|đầu máy)\b", re.I)
 COLLECTIVE = re.compile(r"\b(khu tập thể|tập thể|ktt|nhà [a-z]\d|^[a-z]\d{1,2}$)", re.I)
@@ -109,6 +115,8 @@ def classify(b, zone):
     area, rect, elong, short = b["area_m2"], b["rect"], b["elong"], b["short_m"]
     tall = (b["height_obs"] or 0) >= 40 or (floors or 0) >= 12
 
+    if CIVIC_NAME.search(name):
+        return "cong_trinh_cong_cong", "civic name"
     if cls in RELIGIOUS_CLASSES or RELIGIOUS.search(name):
         return "dinh_chua", "religious name/class"
     if MARKET.search(name) and area > 300:

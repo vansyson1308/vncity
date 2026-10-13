@@ -142,7 +142,7 @@
         "fail_conditions": ["nuoc_dung_duc", "sai_order_3_lan", "khach_cho_qua_10_phut"]
       },
       "pay": {"base_vnd": 55000, "tip_max_vnd": 0, "rating": true},
-      "locations": ["landmarks:cho_dong_xuan"],
+      "locations": ["businesses:pho_tho_hang_chieu"],
       "skills_trained": ["nau_an", "kinh_doanh"]
     },
     {

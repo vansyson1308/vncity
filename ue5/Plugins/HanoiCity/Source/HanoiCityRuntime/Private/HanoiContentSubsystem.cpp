@@ -81,18 +81,39 @@ int64 UHanoiContentSubsystem::EnumValueFromContentString(const UEnum* Enum, cons
 	{
 		return -1;
 	}
-	// Same rule as tools/codegen_ue.py pascal(): split on non-alphanumerics, capitalise each part,
-	// keep "_" between two parts that both start with a digit.
+	// Same rule as tools/codegen_ue.py pascal(): split on non-[A-Za-z0-9], capitalise each part,
+	// keep "_" between two parts that both start with a digit, prefix "V" if it starts with a digit.
 	FString Ident;
-	TArray<FString> Parts;
-	Value.ParseIntoArray(Parts, TEXT("_"), true);
-	for (const FString& Part : Parts)
+	FString Part;
+	const auto Flush = [&Ident, &Part]()
 	{
+		if (Part.IsEmpty())
+		{
+			return;
+		}
 		if (!Ident.IsEmpty() && FChar::IsDigit(Ident[Ident.Len() - 1]) && FChar::IsDigit(Part[0]))
 		{
 			Ident += TEXT("_");
 		}
 		Ident += Part.Left(1).ToUpper() + Part.Mid(1);
+		Part.Reset();
+	};
+	for (const TCHAR Ch : Value)
+	{
+		const bool bAsciiAlnum = (Ch >= TEXT('a') && Ch <= TEXT('z')) || (Ch >= TEXT('A') && Ch <= TEXT('Z')) || (Ch >= TEXT('0') && Ch <= TEXT('9'));
+		if (bAsciiAlnum)
+		{
+			Part.AppendChar(Ch);
+		}
+		else
+		{
+			Flush();
+		}
+	}
+	Flush();
+	if (Ident.IsEmpty() || FChar::IsDigit(Ident[0]))
+	{
+		Ident = TEXT("V") + Ident;
 	}
 	return Enum->GetValueByNameString(Ident);
 }

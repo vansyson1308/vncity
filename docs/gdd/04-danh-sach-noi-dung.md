@@ -1,6 +1,7 @@
 # 04. Danh sách nội dung và phần còn thiếu
 
-Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi file là
+Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Nhật ký QC nội dung gần nhất:
+`05-qc-noi-dung.md`. Mọi file là
 `{"collection": "...", "items": [...]}` theo `game/schemas/<collection>.schema.json`.
 
 ## Nội dung hiện có (v0)
@@ -9,7 +10,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
 | --- | --- | --- | --- |
 | districts | `world/districts.json` | 13 | Phố cổ, Hoàn Kiếm/khu Pháp, Ba Đình, Tây Hồ, Long Biên, Đống Đa, Hai Bà Trưng, Cầu Giấy, Thanh Xuân, Hà Đông, Hoàng Mai, Gia Lâm, Mỹ Đình. Tên phường theo ranh giới sau sáp nhập 7/2025 gắn tag `division_names_need_check` |
 | building_archetypes | `world/building_archetypes.json` | 13 | Đúng 13 id pipeline dùng |
-| landmarks | `world/landmarks.json` | 44 | Mọi toạ độ gắn `coords_unverified` |
+| landmarks | `world/landmarks.json` | 44 | 24 mục `coords_verified_overture`, 20 mục còn `coords_unverified` |
 | characters | `characters/protagonists.json` | 3 | Minh, Lan, Khôi |
 | characters | `characters/story.json` | 24 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio |
 | characters | `characters/ambient.json` | 20 | Kiểu dân cư có lịch sinh hoạt |
@@ -19,7 +20,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
 | missions | `missions/story_chapter1.json` | 9 | Chương 1 |
 | missions | `missions/side_stranger.json` | 12 | Phụ và người lạ |
 | dialogues | `dialogues/prologue.json`, `chapter1.json`, `side.json` | 57 | Có bản `en` cho mọi dòng |
-| items | `items.json` | 48 | Đồ ăn, đồ dùng, app, giấy tờ, sưu tầm |
+| items | `items.json` | 52 | Đồ ăn, đồ dùng, 12 app điện thoại, giấy tờ, sưu tầm, vật phẩm nhiệm vụ (`la_dong`, `dieu_cua_be`) |
 | businesses | `businesses.json` | 11 | Đủ 10 loại hình |
 | events | `events.json` | 20 | Lịch âm, lịch dương, tuần, dữ liệu sống |
 | radio | `radio.json` | 7 | Nhạc gốc hoặc chờ cấp phép |
@@ -45,7 +46,8 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
 
 ## Việc kiểm chứng còn treo
 
-1. **Toạ độ** 44 địa danh và tâm 13 quận: khớp với Overture places/OSM, bỏ tag `coords_unverified`.
+1. **Toạ độ** 20 địa danh còn `coords_unverified` và tâm 13 quận: khớp với Overture places/OSM
+   (`pipeline/verify_landmarks.py`), bỏ tag `coords_unverified`.
 2. **Tên phường** trong `overture_division_names`: đối chiếu ranh giới hành chính sau 1/7/2025 mà
    Overture đang dùng.
 3. **Mức phạt** 11 lỗi `fine_unverified`: đối chiếu Nghị định 168/2024/NĐ-CP (và sửa đổi nếu có)
@@ -56,13 +58,19 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
    Định, Phú Thọ) và các chi tiết lịch sử (ông Thắng 1979, ông Khiêm 1972, tem phiếu 1984).
 7. **Bản quyền âm nhạc**: đài "Sân Đình" đang `licensed_tbd`.
 
-## Đề xuất thay đổi schema (chưa sửa `game/schemas/`)
+## Đề xuất thay đổi schema
+
+Trạng thái: 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem từng mục); các mục khác chưa sửa
+`game/schemas/`.
 
 1. **missions.steps[].next dạng bảng**: thêm `branch_on` để nói rõ khóa nhánh lấy từ đâu, ví dụ
    `{"source": "flag" | "dialogue_choice" | "minigame_score" | "player_input", "map": {...}}`. Hiện
-   khóa nhánh chỉ được quy ước trong tài liệu.
+   khóa nhánh chỉ được quy ước trong tài liệu. *Một phần:* `params.branch_source`
+   (`flag`/`player_input`) và `params.player_input` nay có kiểu trong schema và runtime xử lý
+   (`docs/gdd/02-he-thong.md` §8); `dialogue_choice`/`minigame_score` vẫn là quy ước.
 2. **missions.steps[].switch_to**: trường chuẩn để đổi nhân vật điều khiển (hiện dùng
-   `params.protagonist` và `params.switch_protagonist_on_line`).
+   `params.protagonist` và `params.switch_protagonist_on_line`). *Một phần:* hai khóa này nay có
+   kiểu trong schema và runtime đổi nhân vật (`OnProtagonistSwitched`).
 3. **dialogues.lines[].condition**: dòng thoại chỉ hiện khi đủ điều kiện (cờ, uy tín) để các chương
    sau phản ứng với lựa chọn trước mà không cần nhân đôi đoạn thoại.
 4. **dialogues.lines[].speaker** cho phép giá trị đặc biệt `player` (nhân vật đang điều khiển), để
@@ -77,3 +85,11 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
 9. **activities.pay** thêm `commission_rate` (app ăn chiết khấu) và `currency_note`.
 10. **characters.voice** thêm `dialect_region` chi tiết hơn (`thai_binh`, `nam_dinh`, `phu_tho`,
     `hung_yen`) thay vì gộp `northern_rural`.
+11. ~~**missions.steps[].set_flags**: cờ đặt ngay khi xong một bước.~~ **Đã làm:** trường
+    `steps[].set_flags` trong schema, `c1_03` (`gap_lan`, `ve_tro`) đã chuyển từ `params`, runtime
+    áp cờ khi bước hoàn thành (trước khi chọn bước kế).
+12. ~~**missions.steps[].fail_if** có pattern chặt và **next** chấp nhận rõ `end`/`success`/`fail`.~~
+    **Đã làm:** pattern `^(event|flag):[a-z0-9_]+$|^(time|heat)(>=|<=|==|>|<)\d+(\.\d+)?$` (cho
+    phép số thập phân vì runtime đọc bằng `Atof`; runtime dùng đúng pattern này để cảnh báo quy tắc
+    lạ); `next` dùng `common.schema.json#/$defs/step_id`; `tools/validate.py` kiểm mọi đích `next`
+    là bước có thật hoặc `end`/`success`/`fail`, cùng tập id mà runtime xử lý.

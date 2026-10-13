@@ -1,6 +1,7 @@
 #include "HanoiTimeWeatherSubsystem.h"
 #include "HanoiCitySettings.h"
 #include "Components/LightComponent.h"
+#include "Components/SceneComponent.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
@@ -132,22 +133,24 @@ ADirectionalLight* UHanoiTimeWeatherSubsystem::FindSun()
 		return nullptr;
 	}
 	const FName Tag = UHanoiCitySettings::Get()->SunLightTag;
-	ADirectionalLight* First = nullptr;
+	ADirectionalLight* Found = nullptr;
 	for (TActorIterator<ADirectionalLight> It(World); It; ++It)
 	{
 		if (It->ActorHasTag(Tag))
 		{
-			Sun = *It;
-			return *It;
+			Found = *It;
+			break;
 		}
-		First = First ? First : *It;
+		Found = Found ? Found : *It;
 	}
-	Sun = First;
-	if (First && First->GetRootComponent())
+	// A Static light cannot be rotated at runtime (SetActorRotation would only log a warning).
+	USceneComponent* Root = Found ? Found->GetRootComponent() : nullptr;
+	if (Root && Root->Mobility == EComponentMobility::Static)
 	{
-		First->GetRootComponent()->SetMobility(EComponentMobility::Movable);
+		Root->SetMobility(EComponentMobility::Movable);
 	}
-	return First;
+	Sun = Found;
+	return Found;
 }
 
 void UHanoiTimeWeatherSubsystem::UpdateSun()

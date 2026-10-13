@@ -285,8 +285,8 @@
           "id": "l02",
           "speaker": "characters:khoi",
           "text": {
-            "vi": "Lan? Con bé hay khóc đòi kem Tràng Tiền? Giờ cao hơn cả cái nồi.",
-            "en": "Lan? The little girl who cried for Tràng Tiền ice cream? You're taller than the stockpot now."
+            "vi": "Lan? Con bé ngày xưa anh hay bế ra cửa xem xe đấy à? Giờ cao hơn cả cái nồi.",
+            "en": "Lan? The baby I used to carry to the door to watch the bikes? You're taller than the stockpot now."
           }
         },
         {
@@ -310,8 +310,8 @@
           "id": "l05",
           "speaker": "characters:minh",
           "text": {
-            "vi": "Anh ơi, cuốc này năm mươi hai nghìn ạ. Anh trả tiền mặt hay quét mã ạ?",
-            "en": "Sir, that's fifty-two thousand. Cash or QR?"
+            "vi": "Anh ơi, cuốc này ba mươi hai nghìn ạ. Anh trả tiền mặt hay quét mã ạ?",
+            "en": "Sir, that's thirty-two thousand. Cash or QR?"
           }
         },
         {
@@ -445,16 +445,16 @@
           "id": "l06",
           "speaker": "characters:lan",
           "text": {
-            "vi": "Con biết rồi. Con ghi vào Excel rồi.",
-            "en": "I know. I've put it in Excel."
+            "vi": "Con biết rồi. Con ghi vào bảng tính trên máy rồi.",
+            "en": "I know. I've put it all in a spreadsheet."
           }
         },
         {
           "id": "l07",
           "speaker": "characters:cu_tho",
           "text": {
-            "vi": "Ích xen là cái gì. Ghi vào lưỡi ấy.",
-            "en": "What's an Excel. Write it on your tongue."
+            "vi": "Bảng với chả tính. Ghi vào lưỡi ấy.",
+            "en": "Spreadsheet, my foot. Write it on your tongue."
           }
         }
       ]

@@ -6,16 +6,16 @@ Axis conversion (the part to verify on first open):
   UE world   : X = east, Y = south, Z = up, centimetres:  UE = (100 x, -100 y, 100 z)
   i.e. UE.X = 100 glTF.X, UE.Y = 100 glTF.Z, UE.Z = 100 glTF.Y  (a Y/Z swap, which is also the
   handedness flip). That is what UE's glTF importers are expected to do, but instead of trusting
-  it, this script measures the first imported tiles (mesh bounds vs. the tile's known building
-  extent) with hanoi_geo.solve_tile_placement and derives the actor transform (yaw, mirror,
-  unit scale, whether the node offset was baked). The decision is logged; it must read
-  "units=100 baked=True map=((1, 0), (0, -1))" for the expected importer behaviour.
+  it, this script measures up to 16 imported tiles (mesh bounds vs. the tile's known building
+  extent from semantics/footprints_X_Y.json) and solves all of them jointly with
+  hanoi_geo.solve_mapping, then derives the actor transform (yaw, mirror, unit scale, whether the
+  node offset was baked). The decision is logged; it must read
+  "units=100.0 baked=True map=((1, 0), (0, -1))" for the expected importer behaviour.
   Then check the landmark markers spawned under City/Verify sit on the right buildings.
 
 Usage: Tools > Hanoi City > Import City Tiles, or py import_city.py --city ../out/hoankiem
 """
 
-import collections
 import glob
 import json
 import math
@@ -49,7 +49,23 @@ def ensure_map(cfg):
 
 
 def tile_expected_box(tm, tiles_dir, key, origin, size):
-    """Plan box (e0, e1, n0, n1) of the building centroids of one tile, from bld_X_Y.json."""
+    """Plan box (e0, e1, n0, n1) of one tile's building mesh in ENU metres.
+
+    Exact when semantics/footprints_X_Y.json exists (the mesh is extruded from those outlines,
+    including footprints that straddle the tile edge); otherwise the building centroids of
+    tiles/bld_X_Y.json padded by a typical half footprint.
+    """
+    fp = os.path.join(os.path.dirname(os.path.normpath(tiles_dir)), "semantics",
+                      f"footprints_{key[0]}_{key[1]}.json")
+    try:
+        with open(fp, encoding="utf-8") as f:
+            outlines = [b["outline"] for b in json.load(f)["buildings"] if b.get("outline")]
+        vs = [v for o in outlines for v in o]
+        if len(outlines) >= 8:
+            xs, ys = [v[0] for v in vs], [v[1] for v in vs]
+            return (min(xs), max(xs), min(ys), max(ys))
+    except (OSError, KeyError, ValueError, TypeError, IndexError):
+        pass
     path = os.path.join(tiles_dir, f"bld_{key[0]}_{key[1]}.json")
     try:
         with open(path, encoding="utf-8") as f:
@@ -66,7 +82,11 @@ def tile_expected_box(tm, tiles_dir, key, origin, size):
 
 
 def import_glb(path, dest):
-    """Import one .glb; return the StaticMesh assets it produced."""
+    """Import one .glb into its own folder dest; return the StaticMesh assets it produced.
+
+    The result is read from the task (imported_object_paths, or get_objects() which Interchange
+    fills), falling back to listing dest, which only ever holds this one file's assets.
+    """
     task = unreal.AssetImportTask()
     task.set_editor_property("filename", path)
     task.set_editor_property("destination_path", dest)
@@ -74,11 +94,17 @@ def import_glb(path, dest):
     task.set_editor_property("replace_existing", True)
     task.set_editor_property("save", False)
     hc.asset_tools().import_asset_tasks([task])
-    meshes = []
+    objects = []
     for obj_path in task.get_editor_property("imported_object_paths") or []:
-        asset = unreal.EditorAssetLibrary.load_asset(obj_path)
-        if isinstance(asset, unreal.StaticMesh):
-            meshes.append(asset)
+        objects.append(unreal.EditorAssetLibrary.load_asset(obj_path))
+    if not objects and hasattr(task, "get_objects"):
+        objects = list(task.get_objects() or [])
+    if not objects:
+        objects = [unreal.EditorAssetLibrary.load_asset(p)
+                   for p in unreal.EditorAssetLibrary.list_assets(dest, recursive=True, include_folder=False)]
+    meshes = [a for a in objects if isinstance(a, unreal.StaticMesh)]
+    if not meshes:
+        hc.warn(f"{os.path.basename(path)}: the importer produced no StaticMesh in {dest}")
     return meshes
 
 
@@ -114,19 +140,18 @@ def place(mesh, placement, label, folder):
 
 
 def calibrate(samples):
-    """Majority vote over per-tile solves -> (map, units, baked)."""
-    votes = collections.Counter((str(p["map"]), p["units"], p["baked"]) for p in samples)
-    (m, units, baked), n = votes.most_common(1)[0]
-    best = next(p for p in samples if (str(p["map"]), p["units"], p["baked"]) == (m, units, baked))
+    """Joint solve over the sampled tiles -> (map, units, baked). samples: hanoi_geo.solve_mapping input."""
+    r = hanoi_geo.solve_mapping(samples)
+    m, units, baked, scores = r["map"], r["units"], r["baked"], r["scores"]
     hc.log(f"importer axis calibration: units={units} baked={baked} map={m} "
-           f"({n}/{len(samples)} tiles agree, IoU {min(p['score'] for p in samples):.2f}-"
-           f"{max(p['score'] for p in samples):.2f})")
-    if (m, units, baked) != (str(((1, 0), (0, -1))), 100.0, True):
+           f"({len(samples)} tiles, IoU {min(scores):.2f}-{max(scores):.2f}, "
+           f"total {r['total']:.2f} vs runner-up {r['runner_up'][1]:.2f} {r['runner_up'][0]})")
+    if (m, units, baked) != (((1, 0), (0, -1)), 100.0, True):
         hc.warn("importer did not behave as expected (see docs/05-tich-hop-ue5.md, axis check); "
                 "corrected via actor transforms")
-    if n < len(samples) or min(p["score"] for p in samples) < 0.6:
+    if min(scores) < 0.6 or r["total"] - r["runner_up"][1] < 0.05 * len(samples):
         hc.warn("axis calibration is ambiguous: inspect the City/Verify markers carefully")
-    return best["map"], units, baked
+    return m, units, baked
 
 
 def import_tiles(cfg, manifest):
@@ -156,7 +181,8 @@ def import_tiles(cfg, manifest):
                 fname = f"{kind}_{key[0]}_{key[1]}.glb"
                 if fname not in t.get("files", []):
                     continue
-                meshes = import_glb(os.path.join(tiles_dir, fname), f"{cfg['tiles_dest']}/{folder_key}")
+                meshes = import_glb(os.path.join(tiles_dir, fname),
+                                    f"{cfg['tiles_dest']}/{folder_key}/{kind}")
                 for m in meshes:
                     prepare_mesh(m, cfg.get("nanite", True) and kind == "bld")
                 box = tile_expected_box(tm, tiles_dir, key, t["origin_m"], size) if kind == "bld" else None
@@ -164,9 +190,9 @@ def import_tiles(cfg, manifest):
 
     samples = []
     for kind, key, origin, meshes, box in imported:
-        if kind == "bld" and box and len(meshes) == 1 and len(samples) < 7:
+        if kind == "bld" and box and len(meshes) == 1 and len(samples) < 16:
             mn, mx = mesh_bounds(meshes[0])
-            samples.append(hanoi_geo.solve_tile_placement(mn, mx, origin, size, box))
+            samples.append((mn, mx, origin, box))
     if not samples:
         hc.warn("no tile suitable for axis calibration; assuming the contract mapping")
         mapping = (((1, 0), (0, -1)), 100.0, True)
@@ -228,8 +254,9 @@ def spawn_verify_markers(cfg, manifest):
         if isinstance(doc, dict) and doc.get("collection") == "landmarks":
             for it in doc.get("items", []):
                 loc = it.get("location")
-                if loc:
-                    points.append((it["name"].get("vi", it["id"]), loc["lat"], loc["lon"]))
+                if loc and "lat" in loc and "lon" in loc:
+                    label = (it.get("name") or {}).get("vi") or it.get("id", "?")
+                    points.append((label, loc["lat"], loc["lon"]))
     sub = hc.actor_subsystem()
     for label, lat, lon in points:
         x, y = tm.forward(lat, lon)

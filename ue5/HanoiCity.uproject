@@ -17,7 +17,6 @@
 		{ "Name": "EditorScriptingUtilities", "Enabled": true },
 		{ "Name": "Interchange", "Enabled": true, "Optional": true },
 		{ "Name": "InterchangeEditor", "Enabled": true, "Optional": true },
-		{ "Name": "GLTFImporter", "Enabled": true, "Optional": true },
 		{ "Name": "MassGameplay", "Enabled": true, "Optional": true },
 		{ "Name": "MassAI", "Enabled": true, "Optional": true },
 		{ "Name": "ZoneGraph", "Enabled": true, "Optional": true },

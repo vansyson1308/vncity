@@ -60,7 +60,7 @@
       "id": "vu_lan",
       "tags": ["lunar", "religious", "family"],
       "name": {"vi": "Lễ Vu Lan (Rằm tháng Bảy)", "en": "Vu Lan (Ghost Month full moon)"},
-      "description": {"vi": "Cài hoa hồng trên áo để báo hiếu, cúng cô hồn, người trẻ đi chùa. Khôi lần đầu cúng giỗ cho bố theo lời dặn của ông Thắng.", "en": "Roses pinned on shirts to honour parents, offerings to wandering souls. Khôi makes his first offering to his father as Mr Thắng instructs."},
+      "description": {"vi": "Cài hoa hồng trên áo để báo hiếu, cúng cô hồn, người trẻ đi chùa. Khôi lần đầu làm lễ Vu Lan cho bố theo lời dặn của ông Thắng.", "en": "Roses pinned on shirts to honour parents, offerings to wandering souls. Khôi makes his first Vu Lan offering for his father as Mr Thắng instructs."},
       "trigger": {"lunar_date": "15-7", "duration_days": 1},
       "world_changes": ["hoa_hong_cai_ao", "mam_cung_co_hon_via_he", "dot_vang_ma_truoc_cua"],
       "locations": ["landmarks:chua_tran_quoc", "landmarks:den_quan_thanh"]

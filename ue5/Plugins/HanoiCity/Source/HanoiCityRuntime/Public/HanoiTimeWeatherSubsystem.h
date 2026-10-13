@@ -49,7 +49,7 @@ public:
 	void SetSyncToRealTime(bool bSync) { bRealTime = bSync; }
 
 	UFUNCTION(BlueprintPure, Category = "Hanoi|Weather")
-	const FHanoiWeatherState& GetWeather() const { return Weather; }
+	FHanoiWeatherState GetWeather() const { return Weather; }
 
 	/** Overrides the weather now (and keeps it if the source is Manual). */
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Weather")

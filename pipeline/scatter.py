@@ -268,10 +268,11 @@ def lakeshores(src, tf, w, blockers):
         for poly in polygons(project(wkb.loads(bytes(g)), tf)):
             if poly.area < 20000:
                 continue
-            inland = poly.exterior.buffer(4.0).difference(poly).exterior if poly.is_valid else None
-            if inland is None or inland.is_empty:
+            grown = shapely.make_valid(poly).buffer(4.0)  # promenade line 4 m from the shore
+            parts = polygons(grown)
+            if not parts:
                 continue
-            ring = LineString(inland.coords)
+            ring = LineString(max(parts, key=lambda p: p.area).exterior.coords)
             rng = Rng("lake", wid)
             s = 0.0
             while s < ring.length:

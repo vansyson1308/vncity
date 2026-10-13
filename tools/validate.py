@@ -58,13 +58,52 @@ def iter_refs(schema_node, value, path, schemas):
             yield from iter_refs(sub, value, path, schemas)
 
 
+TERMINAL_STEPS = {"end", "success", "fail"}  # common.schema.json#/$defs/step_id; UHanoiMissionSubsystem::Advance
+
+
+def check_missions(docs, items):
+    """Mission step graphs: every next target is a step of the same mission or a terminal id,
+    step ids are unique, choice branch params are consistent, and switch_protagonist_on_line
+    names lines of the step's dialogue."""
+    errors = []
+    for p, name, doc in docs:
+        if name != "missions":
+            continue
+        for m in doc.get("items", []):
+            steps = m.get("steps", [])
+            sids = [s.get("id") for s in steps]
+            where = f"{p}: missions:{m.get('id')}"
+            if len(set(sids)) != len(sids):
+                errors.append(f"{where}: duplicate step ids")
+            for s in steps:
+                nxt = s.get("next")
+                targets = [nxt] if isinstance(nxt, str) else list((nxt or {}).values())
+                for tgt in targets:
+                    if tgt not in sids and tgt not in TERMINAL_STEPS:
+                        errors.append(f"{where}.{s.get('id')}: next '{tgt}' is not a step or one of {sorted(TERMINAL_STEPS)}")
+                params = s.get("params") or {}
+                if "branch_source" in params and not isinstance(nxt, dict):
+                    errors.append(f"{where}.{s.get('id')}: branch_source needs an object next (branch table)")
+                if params.get("branch_source") == "flag" and isinstance(nxt, dict) and "default" not in nxt:
+                    errors.append(f"{where}.{s.get('id')}: branch_source=flag needs a 'default' branch")
+                lines = params.get("switch_protagonist_on_line")
+                if lines:
+                    dlg = items.get(s.get("dialogue") or "")
+                    known = {ln.get("id") for ln in (dlg or {}).get("lines", [])}
+                    for line in lines:
+                        if line not in known:
+                            errors.append(f"{where}.{s.get('id')}: switch_protagonist_on_line line '{line}' "
+                                          f"is not in {s.get('dialogue')}")
+    return errors
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default="game")
     a = ap.parse_args()
     root = pathlib.Path(a.root)
     schemas, registry = load_registry(root / "schemas")
-    errors, ids, docs = [], {}, []
+    errors, ids, docs, items = [], {}, [], {}
 
     for p in sorted((root / "content").rglob("*.json")):
         try:
@@ -85,6 +124,7 @@ def main():
             if key in ids:
                 errors.append(f"{p}: duplicate id {key} (also in {ids[key]})")
             ids[key] = p
+            items[key] = item
         docs.append((p, name, doc))
 
     for p, name, doc in docs:
@@ -93,6 +133,8 @@ def main():
             for path, ref in iter_refs(item_schema, item, f"items[{i}]({item.get('id')})", schemas):
                 if ref not in ids:
                     errors.append(f"{p}: {path}: unresolved reference {ref}")
+
+    errors += check_missions(docs, items)
 
     counts = {}
     for _, name, doc in docs:

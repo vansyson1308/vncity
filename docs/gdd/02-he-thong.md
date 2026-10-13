@@ -32,7 +32,8 @@ rõ ràng, không giáo điều).
 2024). Hết điểm thì không được lái cho đến khi thi lại phần lý thuyết (minigame trắc nghiệm luật).
 Điểm phục hồi đủ 12 nếu giữ hồ sơ sạch đủ lâu (luật thật: 12 tháng không bị trừ điểm, cần kiểm
 tra; game nén thành 60 ngày game). Giữ sạch 90 ngày game mở nhiệm vụ phụ tích cực với CSGT
-(`s12_mu_bao_hiem_cho_be`).
+(`s12_mu_bao_hiem_cho_be`): runtime tự đặt cờ `ho_so_sach_90_ngay` khi đủ 90 ngày game không bị
+lập biên bản (không nhiệm vụ hay thoại nào đặt cờ này).
 
 Nồng độ cồn: mọi đồ uống có cồn cộng `nong_do_con`. Chốt đo nồng độ xuất hiện tối 21h-1h. Thiết kế
 khuyến khích gọi xe về sau bia hơi (hoạt động bia hơi gợi ý sẵn).
@@ -124,14 +125,46 @@ Không phe nào "ác". Uy tín Kim Long Land cao là con đường chơi hợp l
 Sự kiện trong `events.json` kích hoạt theo lịch âm, lịch dương, ngày trong tuần hoặc dữ liệu sống,
 và áp `world_changes` (tag cho hệ thống dựng cảnh: cờ, đèn lồng, cấm xe, đổi doanh thu...). Sự kiện
 có thể mở nhiệm vụ riêng (`missions`). Danh sách hiện có: Tết, Giao thừa, Ông Công ông Táo, Rằm
-tháng Giêng, Giỗ Tổ, Trung thu, Vu Lan, Quốc khánh, Giải phóng Thủ đô, 30/4-1/5, phố đi bộ cuối tuần,
-mùa hoa sữa, mùa loa kèn, nồm, mưa ngập, nắng nóng, rét đậm, bụi mịn, bão.
+tháng Giêng, Giỗ Tổ, Trung thu, Vu Lan, Quốc khánh, Giải phóng Thủ đô, 30/4-1/5, phố đi bộ cuối tuần
+(buổi tối thứ Sáu đến Chủ nhật, và ban ngày thứ Bảy, Chủ nhật: hai mục), mùa hoa sữa, mùa loa kèn,
+nồm, mưa ngập, nắng nóng, rét đậm, bụi mịn, bão (20 mục).
 
 ## 8. Quy ước cho dữ liệu nhiệm vụ
 
-- Bước `choice` có `next` là bảng `{khóa: bước}`. Khóa là kết quả do runtime xác định: lựa chọn
-  thoại vừa xong (qua cờ `set_flags`), đầu vào người chơi (`dung_lai`/`vuot_den`), hoặc điểm minigame
-  (`dat`/`chua_dat`). Runtime cần bảng ánh xạ khóa → điều kiện; hiện ghi trong `params` hoặc suy ra
-  từ cờ cùng tên. Đề xuất bổ sung schema ở `04-danh-sach-noi-dung.md`.
-- `params.switch_protagonist_on_line` cho phép đổi nhân vật điều khiển giữa một đoạn thoại nhiều người.
-- Bước không có `next` là bước kết thúc nhiệm vụ.
+Mọi khóa trong `steps[].params` đều được khai báo có kiểu trong `missions.schema.json`
+(`additionalProperties: false`, validator bắt khóa lạ). Mỗi khóa có `x-consumer`:
+`runtime` = `UHanoiMissionSubsystem` tự đọc; `gameplay` = code minigame/UI/xe đọc qua
+`GetActiveStepParamNumber/String/Bool` hoặc `GetActiveStepParamsJson`. Test
+`test_every_mission_param_is_typed_and_has_a_consumer` giữ danh sách `runtime` khớp đúng với C++.
+
+- **Rẽ nhánh**: `next` là bảng `{khóa: bước}`; runtime chọn theo `Outcome` truyền vào
+  `CompleteCurrentStep`, thiếu thì dùng khóa `default`. Nguồn khóa (`params.branch_source`):
+  - `"flag"`: runtime tự chọn khóa đầu tiên trùng một cờ đang bật (cờ do lựa chọn thoại
+    `from_dialogue` đặt, ví dụ `lan_mua_gia_vi_chuan` / `lan_mua_gia_vi_re` ở `c1_04`), không có thì
+    `default` — validator bắt buộc có `default`;
+  - `"player_input"` (hoặc bước `choice` không ghi nguồn): runtime phát `OnChoiceRequested(mission,
+    bước, params.player_input, các khóa)`; UI hiện lựa chọn rồi gọi `CompleteCurrentStep(khóa)`;
+  - minigame có `pass_score`: gameplay truyền `dat`/`chua_dat`.
+- **Bước không có `next` chạy sang bước kế tiếp trong mảng**; bước cuối mảng kết thúc nhiệm vụ. Id
+  đặc biệt của `next` (`common.schema.json#/$defs/step_id`): `end`/`success` = hoàn thành, `fail` =
+  thất bại. Validator kiểm mọi đích `next` là bước của cùng nhiệm vụ hoặc một trong ba id này.
+- **`set_flags` của bước** (trường riêng, không nằm trong `params`): đặt cờ ngay khi bước hoàn
+  thành, trước khi chọn bước kế (nên dùng được cho `branch_source: "flag"` ngay sau đó).
+  `reward.set_flags` vẫn chỉ áp khi xong cả nhiệm vụ.
+- **`fail_if`** có pattern chặt: `event:<tên>` (gameplay gọi `ReportEvent`), `flag:<tên>`,
+  `time<op>N` (giây trong bước), `heat<op>N`, với `op` là `>= <= == > <`, N số (có thể thập phân).
+  Runtime cảnh báo trong Output Log nếu gặp quy tắc không hiểu. `params.time_limit_s` = `time>N`;
+  `params.deadline_hour` làm bước thất bại (`deadline`) khi đồng hồ game vượt giờ đó (tính tiến từ
+  lúc vào bước).
+- **Runtime đọc**: `radius_m` (bán kính tới đích, mặc định 15 m); `wait_until`: `hours`
+  `[từ, đến)` hoặc `until_hour`/`hour` (cửa sổ một giờ); `escape_traffic_police`: `heat` (cộng khi
+  vào bước, mặc định 2); `requires_event` (`events:<id>`: bước không hoàn thành được cho tới khi
+  gameplay gọi `SetWorldEventActive(id, true)`; phát `OnStepWaitingForEvent`); `apply_fine`
+  (`traffic_rules:<id>`: lúc vào bước cộng tiền phạt xe máy và trừ điểm bằng vào phạt chưa nộp;
+  phát `OnFineApplied`); `protagonist` (đổi nhân vật điều khiển khi vào bước) và
+  `switch_protagonist_on_line` (`{dòng thoại: characters:<id>}`; UI thoại gọi
+  `NotifyDialogueLine(dòng)`); cả hai phát `OnProtagonistSwitched`; `minimap: false` ẩn bản đồ
+  nhỏ trong bước (`OnMinimapVisibilityChanged`, tự bật lại khi sang bước khác/hết nhiệm vụ).
+- **Gameplay đọc** (ví dụ): đua xe `scripted_winner_npc` + `max_player_rank` (NPC luôn thắng,
+  người chơi tối đa hạng đó), `rivals`, `vehicle`, `passenger`, `cargo`, `recipe`, `pass_score`,
+  `match_threshold`, `time_of_day` (giờ dàn cảnh)… xem mô tả từng khóa trong schema.

@@ -8,6 +8,7 @@
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "GameFramework/Pawn.h"
+#include "Internationalization/Regex.h"
 #include "Kismet/GameplayStatics.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
@@ -239,7 +240,10 @@ void UHanoiMissionSubsystem::EnterStep(int32 Index)
 	StepElapsed = 0.f;
 	StepEvents.Reset();
 	StepParams.Reset();
-	const FHanoiMissionStep& Step = ActiveMission.Steps[Index];
+	RequiredEvent = NAME_None;
+	DeadlineGameHours = -1.0;
+	// Copy: delegates fired below may start another step and reallocate ActiveMission.Steps.
+	const FHanoiMissionStep Step = ActiveMission.Steps[Index];
 	if (!Step.Params.IsEmpty())
 	{
 		FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(Step.Params), StepParams);
@@ -254,15 +258,166 @@ void UHanoiMissionSubsystem::EnterStep(int32 Index)
 			}
 		}
 	}
+	ApplyStepParamsOnEnter(Step);
+	const int32 EnteredIndex = StepIndex;
 	OnStepStarted.Broadcast(ActiveMission.Id, StepIndex, Step);
+	if (!bActive || StepIndex != EnteredIndex)
+	{
+		return;  // a listener already completed or ended the step
+	}
+
+	if (Step.Kind == EHanoiMissionStepKind::Choice && Step.Next.IsBranching())
+	{
+		if (GetParamString(TEXT("branch_source")) == TEXT("flag"))
+		{
+			// Branch keys are flag names (set earlier, e.g. by a dialogue choice); else "default".
+			for (const TPair<FName, FName>& Branch : Step.Next.Branches)
+			{
+				if (Branch.Key != HanoiMission::Default && State.Flags.Contains(Branch.Key))
+				{
+					Advance(Branch.Key);
+					return;
+				}
+			}
+			Advance(HanoiMission::Default);
+			return;
+		}
+		TArray<FName> Options;
+		Step.Next.Branches.GenerateKeyArray(Options);
+		Options.Remove(HanoiMission::Default);
+		OnChoiceRequested.Broadcast(ActiveMission.Id, Step.Id, FName(*GetParamString(TEXT("player_input"))), Options);
+	}
+}
+
+void UHanoiMissionSubsystem::ApplyStepParamsOnEnter(const FHanoiMissionStep& Step)
+{
+	for (const FString& Rule : Step.FailIf)
+	{
+		static const FRegexPattern Pattern(TEXT("^(event|flag):[a-z0-9_]+$|^(time|heat)(>=|<=|==|>|<)\\d+(\\.\\d+)?$"));
+		FRegexMatcher Matcher(Pattern, Rule);
+		if (!Matcher.FindNext())
+		{
+			UE_LOG(LogHanoi, Warning, TEXT("Mission %s step %s: fail_if '%s' is not understood and is ignored"),
+				*ActiveMission.Id.ToString(), *Step.Id.ToString(), *Rule);
+		}
+	}
+
+	SetMinimapAllowed(GetParamBool(TEXT("minimap"), true));
+
+	const FString Protagonist = GetParamString(TEXT("protagonist"));
+	if (!Protagonist.IsEmpty())
+	{
+		SwitchProtagonist(FHanoiRef::Parse(Protagonist), NAME_None);
+	}
+
+	const FString FineRule = GetParamString(TEXT("apply_fine"));
+	if (!FineRule.IsEmpty())
+	{
+		ApplyFine(FHanoiRef::Parse(FineRule).Id);
+	}
+
+	double Deadline = 0.0;
+	const UHanoiTimeWeatherSubsystem* Time = GetGameInstance()->GetSubsystem<UHanoiTimeWeatherSubsystem>();
+	if (Time && TryGetParamNumber(TEXT("deadline_hour"), Deadline))
+	{
+		StepStartGameTime = Time->GetHanoiTime();
+		DeadlineGameHours = FMath::Fmod(Deadline - double(Time->GetHourOfDay()) + 24.0, 24.0);
+	}
+
+	const FString Event = GetParamString(TEXT("requires_event"));
+	if (!Event.IsEmpty())
+	{
+		const FHanoiRef EventRef = FHanoiRef::Parse(Event);
+		RequiredEvent = EventRef.IsValid() ? EventRef.Id : FName(*Event);
+		if (!ActiveWorldEvents.Contains(RequiredEvent))
+		{
+			OnStepWaitingForEvent.Broadcast(ActiveMission.Id, Step.Id, RequiredEvent);
+		}
+	}
+}
+
+bool UHanoiMissionSubsystem::IsStepGateOpen() const
+{
+	return RequiredEvent.IsNone() || ActiveWorldEvents.Contains(RequiredEvent);
+}
+
+void UHanoiMissionSubsystem::SetMinimapAllowed(bool bAllowed)
+{
+	if (bMinimapAllowed != bAllowed)
+	{
+		bMinimapAllowed = bAllowed;
+		OnMinimapVisibilityChanged.Broadcast(bAllowed);
+	}
+}
+
+void UHanoiMissionSubsystem::SwitchProtagonist(const FHanoiRef& Character, FName LineId)
+{
+	if (!Character.IsValid() || State.Protagonist == Character.Id)
+	{
+		return;
+	}
+	State.Protagonist = Character.Id;
+	OnProtagonistSwitched.Broadcast(Character.Id, LineId);
+	NotifyStateChanged();
+}
+
+void UHanoiMissionSubsystem::ApplyFine(FName RuleId)
+{
+	const UHanoiContentSubsystem* Content = GetGameInstance()->GetSubsystem<UHanoiContentSubsystem>();
+	const FHanoiTrafficRuleRow* Rule = Content ? Content->Find<FHanoiTrafficRuleRow>(TEXT("traffic_rules"), RuleId) : nullptr;
+	if (!Rule)
+	{
+		UE_LOG(LogHanoi, Warning, TEXT("apply_fine: unknown traffic rule %s"), *RuleId.ToString());
+		return;
+	}
+	// Mission fines are written for the player's motorbike (the default vehicle).
+	const int64 Fine = Rule->FineVnd.Motorbike;
+	State.UnpaidFinesVnd += Fine;
+	State.LicencePoints = FMath::Max(0, State.LicencePoints - Rule->LicencePoints);
+	OnFineApplied.Broadcast(RuleId, Fine, Rule->LicencePoints);
+	NotifyStateChanged();
+}
+
+void UHanoiMissionSubsystem::NotifyDialogueLine(FName LineId)
+{
+	if (!bActive)
+	{
+		return;
+	}
+	if (const TSharedPtr<FJsonObject> Lines = GetParamObject(TEXT("switch_protagonist_on_line")))
+	{
+		FString Character;
+		if (Lines->TryGetStringField(LineId.ToString(), Character))
+		{
+			SwitchProtagonist(FHanoiRef::Parse(Character), LineId);
+		}
+	}
+}
+
+void UHanoiMissionSubsystem::SetWorldEventActive(FName EventId, bool bIsActive)
+{
+	if (bIsActive)
+	{
+		ActiveWorldEvents.Add(EventId);
+	}
+	else
+	{
+		ActiveWorldEvents.Remove(EventId);
+	}
 }
 
 void UHanoiMissionSubsystem::CompleteCurrentStep(FName Outcome)
 {
-	if (bActive)
+	if (!bActive)
 	{
-		Advance(Outcome);
+		return;
 	}
+	if (!IsStepGateOpen())
+	{
+		UE_LOG(LogHanoi, Log, TEXT("Mission %s: step waits for event %s"), *ActiveMission.Id.ToString(), *RequiredEvent.ToString());
+		return;
+	}
+	Advance(Outcome);
 }
 
 void UHanoiMissionSubsystem::ReportEvent(FName Event)
@@ -273,7 +428,19 @@ void UHanoiMissionSubsystem::ReportEvent(FName Event)
 void UHanoiMissionSubsystem::Advance(FName Outcome)
 {
 	const FHanoiMissionStep Step = ActiveMission.Steps[StepIndex];
+	if (Step.SetFlags.Num() > 0)
+	{
+		for (const FString& Flag : Step.SetFlags)
+		{
+			State.Flags.Add(FName(*Flag));
+		}
+		NotifyStateChanged();
+	}
 	OnStepCompleted.Broadcast(ActiveMission.Id, StepIndex, Step);
+	if (!bActive)
+	{
+		return;  // a listener ended the mission
+	}
 
 	FName NextId;
 	if (!Step.Next.Step.IsNone())
@@ -323,6 +490,10 @@ void UHanoiMissionSubsystem::FinishMission(bool bSuccess, FName Reason)
 	const FName Id = ActiveMission.Id;
 	bActive = false;
 	StepIndex = INDEX_NONE;
+	StepParams.Reset();
+	RequiredEvent = NAME_None;
+	DeadlineGameHours = -1.0;
+	SetMinimapAllowed(true);
 	if (bSuccess)
 	{
 		State.CompletedMissions.Add(Id);
@@ -345,7 +516,70 @@ void UHanoiMissionSubsystem::FinishMission(bool bSuccess, FName Reason)
 float UHanoiMissionSubsystem::GetParamNumber(const TCHAR* Key, float Default) const
 {
 	double Value = 0.0;
-	return (StepParams.IsValid() && StepParams->TryGetNumberField(Key, Value)) ? float(Value) : Default;
+	return TryGetParamNumber(Key, Value) ? float(Value) : Default;
+}
+
+bool UHanoiMissionSubsystem::TryGetParamNumber(const TCHAR* Key, double& OutValue) const
+{
+	return StepParams.IsValid() && StepParams->TryGetNumberField(Key, OutValue);
+}
+
+FString UHanoiMissionSubsystem::GetParamString(const TCHAR* Key) const
+{
+	FString Value;
+	if (StepParams.IsValid())
+	{
+		StepParams->TryGetStringField(Key, Value);
+	}
+	return Value;
+}
+
+bool UHanoiMissionSubsystem::GetParamBool(const TCHAR* Key, bool bDefault) const
+{
+	bool bValue = bDefault;
+	if (StepParams.IsValid())
+	{
+		StepParams->TryGetBoolField(Key, bValue);
+	}
+	return bValue;
+}
+
+const TArray<TSharedPtr<FJsonValue>>* UHanoiMissionSubsystem::GetParamArray(const TCHAR* Key) const
+{
+	const TArray<TSharedPtr<FJsonValue>>* Values = nullptr;
+	return (StepParams.IsValid() && StepParams->TryGetArrayField(Key, Values)) ? Values : nullptr;
+}
+
+TSharedPtr<FJsonObject> UHanoiMissionSubsystem::GetParamObject(const TCHAR* Key) const
+{
+	const TSharedPtr<FJsonObject>* Object = nullptr;
+	return (StepParams.IsValid() && StepParams->TryGetObjectField(Key, Object) && Object) ? *Object : nullptr;
+}
+
+bool UHanoiMissionSubsystem::GetActiveStepParamNumber(const FString& Key, float& OutValue) const
+{
+	double Value = 0.0;
+	if (bActive && StepParams.IsValid() && StepParams->TryGetNumberField(Key, Value))
+	{
+		OutValue = float(Value);
+		return true;
+	}
+	return false;
+}
+
+bool UHanoiMissionSubsystem::GetActiveStepParamString(const FString& Key, FString& OutValue) const
+{
+	return bActive && StepParams.IsValid() && StepParams->TryGetStringField(Key, OutValue);
+}
+
+bool UHanoiMissionSubsystem::GetActiveStepParamBool(const FString& Key, bool& OutValue) const
+{
+	return bActive && StepParams.IsValid() && StepParams->TryGetBoolField(Key, OutValue);
+}
+
+FString UHanoiMissionSubsystem::GetActiveStepParamsJson() const
+{
+	return (bActive && ActiveMission.Steps.IsValidIndex(StepIndex)) ? ActiveMission.Steps[StepIndex].Params : FString();
 }
 
 float UHanoiMissionSubsystem::GetCurrentHeat() const
@@ -410,15 +644,15 @@ bool UHanoiMissionSubsystem::IsAutoComplete() const
 		const UHanoiTimeWeatherSubsystem* Time = GetGameInstance()->GetSubsystem<UHanoiTimeWeatherSubsystem>();
 		if (!Time) { return true; }
 		FHanoiHourRange Range;
-		const TArray<TSharedPtr<FJsonValue>>* Hours = nullptr;
-		if (StepParams.IsValid() && StepParams->TryGetArrayField(TEXT("hours"), Hours) && Hours->Num() == 2)
+		const TArray<TSharedPtr<FJsonValue>>* Hours = GetParamArray(TEXT("hours"));
+		if (Hours && Hours->Num() == 2)
 		{
 			Range.From = float((*Hours)[0]->AsNumber());
 			Range.To = float((*Hours)[1]->AsNumber());
 		}
 		else
 		{
-			Range.From = GetParamNumber(TEXT("hour"), 0.f);
+			Range.From = GetParamNumber(TEXT("until_hour"), GetParamNumber(TEXT("hour"), 0.f));
 			Range.To = FMath::Fmod(Range.From + 1.f, 24.f);
 		}
 		return Range.Contains(Time->GetHourOfDay());
@@ -437,6 +671,15 @@ bool UHanoiMissionSubsystem::ShouldFail(FName& OutReason) const
 	{
 		OutReason = TEXT("time_limit");
 		return true;
+	}
+	if (DeadlineGameHours >= 0.0)
+	{
+		const UHanoiTimeWeatherSubsystem* Time = GetGameInstance()->GetSubsystem<UHanoiTimeWeatherSubsystem>();
+		if (Time && (Time->GetHanoiTime() - StepStartGameTime).GetTotalHours() > DeadlineGameHours)
+		{
+			OutReason = TEXT("deadline");
+			return true;
+		}
 	}
 	for (const FString& Rule : ActiveMission.Steps[StepIndex].FailIf)
 	{
@@ -479,7 +722,7 @@ void UHanoiMissionSubsystem::Tick(float DeltaTime)
 	{
 		FinishMission(false, Reason);
 	}
-	else if (IsAutoComplete())
+	else if (IsStepGateOpen() && IsAutoComplete())
 	{
 		Advance(HanoiMission::Success);
 	}

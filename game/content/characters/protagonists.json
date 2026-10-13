@@ -34,9 +34,9 @@
         {"with": "characters:anh_duc_sua_xe", "kind": "thay_day_nghe", "notes": "Học sửa xe buổi tối, trả công bằng việc vặt."},
         {"with": "characters:thao", "kind": "khach_quen", "notes": "Khách đặt chuyến cả ngày; dần thành mối quan hệ phức tạp."},
         {"with": "characters:chu_cuong", "kind": "doi_thu_roi_dong_minh", "notes": "Xe ôm truyền thống ghét xe ôm app."},
-        {"with": "characters:lan", "kind": "ban", "notes": "Gặp nhau khi Minh giao nhầm đơn phở."},
+        {"with": "characters:lan", "kind": "ban", "notes": "Gặp nhau sáng Minh chở Khôi về trước cửa Phở Thọ (phần mở đầu)."},
         {"with": "characters:khoi", "kind": "thay_tro_nguoc", "notes": "Minh dạy Khôi đi xe máy giữa phố Hà Nội."},
-        {"with": "characters:thuong_uy_hai", "kind": "oan_gia", "notes": "Đã bị Hải lập biên bản hai lần."}
+        {"with": "characters:thuong_uy_hai", "kind": "oan_gia", "notes": "CSGT ở chốt Nguyễn Thái Học; có thể lập biên bản Minh ngay cuốc đầu tiên của game nếu vượt đèn."}
       ]
     },
     {
@@ -47,7 +47,7 @@
       "age": 29,
       "gender": "female",
       "bio": {
-        "vi": "Cháu đích tôn (gái) của cụ Thọ, người dựng quán Phở Thọ ở Hàng Chiếu từ năm 1957. Học tài chính, làm chuyên viên thẩm định tín dụng ở một ngân hàng trong tòa tháp Phạm Hùng, lương 35 triệu. Khi ông ngã quỵ vì tai biến, cô xin nghỉ không lương để giữ quán, rồi phát hiện cô ruột đang thương lượng bán cả căn nhà cho Kim Long Land. Lan giỏi Excel hơn giỏi ninh xương, nói thẳng đến mức mất lòng, và chưa bao giờ chịu thua một nồi nước dùng.",
+        "vi": "Cháu đích tôn (gái) của cụ Thọ, người dựng quán Phở Thọ ở Hàng Chiếu từ năm 1957. Học tài chính, làm chuyên viên thẩm định tín dụng ở một ngân hàng trong tòa tháp Phạm Hùng, lương 35 triệu. Khi ông ngã quỵ vì tai biến, cô xin nghỉ không lương để giữ quán, rồi phát hiện cô ruột đang thương lượng bán cả căn nhà cho Kim Long Land. Lan giỏi bảng tính hơn giỏi ninh xương, nói thẳng đến mức mất lòng, và chưa bao giờ chịu thua một nồi nước dùng.",
         "en": "Granddaughter of old Thọ, who founded Phở Thọ on Hàng Chiếu in 1957. Studied finance and worked as a credit analyst at a bank in a Phạm Hùng tower on 35 million a month. When her grandfather collapsed with a stroke she took unpaid leave to keep the shop running, then discovered her aunt was negotiating to sell the whole house to Kim Long Land. Better at spreadsheets than at simmering bones, blunt to a fault, and she has never let a pot of broth beat her."
       },
       "home": {"lat": 21.03745, "lon": 105.85120},
@@ -69,7 +69,7 @@
       "relationships": [
         {"with": "characters:cu_tho", "kind": "ong_noi", "notes": "Người duy nhất Lan không cãi lại."},
         {"with": "characters:co_hanh", "kind": "co_ruot", "notes": "Muốn bán nhà để trả nợ đất nền."},
-        {"with": "characters:khoi", "kind": "hang_xom_tang_tren", "notes": "Hồi bé Khôi cõng Lan đi ăn kem Tràng Tiền; giờ anh nắm phần sở hữu quyết định."},
+        {"with": "characters:khoi", "kind": "hang_xom_tang_tren", "notes": "Trước khi sang Đức, cậu bé Khôi mười tuổi hay bế Lan còn bé tí ra cửa xem xe; giờ anh nắm phần sở hữu quyết định."},
         {"with": "characters:ba_tam_xoi", "kind": "hang_xom", "notes": "Bà Tâm biết mọi chuyện trước cả Lan."},
         {"with": "characters:ba_lua_dong_xuan", "kind": "nguoi_cung_cap", "notes": "Bán quế, hồi, thảo quả cho nhà Lan ba mươi năm."},
         {"with": "characters:vinh", "kind": "doi_thu", "notes": "Từng thẩm định hồ sơ vay của Kim Long Land khi còn ở ngân hàng."},
@@ -84,7 +84,7 @@
       "age": 38,
       "gender": "male",
       "bio": {
-        "vi": "Sinh năm 1988 trên gác hiệu Ảnh Khải, Hàng Chiếu. Mười tuổi theo mẹ sang Leipzig, Đức; lớn lên giữa chợ Đồng Xuân Leipzig và trường Đức, thành phóng viên ảnh tự do, chụp biên giới, lũ lụt, biểu tình. Bố anh, ông Khải, ở lại Hà Nội với cái studio và hàng nghìn cuộn phim chụp phố phường từ 1975 đến 2010. Ông mất tháng Chín. Khôi về chịu tang, định ở hai tuần rồi bán nốt phần nhà. Rồi anh mở chiếc tủ sắt trên gác.",
+        "vi": "Sinh năm 1988 trên gác hiệu Ảnh Khải, Hàng Chiếu. Mười tuổi theo mẹ sang Leipzig, Đức; lớn lên giữa khu chợ đầu mối của người Việt ở Leipzig và trường Đức, thành phóng viên ảnh tự do, chụp biên giới, lũ lụt, biểu tình. Bố anh, ông Khải, ở lại Hà Nội với cái studio và hàng nghìn cuộn phim chụp phố phường từ 1975 đến 2010. Ông mất tháng Chín. Khôi về chịu tang, định ở hai tuần rồi bán nốt phần nhà. Rồi anh mở chiếc tủ sắt trên gác.",
         "en": "Born in 1988 above the Ảnh Khải photo studio on Hàng Chiếu. At ten he followed his mother to Leipzig, Germany, grew up between the Vietnamese wholesale market and a German school, and became a freelance photojournalist covering borders, floods and protests. His father Khải stayed in Hanoi with the studio and thousands of rolls of film documenting the streets from 1975 to 2010. Khải died in September. Khôi came home for the funeral, planning to stay two weeks and sell his share of the house. Then he opened the iron cabinet in the attic."
       },
       "home": {"lat": 21.03745, "lon": 105.85120},

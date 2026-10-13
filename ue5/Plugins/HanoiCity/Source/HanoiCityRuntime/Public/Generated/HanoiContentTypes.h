@@ -1122,7 +1122,7 @@ struct HANOICITYRUNTIME_API FHanoiMissionStep
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiRef Dialogue;
 
-	/** [json: params - compact JSON text] */
+	/** Typed step parameters. x-consumer: runtime = read by UHanoiMissionSubsystem; gameplay = read by minigame/UI/vehicle code via GetActiveStepParam* or OnStepStarted. Kept as compact JSON in UE (x-ue: json). [json: params - compact JSON text] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FString Params;
 
@@ -1133,6 +1133,10 @@ struct HANOICITYRUNTIME_API FHanoiMissionStep
 	/** [json: fail_if] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TArray<FString> FailIf;
+
+	/** Player flags set when the step completes (before its next is resolved). [json: set_flags] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FString> SetFlags;
 };
 
 /** Row of collection 'missions' (DataTable row name = id). Story and side missions as data. Steps form a graph the UE mission runner executes. */

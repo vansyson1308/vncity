@@ -4,9 +4,10 @@ No `unreal` import, so tests/test_codegen_ue.py checks it outside the editor:
   * TransverseMercator: same Krueger n^3 series as FHanoiTransverseMercator (HanoiGeoSubsystem.cpp).
   * enu_to_ue / ue_yaw: the contract in docs/pipeline-outputs.md.
   * solar_position: NOAA algorithm, twin of UHanoiTimeWeatherSubsystem::ComputeSunPosition.
-  * solve_tile_placement: works out how the glTF importer mapped a tile (axes, units, baked node
-    offset) from the imported mesh bounds, and returns the actor transform that puts it on the
-    contract frame. It removes the dependency on importer axis conventions.
+  * solve_mapping / solve_tile_placement: work out how the glTF importer mapped the tiles (axes,
+    units, baked node offset) from the imported mesh bounds (jointly over several tiles, or for
+    one tile), and placement_from_mapping returns the actor transform that puts a tile on the
+    contract frame. This removes the dependency on importer axis conventions.
 """
 
 import math
@@ -168,6 +169,49 @@ def solve_tile_placement(mesh_min, mesh_max, tile_origin_m, tile_size_m, expecte
     p = placement_from_mapping(m, s, baked, tile_origin_m)
     p["score"] = score
     return p
+
+
+TIE_IOU = 0.005  # per-tile IoU difference below which the contract mapping wins
+
+
+def candidate_mappings():
+    """All 32 importer hypotheses (map, units, baked); the contract comes first."""
+    return [(m, s, baked) for s in (100.0, 1.0) for baked in (True, False) for m in PLANE_MAPS]
+
+
+def mapping_score(m, s, baked, mesh_min, mesh_max, tile_origin_m, expected_box_m):
+    """IoU of the measured mesh plan box with the expected box under one importer hypothesis."""
+    ox, oy = tile_origin_m
+    de, dn = (0.0, 0.0) if baked else (ox, oy)
+    ex = expected_box_m
+    box = _box(m, ex[0] - de, ex[1] - de, ex[2] - dn, ex[3] - dn, s)
+    return _iou(box, (mesh_min[0], mesh_max[0], mesh_min[1], mesh_max[1]))
+
+
+def solve_mapping(samples):
+    """Joint solve over several tiles: samples = [(mesh_min, mesh_max, tile_origin_m, expected_box_m)].
+
+    One importer behaves the same for every tile, so the hypotheses are ranked by their summed IoU.
+    Per-tile argmax is not enough: a tile whose content is roughly square and centred like its
+    neighbours (typically the tiles around the origin) scores a rotated/mirrored hypothesis within
+    0.1% of the right one, and footprints that straddle tile edges can tip it. Summing over tiles
+    at different offsets separates them. Near-ties (< TIE_IOU per tile) keep the contract mapping.
+
+    Returns dict(map, units, baked, total, scores=[per-tile IoU], runner_up=(hypothesis, total)).
+    """
+    ranked = []
+    for i, (m, s, baked) in enumerate(candidate_mappings()):
+        scores = [mapping_score(m, s, baked, mn, mx, o, ex) for mn, mx, o, ex in samples]
+        ranked.append((sum(scores), -i, (m, s, baked), scores))
+    contract = ranked[0]
+    ranked.sort(reverse=True)
+    if contract[0] >= ranked[0][0] - TIE_IOU * len(samples):  # near-tie: trust the contract
+        ranked.remove(contract)
+        ranked.insert(0, contract)
+    total, _, (m, s, baked), scores = ranked[0]
+    second = ranked[1] if len(ranked) > 1 else None
+    return {"map": m, "units": s, "baked": baked, "total": total, "scores": scores,
+            "runner_up": (second[2], second[0]) if second else None}
 
 
 def placement_from_mapping(m, s, baked, tile_origin_m):

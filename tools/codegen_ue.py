@@ -22,9 +22,11 @@ Mapping rules (also documented in docs/05-tich-hop-ue5.md):
   integer -> int32; money_vnd -> int64; number -> float; boolean -> bool (prefixed b);
   enum -> UENUM with an "Unset" zero value, identifiers PascalCased, UMETA(DisplayName = original);
   object with properties -> nested USTRUCT; object with only additionalProperties -> TMap<FName, V>;
-  free-form object -> FString holding compact JSON; array -> TArray;
+  free-form object, or any node marked "x-ue": "json" -> FString holding compact JSON; array -> TArray;
   oneOf geo|ref -> FHanoiTarget{Kind, Geo, Ref}; oneOf id|{key: id} -> FHanoiNext{Step, Branches};
   any other oneOf -> FString holding compact JSON.
+  Nested containers (array of array/map, map of array/map) are not UPROPERTY-legal in UHT, so
+  such a property also becomes an FString holding compact JSON.
   Property "name" becomes DisplayName (DataTable JSON reserves "Name" for the row name) and
   "class" becomes ClassKind.
 
@@ -77,6 +79,19 @@ CORE = {
                    (None, "Branches", {"k": "map", "value": {"k": "name"}})],
 }
 
+# Identifiers that break C++ when used as an enum entry / field name (Windows SDK and engine
+# macros, C++ keywords that PascalCase can still produce). pascal() only upper-cases the first
+# letter, so these can only appear when the content value itself is spelled that way.
+RESERVED_IDENTS = {
+    "TRUE", "FALSE", "DELETE", "IN", "OUT", "OPTIONAL", "ERROR", "CONST", "VOID", "INFINITE",
+    "NULL", "TEXT", "PI", "BOOL", "BYTE", "WORD", "DWORD", "INT", "UINT", "FLOAT", "LONG",
+    "CHAR", "INDEX_NONE", "NAME_None",
+    "UPROPERTY", "UFUNCTION", "UENUM", "USTRUCT", "UCLASS", "UMETA", "GENERATED_BODY",
+}
+INT32_RANGE = (-2**31, 2**31 - 1)
+INT64_RANGE = (-2**63, 2**63 - 1)
+MAX_ENUM_VALUES = 254  # uint8 enum: Unset = 0, values 1..254, UHT adds <Enum>_MAX = 255
+
 CPP_SCALARS = {"name": "FName", "string": "FString", "int": "int32", "int64": "int64",
                "float": "float", "double": "double", "bool": "bool", "json": "FString"}
 CPP_DEFAULTS = {"int": " = 0", "int64": " = 0", "float": " = 0.f", "double": " = 0.0",
@@ -117,6 +132,17 @@ def enum_ident(value):
     return pascal(str(value))
 
 
+def check_ident(ident, where):
+    if ident in RESERVED_IDENTS:
+        raise ValueError(f"{where}: identifier {ident!r} collides with a C++/Windows/engine macro")
+    return ident
+
+
+def cpp_string(s):
+    """C++ string literal body (for UMETA DisplayName)."""
+    return str(s).replace("\\", "\\\\").replace('"', '\\"')
+
+
 # ----------------------------------------------------------------------------- model
 
 class Model:
@@ -128,6 +154,7 @@ class Model:
         self.enums = {}        # name -> [values]
         self.enum_by_values = {}
         self.collections = {}  # collection -> row struct name
+        self._nodes = {}       # struct name -> schema node it was generated from
         self._common_struct("condition", "FHanoiCondition")
         self._common_struct("reward", "FHanoiReward")
         for name in sorted(schemas):
@@ -147,14 +174,23 @@ class Model:
 
     def _struct(self, name, node, doc="", row=False, collection=None):
         if name in self.structs:
+            if self._nodes.get(name) != node:
+                raise ValueError(f"struct name {name} is produced by two different schema objects; "
+                                 "add an entry to SINGULAR or rename a property")
             return
         self.structs[name] = None  # reserve (guards recursion)
+        self._nodes[name] = node
         fields = []
         required = set(node.get("required", []))
         base = name[:-3] if name.endswith("Row") else name
         for prop, sub in node.get("properties", {}).items():
             spec = self.spec(sub, base, prop)
-            fields.append({"json": prop, "cpp": field_name(prop, spec), "spec": spec,
+            cpp = check_ident(field_name(prop, spec), f"{name}.{prop}")
+            if cpp in {f["cpp"] for f in fields}:
+                raise ValueError(f"{name}: properties map to the same field name {cpp}")
+            if cpp == "Name":
+                raise ValueError(f"{name}.{prop}: {cpp} is reserved by the DataTable importer")
+            fields.append({"json": prop, "cpp": cpp, "spec": spec,
                            "required": prop in required, "doc": self._doc(sub)})
         self.structs[name] = {"fields": fields, "doc": doc, "row": row, "collection": collection,
                               "props": list(node.get("properties", {}))}
@@ -174,9 +210,15 @@ class Model:
         if fixed is None and key in self.enum_by_values:
             return self.enum_by_values[key]
         name = fixed or "E" + owner[1:] + pascal(prop)
-        idents = [enum_ident(v) for v in values]
+        if name in self.enums:
+            raise ValueError(f"enum name {name} is produced by two different value lists")
+        idents = [check_ident(enum_ident(v), f"{name}.{v}") for v in values]
         if len(set(idents)) != len(idents) or "Unset" in idents:
             raise ValueError(f"{name}: enum values do not sanitize to unique identifiers")
+        if any(i == f"{name}_MAX" or i.upper() == "MAX" for i in idents):
+            raise ValueError(f"{name}: an enum value named MAX clashes with UHT's {name}_MAX")
+        if len(values) > MAX_ENUM_VALUES:
+            raise ValueError(f"{name}: {len(values)} values do not fit a uint8 enum")
         self.enums[name] = list(values)
         self.enum_by_values.setdefault(key, name)
         return name
@@ -186,6 +228,8 @@ class Model:
 
         elem: node is the item schema of array property `prop` (struct names use the singular).
         """
+        if node.get("x-ue") == "json":  # typed for validation, kept as compact JSON text in UE
+            return {"k": "json"}
         ref = node.get("$ref", "")
         if ref.startswith("#/$defs/"):  # local ref inside common.schema.json
             ref = COMMON + ref[len("#/$defs/"):]
@@ -195,6 +239,7 @@ class Model:
             d = ref[len(COMMON):]
             return {
                 "id": {"k": "name"},
+                "step_id": {"k": "name"},
                 "ref": {"k": "struct", "name": "FHanoiRef", "core": "ref"},
                 "text": {"k": "struct", "name": "FHanoiText", "core": "text"},
                 "geo": {"k": "struct", "name": "FHanoiGeo", "core": "geo"},
@@ -223,10 +268,16 @@ class Model:
                 return {"k": "struct", "name": name}
             ap = node.get("additionalProperties")
             if isinstance(ap, dict):
-                return {"k": "map", "value": self.spec(ap, owner, prop, elem)}
+                value = self.spec(ap, owner, prop, elem)
+                if value["k"] in ("array", "map"):
+                    return {"k": "json"}  # TMap<FName, TArray/TMap> is rejected by UHT
+                return {"k": "map", "value": value}
             return {"k": "json"}
         if t == "array":
-            return {"k": "array", "elem": self.spec(node.get("items", {}), owner, prop, True)}
+            item = self.spec(node.get("items", {}), owner, prop, True)
+            if item["k"] in ("array", "map"):
+                return {"k": "json"}  # TArray<TArray/TMap> is rejected by UHT
+            return {"k": "array", "elem": item}
         if t == "string":
             return {"k": "string"}
         if t == "integer":
@@ -287,7 +338,7 @@ def render_header(model):
         o.append(f"UENUM(BlueprintType)\nenum class {name} : uint8\n{{\n")
         o.append("\tUnset = 0 UMETA(DisplayName = \"(unset)\"),\n")
         for v in model.enums[name]:
-            o.append(f"\t{enum_ident(v)} UMETA(DisplayName = \"{v}\"),\n")
+            o.append(f"\t{enum_ident(v)} UMETA(DisplayName = \"{cpp_string(v)}\"),\n")
         o.append("};\n\n")
     for name in model.order:
         s = model.structs[name]
@@ -324,7 +375,14 @@ def convert_value(model, spec, v):
     if k in ("name", "string"):
         return "" if v is None else str(v)
     if k in ("int", "int64"):
-        return 0 if v is None else int(v)
+        if v is None:
+            return 0
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or int(v) != v:
+            raise ValueError(f"{v!r} is not an integer")
+        lo, hi = INT32_RANGE if k == "int" else INT64_RANGE
+        if not lo <= int(v) <= hi:
+            raise ValueError(f"{v} does not fit {CPP_SCALARS[k]}")
+        return int(v)
     if k in ("float", "double"):
         return 0.0 if v is None else float(v)
     if k == "bool":
