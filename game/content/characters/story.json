@@ -9,8 +9,8 @@
       "age": 86,
       "gender": "male",
       "bio": {
-        "vi": "Người Vân Cù, Nam Định, quê gốc của phở. Gánh phở lên Hà Nội năm 1954, ngồi đầu ngõ Hàng Chiếu ba năm rồi mới thuê được nửa gian nhà. Bị tai biến nhẹ, nửa người trái yếu, không đứng được bếp nhưng chỉ cần nếm một thìa là biết hôm nay Lan cho thiếu gừng nướng hay ninh xương non tay.",
-        "en": "From Vân Cù, Nam Định, the cradle of pho. Carried his pho yoke to Hanoi in 1954, sat at the mouth of a Hàng Chiếu alley for three years before he could rent half a room. A mild stroke weakened his left side; he can no longer stand at the stove, but one spoonful tells him if Lan skimped on charred ginger or rushed the bones."
+        "vi": "Người Vân Cù, Nam Định, quê gốc của phở. Gánh phở lên Hà Nội năm 1954, ngồi đầu ngõ Hàng Chiếu ba năm, đến năm 1957 mới cùng ông Khiêm nhà bên góp tiền mua chung căn số 49. Bị tai biến nhẹ, nửa người trái yếu, không đứng được bếp nhưng chỉ cần nếm một thìa là biết hôm nay Lan cho thiếu gừng nướng hay ninh xương non tay.",
+        "en": "From Vân Cù, Nam Định, the cradle of pho. Carried his pho yoke to Hanoi in 1954, sat at the mouth of a Hàng Chiếu alley for three years until, in 1957, he and his neighbour Khiêm pooled their money to buy No. 49 together. A mild stroke weakened his left side; he can no longer stand at the stove, but one spoonful tells him if Lan skimped on charred ginger or rushed the bones."
       },
       "home": {"lat": 21.03745, "lon": 105.85120},
       "district": "districts:pho_co",
@@ -159,7 +159,7 @@
       "age": 24,
       "gender": "male",
       "bio": {
-        "vi": "Bạn cùng phòng của Minh, quê Phú Thọ. Shipper đồ ăn cho app Đói, đồng thời 'TikToker' 312 follower chuyên review trà sữa. Nặng 92 kg, chở đơn trà sữa 20 cốc chưa đổ cốc nào. Là người đầu tiên đề xuất mọi ý tưởng tồi.",
+        "vi": "Bạn cùng phòng của Minh, quê Phú Thọ. Shipper đồ ăn cho app Đói, đồng thời là 'nhà sáng tạo nội dung' trên Tóp Tóp với 312 người theo dõi, chuyên review trà sữa. Nặng 92 kg, chở đơn trà sữa 20 cốc chưa đổ cốc nào. Là người đầu tiên đề xuất mọi ý tưởng tồi.",
         "en": "Minh's roommate from Phú Thọ. Food courier for the Đói app and a 'content creator' with 312 followers reviewing bubble tea. Weighs 92 kg and has never spilled a 20-cup bubble-tea order. First to propose every bad idea."
       },
       "home": {"lat": 20.99050, "lon": 105.81500},
@@ -313,7 +313,7 @@
       "tags": ["cafe", "business_seller"],
       "name": {"vi": "Nguyễn Tuyết Mai", "en": "Nguyễn Tuyết Mai"},
       "role": "vendor",
-      "age": 40,
+      "age": 29,
       "gender": "female",
       "bio": {"vi": "Chủ một quán cà phê trứng trong ngõ nhỏ phố Hàng Gai, gác xép nhìn ra hồ. Sắp theo chồng vào Đà Nẵng, muốn sang lại quán cho người 'biết đánh trứng bằng tay'.", "en": "Runs an egg-coffee café in a tiny Hàng Gai alley with a loft view of the lake. Moving to Đà Nẵng with her husband, she'll only hand the café to someone who 'whips eggs by hand'."},
       "home": {"lat": 21.03200, "lon": 105.85100},
@@ -402,7 +402,7 @@
     {
       "id": "co_nguyet_cai_luong",
       "tags": ["radio_host", "traditional_music"],
-      "name": {"vi": "NSƯT Ánh Nguyệt (hư cấu)", "en": "Artist Ánh Nguyệt (fictional)"},
+      "name": {"vi": "Nghệ sĩ Ánh Nguyệt", "en": "Artist Ánh Nguyệt"},
       "role": "contact",
       "age": 61,
       "gender": "female",

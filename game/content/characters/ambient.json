@@ -145,7 +145,7 @@
       "role": "ambient_archetype",
       "age": 68,
       "gender": "female",
-      "bio": {"vi": "Từ 5 giờ sáng tập dưỡng sinh, nhảy dân vũ, đi bộ ngược chiều kim đồng hồ quanh hồ, vỗ tay vào cây. Loa kéo mở 'Hà Nội mùa vắng những cơn mưa'.", "en": "From 5 a.m.: tai chi, line dancing, counter-clockwise walks round the lake, palms slapping tree trunks. A trolley speaker plays old Hanoi ballads."},
+      "bio": {"vi": "Từ 5 giờ sáng tập dưỡng sinh, nhảy dân vũ, đi bộ ngược chiều kim đồng hồ quanh hồ, vỗ tay vào cây. Loa kéo mở nhạc trữ tình về Hà Nội.", "en": "From 5 a.m.: tai chi, line dancing, counter-clockwise walks round the lake, palms slapping tree trunks. A trolley speaker plays old Hanoi ballads."},
       "occupation": {"vi": "Hưu trí", "en": "Retiree"},
       "voice": {"accent": "hanoi"},
       "appearance": {"outfit": "Bộ thể thao màu sặc sỡ, mũ vải, quạt nan."},
@@ -170,7 +170,7 @@
       "role": "ambient_archetype",
       "age": 45,
       "gender": "female",
-      "bio": {"vi": "Xe đạp Phượng Hoàng chất đầy hoa theo mùa: loa kèn tháng 4, sen tháng 6, cúc họa mi tháng 11, đào ngày Tết. Dân mạng xin chụp ảnh cùng xe hoa.", "en": "A Phoenix bicycle heaped with seasonal flowers: April lilies, June lotus, November daisies, Tết peach blossom. Instagrammers ask to pose with it."},
+      "bio": {"vi": "Chiếc xe đạp cũ chất đầy hoa theo mùa: loa kèn tháng 4, sen tháng 6, cúc họa mi tháng 11, đào ngày Tết. Dân mạng xin chụp ảnh cùng xe hoa.", "en": "An old bicycle heaped with seasonal flowers: April lilies, June lotus, November daisies, Tết peach blossom. Social-media fans ask to pose with it."},
       "occupation": {"vi": "Bán hoa", "en": "Flower seller"},
       "voice": {"accent": "northern_rural"},
       "schedule": [{"hours": [6, 12], "activity": "ban_hoa_rong"}, {"hours": [15, 19], "activity": "ban_hoa_rong"}]

@@ -38,8 +38,8 @@ FHanoiWeatherState UHanoiClimatologyWeather::Sample(const FDateTime& Local)
 	const int32 RainStart = Day.RandRange(0, 23);
 	const int32 RainHours = Day.RandRange(1, 6);
 	W.bNom = Day.FRand() < NomShare[M];
-	W.TemperatureC = MeanTempC[M] + DayOffset + 0.5f * DailyRangeC[M] * FMath::Cos((Hour - 14.f) / 24.f * 2.f * PI);
-	W.Humidity = FMath::Clamp(Humidity[M] + (W.bNom ? 0.12f : 0.f) - 0.1f * FMath::Cos((Hour - 14.f) / 24.f * 2.f * PI), 0.f, 1.f);
+	W.TemperatureC = MeanTempC[M] + DayOffset + 0.5f * DailyRangeC[M] * FMath::Cos((Hour - 14.f) / 24.f * 2.f * UE_PI);
+	W.Humidity = FMath::Clamp(Humidity[M] + (W.bNom ? 0.12f : 0.f) - 0.1f * FMath::Cos((Hour - 14.f) / 24.f * 2.f * UE_PI), 0.f, 1.f);
 	W.WindKmh = Day.FRandRange(4.f, 14.f);
 	W.CloudCover = bRainDay ? 0.9f : Day.FRandRange(0.1f, 0.7f);
 

@@ -73,7 +73,7 @@
           },
           "next": "thi_sat_hach",
           "fail_if": [
-            "nga_xe_5_lan"
+            "event:nga_xe_5_lan"
           ]
         },
         {
@@ -118,7 +118,7 @@
           },
           "next": "ve_dich",
           "fail_if": [
-            "vi_pham_giao_thong_2_lan"
+            "event:vi_pham_giao_thong_2_lan"
           ]
         },
         {
@@ -298,7 +298,7 @@
           },
           "next": "diem_hang_bac",
           "fail_if": [
-            "den_muon_qua_10_phut"
+            "event:den_muon_qua_10_phut"
           ]
         },
         {
@@ -362,6 +362,10 @@
           "target": {
             "lat": 21.03745,
             "lon": 105.8512
+          },
+          "params": {
+            "branch_source": "player_input",
+            "player_input": "hoi_thang_hay_im_lang"
           },
           "next": {
             "hoi_thang": "hoi",
@@ -433,6 +437,10 @@
             "lat": 21.03745,
             "lon": 105.8512
           },
+          "params": {
+            "branch_source": "player_input",
+            "player_input": "ke_hay_giu_kin"
+          },
           "next": {
             "ke_cho_lan": "gap_lan",
             "giu_kin": "ve_tro"
@@ -454,7 +462,8 @@
             "set_flags": [
               "lan_biet_danh_sach"
             ]
-          }
+          },
+          "next": "end"
         },
         {
           "id": "ve_tro",
@@ -581,9 +590,13 @@
             "en": "Which spices did you buy?"
           },
           "target": "landmarks:cho_dong_xuan",
+          "params": {
+            "branch_source": "flag",
+            "from_dialogue": "dialogues:dlg_c1_04_ba_lua"
+          },
           "next": {
-            "que_yen_bai": "ve_quan",
-            "que_re": "ve_quan_re"
+            "lan_mua_gia_vi_chuan": "ve_quan",
+            "lan_mua_gia_vi_re": "ve_quan_re"
           }
         },
         {
@@ -630,7 +643,8 @@
             "lat": 21.03745,
             "lon": 105.8512
           },
-          "dialogue": "dialogues:dlg_c1_04_cu_tho_khen"
+          "dialogue": "dialogues:dlg_c1_04_cu_tho_khen",
+          "next": "end"
         },
         {
           "id": "nem_re",
@@ -748,8 +762,8 @@
           },
           "next": "chu_y_csgt",
           "fail_if": [
-            "do_qua_5_suat",
-            "xe_chet_may_va_khong_dat_kip"
+            "event:do_qua_5_suat",
+            "event:xe_chet_may_va_khong_dat_kip"
           ]
         },
         {
@@ -764,9 +778,9 @@
             "lon": 105.8215
           },
           "params": {
-            "heat_start": 2,
             "decay_rule": "chi_giam_khi_tuan_thu_luat",
-            "alternative": "dung_lai_nop_phat"
+            "alternative": "dung_lai_nop_phat",
+            "heat": 2
           },
           "next": "cuu_tuan"
         },
@@ -774,12 +788,12 @@
           "id": "cuu_tuan",
           "kind": "go_to",
           "objective": {
-            "vi": "Đến Thái Hà, tìm Tuấn và chiếc xe chết máy",
-            "en": "Go to Thái Hà, find Tuấn and his dead bike"
+            "vi": "Đến Nguyễn Trãi đoạn Khương Trung, tìm Tuấn và chiếc xe chết máy",
+            "en": "Go to Nguyễn Trãi by Khương Trung, find Tuấn and his dead bike"
           },
           "target": {
-            "lat": 21.0135,
-            "lon": 105.8205
+            "lat": 20.9975,
+            "lon": 105.817
           },
           "next": "day_xe"
         },
@@ -994,7 +1008,7 @@
           },
           "next": "mark_nem",
           "fail_if": [
-            "diem_duoi_60"
+            "event:diem_duoi_60"
           ]
         },
         {
@@ -1092,7 +1106,7 @@
           },
           "dialogue": "dialogues:dlg_c1_08_mo_dau",
           "params": {
-            "time_of_day": 18.0,
+            "time_of_day": 19.0,
             "requires_event": "events:pho_di_bo_cuoi_tuan"
           },
           "next": "minh_cho_anh"
@@ -1101,12 +1115,12 @@
           "id": "minh_cho_anh",
           "kind": "deliver",
           "objective": {
-            "vi": "MINH: chở 20 khung ảnh từ Hàng Chiếu, gửi xe ngoài Đinh Tiên Hoàng (phố đi bộ cấm xe)",
-            "en": "MINH: haul 20 frames from Hàng Chiếu and park outside on Đinh Tiên Hoàng (no vehicles on the walking street)"
+            "vi": "MINH: chở 20 khung ảnh từ Hàng Chiếu, gửi xe ở bãi ngoài rào chắn (phố đi bộ cấm xe)",
+            "en": "MINH: haul 20 frames from Hàng Chiếu and park at a lot outside the barriers (no vehicles on the walking street)"
           },
           "target": {
-            "lat": 21.032,
-            "lon": 105.8533
+            "lat": 21.0322,
+            "lon": 105.8556
           },
           "params": {
             "protagonist": "characters:minh",
@@ -1299,7 +1313,7 @@
           },
           "params": {
             "radio_forced": "radio:ha_noi_xua",
-            "no_minimap": true
+            "minimap": false
           },
           "next": "bi_mat"
         },

@@ -1,6 +1,7 @@
 # 04. Danh sách nội dung và phần còn thiếu
 
-Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi file là
+Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Nhật ký QC nội dung gần nhất:
+`05-qc-noi-dung.md`. Mọi file là
 `{"collection": "...", "items": [...]}` theo `game/schemas/<collection>.schema.json`.
 
 ## Nội dung hiện có (v0)
@@ -9,7 +10,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
 | --- | --- | --- | --- |
 | districts | `world/districts.json` | 13 | Phố cổ, Hoàn Kiếm/khu Pháp, Ba Đình, Tây Hồ, Long Biên, Đống Đa, Hai Bà Trưng, Cầu Giấy, Thanh Xuân, Hà Đông, Hoàng Mai, Gia Lâm, Mỹ Đình. Tên phường theo ranh giới sau sáp nhập 7/2025 gắn tag `division_names_need_check` |
 | building_archetypes | `world/building_archetypes.json` | 13 | Đúng 13 id pipeline dùng |
-| landmarks | `world/landmarks.json` | 44 | Mọi toạ độ gắn `coords_unverified` |
+| landmarks | `world/landmarks.json` | 44 | 24 mục `coords_verified_overture`, 20 mục còn `coords_unverified` |
 | characters | `characters/protagonists.json` | 3 | Minh, Lan, Khôi |
 | characters | `characters/story.json` | 24 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio |
 | characters | `characters/ambient.json` | 20 | Kiểu dân cư có lịch sinh hoạt |
@@ -19,7 +20,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
 | missions | `missions/story_chapter1.json` | 9 | Chương 1 |
 | missions | `missions/side_stranger.json` | 12 | Phụ và người lạ |
 | dialogues | `dialogues/prologue.json`, `chapter1.json`, `side.json` | 57 | Có bản `en` cho mọi dòng |
-| items | `items.json` | 48 | Đồ ăn, đồ dùng, app, giấy tờ, sưu tầm |
+| items | `items.json` | 52 | Đồ ăn, đồ dùng, 12 app điện thoại, giấy tờ, sưu tầm, vật phẩm nhiệm vụ (`la_dong`, `dieu_cua_be`) |
 | businesses | `businesses.json` | 11 | Đủ 10 loại hình |
 | events | `events.json` | 20 | Lịch âm, lịch dương, tuần, dữ liệu sống |
 | radio | `radio.json` | 7 | Nhạc gốc hoặc chờ cấp phép |
@@ -45,7 +46,8 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
 
 ## Việc kiểm chứng còn treo
 
-1. **Toạ độ** 44 địa danh và tâm 13 quận: khớp với Overture places/OSM, bỏ tag `coords_unverified`.
+1. **Toạ độ** 20 địa danh còn `coords_unverified` và tâm 13 quận: khớp với Overture places/OSM
+   (`pipeline/verify_landmarks.py`), bỏ tag `coords_unverified`.
 2. **Tên phường** trong `overture_division_names`: đối chiếu ranh giới hành chính sau 1/7/2025 mà
    Overture đang dùng.
 3. **Mức phạt** 11 lỗi `fine_unverified`: đối chiếu Nghị định 168/2024/NĐ-CP (và sửa đổi nếu có)
@@ -77,3 +79,9 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Mọi
 9. **activities.pay** thêm `commission_rate` (app ăn chiết khấu) và `currency_note`.
 10. **characters.voice** thêm `dialect_region` chi tiết hơn (`thai_binh`, `nam_dinh`, `phu_tho`,
     `hung_yen`) thay vì gộp `northern_rural`.
+11. **missions.steps[].set_flags**: cờ đặt ngay khi xong một bước (hiện `c1_03` ghi trong
+    `params.set_flags` ở bước `gap_lan`/`ve_tro`, nhưng runtime chỉ áp `reward.set_flags` lúc kết thúc
+    nhiệm vụ).
+12. **missions.steps[].fail_if** có pattern chặt (`^(event|flag):[a-z0-9_]+$|^(time|heat)(>=|<=|==|>|<)\d+$`)
+    và **next** chấp nhận rõ ràng các giá trị đặc biệt `end`/`success`/`fail`, để validator bắt lỗi
+    cú pháp mà runtime đang bỏ qua im lặng.

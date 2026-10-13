@@ -82,7 +82,7 @@ về một quán phở.
 | 1.1 | Thầy Minh | Khôi + Minh | Học xe số ở bãi giữa, thi A1, qua cầu Long Biên đi bên trái |
 | 1.2 | Người vui nhất Hà Nội | Khôi | Gặp ông Thắng, xích lô qua phố cổ, ảnh 1989 trên cầu, lựa chọn giữ/bán |
 | 1.3 | Khách VIP cả ngày | Minh | Chở Thảo khảo sát 14 nhà, lời mời làm việc (3 lựa chọn), kể hay giấu Lan |
-| 1.4 | Chợ lúc sáu giờ | Lan | Chợ Long Biên lúc nửa đêm, chọn gia vị chuẩn hay rẻ (hệ quả doanh thu) |
+| 1.4 | Chợ lúc sáu giờ | Lan | Chợ Long Biên lúc 2:30 sáng, sạp bà Lụa ở chợ Đồng Xuân lúc 6 giờ, chọn gia vị chuẩn hay rẻ (hệ quả doanh thu) |
 | 1.5 | Mưa ngập phố | Minh | Thời tiết sống, giao 30 suất phở, Chú ý CSGT, cứu Tuấn, tin đồn "tiền mua tin" |
 | 1.6 | Họp tổ dân phố | Lan + Khôi | Ba lập luận (thông tin mật / tình cảm / phương án), Khôi giữ hay xin thời gian |
 | 1.7 | Con bò đi spa | Lan | Vlogger Mark, phở đúng hay phở chiêu trò, video viral |

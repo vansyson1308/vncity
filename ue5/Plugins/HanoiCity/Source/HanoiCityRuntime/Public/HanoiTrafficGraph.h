@@ -47,8 +47,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi|Traffic")
 	bool bLoadOnBeginPlay = true;
 
-	UFUNCTION(BlueprintCallable, CallInEditor, Category = "Hanoi|Traffic")
+	/** (Re)loads GraphFile. Returns false (and logs) if the file is missing or malformed. */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Traffic")
 	bool LoadGraph();
+
+	/** Details-panel button (CallInEditor functions must have no parameters and no return value). */
+	UFUNCTION(CallInEditor, Category = "Hanoi|Traffic")
+	void ReloadGraph() { LoadGraph(); }
 
 	/** Index of the closest node within MaxDistanceCm (2D), or -1. */
 	UFUNCTION(BlueprintPure, Category = "Hanoi|Traffic")
@@ -88,5 +93,5 @@ private:
 	float MaxSpeedMps = 1.f;
 
 	static constexpr float GridCellCm = 10000.f;
-	FIntPoint CellOf(const FVector& P) const { return FIntPoint(FMath::FloorToInt(P.X / GridCellCm), FMath::FloorToInt(P.Y / GridCellCm)); }
+	FIntPoint CellOf(const FVector& P) const { return FIntPoint(int32(FMath::FloorToDouble(P.X / GridCellCm)), int32(FMath::FloorToDouble(P.Y / GridCellCm))); }
 };

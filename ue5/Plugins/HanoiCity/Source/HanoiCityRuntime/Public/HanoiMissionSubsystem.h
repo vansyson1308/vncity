@@ -102,7 +102,10 @@ public:
 	bool LoadProgress();
 
 	UFUNCTION(BlueprintPure, Category = "Hanoi|Progress")
-	const FHanoiPlayerState& GetPlayerState() const { return State; }
+	FHanoiPlayerState GetPlayerState() const { return State; }
+
+	/** C++ read access without a copy. */
+	const FHanoiPlayerState& GetPlayerStateRef() const { return State; }
 
 	/** Direct access for other subsystems (heat fines...). Call NotifyStateChanged after edits. */
 	FHanoiPlayerState& MutableState() { return State; }

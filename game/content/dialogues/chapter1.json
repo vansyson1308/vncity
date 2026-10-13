@@ -896,8 +896,8 @@
           "id": "l01",
           "speaker": "characters:tuan_beo",
           "text": {
-            "vi": "[Cuộc gọi] Minh ơi cứu tao! Thái Hà ngập đến bô xe rồi, xe tao chết máy, hai mươi cốc trà sữa đang bơi trong thùng!",
-            "en": "[Call] Minh, help! Thái Hà's flooded up to the exhaust, my bike's dead and twenty bubble teas are swimming in the box!"
+            "vi": "[Cuộc gọi] Minh ơi cứu tao! Nguyễn Trãi đoạn Khương Trung ngập đến bô xe rồi, xe tao chết máy, hai mươi cốc trà sữa đang bơi trong thùng!",
+            "en": "[Call] Minh, help! Nguyễn Trãi by Khương Trung is flooded up to the exhaust, my bike's dead and twenty bubble teas are swimming in the box!"
           }
         },
         {
@@ -1083,7 +1083,7 @@
           "speaker": "characters:co_hanh",
           "text": {
             "vi": "Em nói hay lắm, nhưng em có phải sống bốn người trong hai mươi mét vuông, chung nhà vệ sinh với hai nhà khác không?",
-            "en": "Lovely words, but do you live four to twenty square metres, sharing a toilet with two other families?"
+            "en": "Lovely words, but do you live four people in twenty square metres, sharing a toilet with two other families?"
           }
         },
         {
@@ -1257,7 +1257,7 @@
           "id": "l01",
           "speaker": "characters:mark",
           "text": {
-            "vi": "Xin chào! Ngôn quá! ...Sorry, chưa ăn đã khen. Hi, I'm Mark, 'Mark Eats Hanoi', two point one million subscribers. Is this the famous Phở Thọ?",
+            "vi": "Xin chào! Ngôn quá! ...Sorry, chưa ăn đã khen. Hi, I'm Mark, 'Mark Eats Hanoi', two point one million subscribers. Is this the famous Phở Thọ? [Chào cả nhà, tôi là Mark, kênh 'Mark Ăn Hà Nội', hai triệu một trăm nghìn người đăng ký. Đây là Phở Thọ nổi tiếng phải không?]",
             "en": "Xin chào! Ngôn quá! ...Sorry, I haven't even eaten yet. Hi, I'm Mark, 'Mark Eats Hanoi', two point one million subscribers. Is this the famous Phở Thọ?"
           }
         },
@@ -1273,7 +1273,7 @@
           "id": "l03",
           "speaker": "characters:mark",
           "text": {
-            "vi": "Whatever grandpa recommends! And, um, my manager asked: do you have something... special? For the thumbnail? Like a gold-leaf pho? Or a giant bowl challenge?",
+            "vi": "Whatever grandpa recommends! And, um, my manager asked: do you have something... special? For the thumbnail? Like a gold-leaf pho? Or a giant bowl challenge? [Ông cụ gợi ý gì tôi ăn nấy! À, quản lý của tôi hỏi: quán có món gì... đặc biệt không? Để làm ảnh bìa? Kiểu phở dát vàng? Hay thử thách ăn bát khổng lồ?]",
             "en": "Whatever grandpa recommends! And, um, my manager asked: do you have something... special? For the thumbnail? Like a gold-leaf pho? Or a giant bowl challenge?"
           }
         },
@@ -1318,7 +1318,7 @@
           "id": "l05",
           "speaker": "characters:mark",
           "text": {
-            "vi": "Oh, I love that. 'Only one way: right.' That's my title!",
+            "vi": "Oh, I love that. 'Only one way: right.' That's my title! [Ôi, thích quá. 'Chỉ một kiểu: đúng.' Tiêu đề video của tôi đây rồi!]",
             "en": "Oh, I love that. 'Only one way: right.' That's my title!"
           },
           "goto": "l07"
@@ -1327,7 +1327,7 @@
           "id": "l06",
           "speaker": "characters:mark",
           "text": {
-            "vi": "YES! Content!",
+            "vi": "YES! Content! [Tuyệt! Có nội dung rồi!]",
             "en": "YES! Content!"
           }
         },
@@ -1349,23 +1349,23 @@
           "id": "l01",
           "speaker": "characters:mark",
           "text": {
-            "vi": "(húp) ...Oh. Oh no. Guys. I'm not acting. This broth is... clean. It's like the cow went to a spa.",
+            "vi": "(húp) ...Oh. Oh no. Guys. I'm not acting. This broth is... clean. It's like the cow went to a spa. [Ôi. Ôi trời. Các bạn ơi, tôi không diễn đâu. Nước dùng này... trong veo. Cứ như con bò vừa đi spa về.]",
             "en": "(slurps) ...Oh. Oh no. Guys. I'm not acting. This broth is... clean. It's like the cow went to a spa."
           }
         },
         {
           "id": "l02",
-          "speaker": "characters:lan",
+          "speaker": "characters:cu_tho",
           "text": {
-            "vi": "Anh ấy nói gì thế ông?",
-            "en": "What's he saying, Grandpa?"
+            "vi": "Thằng Tây nó nói gì thế?",
+            "en": "What's the foreigner saying?"
           }
         },
         {
           "id": "l03",
           "speaker": "characters:khoi",
           "text": {
-            "vi": "Anh ấy bảo nước dùng trong như con bò vừa đi spa về. Đó là lời khen. Ở Úc.",
+            "vi": "Ông ơi, anh ấy bảo nước dùng trong như con bò vừa đi spa về. Đó là lời khen ạ. Ở Úc.",
             "en": "He says the broth is so clean the cow must have been to a spa. That's a compliment. In Australia."
           }
         },
@@ -1381,7 +1381,7 @@
           "id": "l05",
           "speaker": "characters:mark",
           "text": {
-            "vi": "Grandpa, can I ask: why do you still get up at four a.m. at your age?",
+            "vi": "Grandpa, can I ask: why do you still get up at four a.m. at your age? [Ông ơi, cho cháu hỏi: sao tuổi này ông vẫn dậy từ bốn giờ sáng?]",
             "en": "Grandpa, can I ask: why do you still get up at four a.m. at your age?"
           }
         },
@@ -1411,16 +1411,16 @@
           "id": "l01",
           "speaker": "characters:linh_bao_ton",
           "text": {
-            "vi": "Ok team! Phường cấp phép cho nhóm mình một gian từ bảy đến mười giờ. Anh Minh: chuyển hai mươi khung ảnh từ Hàng Chiếu ra. Anh Khôi: chụp phản ứng của khách. Chị Lan: phở cuốn mời nếm, nhỏ thôi, đừng bê cả nồi ra đây nhé!",
-            "en": "Okay team! The ward gave us a stall from seven to ten. Minh: bring twenty framed prints from Hàng Chiếu. Khôi: shoot people's reactions. Lan: rolled-pho tasters, small ones, don't bring the whole pot!"
+            "vi": "Ok team! Phường cấp phép cho nhóm mình một gian từ tám đến mười một giờ. Anh Minh: chuyển hai mươi khung ảnh từ Hàng Chiếu ra. Anh Khôi: chụp phản ứng của khách. Chị Lan: phở cuốn mời nếm, nhỏ thôi, đừng bê cả nồi ra đây nhé!",
+            "en": "Okay team! The ward gave us a stall from eight to eleven. Minh: bring twenty framed prints from Hàng Chiếu. Khôi: shoot people's reactions. Lan: rolled-pho tasters, small ones, don't bring the whole pot!"
           }
         },
         {
           "id": "l02",
           "speaker": "characters:minh",
           "text": {
-            "vi": "Phố đi bộ cấm xe, anh để xe ngoài Đinh Tiên Hoàng rồi bê bộ vào à? Hai mươi khung?",
-            "en": "The walking street is closed to bikes; I park on Đinh Tiên Hoàng and carry them in? Twenty frames?"
+            "vi": "Phố đi bộ cấm xe, anh gửi xe ngoài rào chắn rồi bê bộ vào à? Hai mươi khung?",
+            "en": "The walking street is closed to bikes; I park outside the barriers and carry them in? Twenty frames?"
           }
         },
         {
@@ -1814,8 +1814,8 @@
           "id": "l13",
           "speaker": "characters:vinh",
           "text": {
-            "vi": "Không cũng là một câu trả lời. Nhưng cô chỉ là một trong ba chữ ký.",
-            "en": "No is also an answer. But you are only one of three signatures."
+            "vi": "Không cũng là một câu trả lời. Nhưng tên cô không có trong sổ đỏ, cô Lan. Tên cô Hạnh thì có.",
+            "en": "No is also an answer. But your name isn't on the deed, Ms Lan. Mrs Hạnh's is."
           },
           "goto": "l16"
         },
@@ -1922,8 +1922,8 @@
           "id": "l09",
           "speaker": "characters:minh",
           "text": {
-            "vi": "Cháy một cánh. Giống cái đèn ông sao của anh.",
-            "en": "Burnt off one point. Like your star lantern."
+            "vi": "(khẽ) Cháy đúng chỗ quan trọng nhất.",
+            "en": "(quietly) Burnt right where it matters most."
           }
         },
         {

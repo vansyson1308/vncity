@@ -113,7 +113,7 @@
           "id": "l01",
           "speaker": "characters:mark",
           "text": {
-            "vi": "Khôi, mate, I've been standing on this corner for twenty minutes. There are no gaps. The gaps are a myth.",
+            "vi": "Khôi, mate, I've been standing on this corner for twenty minutes. There are no gaps. The gaps are a myth. [Khôi ơi, tôi đứng ở góc này hai mươi phút rồi. Chẳng có khe nào cả. Khe hở là chuyện bịa.]",
             "en": "Khôi, mate, I've been standing on this corner for twenty minutes. There are no gaps. The gaps are a myth."
           }
         },
@@ -129,7 +129,7 @@
           "id": "l03",
           "speaker": "characters:mark",
           "text": {
-            "vi": "In English please.",
+            "vi": "In English please. [Nói tiếng Anh giúp tôi với.]",
             "en": "In English please."
           }
         },
@@ -137,7 +137,7 @@
           "id": "l04",
           "speaker": "characters:khoi",
           "text": {
-            "vi": "Walk slowly. Don't stop. Don't run. Be a rock in a river.",
+            "vi": "Walk slowly. Don't stop. Don't run. Be a rock in a river. [Đi chậm. Đừng dừng. Đừng chạy. Làm hòn đá giữa dòng sông.]",
             "en": "Walk slowly. Don't stop. Don't run. Be a rock in a river."
           }
         },
@@ -145,7 +145,7 @@
           "id": "l05",
           "speaker": "characters:mark",
           "text": {
-            "vi": "Be a rock. Be a rock. Okay. If I die, tell my mum the pho was worth it.",
+            "vi": "Be a rock. Be a rock. Okay. If I die, tell my mum the pho was worth it. [Làm hòn đá. Làm hòn đá. Được rồi. Nếu tôi chết, nhắn mẹ tôi là bát phở đáng lắm.]",
             "en": "Be a rock. Be a rock. Okay. If I die, tell my mum the pho was worth it."
           }
         }
@@ -162,8 +162,8 @@
           "id": "l01",
           "speaker": "characters:mark",
           "text": {
-            "vi": "And now the train street! I saw it on Instagram, people having coffee while the train passes like, this close!",
-            "en": "And now the train street! I saw it on Instagram, people having coffee while the train passes like, this close!"
+            "vi": "And now the train street! I saw it on Tóp Tóp, people having coffee while the train passes like, this close! [Giờ đến phố đường tàu! Tôi xem trên Tóp Tóp rồi, người ta ngồi uống cà phê lúc tàu chạy qua, sát thế này này!]",
+            "en": "And now the train street! I saw it on Tóp Tóp, people having coffee while the train passes like, this close!"
           }
         },
         {
@@ -178,7 +178,7 @@
           "id": "l03",
           "speaker": "characters:mark",
           "text": {
-            "vi": "You're no fun.",
+            "vi": "You're no fun. [Anh chán thật đấy.]",
             "en": "You're no fun."
           }
         },
@@ -562,8 +562,8 @@
           "id": "l02",
           "speaker": "characters:cu_tho",
           "text": {
-            "vi": "Năm tám tư. Con Hạnh lên ba. Ngồi xếp hàng với bố, ngủ gục trên cái rổ. (lặng đi) Đem cho bảo tàng đi. Để bọn trẻ biết.",
-            "en": "Eighty-four. Hạnh was three. She queued with me and fell asleep on the basket. (falls silent) Give them to the museum. Let the young ones know."
+            "vi": "Năm tám tư. Con Hạnh mười ba tuổi, đi xếp hàng thay bố từ bốn giờ sáng, ngủ gục trên cái rổ. (lặng đi) Đem cho bảo tàng đi. Để bọn trẻ biết.",
+            "en": "Eighty-four. Hạnh was thirteen. She queued in my place from four in the morning and fell asleep on the basket. (falls silent) Give them to the museum. Let the young ones know."
           }
         }
       ]
@@ -884,8 +884,8 @@
           "id": "l02",
           "speaker": "characters:minh",
           "text": {
-            "vi": "Em tu rồi anh ạ. Năm triệu một lần vượt đèn, em đau lắm.",
-            "en": "I've reformed. Five million for one red light, that hurt."
+            "vi": "Em tu rồi anh ạ. Năm triệu một lần vượt đèn, nghĩ thôi em đã thấy đau.",
+            "en": "I've reformed. Five million for one red light; just thinking about it hurts."
           }
         },
         {

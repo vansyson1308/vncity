@@ -89,3 +89,11 @@ def test_scatter_is_deterministic():
     assert scatter.seed_of("a", 1) == scatter.seed_of("a", 1) != scatter.seed_of("a", 2)
     pts = list(scatter.along([[0, 0], [100, 0]], 10, 3.0, 5))
     assert len(pts) == 10 and all(abs(y - 3.0) < 1e-9 for _, y, _ in pts)
+
+
+def test_classify_names_that_only_look_religious():
+    assert semantics.classify(bld(name="Ga Chùa Hà", area_m2=2000), None)[0] == "cong_trinh_cong_cong"
+    assert semantics.classify(bld(name="5 Điện Biên Phủ"), "old_quarter")[0] != "dinh_chua"
+    assert semantics.classify(bld(name="Quán phở Thìn"), "old_quarter")[0] != "dinh_chua"
+    assert semantics.classify(bld(name="Hội quán Phúc Kiến"), "old_quarter")[0] == "dinh_chua"
+    assert semantics.classify(bld(name="Đền Quán Thánh"), None)[0] == "dinh_chua"

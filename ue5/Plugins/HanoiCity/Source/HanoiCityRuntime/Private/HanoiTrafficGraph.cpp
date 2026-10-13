@@ -219,7 +219,7 @@ bool AHanoiTrafficGraph::FindPath(const FVector& Start, const FVector& End, bool
 	{
 		const FHanoiTrafficEdge& E = Edges[ViaEdge[N]];
 		const bool bReverse = E.To != N;
-		Route.Add({ViaEdge[N], bReverse});
+		Route.Emplace(ViaEdge[N], bReverse);
 		N = bReverse ? E.To : E.From;
 	}
 	Algo::Reverse(Route);

@@ -22,7 +22,7 @@
       "tags": ["core", "tourist", "lake", "french_quarter", "walking_street", "division_names_need_check"],
       "name": {"vi": "Hồ Hoàn Kiếm và khu phố Pháp", "en": "Hoàn Kiếm Lake and the French Quarter"},
       "center": {"lat": 21.02560, "lon": 105.85350},
-      "overture_division_names": ["Hoàn Kiếm", "Cửa Nam", "Phường Cửa Nam", "Tràng Tiền", "Hàng Bài", "Phan Chu Trinh", "Tràng Tiền", "Lý Thái Tổ", "Trần Hưng Đạo"],
+      "overture_division_names": ["Hoàn Kiếm", "Cửa Nam", "Phường Cửa Nam", "Tràng Tiền", "Hàng Bài", "Phan Chu Trinh", "Lý Thái Tổ", "Trần Hưng Đạo"],
       "identity": {
         "vi": "Trái tim thành phố. Hồ Gươm với Tháp Rùa, cầu Thê Húc đỏ son; phía nam là đại lộ có hàng sấu, biệt thự vàng cửa chớp xanh, Nhà hát Lớn, Tràng Tiền. Sáng sớm các cụ tập dưỡng sinh, tối cuối tuần phố đi bộ đông nghịt, kem Tràng Tiền và chụp ảnh cưới.",
         "en": "The heart of the city. Sword Lake with Turtle Tower and the red Huc Bridge; to the south, tamarind-lined boulevards, ochre villas with green shutters, the Opera House, Tràng Tiền. Elderly tai chi at dawn, packed walking street on weekend nights, ice cream and wedding shoots."
@@ -72,7 +72,7 @@
       "center": {"lat": 21.04500, "lon": 105.87500},
       "overture_division_names": ["Long Biên", "Phường Long Biên", "Bồ Đề", "Việt Hưng", "Phúc Lợi", "Quận Long Biên", "Ngọc Thụy", "Ngọc Lâm", "Gia Thụy", "Hồng Hà", "Phúc Xá"],
       "identity": {
-        "vi": "Bên kia cầu Long Biên. Dưới gầm cầu là bãi giữa: ruộng ngô, vườn chuối, nhà tạm, người thả diều và chụp ảnh lau trắng tháng 10. Ngoài đê là Long Biên mới với khu đô thị, Aeon Mall, phố Nguyễn Văn Cừ, Ngọc Lâm. Gió sông, tiếng tàu hỏa chạy chậm trên cầu sắt.",
+        "vi": "Bên kia cầu Long Biên. Dưới gầm cầu là bãi giữa: ruộng ngô, vườn chuối, nhà tạm, người thả diều và chụp ảnh lau trắng tháng 10. Ngoài đê là Long Biên mới với khu đô thị, trung tâm thương mại lớn, phố Nguyễn Văn Cừ, Ngọc Lâm. Gió sông, tiếng tàu hỏa chạy chậm trên cầu sắt.",
         "en": "Across the Long Biên bridge. Beneath it lies the sandbank: maize fields, banana groves, makeshift houses, kite flyers and October reed-flower photo shoots. Beyond the dyke, new Long Biên with townhouse estates, a big mall and Nguyễn Văn Cừ road. River wind and slow trains rattling over the steel bridge."
       },
       "era_mix": {"nha_ong_hien_dai": 0.35, "lien_ke_kdt": 0.20, "nha_thap_tang": 0.20, "chung_cu_cao_tang": 0.10, "khu_tap_the": 0.05, "nha_xuong": 0.05, "dinh_chua": 0.03, "cho": 0.02},
@@ -104,8 +104,8 @@
       "center": {"lat": 21.00800, "lon": 105.85400},
       "overture_division_names": ["Hai Bà Trưng", "Phường Hai Bà Trưng", "Vĩnh Tuy", "Bạch Mai", "Quận Hai Bà Trưng", "Bùi Thị Xuân", "Lê Đại Hành", "Phố Huế", "Bách Khoa", "Thanh Nhàn", "Minh Khai"],
       "identity": {
-        "vi": "Phố Huế - Bà Triệu sầm uất, chợ Hôm, công viên Thống Nhất với hồ Bảy Mẫu, Đại học Bách Khoa - Kinh tế Quốc dân, phố Lò Đúc với phở bò cũ, Times City phía đông nam. Biệt thự Pháp xen nhà ống, khu tập thể Thanh Nhàn, Bách Khoa.",
-        "en": "Busy Huế and Bà Triệu streets, Hôm market, Thống Nhất park and its lake, the Polytechnic and Economics universities, old-school beef pho on Lò Đúc, and the Times City towers to the south-east. French villas squeezed between tube houses and housing blocks."
+        "vi": "Phố Huế - Bà Triệu sầm uất, chợ Hôm, công viên Thống Nhất với hồ Bảy Mẫu, Đại học Bách Khoa - Kinh tế Quốc dân, phố Lò Đúc với phở bò cũ, cụm chung cư cao tầng phía đông nam. Biệt thự Pháp xen nhà ống, khu tập thể Thanh Nhàn, Bách Khoa.",
+        "en": "Busy Huế and Bà Triệu streets, Hôm market, Thống Nhất park and its lake, the Polytechnic and Economics universities, old-school beef pho on Lò Đúc, and a cluster of apartment towers to the south-east. French villas squeezed between tube houses and housing blocks."
       },
       "era_mix": {"nha_ong_hien_dai": 0.35, "khu_tap_the": 0.20, "biet_thu_phap": 0.08, "chung_cu_cao_tang": 0.10, "nha_thap_tang": 0.10, "cong_trinh_cong_cong": 0.07, "cho": 0.04, "van_phong_cao_tang": 0.06},
       "density": "very_high",
@@ -136,8 +136,8 @@
       "center": {"lat": 20.99500, "lon": 105.81000},
       "overture_division_names": ["Thanh Xuân", "Phường Thanh Xuân", "Khương Đình", "Phương Liệt", "Quận Thanh Xuân", "Nhân Chính", "Thượng Đình", "Khương Trung", "Kim Giang"],
       "identity": {
-        "vi": "Trục Nguyễn Trãi với tàu điện Cát Linh - Hà Đông chạy trên cao, khu tập thể Thanh Xuân Bắc, Royal City, ngõ Khương Đình đầy phòng trọ của người tỉnh lên làm ăn. Đây là nơi Minh thuê trọ: 2,5 triệu một tháng, chung nhà vệ sinh.",
-        "en": "Nguyễn Trãi avenue with the elevated Cát Linh - Hà Đông metro overhead, the Thanh Xuân Bắc housing blocks, Royal City, and Khương Đình alleys full of rooms rented by people from the provinces. Minh rents here: 2.5 million a month, shared toilet."
+        "vi": "Trục Nguyễn Trãi với tàu điện Cát Linh - Hà Đông chạy trên cao, khu tập thể Thanh Xuân Bắc, tổ hợp chung cư có trung tâm thương mại dưới lòng đất, ngõ Khương Đình đầy phòng trọ của người tỉnh lên làm ăn. Đây là nơi Minh thuê trọ: 2,5 triệu một tháng, chung nhà vệ sinh.",
+        "en": "Nguyễn Trãi avenue with the elevated Cát Linh - Hà Đông metro overhead, the Thanh Xuân Bắc housing blocks, a tower complex with an underground mall, and Khương Đình alleys full of rooms rented by people from the provinces. Minh rents here: 2.5 million a month, shared toilet."
       },
       "era_mix": {"nha_ong_hien_dai": 0.35, "khu_tap_the": 0.15, "chung_cu_cao_tang": 0.20, "nha_thap_tang": 0.15, "van_phong_cao_tang": 0.07, "nha_xuong": 0.03, "cong_trinh_cong_cong": 0.05},
       "density": "very_high",
@@ -180,12 +180,12 @@
     {
       "id": "gia_lam",
       "tags": ["suburb", "pottery_village", "periphery", "map_edge", "division_names_need_check"],
-      "name": {"vi": "Gia Lâm và phía Ecopark", "en": "Gia Lâm and the Ecopark side"},
+      "name": {"vi": "Gia Lâm và khu đô thị sinh thái", "en": "Gia Lâm and the eco-township"},
       "center": {"lat": 21.00800, "lon": 105.93300},
       "overture_division_names": ["Gia Lâm", "Thuận An", "Bát Tràng", "Phù Đổng", "Huyện Gia Lâm", "Trâu Quỳ", "Đa Tốn", "Kiêu Kỵ", "Dương Xá"],
       "identity": {
-        "vi": "Rìa đông của bản đồ. Học viện Nông nghiệp ở Trâu Quỳ, làng gốm Bát Tràng với lò nung và chợ gốm, làng nghề quỳ vàng Kiêu Kỵ, đồng ruộng ven đê; xa hơn là khu đô thị sinh thái kiểu Ecopark (thực tế thuộc Văn Giang, Hưng Yên: ta chỉ dựng phần nhìn thấy làm phông nền).",
-        "en": "The eastern map edge. The agriculture academy at Trâu Quỳ, Bát Tràng pottery village with kilns and a ceramics market, Kiêu Kỵ gold-leaf village, fields along the dyke; beyond lies an Ecopark-style eco-township (actually in Văn Giang, Hưng Yên, so only its skyline is built as backdrop)."
+        "vi": "Rìa đông của bản đồ. Học viện Nông nghiệp ở Trâu Quỳ, làng gốm Bát Tràng với lò nung và chợ gốm, làng nghề quỳ vàng Kiêu Kỵ, đồng ruộng ven đê; xa hơn là một khu đô thị sinh thái lớn (thực tế thuộc Văn Giang, Hưng Yên: ta chỉ dựng phần nhìn thấy làm phông nền).",
+        "en": "The eastern map edge. The agriculture academy at Trâu Quỳ, Bát Tràng pottery village with kilns and a ceramics market, Kiêu Kỵ gold-leaf village, fields along the dyke; beyond lies a large eco-township (actually in Văn Giang, Hưng Yên, so only its skyline is built as backdrop)."
       },
       "era_mix": {"nha_ong_hien_dai": 0.30, "lien_ke_kdt": 0.20, "nha_thap_tang": 0.25, "nha_xuong": 0.10, "dinh_chua": 0.06, "chung_cu_cao_tang": 0.06, "cho": 0.03},
       "density": "low",
@@ -200,8 +200,8 @@
       "center": {"lat": 21.02000, "lon": 105.77000},
       "overture_division_names": ["Từ Liêm", "Phường Từ Liêm", "Xuân Phương", "Tây Mỗ", "Đại Mỗ", "Quận Nam Từ Liêm", "Mỹ Đình 1", "Mỹ Đình 2", "Mễ Trì", "Phú Đô", "Cầu Diễn"],
       "identity": {
-        "vi": "Hà Nội mới: Landmark 72 sừng sững trên đại lộ Phạm Hùng, sân vận động Mỹ Đình, bến xe Mỹ Đình, Trung tâm Hội nghị Quốc gia, khu đô thị Vinhomes, đại lộ Thăng Long thẳng tắp ra phía tây. Kính, thép, đèn LED, quán nhậu dưới chân chung cư.",
-        "en": "New Hanoi: Landmark 72 towering over Phạm Hùng boulevard, Mỹ Đình stadium and coach station, the National Convention Centre, glossy township estates, the straight Thăng Long avenue running west. Glass, steel, LED signs and beer joints beneath apartment towers."
+        "vi": "Hà Nội mới: tòa tháp 72 tầng sừng sững trên đại lộ Phạm Hùng, sân vận động Mỹ Đình, bến xe Mỹ Đình, Trung tâm Hội nghị Quốc gia, các khu đô thị mới, đại lộ Thăng Long thẳng tắp ra phía tây. Kính, thép, đèn LED, quán nhậu dưới chân chung cư.",
+        "en": "New Hanoi: the 72-storey tower looming over Phạm Hùng boulevard, Mỹ Đình stadium and coach station, the National Convention Centre, glossy township estates, the straight Thăng Long avenue running west. Glass, steel, LED signs and beer joints beneath apartment towers."
       },
       "era_mix": {"van_phong_cao_tang": 0.20, "chung_cu_cao_tang": 0.30, "lien_ke_kdt": 0.20, "nha_ong_hien_dai": 0.18, "cong_trinh_cong_cong": 0.07, "nha_thap_tang": 0.05},
       "density": "medium",

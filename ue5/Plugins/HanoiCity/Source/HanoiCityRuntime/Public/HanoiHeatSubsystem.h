@@ -35,7 +35,7 @@ public:
 	void AddHeat(float Amount);
 
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Heat")
-	void SetSeenByPolice(bool bSeen);
+	void SetSeenByPolice(bool bInSeen);
 
 	/** Police stopped the player: pay what can be paid, clear heat. Returns the amount paid. */
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Heat")

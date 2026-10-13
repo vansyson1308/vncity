@@ -75,7 +75,7 @@
       "upkeep_per_day_vnd": 250000,
       "upgrades": [
         {"id": "may_rua_xe", "name": {"vi": "Máy rửa xe áp lực", "en": "Pressure washer"}, "cost_vnd": 6000000, "income_bonus": 0.2},
-        {"id": "kho_phu_tung", "name": {"vi": "Kho phụ tùng chính hãng parody", "en": "Parts stockroom"}, "cost_vnd": 20000000, "income_bonus": 0.25},
+        {"id": "kho_phu_tung", "name": {"vi": "Kho phụ tùng chính hãng", "en": "Genuine-parts stockroom"}, "cost_vnd": 20000000, "income_bonus": 0.25},
         {"id": "dich_vu_cuu_ho_mua_ngap", "name": {"vi": "Dịch vụ cứu hộ xe mùa ngập", "en": "Flood rescue service"}, "cost_vnd": 5000000, "income_bonus": 0.1}
       ],
       "unlock": {"missions_completed": ["missions:s07_xe_chet_may_sau_mua"]}

@@ -14,8 +14,7 @@
       },
       "type": "stranger",
       "protagonists": [
-        "characters:minh",
-        "characters:lan"
+        "characters:minh"
       ],
       "giver": "characters:ba_tam_xoi",
       "summary": {
@@ -72,7 +71,7 @@
           },
           "target": "landmarks:cho_long_bien",
           "params": {
-            "item": "la_dong",
+            "item": "items:la_dong",
             "qty": 2,
             "cost_vnd": 40000
           },
@@ -280,7 +279,7 @@
           },
           "next": "den_duong_tau",
           "fail_if": [
-            "mark_chay_ngang"
+            "event:mark_chay_ngang"
           ]
         },
         {
@@ -318,7 +317,7 @@
             "wait_for_train_schedule": true
           },
           "fail_if": [
-            "dung_tren_ray"
+            "event:dung_tren_ray"
           ]
         }
       ],
@@ -391,8 +390,8 @@
           },
           "next": "ve_dich",
           "fail_if": [
-            "mo_ban_do",
-            "het_gio"
+            "event:mo_ban_do",
+            "event:het_gio"
           ]
         },
         {
@@ -476,7 +475,7 @@
           },
           "next": "trao_anh",
           "fail_if": [
-            "nguoi_dung_tren_ray"
+            "event:nguoi_dung_tren_ray"
           ]
         },
         {
@@ -555,7 +554,7 @@
           },
           "target": "landmarks:bai_giua_song_hong",
           "params": {
-            "item": "dieu_cua_be"
+            "item": "items:dieu_cua_be"
           },
           "next": "tha_dieu"
         },
@@ -935,11 +934,13 @@
           "params": {
             "vehicle": "vehicles:xe_dap_dua_ho_tay",
             "rivals": 24,
-            "start_hour": 5.0
+            "start_hour": 5.0,
+            "scripted_winner_npc": "ong_cu_han_quoc_70_tuoi",
+            "max_player_rank": 2
           },
           "next": "dich",
           "fail_if": [
-            "vi_pham_luat_3_lan"
+            "event:vi_pham_luat_3_lan"
           ]
         },
         {
@@ -1036,7 +1037,7 @@
           },
           "next": "tim_nha",
           "fail_if": [
-            "phanh_gap_3_lan"
+            "event:phanh_gap_3_lan"
           ]
         },
         {
@@ -1129,8 +1130,8 @@
           "id": "cho_mu",
           "kind": "deliver",
           "objective": {
-            "vi": "Chở 200 mũ bảo hiểm ra cổng trường trước giờ tan học (3 chuyến, xe tay ga)",
-            "en": "Bring 200 helmets to the school gate before closing time (3 trips by scooter)"
+            "vi": "Chở 200 mũ bảo hiểm ra cổng trường trước giờ tan học (3 chuyến)",
+            "en": "Bring 200 helmets to the school gate before closing time (3 trips)"
           },
           "target": {
             "lat": 21.027,
@@ -1143,7 +1144,7 @@
           },
           "next": "huong_dan",
           "fail_if": [
-            "vi_pham_giao_thong"
+            "event:vi_pham_giao_thong"
           ]
         },
         {

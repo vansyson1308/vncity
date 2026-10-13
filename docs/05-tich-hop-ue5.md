@@ -43,38 +43,129 @@ Runtime (`HanoiCityRuntime`):
 
 ## 3. Cài đặt
 
-1. Cài **Epic Games Launcher**, đăng nhập, tab Unreal Engine > Library > cài **5.8**. Trong
-   Options chọn thêm *Editor symbols for debugging* (cần khi gỡ lỗi C++) và target Windows.
-2. Cài **Visual Studio 2022** (bản Community được), workload *Game development with C++*,
-   kèm *MSVC v143*, *Windows 11 SDK*, *.NET desktop* (cho UnrealBuildTool). Kiểm tra trang
-   "Setting Up Visual Studio" của 5.8 xem có yêu cầu phiên bản toolchain cụ thể không.
-3. Python của repo (đã có `venv`) chạy độc lập với UE. UE có Python 3.11 nhúng riêng; các
-   script editor chỉ dùng thư viện chuẩn.
+### 3.1 Windows (đường chính)
+
+1. Cài **Epic Games Launcher**, đăng nhập, tab Unreal Engine > Library > **+** > chọn **5.8** >
+   Install. Trong *Options* giữ *Starter Content* tuỳ ý, bật *Editor symbols for debugging*
+   (cần khi gỡ lỗi C++, thêm ~40-60 GB) và target platform *Windows*.
+2. Cài **Visual Studio 2022** (Community được; nếu ghi chú phát hành 5.8 yêu cầu bản mới hơn thì
+   theo ghi chú đó). Trong Visual Studio Installer chọn:
+   * workload **Game development with C++**, bên phải đánh dấu thêm *Unreal Engine installer*,
+     *IDE support for Unreal Engine*, *Unreal Engine Test Adapter* (nếu có);
+   * workload **Desktop development with C++**;
+   * tab *Individual components*: **MSVC v143 – VS 2022 C++ x64/x86 build tools (Latest)**,
+     **Windows 11 SDK** (10.0.22621 trở lên), **.NET 8.0 Runtime** / *.NET desktop development*
+     (UnrealBuildTool và AutomationTool chạy trên .NET).
+   Xem trang "Setting Up Visual Studio for Unreal Engine" của 5.8 để biết đúng phiên bản
+   toolchain được hỗ trợ; dùng MSVC quá mới hoặc quá cũ là lỗi build phổ biến nhất.
+3. Clone repo này vào đường dẫn **ngắn, không dấu, không dấu cách** (ví dụ `D:\vncity`): đường
+   dẫn dài vượt giới hạn 260 ký tự của Windows khi build, và tên có dấu tiếng Việt làm hỏng
+   một số công cụ.
+4. Python của repo (`venv`) chạy độc lập với UE. UE có Python 3.11 nhúng riêng; các script
+   editor chỉ dùng thư viện chuẩn, không cần `pip install` gì trong UE.
+
+### 3.2 macOS (phụ)
+
+1. Epic Games Launcher > cài 5.8 (Apple Silicon được hỗ trợ).
+2. Cài **Xcode** đúng phiên bản mà ghi chú phát hành 5.8 yêu cầu (App Store hoặc
+   developer.apple.com), mở Xcode một lần để chấp nhận license, rồi
+   `sudo xcode-select -s /Applications/Xcode.app`.
+3. Thay "Generate Visual Studio project files" ở mục 4 bằng chuột phải `HanoiCity.uproject` >
+   *Services* > **Generate Xcode Project**, hoặc chạy
+   `"/Users/Shared/Epic Games/UE_5.8/Engine/Build/BatchFiles/Mac/GenerateProjectFiles.sh" -project="$PWD/ue5/HanoiCity.uproject" -game`.
+   Lumen phần cứng / MegaLights trên Mac hạn chế hơn; không cần sửa ini, engine tự hạ cấp.
+
+### 3.3 Bố cục thư mục mà script setup cần
+
+Script setup tìm dữ liệu theo **đường dẫn tương đối so với thư mục chứa `HanoiCity.uproject`**
+(tức `ue5/`), khai báo trong `ue5/Config/hanoi_setup.json`:
+
+| Khoá | Mặc định | Là gì |
+| --- | --- | --- |
+| `city_build` | `../out/hoankiem` | bản dựng thành phố của pipeline (`manifest.json`, `tiles/`, `semantics/`, `pcg/`, `traffic/`) |
+| `game_content` | `../game/content` | nội dung game (JSON) |
+| `codegen` | `../tools/codegen_ue.py` | bộ sinh mã/chuyển đổi (script editor import trực tiếp file này) |
+| `data_json_out` | `Data/Generated` | nơi ghi JSON DataTable (`ue5/Data/Generated`, gitignore) |
+
+Vì vậy **giữ nguyên `ue5/` bên trong repo** (cạnh `out/`, `game/`, `tools/`). Nếu đặt bản dựng
+thành phố ở chỗ khác thì sửa `city_build` (đường dẫn tuyệt đối cũng được) hoặc truyền
+`--city <đường dẫn>` khi chạy setup. Không cần chép tay gì vào `Content/`: setup tự chép
+`traffic/graph.json`, `places/pois.json`, `districts.geojson`, `manifest.json` vào
+`ue5/Content/Data/City/` (runtime đọc từ đó, và thư mục này được đóng gói kèm game).
 
 ## 4. Mở project lần đầu
 
+Làm đúng thứ tự; mỗi bước có cách kiểm tra.
+
+**Bước 0 — chuẩn bị dữ liệu (ngoài UE, ở gốc repo):**
+
 ```bash
-# 1) Sinh header C++ từ schema và JSON DataTable từ nội dung game (nếu schema đổi)
+# Header C++ phải khớp game/schemas TRƯỚC khi build (lệnh --check thoát 1 nếu cũ)
 ./venv/bin/python tools/codegen_ue.py
-./venv/bin/python -m pytest tests/test_codegen_ue.py
-# 2) Có sẵn một bản dựng thành phố, ví dụ out/hoankiem (build.py + pipeline)
+./venv/bin/python tools/codegen_ue.py --check
+./venv/bin/python -m pytest -q tests/test_codegen_ue.py
+# Cần một bản dựng thành phố, mặc định out/hoankiem (build.py + pipeline, xem README)
+ls out/hoankiem/manifest.json out/hoankiem/tiles out/hoankiem/semantics out/hoankiem/pcg out/hoankiem/traffic/graph.json
 ```
 
-1. Chuột phải `ue5/HanoiCity.uproject` > **Generate Visual Studio project files**.
-2. Nhấp đúp `HanoiCity.uproject`. Editor báo thiếu module `HanoiCity`, `HanoiCityRuntime`,
-   `HanoiCityEditor` > chọn **Yes** để build. Nếu build lỗi: mở `HanoiCity.sln`, cấu hình
-   *Development Editor / Win64*, Build, đọc lỗi (mục 7 liệt kê các API dễ sai nhất).
-3. Editor có thể báo không tìm thấy plugin tuỳ chọn (MCP, Mass…): các plugin đó được đánh dấu
-   `Optional` nên project vẫn mở; bật lại bằng tay ở bước 5 nếu tên đã đổi.
+(Trên Windows: `venv\Scripts\python tools\codegen_ue.py`.)
+
+**Bước 1 — sinh project file:** chuột phải `ue5/HanoiCity.uproject` > **Generate Visual Studio
+project files** (trên Windows 11 có thể nằm trong *Show more options*). Nếu menu không có (chưa
+liên kết file .uproject với engine), chạy:
+
+```bat
+"C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" -projectfiles -project="D:\vncity\ue5\HanoiCity.uproject" -game -engine
+```
+
+Kết quả: `ue5/HanoiCity.sln`.
+
+**Bước 2 — build editor:** mở `HanoiCity.sln`, cấu hình **Development Editor**, nền tảng
+**Win64**, project khởi động `HanoiCity`, Build (Ctrl+Shift+B). Lần đầu mất 5-20 phút. Hoặc
+dòng lệnh:
+
+```bat
+"C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" HanoiCityEditor Win64 Development -Project="D:\vncity\ue5\HanoiCity.uproject" -WaitMutex
+```
+
+Build lỗi: đọc lỗi **đầu tiên** trong cửa sổ Output (không phải Error List), đối chiếu mục 7.1.
+Lỗi UHT (`*.generated.h`, "Unrecognized type", "Nested containers") nghĩa là header sinh ra
+không hợp lệ: sửa `tools/codegen_ue.py`, chạy lại bước 0, không sửa tay `HanoiContentTypes.h`.
+
+**Bước 3 — mở editor:** nhấp đúp `HanoiCity.uproject` (hoặc F5 trong Visual Studio). Nếu bỏ
+qua bước 2, editor hỏi build các module `HanoiCity`, `HanoiCityRuntime`, `HanoiCityEditor` >
+**Yes** (lỗi thì quay lại bước 2 để xem log). Lần đầu biên dịch shader rất lâu (có thể hàng
+giờ, xem góc phải dưới).
+
+Những cảnh báo **bình thường** ở lần mở đầu:
+* "Failed to load map /Game/Maps/Hanoi": level chưa có, setup ở mục 6 sẽ tạo.
+* Plugin tuỳ chọn không tìm thấy (MCP, Mass…): được đánh dấu `Optional` nên project vẫn mở.
+* Hỏi khởi động lại để bật plugin: chọn *Restart Now*.
+
+**Bước 4 — kiểm tra nhanh trước khi setup:**
+* Output Log (Window > Output Log) có dòng `[HanoiCity] editor scripts ready` (Python plugin
+  chạy, thấy được `Content/Python` của plugin).
+* Menu **Tools** có mục **Hanoi City** (module editor đã nạp).
+* Edit > Project Settings > Game > **Hanoi City** hiện các thiết lập (module runtime đã nạp).
+* Edit > Editor Preferences > Python: đã bật *Developer Mode* (từ `DefaultEngine.ini`).
+
+**Khi đổi C++ hoặc schema về sau:** đóng editor, chạy lại `tools/codegen_ue.py` nếu schema
+đổi, build lại ở bước 2, rồi mở editor. Live Coding (Ctrl+Alt+F11) chỉ dùng cho sửa thân hàm;
+thêm/đổi `UPROPERTY`, `UFUNCTION`, struct hay enum thì phải đóng editor và build đầy đủ.
 
 ## 5. Plugin
 
 `HanoiCity.uproject` bật sẵn: `HanoiCity`, `PCG`, `PythonScriptPlugin`,
-`EditorScriptingUtilities`, `Interchange`/`InterchangeEditor` (nhập glTF), `GLTFImporter`
-(tuỳ chọn), `MassGameplay`, `MassAI`, `ZoneGraph` (giao thông về sau), `ModelContextProtocol` +
-`AllToolsets` (MCP của Epic, thử nghiệm), `CesiumForUnreal` (**tắt**).
+`EditorScriptingUtilities`, `Interchange`/`InterchangeEditor` (nhập glTF/glb), `MassGameplay`,
+`MassAI`, `ZoneGraph` (giao thông về sau), `ModelContextProtocol` + `AllToolsets` (MCP của Epic,
+thử nghiệm), `CesiumForUnreal` (**tắt**). Plugin `GLTFImporter` cũ (Datasmith) cố ý **không**
+bật: nếu nó cũng đăng ký đuôi `.glb` thì không rõ bộ nhập nào chạy; Interchange là bộ nhập glTF
+chuẩn của UE 5.x.
 
-Kiểm tra ở Edit > Plugins: tất cả đều bật, không có cảnh báo "missing". Cesium for Unreal 2.29
+Kiểm tra ở Edit > Plugins (ô tìm kiếm): `HanoiCity`, `PCG`, `Python Editor Script Plugin`,
+`Editor Scripting Utilities`, `Interchange` đều bật — năm plugin này là bắt buộc. Các plugin
+`Optional` (Mass, ZoneGraph, MCP) nếu tên trong 5.8 khác thì editor bỏ qua im lặng: tìm tên
+mới trong Edit > Plugins, bật tay, rồi sửa tên trong `HanoiCity.uproject`. Cesium for Unreal 2.29
 hỗ trợ 5.6-5.8; chỉ bật khi muốn đặt thành phố trên quả địa cầu (Google Photorealistic 3D Tiles
 làm nền tham chiếu). Khi bật Cesium, đặt `CesiumGeoreference` đúng `origin_lat/origin_lon` của
 manifest; quy ước trục của chúng ta (X = đông, Y = nam, Z = lên) trùng với Cesium nên không cần
@@ -89,22 +180,31 @@ Trong editor: **Tools > Hanoi City > Hanoi: Run Full Setup**, hoặc trong Outpu
 py setup_project.py --city ../out/hoankiem --max-tiles 12
 ```
 
-(đường dẫn tương đối so với thư mục chứa `HanoiCity.uproject`; bỏ `--max-tiles` để nhập hết).
-Các bước script làm:
+(đường dẫn tương đối so với thư mục chứa `HanoiCity.uproject`, xem mục 3.3; bỏ `--max-tiles` để
+nhập hết; nên để ít nhất 2 ô để bộ hiệu chỉnh trục có đủ dữ kiện). Các cờ khác: `--content
+<dir>`, `--skip-tiles`, `--skip-points`, `--skip-content`. Menu Tools chạy với giá trị mặc định
+trong `Config/hanoi_setup.json`. Kết quả từng bước in ở cuối Output Log (`setup summary`,
+`OK`/`FAIL`). Các bước script làm:
 
 1. `import_content.py`: chạy bộ chuyển đổi của `tools/codegen_ue.py` → `ue5/Data/Generated/*.json`
    → tạo/cập nhật `/Game/Hanoi/Data/DT_<collection>` với struct dòng sinh tự động.
 2. `import_city.py`: ghi gốc toạ độ vào `DefaultGame.ini`; tạo level `/Game/Maps/Hanoi` từ
    template Open World (World Partition); nhập `tiles/bld_*.glb` và `road_*.glb` (Nanite bật cho
-   nhà); tự hiệu chỉnh trục (xem mục 7.2); đặt actor dưới thư mục Outliner `City/Buildings`,
-   `City/Roads`; chép `traffic/graph.json`, `places/pois.json`, `districts.geojson` vào
-   `Content/Data/City/`; đặt `AHanoiTrafficGraph` (không spatially loaded); đặt các mốc chữ
-   `City/Verify`.
+   nhà; mỗi file vào thư mục riêng `/Game/Hanoi/City/Tiles/<ô>/<bld|road>`, ô âm viết `m1_m2`);
+   tự hiệu chỉnh trục (xem mục 7.3); đặt actor dưới thư mục Outliner `City/Buildings`,
+   `City/Roads`; chép `traffic/graph.json`, `places/pois.json`, `districts.geojson`,
+   `manifest.json` vào `Content/Data/City/`; đặt `AHanoiTrafficGraph` (không spatially loaded);
+   đặt các mốc chữ `City/Verify`; lưu level.
 3. `import_pcg_points.py`: mỗi `pcg/<set>.csv` thành `DT_pcg_<set>` (struct `FHanoiPcgPointRow`,
    giữ nguyên ENU mét); với mỗi `Set/Kind` đã có mesh trong `Config/asset_map.json`, sinh một
    `AHanoiPointSetActor` (HISM) cho từng ô.
 
-Chạy lại bất cứ lúc nào: asset bị thay, actor trong `City/*` được tạo lại.
+Chạy lại bất cứ lúc nào: asset bị thay, actor trong `City/*` được tạo lại (script nạp toàn bộ
+actor World Partition trước khi xoá để không bị trùng; nếu Output Log cảnh báo không nạp được,
+mở cửa sổ World Partition, chọn hết ô > *Load Region From Selection* rồi chạy lại).
+
+Sau setup: **File > Save All**, đóng và mở lại editor một lần (để `DefaultGame.ini` có gốc toạ độ
+mới được đọc lại sạch sẽ), rồi đi danh sách kiểm tra mục 7.
 
 Bản đồ ánh xạ của codegen (để đọc DataTable): `string`→`FString`, `$defs/id`→`FName`,
 `$defs/ref`→`FHanoiRef{Collection, Id}`, `text`→`FHanoiText{Vi, En}`, `geo`→`FHanoiGeo{Lat, Lon,
@@ -135,12 +235,17 @@ dùng `"Name"` cho tên dòng), `class` → `ClassKind`, bool có tiền tố `b
 - [ ] `UEnum::GetValueByNameString("Drizzle")` nhận tên ngắn của enum class — `HanoiContentSubsystem.cpp`
 - [ ] `UToolMenus::ExtendMenu("LevelEditor.MainMenu.Tools")`, `IPythonScriptPlugin::Get()->ExecPythonCommand` — module editor
 - [ ] `TArray::HeapPush/HeapPop` với predicate — A* trong `HanoiTrafficGraph.cpp`
+- [ ] `USceneComponent::Mobility` truy cập trực tiếp (public) và `SetMobility` lúc chạy — `HanoiTimeWeatherSubsystem.cpp` (`FindSun`)
+- [ ] UFUNCTION trả struct theo giá trị (`GetWeather`, `GetPlayerState`); nút `Reload Graph` (CallInEditor, không tham số, không giá trị trả về) hiện trong Details của `AHanoiTrafficGraph`
+- [ ] Không có cảnh báo C4244/C4458 (double→float, che biến thành viên): `BuildSettingsVersion.Latest` có thể biến chúng thành lỗi
+- [ ] Đóng gói: `DefaultGame.ini` có `+DirectoriesToAlwaysCook=(Path="/Game/Hanoi/Data")` (DataTable nạp bằng đường dẫn) và `+DirectoriesToAlwaysStageAsUFS=(Path="Data/City")` (graph.json đọc bằng `FFileHelper`)
 
 ### 7.2 Python editor (UE 5.8 có thể đổi tên)
 
 - [ ] `unreal.DataTableFactory` có property `struct`; `unreal.DataTableFunctionLibrary.fill_data_table_from_json_file(table, path, struct)` và `fill_data_table_from_csv_file` nhập đủ số dòng (script báo lỗi nếu thiếu)
 - [ ] Bộ nhập DataTable JSON đọc được: struct lồng (object), `TMap` (object JSON), mảng enum, `int64`; không có cảnh báo "missing property" (bộ chuyển đổi ghi đủ mọi trường)
-- [ ] `unreal.AssetImportTask` với glTF đi qua Interchange không bật hộp thoại khi `automated=True`; `imported_object_paths` chứa StaticMesh
+- [ ] `unreal.AssetImportTask` với glTF đi qua Interchange không bật hộp thoại khi `automated=True`; mỗi `.glb` cho đúng **một** StaticMesh (script đọc `imported_object_paths`, rồi `get_objects()`, rồi liệt kê thư mục đích; cảnh báo "produced no StaticMesh" nghĩa là cả ba cách đều rỗng)
+- [ ] `unreal.WorldPartitionBlueprintLibrary.get_actor_descs()` / `load_actors()` dùng được (nếu không, xem cảnh báo ở mục 6)
 - [ ] `nanite_settings.enabled`, `body_setup.collision_trace_flag`, `actor.is_spatially_loaded` (script chỉ cảnh báo nếu sai tên)
 - [ ] `LevelEditorSubsystem.new_level_from_template(path, "/Engine/Maps/Templates/OpenWorld")` tạo level World Partition (nếu không: File > New Level > Open World, lưu thành `/Game/Maps/Hanoi`, chạy lại)
 - [ ] Enum Python `unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE`, `unreal.HorizTextAligment.EHTA_CENTER`
@@ -152,14 +257,17 @@ Hợp đồng: ENU mét (x đông, y bắc, z lên) → UE cm: `UE.X = 100x`, `U
 Bộ nhập glTF đúng chuẩn đổi chỗ Y/Z (đồng thời đổi tay phải → tay trái) và m → cm, nên
 `UE = (100·glTF.X, 100·glTF.Z, 100·glTF.Y)` và actor chỉ cần transform đơn vị.
 
-`import_city.py` không tin giả định đó: nó đo bounding box của vài ô đã nhập, so với vùng
-tâm các toà nhà (từ `bld_X_Y.json`, chiếu bằng cùng phép chiếu) và chọn trong 32 khả năng
-(8 hoán vị có dấu × đơn vị m/cm × có/không giữ offset node), rồi tự bù bằng yaw/mirror/scale.
+`import_city.py` không tin giả định đó: nó đo bounding box của tối đa 16 ô đã nhập, so với
+khung mặt bằng chính xác của các footprint (`semantics/footprints_X_Y.json`; thiếu thì dùng tâm
+toà nhà trong `tiles/bld_X_Y.json` cộng lề) và chọn trong 32 khả năng (8 hoán vị có dấu × đơn vị
+m/cm × có/không giữ offset node) theo **tổng** IoU trên mọi ô, rồi tự bù bằng yaw/mirror/scale.
+(Chấm điểm chung là bắt buộc: các ô quanh gốc gần như vuông nên một ô riêng lẻ không phân biệt
+được phép xoay 90°; test `test_real_tiles_calibrate_*` kiểm điều này trên dữ liệu Hoàn Kiếm.)
 
-- [ ] Output Log có dòng `importer axis calibration: units=100.0 baked=True map=((1, 0), (0, -1))`. Khác dòng này nghĩa là bộ nhập 5.8 khác giả định; script đã bù, nhưng ghi lại vào đây.
+- [ ] Output Log có dòng `importer axis calibration: units=100.0 baked=True map=((1, 0), (0, -1)) (N tiles, IoU 0.99-1.00, ...)`. Khác dòng này nghĩa là bộ nhập 5.8 khác giả định; script đã bù, nhưng ghi lại vào đây. Cảnh báo "ambiguous" thì nhập thêm ô (`--max-tiles` lớn hơn) và kiểm kỹ các mốc.
 - [ ] Các mốc chữ trong `City/Verify`: "Thap Rua" nằm trên đảo nhỏ giữa Hồ Gươm, "Nha hat Lon" trên Nhà hát Lớn, "Nha tho Lon" trên Nhà thờ Lớn (sai số cho phép ~20 m, toạ độ tham chiếu đo tay). Lệch đối xứng qua trục = sai dấu Y; xoay 90° = hoán vị trục.
 - [ ] Nhìn từ trên xuống (Top view): phía bắc thành phố (hướng Hồ Tây) nằm về phía **−Y** của UE.
-- [ ] Đường giao thông (`City/Roads`) khớp gầm nhà; `AHanoiTrafficGraph` > Details > `Draw Debug Graph` vẽ đường trùng lên mesh đường.
+- [ ] Đường giao thông (`City/Roads`) khớp gầm nhà; `AHanoiTrafficGraph` > Details > `Reload Graph` rồi `Draw Debug Graph` vẽ đường trùng lên mesh đường (đồ thị Hoàn Kiếm: 2285 nút, 2721 cạnh — Output Log in số này).
 - [ ] Điểm PCG (khi đã có mesh) nằm trên vỉa hè, biển hiệu quay ra phố (nếu quay ngược: chỉnh `yaw_offset_deg` trong `asset_map.json`, không sửa code).
 
 ### 7.4 Runtime trong PIE
@@ -189,15 +297,32 @@ hỏi theo giây thật). Mất kết nối thì rơi về khí hậu trung bìn
 - [ ] Với server đang chạy: PIE, `OnWeatherChanged` nhận đúng `condition` và `source`.
 - [ ] Bản đóng gói (Shipping) gọi HTTP tới `127.0.0.1` không bị chặn; khi phát hành thật, endpoint phải là HTTPS.
 
-### 7.6 Độ chính xác đã kiểm bằng test (không cần UE)
+### 7.6 Đóng gói thử (khi 7.1-7.4 đã xong)
+
+- [ ] Platforms > Windows > *Package Project* (Development) chạy hết, không lỗi cook.
+- [ ] Chạy bản đóng gói: Log (`Saved/Logs`) có `Loaded N content tables` với N như trong PIE và
+  `Traffic graph: 2285 nodes, 2721 edges` (nếu N = 0: thiếu `DirectoriesToAlwaysCook`; nếu
+  graph lỗi: thiếu `DirectoriesToAlwaysStageAsUFS`).
+
+### 7.7 Độ chính xác đã kiểm bằng test (không cần UE)
 
 * Phép chiếu: bản Python giống hệt C++ (`hanoi_geo.py` ↔ `HanoiGeoSubsystem.cpp`), sai lệch
   so với pyproj < 1 µm khi chiếu xuôi trong toàn vùng Hà Nội; chiều ngược < 0,3 mm. Cả 17.688
   toà nhà Hoàn Kiếm chiếu vào đúng ô của chúng.
 * Mặt trời NOAA: sai số thuật toán ~0,01° (bỏ qua khúc xạ khí quyển, ~0,5° khi sát chân trời).
-* Bộ hiệu chỉnh trục: tìm lại đúng mọi cách nhập trong 32 khả năng (test tham số hoá).
+* Bộ hiệu chỉnh trục: tìm lại đúng mọi cách nhập trong 32 khả năng (test tham số hoá), và trên
+  glb thật của Hoàn Kiếm (mô phỏng bộ nhập chuẩn) cho đúng transform đơn vị với 1, 2, 4, 7, 16 ô.
+* Dữ liệu thật đi qua đúng bộ đọc: mọi dòng JSON DataTable khớp tên `UPROPERTY` đọc từ chính
+  file header; mọi CSV điểm PCG khớp `FHanoiPcgPointRow` (Seed vượt int32 → `int64`, khoá ô âm
+  như `-1_-2`); `traffic/graph.json` thoả các giả định của `AHanoiTrafficGraph::LoadGraph`;
+  footprint trong `semantics/` khớp phép chiếu tới vài mm.
 
 ## 8. Kết nối Claude Code qua MCP
+
+Tên plugin, lệnh console và cổng dưới đây **chưa kiểm chứng trên máy có UE 5.8**: nếu khác,
+tìm "MCP" trong Edit > Plugins và Editor Preferences, sửa lại mục này và tên trong
+`HanoiCity.uproject`. Cách kiểm tra cuối cùng luôn là: trong Claude Code gõ `/mcp`, server
+`unreal-mcp` ở trạng thái *connected* và liệt kê được công cụ.
 
 **Plugin của Epic (ưu tiên)** — tên plugin `ModelContextProtocol` ("Unreal MCP"), cần thêm
 `AllToolsets`; đã bật trong `.uproject` (Optional, chỉ editor). Server HTTP/SSE tại

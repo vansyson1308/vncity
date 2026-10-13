@@ -32,7 +32,8 @@ rõ ràng, không giáo điều).
 2024). Hết điểm thì không được lái cho đến khi thi lại phần lý thuyết (minigame trắc nghiệm luật).
 Điểm phục hồi đủ 12 nếu giữ hồ sơ sạch đủ lâu (luật thật: 12 tháng không bị trừ điểm, cần kiểm
 tra; game nén thành 60 ngày game). Giữ sạch 90 ngày game mở nhiệm vụ phụ tích cực với CSGT
-(`s12_mu_bao_hiem_cho_be`).
+(`s12_mu_bao_hiem_cho_be`): runtime tự đặt cờ `ho_so_sach_90_ngay` khi đủ 90 ngày game không bị
+lập biên bản (không nhiệm vụ hay thoại nào đặt cờ này).
 
 Nồng độ cồn: mọi đồ uống có cồn cộng `nong_do_con`. Chốt đo nồng độ xuất hiện tối 21h-1h. Thiết kế
 khuyến khích gọi xe về sau bia hơi (hoạt động bia hơi gợi ý sẵn).
@@ -124,14 +125,26 @@ Không phe nào "ác". Uy tín Kim Long Land cao là con đường chơi hợp l
 Sự kiện trong `events.json` kích hoạt theo lịch âm, lịch dương, ngày trong tuần hoặc dữ liệu sống,
 và áp `world_changes` (tag cho hệ thống dựng cảnh: cờ, đèn lồng, cấm xe, đổi doanh thu...). Sự kiện
 có thể mở nhiệm vụ riêng (`missions`). Danh sách hiện có: Tết, Giao thừa, Ông Công ông Táo, Rằm
-tháng Giêng, Giỗ Tổ, Trung thu, Vu Lan, Quốc khánh, Giải phóng Thủ đô, 30/4-1/5, phố đi bộ cuối tuần,
-mùa hoa sữa, mùa loa kèn, nồm, mưa ngập, nắng nóng, rét đậm, bụi mịn, bão.
+tháng Giêng, Giỗ Tổ, Trung thu, Vu Lan, Quốc khánh, Giải phóng Thủ đô, 30/4-1/5, phố đi bộ cuối tuần
+(buổi tối thứ Sáu đến Chủ nhật, và ban ngày thứ Bảy, Chủ nhật: hai mục), mùa hoa sữa, mùa loa kèn,
+nồm, mưa ngập, nắng nóng, rét đậm, bụi mịn, bão (20 mục).
 
 ## 8. Quy ước cho dữ liệu nhiệm vụ
 
-- Bước `choice` có `next` là bảng `{khóa: bước}`. Khóa là kết quả do runtime xác định: lựa chọn
-  thoại vừa xong (qua cờ `set_flags`), đầu vào người chơi (`dung_lai`/`vuot_den`), hoặc điểm minigame
-  (`dat`/`chua_dat`). Runtime cần bảng ánh xạ khóa → điều kiện; hiện ghi trong `params` hoặc suy ra
-  từ cờ cùng tên. Đề xuất bổ sung schema ở `04-danh-sach-noi-dung.md`.
+- Bước rẽ nhánh có `next` là bảng `{khóa: bước}`; runtime (`UHanoiMissionSubsystem`) chọn nhánh theo
+  `Outcome` mà gameplay/UI truyền vào `CompleteCurrentStep`. Nguồn của khóa ghi trong `params`:
+  - `branch_source: "flag"` + `from_dialogue`: khóa trùng tên cờ `set_flags` của lựa chọn thoại vừa
+    xong (ví dụ `lan_mua_gia_vi_chuan` / `lan_mua_gia_vi_re` ở `c1_04`);
+  - `branch_source: "player_input"` hoặc `player_input`: lựa chọn trực tiếp của người chơi
+    (`dung_lai`/`vuot_den` ở P1, `hoi_thang`/`im_lang` và `ke_cho_lan`/`giu_kin` ở `c1_03`);
+  - minigame có `pass_score`: khóa `dat`/`chua_dat`.
+  Đề xuất đưa thành trường schema riêng ở `04-danh-sach-noi-dung.md`.
+- **Bước không có `next` sẽ chạy tiếp sang bước kế tiếp trong mảng** (đúng như runtime); bước cuối
+  mảng thì kết thúc nhiệm vụ. Bước kết thúc nằm giữa mảng (cuối một nhánh) phải ghi `"next": "end"`.
+  `end`/`success` là hoàn thành, `fail` là thất bại.
+- `fail_if` dùng cú pháp runtime: `event:<tên>` (gameplay gọi `ReportEvent`), `flag:<tên>`, hoặc
+  biểu thức `time>N`, `heat>=N`. `params.time_limit_s` là cách viết tắt của `time>N`.
+- `wait_until` đọc `params.hours` hoặc `params.hour` (cửa sổ một giờ); `escape_traffic_police` đọc
+  `params.heat` (số sao cộng khi bắt đầu bước).
 - `params.switch_protagonist_on_line` cho phép đổi nhân vật điều khiển giữa một đoạn thoại nhiều người.
 - Bước không có `next` là bước kết thúc nhiệm vụ.
