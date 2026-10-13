@@ -458,12 +458,10 @@
             "lon": 105.8512
           },
           "dialogue": "dialogues:dlg_c1_03_bao_lan",
-          "params": {
-            "set_flags": [
-              "lan_biet_danh_sach"
-            ]
-          },
-          "next": "end"
+          "next": "end",
+          "set_flags": [
+            "lan_biet_danh_sach"
+          ]
         },
         {
           "id": "ve_tro",
@@ -476,11 +474,9 @@
             "lat": 20.9905,
             "lon": 105.815
           },
-          "params": {
-            "set_flags": [
-              "minh_giu_kin_danh_sach"
-            ]
-          }
+          "set_flags": [
+            "minh_giu_kin_danh_sach"
+          ]
         }
       ],
       "reward": {
@@ -596,7 +592,8 @@
           },
           "next": {
             "lan_mua_gia_vi_chuan": "ve_quan",
-            "lan_mua_gia_vi_re": "ve_quan_re"
+            "lan_mua_gia_vi_re": "ve_quan_re",
+            "default": "ve_quan"
           }
         },
         {

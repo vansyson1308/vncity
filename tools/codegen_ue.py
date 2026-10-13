@@ -22,7 +22,7 @@ Mapping rules (also documented in docs/05-tich-hop-ue5.md):
   integer -> int32; money_vnd -> int64; number -> float; boolean -> bool (prefixed b);
   enum -> UENUM with an "Unset" zero value, identifiers PascalCased, UMETA(DisplayName = original);
   object with properties -> nested USTRUCT; object with only additionalProperties -> TMap<FName, V>;
-  free-form object -> FString holding compact JSON; array -> TArray;
+  free-form object, or any node marked "x-ue": "json" -> FString holding compact JSON; array -> TArray;
   oneOf geo|ref -> FHanoiTarget{Kind, Geo, Ref}; oneOf id|{key: id} -> FHanoiNext{Step, Branches};
   any other oneOf -> FString holding compact JSON.
   Nested containers (array of array/map, map of array/map) are not UPROPERTY-legal in UHT, so
@@ -228,6 +228,8 @@ class Model:
 
         elem: node is the item schema of array property `prop` (struct names use the singular).
         """
+        if node.get("x-ue") == "json":  # typed for validation, kept as compact JSON text in UE
+            return {"k": "json"}
         ref = node.get("$ref", "")
         if ref.startswith("#/$defs/"):  # local ref inside common.schema.json
             ref = COMMON + ref[len("#/$defs/"):]
@@ -237,6 +239,7 @@ class Model:
             d = ref[len(COMMON):]
             return {
                 "id": {"k": "name"},
+                "step_id": {"k": "name"},
                 "ref": {"k": "struct", "name": "FHanoiRef", "core": "ref"},
                 "text": {"k": "struct", "name": "FHanoiText", "core": "text"},
                 "geo": {"k": "struct", "name": "FHanoiGeo", "core": "geo"},

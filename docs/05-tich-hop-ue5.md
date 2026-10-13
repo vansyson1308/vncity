@@ -236,6 +236,7 @@ dùng `"Name"` cho tên dòng), `class` → `ClassKind`, bool có tiền tố `b
 - [ ] `UToolMenus::ExtendMenu("LevelEditor.MainMenu.Tools")`, `IPythonScriptPlugin::Get()->ExecPythonCommand` — module editor
 - [ ] `TArray::HeapPush/HeapPop` với predicate — A* trong `HanoiTrafficGraph.cpp`
 - [ ] `USceneComponent::Mobility` truy cập trực tiếp (public) và `SetMobility` lúc chạy — `HanoiTimeWeatherSubsystem.cpp` (`FindSun`)
+- [ ] `FRegexPattern`/`FRegexMatcher` (kiểm `fail_if`), delegate động 4 tham số có `const TArray<FName>&` (`OnChoiceRequested`), `TryGetObjectField` — `HanoiMissionSubsystem.cpp/.h`
 - [ ] UFUNCTION trả struct theo giá trị (`GetWeather`, `GetPlayerState`); nút `Reload Graph` (CallInEditor, không tham số, không giá trị trả về) hiện trong Details của `AHanoiTrafficGraph`
 - [ ] Không có cảnh báo C4244/C4458 (double→float, che biến thành viên): `BuildSettingsVersion.Latest` có thể biến chúng thành lỗi
 - [ ] Đóng gói: `DefaultGame.ini` có `+DirectoriesToAlwaysCook=(Path="/Game/Hanoi/Data")` (DataTable nạp bằng đường dẫn) và `+DirectoriesToAlwaysStageAsUFS=(Path="Data/City")` (graph.json đọc bằng `FFileHelper`)
@@ -276,6 +277,7 @@ m/cm × có/không giữ offset node) theo **tổng** IoU trên mọi ô, rồi 
 - [ ] Mặt trời: đặt `StartHour=7` → ánh nắng chiếu từ hướng đông (từ +X), 12:00 gần đỉnh đầu, 18:00 phía tây. Directional light phải là Movable (subsystem tự chuyển). Nếu level có nhiều directional light, gắn tag `HanoiSun` cho mặt trời.
 - [ ] Thời tiết: `WeatherSource=Climatology` cho trạng thái khác nhau theo giờ; với feed thật xem mục 7.5.
 - [ ] Nhiệm vụ: gọi `StartMission` trên một nhiệm vụ có bước `go_to`, đi tới đích → `OnStepCompleted`; nhiệm vụ xong → `OnMissionEnded` và có file lưu `Saved/SaveGames/HanoiSave.sav`.
+- [ ] Tham số bước: nhiệm vụ `c1_03` phát `OnChoiceRequested` ở bước `co_hoi_khong`; `p1` bước `bi_thoi` phát `OnFineApplied` (vuot_den_do); `s04` bước `nam_dia_chi` phát `OnMinimapVisibilityChanged(false)`; `s11` bước `gap_ba` chờ `SetWorldEventActive("trung_thu", true)`.
 - [ ] Heat: `ReportViolation(<id traffic_rules>, false, true, false)` → `OnHeatChanged`; đứng khuất tầm nhìn 20 s heat giảm dần; `PulledOver` trừ tiền phạt.
 
 ### 7.5 Feed thời tiết trực tiếp
@@ -370,13 +372,25 @@ Quy tắc khi để Claude điều khiển editor: mọi thay đổi lớn nên 
 
 ## 10. Quy ước runtime cho người viết nội dung nhiệm vụ
 
+Quy ước đầy đủ (mọi khóa `params`, ai đọc khóa nào) ở `docs/gdd/02-he-thong.md` §8 và trong mô tả
+từng khóa của `game/schemas/missions.schema.json`. Tóm tắt phía UE:
+
 * Bước tự hoàn thành: `go_to`, `ride`, `deliver`, `drive_passenger`, `follow` khi người chơi
   vào bán kính `params.radius_m` (mặc định 15 m) quanh `target`; `wait_until` khi giờ game nằm
-  trong `params.hours` `[từ, đến]` hoặc `params.hour`; `escape_traffic_police` khi heat về 0
-  (`params.heat` cộng heat lúc bắt đầu bước, mặc định 2).
+  trong `params.hours` `[từ, đến)` hoặc `params.until_hour`/`params.hour`; `escape_traffic_police`
+  khi heat về 0 (`params.heat` cộng heat lúc bắt đầu bước, mặc định 2).
 * Các bước khác (`talk`, `choice`, `minigame`, `cook`, `cutscene`, `photograph`, `collect`) do
-  gameplay/UI gọi `CompleteCurrentStep(<outcome>)`.
+  gameplay/UI gọi `CompleteCurrentStep(<outcome>)`. Bước có `params.requires_event` chỉ hoàn thành
+  khi `SetWorldEventActive(<event>, true)` đã được gọi.
 * `next`: chuỗi = bước kế; object = nhánh theo outcome, thiếu thì dùng khoá `default`; không có
   `next` = bước tiếp theo trong mảng. Id đặc biệt: `end`/`success` (hoàn thành), `fail`.
+  `choice` với `branch_source: "flag"` tự rẽ theo cờ; còn lại phát `OnChoiceRequested`.
+* `steps[].set_flags` áp khi bước hoàn thành.
 * `fail_if`: `time>N` (giây trong bước), `heat>=N` (cũng `> < <= ==`), `event:<tên>` (gameplay gọi
-  `ReportEvent`), `flag:<tên>`; `params.time_limit_s` là cách viết tắt của giới hạn thời gian.
+  `ReportEvent`), `flag:<tên>`; `params.time_limit_s` = giới hạn giây; `params.deadline_hour` = giờ
+  game chót.
+* Delegate cho UI/gameplay trên `UHanoiMissionSubsystem`: `OnStepStarted`, `OnStepCompleted`,
+  `OnMissionEnded`, `OnStateChanged`, `OnChoiceRequested`, `OnFineApplied`,
+  `OnProtagonistSwitched`, `OnMinimapVisibilityChanged`, `OnStepWaitingForEvent`. Gọi vào:
+  `CompleteCurrentStep`, `ReportEvent`, `NotifyDialogueLine`, `SetWorldEventActive`,
+  `GetActiveStepParamNumber/String/Bool`, `GetActiveStepParamsJson`, `IsMinimapAllowed`.

@@ -58,13 +58,19 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Nhậ
    Định, Phú Thọ) và các chi tiết lịch sử (ông Thắng 1979, ông Khiêm 1972, tem phiếu 1984).
 7. **Bản quyền âm nhạc**: đài "Sân Đình" đang `licensed_tbd`.
 
-## Đề xuất thay đổi schema (chưa sửa `game/schemas/`)
+## Đề xuất thay đổi schema
+
+Trạng thái: 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem từng mục); các mục khác chưa sửa
+`game/schemas/`.
 
 1. **missions.steps[].next dạng bảng**: thêm `branch_on` để nói rõ khóa nhánh lấy từ đâu, ví dụ
    `{"source": "flag" | "dialogue_choice" | "minigame_score" | "player_input", "map": {...}}`. Hiện
-   khóa nhánh chỉ được quy ước trong tài liệu.
+   khóa nhánh chỉ được quy ước trong tài liệu. *Một phần:* `params.branch_source`
+   (`flag`/`player_input`) và `params.player_input` nay có kiểu trong schema và runtime xử lý
+   (`docs/gdd/02-he-thong.md` §8); `dialogue_choice`/`minigame_score` vẫn là quy ước.
 2. **missions.steps[].switch_to**: trường chuẩn để đổi nhân vật điều khiển (hiện dùng
-   `params.protagonist` và `params.switch_protagonist_on_line`).
+   `params.protagonist` và `params.switch_protagonist_on_line`). *Một phần:* hai khóa này nay có
+   kiểu trong schema và runtime đổi nhân vật (`OnProtagonistSwitched`).
 3. **dialogues.lines[].condition**: dòng thoại chỉ hiện khi đủ điều kiện (cờ, uy tín) để các chương
    sau phản ứng với lựa chọn trước mà không cần nhân đôi đoạn thoại.
 4. **dialogues.lines[].speaker** cho phép giá trị đặc biệt `player` (nhân vật đang điều khiển), để
@@ -79,9 +85,11 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Nhậ
 9. **activities.pay** thêm `commission_rate` (app ăn chiết khấu) và `currency_note`.
 10. **characters.voice** thêm `dialect_region` chi tiết hơn (`thai_binh`, `nam_dinh`, `phu_tho`,
     `hung_yen`) thay vì gộp `northern_rural`.
-11. **missions.steps[].set_flags**: cờ đặt ngay khi xong một bước (hiện `c1_03` ghi trong
-    `params.set_flags` ở bước `gap_lan`/`ve_tro`, nhưng runtime chỉ áp `reward.set_flags` lúc kết thúc
-    nhiệm vụ).
-12. **missions.steps[].fail_if** có pattern chặt (`^(event|flag):[a-z0-9_]+$|^(time|heat)(>=|<=|==|>|<)\d+$`)
-    và **next** chấp nhận rõ ràng các giá trị đặc biệt `end`/`success`/`fail`, để validator bắt lỗi
-    cú pháp mà runtime đang bỏ qua im lặng.
+11. ~~**missions.steps[].set_flags**: cờ đặt ngay khi xong một bước.~~ **Đã làm:** trường
+    `steps[].set_flags` trong schema, `c1_03` (`gap_lan`, `ve_tro`) đã chuyển từ `params`, runtime
+    áp cờ khi bước hoàn thành (trước khi chọn bước kế).
+12. ~~**missions.steps[].fail_if** có pattern chặt và **next** chấp nhận rõ `end`/`success`/`fail`.~~
+    **Đã làm:** pattern `^(event|flag):[a-z0-9_]+$|^(time|heat)(>=|<=|==|>|<)\d+(\.\d+)?$` (cho
+    phép số thập phân vì runtime đọc bằng `Atof`; runtime dùng đúng pattern này để cảnh báo quy tắc
+    lạ); `next` dùng `common.schema.json#/$defs/step_id`; `tools/validate.py` kiểm mọi đích `next`
+    là bước có thật hoặc `end`/`success`/`fail`, cùng tập id mà runtime xử lý.

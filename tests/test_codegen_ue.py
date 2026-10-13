@@ -1,5 +1,6 @@
 """Tests for tools/codegen_ue.py and the pure-Python twin of the UE runtime math (hanoi_geo)."""
 
+import collections
 import importlib.util
 import json
 import math
@@ -86,6 +87,8 @@ def _walk(model, header, node, struct_name, seen):
         ref = sub.get("$ref", "")
         if ref.endswith("/condition") or ref.endswith("/reward"):
             _walk(model, header, common[ref.rsplit("/", 1)[1]], spec["name"], seen)
+        elif sub.get("x-ue") == "json":
+            assert spec["k"] == "json"
         elif sub.get("type") == "object" and sub.get("properties"):
             assert spec["k"] == "struct"
             _walk(model, header, sub, spec["name"], seen)
@@ -683,6 +686,7 @@ RUNTIME_FIELD_CONTRACT = [
     ("FHanoiMissionStep", "Params", "FString"),
     ("FHanoiMissionStep", "Next", "FHanoiNext"),
     ("FHanoiMissionStep", "FailIf", "TArray<FString>"),
+    ("FHanoiMissionStep", "SetFlags", "TArray<FString>"),
     ("FHanoiTrafficRuleRow", "FineVnd", "FHanoiTrafficRuleFineVnd"),
     ("FHanoiTrafficRuleFineVnd", "Car", "int64"),
     ("FHanoiTrafficRuleFineVnd", "Motorbike", "int64"),
@@ -714,3 +718,95 @@ def test_hand_written_runtime_matches_generated_types():
     for enum, value in sorted(used):
         if enum not in hand:
             assert value in enums.get(enum, set()), f"{enum}::{value} used by C++ but not generated"
+
+
+# ----------------------------------------------------------------------------- mission step params coverage
+
+MISSION_CPP = RUNTIME_SRC / "Private" / "HanoiMissionSubsystem.cpp"
+
+
+def _step_params_schema():
+    s = json.loads((ROOT / "game" / "schemas" / "missions.schema.json").read_text(encoding="utf-8"))
+    return s["properties"]["items"]["items"]["properties"]["steps"]["items"]["properties"]["params"]
+
+
+def test_every_mission_param_is_typed_and_has_a_consumer():
+    """No step param may exist only in content: each key is declared (typed) in missions.schema.json
+    with x-consumer runtime (read by UHanoiMissionSubsystem) or gameplay (read through
+    GetActiveStepParam*), and the runtime list matches what the C++ actually reads."""
+    params = _step_params_schema()
+    assert params.get("additionalProperties") is False and params.get("x-ue") == "json"
+    declared = params["properties"]
+    for key, spec in declared.items():
+        assert spec.get("x-consumer") in ("runtime", "gameplay"), key
+        assert any(k in spec for k in ("type", "$ref", "enum", "oneOf", "anyOf")), f"{key} is untyped"
+    used = collections.defaultdict(list)
+    for p in sorted((ROOT / "game" / "content").rglob("*.json")):
+        doc = json.loads(p.read_text(encoding="utf-8"))
+        if isinstance(doc, dict) and doc.get("collection") == "missions":
+            for m in doc["items"]:
+                for st in m["steps"]:
+                    for k in st.get("params") or {}:
+                        used[k].append(f"{m['id']}.{st['id']}")
+    undeclared = {k: v for k, v in used.items() if k not in declared}
+    assert not undeclared, f"params used in content but not typed in missions.schema.json: {undeclared}"
+
+    cpp = MISSION_CPP.read_text(encoding="utf-8")
+    read_by_cpp = set(re.findall(r"Param\w*\(TEXT\(\"(\w+)\"\)", cpp))
+    runtime = {k for k, s in declared.items() if s["x-consumer"] == "runtime"}
+    assert read_by_cpp == runtime, (f"C++ reads {sorted(read_by_cpp - runtime)} not marked runtime; "
+                                    f"marked runtime but unread: {sorted(runtime - read_by_cpp)}")
+    # the params the content QC flagged are now consumed by the runtime
+    assert {"requires_event", "apply_fine", "switch_protagonist_on_line", "player_input",
+            "branch_source", "minimap"} <= runtime
+    assert {"scripted_winner_npc", "max_player_rank"} <= set(declared)
+
+
+def test_set_flags_is_a_step_field_and_applied_by_runtime(model):
+    step = model.structs["FHanoiMissionStep"]
+    assert {"json": "set_flags", "cpp": "SetFlags"} == {k: f[k] for f in step["fields"] if f["json"] == "set_flags" for k in ("json", "cpp")}
+    assert "Step.SetFlags" in MISSION_CPP.read_text(encoding="utf-8")
+    for p in sorted((ROOT / "game" / "content" / "missions").glob("*.json")):
+        for m in json.loads(p.read_text(encoding="utf-8"))["items"]:
+            for st in m["steps"]:
+                assert "set_flags" not in (st.get("params") or {}), f"{m['id']}.{st['id']}: use step.set_flags"
+
+
+def test_fail_if_pattern_matches_runtime_rules():
+    pat = re.compile(_step_schema_prop("fail_if")["items"]["pattern"])
+    for ok in ("event:mo_ban_do", "flag:khoi_co_bang_a1", "time>60", "heat>=3", "heat<=1.5", "time==10", "heat<2"):
+        assert pat.search(ok), ok
+    for bad in ("event:Mo", "time>", "speed>3", "heat=>2", "flag:", "time > 60"):
+        assert not pat.search(bad), bad
+    # the C++ validator uses the same pattern
+    cpp = MISSION_CPP.read_text(encoding="utf-8")
+    assert pat.pattern.replace("\\", "\\\\") in cpp
+
+
+def _step_schema_prop(name):
+    s = json.loads((ROOT / "game" / "schemas" / "missions.schema.json").read_text(encoding="utf-8"))
+    return s["properties"]["items"]["items"]["properties"]["steps"]["items"]["properties"][name]
+
+
+def test_terminal_next_ids_agree_between_schema_validator_and_runtime():
+    common = json.loads((ROOT / "game" / "schemas" / "common.schema.json").read_text(encoding="utf-8"))
+    terminals = set(common["$defs"]["step_id"]["anyOf"][0]["enum"])
+    assert terminals == {"end", "success", "fail"}
+    validate = _load("validate_tool", ROOT / "tools" / "validate.py")
+    assert validate.TERMINAL_STEPS == terminals
+    cpp = MISSION_CPP.read_text(encoding="utf-8")
+    for t in terminals:
+        assert f'TEXT("{t}")' in cpp
+
+
+def test_validator_rejects_broken_mission_graphs():
+    validate = _load("validate_tool", ROOT / "tools" / "validate.py")
+    doc = {"collection": "missions", "items": [{"id": "m", "steps": [
+        {"id": "a", "kind": "choice", "next": {"x": "b", "y": "nowhere"}, "params": {"branch_source": "flag"}},
+        {"id": "b", "kind": "talk", "next": "fail", "dialogue": "dialogues:d",
+         "params": {"switch_protagonist_on_line": {"l9": "characters:c"}}},
+        {"id": "c", "kind": "talk", "next": "end"}]}]}
+    items = {"dialogues:d": {"id": "d", "lines": [{"id": "l1"}]}}
+    errs = validate.check_missions([(pathlib.Path("t.json"), "missions", doc)], items)
+    assert len(errs) == 3, errs
+    assert any("nowhere" in e for e in errs) and any("default" in e for e in errs) and any("l9" in e for e in errs)

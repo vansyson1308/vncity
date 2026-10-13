@@ -7,6 +7,10 @@
       "description": "Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name.",
       "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"
     },
+    "step_id": {
+      "description": "A mission step id, or one of the terminal ids: end / success (mission completed), fail (mission failed). The runtime and tools/validate.py accept exactly these.",
+      "anyOf": [{"enum": ["end", "success", "fail"]}, {"$ref": "#/$defs/id"}]
+    },
     "ref": {
       "description": "Reference to another record as '<collection>:<id>', checked by tools/validate.py.",
       "type": "string", "pattern": "^[a-z_]+:[a-z][a-z0-9_]{1,63}$"
