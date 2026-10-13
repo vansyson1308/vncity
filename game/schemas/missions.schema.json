@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "missions.schema.json",
+  "title": "Missions",
+  "description": "Story and side missions as data. Steps form a graph the UE mission runner executes.",
+  "x-collection": "missions",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "missions"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "giver",
+          "steps"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "type": {
+            "enum": [
+              "story",
+              "side",
+              "stranger",
+              "event",
+              "tutorial"
+            ]
+          },
+          "chapter": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "protagonists": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            },
+            "minItems": 1
+          },
+          "giver": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "summary": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "requires": {
+            "$ref": "common.schema.json#/$defs/condition"
+          },
+          "start": {
+            "$ref": "common.schema.json#/$defs/geo"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "kind",
+                "objective"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "kind": {
+                  "enum": [
+                    "go_to",
+                    "ride",
+                    "deliver",
+                    "talk",
+                    "photograph",
+                    "follow",
+                    "escape_traffic_police",
+                    "minigame",
+                    "cook",
+                    "wait_until",
+                    "cutscene",
+                    "choice",
+                    "collect",
+                    "drive_passenger"
+                  ]
+                },
+                "objective": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "$ref": "common.schema.json#/$defs/geo"
+                    },
+                    {
+                      "$ref": "common.schema.json#/$defs/ref"
+                    }
+                  ]
+                },
+                "dialogue": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                },
+                "params": {
+                  "type": "object"
+                },
+                "next": {
+                  "oneOf": [
+                    {
+                      "$ref": "common.schema.json#/$defs/id"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "common.schema.json#/$defs/id"
+                      }
+                    }
+                  ]
+                },
+                "fail_if": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "reward": {
+            "$ref": "common.schema.json#/$defs/reward"
+          },
+          "unlocks": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

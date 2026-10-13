@@ -35,6 +35,8 @@ import trimesh
 from shapely import wkb
 from shapely.geometry import box
 
+from fetch import load_extensions
+
 FLOOR_M = 3.3  # typical VN storey height used to convert floor counts
 # Inferred defaults by footprint area (m²) when no height or floor count is known.
 # Small plots in Hanoi/Saigon are mostly 3-5 storey "nhà ống" tube houses.
@@ -50,6 +52,7 @@ PROVENANCE_RGBA = {
     "observed": (46, 160, 67, 255),      # height present in source data
     "derived_floors": (31, 111, 235, 255),  # floors × storey height
     "derived_raster": (163, 113, 247, 255),  # sampled from a 2.5D height raster
+    "estimated_archetype": (230, 150, 40, 255),  # typical storeys of its Hanoi archetype (pipeline/semantics.py)
     "estimated": (150, 150, 150, 255),   # area heuristic, replace before shipping
 }
 ROAD_RGBA = (60, 60, 64, 255)
@@ -94,6 +97,8 @@ def resolve_height(row, area, raster_h):
         return row["num_floors"] * FLOOR_M, "derived_floors"
     if raster_h is not None and raster_h > 2:
         return float(raster_h), "derived_raster"
+    if row.get("sem_height"):
+        return float(row["sem_height"]), "estimated_archetype"
     floors = next(f for limit, f in AREA_FLOORS if area < limit)
     return floors * FLOOR_M, "estimated"
 
@@ -127,6 +132,7 @@ def extrude(poly, base, top):
 
 PROV_CODES = list(PROVENANCE_RGBA)
 BCOLS = ["id", "name", "class", "height", "num_floors", "min_height", "is_underground", "sources", "wkb"]
+SEMCOLS = ["sem_height", "archetype"]
 RCOLS = ["subtype", "class", "width_rules", "wkb"]
 W = {}  # per-worker state, filled by init_worker
 
@@ -143,12 +149,18 @@ def init_worker(cfg):
 
 
 def tile_buildings(ix, iy, ox, oy):
-    rows = W["con"].execute(
-        f"SELECT {', '.join(BCOLS)} FROM '{W['work'] / 'buildings.parquet'}' WHERE ix = ? AND iy = ?",
-        [ix, iy]).fetchall()
+    sem = W["src"] / "semantics.parquet"
+    if sem.exists():  # archetype heights from pipeline/semantics.py
+        q = (f"SELECT {', '.join('b.' + c for c in BCOLS)}, s.height_m, s.archetype "
+             f"FROM '{W['work'] / 'buildings.parquet'}' b LEFT JOIN '{sem}' s ON s.id = b.id "
+             f"WHERE b.ix = ? AND b.iy = ?")
+    else:
+        q = (f"SELECT {', '.join(BCOLS)}, NULL, NULL FROM '{W['work'] / 'buildings.parquet'}' "
+             f"WHERE ix = ? AND iy = ?")
+    rows = W["con"].execute(q, [ix, iy]).fetchall()
     out, skipped = [], Counter()
     for r in rows:
-        row = dict(zip(BCOLS, r))
+        row = dict(zip(BCOLS + SEMCOLS, r))
         if row["is_underground"]:
             skipped["underground"] += 1
             continue
@@ -165,7 +177,7 @@ def tile_buildings(ix, iy, ox, oy):
             continue
         c = g.centroid
         out.append({
-            "id": row["id"], "name": row["name"], "class": row["class"],
+            "id": row["id"], "name": row["name"], "class": row["class"], "archetype": row["archetype"],
             "geom": shapely.affinity.translate(pg, -ox, -oy), "base": base, "top": h,
             "height_m": round(h, 2), "height_source": prov, "min_height_m": base,
             "area_m2": round(pg.area, 1), "lon": round(c.x, 7), "lat": round(c.y, 7),
@@ -213,7 +225,7 @@ def build_tile(key):
         m = trimesh.util.concatenate(ms)
         m.visual.vertex_colors = np.tile(PROVENANCE_RGBA[b["height_source"]], (len(m.vertices), 1))
         parts.append(m)
-        attrs.append({k: b[k] for k in ("id", "name", "class", "height_m", "height_source",
+        attrs.append({k: b[k] for k in ("id", "name", "class", "archetype", "height_m", "height_source",
                                         "min_height_m", "area_m2", "lon", "lat", "sources")}
                      | {"face_start": face, "face_count": len(m.faces)})
         face += len(m.faces)
@@ -389,7 +401,7 @@ def main():
         d.mkdir(parents=True, exist_ok=True)
 
     con = duckdb.connect(config={"memory_limit": "4GB"})
-    con.sql("INSTALL spatial; LOAD spatial;")
+    load_extensions(con, "spatial")
     keys, n_buildings, n_roads = tile_index(con, src, work, tf, a.tile)
     con.close()
     detail = n_buildings <= 60000

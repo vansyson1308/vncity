@@ -1,0 +1,15 @@
+{
+  "_comment": "Paths are relative to the folder containing HanoiCity.uproject. Read by Content/Python/setup_project.py.",
+  "city_build": "../out/hoankiem",
+  "game_content": "../game/content",
+  "codegen": "../tools/codegen_ue.py",
+  "data_json_out": "Data/Generated",
+  "map": "/Game/Maps/Hanoi",
+  "map_template": "/Engine/Maps/Templates/OpenWorld",
+  "tiles_dest": "/Game/Hanoi/City/Tiles",
+  "data_dest": "/Game/Hanoi/Data",
+  "points_dest": "/Game/Hanoi/City/Points",
+  "import_roads": true,
+  "nanite": true,
+  "max_tiles": 0
+}

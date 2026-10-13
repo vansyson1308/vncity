@@ -1,0 +1,562 @@
+{
+  "collection": "missions",
+  "items": [
+    {
+      "id": "p1_cuoc_xe_luc_rang_dong",
+      "tags": [
+        "prologue",
+        "tutorial",
+        "minh"
+      ],
+      "name": {
+        "vi": "Cuốc xe lúc rạng đông",
+        "en": "A Ride at Dawn"
+      },
+      "type": "story",
+      "chapter": 0,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:tuan_beo",
+      "summary": {
+        "vi": "Một sáng bình thường của tài xế xe ôm công nghệ: dậy sớm, chạy cuốc đầu tiên, và vô tình chở người sẽ thay đổi cả con phố.",
+        "en": "An ordinary morning for an app rider: an early start, the first fare, and by chance the passenger who will change a whole street."
+      },
+      "start": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "steps": [
+        {
+          "id": "thuc_day",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Thức dậy ở phòng trọ Khương Đình",
+            "en": "Wake up in the Khương Đình rented room"
+          },
+          "target": {
+            "lat": 20.9905,
+            "lon": 105.815
+          },
+          "dialogue": "dialogues:dlg_p1_phong_tro",
+          "params": {
+            "time_of_day": 5.0
+          },
+          "next": "den_ga"
+        },
+        {
+          "id": "den_ga",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Bật app Vồ, nhận cuốc đầu tiên: cổng ga Hà Nội phía Lê Duẩn",
+            "en": "Switch on Vồ and take the first ride: Hanoi Station, Lê Duẩn gate"
+          },
+          "target": "landmarks:ga_ha_noi",
+          "params": {
+            "tutorial": [
+              "lai_xe_co_ban",
+              "app_vo"
+            ],
+            "vehicle": "vehicles:hongdat_song_alpha"
+          },
+          "next": "don_khach",
+          "fail_if": [
+            "nga_xe_3_lan"
+          ]
+        },
+        {
+          "id": "don_khach",
+          "kind": "talk",
+          "objective": {
+            "vi": "Đón khách: anh Khôi, va li to, mới từ sân bay về",
+            "en": "Pick up the passenger: Khôi, big suitcase, fresh from the airport"
+          },
+          "target": "landmarks:ga_ha_noi",
+          "dialogue": "dialogues:dlg_p1_don_khoi",
+          "next": "cho_khach"
+        },
+        {
+          "id": "cho_khach",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở khách về Hàng Chiếu. Giữ xe êm, khách có hành lý.",
+            "en": "Drive the passenger to Hàng Chiếu. Ride smoothly, he has luggage."
+          },
+          "target": {
+            "lat": 21.0288,
+            "lon": 105.8414
+          },
+          "params": {
+            "passenger": "characters:khoi",
+            "tutorial": [
+              "csgt_heat",
+              "den_tin_hieu"
+            ],
+            "scripted_signal": "den_vang_chuyen_do_khi_den_gan"
+          },
+          "next": "den_tin_hieu"
+        },
+        {
+          "id": "den_tin_hieu",
+          "kind": "choice",
+          "objective": {
+            "vi": "Đèn chuyển vàng rồi đỏ ở ngã tư. Dừng lại hay vượt?",
+            "en": "The light turns amber then red. Stop or run it?"
+          },
+          "target": {
+            "lat": 21.0288,
+            "lon": 105.8414
+          },
+          "params": {
+            "player_input": "phanh_hoac_tang_ga",
+            "rule": "traffic_rules:vuot_den_do"
+          },
+          "next": {
+            "dung_lai": "ve_hang_chieu",
+            "vuot_den": "bi_thoi"
+          }
+        },
+        {
+          "id": "bi_thoi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bị CSGT dừng xe. Xuất trình giấy tờ.",
+            "en": "Pulled over by traffic police. Show your papers."
+          },
+          "target": {
+            "lat": 21.0288,
+            "lon": 105.8414
+          },
+          "dialogue": "dialogues:dlg_p1_csgt_hai",
+          "params": {
+            "apply_fine": "traffic_rules:vuot_den_do"
+          },
+          "next": "ve_hang_chieu"
+        },
+        {
+          "id": "ve_hang_chieu",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Tiếp tục chở khách về Hàng Chiếu",
+            "en": "Continue to Hàng Chiếu"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "passenger": "characters:khoi"
+          },
+          "next": "den_noi"
+        },
+        {
+          "id": "den_noi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Trả khách trước cửa Phở Thọ",
+            "en": "Drop the passenger at Phở Thọ"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p1_den_hang_chieu"
+        }
+      ],
+      "reward": {
+        "money_vnd": 52000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 5
+        },
+        "set_flags": [
+          "gap_khoi",
+          "gap_lan"
+        ]
+      },
+      "unlocks": [
+        "activities:act_xe_om_cong_nghe",
+        "activities:act_giao_do_an",
+        "missions:p2_noi_nuoc_dung_4_gio"
+      ]
+    },
+    {
+      "id": "p2_noi_nuoc_dung_4_gio",
+      "tags": [
+        "prologue",
+        "tutorial",
+        "lan",
+        "cooking"
+      ],
+      "name": {
+        "vi": "Nồi nước dùng lúc bốn giờ",
+        "en": "The Four O'Clock Broth"
+      },
+      "type": "story",
+      "chapter": 0,
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "Ngày đầu Lan một mình đứng bếp thay ông, và ngày cô biết căn nhà có thể bị bán.",
+        "en": "Lan's first day running the stove alone, and the day she learns the house may be sold."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p1_cuoc_xe_luc_rang_dong"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "bep_luc_khuya",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "3:30 sáng, bếp Phở Thọ. Nghe ông dặn.",
+            "en": "3:30 a.m., Phở Thọ kitchen. Listen to Grandpa."
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p2_bep_luc_khuya",
+          "params": {
+            "time_of_day": 3.5
+          },
+          "next": "nuong_gung_hanh"
+        },
+        {
+          "id": "nuong_gung_hanh",
+          "kind": "cook",
+          "objective": {
+            "vi": "Nướng gừng và hành củ đến khi cháy vỏ, thơm ruột",
+            "en": "Char ginger and shallots until blackened outside, fragrant inside"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "recipe": "nuoc_dung_pho_bo",
+            "stage": "nuong_gung_hanh"
+          },
+          "next": "rang_gia_vi"
+        },
+        {
+          "id": "rang_gia_vi",
+          "kind": "cook",
+          "objective": {
+            "vi": "Rang quế, hồi, thảo quả, đừng để khét",
+            "en": "Toast cinnamon, star anise and black cardamom without scorching"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "recipe": "nuoc_dung_pho_bo",
+            "stage": "rang_gia_vi"
+          },
+          "next": "vot_bot"
+        },
+        {
+          "id": "vot_bot",
+          "kind": "cook",
+          "objective": {
+            "vi": "Ninh xương, vớt bọt đúng lúc để nước trong",
+            "en": "Simmer the bones and skim at the right moments for a clear broth"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "recipe": "nuoc_dung_pho_bo",
+            "stage": "ninh_xuong_vot_bot",
+            "time_compression": 30
+          },
+          "next": "nem_thu"
+        },
+        {
+          "id": "nem_thu",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Cho ông nếm nước dùng",
+            "en": "Let Grandpa taste the broth"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "grader": "characters:cu_tho",
+            "pass_score": 70
+          },
+          "next": {
+            "dat": "khen",
+            "chua_dat": "che"
+          }
+        },
+        {
+          "id": "khen",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông nếm",
+            "en": "Grandpa tastes"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p2_nem_dat",
+          "next": "mo_hang"
+        },
+        {
+          "id": "che",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông nếm",
+            "en": "Grandpa tastes"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p2_nem_chua_dat",
+          "next": "sua_nuoc_dung"
+        },
+        {
+          "id": "sua_nuoc_dung",
+          "kind": "cook",
+          "objective": {
+            "vi": "Lọc lại nước dùng qua vải, thêm hành nướng",
+            "en": "Strain the broth through cloth, add charred onion"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "recipe": "nuoc_dung_pho_bo",
+            "stage": "loc_lai"
+          },
+          "next": "mo_hang"
+        },
+        {
+          "id": "mo_hang",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Mở hàng: phục vụ 12 bát đầu tiên (có cả anh Khôi và anh xe ôm)",
+            "en": "Open up: serve the first 12 bowls (including Khôi and the rider)"
+          },
+          "target": "activities:act_nau_pho",
+          "params": {
+            "orders": 12,
+            "includes": [
+              "characters:khoi",
+              "characters:minh"
+            ],
+            "time_of_day": 6.0
+          },
+          "next": "co_hanh_den",
+          "fail_if": [
+            "khach_bo_ve_qua_4"
+          ]
+        },
+        {
+          "id": "co_hanh_den",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cô Hạnh đến, có chuyện muốn nói",
+            "en": "Aunt Hạnh arrives with news"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p2_co_hanh",
+          "params": {
+            "time_of_day": 10.0
+          }
+        }
+      ],
+      "reward": {
+        "money_vnd": 660000,
+        "reputation": {
+          "to_dan_pho_hang_chieu": 5
+        },
+        "items": [
+          "items:nuoc_dung_phieu_cu_tho"
+        ],
+        "set_flags": [
+          "biet_chuyen_ban_nha"
+        ]
+      },
+      "unlocks": [
+        "activities:act_nau_pho",
+        "businesses:pho_tho_hang_chieu",
+        "missions:p3_tu_sat_tren_gac"
+      ]
+    },
+    {
+      "id": "p3_tu_sat_tren_gac",
+      "tags": [
+        "prologue",
+        "tutorial",
+        "khoi",
+        "photo"
+      ],
+      "name": {
+        "vi": "Chiếc tủ sắt trên gác",
+        "en": "The Iron Cabinet in the Attic"
+      },
+      "type": "story",
+      "chapter": 0,
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:bo_khai",
+      "summary": {
+        "vi": "Khôi mở chiếc tủ của bố và nhận 'bài tập' đầu tiên: chụp lại Hà Nội đúng chỗ bố từng đứng.",
+        "en": "Khôi opens his father's cabinet and receives his first 'homework': photograph Hanoi again from exactly where his father stood."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p2_noi_nuoc_dung_4_gio"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "len_gac",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Lên gác hiệu Ảnh Khải cùng Lan",
+            "en": "Climb to the Ảnh Khải attic with Lan"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p3_gac_xep",
+          "params": {
+            "time_of_day": 15.0
+          },
+          "next": "nghe_bang"
+        },
+        {
+          "id": "nghe_bang",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Nghe cuộn băng 'Gửi Khôi. Số 1.'",
+            "en": "Play the tape 'For Khôi. No. 1.'"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p3_bang_cassette_1",
+          "next": "cho_sang"
+        },
+        {
+          "id": "cho_sang",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Chờ đến 5:30 sáng hôm sau",
+            "en": "Wait until 5:30 next morning"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "until_hour": 5.5,
+            "skip_allowed": true
+          },
+          "next": "ra_bo_ho"
+        },
+        {
+          "id": "ra_bo_ho",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đi bộ ra Hồ Gươm, đến chỗ cây lộc vừng",
+            "en": "Walk to Sword Lake, to the barringtonia tree"
+          },
+          "target": "landmarks:ho_hoan_kiem",
+          "params": {
+            "on_foot": true,
+            "reason": "khoi_chua_biet_lai_xe_may"
+          },
+          "next": "chup_lai"
+        },
+        {
+          "id": "chup_lai",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp lại tấm 'Tháp Rùa trong sương, 1989' khớp trên 85%",
+            "en": "Rephotograph 'Turtle Tower in mist, 1989' at over 85% match"
+          },
+          "target": "landmarks:thap_rua",
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "archive_frame": "khai_1989_017_thap_rua_suong",
+            "match_threshold": 0.85,
+            "hours": [
+              5.5,
+              7
+            ]
+          },
+          "next": "ba_cu"
+        },
+        {
+          "id": "ba_cu",
+          "kind": "talk",
+          "objective": {
+            "vi": "Một bà cụ tập thể dục nhận ra con dấu của hiệu Ảnh Khải",
+            "en": "An exercising grandmother recognises the Ảnh Khải stamp"
+          },
+          "target": "landmarks:ho_hoan_kiem",
+          "dialogue": "dialogues:dlg_p3_ba_cu_bo_ho",
+          "next": "chup_cac_cu"
+        },
+        {
+          "id": "chup_cac_cu",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp các cụ đang tập dưỡng sinh (xin phép trước)",
+            "en": "Photograph the elders at their exercises (ask first)"
+          },
+          "target": "landmarks:ho_hoan_kiem",
+          "params": {
+            "require_consent": true,
+            "subjects_min": 3
+          }
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 5
+        },
+        "items": [
+          "items:may_anh_phim_khai",
+          "items:bang_cassette_khai"
+        ],
+        "set_flags": [
+          "mo_kho_anh"
+        ]
+      },
+      "unlocks": [
+        "activities:act_chup_lai_anh_xua",
+        "activities:act_chup_anh_pho",
+        "missions:c1_01_hoc_lai_xe_may",
+        "missions:c1_02_xich_lo_va_buc_anh_1989"
+      ]
+    }
+  ]
+}

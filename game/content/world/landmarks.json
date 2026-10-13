@@ -1,0 +1,1538 @@
+{
+  "collection": "landmarks",
+  "items": [
+    {
+      "id": "ho_hoan_kiem",
+      "tags": [
+        "coords_unverified",
+        "hero",
+        "lake",
+        "walking_street"
+      ],
+      "name": {
+        "vi": "Hồ Hoàn Kiếm (Hồ Gươm)",
+        "en": "Hoàn Kiếm Lake (Sword Lake)"
+      },
+      "location": {
+        "lat": 21.0288,
+        "lon": 105.8524
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "lake",
+      "description": {
+        "vi": "Hồ của truyền thuyết vua Lê trả gươm cho Rùa Thần. Hàng liễu rủ, cây lộc vừng nghiêng mặt nước, đường dạo quanh hồ khoảng 1,7 km. Mốc số 0 của mọi cuộc hẹn ở Hà Nội.",
+        "en": "The lake of the legend in which King Lê returned his sword to the Golden Turtle. Weeping willows, a leaning barringtonia, a lakeside loop of about 1.7 km. Ground zero of every Hanoi meet-up."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "mapillary_cc_by_sa_reference_only",
+          "osm_shoreline"
+        ],
+        "notes": "Bờ hồ, kè đá, cây lộc vừng, ghế đá dựng tay; mặt nước dùng water body với phản chiếu đèn đêm. Không dùng ảnh Google."
+      },
+      "activities": [
+        "activities:act_chay_bo_ho_guom",
+        "activities:act_tap_duong_sinh",
+        "activities:act_co_tuong",
+        "activities:act_chup_anh_pho",
+        "activities:act_chup_lai_anh_xua"
+      ]
+    },
+    {
+      "id": "thap_rua",
+      "tags": [
+        "hero",
+        "icon",
+        "skyline_anchor",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Tháp Rùa",
+        "en": "Turtle Tower"
+      },
+      "location": {
+        "lat": 21.027873,
+        "lon": 105.852293
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "monument",
+      "description": {
+        "vi": "Tháp ba tầng xây trên gò Rùa giữa hồ, pha trộn kiến trúc Việt và Pháp. Biểu tượng số một của Hà Nội, phải đúng tỉ lệ đến từng ô cửa vòm.",
+        "en": "A three-storey tower on the Turtle Mound in the middle of the lake, mixing Vietnamese and French styles. Hanoi's number one symbol, so every arched opening must be in proportion."
+      },
+      "built_year": 1886,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey_from_shore_telephoto",
+          "wikimedia_commons",
+          "published_architectural_drawings_if_licensed"
+        ],
+        "notes": "Không đặt chân lên gò được: chụp tele từ bờ, ghép với bản vẽ. Không bay drone trên hồ khi chưa có phép."
+      },
+      "activities": [
+        "activities:act_chup_lai_anh_xua"
+      ],
+      "overture_ids": [
+        "9653477a-a772-45cf-9066-9b71cd9e0d94"
+      ]
+    },
+    {
+      "id": "cau_the_huc",
+      "tags": [
+        "coords_unverified",
+        "hero",
+        "red_bridge"
+      ],
+      "name": {
+        "vi": "Cầu Thê Húc",
+        "en": "Thê Húc Bridge"
+      },
+      "location": {
+        "lat": 21.0305,
+        "lon": 105.8529
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "bridge",
+      "description": {
+        "vi": "Cây cầu gỗ cong sơn đỏ nối bờ hồ với đền Ngọc Sơn. Tên có nghĩa 'nơi đậu ánh sáng ban mai'.",
+        "en": "The curved, red-lacquered wooden bridge leading to Ngọc Sơn Temple. Its name means 'perch of morning sunlight'."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      },
+      "opening_hours": [
+        7,
+        18
+      ],
+      "activities": [
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "den_ngoc_son",
+      "tags": [
+        "hero",
+        "respectful_zone",
+        "religious",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Đền Ngọc Sơn",
+        "en": "Ngọc Sơn Temple"
+      },
+      "location": {
+        "lat": 21.030726,
+        "lon": 105.852376
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "temple",
+      "description": {
+        "vi": "Đền trên đảo Ngọc thờ Văn Xương Đế Quân và Đức Thánh Trần, có Tháp Bút, Đài Nghiên ở cổng và tiêu bản rùa Hồ Gươm.",
+        "en": "Temple on Jade Island honouring the god of literature and Saint Trần, with the Pen Tower and Ink Slab at the gate and the preserved Sword Lake turtle."
+      },
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey_with_permission",
+          "wikimedia_commons"
+        ],
+        "notes": "Chụp nội thất cần xin phép ban quản lý; khu thờ không có gameplay ồn ào."
+      },
+      "opening_hours": [
+        7,
+        18
+      ],
+      "overture_ids": [
+        "5ec4ff1c-f5de-4dfc-b637-873a45d4be67"
+      ]
+    },
+    {
+      "id": "thap_but_dai_nghien",
+      "tags": [
+        "coords_unverified",
+        "hero"
+      ],
+      "name": {
+        "vi": "Tháp Bút - Đài Nghiên",
+        "en": "Pen Tower and Ink Slab"
+      },
+      "location": {
+        "lat": 21.031,
+        "lon": 105.8531
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "monument",
+      "description": {
+        "vi": "Tháp đá năm tầng hình ngọn bút viết lên trời xanh, do Nguyễn Văn Siêu dựng.",
+        "en": "A five-storey stone tower shaped like a brush writing on the sky, raised by the scholar Nguyễn Văn Siêu."
+      },
+      "built_year": 1865,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      }
+    },
+    {
+      "id": "nha_hat_lon",
+      "tags": [
+        "hero",
+        "french_quarter",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Nhà hát Lớn Hà Nội",
+        "en": "Hanoi Opera House"
+      },
+      "location": {
+        "lat": 21.024183,
+        "lon": 105.857824
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "theatre",
+      "description": {
+        "vi": "Nhà hát kiểu Pháp ở đầu phố Tràng Tiền, mô phỏng Opéra Garnier, quảng trường trước cửa là điểm chụp ảnh cưới.",
+        "en": "French opera house at the head of Tràng Tiền, modelled on the Palais Garnier; its forecourt is a favourite wedding-photo spot."
+      },
+      "built_year": 1911,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "mapillary_cc_by_sa_reference_only"
+        ]
+      },
+      "activities": [
+        "activities:act_chup_anh_pho"
+      ],
+      "overture_ids": [
+        "68b0e91e-fdf9-4175-8c81-2684237da7a4"
+      ]
+    },
+    {
+      "id": "nha_tho_lon",
+      "tags": [
+        "hero",
+        "religious",
+        "respectful_zone",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Nhà thờ Lớn Hà Nội (Nhà thờ Chính tòa Thánh Giuse)",
+        "en": "St Joseph's Cathedral"
+      },
+      "location": {
+        "lat": 21.028708,
+        "lon": 105.84888
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "church",
+      "description": {
+        "vi": "Nhà thờ Gothic đá xám đen với hai tháp chuông. Phía trước là quán trà chanh 'chém gió' nổi tiếng của giới trẻ.",
+        "en": "Grey-black neo-Gothic cathedral with twin bell towers. Out front, the lemon-tea pavement stalls where Hanoi's youth gossip."
+      },
+      "built_year": 1886,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ],
+        "notes": "Giờ lễ: NPC giáo dân, không cho phép xe máy đi vào sân."
+      },
+      "activities": [
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "cau_long_bien",
+      "tags": [
+        "coords_unverified",
+        "hero",
+        "river",
+        "railway",
+        "steel"
+      ],
+      "name": {
+        "vi": "Cầu Long Biên",
+        "en": "Long Biên Bridge"
+      },
+      "location": {
+        "lat": 21.0429,
+        "lon": 105.8596
+      },
+      "district": "districts:long_bien",
+      "kind": "bridge",
+      "description": {
+        "vi": "Cầu thép dài khoảng 2,3 km, đường sắt ở giữa, hai làn xe máy và xe đạp hai bên, đi bên trái. Mang vết bom thời chiến tranh, hoàng hôn ở đây đẹp nhất Hà Nội.",
+        "en": "A steel bridge of about 2.3 km with rail in the centre and motorbike lanes on each side, driven on the left. It still bears war-time bomb scars; the best sunset in Hanoi."
+      },
+      "built_year": 1902,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "historical_engineering_drawings_public_domain"
+        ],
+        "notes": "Giàn thép lặp lại: dựng một nhịp chuẩn rồi nhân bản, thêm biến dạng hư hỏng từng nhịp. Làn xe máy đi bên trái là luật thật của cầu."
+      },
+      "activities": [
+        "activities:act_chup_anh_pho",
+        "activities:act_chup_lai_anh_xua"
+      ]
+    },
+    {
+      "id": "ga_long_bien",
+      "tags": [
+        "railway",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Ga Long Biên",
+        "en": "Long Biên Station"
+      },
+      "location": {
+        "lat": 21.039859,
+        "lon": 105.850034
+      },
+      "district": "districts:pho_co",
+      "kind": "station",
+      "description": {
+        "vi": "Ga nhỏ ở đầu cầu Long Biên, tàu đi Hải Phòng dừng tại đây. Đường ray trên cao chạy song song phố Phùng Hưng.",
+        "en": "Small station at the head of the Long Biên bridge served by trains to Hải Phòng. Elevated tracks run alongside Phùng Hưng street."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      },
+      "overture_ids": [
+        "c35fa944-ba38-4a6b-98f4-474fdebeb0aa"
+      ]
+    },
+    {
+      "id": "cho_long_bien",
+      "tags": [
+        "night_market",
+        "wholesale",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Chợ Long Biên",
+        "en": "Long Biên Market"
+      },
+      "location": {
+        "lat": 21.04119,
+        "lon": 105.850646
+      },
+      "district": "districts:pho_co",
+      "kind": "market",
+      "description": {
+        "vi": "Chợ đầu mối hoa quả, rau củ hoạt động từ nửa đêm đến sáng. Cửu vạn gánh hàng chạy dưới gầm cầu, xe ba gác chở thùng xốp.",
+        "en": "Wholesale fruit and vegetable market running from midnight to dawn. Porters jog under the bridge, cargo tricycles stacked with styrofoam boxes."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey_night",
+          "mapillary_cc_by_sa_reference_only"
+        ]
+      },
+      "opening_hours": [
+        0,
+        7
+      ],
+      "activities": [
+        "activities:act_mac_ca_cho_dau_moi"
+      ]
+    },
+    {
+      "id": "van_mieu",
+      "tags": [
+        "hero",
+        "heritage",
+        "respectful_zone",
+        "students",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Văn Miếu - Quốc Tử Giám",
+        "en": "Temple of Literature"
+      },
+      "location": {
+        "lat": 21.029161,
+        "lon": 105.836084
+      },
+      "district": "districts:dong_da",
+      "kind": "temple",
+      "description": {
+        "vi": "Trường đại học đầu tiên của Việt Nam. Khuê Văn Các, giếng Thiên Quang, 82 bia tiến sĩ trên lưng rùa đá. Học sinh đến xin chữ, sinh viên chụp ảnh tốt nghiệp.",
+        "en": "Vietnam's first university. The Constellation of Literature pavilion, the Well of Heavenly Clarity, 82 doctoral stelae on stone turtles. Pupils come for calligraphy, graduates for photos."
+      },
+      "built_year": 1070,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey_with_permission",
+          "wikimedia_commons"
+        ],
+        "notes": "Bia tiến sĩ là Di sản Tư liệu UNESCO: chỉ quan sát, không cho người chơi sờ/xoa đầu rùa (đúng quy định thật)."
+      },
+      "opening_hours": [
+        8,
+        17
+      ],
+      "activities": [
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "lang_bac",
+      "tags": [
+        "hero",
+        "state_site",
+        "respectful_zone",
+        "no_gameplay_mockery",
+        "no_vehicle_entry",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Lăng Chủ tịch Hồ Chí Minh",
+        "en": "Hồ Chí Minh Mausoleum"
+      },
+      "location": {
+        "lat": 21.036779,
+        "lon": 105.834695
+      },
+      "district": "districts:ba_dinh",
+      "kind": "monument",
+      "description": {
+        "vi": "Công trình trang nghiêm bậc nhất cả nước. Trong game chỉ được ngắm từ quảng trường, có lễ thượng cờ lúc sáng sớm và hạ cờ buổi tối. Không có nhiệm vụ, không có hoạt động gây ồn hay hài hước ở khu vực này.",
+        "en": "The most solemn site in the country. In game it is only viewed from the square, with the dawn flag-raising and evening flag-lowering ceremonies. No missions, no noisy or comic activity here."
+      },
+      "built_year": 1975,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_ground_level_photo_survey_exterior_only",
+          "wikimedia_commons"
+        ],
+        "notes": "Khu vực cấm bay flycam; chỉ chụp từ mặt đất nơi được phép. Không mô hình nội thất. Xem docs/gdd/00-tru-cot-thiet-ke.md mục 'Địa điểm trang nghiêm'."
+      },
+      "overture_ids": [
+        "cee010df-1fed-4280-9a0a-ee3925e24ae3"
+      ]
+    },
+    {
+      "id": "quang_truong_ba_dinh",
+      "tags": [
+        "coords_unverified",
+        "state_site",
+        "respectful_zone",
+        "flag_ceremony"
+      ],
+      "name": {
+        "vi": "Quảng trường Ba Đình",
+        "en": "Ba Đình Square"
+      },
+      "location": {
+        "lat": 21.037,
+        "lon": 105.8362
+      },
+      "district": "districts:ba_dinh",
+      "kind": "park",
+      "description": {
+        "vi": "Nơi Chủ tịch Hồ Chí Minh đọc Tuyên ngôn Độc lập ngày 2/9/1945. 168 ô cỏ, cột cờ giữa quảng trường. Người dân đến xem lễ thượng cờ lúc 6 giờ sáng.",
+        "en": "Where President Hồ Chí Minh read the Declaration of Independence on 2 September 1945. 168 lawn squares and a central flagpole; locals come to watch the 6 a.m. flag-raising."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_ground_level_photo_survey",
+          "osm",
+          "wikimedia_commons"
+        ]
+      }
+    },
+    {
+      "id": "chua_mot_cot",
+      "tags": [
+        "coords_unverified",
+        "hero",
+        "religious",
+        "respectful_zone"
+      ],
+      "name": {
+        "vi": "Chùa Một Cột (Diên Hựu tự)",
+        "en": "One Pillar Pagoda"
+      },
+      "location": {
+        "lat": 21.0358,
+        "lon": 105.8336
+      },
+      "district": "districts:ba_dinh",
+      "kind": "pagoda",
+      "description": {
+        "vi": "Ngôi chùa nhỏ hình bông sen nở trên một cột đá giữa hồ vuông, dựng theo giấc mộng của vua Lý Thái Tông. Bản hiện nay dựng lại năm 1955.",
+        "en": "A tiny lotus-shaped shrine on a single stone pillar in a square pond, born of King Lý Thái Tông's dream. The present structure was rebuilt in 1955."
+      },
+      "built_year": 1049,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      }
+    },
+    {
+      "id": "phu_chu_tich",
+      "tags": [
+        "state_site",
+        "respectful_zone",
+        "french_colonial",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Phủ Chủ tịch",
+        "en": "Presidential Palace"
+      },
+      "location": {
+        "lat": 21.039303,
+        "lon": 105.834439
+      },
+      "district": "districts:ba_dinh",
+      "kind": "colonial_building",
+      "description": {
+        "vi": "Dinh Toàn quyền Đông Dương cũ, sơn vàng rực giữa vườn xoài. Gần đó là nhà sàn Bác Hồ và ao cá. Chỉ ngắm qua hàng rào.",
+        "en": "The former Governor-General's palace, bright yellow amid mango trees, near Hồ Chí Minh's stilt house and fish pond. Viewed through the railings only."
+      },
+      "built_year": 1906,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_ground_level_photo_survey_exterior_only",
+          "wikimedia_commons"
+        ]
+      },
+      "overture_ids": [
+        "cd15f27c-52cd-4bff-a0ef-de33a3e426ee"
+      ]
+    },
+    {
+      "id": "hoang_thanh_thang_long",
+      "tags": [
+        "hero",
+        "unesco",
+        "heritage",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Hoàng thành Thăng Long",
+        "en": "Imperial Citadel of Thăng Long"
+      },
+      "location": {
+        "lat": 21.03497,
+        "lon": 105.840196
+      },
+      "district": "districts:ba_dinh",
+      "kind": "gate",
+      "description": {
+        "vi": "Di sản thế giới UNESCO: Đoan Môn, điện Kính Thiên với rồng đá, hố khảo cổ 18 Hoàng Diệu, Hậu Lâu, nhà D67. Mười ba thế kỷ chồng lớp dưới chân.",
+        "en": "UNESCO World Heritage: Đoan Môn gate, Kính Thiên palace steps with stone dragons, the 18 Hoàng Diệu archaeological site, the Princess Pavilion and the D67 war bunker. Thirteen centuries layered underfoot."
+      },
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey_with_permission",
+          "wikimedia_commons"
+        ]
+      },
+      "opening_hours": [
+        8,
+        17
+      ],
+      "activities": [
+        "activities:act_huong_dan_vien"
+      ]
+    },
+    {
+      "id": "cot_co_ha_noi",
+      "tags": [
+        "hero",
+        "skyline_anchor",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Cột cờ Hà Nội",
+        "en": "Hanoi Flag Tower"
+      },
+      "location": {
+        "lat": 21.032591,
+        "lon": 105.839825
+      },
+      "district": "districts:ba_dinh",
+      "kind": "monument",
+      "description": {
+        "vi": "Tháp gạch ba tầng đế hình chóp cụt, đỉnh tung bay lá cờ đỏ sao vàng, một trong số ít công trình thời Nguyễn còn nguyên vẹn.",
+        "en": "A brick tower on a three-tiered base topped by the red flag, one of the few intact Nguyễn-dynasty structures."
+      },
+      "built_year": 1812,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      },
+      "overture_ids": [
+        "621a822d-4cd6-40b1-ba35-d4cb7cce9c36"
+      ]
+    },
+    {
+      "id": "cho_dong_xuan",
+      "tags": [
+        "hero",
+        "market",
+        "night_market",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Chợ Đồng Xuân",
+        "en": "Đồng Xuân Market"
+      },
+      "location": {
+        "lat": 21.038084,
+        "lon": 105.849418
+      },
+      "district": "districts:pho_co",
+      "kind": "market",
+      "description": {
+        "vi": "Chợ lớn nhất phố cổ, mặt tiền năm vòm kiểu Pháp. Bán sỉ vải, quần áo, đồ khô; cuối tuần có chợ đêm kéo dài theo phố Hàng Đào.",
+        "en": "The biggest Old Quarter market behind a five-arched French façade. Wholesale fabric, clothes and dry goods; on weekends a night market stretches down Hàng Đào."
+      },
+      "built_year": 1889,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "mapillary_cc_by_sa_reference_only"
+        ],
+        "notes": "Mặt tiền dựng lại sau vụ cháy 1994: dựng theo hiện trạng."
+      },
+      "opening_hours": [
+        6,
+        18
+      ],
+      "activities": [
+        "activities:act_mac_ca_cho_dau_moi",
+        "activities:act_ban_hang_rong"
+      ],
+      "overture_ids": [
+        "3a9351ad-9bec-4514-99e9-8e973e453f10"
+      ]
+    },
+    {
+      "id": "o_quan_chuong",
+      "tags": [
+        "hero",
+        "city_gate",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Ô Quan Chưởng (Đông Hà Môn)",
+        "en": "Ô Quan Chưởng Gate"
+      },
+      "location": {
+        "lat": 21.037332,
+        "lon": 105.8522
+      },
+      "district": "districts:pho_co",
+      "kind": "gate",
+      "description": {
+        "vi": "Cửa ô duy nhất còn lại của kinh thành Thăng Long. Xe máy vẫn chui qua vòm cửa hẹp mỗi ngày; hội xe ôm truyền thống đóng đô ở đây.",
+        "en": "The only surviving gate of the old city wall. Motorbikes still squeeze through its narrow arch; the traditional xe ôm crew hangs out here."
+      },
+      "built_year": 1749,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      },
+      "overture_ids": [
+        "9515e12f-5ee8-4760-86a4-f7cd84957d4f"
+      ]
+    },
+    {
+      "id": "den_bach_ma",
+      "tags": [
+        "religious",
+        "respectful_zone",
+        "thang_long_tu_tran",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Đền Bạch Mã",
+        "en": "Bạch Mã Temple"
+      },
+      "location": {
+        "lat": 21.035915,
+        "lon": 105.850992
+      },
+      "district": "districts:pho_co",
+      "kind": "temple",
+      "description": {
+        "vi": "Một trong Thăng Long tứ trấn, trấn giữ phía đông kinh thành, nằm giữa phố Hàng Buồm.",
+        "en": "One of the four guardian temples of Thăng Long, guarding the east, right on Hàng Buồm street."
+      },
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey_with_permission",
+          "wikimedia_commons"
+        ]
+      },
+      "overture_ids": [
+        "bccf13b3-c593-473b-93c0-8220d55cc574"
+      ]
+    },
+    {
+      "id": "pho_ta_hien",
+      "tags": [
+        "coords_unverified",
+        "nightlife",
+        "street"
+      ],
+      "name": {
+        "vi": "Phố Tạ Hiện (phố bia)",
+        "en": "Tạ Hiện beer street"
+      },
+      "location": {
+        "lat": 21.0351,
+        "lon": 105.8519
+      },
+      "district": "districts:pho_co",
+      "kind": "street",
+      "description": {
+        "vi": "Ngã tư Tạ Hiện - Lương Ngọc Quyến, ghế nhựa tràn kín lòng đường, bia hơi, nem chua rán, khách Tây và nhạc xập xình. Tối cuối tuần cấm xe.",
+        "en": "The Tạ Hiện - Lương Ngọc Quyến crossroads: plastic stools across the roadway, draught beer, fried fermented pork, backpackers and thumping music. Closed to traffic on weekend nights."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey_night",
+          "mapillary_cc_by_sa_reference_only"
+        ]
+      },
+      "opening_hours": [
+        17,
+        2
+      ],
+      "activities": [
+        "activities:act_bia_hoi_ta_hien"
+      ]
+    },
+    {
+      "id": "pho_duong_tau",
+      "tags": [
+        "coords_unverified",
+        "hero",
+        "railway",
+        "safety_restricted"
+      ],
+      "name": {
+        "vi": "Phố đường tàu (Phùng Hưng - Trần Phú)",
+        "en": "Train Street (Phùng Hưng - Trần Phú)"
+      },
+      "location": {
+        "lat": 21.0303,
+        "lon": 105.845
+      },
+      "district": "districts:pho_co",
+      "kind": "street",
+      "description": {
+        "vi": "Đường ray chạy sát mép nhà, cách cửa sổ vài gang tay. Tàu Thống Nhất qua là cả xóm thu ghế, dẹp chậu. Ngoài đời chính quyền đã nhiều lần hạn chế cà phê đường tàu vì an toàn; trong game tàu là mối nguy thật, chỉ có hoạt động chụp ảnh từ khoảng cách an toàn.",
+        "en": "Rails pass a hand-span from front doors. When the North-South express comes, the whole alley folds stools and moves pots. In reality the authorities have repeatedly restricted train-street cafés for safety; in game the train is a real hazard and only safe-distance photography is offered."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "mapillary_cc_by_sa_reference_only"
+        ]
+      },
+      "activities": [
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "ga_ha_noi",
+      "tags": [
+        "hero",
+        "railway",
+        "arrival",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Ga Hà Nội (Ga Hàng Cỏ)",
+        "en": "Hanoi Railway Station"
+      },
+      "location": {
+        "lat": 21.025112,
+        "lon": 105.840792
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "station",
+      "description": {
+        "vi": "Ga đầu mối tuyến Bắc - Nam. Khối giữa xây lại kiểu hiện đại sau khi bị bom phá năm 1972, hai cánh còn giữ kiến trúc Pháp. Xe ôm, taxi chèo kéo khách ở cổng Lê Duẩn.",
+        "en": "Terminus of the North-South line. The central block was rebuilt in modernist style after the 1972 bombing; both wings keep their French architecture. Xe ôm and taxis tout at the Lê Duẩn gate."
+      },
+      "built_year": 1902,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      }
+    },
+    {
+      "id": "buu_dien_bo_ho",
+      "tags": [
+        "coords_unverified",
+        "landmark_clock"
+      ],
+      "name": {
+        "vi": "Bưu điện Bờ Hồ (Bưu điện Hà Nội)",
+        "en": "Hanoi Post Office (Bờ Hồ)"
+      },
+      "location": {
+        "lat": 21.0263,
+        "lon": 105.854
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "other",
+      "description": {
+        "vi": "Tòa nhà bưu điện với tháp đồng hồ nhìn ra hồ, nơi người Hà Nội 'hẹn nhau ở Bưu điện' từ thời chưa có điện thoại di động.",
+        "en": "The post office with a clock tower facing the lake, where Hanoians said 'meet you at the Post Office' long before mobile phones."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      }
+    },
+    {
+      "id": "pho_sach_dinh_le",
+      "tags": [
+        "coords_unverified",
+        "books",
+        "pedestrian"
+      ],
+      "name": {
+        "vi": "Phố sách Hà Nội (19 Tháng 12)",
+        "en": "Hanoi Book Street"
+      },
+      "location": {
+        "lat": 21.0256,
+        "lon": 105.8506
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "street",
+      "description": {
+        "vi": "Con phố đi bộ dành cho sách, cạnh khu Đinh Lễ vốn là 'thiên đường sách' của dân Hà Nội.",
+        "en": "A pedestrian street dedicated to books, next to Đinh Lễ, Hanoi's long-time book paradise."
+      },
+      "built_year": 2017,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 3,
+        "reference_sources": [
+          "own_photo_survey"
+        ]
+      },
+      "activities": [
+        "activities:act_suu_tam_tem_phieu"
+      ]
+    },
+    {
+      "id": "nha_tu_hoa_lo",
+      "tags": [
+        "museum",
+        "history",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Di tích Nhà tù Hỏa Lò",
+        "en": "Hỏa Lò Prison Relic"
+      },
+      "location": {
+        "lat": 21.02534,
+        "lon": 105.846472
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "museum",
+      "description": {
+        "vi": "Phần còn lại của nhà tù Pháp xây năm 1896, nay là bảo tàng, nằm dưới chân tòa tháp văn phòng. Tour đêm 'Đường về tự do' rất đông khách.",
+        "en": "The remaining part of the 1896 French prison, now a museum at the foot of an office tower. Its night tour is hugely popular."
+      },
+      "built_year": 1896,
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey_with_permission",
+          "wikimedia_commons"
+        ]
+      },
+      "opening_hours": [
+        8,
+        17
+      ],
+      "overture_ids": [
+        "2b2681d4-7602-4d82-8555-678dcf1150c3"
+      ]
+    },
+    {
+      "id": "bao_tang_lich_su_quoc_gia",
+      "tags": [
+        "museum",
+        "french_quarter",
+        "indochine_style",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Bảo tàng Lịch sử Quốc gia",
+        "en": "National Museum of Vietnamese History"
+      },
+      "location": {
+        "lat": 21.025264,
+        "lon": 105.858495
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "museum",
+      "description": {
+        "vi": "Tòa nhà kiến trúc Đông Dương với mái bát giác, xưa là bảo tàng Louis Finot của Viện Viễn Đông Bác cổ.",
+        "en": "An Indochine-style building with an octagonal roof, once the Louis Finot museum of the French School of the Far East."
+      },
+      "built_year": 1932,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      },
+      "opening_hours": [
+        8,
+        17
+      ]
+    },
+    {
+      "id": "ho_tay",
+      "tags": [
+        "coords_unverified",
+        "hero",
+        "lake",
+        "sunset"
+      ],
+      "name": {
+        "vi": "Hồ Tây",
+        "en": "West Lake"
+      },
+      "location": {
+        "lat": 21.056,
+        "lon": 105.819
+      },
+      "district": "districts:tay_ho",
+      "kind": "lake",
+      "description": {
+        "vi": "Hồ rộng khoảng 500 ha, vòng quanh gần 17 km. Thuyền đạp thiên nga, câu cá, hoàng hôn trên đường Thanh Niên, sen Quảng Bá tháng 6.",
+        "en": "About 500 ha of water, nearly 17 km around. Swan pedal boats, anglers, sunsets on Thanh Niên road, Quảng Bá lotus in June."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "osm_shoreline",
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      },
+      "activities": [
+        "activities:act_dua_xe_dap_ho_tay",
+        "activities:act_dap_vit_ho_tay",
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "chua_tran_quoc",
+      "tags": [
+        "hero",
+        "religious",
+        "respectful_zone",
+        "sunset",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Chùa Trấn Quốc",
+        "en": "Trấn Quốc Pagoda"
+      },
+      "location": {
+        "lat": 21.04784,
+        "lon": 105.836752
+      },
+      "district": "districts:tay_ho",
+      "kind": "pagoda",
+      "description": {
+        "vi": "Ngôi chùa cổ nhất Hà Nội trên bán đảo nhỏ của Hồ Tây, bảo tháp 11 tầng đỏ thẫm in bóng hoàng hôn.",
+        "en": "Hanoi's oldest pagoda on a little peninsula in West Lake; its deep-red eleven-storey stupa silhouetted at sunset."
+      },
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      },
+      "opening_hours": [
+        8,
+        16.5
+      ],
+      "overture_ids": [
+        "116f5e46-d1a0-4112-a7bf-5dc6cdd95d4f"
+      ]
+    },
+    {
+      "id": "den_quan_thanh",
+      "tags": [
+        "religious",
+        "respectful_zone",
+        "thang_long_tu_tran",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Đền Quán Thánh (Trấn Vũ Quán)",
+        "en": "Quán Thánh Temple"
+      },
+      "location": {
+        "lat": 21.043038,
+        "lon": 105.836338
+      },
+      "district": "districts:ba_dinh",
+      "kind": "temple",
+      "description": {
+        "vi": "Trấn phía bắc của Thăng Long tứ trấn, có tượng Huyền Thiên Trấn Vũ bằng đồng đen cao gần 4 m.",
+        "en": "Northern guardian of Thăng Long, housing a nearly 4 m black-bronze statue of the Dark Warrior."
+      },
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey_with_permission",
+          "wikimedia_commons"
+        ]
+      }
+    },
+    {
+      "id": "ho_truc_bach",
+      "tags": [
+        "coords_unverified",
+        "lake",
+        "food"
+      ],
+      "name": {
+        "vi": "Hồ Trúc Bạch",
+        "en": "Trúc Bạch Lake"
+      },
+      "location": {
+        "lat": 21.0445,
+        "lon": 105.8409
+      },
+      "district": "districts:ba_dinh",
+      "kind": "lake",
+      "description": {
+        "vi": "Hồ nhỏ tách khỏi Hồ Tây bởi đường Thanh Niên. Ven hồ là phở cuốn Ngũ Xã, ốc luộc, quán cà phê ngắm hồ.",
+        "en": "The small lake split from West Lake by Thanh Niên road. Lakeside: Ngũ Xã rolled pho, boiled snails, lake-view cafés."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "osm_shoreline",
+          "own_photo_survey"
+        ]
+      }
+    },
+    {
+      "id": "phu_tay_ho",
+      "tags": [
+        "religious",
+        "respectful_zone",
+        "food",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Phủ Tây Hồ",
+        "en": "Tây Hồ Shrine"
+      },
+      "location": {
+        "lat": 21.0551,
+        "lon": 105.8195
+      },
+      "district": "districts:tay_ho",
+      "kind": "temple",
+      "description": {
+        "vi": "Phủ thờ Mẫu Liễu Hạnh trên mũi đất nhô ra Hồ Tây. Ngày rằm, mùng một đông nghịt người đi lễ; ngõ vào bán bánh tôm, ốc.",
+        "en": "Shrine to the Mother Goddess Liễu Hạnh on a spit of land into West Lake. Packed on full-moon and first-of-month days; the lane in sells shrimp cakes and snails."
+      },
+      "modelling": {
+        "method": "photogrammetry",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      }
+    },
+    {
+      "id": "landmark_72",
+      "tags": [
+        "hero",
+        "skyline_anchor",
+        "skyscraper",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Tòa tháp 72 tầng Phạm Hùng (Landmark 72)",
+        "en": "Landmark 72 tower"
+      },
+      "location": {
+        "lat": 21.017,
+        "lon": 105.7838
+      },
+      "district": "districts:my_dinh",
+      "kind": "modern_tower",
+      "description": {
+        "vi": "Tháp cao nhất Hà Nội một thời, cao khoảng 336 m, hai tháp chung cư đứng hai bên. Trong game có quầy bar tầng thượng nơi Kim Long Land tiếp khách.",
+        "en": "Once Hanoi's tallest tower at about 336 m, flanked by two residential towers. In game its rooftop bar is where Kim Long Land entertains."
+      },
+      "built_year": 2011,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ],
+        "notes": "Tên thương mại thật không xuất hiện trên biển hiệu trong game; dùng tên parody 'Tháp Bảy Hai'."
+      }
+    },
+    {
+      "id": "lotte_center",
+      "tags": [
+        "skyline_anchor",
+        "skyscraper",
+        "observation_deck",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Tòa tháp Liễu Giai (Lotte Center)",
+        "en": "Liễu Giai tower (Lotte Center)"
+      },
+      "location": {
+        "lat": 21.03188,
+        "lon": 105.81243
+      },
+      "district": "districts:ba_dinh",
+      "kind": "modern_tower",
+      "description": {
+        "vi": "Tháp 65 tầng hình lưỡi cày cong ở góc Liễu Giai - Đào Tấn, đài quan sát sàn kính tầng 65.",
+        "en": "A 65-storey curved tower at Liễu Giai - Đào Tấn with a glass-floor observation deck on top."
+      },
+      "built_year": 2014,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ],
+        "notes": "Biển hiệu trong game dùng tên parody 'Lốt Tê Tower'."
+      }
+    },
+    {
+      "id": "cau_nhat_tan",
+      "tags": [
+        "coords_unverified",
+        "hero",
+        "river",
+        "cable_stayed",
+        "night_lights"
+      ],
+      "name": {
+        "vi": "Cầu Nhật Tân",
+        "en": "Nhật Tân Bridge"
+      },
+      "location": {
+        "lat": 21.0875,
+        "lon": 105.8245
+      },
+      "district": "districts:tay_ho",
+      "kind": "bridge",
+      "description": {
+        "vi": "Cầu dây văng năm trụ tháp, đèn LED đổi màu ban đêm, nối Tây Hồ với đường ra sân bay Nội Bài.",
+        "en": "A five-pylon cable-stayed bridge with colour-changing LEDs at night, linking Tây Hồ to the Nội Bài airport road."
+      },
+      "built_year": 2015,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm"
+        ]
+      }
+    },
+    {
+      "id": "cau_chuong_duong",
+      "tags": [
+        "coords_unverified",
+        "river"
+      ],
+      "name": {
+        "vi": "Cầu Chương Dương",
+        "en": "Chương Dương Bridge"
+      },
+      "location": {
+        "lat": 21.0365,
+        "lon": 105.864
+      },
+      "district": "districts:long_bien",
+      "kind": "bridge",
+      "description": {
+        "vi": "Cầu bê tông do kỹ sư Việt Nam tự thiết kế, gánh phần lớn xe máy qua sông Hồng giờ cao điểm.",
+        "en": "A concrete bridge designed by Vietnamese engineers that carries most of the rush-hour motorbikes across the Red River."
+      },
+      "built_year": 1985,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "osm",
+          "own_photo_survey"
+        ]
+      }
+    },
+    {
+      "id": "bai_giua_song_hong",
+      "tags": [
+        "coords_unverified",
+        "riverbank",
+        "kites",
+        "reed_flowers"
+      ],
+      "name": {
+        "vi": "Bãi giữa sông Hồng",
+        "en": "Red River middle sandbank"
+      },
+      "location": {
+        "lat": 21.045,
+        "lon": 105.862
+      },
+      "district": "districts:long_bien",
+      "kind": "park",
+      "description": {
+        "vi": "Dải bãi bồi dưới chân cầu Long Biên: vườn chuối, ruộng ngô, hoa lau tháng 10, gió lộng cho thả diều. Mùa lũ nước lên ngập lối xuống.",
+        "en": "The alluvial strip beneath Long Biên bridge: banana groves, maize, October reed flowers and strong wind for kites. In flood season the path down goes under water."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "copernicus_dem"
+        ]
+      },
+      "activities": [
+        "activities:act_tha_dieu"
+      ]
+    },
+    {
+      "id": "con_duong_gom_su",
+      "tags": [
+        "coords_unverified",
+        "public_art",
+        "dyke"
+      ],
+      "name": {
+        "vi": "Con đường gốm sứ ven sông Hồng",
+        "en": "Red River ceramic mosaic road"
+      },
+      "location": {
+        "lat": 21.036,
+        "lon": 105.857
+      },
+      "district": "districts:hoan_kiem",
+      "kind": "street",
+      "description": {
+        "vi": "Bức tranh gốm dài gần 4 km trên tường đê, từng được Guinness ghi nhận. Đẹp để chạy xe chậm và chụp ảnh.",
+        "en": "A ceramic mosaic nearly 4 km long on the dyke wall, once a Guinness record. Great for slow rides and photos."
+      },
+      "built_year": 2010,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 3,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ],
+        "notes": "Tranh gốm là tác phẩm nghệ thuật có tác giả: dùng hoa văn tự vẽ theo tinh thần, không sao chép nguyên tác."
+      }
+    },
+    {
+      "id": "nha_tho_cua_bac",
+      "tags": [
+        "religious",
+        "respectful_zone",
+        "art_deco",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Nhà thờ Cửa Bắc",
+        "en": "Cửa Bắc Church"
+      },
+      "location": {
+        "lat": 21.041439,
+        "lon": 105.840516
+      },
+      "district": "districts:ba_dinh",
+      "kind": "church",
+      "description": {
+        "vi": "Nhà thờ vàng nhạt mái ngói đỏ, tháp chuông vuông, do kiến trúc sư Ernest Hébrard thiết kế.",
+        "en": "Pale-yellow church with red tiles and a square bell tower, designed by Ernest Hébrard."
+      },
+      "built_year": 1932,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 3,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      },
+      "overture_ids": [
+        "88f944cf-bb0c-4dab-8266-f44468c54330"
+      ]
+    },
+    {
+      "id": "ga_cat_linh",
+      "tags": [
+        "metro",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Ga Cát Linh (tuyến 2A)",
+        "en": "Cát Linh metro station (Line 2A)"
+      },
+      "location": {
+        "lat": 21.028242,
+        "lon": 105.827284
+      },
+      "district": "districts:dong_da",
+      "kind": "station",
+      "description": {
+        "vi": "Ga đầu tuyến đường sắt trên cao Cát Linh - Hà Đông, mở cửa năm 2021. Tàu màu xanh lá chạy dọc Nguyễn Trãi xuống Hà Đông.",
+        "en": "Terminus of the elevated Cát Linh - Hà Đông line opened in 2021. Green trains run down Nguyễn Trãi to Hà Đông."
+      },
+      "built_year": 2021,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "osm"
+        ]
+      },
+      "overture_ids": [
+        "6b82af13-2f03-482e-b633-166c910e6ab3"
+      ]
+    },
+    {
+      "id": "bao_tang_dan_toc_hoc",
+      "tags": [
+        "museum",
+        "outdoor_houses",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Bảo tàng Dân tộc học Việt Nam",
+        "en": "Vietnam Museum of Ethnology"
+      },
+      "location": {
+        "lat": 21.040393,
+        "lon": 105.798793
+      },
+      "district": "districts:cau_giay",
+      "kind": "museum",
+      "description": {
+        "vi": "Bảo tàng về 54 dân tộc, vườn ngoài trời có nhà rông Ba Na, nhà dài Ê Đê, nhà mồ Gia Rai dựng theo nguyên mẫu.",
+        "en": "A museum of Vietnam's 54 ethnic groups; its outdoor garden holds a Ba Na communal house, an Ê Đê longhouse and a Gia Rai tomb house built true to originals."
+      },
+      "built_year": 1997,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 3,
+        "reference_sources": [
+          "own_photo_survey_with_permission",
+          "wikimedia_commons"
+        ]
+      },
+      "opening_hours": [
+        8.5,
+        17.5
+      ]
+    },
+    {
+      "id": "cong_vien_thong_nhat",
+      "tags": [
+        "coords_unverified",
+        "park",
+        "exercise"
+      ],
+      "name": {
+        "vi": "Công viên Thống Nhất",
+        "en": "Thống Nhất Park"
+      },
+      "location": {
+        "lat": 21.0165,
+        "lon": 105.8438
+      },
+      "district": "districts:hai_ba_trung",
+      "kind": "park",
+      "description": {
+        "vi": "Công viên lớn quanh hồ Bảy Mẫu, sáng sớm nhảy dân vũ, đá cầu, chiều tối hẹn hò. Từ 2023 bỏ hàng rào thu vé.",
+        "en": "Big park around Bảy Mẫu lake: dawn line-dancing, shuttlecock, evening dates. The ticket fence came down in 2023."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "osm",
+          "own_photo_survey"
+        ]
+      },
+      "activities": [
+        "activities:act_da_cau",
+        "activities:act_tap_duong_sinh"
+      ]
+    },
+    {
+      "id": "svd_my_dinh",
+      "tags": [
+        "stadium",
+        "football",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Sân vận động Quốc gia Mỹ Đình",
+        "en": "Mỹ Đình National Stadium"
+      },
+      "location": {
+        "lat": 21.020486,
+        "lon": 105.763914
+      },
+      "district": "districts:my_dinh",
+      "kind": "other",
+      "description": {
+        "vi": "Sân 40.000 chỗ với mái vòm cung thép. Đêm đội tuyển đá, cả thành phố đổ ra đường đi bão.",
+        "en": "A 40,000-seat stadium under a steel arch. On national-team match nights the whole city floods the streets to celebrate."
+      },
+      "built_year": 2003,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons"
+        ]
+      }
+    },
+    {
+      "id": "lang_gom_bat_trang",
+      "tags": [
+        "craft_village",
+        "pottery",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Làng gốm Bát Tràng",
+        "en": "Bát Tràng pottery village"
+      },
+      "location": {
+        "lat": 20.97833,
+        "lon": 105.914479
+      },
+      "district": "districts:gia_lam",
+      "kind": "other",
+      "description": {
+        "vi": "Làng gốm hơn 500 năm ven sông Hồng: lò bầu, tường dán than tổ ong, chợ gốm, khách tự nặn gốm trên bàn xoay.",
+        "en": "A riverside pottery village over five centuries old: climbing kilns, walls plastered with coal patties, a ceramics market, visitors throwing pots on wheels."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 3,
+        "reference_sources": [
+          "own_photo_survey"
+        ]
+      }
+    }
+  ]
+}

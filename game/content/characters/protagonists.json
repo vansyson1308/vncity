@@ -1,0 +1,116 @@
+{
+  "collection": "characters",
+  "items": [
+    {
+      "id": "minh",
+      "tags": ["protagonist", "switchable", "driver", "migrant"],
+      "name": {"vi": "Nguyễn Văn Minh", "en": "Nguyễn Văn Minh"},
+      "role": "protagonist",
+      "age": 23,
+      "gender": "male",
+      "bio": {
+        "vi": "Quê Kiến Xương, Thái Bình. Bỏ dở năm ba Đại học Giao thông Vận tải khi bố bị tai biến, nợ viện phí 180 triệu. Giờ chạy xe ôm công nghệ trên app Vồ bằng con Sóng đời 2012 đã thay ba lần nhông xích, thuê trọ 12 m² ở ngõ Khương Đình, mỗi tháng gửi về quê 6 triệu. Thuộc đường nhanh hơn GPS, cãi tay đôi được với bất kỳ bà bán nước nào, và có tật vượt đèn vàng. Mơ một ngày mở tiệm sửa xe của riêng mình.",
+        "en": "From Kiến Xương, Thái Bình. Dropped out of his third year at the transport university when his father had a stroke and the family took on a 180-million hospital debt. Now rides for the Vồ app on a 2012 Sóng whose chain he has replaced three times, rents a 12 m² room in a Khương Đình alley and sends 6 million home each month. Knows the streets faster than GPS, can out-argue any tea-stall auntie, and has a habit of running amber lights. Dreams of his own repair shop."
+      },
+      "home": {"lat": 20.99050, "lon": 105.81500},
+      "district": "districts:thanh_xuan",
+      "occupation": {"vi": "Tài xế xe ôm công nghệ", "en": "Ride-hailing motorbike driver"},
+      "personality": ["lanh_loi", "hai_huoc", "lieu", "thuong_gia_dinh", "tu_ai_ngam", "khong_chiu_thua"],
+      "voice": {"accent": "northern_rural", "notes": "Giọng Thái Bình nhẹ, nói nhanh, hay 'thôi chết', 'bỏ mẹ' (nhẹ), gọi khách là 'anh/chị' dù ít tuổi hơn. Khi căng thẳng nói nhỏ lại chứ không quát."},
+      "appearance": {"outfit": "Áo khoác đồng phục xanh lá app Vồ đã bạc màu, mũ bảo hiểm cùng màu dán decal, quần bò, dép tổ ong khi nghỉ, giày vải khi chạy. Áo mưa cánh dơi trong cốp.", "metahuman_preset": "MH_VN_Male_20s_Slim", "notes": "Da rám nắng ở cổ tay và gáy, sẹo nhỏ ở cằm do ngã xe năm 18 tuổi."},
+      "schedule": [
+        {"hours": [5.5, 9], "activity": "chay_cuoc_sang_cao_diem", "location": {"lat": 21.00300, "lon": 105.82000}},
+        {"hours": [9, 11], "activity": "ngoi_tra_da_cho_cuoc", "location": {"lat": 21.02860, "lon": 105.82720}},
+        {"hours": [11, 13.5], "activity": "giao_do_an_trua", "location": {"lat": 21.03300, "lon": 105.79500}},
+        {"hours": [13.5, 16], "activity": "ngu_trua_tai_phong_tro", "location": {"lat": 20.99050, "lon": 105.81500}},
+        {"hours": [16, 20], "activity": "chay_cuoc_chieu", "location": {"lat": 21.01700, "lon": 105.78380}},
+        {"hours": [20, 23], "activity": "phu_viec_tiem_sua_xe_duc", "location": {"lat": 20.99120, "lon": 105.81420}},
+        {"hours": [23, 5.5], "activity": "ngu", "location": {"lat": 20.99050, "lon": 105.81500}}
+      ],
+      "skills": {"lai_xe": 70, "thuoc_duong": 60, "sua_xe": 45, "an_noi": 65, "nau_an": 10, "chup_anh": 15, "the_luc": 55, "kinh_doanh": 20},
+      "relationships": [
+        {"with": "characters:tuan_beo", "kind": "ban_cung_phong", "notes": "Ở chung trọ, nợ nhau từng gói mì."},
+        {"with": "characters:me_minh", "kind": "me", "notes": "Gọi video mỗi tối, Minh luôn bảo 'con ổn'."},
+        {"with": "characters:anh_duc_sua_xe", "kind": "thay_day_nghe", "notes": "Học sửa xe buổi tối, trả công bằng việc vặt."},
+        {"with": "characters:thao", "kind": "khach_quen", "notes": "Khách đặt chuyến cả ngày; dần thành mối quan hệ phức tạp."},
+        {"with": "characters:chu_cuong", "kind": "doi_thu_roi_dong_minh", "notes": "Xe ôm truyền thống ghét xe ôm app."},
+        {"with": "characters:lan", "kind": "ban", "notes": "Gặp nhau khi Minh giao nhầm đơn phở."},
+        {"with": "characters:khoi", "kind": "thay_tro_nguoc", "notes": "Minh dạy Khôi đi xe máy giữa phố Hà Nội."},
+        {"with": "characters:thuong_uy_hai", "kind": "oan_gia", "notes": "Đã bị Hải lập biên bản hai lần."}
+      ]
+    },
+    {
+      "id": "lan",
+      "tags": ["protagonist", "switchable", "cook", "heir"],
+      "name": {"vi": "Trần Ngọc Lan", "en": "Trần Ngọc Lan"},
+      "role": "protagonist",
+      "age": 29,
+      "gender": "female",
+      "bio": {
+        "vi": "Cháu đích tôn (gái) của cụ Thọ, người dựng quán Phở Thọ ở Hàng Chiếu từ năm 1957. Học tài chính, làm chuyên viên thẩm định tín dụng ở một ngân hàng trong tòa tháp Phạm Hùng, lương 35 triệu. Khi ông ngã quỵ vì tai biến, cô xin nghỉ không lương để giữ quán, rồi phát hiện cô ruột đang thương lượng bán cả căn nhà cho Kim Long Land. Lan giỏi Excel hơn giỏi ninh xương, nói thẳng đến mức mất lòng, và chưa bao giờ chịu thua một nồi nước dùng.",
+        "en": "Granddaughter of old Thọ, who founded Phở Thọ on Hàng Chiếu in 1957. Studied finance and worked as a credit analyst at a bank in a Phạm Hùng tower on 35 million a month. When her grandfather collapsed with a stroke she took unpaid leave to keep the shop running, then discovered her aunt was negotiating to sell the whole house to Kim Long Land. Better at spreadsheets than at simmering bones, blunt to a fault, and she has never let a pot of broth beat her."
+      },
+      "home": {"lat": 21.03745, "lon": 105.85120},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Chủ quán phở (bất đắc dĩ)", "en": "Reluctant pho shop owner"},
+      "personality": ["thang_tinh", "cau_toan", "tu_trong", "nhanh_tri", "hay_lo", "thuong_ong"],
+      "voice": {"accent": "hanoi", "notes": "Giọng Hà Nội phố cổ chuẩn, dùng 'ạ', 'nhé', 'đấy' đúng chỗ; khi bực thì nói chậm và rõ từng chữ, đáng sợ hơn quát. Thỉnh thoảng lẫn thuật ngữ ngân hàng ('dòng tiền', 'tài sản đảm bảo')."},
+      "appearance": {"outfit": "Áo phông trắng, tạp dề nâu buộc gọn, tóc búi cao kẹp càng cua, dép cao su. Khi đi gặp đối tác: sơ mi lụa, quần âu, túi công sở cũ từ thời ngân hàng.", "metahuman_preset": "MH_VN_Female_20s_Average", "notes": "Vết bỏng nhỏ ở mu bàn tay trái do nồi nước dùng."},
+      "schedule": [
+        {"hours": [3.5, 5.5], "activity": "ninh_nuoc_dung", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [5.5, 10], "activity": "ban_pho_sang", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [10, 12], "activity": "di_cho_dong_xuan", "location": {"lat": 21.03830, "lon": 105.84980}},
+        {"hours": [12, 15], "activity": "lam_so_sach_cham_ong", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [15, 17], "activity": "gap_doi_tac_ngan_hang", "location": {"lat": 21.02430, "lon": 105.85760}},
+        {"hours": [17, 21], "activity": "ban_pho_toi", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [21, 3.5], "activity": "ngu", "location": {"lat": 21.03745, "lon": 105.85120}}
+      ],
+      "skills": {"nau_an": 45, "kinh_doanh": 75, "giao_tiep": 60, "mac_ca": 55, "lai_xe": 40, "thuoc_duong": 50, "chup_anh": 20, "the_luc": 40},
+      "relationships": [
+        {"with": "characters:cu_tho", "kind": "ong_noi", "notes": "Người duy nhất Lan không cãi lại."},
+        {"with": "characters:co_hanh", "kind": "co_ruot", "notes": "Muốn bán nhà để trả nợ đất nền."},
+        {"with": "characters:khoi", "kind": "hang_xom_tang_tren", "notes": "Hồi bé Khôi cõng Lan đi ăn kem Tràng Tiền; giờ anh nắm phần sở hữu quyết định."},
+        {"with": "characters:ba_tam_xoi", "kind": "hang_xom", "notes": "Bà Tâm biết mọi chuyện trước cả Lan."},
+        {"with": "characters:ba_lua_dong_xuan", "kind": "nguoi_cung_cap", "notes": "Bán quế, hồi, thảo quả cho nhà Lan ba mươi năm."},
+        {"with": "characters:vinh", "kind": "doi_thu", "notes": "Từng thẩm định hồ sơ vay của Kim Long Land khi còn ở ngân hàng."},
+        {"with": "characters:minh", "kind": "ban"}
+      ]
+    },
+    {
+      "id": "khoi",
+      "tags": ["protagonist", "switchable", "photographer", "returnee", "viet_kieu"],
+      "name": {"vi": "Nguyễn Khải Khôi", "en": "Nguyễn Khải Khôi (Daniel)"},
+      "role": "protagonist",
+      "age": 38,
+      "gender": "male",
+      "bio": {
+        "vi": "Sinh năm 1988 trên gác hiệu Ảnh Khải, Hàng Chiếu. Mười tuổi theo mẹ sang Leipzig, Đức; lớn lên giữa chợ Đồng Xuân Leipzig và trường Đức, thành phóng viên ảnh tự do, chụp biên giới, lũ lụt, biểu tình. Bố anh, ông Khải, ở lại Hà Nội với cái studio và hàng nghìn cuộn phim chụp phố phường từ 1975 đến 2010. Ông mất tháng Chín. Khôi về chịu tang, định ở hai tuần rồi bán nốt phần nhà. Rồi anh mở chiếc tủ sắt trên gác.",
+        "en": "Born in 1988 above the Ảnh Khải photo studio on Hàng Chiếu. At ten he followed his mother to Leipzig, Germany, grew up between the Vietnamese wholesale market and a German school, and became a freelance photojournalist covering borders, floods and protests. His father Khải stayed in Hanoi with the studio and thousands of rolls of film documenting the streets from 1975 to 2010. Khải died in September. Khôi came home for the funeral, planning to stay two weeks and sell his share of the house. Then he opened the iron cabinet in the attic."
+      },
+      "home": {"lat": 21.03745, "lon": 105.85120},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Phóng viên ảnh tự do", "en": "Freelance photojournalist"},
+      "personality": ["quan_sat", "it_noi", "tu_ve_bang_hai_huoc_kho", "lac_long", "ton_trong_nguoi_khac", "co_chap_voi_su_that"],
+      "voice": {"accent": "hanoi", "notes": "Giọng Hà Nội của đứa trẻ 10 tuổi năm 1998, từ vựng dừng ở đó: nói 'ti vi đen trắng', 'tem phiếu', không biết từ lóng mới. Hay chêm tiếng Đức khi bực ('Mensch!', 'Scheiße' bị bíp nhẹ). Xưng 'tôi' cứng nhắc rồi dần chuyển sang 'anh/em' tự nhiên."},
+      "appearance": {"outfit": "Áo khoác dã chiến màu ô liu, quần kaki, giày trekking, máy ảnh rangefinder phim đeo cổ và máy số mirrorless trong túi. Đội mũ bảo hiểm sai cách ở chương đầu (quai không cài).", "metahuman_preset": "MH_VN_Male_30s_Tall", "notes": "Cao 1m80, nổi bật giữa phố; người bán hàng hay nói tiếng Anh với anh và anh thấy tổn thương."},
+      "schedule": [
+        {"hours": [5, 7.5], "activity": "chup_anh_binh_minh_bo_ho", "location": {"lat": 21.02880, "lon": 105.85240}},
+        {"hours": [7.5, 9], "activity": "an_sang_quan_pho_tho", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [9, 13], "activity": "phan_loai_kho_phim", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [13, 17], "activity": "di_tim_dia_diem_anh_xua", "location": {"lat": 21.04290, "lon": 105.85960}},
+        {"hours": [17, 19], "activity": "ngoi_ca_phe_voi_ong_thang", "location": {"lat": 21.03780, "lon": 105.85230}},
+        {"hours": [19, 24], "activity": "trang_phim_bien_tap", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [0, 5], "activity": "ngu_chap_chon_lech_mui_gio", "location": {"lat": 21.03745, "lon": 105.85120}}
+      ],
+      "skills": {"chup_anh": 85, "ngoai_ngu": 80, "giao_tiep": 40, "lai_xe": 15, "thuoc_duong": 10, "nau_an": 25, "kinh_doanh": 30, "the_luc": 60},
+      "relationships": [
+        {"with": "characters:bo_khai", "kind": "bo", "notes": "Hai mươi tám năm chỉ gặp qua điện thoại. Kho phim là lời bố chưa kịp nói."},
+        {"with": "characters:ong_thang", "kind": "ban_cu_cua_bo", "notes": "Người trong bức ảnh 1989 nổi tiếng nhất của ông Khải."},
+        {"with": "characters:lan", "kind": "hang_xom_tang_duoi"},
+        {"with": "characters:phong_bien_tap", "kind": "ban_cu", "notes": "Từng học chung lớp tiếng Việt cuối tuần ở Leipzig."},
+        {"with": "characters:linh_bao_ton", "kind": "dong_minh", "notes": "Linh cần ảnh tư liệu, Khôi cần người dẫn đường."},
+        {"with": "characters:minh", "kind": "hoc_tro_lai_xe"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "businesses.schema.json",
+  "title": "Businesses",
+  "description": "Purchasable / runnable businesses (GTA properties, non-criminal).",
+  "x-collection": "businesses",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "businesses"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "price_vnd"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "kind": {
+            "enum": [
+              "pho_shop",
+              "cafe",
+              "bia_hoi",
+              "repair_shop",
+              "homestay",
+              "souvenir",
+              "karaoke",
+              "bakery",
+              "laundry",
+              "market_stall"
+            ]
+          },
+          "price_vnd": {
+            "$ref": "common.schema.json#/$defs/money_vnd"
+          },
+          "location": {
+            "$ref": "common.schema.json#/$defs/geo"
+          },
+          "district": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "income_per_day_vnd": {
+            "$ref": "common.schema.json#/$defs/money_vnd"
+          },
+          "upkeep_per_day_vnd": {
+            "$ref": "common.schema.json#/$defs/money_vnd"
+          },
+          "upgrades": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "cost_vnd"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "name": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "cost_vnd": {
+                  "$ref": "common.schema.json#/$defs/money_vnd"
+                },
+                "income_bonus": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "unlock": {
+            "$ref": "common.schema.json#/$defs/condition"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

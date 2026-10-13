@@ -1,0 +1,281 @@
+{
+  "collection": "building_archetypes",
+  "items": [
+    {
+      "id": "nha_ong_pho_co",
+      "tags": ["tube_house", "heritage", "old_quarter"],
+      "name": {"vi": "Nhà ống phố cổ", "en": "Old Quarter tube house"},
+      "era": "pre_1873",
+      "floors": {"min": 1, "max": 4},
+      "footprint_m2": {"min": 25, "max": 180},
+      "frontage_m": {"min": 2.5, "max": 5},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/NhaOngPhoCo",
+        "ground_floor": "shopfront",
+        "palette": ["#C9A55B", "#D8B86A", "#8E7A5A", "#6B4F3A", "#A33A2A", "#2F5D3A", "#E5DCC8"],
+        "features": ["mai_ngoi_am_duong_tang_tren", "mat_tien_go_cua_long_khong", "cua_xep_sat", "ban_cong_hep_lan_can_sat", "tuong_voi_bong_troc_reu", "bien_hieu_chu_quoc_ngu_to", "bien_hieu_dung_neon", "cay_canh_ban_cong", "phoi_quan_ao", "bo_day_dien_vat_ngang", "ghe_nhua_do_via_he", "co_do_sao_vang_ngay_le", "gac_xep", "san_trong_gieng_troi", "mai_toi_che_nang", "xe_may_dau_via_he"]
+      ,
+        "roof": "tiled_pitched"
+      },
+      "classification_hints": {
+        "overture_classes": ["residential", "house", "commercial", "retail"],
+        "districts": ["districts:pho_co"],
+        "max_height_m": 14,
+        "name_keywords": ["Hàng ", "Mã Mây", "Tạ Hiện", "Lương Ngọc Quyến", "Nhà cổ"]
+      }
+    },
+    {
+      "id": "nha_ong_hien_dai",
+      "tags": ["tube_house", "common", "procedural_bulk"],
+      "name": {"vi": "Nhà ống hiện đại (nhà phố)", "en": "Modern tube house"},
+      "era": "doi_moi_1986_2005",
+      "floors": {"min": 3, "max": 7},
+      "footprint_m2": {"min": 25, "max": 120},
+      "frontage_m": {"min": 3, "max": 6},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/NhaOngHienDai",
+        "ground_floor": "shopfront",
+        "palette": ["#F1E6C8", "#E9D9A6", "#F3F0E8", "#D7E3E8", "#F2C9C0", "#B9CFA8", "#7A7A7A"],
+        "features": ["ban_cong_moi_tang", "lan_can_inox", "cua_kinh_khung_nhom", "mai_ton_tang_thuong", "lam_chan_nang_nhom", "bon_nuoc_inox_tren_mai", "dan_nong_dieu_hoa_mat_tien", "bien_hieu_bat_hiflex", "bien_led_chay_chu", "cua_cuon_sat", "bo_day_dien_vat_ngang", "lan_can_trang_tri_kieu_chau_au", "chuong_cop_tang_thuong", "chuong_bao_ve_ban_cong", "son_tuong_ben_hong_tron"],
+        "roof": "corrugated"
+      },
+      "classification_hints": {
+        "overture_classes": ["residential", "house", "commercial", "retail", "mixed_use"],
+        "min_height_m": 9,
+        "max_height_m": 25
+      }
+    },
+    {
+      "id": "biet_thu_phap",
+      "tags": ["colonial", "villa", "heritage"],
+      "name": {"vi": "Biệt thự Pháp", "en": "French colonial villa"},
+      "era": "colonial_1873_1954",
+      "floors": {"min": 2, "max": 3},
+      "footprint_m2": {"min": 120, "max": 600},
+      "frontage_m": {"min": 10, "max": 30},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/BietThuPhap",
+        "ground_floor": "residential_gate",
+        "palette": ["#E4B94A", "#D9A441", "#F0D48A", "#3E6B48", "#2E5A3C", "#FFFFFF", "#8C3B2E"],
+        "features": ["tuong_vang_phap", "cua_chop_go_xanh_la", "mai_ngoi_vay_ca_do", "ong_khoi", "cot_tru_gach_cong", "hang_rao_sat_hoa_van", "cua_vom", "ban_cong_lan_can_sat_uon", "san_vuon_cay_sau", "bien_ten_co_quan_neu_bi_chiem_dung", "phan_nha_coi_noi_sau_1954", "rao_rau_leo_hoa_giay", "o_tho_gach_men_hoa"],
+        "roof": "tiled_pitched"
+      },
+      "classification_hints": {
+        "overture_classes": ["residential", "house", "embassy", "government"],
+        "districts": ["districts:hoan_kiem", "districts:ba_dinh", "districts:hai_ba_trung"],
+        "max_height_m": 14,
+        "name_keywords": ["Biệt thự", "Villa", "Đại sứ quán"]
+      }
+    },
+    {
+      "id": "cong_trinh_phap_cong",
+      "tags": ["colonial", "public", "monumental"],
+      "name": {"vi": "Công trình công thời Pháp", "en": "French colonial public building"},
+      "era": "colonial_1873_1954",
+      "floors": {"min": 2, "max": 4},
+      "footprint_m2": {"min": 800, "max": 12000},
+      "frontage_m": {"min": 30, "max": 150},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/CongTrinhPhapCong",
+        "ground_floor": "lobby",
+        "palette": ["#E9C46A", "#E0B24F", "#F2E2B3", "#3F6E4A", "#FFFFFF", "#6E6E6E"],
+        "features": ["tuong_vang_phap", "cua_chop_go_xanh_la", "cua_so_vom_cao", "phu_dieu_dau_cot", "bac_tam_cap_da", "mai_mansard_ngoi_den", "dong_ho_mat_tien", "co_do_tren_noc", "cot_doi_kieu_tan_co_dien", "song_sat_rua_hoa"],
+        "roof": "mansard"
+      },
+      "classification_hints": {
+        "overture_classes": ["government", "civic", "public", "university", "museum", "post_office", "courthouse", "hospital"],
+        "districts": ["districts:hoan_kiem", "districts:ba_dinh"],
+        "name_keywords": ["Bảo tàng", "Bưu điện", "Tòa án", "Bộ ", "Bệnh viện", "Trường", "Phủ", "Viện"]
+      }
+    },
+    {
+      "id": "khu_tap_the",
+      "tags": ["socialist", "housing_block", "iconic"],
+      "name": {"vi": "Khu tập thể (nhà lắp ghép)", "en": "Socialist-era housing block"},
+      "era": "socialist_1954_1986",
+      "floors": {"min": 4, "max": 5},
+      "footprint_m2": {"min": 400, "max": 2000},
+      "frontage_m": {"min": 30, "max": 90},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/KhuTapThe",
+        "ground_floor": "shopfront",
+        "palette": ["#D8C7A0", "#C2B38F", "#9C9A8E", "#B9A06A", "#6B6B5F", "#4C5A4E"],
+        "features": ["chuong_cop_coi_noi_lo_lung", "tuong_ve_bong_tron_ra_mau_den", "hanh_lang_chung", "cau_thang_ngoai", "bon_nuoc_tren_mai_chi_chit", "day_dien_chang_nhu_mang_nhen", "cay_mong_rong_moc_tren_tuong", "quan_ao_phoi_ngoai_cua_so", "tang_mot_coi_noi_lam_ki_ot", "dieu_hoa_cu_vang_nuoc", "bien_so_nha_son_tay_A1_B2", "san_choi_giua_cac_khoi"],
+        "roof": "flat_terrace"
+      },
+      "classification_hints": {
+        "overture_classes": ["apartments", "residential"],
+        "districts": ["districts:dong_da", "districts:ba_dinh", "districts:hai_ba_trung", "districts:thanh_xuan"],
+        "min_height_m": 11,
+        "max_height_m": 18,
+        "name_keywords": ["Tập thể", "TT ", "Kim Liên", "Trung Tự", "Giảng Võ", "Thành Công", "Nguyễn Công Trứ", "Khương Thượng", "Thanh Xuân Bắc"]
+      }
+    },
+    {
+      "id": "chung_cu_cao_tang",
+      "tags": ["contemporary", "tower", "residential"],
+      "name": {"vi": "Chung cư cao tầng", "en": "High-rise apartment tower"},
+      "era": "contemporary_2005_plus",
+      "floors": {"min": 15, "max": 45},
+      "footprint_m2": {"min": 800, "max": 4000},
+      "frontage_m": {"min": 25, "max": 80},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/ChungCuCaoTang",
+        "ground_floor": "lobby",
+        "palette": ["#EDEBE6", "#C9C3B6", "#8FA3AD", "#3C4A57", "#D5B79A"],
+        "features": ["lo_gia_kinh", "dan_nong_dieu_hoa_xep_hang", "phoi_do_lo_gia", "ten_toa_chu_lon_tren_dinh", "tang_mot_shophouse", "ham_xe_may_doc", "luoi_an_toan_ban_cong", "bang_ron_cu_dan_phan_doi_quan_ly"],
+        "roof": "flat_terrace"
+      },
+      "classification_hints": {
+        "overture_classes": ["apartments", "residential"],
+        "min_height_m": 45,
+        "name_keywords": ["Chung cư", "Tòa", "HH", "Tower", "Residence", "Times City", "Royal City", "Vinhomes"]
+      }
+    },
+    {
+      "id": "van_phong_cao_tang",
+      "tags": ["contemporary", "tower", "office", "glass"],
+      "name": {"vi": "Tòa văn phòng cao tầng", "en": "Office tower"},
+      "era": "contemporary_2005_plus",
+      "floors": {"min": 10, "max": 72},
+      "footprint_m2": {"min": 600, "max": 9000},
+      "frontage_m": {"min": 25, "max": 120},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/VanPhongCaoTang",
+        "ground_floor": "lobby",
+        "palette": ["#5F7C8A", "#2B3A42", "#9BB3C0", "#D9DEE2", "#1E2A30"],
+        "features": ["tuong_kinh_rem", "logo_ngan_hang_parody_tren_dinh", "san_do_xe_ham", "bao_ve_cong", "den_led_vien_dem", "quan_cafe_san_tang_mot", "bai_xe_may_ngoai_troi_co_mai"],
+        "roof": "flat_terrace"
+      },
+      "classification_hints": {
+        "overture_classes": ["office", "commercial"],
+        "min_height_m": 35,
+        "name_keywords": ["Tower", "Building", "Center", "Plaza", "Tòa nhà", "Trung tâm"]
+      }
+    },
+    {
+      "id": "lien_ke_kdt",
+      "tags": ["contemporary", "townhouse", "new_estate"],
+      "name": {"vi": "Nhà liền kề khu đô thị", "en": "New-estate terraced townhouse"},
+      "era": "contemporary_2005_plus",
+      "floors": {"min": 4, "max": 5},
+      "footprint_m2": {"min": 60, "max": 150},
+      "frontage_m": {"min": 5, "max": 7},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/LienKeKDT",
+        "ground_floor": "garage",
+        "palette": ["#F2EEE6", "#D9CDB8", "#B8A88A", "#4E4A44", "#2F2F2F"],
+        "features": ["mat_tien_dong_bo_chu_dau_tu", "phao_chi_tan_co_dien", "cua_cuon_gara", "o_to_do_via_he", "bien_cho_thue_van_phong", "cay_xanh_ho_ga_dong_bo", "nha_bo_hoang_chua_xay"],
+        "roof": "flat_terrace"
+      },
+      "classification_hints": {
+        "overture_classes": ["residential", "house", "terrace"],
+        "districts": ["districts:my_dinh", "districts:ha_dong", "districts:long_bien", "districts:gia_lam", "districts:hoang_mai"],
+        "min_height_m": 13,
+        "max_height_m": 20,
+        "name_keywords": ["Liền kề", "LK", "Shophouse", "Biệt thự khu đô thị"]
+      }
+    },
+    {
+      "id": "dinh_chua",
+      "tags": ["religious", "heritage", "respectful_zone"],
+      "name": {"vi": "Đình, chùa, đền, miếu", "en": "Communal house, pagoda, temple or shrine"},
+      "era": "pre_1873",
+      "floors": {"min": 1, "max": 2},
+      "footprint_m2": {"min": 30, "max": 3000},
+      "frontage_m": {"min": 4, "max": 60},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/DinhChua",
+        "ground_floor": "temple_gate",
+        "palette": ["#7A2E1F", "#A33A2A", "#C9A227", "#5B4636", "#9A8B74", "#3B3B32"],
+        "features": ["mai_cong_dao_dau_dao", "ngoi_mui_hai", "luong_cot_go_son_son_then", "hoanh_phi_cau_doi_chu_han", "cong_tam_quan", "lu_huong_khoi_nhang", "cay_da_co_thu", "san_gach_bat", "ho_ban_nguyet", "rong_chau_mat_nguyet_tren_noc"],
+        "roof": "curved_temple"
+      },
+      "classification_hints": {
+        "overture_classes": ["religious", "temple", "place_of_worship", "shrine"],
+        "name_keywords": ["Chùa", "Đền", "Đình", "Miếu", "Phủ", "Quán"]
+      }
+    },
+    {
+      "id": "cho",
+      "tags": ["market", "public"],
+      "name": {"vi": "Chợ", "en": "Market hall"},
+      "era": "colonial_1873_1954",
+      "floors": {"min": 1, "max": 3},
+      "footprint_m2": {"min": 500, "max": 15000},
+      "frontage_m": {"min": 20, "max": 150},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/Cho",
+        "ground_floor": "market_stalls",
+        "palette": ["#BFB8A8", "#E1D3A6", "#7B8C7A", "#A04532", "#5F6B70"],
+        "features": ["mai_ton_kho_lon", "bat_che_mua_xanh_do", "san_hang_tran_ra_via_he", "loi_di_hep_giua_sap", "xe_ba_gac_cho_hang", "bien_ten_cho_chu_lon", "quat_tran_cu", "bong_den_tran_tre_lung"],
+        "roof": "corrugated"
+      },
+      "classification_hints": {
+        "overture_classes": ["marketplace", "market", "retail"],
+        "name_keywords": ["Chợ"]
+      }
+    },
+    {
+      "id": "cong_trinh_cong_cong",
+      "tags": ["public", "socialist_modern"],
+      "name": {"vi": "Công trình công cộng (trường, viện, UBND, bệnh viện)", "en": "Public building (school, hospital, ward office)"},
+      "era": "socialist_1954_1986",
+      "floors": {"min": 2, "max": 9},
+      "footprint_m2": {"min": 300, "max": 10000},
+      "frontage_m": {"min": 20, "max": 120},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/CongTrinhCongCong",
+        "ground_floor": "lobby",
+        "palette": ["#F0D98C", "#E6C76A", "#FFFFFF", "#C43B2F", "#7D8A80"],
+        "features": ["son_vang_kem_cong_so", "khau_hieu_bang_ron_do", "cong_sat_co_bot_bao_ve", "quoc_huy_tren_mat_tien", "san_co_cot_co", "nha_de_xe_mai_ton", "hanh_lang_dai_cua_so_doi"],
+        "roof": "flat_terrace"
+      },
+      "classification_hints": {
+        "overture_classes": ["school", "hospital", "government", "civic", "university", "college", "police", "townhall"],
+        "name_keywords": ["UBND", "Trường", "Bệnh viện", "Trạm y tế", "Công an", "Đại học", "Học viện", "Nhà văn hóa"]
+      }
+    },
+    {
+      "id": "nha_xuong",
+      "tags": ["industrial", "warehouse"],
+      "name": {"vi": "Nhà xưởng, kho bãi", "en": "Workshop or warehouse"},
+      "era": "doi_moi_1986_2005",
+      "floors": {"min": 1, "max": 3},
+      "footprint_m2": {"min": 200, "max": 20000},
+      "frontage_m": {"min": 10, "max": 200},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/NhaXuong",
+        "ground_floor": "garage",
+        "palette": ["#9AA3A6", "#5E8CA8", "#C5C7C4", "#8A5A3C", "#3F4B52"],
+        "features": ["mai_ton_xanh_duong", "tuong_ton_gon_song", "cua_cuon_lon", "xe_tai_nho_do", "bien_cong_ty_tnhh", "bai_vat_lieu_xay_dung", "hang_rao_tuong_gach_tho"],
+        "roof": "corrugated"
+      },
+      "classification_hints": {
+        "overture_classes": ["industrial", "warehouse", "manufacture", "garage", "storage"],
+        "max_height_m": 14,
+        "name_keywords": ["Công ty", "Kho", "Xưởng", "Nhà máy", "Lò gốm"]
+      }
+    },
+    {
+      "id": "nha_thap_tang",
+      "tags": ["low_rise", "periphery", "village"],
+      "name": {"vi": "Nhà thấp tầng ven đô, làng xóm", "en": "Low-rise peri-urban or village house"},
+      "era": "doi_moi_1986_2005",
+      "floors": {"min": 1, "max": 3},
+      "footprint_m2": {"min": 40, "max": 250},
+      "frontage_m": {"min": 4, "max": 12},
+      "facade": {
+        "kit": "/Game/Hanoi/Kits/NhaThapTang",
+        "ground_floor": "residential_gate",
+        "palette": ["#E8DFC7", "#CFC2A0", "#B4876A", "#7E8B6A", "#A9B7BE"],
+        "features": ["mai_ton_hoac_ngoi_do", "cong_sat_son_xanh", "san_gach_phoi_thoc", "gieng_cu_hoac_bon_nuoc", "chuong_ga", "cay_cau_cay_mit", "tuong_rao_gach_mo_ga"],
+        "roof": "corrugated"
+      },
+      "classification_hints": {
+        "overture_classes": ["residential", "house", "farm", "detached"],
+        "max_height_m": 11
+      }
+    }
+  ]
+}

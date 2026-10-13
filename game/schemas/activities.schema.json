@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "activities.schema.json",
+  "title": "Activities and jobs",
+  "description": "Repeatable gameplay loops (GTA side activities, minus crime). Each defines how a session is generated, scored and paid.",
+  "x-collection": "activities",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "activities"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "loop",
+          "pay"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "kind": {
+            "enum": [
+              "job",
+              "minigame",
+              "leisure",
+              "social",
+              "business",
+              "collectible",
+              "race_legal"
+            ]
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "unlock": {
+            "$ref": "common.schema.json#/$defs/condition"
+          },
+          "available": {
+            "$ref": "common.schema.json#/$defs/condition"
+          },
+          "vehicle_classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "loop": {
+            "type": "object",
+            "required": [
+              "generator",
+              "objective"
+            ],
+            "properties": {
+              "generator": {
+                "type": "string",
+                "description": "Runtime generator id, e.g. ride_request, delivery_order, photo_target."
+              },
+              "objective": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "time_limit_s": {
+                "type": "number",
+                "minimum": 0
+              },
+              "scoring": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "fail_conditions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "pay": {
+            "type": "object",
+            "properties": {
+              "base_vnd": {
+                "$ref": "common.schema.json#/$defs/money_vnd"
+              },
+              "per_km_vnd": {
+                "$ref": "common.schema.json#/$defs/money_vnd"
+              },
+              "tip_max_vnd": {
+                "$ref": "common.schema.json#/$defs/money_vnd"
+              },
+              "rating": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          },
+          "skills_trained": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,11 @@
+{
+  "_comment": "PCG point Set/Kind -> static mesh. Empty mesh = skipped (DataTable still imported). Fill when assets exist. Keys are '<Set>/<Kind>' or '<Set>/*'. scale multiplies the CSV Scale; yaw_offset_deg fixes mesh forward axis (UE meshes face +X).",
+  "street_trees/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 400},
+  "power_poles/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 300},
+  "street_lights/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 300},
+  "shop_signs/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 150},
+  "parked_motorbikes/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 120},
+  "street_vendors/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 120},
+  "cable_spans/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 200},
+  "_example/tree_sau": {"mesh": "/Game/Hanoi/Props/Trees/SM_Sau_01.SM_Sau_01", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 400}
+}
