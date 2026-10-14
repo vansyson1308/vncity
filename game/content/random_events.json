@@ -1,0 +1,3919 @@
+{
+  "collection": "random_events",
+  "items": [
+    {
+      "id": "re_xe_chet_may_giua_duong",
+      "tags": [
+        "giup_nguoi",
+        "minh",
+        "xe_may"
+      ],
+      "name": {
+        "vi": "Xe chết máy giữa đường",
+        "en": "Bike dead in the middle of the road"
+      },
+      "description": {
+        "vi": "Một tài xế áo xanh dắt chiếc Hồng Đạt Sóng Alpha chết máy giữa làn ô tô, còi bấm sau lưng từng hồi, app vẫn đếm giờ cuốc.",
+        "en": "A ride-hailing driver pushes a dead Hồng Đạt Sóng Alpha across the car lane while horns pile up behind him; his app is still counting the trip."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_xe_om_cong_nghe",
+      "motive": {
+        "kho": "Cuốc đang chạy bị huỷ thì mất tiền lẫn điểm, xe thì chết máy giữa đường, không ai dừng.",
+        "tap": "Giữ bằng được điểm app; đời tài xế chỉ còn cái sao 4.9."
+      },
+      "spawn": {
+        "road_types": [
+          "duong_lon",
+          "pho"
+        ],
+        "protagonist": [
+          "characters:minh"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "sua_giup",
+          "text": {
+            "vi": "Tấp vào, mở cốp lấy đồ sửa",
+            "en": "Pull over and open your toolkit"
+          },
+          "outcome": {
+            "vi": "Bugi ướt. Lau khô, đạp ba cái nổ. Anh ta xin số Alô Chat để 'lần sau mời cốc bia'.",
+            "en": "Wet spark plug. Dry it, three kicks, it fires. He asks for your Alô Chat 'for a beer next time'."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": 2
+            },
+            "skills": [
+              "sua_xe"
+            ],
+            "time_min": 20,
+            "note": "Tài xế Vở nhớ mặt Minh; tiệm Đức Còi có thêm khách truyền miệng."
+          },
+          "minigame": "activities:act_sua_xe_may",
+          "fail_effect": {
+            "time_min": 25,
+            "note": "Không sửa được, anh ta gọi cứu hộ; vẫn cảm ơn."
+          }
+        },
+        {
+          "id": "day_den_tiem",
+          "text": {
+            "vi": "Đẩy xe giúp đến tiệm gần nhất",
+            "en": "Push the bike to the nearest shop"
+          },
+          "outcome": {
+            "vi": "Đẩy xe bằng chân chống 400 mét. Tiệm sửa xe đầu ngõ nhận ngay.",
+            "en": "Four hundred metres pushing with your foot on his footpeg. The alley repair shop takes him."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": 1
+            },
+            "skills": [
+              "lai_xe"
+            ],
+            "time_min": 15
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Lách qua, bấm còi như mọi người",
+            "en": "Squeeze past and honk like everyone else"
+          },
+          "outcome": {
+            "vi": "Anh ta nhìn theo biển số của bạn.",
+            "en": "He reads your plate as you go."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": -1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_cu_ba_qua_duong",
+      "tags": [
+        "giup_nguoi",
+        "nguoi_gia"
+      ],
+      "name": {
+        "vi": "Cụ bà không sang được đường",
+        "en": "Grandmother stuck at the kerb"
+      },
+      "description": {
+        "vi": "Một cụ bà cầm túi rau đứng mép vỉa hè đã ba nhịp đèn, dòng xe không hở một khe.",
+        "en": "An old lady with a bag of greens has waited through three light cycles; the river of bikes never opens."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_ba_tap_the_duc",
+      "motive": {
+        "kho": "Chân yếu, mắt mờ, đèn xanh 20 giây không đủ để qua sáu làn xe.",
+        "tap": "Phải tự đi chợ, không muốn làm phiền con cháu đang đi làm."
+      },
+      "spawn": {
+        "road_types": [
+          "duong_lon"
+        ],
+        "hours": [
+          6,
+          19
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "dat_qua",
+          "text": {
+            "vi": "Giơ tay chặn xe, dắt cụ qua",
+            "en": "Raise a hand, stop the traffic, walk her across"
+          },
+          "outcome": {
+            "vi": "Xe dừng. Cụ nắm cánh tay bạn rất chặt. 'Cháu ở phường nào, để bà nhớ.'",
+            "en": "The bikes stop. She grips your arm hard. 'Which ward are you from, so I remember you.'"
+          },
+          "effect": {
+            "reputation": {
+              "hoi_nguoi_cao_tuoi_phuong": 2
+            },
+            "time_min": 5,
+            "note": "Hội người cao tuổi phường biết tên bạn."
+          }
+        },
+        {
+          "id": "chi_cau_vuot",
+          "text": {
+            "vi": "Chỉ cụ lối cầu vượt bộ hành cách 200 m",
+            "en": "Point her to the footbridge 200 m away"
+          },
+          "outcome": {
+            "vi": "Cụ nhìn cái cầu thang, thở dài, rồi vẫn đứng đó.",
+            "en": "She looks at the stairs, sighs, and stays where she is."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_sinh_vien_het_xang",
+      "tags": [
+        "giup_nguoi",
+        "sinh_vien"
+      ],
+      "name": {
+        "vi": "Sinh viên dắt xe hết xăng",
+        "en": "Student pushing a bike that ran dry"
+      },
+      "description": {
+        "vi": "Cậu sinh viên dắt chiếc Giamaha Thiên Lang dưới nắng, kim xăng về E từ sáng, ví còn 12 nghìn.",
+        "en": "A student pushes a Giamaha Thiên Lang in the heat; the fuel needle has been on E since morning and his wallet holds twelve thousand."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_sinh_vien",
+      "motive": {
+        "kho": "Cuối tháng, tiền nhà chưa đóng, xăng thì không nợ được.",
+        "tap": "Không dám gọi về nhà xin, sợ mẹ lo."
+      },
+      "spawn": {
+        "districts": [
+          "districts:cau_giay",
+          "districts:dong_da",
+          "districts:thanh_xuan",
+          "districts:hai_ba_trung",
+          "districts:bac_tu_liem"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "cho_50k",
+          "text": {
+            "vi": "Dúi 50 nghìn: 'Đổ xăng đi, khỏi trả'",
+            "en": "Press 50k on him: 'Fill up, don't pay me back'"
+          },
+          "outcome": {
+            "vi": "Cậu ta chụp ảnh biển số bạn 'để chuyển khoản lại'. Ba ngày sau có 60 nghìn vào Ví Heo kèm lời cảm ơn.",
+            "en": "He photographs your plate 'to transfer it back'. Three days later 60k lands in your Ví Heo with a thank-you."
+          },
+          "effect": {
+            "money_vnd": -50000,
+            "note": "Sau 3 ngày game hoàn 60.000 đ qua app; sinh viên này thành NPC quen ở khu Cầu Giấy."
+          }
+        },
+        {
+          "id": "cho_den_cay_xang",
+          "text": {
+            "vi": "Chở cậu ấy ra cây xăng rồi quay lại",
+            "en": "Ride him to the petrol station and back"
+          },
+          "outcome": {
+            "vi": "Hai lượt đi về, cậu ta mua được 1 lít xăng vào chai nước. Cảm ơn rối rít.",
+            "en": "Two trips; he buys one litre into a water bottle. Thanks you three times."
+          },
+          "effect": {
+            "skills": [
+              "thuoc_duong"
+            ],
+            "time_min": 20
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Ride on"
+          },
+          "outcome": {
+            "vi": "Đời sinh viên ai chẳng có ngày dắt xe.",
+            "en": "Every student has a day pushing a bike."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_shipper_do_xe_mua",
+      "tags": [
+        "giup_nguoi",
+        "mua",
+        "shipper"
+      ],
+      "name": {
+        "vi": "Shipper đổ xe trong mưa",
+        "en": "Delivery rider down in the rain"
+      },
+      "description": {
+        "vi": "Xe shipper trượt trên vạch sơn ướt, hai chục đơn hàng tung tóe, một hộp cơm mở nắp.",
+        "en": "A delivery bike slides on wet paint; twenty parcels scatter and a rice box pops open."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_shipper",
+      "motive": {
+        "kho": "Mỗi đơn hỏng là trừ tiền và một sao; mưa to thì đơn dồn, chạy ẩu là cách duy nhất kịp.",
+        "tap": "Cố giữ chỉ tiêu 80 đơn một tuần để lĩnh thưởng."
+      },
+      "spawn": {
+        "road_types": [
+          "pho",
+          "duong_lon"
+        ],
+        "weather": [
+          "rain",
+          "storm"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.12,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "nhat_giup",
+          "text": {
+            "vi": "Dừng xe, nhặt hàng giúp",
+            "en": "Stop and gather the parcels"
+          },
+          "outcome": {
+            "vi": "Nhặt đủ 19 gói, hộp cơm thì chịu. Cậu ta chạy tiếp, ngoái lại gật đầu.",
+            "en": "Nineteen parcels recovered; the rice is lost. He rides on with a nod over his shoulder."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": 2
+            },
+            "time_min": 10
+          }
+        },
+        {
+          "id": "cam_goi",
+          "text": {
+            "vi": "Nhặt hộ rồi 'cầm nhầm' một gói nhỏ",
+            "en": "Help, and 'accidentally' keep a small parcel"
+          },
+          "outcome": {
+            "vi": "Trong gói là sạc dự phòng. Cậu shipper sẽ bị trừ 300 nghìn tối nay.",
+            "en": "The parcel holds a power bank. The rider will be docked 300k tonight."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": -3
+            },
+            "heat": 1,
+            "items": [
+              "items:sac_du_phong"
+            ],
+            "note": "Nếu Minh là người chọn, cộng đồng tài xế Vở sẽ kể lại chuyện này."
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Hỏi 'ổn không' rồi đi",
+            "en": "Ask 'you OK?' and ride on"
+          },
+          "outcome": {
+            "vi": "Cậu ta không đáp.",
+            "en": "He does not answer."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_ganh_hang_rong_bi_duoi",
+      "tags": [
+        "giup_nguoi",
+        "hang_rong",
+        "pho_co"
+      ],
+      "name": {
+        "vi": "Gánh hàng rong bị đuổi",
+        "en": "Street vendor chased off"
+      },
+      "description": {
+        "vi": "Xe trật tự phường rẽ vào, cô bán hoa quả quang gánh vội bê thúng chạy, ổi lăn đầy vỉa hè.",
+        "en": "The ward enforcement truck turns in; a fruit seller snatches up her baskets and runs, guavas rolling over the pavement."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_ban_hang_rong_quang_ganh",
+      "motive": {
+        "kho": "Bị tịch thu một lần là mất cả vốn một tuần.",
+        "tap": "Vỉa hè phố cổ là chỗ duy nhất bán được giá."
+      },
+      "spawn": {
+        "districts": [
+          "districts:pho_co",
+          "districts:hoan_kiem"
+        ],
+        "road_types": [
+          "via_he",
+          "pho"
+        ],
+        "hours": [
+          8,
+          18
+        ],
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "be_giup",
+          "text": {
+            "vi": "Bê một đầu gánh, chạy cùng vào ngõ",
+            "en": "Grab one end of the pole and run with her into the alley"
+          },
+          "outcome": {
+            "vi": "Vào tới ngõ Hàng Chiếu thì thoát. Cô dúi cho hai quả ổi, không nhận tiền.",
+            "en": "You make it into Hàng Chiếu alley. She pushes two guavas into your hand, refuses money."
+          },
+          "effect": {
+            "reputation": {
+              "hoi_ban_hang_rong": 3
+            },
+            "heat": 1,
+            "skills": [
+              "the_luc"
+            ],
+            "time_min": 5,
+            "note": "Hội bán hàng rong nhớ mặt; sau này gánh hàng của Lan được nhường chỗ."
+          }
+        },
+        {
+          "id": "mua_het",
+          "text": {
+            "vi": "Mua hết chỗ ổi còn lại cho cô đi về",
+            "en": "Buy out the rest so she can go home"
+          },
+          "outcome": {
+            "vi": "80 nghìn, một túi ổi, cô ấy về sớm được một ngày.",
+            "en": "Eighty thousand, a bag of guavas, and she gets to go home early for once."
+          },
+          "effect": {
+            "money_vnd": -80000,
+            "reputation": {
+              "hoi_ban_hang_rong": 2
+            }
+          }
+        },
+        {
+          "id": "dung_xem",
+          "text": {
+            "vi": "Đứng xem",
+            "en": "Stand and watch"
+          },
+          "outcome": {
+            "vi": "Cái thúng bị ném lên thùng xe. Cô ấy đứng khóc một lúc rồi đi.",
+            "en": "The basket is tossed onto the truck. She cries a while, then leaves."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_hoc_sinh_xin_di_nho",
+      "tags": [
+        "giup_nguoi",
+        "hoc_sinh",
+        "sang"
+      ],
+      "name": {
+        "vi": "Học sinh lỡ xe buýt",
+        "en": "Schoolkid missed the bus"
+      },
+      "description": {
+        "vi": "Cậu học sinh cấp 2 đeo cặp đứng vẫy ở bến, 7 giờ 10, xe 32 vừa đi mất, 7 giờ 15 đóng cổng.",
+        "en": "A middle-schooler waves from the bus stop. 7:10, the 32 just left, the school gate shuts at 7:15."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_hoc_sinh",
+      "motive": {
+        "kho": "Muộn lần thứ ba trong tháng là mời phụ huynh.",
+        "tap": "Giấu bố mẹ chuyện ngủ quên vì xem Tóp Tóp."
+      },
+      "spawn": {
+        "road_types": [
+          "ben_xe",
+          "duong_lon"
+        ],
+        "hours": [
+          6.75,
+          7.5
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.15,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "cho_co_mu",
+          "text": {
+            "vi": "Đưa mũ dự phòng, chở đến trường",
+            "en": "Hand over the spare helmet and ride him to school"
+          },
+          "outcome": {
+            "vi": "Kịp 7 giờ 14. Cậu bé chạy vào cổng, quay lại cúi đầu.",
+            "en": "7:14. He runs for the gate and turns to bow."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": 1
+            },
+            "time_min": 10
+          }
+        },
+        {
+          "id": "cho_khong_mu",
+          "text": {
+            "vi": "Chở luôn, không mũ, cho nhanh",
+            "en": "Just ride, no helmet, faster"
+          },
+          "outcome": {
+            "vi": "Qua ngã tư có chốt. Áo vàng vẫy vào.",
+            "en": "A checkpoint at the junction. The yellow uniform waves you in."
+          },
+          "effect": {
+            "heat": 1,
+            "fine": "traffic_rules:khong_doi_mu_bao_hiem",
+            "time_min": 15
+          }
+        },
+        {
+          "id": "tu_choi",
+          "text": {
+            "vi": "Chỉ cậu ta bắt xe ôm bên kia đường",
+            "en": "Point him to the xe ôm across the road"
+          },
+          "outcome": {
+            "vi": "Cậu ta nhìn ví rồi nhìn đồng hồ.",
+            "en": "He looks at his wallet, then at the clock."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_tho_xay_xin_nuoc",
+      "tags": [
+        "giup_nguoi",
+        "nang_nong"
+      ],
+      "name": {
+        "vi": "Thợ xây giữa trưa nắng",
+        "en": "Builders in the noon sun"
+      },
+      "description": {
+        "vi": "Hai thợ xây ngồi bóng cột điện, mặt đỏ gắt, bình nước cạn, quán trà đá gần nhất cách 300 m.",
+        "en": "Two builders sit in the shadow of a lamp post, faces scarlet, water jug empty, the nearest tea stall 300 m off."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_tho_xay",
+      "motive": {
+        "kho": "Làm khoán, nghỉ là mất tiền; nắng 40 độ cũng không dám bỏ ca.",
+        "tap": "Gửi tiền về quê đúng ngày mồng 5."
+      },
+      "spawn": {
+        "hours": [
+          11,
+          14
+        ],
+        "weather": [
+          "hot"
+        ],
+        "events_active": [
+          "events:nang_nong_dinh_diem"
+        ],
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "mua_nuoc",
+          "text": {
+            "vi": "Chạy đi mua hai chai nước lạnh",
+            "en": "Run and buy two cold bottles"
+          },
+          "outcome": {
+            "vi": "'Ôi giời, người Hà Nội tử tế thế.' Giọng Thanh Hoá.",
+            "en": "'Heavens, Hanoians are kind after all.' Thanh Hoá accent."
+          },
+          "effect": {
+            "money_vnd": -20000,
+            "reputation": {
+              "to_dan_pho_hang_chieu": 1
+            },
+            "time_min": 10
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Ride on"
+          },
+          "outcome": {
+            "vi": "Nắng vẫn thế.",
+            "en": "The sun does not move."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_chay_nho_bep_ga",
+      "tags": [
+        "giup_nguoi",
+        "hiem_hoa",
+        "pho_co"
+      ],
+      "name": {
+        "vi": "Khói từ bếp nhà trong ngõ",
+        "en": "Smoke from a kitchen in the alley"
+      },
+      "description": {
+        "vi": "Khói đen bốc từ tầng hai nhà ống trong ngõ Hàng Bạc, tiếng trẻ con khóc, cửa cuốn kéo nửa chừng.",
+        "en": "Black smoke from the second floor of a tube house in Hàng Bạc alley; a child crying, the roller door half down."
+      },
+      "kind": "giup_nguoi",
+      "motive": {
+        "kho": "Bà nội trông cháu một mình, quên bếp đang ninh xương.",
+        "tap": "Nhà ống không lối thoát hiểm, cái cửa cuốn là tài sản lớn nhất."
+      },
+      "spawn": {
+        "districts": [
+          "districts:pho_co"
+        ],
+        "road_types": [
+          "ngo"
+        ],
+        "hours": [
+          9,
+          21
+        ],
+        "chance_per_game_hour": 0.03,
+        "cooldown_days": 10,
+        "max_per_playthrough": 3
+      },
+      "duration_s": 45,
+      "ignore_effect": {
+        "reputation": {
+          "to_dan_pho_hang_chieu": -1
+        }
+      },
+      "choices": [
+        {
+          "id": "ho_hoan_dap",
+          "text": {
+            "vi": "Hô hoán cả ngõ, xông vào tắt bếp",
+            "en": "Shout the alley awake and go in to kill the stove"
+          },
+          "outcome": {
+            "vi": "Nồi xương cháy đen. Bà cụ run run, cả ngõ đứng kín cửa. Tổ dân phố ghi tên bạn.",
+            "en": "The bone broth is charcoal. The grandmother shakes; the whole alley stands at the door. The neighbourhood committee notes your name."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": 3,
+              "hoi_nguoi_cao_tuoi_phuong": 1
+            },
+            "skills": [
+              "the_luc"
+            ],
+            "time_min": 15,
+            "note": "Cổng ngõ này về sau luôn mở cho bạn; tổ dân phố mời họp."
+          }
+        },
+        {
+          "id": "goi_114",
+          "text": {
+            "vi": "Gọi 114 rồi đứng ngoài",
+            "en": "Call 114 and wait outside"
+          },
+          "outcome": {
+            "vi": "Xe cứu hoả không vào được ngõ. Hàng xóm tự dập xong trước.",
+            "en": "The fire engine cannot enter the alley. The neighbours have it out before it arrives."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": 1
+            },
+            "time_min": 10
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Chắc người ta tự lo được",
+            "en": "They can probably handle it"
+          },
+          "outcome": {
+            "vi": "Có người nhìn thấy bạn đi qua.",
+            "en": "Someone saw you pass."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": -2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_tai_nan_nhe_nga_tu",
+      "tags": [
+        "giao_thong",
+        "giup_nguoi"
+      ],
+      "name": {
+        "vi": "Va quệt ở ngã tư",
+        "en": "Fender-bender at the junction"
+      },
+      "description": {
+        "vi": "Một ô tô con và một xe máy của chị văn phòng cãi nhau giữa Ngã Tư Sở, đèn xanh ba nhịp không ai nhúc nhích.",
+        "en": "A hatchback and an office worker's scooter argue in the middle of Ngã Tư Sở; three green lights and nobody moves."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_dan_van_phong",
+      "motive": {
+        "kho": "Xe mới mua trả góp, xước một vết là mất cả tháng lương; bên ô tô đổ lỗi vì 'xe máy bao giờ chả sai'.",
+        "tap": "Không muốn gọi bảo hiểm vì sợ tăng phí."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:nga_tu_so",
+          "landmarks:ga_cat_linh"
+        ],
+        "road_types": [
+          "duong_lon"
+        ],
+        "hours": [
+          7,
+          19
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "lam_chung",
+          "text": {
+            "vi": "Dừng lại làm chứng: ô tô rẽ không xi-nhan",
+            "en": "Stop and witness: the car turned without a signal"
+          },
+          "outcome": {
+            "vi": "Có người làm chứng, bên ô tô dịu xuống, chịu 500 nghìn sửa yếm. Chị ấy xin số bạn.",
+            "en": "With a witness the driver backs down and pays 500k for the fairing. She takes your number."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": 1
+            },
+            "skills": [
+              "an_noi"
+            ],
+            "time_min": 20,
+            "note": "Chị văn phòng này thành khách quen đặt cuốc buổi sáng."
+          }
+        },
+        {
+          "id": "chup_anh_dang",
+          "text": {
+            "vi": "Chụp ảnh, đăng MặtBook 'Ngã Tư Sở sáng nay'",
+            "en": "Photograph it, post 'Ngã Tư Sở this morning'"
+          },
+          "outcome": {
+            "vi": "Ba trăm lượt chia sẻ. Có người nhận ra chị ấy. Không ai cảm ơn.",
+            "en": "Three hundred shares. Someone recognises her. Nobody thanks you."
+          },
+          "effect": {
+            "heat": 0.5,
+            "skills": [
+              "chup_anh"
+            ]
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Lách qua",
+            "en": "Squeeze through"
+          },
+          "outcome": {
+            "vi": "Còi phía sau vẫn réo.",
+            "en": "The horns keep going behind you."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_phuot_thu_lac_doan",
+      "tags": [
+        "de",
+        "giup_nguoi",
+        "phuot"
+      ],
+      "name": {
+        "vi": "Phượt thủ lạc đoàn",
+        "en": "Rider lost from his group"
+      },
+      "description": {
+        "vi": "Một cậu đội mũ phượt, xe Win chất ba lô, dừng dưới chân cầu Nhật Tân hỏi đường lên đê đi Bắc Giang.",
+        "en": "A rider in a touring helmet, Win loaded with packs, stops under Nhật Tân bridge asking the way up the dyke to Bắc Giang."
+      },
+      "kind": "giup_nguoi",
+      "npc": "characters:amb_sinh_vien",
+      "motive": {
+        "kho": "Đoàn đi trước mất, điện thoại hết pin, trời sắp tối.",
+        "tap": "Không muốn thừa nhận với cả đoàn là mình lạc."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:cau_nhat_tan",
+          "landmarks:cau_long_bien",
+          "landmarks:de_song_hong_ngoc_thuy"
+        ],
+        "road_types": [
+          "de",
+          "cau"
+        ],
+        "hours": [
+          15,
+          19
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "dan_duong",
+          "text": {
+            "vi": "Dẫn cậu ấy lên đê tới ngã ba",
+            "en": "Lead him up the dyke to the fork"
+          },
+          "outcome": {
+            "vi": "Qua ngã ba, cậu ta nổ máy đi. Tối đó CLB Phượt Hà Nội tag bạn trong bài cảm ơn.",
+            "en": "At the fork he throttles away. That night CLB Phượt Hà Nội tags you in a thank-you post."
+          },
+          "effect": {
+            "reputation": {
+              "clb_phuot_ha_noi": 2
+            },
+            "skills": [
+              "thuoc_duong"
+            ],
+            "time_min": 15
+          }
+        },
+        {
+          "id": "cho_muon_sac",
+          "text": {
+            "vi": "Cho mượn sạc dự phòng, chỉ đường bằng app",
+            "en": "Lend your power bank and show the route on the app"
+          },
+          "outcome": {
+            "vi": "Pin lên 15%, cậu ta tự đi.",
+            "en": "Fifteen percent and he goes on alone."
+          },
+          "effect": {
+            "reputation": {
+              "clb_phuot_ha_noi": 1
+            },
+            "time_min": 5
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Chỉ bừa một hướng",
+            "en": "Wave vaguely in a direction"
+          },
+          "outcome": {
+            "vi": "Hướng ấy ra bãi giữa.",
+            "en": "That way leads to the mid-river sandbank."
+          },
+          "effect": {
+            "reputation": {
+              "clb_phuot_ha_noi": -1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_cay_do_sau_bao",
+      "tags": [
+        "bao",
+        "cay_xanh",
+        "giao_thong"
+      ],
+      "name": {
+        "vi": "Cây đổ chắn ngang phố",
+        "en": "Tree down across the street"
+      },
+      "description": {
+        "vi": "Một cây xà cừ bật gốc chắn hết lòng đường Phan Đình Phùng, công nhân cây xanh mới có hai người và một cưa máy.",
+        "en": "A rain tree has toppled across Phan Đình Phùng; two green-space workers and one chainsaw are all that has arrived."
+      },
+      "kind": "giao_thong",
+      "npc": "characters:amb_cong_nhan_moi_truong",
+      "motive": {
+        "kho": "Cả đêm bão không về nhà, sáng còn mấy chục cây đổ chờ dọn.",
+        "tap": "Cố thông đường trước giờ cao điểm để không bị cấp trên gọi."
+      },
+      "spawn": {
+        "road_types": [
+          "pho",
+          "duong_lon"
+        ],
+        "weather": [
+          "storm"
+        ],
+        "events_active": [
+          "events:bao_vao_ha_noi"
+        ],
+        "chance_per_game_hour": 0.25,
+        "cooldown_days": 1
+      },
+      "duration_s": 90,
+      "ignore_effect": {
+        "time_min": 15
+      },
+      "choices": [
+        {
+          "id": "keo_canh",
+          "text": {
+            "vi": "Xắn tay kéo cành cùng công nhân",
+            "en": "Roll up your sleeves and drag branches with the crew"
+          },
+          "outcome": {
+            "vi": "Nửa tiếng, một làn thông. Anh công nhân đưa bạn cái bánh mì đang ăn dở.",
+            "en": "Half an hour and one lane is clear. The worker hands you the half of his bánh mì."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": 2
+            },
+            "items": [
+              "items:banh_mi_pate"
+            ],
+            "skills": [
+              "the_luc"
+            ],
+            "time_min": 30
+          }
+        },
+        {
+          "id": "chup_gui_bao",
+          "text": {
+            "vi": "Chụp ảnh cây đổ gửi toà soạn",
+            "en": "Photograph the tree for the paper"
+          },
+          "outcome": {
+            "vi": "Ảnh cây xà cừ trăm tuổi nằm ngang phố lên trang nhất điện tử trong 20 phút. Nhuận ảnh 200 nghìn.",
+            "en": "The hundred-year rain tree lying across the street is on the front page in 20 minutes. 200k for the shot."
+          },
+          "effect": {
+            "money_vnd": 200000,
+            "skills": [
+              "chup_anh"
+            ],
+            "time_min": 10
+          }
+        },
+        {
+          "id": "di_vong",
+          "text": {
+            "vi": "Quay đầu đi đường khác",
+            "en": "Turn around and find another way"
+          },
+          "outcome": {
+            "vi": "Đường nào cũng có cây đổ.",
+            "en": "Every road has a tree down."
+          },
+          "effect": {
+            "time_min": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_dam_cuoi_chan_ngo",
+      "tags": [
+        "giao_thong",
+        "ngo",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Rạp cưới chắn ngõ",
+        "en": "Wedding marquee blocking the alley"
+      },
+      "description": {
+        "vi": "Rạp cưới phông hồng dựng kín ngõ, loa đang bật 'Ngày cưới', bàn cỗ kê sát tường, chỉ còn lối 40 cm.",
+        "en": "A pink wedding marquee fills the alley, 'Ngày cưới' on the speakers, tables against the walls, a 40 cm gap left."
+      },
+      "kind": "giao_thong",
+      "npc": "characters:amb_co_dau_chu_re",
+      "motive": {
+        "kho": "Nhà trong ngõ không có chỗ, cưới một đời một lần không thể làm ở nhà hàng vì tiền đã dồn mua nhà.",
+        "tap": "Giữ thể diện hai họ, mời cả ngõ."
+      },
+      "spawn": {
+        "road_types": [
+          "ngo"
+        ],
+        "hours": [
+          9,
+          14
+        ],
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 3
+      },
+      "duration_s": 90,
+      "ignore_effect": {
+        "time_min": 5
+      },
+      "choices": [
+        {
+          "id": "cho",
+          "text": {
+            "vi": "Tắt máy chờ họ dọn lối",
+            "en": "Kill the engine and wait for a gap"
+          },
+          "outcome": {
+            "vi": "Mười phút sau chú rể tự ra dẹp bàn, mời bạn điếu thuốc.",
+            "en": "Ten minutes later the groom himself moves a table and offers you a cigarette."
+          },
+          "effect": {
+            "time_min": 10
+          }
+        },
+        {
+          "id": "vao_mung",
+          "text": {
+            "vi": "Vào mừng, uống một chén rượu",
+            "en": "Go in, congratulate them, drink one cup"
+          },
+          "outcome": {
+            "vi": "Chén rượu, miếng giò, phong bì 100 nghìn bạn móc vội. Cả bàn vỗ tay 'khách lạ mà quý'.",
+            "en": "A cup of rice wine, a slice of giò, a hundred-thousand envelope you dig out. The table applauds 'a stranger, and a kind one'."
+          },
+          "effect": {
+            "money_vnd": -100000,
+            "reputation": {
+              "to_dan_pho_hang_chieu": 2
+            },
+            "skills": [
+              "an_noi"
+            ],
+            "time_min": 20,
+            "note": "Uống rượu rồi lái xe: chốt CSGT trong 2 giờ tới có thể thổi nồng độ cồn."
+          }
+        },
+        {
+          "id": "ro_ga_lach",
+          "text": {
+            "vi": "Rồ ga lách qua khe 40 cm",
+            "en": "Gun it through the 40 cm gap"
+          },
+          "outcome": {
+            "vi": "Quệt vào chân bàn, đổ một khay nước ngọt. Bà cô nhà gái chửi theo tận đầu ngõ.",
+            "en": "You clip a table leg and tip a tray of soft drinks. The bride's aunt curses you to the alley mouth."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": -2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_dam_tang_ngo",
+      "tags": [
+        "giao_thong",
+        "ngo",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Đám tang trong ngõ",
+        "en": "Funeral in the alley"
+      },
+      "description": {
+        "vi": "Kèn đám ma, cờ tang trắng trước cửa, một hàng người đội khăn trắng đứng hai bên ngõ. Xe tang chưa đến.",
+        "en": "Funeral trumpets, white mourning banners at the door, a line of white-scarfed mourners down both sides of the alley. The hearse has not come."
+      },
+      "kind": "giao_thong",
+      "motive": {
+        "kho": "Nhà có người mất đột ngột, con cháu ở xa chưa về kịp.",
+        "tap": "Phải làm đủ lễ cho người đi, dù ngõ chỉ rộng hai mét."
+      },
+      "spawn": {
+        "road_types": [
+          "ngo"
+        ],
+        "hours": [
+          7,
+          11
+        ],
+        "chance_per_game_hour": 0.06,
+        "cooldown_days": 3
+      },
+      "duration_s": 90,
+      "ignore_effect": {
+        "time_min": 10
+      },
+      "choices": [
+        {
+          "id": "dat_xe",
+          "text": {
+            "vi": "Tắt máy, bỏ mũ, dắt xe qua",
+            "en": "Kill the engine, take off your helmet, walk the bike through"
+          },
+          "outcome": {
+            "vi": "Người nhà nghiêng đầu chào. Không ai nói gì.",
+            "en": "A family member inclines his head. Nobody speaks."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": 1
+            },
+            "time_min": 5
+          }
+        },
+        {
+          "id": "phung_vieng",
+          "text": {
+            "vi": "Vào thắp nén hương, phúng 100 nghìn",
+            "en": "Go in, light incense, give 100k"
+          },
+          "outcome": {
+            "vi": "Bạn không biết người mất là ai. Con trai cụ nắm tay bạn hồi lâu.",
+            "en": "You never knew the deceased. The son holds your hand a long time."
+          },
+          "effect": {
+            "money_vnd": -100000,
+            "reputation": {
+              "to_dan_pho_hang_chieu": 2,
+              "hoi_nguoi_cao_tuoi_phuong": 1
+            },
+            "time_min": 15
+          }
+        },
+        {
+          "id": "ro_ga",
+          "text": {
+            "vi": "Giữ nguyên máy, bấm còi xin đường",
+            "en": "Keep the engine running and honk for room"
+          },
+          "outcome": {
+            "vi": "Cả hàng khăn trắng quay lại nhìn. Bạn sẽ không được chào ở ngõ này nữa.",
+            "en": "The whole line of white scarves turns. You will not be greeted in this alley again."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": -3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_ngap_duong",
+      "tags": [
+        "giao_thong",
+        "mua_ngap"
+      ],
+      "name": {
+        "vi": "Đường ngập nửa bánh",
+        "en": "Street flooded to the axle"
+      },
+      "description": {
+        "vi": "Nước đen ngập nửa bánh xe cả đoạn 200 m, ô tô tạo sóng, mấy xe máy đã chết máy đứng rải rác.",
+        "en": "Black water to the axle for 200 m, cars pushing waves, several scooters already dead and stranded."
+      },
+      "kind": "giao_thong",
+      "npc": "characters:amb_shipper",
+      "motive": {
+        "kho": "Đơn sắp quá giờ mà đường nào cũng ngập.",
+        "tap": "Liều lội qua vì hoàn hàng là mất tiền ship lẫn tiền hàng."
+      },
+      "spawn": {
+        "districts": [
+          "districts:hoang_mai",
+          "districts:long_bien",
+          "districts:ha_dong",
+          "districts:cau_giay",
+          "districts:thanh_xuan",
+          "districts:my_dinh"
+        ],
+        "road_types": [
+          "duong_lon",
+          "pho"
+        ],
+        "weather": [
+          "rain",
+          "storm"
+        ],
+        "events_active": [
+          "events:mua_ngap"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.2,
+        "cooldown_days": 1
+      },
+      "duration_s": 90,
+      "ignore_effect": {
+        "time_min": 10
+      },
+      "choices": [
+        {
+          "id": "loi_qua",
+          "text": {
+            "vi": "Ga đều, lội qua",
+            "en": "Steady throttle and wade through"
+          },
+          "outcome": {
+            "vi": "Qua được hai phần ba thì ô tô tạo sóng. Nước vào pô. Chết máy. Thợ sửa lấy 150 nghìn vì 'nước vào máy'.",
+            "en": "Two-thirds across, a car sends a wave. Water in the exhaust. Dead. The mechanic charges 150k for 'water in the engine'."
+          },
+          "effect": {
+            "money_vnd": -150000,
+            "time_min": 40
+          },
+          "minigame": "activities:act_sua_xe_may",
+          "fail_effect": {
+            "money_vnd": -150000,
+            "time_min": 40
+          }
+        },
+        {
+          "id": "di_vong",
+          "text": {
+            "vi": "Quay đầu, đi vòng theo đê",
+            "en": "Turn back and loop round by the dyke"
+          },
+          "outcome": {
+            "vi": "Thêm 25 phút, xe khô.",
+            "en": "Twenty-five minutes longer and a dry bike."
+          },
+          "effect": {
+            "skills": [
+              "thuoc_duong"
+            ],
+            "time_min": 25
+          }
+        },
+        {
+          "id": "day_giup",
+          "text": {
+            "vi": "Dựng xe trên cao, lội xuống đẩy giúp mấy xe chết máy",
+            "en": "Park high and wade in to push the stranded bikes"
+          },
+          "outcome": {
+            "vi": "Đẩy ba xe lên chỗ cao. Một chị shipper gửi bạn 50 nghìn 'tiền nước'.",
+            "en": "Three bikes pushed to dry ground. A delivery rider sends you 50k 'for water'."
+          },
+          "effect": {
+            "money_vnd": 50000,
+            "reputation": {
+              "cong_dong_tai_xe_vo": 2
+            },
+            "skills": [
+              "the_luc"
+            ],
+            "time_min": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_pho_di_bo_cam_xe",
+      "tags": [
+        "giao_thong",
+        "ho_guom",
+        "pho_di_bo"
+      ],
+      "name": {
+        "vi": "Rào chắn phố đi bộ",
+        "en": "Pedestrian-zone barrier"
+      },
+      "description": {
+        "vi": "Barie kéo ngang đầu Đinh Tiên Hoàng, bảo vệ dân phố đeo băng đỏ, tấm biển 'Cấm xe máy 19h-24h'.",
+        "en": "A barrier across the top of Đinh Tiên Hoàng, a civil guard with a red armband, a sign 'No motorbikes 19h-24h'."
+      },
+      "kind": "giao_thong",
+      "npc": "characters:amb_bao_ve",
+      "motive": {
+        "kho": "Làm bán thời gian 150 nghìn một buổi, bị khách du lịch lẫn dân phố cãi cả tối.",
+        "tap": "Giữ cái chốt vì mất chốt là mất việc."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:ho_hoan_kiem"
+        ],
+        "events_active": [
+          "events:pho_di_bo_cuoi_tuan",
+          "events:pho_di_bo_ban_ngay"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.3,
+        "cooldown_days": 1
+      },
+      "duration_s": 60,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "gui_xe",
+          "text": {
+            "vi": "Gửi xe 10 nghìn, đi bộ vào",
+            "en": "Park for 10k and walk in"
+          },
+          "outcome": {
+            "vi": "Vé gửi xe viết tay. Phố không còi, lần đầu nghe tiếng hồ.",
+            "en": "A handwritten parking ticket. A street without horns; the first time you hear the lake."
+          },
+          "effect": {
+            "money_vnd": -10000,
+            "time_min": 10
+          }
+        },
+        {
+          "id": "lach_vao",
+          "text": {
+            "vi": "Lách qua khe barie khi bảo vệ quay đi",
+            "en": "Slip past the barrier when the guard looks away"
+          },
+          "outcome": {
+            "vi": "Được 50 m thì tổ công tác chặn. Lỗi 'đi vào đường cấm'.",
+            "en": "Fifty metres in, the patrol stops you. 'Entering a restricted road'."
+          },
+          "effect": {
+            "heat": 2,
+            "fine": "traffic_rules:di_vao_pho_di_bo_duong_cam"
+          }
+        },
+        {
+          "id": "quay_dau",
+          "text": {
+            "vi": "Quay đầu, đi đường Lê Thái Tổ",
+            "en": "Turn round and take Lê Thái Tổ"
+          },
+          "outcome": {
+            "vi": "Thêm 5 phút.",
+            "en": "Five minutes more."
+          },
+          "effect": {
+            "time_min": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_xe_buyt_chet_may",
+      "tags": [
+        "giao_thong",
+        "minh",
+        "xe_buyt"
+      ],
+      "name": {
+        "vi": "Xe buýt chết máy ở bến",
+        "en": "Bus dead at the stop"
+      },
+      "description": {
+        "vi": "Xe buýt 09 nằm chết máy, phụ xe mở nắp ca-pô sau, hai chục khách tràn xuống vỉa hè nhìn điện thoại.",
+        "en": "Bus 09 is dead at the stop, the conductor has the rear hatch open, twenty passengers spill onto the pavement staring at their phones."
+      },
+      "kind": "giao_thong",
+      "npc": "characters:amb_dan_van_phong",
+      "motive": {
+        "kho": "8 giờ 5 phút chấm công, chậm 3 lần là trừ chuyên cần.",
+        "tap": "Đi buýt để tiết kiệm tiền xăng cho khoản trả góp xe."
+      },
+      "spawn": {
+        "road_types": [
+          "ben_xe",
+          "duong_lon"
+        ],
+        "hours": [
+          7,
+          9
+        ],
+        "protagonist": [
+          "characters:minh"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "don_khach",
+          "text": {
+            "vi": "Mở app, nhận một cuốc tại chỗ",
+            "en": "Open the app and pick up a fare on the spot"
+          },
+          "outcome": {
+            "vi": "Chị văn phòng lên xe không hỏi giá. Đến nơi bo thêm 20 nghìn.",
+            "en": "The office worker gets on without asking the price. At the end she adds a 20k tip."
+          },
+          "effect": {
+            "money_vnd": 60000,
+            "skills": [
+              "lai_xe"
+            ],
+            "time_min": 20
+          }
+        },
+        {
+          "id": "cho_mien_phi",
+          "text": {
+            "vi": "Chở miễn phí người đang cuống nhất",
+            "en": "Give the most panicked one a free ride"
+          },
+          "outcome": {
+            "vi": "Một cậu thực tập sinh. Cậu ấy sẽ nhớ.",
+            "en": "An intern. He will remember."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": 1
+            },
+            "time_min": 20
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Ride on"
+          },
+          "outcome": {
+            "vi": "Khách vẫn đứng đó.",
+            "en": "The passengers are still there."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_bao_ve_duoi_do_xe",
+      "tags": [
+        "giao_thong",
+        "mall"
+      ],
+      "name": {
+        "vi": "Bảo vệ đuổi chỗ đỗ xe",
+        "en": "Guard moving you off the parking"
+      },
+      "description": {
+        "vi": "Vừa dựng xe trước sảnh trung tâm thương mại, bảo vệ thổi còi: 'Xe máy xuống hầm, 5 nghìn.'",
+        "en": "You have just parked at the mall entrance when a guard blows his whistle: 'Bikes go to the basement. 5k.'"
+      },
+      "kind": "giao_thong",
+      "npc": "characters:amb_bao_ve",
+      "motive": {
+        "kho": "Quản lý toà nhà trừ lương nếu sảnh có xe máy khi khách VIP đến.",
+        "tap": "Giữ việc; 7 triệu một tháng nuôi hai con."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:royal_city",
+          "landmarks:times_city",
+          "landmarks:aeon_long_bien",
+          "landmarks:lotte_center",
+          "landmarks:landmark_72"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.15,
+        "cooldown_days": 2
+      },
+      "duration_s": 30,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "xuong_ham",
+          "text": {
+            "vi": "Xuống hầm gửi xe",
+            "en": "Take it to the basement"
+          },
+          "outcome": {
+            "vi": "Hầm B2, 5 nghìn, vé từ.",
+            "en": "B2, 5k, a magnetic ticket."
+          },
+          "effect": {
+            "money_vnd": -5000,
+            "time_min": 5
+          }
+        },
+        {
+          "id": "cai",
+          "text": {
+            "vi": "'Tôi dừng có một phút'",
+            "en": "'I'm only here a minute'"
+          },
+          "outcome": {
+            "vi": "Anh bảo vệ gọi bộ đàm. Bạn thua trong 90 giây.",
+            "en": "The guard radios in. You lose in 90 seconds."
+          },
+          "effect": {
+            "reputation": {
+              "kim_long_land": -1
+            },
+            "time_min": 5
+          }
+        },
+        {
+          "id": "dat_di",
+          "text": {
+            "vi": "Dắt xe sang vỉa hè đối diện",
+            "en": "Walk the bike to the opposite pavement"
+          },
+          "outcome": {
+            "vi": "Vỉa hè có chú trông xe tự phát: 10 nghìn.",
+            "en": "An unofficial attendant on that pavement: 10k."
+          },
+          "effect": {
+            "money_vnd": -10000,
+            "time_min": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_tac_duong_truong_hoc",
+      "tags": [
+        "giao_thong",
+        "truong_hoc"
+      ],
+      "name": {
+        "vi": "Tan học, tắc cứng",
+        "en": "School's out, total gridlock"
+      },
+      "description": {
+        "vi": "Cổng trường tiểu học giờ tan, phụ huynh dựng xe ba hàng, lòng đường còn một làn, bác bảo vệ cầm gậy chỉ đường bất lực.",
+        "en": "A primary school gate at pick-up, parents parked three deep, one lane left, the school guard waving a stick to no effect."
+      },
+      "kind": "giao_thong",
+      "npc": "characters:amb_dan_van_phong",
+      "motive": {
+        "kho": "Xin về sớm đón con đã khó, muộn 10 phút con đứng một mình.",
+        "tap": "Đỗ sát cổng cho con thấy ngay."
+      },
+      "spawn": {
+        "road_types": [
+          "pho"
+        ],
+        "hours": [
+          16.5,
+          17.5
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.15,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {
+        "time_min": 10
+      },
+      "choices": [
+        {
+          "id": "cho",
+          "text": {
+            "vi": "Tắt máy, chờ 10 phút",
+            "en": "Engine off, wait ten minutes"
+          },
+          "outcome": {
+            "vi": "Dòng xe tan dần như nước rút.",
+            "en": "The tide of bikes recedes."
+          },
+          "effect": {
+            "time_min": 10
+          }
+        },
+        {
+          "id": "leo_via_he",
+          "text": {
+            "vi": "Leo lên vỉa hè đi tắt",
+            "en": "Mount the pavement and cut through"
+          },
+          "outcome": {
+            "vi": "Bác bảo vệ chụp ảnh biển số gửi nhóm phụ huynh. Hôm sau có áo vàng đứng đúng chỗ ấy.",
+            "en": "The guard photographs your plate for the parents' group. Next day a yellow uniform stands exactly there."
+          },
+          "effect": {
+            "heat": 1,
+            "fine": "traffic_rules:di_tren_via_he"
+          }
+        },
+        {
+          "id": "di_vong",
+          "text": {
+            "vi": "Quay đầu đi ngõ bên",
+            "en": "Turn back and take the side alley"
+          },
+          "outcome": {
+            "vi": "Ngõ bên cũng kẹt, nhưng ít hơn.",
+            "en": "The alley is jammed too, but less."
+          },
+          "effect": {
+            "skills": [
+              "thuoc_duong"
+            ],
+            "time_min": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_csgt_chot_kiem_tra",
+      "tags": [
+        "csgt",
+        "hiem_hoa"
+      ],
+      "name": {
+        "vi": "Chốt kiểm tra đột xuất",
+        "en": "Surprise checkpoint"
+      },
+      "description": {
+        "vi": "Bốn áo vàng đứng ngay sau khúc cua, một xe chuyên dụng, cây gậy chỉ thẳng vào bạn.",
+        "en": "Four yellow uniforms right after the bend, a patrol car, a baton pointing straight at you."
+      },
+      "kind": "hiem_hoa",
+      "npc": "characters:amb_csgt",
+      "motive": {
+        "kho": "Chỉ tiêu tháng; chốt nào không có biên bản thì bị hỏi.",
+        "tap": "Làm đúng quy trình để không bị quay clip tung lên mạng."
+      },
+      "spawn": {
+        "road_types": [
+          "duong_lon"
+        ],
+        "hours": [
+          6,
+          22
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 2
+      },
+      "duration_s": 20,
+      "ignore_effect": {
+        "heat": 2
+      },
+      "choices": [
+        {
+          "id": "dung_lai",
+          "text": {
+            "vi": "Dừng xe, xuất trình giấy tờ",
+            "en": "Stop and show your papers"
+          },
+          "outcome": {
+            "vi": "Nếu đủ giấy tờ và mũ: 'Chúc anh đi đường bình an.' Nếu thiếu: lập biên bản.",
+            "en": "Papers and helmet in order: 'Safe travels.' Otherwise: a ticket."
+          },
+          "effect": {
+            "time_min": 5,
+            "note": "Runtime: nếu thiếu items giay_phep_lai_xe_a1 / dang_ky_xe / bao_hiem_xe_bat_buoc thì áp traffic_rules:khong_mang_giay_to."
+          }
+        },
+        {
+          "id": "quay_dau",
+          "text": {
+            "vi": "Quay đầu ngược chiều bỏ chạy",
+            "en": "U-turn against traffic and bolt"
+          },
+          "outcome": {
+            "vi": "Camera hành trình ghi lại. Ba ngày sau Tra Phạt Nguội báo lỗi đi ngược chiều.",
+            "en": "The dashcam has you. Three days later Tra Phạt Nguội lists 'wrong-way driving'."
+          },
+          "effect": {
+            "heat": 3,
+            "fine": "traffic_rules:di_nguoc_chieu"
+          }
+        },
+        {
+          "id": "vuot_chot",
+          "text": {
+            "vi": "Giả vờ không thấy, phóng qua",
+            "en": "Pretend not to see and blow through"
+          },
+          "outcome": {
+            "vi": "Một xe đặc chủng nổ máy theo sau. Chú ý CSGT tăng vọt.",
+            "en": "A patrol bike fires up behind you. Police attention spikes."
+          },
+          "effect": {
+            "heat": 4,
+            "fine": "traffic_rules:vuot_toc_do_10_20"
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_khach_say_ta_hien",
+      "tags": [
+        "dem",
+        "hiem_hoa",
+        "pho_co"
+      ],
+      "name": {
+        "vi": "Khách Tây say ở Tạ Hiện",
+        "en": "Drunk backpacker on Tạ Hiện"
+      },
+      "description": {
+        "vi": "Hai giờ sáng, một khách Tây ôm cột đèn Tạ Hiện, ví lòi ra túi quần, không nhớ tên khách sạn.",
+        "en": "Two in the morning, a backpacker hugging a lamp post on Tạ Hiện, wallet sticking out of his pocket, no memory of his hotel's name."
+      },
+      "kind": "hiem_hoa",
+      "npc": "characters:amb_khach_tay_ba_lo",
+      "motive": {
+        "kho": "Bia hơi 10 nghìn một cốc, rẻ hơn nước ở nhà, uống đến khi không đứng nổi.",
+        "tap": "Tin rằng Việt Nam 'an toàn, ai cũng thân thiện'."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:pho_ta_hien"
+        ],
+        "hours": [
+          23,
+          3
+        ],
+        "chance_per_game_hour": 0.12,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "tim_khach_san",
+          "text": {
+            "vi": "Lục booking trong điện thoại, chở về khách sạn",
+            "en": "Dig the booking out of his phone and ride him back"
+          },
+          "outcome": {
+            "vi": "Khách sạn ở Hàng Bè, cách 400 m. Sáng hôm sau anh ta tìm bạn, đưa 200 nghìn và một cái ôm.",
+            "en": "The hotel is on Hàng Bè, 400 m away. Next morning he finds you, hands over 200k and a hug."
+          },
+          "effect": {
+            "money_vnd": 200000,
+            "reputation": {
+              "hoi_xe_om_o_quan_chuong": 1
+            },
+            "skills": [
+              "ngoai_ngu"
+            ],
+            "time_min": 30
+          }
+        },
+        {
+          "id": "goi_bao_ve",
+          "text": {
+            "vi": "Gọi bảo vệ dân phố ra trông",
+            "en": "Call the ward guard to watch him"
+          },
+          "outcome": {
+            "vi": "Bảo vệ cho anh ta ngồi ghế chốt đến sáng.",
+            "en": "The guard sits him on the checkpoint chair till dawn."
+          },
+          "effect": {
+            "time_min": 5
+          }
+        },
+        {
+          "id": "lay_vi",
+          "text": {
+            "vi": "Rút cái ví",
+            "en": "Take the wallet"
+          },
+          "outcome": {
+            "vi": "Hai triệu rưỡi và một thẻ. Camera quán bia ghi hết. Đại sứ quán sẽ gửi công văn.",
+            "en": "Two and a half million and a card. The beer bar's camera caught all of it. The embassy will send a letter."
+          },
+          "effect": {
+            "money_vnd": 2500000,
+            "reputation": {
+              "hoi_bao_ton_pho_cu": -5,
+              "hoi_xe_om_o_quan_chuong": -3
+            },
+            "heat": 5,
+            "note": "Phố cổ ban đêm sau đó: CSGT và bảo vệ dân phố để ý bạn."
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_bui_min_cao",
+      "tags": [
+        "hiem_hoa",
+        "thoi_tiet"
+      ],
+      "name": {
+        "vi": "Trời đục vì bụi mịn",
+        "en": "Sky white with fine dust"
+      },
+      "description": {
+        "vi": "App Trời Hà Nội báo AQI 230, bầu trời trắng đục, cổ họng rát sau hai cây số.",
+        "en": "Trời Hà Nội app says AQI 230, the sky a flat white, your throat raw after two kilometres."
+      },
+      "kind": "hiem_hoa",
+      "npc": "characters:amb_ban_hoa_xe_dap",
+      "motive": {
+        "kho": "Cô bán hoa xe đạp ho cả ngày nhưng không nghỉ được, hoa héo là mất vốn.",
+        "tap": "Khẩu trang 5 nghìn cũng tiếc."
+      },
+      "spawn": {
+        "hours": [
+          6,
+          20
+        ],
+        "events_active": [
+          "events:bui_min_cao"
+        ],
+        "chance_per_game_hour": 0.3,
+        "cooldown_days": 1
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "mua_khau_trang",
+          "text": {
+            "vi": "Tạt vào hiệu thuốc mua hai khẩu trang, tặng cô bán hoa một",
+            "en": "Stop at the pharmacy for two masks, give one to the flower seller"
+          },
+          "outcome": {
+            "vi": "Cô ấy đeo ngay, cho bạn một bông cúc.",
+            "en": "She puts it on at once and gives you a chrysanthemum."
+          },
+          "effect": {
+            "money_vnd": -10000,
+            "reputation": {
+              "hoi_ban_hang_rong": 1
+            },
+            "items": [
+              "items:khau_trang"
+            ],
+            "time_min": 5
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Kéo áo che mũi đi tiếp",
+            "en": "Pull your shirt over your nose and ride on"
+          },
+          "outcome": {
+            "vi": "Tối về ho khan. Thể lực hôm nay giảm.",
+            "en": "A dry cough by evening. Stamina is down today."
+          },
+          "effect": {
+            "note": "Runtime: giảm 10% hồi thể lực đến hết ngày."
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_cuop_giat_dien_thoai",
+      "tags": [
+        "dem",
+        "hiem_hoa",
+        "pho_co"
+      ],
+      "name": {
+        "vi": "Giật điện thoại trên phố",
+        "en": "Phone snatched on the street"
+      },
+      "description": {
+        "vi": "Hai thanh niên xe Giamaha Phấn Khích không biển áp sát một cô gái đang cầm điện thoại chỉ đường, giật, phóng vào ngõ Hàng Buồm.",
+        "en": "Two youths on a plateless Giamaha Phấn Khích pull alongside a girl reading her phone for directions, snatch it, and bolt into Hàng Buồm alley."
+      },
+      "kind": "hiem_hoa",
+      "npc": "characters:amb_khach_du_lich_noi_dia",
+      "motive": {
+        "kho": "Lần đầu ra Hà Nội, điện thoại có vé tàu về và ảnh cả chuyến đi.",
+        "tap": "Tin lời bạn bảo 'phố cổ đông người thì an toàn'."
+      },
+      "spawn": {
+        "districts": [
+          "districts:pho_co",
+          "districts:hoan_kiem"
+        ],
+        "hours": [
+          19,
+          24
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.04,
+        "cooldown_days": 5,
+        "max_per_playthrough": 4
+      },
+      "duration_s": 30,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "duoi_theo",
+          "text": {
+            "vi": "Rồ ga đuổi theo vào ngõ",
+            "en": "Gun it after them into the alley"
+          },
+          "outcome": {
+            "vi": "Ngõ Hàng Buồm cụt. Hai thằng vứt điện thoại lại, leo tường. Cô gái khóc cảm ơn, gửi 100 nghìn.",
+            "en": "Hàng Buồm alley is a dead end. They drop the phone and go over a wall. The girl thanks you in tears and gives 100k."
+          },
+          "effect": {
+            "money_vnd": 100000,
+            "reputation": {
+              "hoi_bao_ton_pho_cu": 1
+            },
+            "heat": 1,
+            "skills": [
+              "lai_xe"
+            ],
+            "time_min": 10
+          },
+          "minigame": "activities:act_xe_om_cong_nghe",
+          "fail_effect": {
+            "time_min": 10,
+            "note": "Mất dấu; đồn công an phường ghi lời khai của bạn."
+          }
+        },
+        {
+          "id": "bao_cong_an",
+          "text": {
+            "vi": "Chở cô ấy ra công an phường trình báo",
+            "en": "Take her to the ward police to report it"
+          },
+          "outcome": {
+            "vi": "Biên bản 40 phút. Điện thoại không về. Cô ấy có chỗ ngồi uống trà nóng.",
+            "en": "Forty minutes of paperwork. The phone does not come back. She gets a seat and hot tea."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": 1
+            },
+            "time_min": 40
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Không phải việc của mình",
+            "en": "Not your business"
+          },
+          "outcome": {
+            "vi": "Cô gái đứng giữa phố nhìn quanh.",
+            "en": "The girl stands in the street looking around."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_say_ruou_lai_xe",
+      "tags": [
+        "hiem_hoa",
+        "xe_om"
+      ],
+      "name": {
+        "vi": "Xe ôm say rượu chở khách",
+        "en": "Drunk xe ôm with a fare"
+      },
+      "description": {
+        "vi": "Một bác xe ôm truyền thống nồng mùi rượu đang lạng xe với khách phía sau, suýt quệt gương bạn.",
+        "en": "A traditional xe ôm reeking of rice wine weaves with a passenger on the back and nearly clips your mirror."
+      },
+      "kind": "hiem_hoa",
+      "npc": "characters:amb_xe_om_truyen_thong",
+      "motive": {
+        "kho": "Mất khách vào tay app, ngồi bến cả ngày, uống cho đỡ nhục; có khách thì phải chạy.",
+        "tap": "Nghĩ rằng 40 năm cầm lái thì say cũng lái được."
+      },
+      "spawn": {
+        "road_types": [
+          "pho",
+          "duong_lon"
+        ],
+        "hours": [
+          12,
+          23
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.06,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "chan_lai",
+          "text": {
+            "vi": "Vượt lên, ép bác ấy dừng, chở khách thay",
+            "en": "Overtake, make him pull over, take the passenger yourself"
+          },
+          "outcome": {
+            "vi": "Khách sợ xanh mặt, lên xe bạn ngay. Bác ấy chửi, rồi ngồi xuống vỉa hè. Khách trả bạn tiền cuốc.",
+            "en": "The passenger, white-faced, climbs onto your bike. He curses, then sits down on the kerb. The passenger pays you the fare."
+          },
+          "effect": {
+            "money_vnd": 40000,
+            "reputation": {
+              "hoi_xe_om_o_quan_chuong": -1,
+              "cong_dong_tai_xe_vo": 1
+            },
+            "skills": [
+              "an_noi"
+            ],
+            "time_min": 15
+          }
+        },
+        {
+          "id": "goi_hoi",
+          "text": {
+            "vi": "Gọi cho hội xe ôm Ô Quan Chưởng ra đón bác ấy",
+            "en": "Call the Ô Quan Chưởng xe ôm crew to fetch him"
+          },
+          "outcome": {
+            "vi": "Hai bác già phóng tới, một người chở khách, một người chở bạn già về. Không ai mất mặt.",
+            "en": "Two old hands arrive; one takes the passenger, the other takes their friend home. Nobody loses face."
+          },
+          "effect": {
+            "reputation": {
+              "hoi_xe_om_o_quan_chuong": 2
+            },
+            "time_min": 10
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Tránh xa",
+            "en": "Keep your distance"
+          },
+          "outcome": {
+            "vi": "Phía sau, một tiếng phanh gấp.",
+            "en": "Behind you, a hard brake."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_khach_quen_dien_thoai",
+      "tags": [
+        "co_hoi",
+        "minh"
+      ],
+      "name": {
+        "vi": "Khách để quên điện thoại",
+        "en": "Passenger left her phone"
+      },
+      "description": {
+        "vi": "Vừa thả khách ở Hàng Bài, bạn thấy một chiếc điện thoại cài ốp hồng kẹt trong khe yên. Màn hình sáng: 'Mẹ' đang gọi.",
+        "en": "You have just dropped a passenger on Hàng Bài when you spot a pink-cased phone wedged in the seat gap. The screen lights: 'Mẹ' calling."
+      },
+      "kind": "co_hoi",
+      "npc": "characters:amb_khach_du_lich_noi_dia",
+      "motive": {
+        "kho": "Điện thoại trả góp còn 8 tháng, trong đó có mã vé máy bay về Vinh.",
+        "tap": "Tin rằng mất là mất, không ai trả."
+      },
+      "spawn": {
+        "protagonist": [
+          "characters:minh"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 3
+      },
+      "duration_s": 90,
+      "ignore_effect": {
+        "note": "Điện thoại rơi ở cuốc sau; khách đánh giá 1 sao."
+      },
+      "choices": [
+        {
+          "id": "quay_lai_tra",
+          "text": {
+            "vi": "Nghe máy, hẹn trả ngay",
+            "en": "Answer, arrange to return it now"
+          },
+          "outcome": {
+            "vi": "Cô gái chạy từ quán cà phê ra, dúi 50 nghìn, đánh giá 5 sao kèm 'anh tài xế tử tế nhất Hà Nội'.",
+            "en": "She runs out of the café, presses 50k on you, five stars and 'the kindest driver in Hanoi'."
+          },
+          "effect": {
+            "money_vnd": 50000,
+            "reputation": {
+              "cong_dong_tai_xe_vo": 2
+            },
+            "time_min": 10,
+            "note": "Đánh giá 5 sao tăng tỉ lệ nổ cuốc tuần này."
+          }
+        },
+        {
+          "id": "nop_cong_an",
+          "text": {
+            "vi": "Mang ra công an phường",
+            "en": "Hand it in at the ward police"
+          },
+          "outcome": {
+            "vi": "Biên nhận. 25 phút. Không ai biết là bạn.",
+            "en": "A receipt. Twenty-five minutes. Nobody knows it was you."
+          },
+          "effect": {
+            "time_min": 25
+          }
+        },
+        {
+          "id": "ban_di",
+          "text": {
+            "vi": "Tắt máy, mang ra Trần Phú bán",
+            "en": "Switch it off and sell it on Trần Phú"
+          },
+          "outcome": {
+            "vi": "1 triệu rưỡi. Tài khoản app của bạn bị báo cáo trong 2 ngày.",
+            "en": "One and a half million. Your app account gets reported within two days."
+          },
+          "effect": {
+            "money_vnd": 1500000,
+            "reputation": {
+              "cong_dong_tai_xe_vo": -4
+            },
+            "heat": 2,
+            "note": "Runtime: khoá app_vo 2 ngày game."
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_khach_tay_lac_duong",
+      "tags": [
+        "co_hoi",
+        "khach_tay",
+        "pho_co"
+      ],
+      "name": {
+        "vi": "Khách Tây lạc trong phố cổ",
+        "en": "Backpackers lost in the Old Quarter"
+      },
+      "description": {
+        "vi": "Hai khách ba lô xoay bản đồ giấy ở ngã năm Hàng Mã, hỏi mọi người 'Train Street?' bằng giọng Úc.",
+        "en": "Two backpackers spin a paper map at the Hàng Mã five-way, asking everyone 'Train Street?' in Australian accents."
+      },
+      "kind": "co_hoi",
+      "npc": "characters:amb_khach_tay_ba_lo",
+      "motive": {
+        "kho": "Mạng 4G hết, Bản Đồ Ơi chỉ sai vì phố một chiều.",
+        "tap": "Muốn ảnh phố đường tàu như trên Tóp Tóp trước 15 giờ tàu chạy."
+      },
+      "spawn": {
+        "districts": [
+          "districts:pho_co"
+        ],
+        "hours": [
+          8,
+          18
+        ],
+        "chance_per_game_hour": 0.15,
+        "cooldown_days": 1
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "chi_duong",
+          "text": {
+            "vi": "Chỉ đường bằng tiếng Anh",
+            "en": "Give directions in English"
+          },
+          "outcome": {
+            "vi": "'Legend!' Họ chụp selfie với bạn.",
+            "en": "'Legend!' They take a selfie with you."
+          },
+          "effect": {
+            "skills": [
+              "ngoai_ngu",
+              "an_noi"
+            ],
+            "time_min": 3
+          }
+        },
+        {
+          "id": "cho_di",
+          "text": {
+            "vi": "'Hop on, 50k'",
+            "en": "'Hop on, 50k'"
+          },
+          "outcome": {
+            "vi": "Chở từng người, hai lượt. Đến nơi họ đưa 100 nghìn và một lon bia.",
+            "en": "One at a time, two trips. They give 100k and a can of beer."
+          },
+          "effect": {
+            "money_vnd": 100000,
+            "skills": [
+              "ngoai_ngu"
+            ],
+            "time_min": 15
+          },
+          "minigame": "activities:act_xich_lo_du_lich",
+          "fail_effect": {
+            "money_vnd": 50000,
+            "time_min": 25,
+            "note": "Lạc đường, chỉ một người trả."
+          }
+        },
+        {
+          "id": "chi_sai",
+          "text": {
+            "vi": "Chỉ bừa cho đỡ mất thời gian",
+            "en": "Point anywhere to save time"
+          },
+          "outcome": {
+            "vi": "Họ đi về hướng chợ Đồng Xuân. Một bác xe ôm quen của bạn vớ được khách.",
+            "en": "They head for Đồng Xuân market. A xe ôm you know lands the fare."
+          },
+          "effect": {
+            "reputation": {
+              "hoi_xe_om_o_quan_chuong": 1,
+              "hoi_bao_ton_pho_cu": -1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_ba_tap_the_duc_roi_dong_ho",
+      "tags": [
+        "co_hoi",
+        "cong_vien",
+        "sang"
+      ],
+      "name": {
+        "vi": "Đồng hồ rơi bên ghế đá",
+        "en": "Watch dropped by the bench"
+      },
+      "description": {
+        "vi": "Chiếc đồng hồ Liên Xô cũ nằm dưới ghế đá, tốp các bà tập dưỡng sinh vừa tan, loa kéo còn nhạc.",
+        "en": "An old Soviet watch lies under a stone bench; the morning exercise group has just dispersed, the speaker still playing."
+      },
+      "kind": "co_hoi",
+      "npc": "characters:amb_ba_tap_the_duc",
+      "motive": {
+        "kho": "Đồng hồ của chồng để lại, dây cũ hay tuột khi vung tay.",
+        "tap": "Không dám nói với con là làm mất vì con sẽ bắt bỏ tập."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:ho_hoan_kiem",
+          "landmarks:ho_tay",
+          "landmarks:cong_vien_thong_nhat",
+          "landmarks:ho_thien_quang",
+          "landmarks:cong_vien_cau_giay",
+          "landmarks:ho_van_quan",
+          "landmarks:ho_linh_dam"
+        ],
+        "hours": [
+          5.5,
+          7.5
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "tim_tra",
+          "text": {
+            "vi": "Đuổi theo tốp các bà, hỏi từng người",
+            "en": "Catch up with the group and ask each one"
+          },
+          "outcome": {
+            "vi": "Bà Tịnh nhận ra ngay, khóc. 'Của ông nhà bà.' Cả tốp mời bạn tập cùng sáng mai.",
+            "en": "Bà Tịnh knows it at once and cries. 'My husband's.' The whole group invites you to join tomorrow."
+          },
+          "effect": {
+            "reputation": {
+              "hoi_nguoi_cao_tuoi_phuong": 3
+            },
+            "time_min": 10,
+            "note": "Mở hoạt động act_tap_duong_sinh ở công viên này với giá 0 đ."
+          }
+        },
+        {
+          "id": "de_lai",
+          "text": {
+            "vi": "Đặt lên ghế cho dễ thấy",
+            "en": "Set it on the bench where it can be seen"
+          },
+          "outcome": {
+            "vi": "Mười phút sau không còn ở đó.",
+            "en": "Ten minutes later it is gone."
+          },
+          "effect": {}
+        },
+        {
+          "id": "giu",
+          "text": {
+            "vi": "Bỏ túi",
+            "en": "Pocket it"
+          },
+          "outcome": {
+            "vi": "Đồng hồ Liên Xô cũ bán được 300 nghìn ở chợ Giời.",
+            "en": "An old Soviet watch fetches 300k at Giời market."
+          },
+          "effect": {
+            "money_vnd": 300000,
+            "reputation": {
+              "hoi_nguoi_cao_tuoi_phuong": -2
+            },
+            "heat": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_dan_van_phong_can_xe_gap",
+      "tags": [
+        "co_hoi",
+        "minh",
+        "sang"
+      ],
+      "name": {
+        "vi": "Khách cần cuốc gấp",
+        "en": "Fare in a hurry"
+      },
+      "description": {
+        "vi": "Chị công sở vẫy tay giữa đường Duy Tân: '8 giờ 15 họp, Lốt Tê, 100 nghìn, đi được không?'",
+        "en": "A woman in office wear flags you down on Duy Tân: 'Meeting at 8:15, Lốt Tê, 100k, can you?'"
+      },
+      "kind": "co_hoi",
+      "npc": "characters:amb_dan_van_phong",
+      "motive": {
+        "kho": "Chậm họp với khách Nhật lần thứ hai là mất hợp đồng.",
+        "tap": "Thà trả gấp ba còn hơn gọi app đợi 10 phút."
+      },
+      "spawn": {
+        "districts": [
+          "districts:cau_giay",
+          "districts:ba_dinh",
+          "districts:dong_da",
+          "districts:thanh_xuan"
+        ],
+        "hours": [
+          7.5,
+          8.75
+        ],
+        "protagonist": [
+          "characters:minh"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.12,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "nhan",
+          "text": {
+            "vi": "'Lên xe!'",
+            "en": "'Get on!'"
+          },
+          "outcome": {
+            "vi": "Đi tắt qua ngõ Láng, kịp 8 giờ 12. Chị ấy đưa 120 nghìn.",
+            "en": "Cut through the Láng alleys, arrive 8:12. She hands over 120k."
+          },
+          "effect": {
+            "money_vnd": 120000,
+            "skills": [
+              "lai_xe",
+              "thuoc_duong"
+            ],
+            "time_min": 15
+          },
+          "minigame": "activities:act_xe_om_cong_nghe",
+          "fail_effect": {
+            "money_vnd": 50000,
+            "reputation": {
+              "cong_dong_tai_xe_vo": -1
+            },
+            "time_min": 25,
+            "note": "Muộn họp; chị ấy đánh giá 1 sao."
+          }
+        },
+        {
+          "id": "tu_choi",
+          "text": {
+            "vi": "'Em đang có cuốc rồi'",
+            "en": "'I've got a fare already'"
+          },
+          "outcome": {
+            "vi": "Chị ấy vẫy xe sau.",
+            "en": "She flags the next bike."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_khach_noi_dia_hoi_pho",
+      "tags": [
+        "co_hoi",
+        "du_lich",
+        "ho_guom"
+      ],
+      "name": {
+        "vi": "Khách du lịch hỏi quán phở",
+        "en": "Tourists asking for a phở place"
+      },
+      "description": {
+        "vi": "Gia đình Sài Gòn bốn người đứng cạnh hồ Gươm, bố cầm điện thoại: 'Phở nào ngon mà không chặt chém?'",
+        "en": "A family of four from Saigon by the lake, father holding his phone: 'Which phở is good and doesn't rip you off?'"
+      },
+      "kind": "co_hoi",
+      "npc": "characters:amb_khach_du_lich_noi_dia",
+      "motive": {
+        "kho": "Lần trước ra Hà Nội bị tính 120 nghìn một bát, về kể xấu Hà Nội cả năm.",
+        "tap": "Muốn chứng minh với vợ là 'Hà Nội cũng được'."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:ho_hoan_kiem",
+          "landmarks:nha_tho_lon",
+          "landmarks:cho_dong_xuan"
+        ],
+        "hours": [
+          6,
+          10
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.12,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "chi_quan_lan",
+          "text": {
+            "vi": "Chỉ sang quán phở nhà Lan ở Hàng Chiếu",
+            "en": "Send them to Lan's phở shop on Hàng Chiếu"
+          },
+          "outcome": {
+            "vi": "Họ ăn bốn bát, 200 nghìn, khen 'bò chín mềm'. Tối đó đăng bài 5 sao.",
+            "en": "Four bowls, 200k, 'the brisket is tender'. A five-star post that night."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": 1
+            },
+            "note": "Quán phở Lan: +1 lượt khách truyền miệng, doanh thu ngày mai +80.000 đ."
+          }
+        },
+        {
+          "id": "dan_di",
+          "text": {
+            "vi": "Dẫn cả nhà đi bộ một vòng, kể chuyện phố",
+            "en": "Walk them round and tell the street's stories"
+          },
+          "outcome": {
+            "vi": "Một tiếng, năm phố, hai hàng bánh. Ông bố dúi 150 nghìn 'tiền cà phê'.",
+            "en": "An hour, five streets, two bakeries. The father slips you 150k 'for coffee'."
+          },
+          "effect": {
+            "money_vnd": 150000,
+            "skills": [
+              "an_noi"
+            ],
+            "time_min": 60
+          },
+          "minigame": "activities:act_huong_dan_vien",
+          "fail_effect": {
+            "money_vnd": 50000,
+            "time_min": 60,
+            "note": "Kể sai chuyện Tháp Rùa, bị cậu con tra Bản Đồ Ơi bắt lỗi."
+          }
+        },
+        {
+          "id": "chi_dai",
+          "text": {
+            "vi": "Chỉ bừa quán gần nhất",
+            "en": "Point at the nearest place"
+          },
+          "outcome": {
+            "vi": "Quán ấy tính 90 nghìn một bát. Họ sẽ kể lại.",
+            "en": "That place charges 90k a bowl. They will tell people."
+          },
+          "effect": {
+            "reputation": {
+              "hoi_bao_ton_pho_cu": -1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_co_dau_chu_re_chup_anh",
+      "tags": [
+        "anh",
+        "co_hoi",
+        "khoi"
+      ],
+      "name": {
+        "vi": "Ảnh cưới thiếu thợ",
+        "en": "Wedding shoot short a photographer"
+      },
+      "description": {
+        "vi": "Cặp đôi áo dài đỏ đứng trước Nhà thờ Lớn, thợ ảnh bị tai nạn xe không đến, cô dâu sắp khóc, trang điểm sắp trôi.",
+        "en": "A couple in red áo dài in front of the Cathedral; the photographer crashed his bike and is not coming, the bride is close to tears, the make-up close to running."
+      },
+      "kind": "co_hoi",
+      "npc": "characters:amb_co_dau_chu_re",
+      "motive": {
+        "kho": "Thuê áo dài theo giờ, 3 triệu một buổi, không chụp hôm nay là mất.",
+        "tap": "Ảnh phải 'đẹp như trên MặtBook' để nhà chồng khỏi so bì."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:nha_tho_lon",
+          "landmarks:pho_phan_dinh_phung",
+          "landmarks:cau_long_bien",
+          "landmarks:hoang_thanh_thang_long",
+          "landmarks:con_duong_gom_su"
+        ],
+        "hours": [
+          7,
+          10
+        ],
+        "protagonist": [
+          "characters:khoi"
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "chup_giup",
+          "text": {
+            "vi": "Lấy máy ra chụp giúp một buổi",
+            "en": "Get the camera out and shoot the session"
+          },
+          "outcome": {
+            "vi": "Bốn mươi phút, 200 kiểu, một kiểu ở khe sáng cửa nhà thờ mà cô dâu khóc thật. Họ trả 1 triệu và xin Alô Chat.",
+            "en": "Forty minutes, 200 frames, one in the slit of light at the church door where the bride cries for real. They pay 1 million and ask for your Alô Chat."
+          },
+          "effect": {
+            "money_vnd": 1000000,
+            "skills": [
+              "chup_anh",
+              "an_noi"
+            ],
+            "time_min": 40,
+            "note": "Khôi có thêm nguồn khách ảnh cưới; mở lại sự kiện này ở các địa điểm khác."
+          },
+          "minigame": "activities:act_chup_anh_pho",
+          "fail_effect": {
+            "money_vnd": 300000,
+            "time_min": 40,
+            "note": "Ảnh ngược sáng; họ trả 300 nghìn và không giữ liên lạc."
+          }
+        },
+        {
+          "id": "chup_dien_thoai",
+          "text": {
+            "vi": "Chụp bằng điện thoại cho họ đỡ tiếc",
+            "en": "Shoot a few on your phone so they have something"
+          },
+          "outcome": {
+            "vi": "Mười kiểu. Cô dâu cười gượng.",
+            "en": "Ten frames. The bride smiles bravely."
+          },
+          "effect": {
+            "time_min": 10
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Walk on"
+          },
+          "outcome": {
+            "vi": "Lớp phấn trôi theo nước mắt.",
+            "en": "The powder runs with the tears."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_khach_doi_di_xa",
+      "tags": [
+        "ben_xe",
+        "co_hoi",
+        "minh"
+      ],
+      "name": {
+        "vi": "Khách đòi đi xa",
+        "en": "Fare to the edge of the map"
+      },
+      "description": {
+        "vi": "Một ông khách vali to ở Bến xe Mỹ Đình: 'Về Phùng, 25 cây, 250 nghìn, cậu đi không?' Trời sắp mưa.",
+        "en": "A man with a big suitcase at Mỹ Đình station: 'Phùng, 25 km, 250k, you up for it?' Rain is coming."
+      },
+      "kind": "co_hoi",
+      "npc": "characters:amb_khach_du_lich_noi_dia",
+      "motive": {
+        "kho": "Xe khách về Phùng đã hết chuyến, taxi đòi 400.",
+        "tap": "Phải về trước bữa tối giỗ bố."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:ben_xe_my_dinh",
+          "landmarks:ga_ha_noi",
+          "landmarks:ga_yen_nghia"
+        ],
+        "hours": [
+          16,
+          21
+        ],
+        "protagonist": [
+          "characters:minh"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 2
+      },
+      "duration_s": 60,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "nhan",
+          "text": {
+            "vi": "Nhận, đội mưa mà đi",
+            "en": "Take it, rain or not"
+          },
+          "outcome": {
+            "vi": "Mưa từ cầu Diễn. Về đến Phùng ướt sũng, ông ấy đưa 300 nghìn và bát cơm giỗ.",
+            "en": "Rain from Diễn bridge on. You reach Phùng soaked; he gives 300k and a bowl from the memorial meal."
+          },
+          "effect": {
+            "money_vnd": 300000,
+            "skills": [
+              "lai_xe"
+            ],
+            "time_min": 120
+          }
+        },
+        {
+          "id": "tu_choi",
+          "text": {
+            "vi": "'Xa quá bác ơi, bác bắt taxi đi'",
+            "en": "'Too far, uncle, take a taxi'"
+          },
+          "outcome": {
+            "vi": "Ông ấy kéo vali ra đường lớn.",
+            "en": "He drags the suitcase toward the main road."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_loa_phuong_sang",
+      "tags": [
+        "phuong",
+        "sang",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Loa phường 6 giờ sáng",
+        "en": "Ward loudspeaker at six"
+      },
+      "description": {
+        "vi": "Loa trên cột điện rè lên: 'Kính thưa bà con, hôm nay tổ dân phố tổng vệ sinh, 8 giờ tại sân đình...'",
+        "en": "The speaker on the pole crackles: 'Dear residents, today the neighbourhood holds its clean-up, 8 o'clock at the communal house...'"
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_loa_phuong",
+      "motive": {
+        "kho": "Giọng đọc bị cả phố ghét, mà phường bắt đọc.",
+        "tap": "Tin rằng không có loa thì người già không biết lịch tiêm, lịch cắt điện."
+      },
+      "spawn": {
+        "hours": [
+          6,
+          6.75
+        ],
+        "chance_per_game_hour": 0.2,
+        "cooldown_days": 1
+      },
+      "duration_s": 60,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "nghe_het",
+          "text": {
+            "vi": "Dừng xe nghe hết bản tin",
+            "en": "Stop and hear the bulletin out"
+          },
+          "outcome": {
+            "vi": "Lịch cắt điện tối nay, lịch tiêm chó mèo, và 'gia đình bà Thoa Hàng Chiếu có việc hiếu'.",
+            "en": "Tonight's power cut, the pet vaccination day, and 'the Thoa family on Hàng Chiếu has a bereavement'."
+          },
+          "effect": {
+            "time_min": 5,
+            "note": "Runtime: ghi 3 sự kiện phường vào app_so_tay."
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Ride on"
+          },
+          "outcome": {
+            "vi": "Loa rè theo sau lưng.",
+            "en": "The speaker crackles behind you."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_ong_cu_moi_choi_co",
+      "tags": [
+        "co_tuong",
+        "cong_vien",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Cụ mời một ván cờ",
+        "en": "An old man invites you to a game"
+      },
+      "description": {
+        "vi": "Cụ ông áo may ô ngồi ghế đá cạnh bàn cờ tướng khắc đá, hai cốc trà, một cốc còn đầy. 'Cháu biết chơi không?'",
+        "en": "An old man in a singlet by a stone-carved xiangqi board, two cups of tea, one still full. 'Do you play?'"
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_ong_cu_choi_co",
+      "motive": {
+        "kho": "Bạn cờ 30 năm vừa mất tháng trước, bàn cờ thừa một ghế.",
+        "tap": "Không chịu chơi cờ trên điện thoại vì 'cờ phải có người'."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:ho_hoan_kiem",
+          "landmarks:cong_vien_thong_nhat",
+          "landmarks:ho_truc_bach",
+          "landmarks:cong_vien_thu_le",
+          "landmarks:ho_van_quan"
+        ],
+        "hours": [
+          6,
+          18
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.12,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "choi",
+          "text": {
+            "vi": "Ngồi xuống chơi một ván",
+            "en": "Sit down for a game"
+          },
+          "outcome": {
+            "vi": "Thua trong 20 nước. Cụ cười: 'Mai lại ra.' Cốc trà đầy là của bạn.",
+            "en": "Lost in twenty moves. He laughs: 'Come again tomorrow.' The full cup of tea is yours."
+          },
+          "effect": {
+            "reputation": {
+              "clb_co_tuong_bo_ho": 2
+            },
+            "items": [
+              "items:tra_da"
+            ],
+            "time_min": 20
+          },
+          "minigame": "activities:act_co_tuong",
+          "fail_effect": {
+            "reputation": {
+              "clb_co_tuong_bo_ho": 1
+            },
+            "time_min": 20
+          }
+        },
+        {
+          "id": "xem",
+          "text": {
+            "vi": "Đứng xem rồi đi",
+            "en": "Watch a moment, then go"
+          },
+          "outcome": {
+            "vi": "Cụ không ngẩng lên.",
+            "en": "He does not look up."
+          },
+          "effect": {
+            "time_min": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_mat_dien_ca_pho",
+      "tags": [
+        "nang_nong",
+        "pho",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Mất điện cả phố",
+        "en": "Whole street blacked out"
+      },
+      "description": {
+        "vi": "Mất điện giữa trưa 39 độ, cả phố kéo ghế ra vỉa hè, quán trà đá đông gấp ba, quạt tay phe phẩy.",
+        "en": "Power cut at noon, 39 degrees; the whole street drags chairs onto the pavement, the tea stall is three times its size, paper fans everywhere."
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_ba_ban_xoi",
+      "motive": {
+        "kho": "Tủ lạnh nhà nào cũng sắp hỏng đồ, điện lực không nói mấy giờ có lại.",
+        "tap": "Ra vỉa hè để than chung, than một mình thì nóng hơn."
+      },
+      "spawn": {
+        "road_types": [
+          "pho",
+          "ngo"
+        ],
+        "hours": [
+          11,
+          16
+        ],
+        "weather": [
+          "hot"
+        ],
+        "events_active": [
+          "events:nang_nong_dinh_diem"
+        ],
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 3
+      },
+      "duration_s": 120,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "ngoi_tra_da",
+          "text": {
+            "vi": "Ngồi quán trà đá hóng chuyện phố",
+            "en": "Sit at the tea stall and listen to the street"
+          },
+          "outcome": {
+            "vi": "Một tiếng, năm câu chuyện: ai sắp bán nhà, ai mới ly dị, Kim Long Land đang hỏi mua số 49.",
+            "en": "One hour, five stories: who is selling, who just divorced, Kim Long Land is asking after number 49."
+          },
+          "effect": {
+            "money_vnd": -5000,
+            "items": [
+              "items:tra_da"
+            ],
+            "skills": [
+              "an_noi"
+            ],
+            "time_min": 60,
+            "note": "Runtime: mở 1 tin đồn phố trong app_so_tay."
+          }
+        },
+        {
+          "id": "ve_nha",
+          "text": {
+            "vi": "Về nhà nằm chịu nóng",
+            "en": "Go home and lie in the heat"
+          },
+          "outcome": {
+            "vi": "Không ngủ được.",
+            "en": "No sleep."
+          },
+          "effect": {
+            "time_min": 60
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_cong_nhan_moi_truong_dem",
+      "tags": [
+        "dem",
+        "pho_co",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Xe rác hai giờ sáng",
+        "en": "Garbage cart at two a.m."
+      },
+      "description": {
+        "vi": "Chị công nhân môi trường đẩy xe rác lên dốc Hàng Than, chổi tre cắm sau xe, phố chỉ còn tiếng bánh sắt.",
+        "en": "A sanitation worker pushes her cart up the Hàng Than slope, bamboo broom stuck in the back, the street reduced to the sound of iron wheels."
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_cong_nhan_moi_truong",
+      "motive": {
+        "kho": "Ca đêm 7 triệu, hai con ở quê với bà, Tết mới về.",
+        "tap": "Không dám bỏ ca vì rác một đêm không dọn là sáng cả phố chửi."
+      },
+      "spawn": {
+        "districts": [
+          "districts:pho_co",
+          "districts:ba_dinh",
+          "districts:hoan_kiem"
+        ],
+        "road_types": [
+          "pho"
+        ],
+        "hours": [
+          1,
+          4
+        ],
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "day_giup",
+          "text": {
+            "vi": "Đẩy giúp xe lên dốc, mời chị cốc trà nóng",
+            "en": "Help push the cart up and buy her a hot tea"
+          },
+          "outcome": {
+            "vi": "Chị kể quê Phú Thọ, cười: 'Thanh niên Hà Nội giờ cũng còn người thức đẩy xe rác.'",
+            "en": "She is from Phú Thọ, and laughs: 'So Hanoi still has young people awake to push a garbage cart.'"
+          },
+          "effect": {
+            "money_vnd": -10000,
+            "reputation": {
+              "to_dan_pho_hang_chieu": 1
+            },
+            "skills": [
+              "the_luc"
+            ],
+            "time_min": 10
+          }
+        },
+        {
+          "id": "vut_rac",
+          "text": {
+            "vi": "Ném vỏ lon xuống đường ngay trước xe chị",
+            "en": "Toss your can in the road right in front of her"
+          },
+          "outcome": {
+            "vi": "Chị ấy cúi nhặt. Không nói gì.",
+            "en": "She bends and picks it up. Says nothing."
+          },
+          "effect": {
+            "reputation": {
+              "to_dan_pho_hang_chieu": -2
+            }
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Ride on"
+          },
+          "outcome": {
+            "vi": "Bánh sắt vẫn kêu.",
+            "en": "The iron wheels keep going."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_trung_thu_ruoc_den",
+      "tags": [
+        "pho_co",
+        "trung_thu",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Rước đèn Hàng Mã",
+        "en": "Lantern parade on Hàng Mã"
+      },
+      "description": {
+        "vi": "Phố Hàng Mã đỏ rực đèn ông sao, đoàn trẻ con theo đầu lân, trống cà rùng, không xe nào đi nổi.",
+        "en": "Hàng Mã blazes with star lanterns, a troop of children follows a lion head, drums thump, no bike can move."
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_hoc_sinh",
+      "motive": {
+        "kho": "Đèn ông sao 30 nghìn, mẹ bảo 'năm nay không mua', bạn nào cũng có.",
+        "tap": "Chỉ cần được cầm một cái đi hết phố."
+      },
+      "spawn": {
+        "districts": [
+          "districts:pho_co"
+        ],
+        "hours": [
+          18,
+          22
+        ],
+        "events_active": [
+          "events:trung_thu"
+        ],
+        "chance_per_game_hour": 0.4,
+        "cooldown_days": 1,
+        "max_per_playthrough": 2
+      },
+      "duration_s": 120,
+      "ignore_effect": {
+        "time_min": 10
+      },
+      "choices": [
+        {
+          "id": "mua_den",
+          "text": {
+            "vi": "Mua một đèn ông sao, đưa cho đứa bé không có đèn",
+            "en": "Buy a star lantern and give it to the child without one"
+          },
+          "outcome": {
+            "vi": "Nó ngẩn ra rồi chạy vào đoàn. Mẹ nó gật đầu từ xa.",
+            "en": "The child stares, then runs into the parade. The mother nods from across the street."
+          },
+          "effect": {
+            "money_vnd": -30000,
+            "reputation": {
+              "to_dan_pho_hang_chieu": 1
+            },
+            "items": [
+              "items:den_ong_sao"
+            ],
+            "time_min": 10
+          }
+        },
+        {
+          "id": "di_theo",
+          "text": {
+            "vi": "Dựng xe, đi theo đoàn hết phố",
+            "en": "Park and follow the parade to the end of the street"
+          },
+          "outcome": {
+            "vi": "Đến Hàng Lược thì múa lân dừng, phá cỗ. Bạn được chia một miếng bánh dẻo.",
+            "en": "At Hàng Lược the lion dance stops for the feast. You get a slice of mooncake."
+          },
+          "effect": {
+            "items": [
+              "items:banh_com"
+            ],
+            "time_min": 30
+          }
+        },
+        {
+          "id": "di_vong",
+          "text": {
+            "vi": "Quay đầu, đi Phùng Hưng",
+            "en": "Turn back, take Phùng Hưng"
+          },
+          "outcome": {
+            "vi": "Trống xa dần.",
+            "en": "The drums fade."
+          },
+          "effect": {
+            "time_min": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_mua_hoa_sua_nguyen_du",
+      "tags": [
+        "dem",
+        "mua",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Hoa sữa đường Nguyễn Du",
+        "en": "Milk-flower on Nguyễn Du"
+      },
+      "description": {
+        "vi": "Đêm đầu mùa, mùi hoa sữa đặc đến nghẹt thở bên hồ Thiền Quang, một đôi dừng xe ngửa mặt lên cây, bà hàng nước phàn nàn 'nồng quá'.",
+        "en": "First night of the season, the milk-flower scent by Thiền Quang lake thick enough to choke on; a couple stop their bike to look up at the tree, the tea seller complains 'too strong'."
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_ba_ban_xoi",
+      "motive": {
+        "kho": "Bán nước đêm dưới gốc hoa sữa 20 năm, mũi dị ứng mà không bỏ chỗ được.",
+        "tap": "Chỗ này khách quen đến vì cây."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:ho_thien_quang",
+          "landmarks:cong_vien_thong_nhat"
+        ],
+        "hours": [
+          20,
+          24
+        ],
+        "events_active": [
+          "events:mua_hoa_sua"
+        ],
+        "chance_per_game_hour": 0.25,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "dung_lai",
+          "text": {
+            "vi": "Tắt máy, ngồi ghế nhựa, gọi cốc trà nóng",
+            "en": "Engine off, plastic stool, a hot tea"
+          },
+          "outcome": {
+            "vi": "Bà hàng nước kể năm 1998 phố này còn tàu điện. Hoa rụng đầy cốc.",
+            "en": "The tea seller tells of 1998, when this street still had the tram. Flowers fall into your cup."
+          },
+          "effect": {
+            "money_vnd": -5000,
+            "items": [
+              "items:tra_da"
+            ],
+            "skills": [
+              "an_noi"
+            ],
+            "time_min": 20,
+            "note": "Runtime: mở ký ức số 11 trong bộ sưu tập ảnh xưa nếu Khôi là người chọn."
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Ride on"
+          },
+          "outcome": {
+            "vi": "Mùi hoa theo đến tận Ngã Tư Sở.",
+            "en": "The scent follows you all the way to Ngã Tư Sở."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_tet_xin_chu_ong_do",
+      "tags": [
+        "tet",
+        "van_hoa",
+        "van_mieu"
+      ],
+      "name": {
+        "vi": "Ông đồ cho chữ",
+        "en": "Calligrapher at the Temple of Literature"
+      },
+      "description": {
+        "vi": "Dãy ông đồ trải chiếu dọc tường Văn Miếu, giấy đỏ, mực tàu, một cậu bé xin chữ 'Đỗ' cho kỳ thi.",
+        "en": "A row of calligraphers on mats along the Văn Miếu wall, red paper, Chinese ink; a boy asks for the character 'Đỗ' (pass) for his exam."
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_ong_cu_choi_co",
+      "motive": {
+        "kho": "Chữ Hán cả đời chỉ còn có ích ba ngày Tết.",
+        "tap": "Muốn chữ mình treo trong nhà người ta một năm."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:van_mieu"
+        ],
+        "hours": [
+          8,
+          18
+        ],
+        "events_active": [
+          "events:tet_nguyen_dan"
+        ],
+        "chance_per_game_hour": 0.4,
+        "cooldown_days": 1,
+        "max_per_playthrough": 2
+      },
+      "duration_s": 180,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "xin_chu",
+          "text": {
+            "vi": "Xin một chữ, 100 nghìn",
+            "en": "Ask for a character, 100k"
+          },
+          "outcome": {
+            "vi": "Ông hỏi năm nay bạn cần gì. Minh: 'Nhẫn'. Lan: 'An'. Khôi: 'Tâm'. Ông viết xong không nhận thêm tiền.",
+            "en": "He asks what you need this year. Minh: 'Nhẫn' (patience). Lan: 'An' (peace). Khôi: 'Tâm' (heart). He takes no extra money."
+          },
+          "effect": {
+            "money_vnd": -100000,
+            "time_min": 15,
+            "note": "Runtime: treo chữ ở nhà nhân vật; +1 uy tín với hội người cao tuổi khi họ đến chơi."
+          }
+        },
+        {
+          "id": "xem",
+          "text": {
+            "vi": "Đứng xem ông viết cho cậu bé",
+            "en": "Watch him write for the boy"
+          },
+          "outcome": {
+            "vi": "Chữ 'Đỗ' khô dần trên giấy đỏ. Cậu bé cúi đầu ba lần.",
+            "en": "The character dries on red paper. The boy bows three times."
+          },
+          "effect": {
+            "time_min": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_vu_lan_bong_hong",
+      "tags": [
+        "chua",
+        "van_hoa",
+        "vu_lan"
+      ],
+      "name": {
+        "vi": "Bông hồng cài áo",
+        "en": "A rose on the lapel"
+      },
+      "description": {
+        "vi": "Sân chùa rằm tháng Bảy, các cô cài hoa cho khách: hồng đỏ cho người còn mẹ, hồng trắng cho người đã mất mẹ.",
+        "en": "The temple yard on the seventh full moon; volunteers pin roses on visitors: red for those whose mother lives, white for those who have lost her."
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_ba_tap_the_duc",
+      "motive": {
+        "kho": "Chính cô cài hoa trắng cho mình năm nay.",
+        "tap": "Tin rằng ai cũng cần một lần được hỏi 'mẹ còn không'."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:chua_tran_quoc",
+          "landmarks:chua_lang",
+          "landmarks:chua_ha",
+          "landmarks:chua_kim_lien",
+          "landmarks:phu_tay_ho"
+        ],
+        "hours": [
+          6,
+          20
+        ],
+        "events_active": [
+          "events:vu_lan"
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.4,
+        "cooldown_days": 1,
+        "max_per_playthrough": 1
+      },
+      "duration_s": 120,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "cai_hoa",
+          "text": {
+            "vi": "Để cô cài hoa",
+            "en": "Let her pin the rose"
+          },
+          "outcome": {
+            "vi": "Minh: hoa đỏ, nghĩ đến mẹ ở Bắc Giang. Lan: hoa trắng, cô cài hoa nắm tay Lan lâu hơn. Khôi: hoa đỏ, cài xong gọi về Sài Gòn.",
+            "en": "Minh: red, thinks of his mother in Bắc Giang. Lan: white, the volunteer holds her hand a little longer. Khôi: red, and calls Saigon the moment it is pinned."
+          },
+          "effect": {
+            "time_min": 10,
+            "note": "Runtime: Minh gọi mẹ mở thoại lạc quan; Lan mở ký ức về mẹ (docs/gdd/08 §4); Khôi gọi mẹ."
+          }
+        },
+        {
+          "id": "tu_choi",
+          "text": {
+            "vi": "Lắc đầu, đi qua",
+            "en": "Shake your head and pass"
+          },
+          "outcome": {
+            "vi": "Cô ấy không hỏi lại.",
+            "en": "She does not ask again."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_ret_dam_ngo_nuong",
+      "tags": [
+        "dem",
+        "ret",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Bếp ngô nướng đêm rét",
+        "en": "Grilled-corn brazier on a freezing night"
+      },
+      "description": {
+        "vi": "Rét 9 độ, một bếp than hoa đỏ bên gốc cây, cô bán ngô nướng xoa tay, mùi ngô cháy xém kéo người đi đường tấp vào.",
+        "en": "Nine degrees; a charcoal brazier glows at the foot of a tree, the corn seller rubs her hands, the smell of scorched corn pulls riders in."
+      },
+      "kind": "van_hoa",
+      "npc": "characters:amb_ban_hang_rong_quang_ganh",
+      "motive": {
+        "kho": "Mùa rét là mùa kiếm, ốm cũng ngồi.",
+        "tap": "Con ở quê đang chờ tiền học kỳ hai."
+      },
+      "spawn": {
+        "road_types": [
+          "pho",
+          "via_he"
+        ],
+        "hours": [
+          18,
+          23
+        ],
+        "events_active": [
+          "events:ret_dam"
+        ],
+        "chance_per_game_hour": 0.25,
+        "cooldown_days": 1
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "mua_ngo",
+          "text": {
+            "vi": "Mua một bắp, ngồi hơ tay bên bếp",
+            "en": "Buy a cob and warm your hands at the fire"
+          },
+          "outcome": {
+            "vi": "Cô kể chuyện con gái sắp thi đại học. Bạn ăn hết bắp ngô mà không nhớ vị.",
+            "en": "She talks of a daughter about to sit the university exam. You finish the cob without tasting it."
+          },
+          "effect": {
+            "money_vnd": -15000,
+            "reputation": {
+              "hoi_ban_hang_rong": 1
+            },
+            "skills": [
+              "an_noi"
+            ],
+            "time_min": 10
+          }
+        },
+        {
+          "id": "mua_cho_ca_ben",
+          "text": {
+            "vi": "Mua 10 bắp, chia cho mấy bác xe ôm ở bến",
+            "en": "Buy ten cobs and hand them round the xe ôm at the stand"
+          },
+          "outcome": {
+            "vi": "Mười bác, mười bắp, không ai nói cảm ơn nhưng ai cũng nhớ.",
+            "en": "Ten old drivers, ten cobs, nobody says thanks and nobody forgets."
+          },
+          "effect": {
+            "money_vnd": -150000,
+            "reputation": {
+              "hoi_xe_om_o_quan_chuong": 3,
+              "hoi_ban_hang_rong": 2
+            },
+            "time_min": 15
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Ride on"
+          },
+          "outcome": {
+            "vi": "Tay cóng.",
+            "en": "Numb fingers."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_thu_mua_dong_nat",
+      "tags": [
+        "kinh_te",
+        "ngo",
+        "suu_tam"
+      ],
+      "name": {
+        "vi": "'Ai đồng nát sắt vụn bán đi'",
+        "en": "'Scrap, old metal, anyone selling'"
+      },
+      "description": {
+        "vi": "Chị đồng nát đạp xe qua ngõ, loa nhỏ lặp 'ai đồng nát sắt vụn bán đi', trên xe có một tấm biển số nhà men xanh cũ.",
+        "en": "The scrap collector pedals through the alley, a little speaker looping 'scrap, old metal, anyone selling'; on her rack sits an old blue enamel house-number plate."
+      },
+      "kind": "kinh_te",
+      "npc": "characters:amb_thu_mua_dong_nat",
+      "motive": {
+        "kho": "Mỗi ngày đạp 30 cây, lãi 100 nghìn, con học cấp ba ở Nam Định.",
+        "tap": "Không biết đồ cũ nào có giá với 'người thành phố', bán theo cân."
+      },
+      "spawn": {
+        "road_types": [
+          "ngo"
+        ],
+        "hours": [
+          8,
+          17
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "mua_bien_so",
+          "text": {
+            "vi": "Hỏi mua tấm biển số nhà men xanh",
+            "en": "Ask to buy the enamel plate"
+          },
+          "outcome": {
+            "vi": "'Cân là 5 nghìn, nhưng chú thích thì 50.' Bạn trả 100. Biển số 'Hàng Bạc 27' có một vết đạn.",
+            "en": "'By weight it's 5k, but if you like it, 50.' You pay 100. 'Hàng Bạc 27' has a bullet nick in it."
+          },
+          "effect": {
+            "money_vnd": -100000,
+            "items": [
+              "items:bien_so_nha_men_xanh"
+            ],
+            "time_min": 5,
+            "note": "Món sưu tầm cho Khôi; chị đồng nát từ nay để dành biển cũ cho bạn."
+          }
+        },
+        {
+          "id": "ban_do_cu",
+          "text": {
+            "vi": "Bán cho chị mấy thứ linh tinh trong cốp",
+            "en": "Sell her the odds and ends in your under-seat box"
+          },
+          "outcome": {
+            "vi": "Bình ắc quy cũ, một đoạn dây điện. 40 nghìn.",
+            "en": "An old battery, a length of wire. 40k."
+          },
+          "effect": {
+            "money_vnd": 40000
+          }
+        },
+        {
+          "id": "di_tiep",
+          "text": {
+            "vi": "Đi tiếp",
+            "en": "Walk on"
+          },
+          "outcome": {
+            "vi": "'Ai đồng nát...'",
+            "en": "'Scrap, old metal...'"
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_ba_ban_xoi_tra_thua",
+      "tags": [
+        "kinh_te",
+        "sang",
+        "via_he"
+      ],
+      "name": {
+        "vi": "Bà xôi trả thừa tiền",
+        "en": "The sticky-rice granny overpays your change"
+      },
+      "description": {
+        "vi": "Gói xôi xéo 15 nghìn, bạn đưa 50, bà trả lại 85 vì nhầm tờ 50 với tờ 100. Bà đang xúc xôi cho người sau.",
+        "en": "A 15k packet of xôi xéo, you hand over 50, she gives back 85, taking the 50 for a 100. She is already serving the next customer."
+      },
+      "kind": "kinh_te",
+      "npc": "characters:amb_ba_ban_xoi",
+      "motive": {
+        "kho": "Mắt kém, sợ nhất nhầm tiền vì lãi cả buổi chỉ 150 nghìn.",
+        "tap": "Không nói với con vì con bắt nghỉ bán."
+      },
+      "spawn": {
+        "road_types": [
+          "via_he",
+          "ngo"
+        ],
+        "hours": [
+          6,
+          8.5
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.1,
+        "cooldown_days": 2
+      },
+      "duration_s": 30,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "tra_lai",
+          "text": {
+            "vi": "'Bà ơi, bà trả thừa rồi'",
+            "en": "'Granny, you gave me too much'"
+          },
+          "outcome": {
+            "vi": "Bà nhìn tờ tiền, nhìn bạn, rồi cho thêm thìa ruốc: 'Cháu ăn sáng ở đây là bà mừng.'",
+            "en": "She looks at the note, at you, then adds a spoon of pork floss: 'Have breakfast here and I'm happy.'"
+          },
+          "effect": {
+            "money_vnd": -15000,
+            "reputation": {
+              "to_dan_pho_hang_chieu": 2,
+              "hoi_ban_hang_rong": 1
+            },
+            "items": [
+              "items:xoi_xeo"
+            ],
+            "note": "Bà xôi về sau bán cho bạn giá cũ dù giá phố tăng."
+          }
+        },
+        {
+          "id": "cam_luon",
+          "text": {
+            "vi": "Cầm luôn, bà có biết đâu",
+            "en": "Keep it; she will never know"
+          },
+          "outcome": {
+            "vi": "Trưa bà đếm tiền, thiếu 50 nghìn, ngồi thừ một lúc. Người bán nước bên cạnh đã thấy.",
+            "en": "At noon she counts, finds 50k short, sits still a while. The tea seller next to her saw."
+          },
+          "effect": {
+            "money_vnd": 35000,
+            "reputation": {
+              "to_dan_pho_hang_chieu": -2,
+              "hoi_ban_hang_rong": -2
+            },
+            "items": [
+              "items:xoi_xeo"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_tieu_thuong_nho_khieng_hang",
+      "tags": [
+        "cho",
+        "kinh_te"
+      ],
+      "name": {
+        "vi": "Chủ sạp nhờ khiêng hàng",
+        "en": "Stallholder needs a hand with the load"
+      },
+      "description": {
+        "vi": "Xe tải chở vải đỗ ngoài cổng chợ, chủ sạp gọi với: 'Em ơi khiêng hộ chị mười kiện, chị gửi tiền nước!'",
+        "en": "A truck of cloth parked at the market gate; a stallholder calls: 'Hey, help me carry ten bales, I'll pay you for water!'"
+      },
+      "kind": "kinh_te",
+      "npc": "characters:amb_tieu_thuong_cho",
+      "motive": {
+        "kho": "Thuê bốc vác 20 nghìn một kiện, hàng về giờ cấm xe tải phải dỡ nhanh.",
+        "tap": "Giữ kiot vì ban quản lý doạ thu hồi những sạp nộp phí chậm."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:cho_dong_xuan",
+          "landmarks:cho_hom",
+          "landmarks:cho_ha_dong",
+          "landmarks:cho_dau_moi_den_lu",
+          "landmarks:cho_long_bien"
+        ],
+        "road_types": [
+          "cho"
+        ],
+        "hours": [
+          5,
+          10
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.12,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "khieng_lay_cong",
+          "text": {
+            "vi": "Khiêng, lấy 50 nghìn",
+            "en": "Carry, take 50k"
+          },
+          "outcome": {
+            "vi": "Mười kiện, mười phút, mồ hôi ướt áo. 50 nghìn và một cốc trà đá.",
+            "en": "Ten bales, ten minutes, shirt soaked. 50k and an iced tea."
+          },
+          "effect": {
+            "money_vnd": 50000,
+            "skills": [
+              "the_luc"
+            ],
+            "time_min": 15
+          },
+          "minigame": "activities:act_cho_hang_ba_gac",
+          "fail_effect": {
+            "money_vnd": 20000,
+            "time_min": 20,
+            "note": "Làm rách một kiện; chị trừ tiền."
+          }
+        },
+        {
+          "id": "khieng_khong_lay",
+          "text": {
+            "vi": "Khiêng giúp, không lấy tiền",
+            "en": "Carry, refuse the money"
+          },
+          "outcome": {
+            "vi": "Chị ấy nhớ. Lần sau mua vải ở sạp này được giá gốc.",
+            "en": "She remembers. Next time you buy cloth here, it is wholesale price."
+          },
+          "effect": {
+            "reputation": {
+              "ban_quan_ly_cho_dong_xuan": 2
+            },
+            "skills": [
+              "the_luc"
+            ],
+            "time_min": 15,
+            "note": "Giá vải cho Lan (hbt_lan_vai_that) giảm 20% ở sạp này."
+          }
+        },
+        {
+          "id": "tu_choi",
+          "text": {
+            "vi": "Lắc đầu",
+            "en": "Shake your head"
+          },
+          "outcome": {
+            "vi": "Chị gọi người khác.",
+            "en": "She calls someone else."
+          },
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "id": "re_ban_hoa_xe_dap_e_hang",
+      "tags": [
+        "hoa",
+        "kinh_te"
+      ],
+      "name": {
+        "vi": "Hoa ế cuối ngày",
+        "en": "Unsold flowers at day's end"
+      },
+      "description": {
+        "vi": "Năm giờ chiều, cô bán hoa dừng xe đạp ở Phan Đình Phùng, loa kèn héo nửa, 'Hai mươi nghìn một bó, cô về.'",
+        "en": "Five p.m., the flower seller parks her bicycle on Phan Đình Phùng, lilies half-wilted, 'Twenty thousand a bunch, I'm going home.'"
+      },
+      "kind": "kinh_te",
+      "npc": "characters:amb_ban_hoa_xe_dap",
+      "motive": {
+        "kho": "Hoa lấy từ Tây Tựu 3 giờ sáng, không bán hết thì thành rác.",
+        "tap": "Phải về trước 6 giờ để nấu cơm cho mẹ chồng."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:pho_phan_dinh_phung",
+          "landmarks:ho_hoan_kiem",
+          "landmarks:ho_tay"
+        ],
+        "hours": [
+          16.5,
+          18.5
+        ],
+        "events_active": [
+          "events:mua_hoa_loa_ken"
+        ],
+        "chance_per_game_hour": 0.2,
+        "cooldown_days": 1
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "mua",
+          "text": {
+            "vi": "Mua một bó",
+            "en": "Buy a bunch"
+          },
+          "outcome": {
+            "vi": "Loa kèn trắng cắm nhà Lan nở lại qua đêm.",
+            "en": "White lilies in Lan's shop revive overnight."
+          },
+          "effect": {
+            "money_vnd": -20000,
+            "reputation": {
+              "hoi_ban_hang_rong": 1
+            },
+            "note": "Runtime: quán phở Lan +1 không khí ngày mai."
+          }
+        },
+        {
+          "id": "mac_ca",
+          "text": {
+            "vi": "Mặc cả 10 nghìn",
+            "en": "Haggle to 10k"
+          },
+          "outcome": {
+            "vi": "Cô ấy gật đầu mệt mỏi.",
+            "en": "She nods, tired."
+          },
+          "effect": {
+            "money_vnd": -10000,
+            "reputation": {
+              "hoi_ban_hang_rong": -1
+            },
+            "skills": [
+              "mac_ca"
+            ]
+          }
+        },
+        {
+          "id": "mua_het",
+          "text": {
+            "vi": "Mua hết xe, 150 nghìn, cho cô về sớm",
+            "en": "Buy the whole bike, 150k, so she can go home"
+          },
+          "outcome": {
+            "vi": "Cô ấy nhìn bạn như nhìn người lạ tốt. Hoa đủ cắm cả phố Hàng Chiếu.",
+            "en": "She looks at you like a kind stranger. Enough flowers for the whole of Hàng Chiếu."
+          },
+          "effect": {
+            "money_vnd": -150000,
+            "reputation": {
+              "hoi_ban_hang_rong": 3,
+              "to_dan_pho_hang_chieu": 1
+            },
+            "time_min": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_xe_om_tranh_khach",
+      "tags": [
+        "ga",
+        "kinh_te",
+        "minh"
+      ],
+      "name": {
+        "vi": "Tranh khách ở cổng ga",
+        "en": "Fighting over a fare at the station"
+      },
+      "description": {
+        "vi": "Khách vừa ra cổng ga Hà Nội, hai bác xe ôm truyền thống và bạn cùng vẫy. Bác già nhất chạy đến trước nửa bước.",
+        "en": "A passenger steps out of Hanoi station; two traditional xe ôm and you all wave. The oldest gets there half a step first."
+      },
+      "kind": "kinh_te",
+      "npc": "characters:amb_xe_om_truyen_thong",
+      "motive": {
+        "kho": "Cả ngày được hai cuốc, app lấy hết khách trẻ, khách ga là cuốc cuối cùng còn lại.",
+        "tap": "'Bến này tôi đứng 30 năm.'"
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:ga_ha_noi",
+          "landmarks:ben_xe_my_dinh",
+          "landmarks:ga_long_bien",
+          "landmarks:ga_yen_nghia"
+        ],
+        "road_types": [
+          "ben_xe"
+        ],
+        "protagonist": [
+          "characters:minh"
+        ],
+        "on_vehicle": true,
+        "chance_per_game_hour": 0.15,
+        "cooldown_days": 2
+      },
+      "duration_s": 90,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "nhuong",
+          "text": {
+            "vi": "Lùi lại, nhường khách cho bác",
+            "en": "Step back and leave the fare to him"
+          },
+          "outcome": {
+            "vi": "Bác không cảm ơn, nhưng chiều hôm đó có người gọi bạn 'thằng cu Minh' thay vì 'thằng app'.",
+            "en": "He does not thank you, but that afternoon someone calls you 'young Minh' instead of 'the app kid'."
+          },
+          "effect": {
+            "reputation": {
+              "hoi_xe_om_o_quan_chuong": 2
+            }
+          }
+        },
+        {
+          "id": "tranh",
+          "text": {
+            "vi": "Hô giá rẻ hơn, giật khách",
+            "en": "Undercut him and take the fare"
+          },
+          "outcome": {
+            "vi": "40 nghìn. Khách lên xe bạn. Cả bến nhìn theo.",
+            "en": "40k. The passenger gets on with you. The whole stand watches."
+          },
+          "effect": {
+            "money_vnd": 40000,
+            "reputation": {
+              "hoi_xe_om_o_quan_chuong": -3
+            },
+            "time_min": 20,
+            "note": "Bến ga Hà Nội từ nay không cho Minh đứng."
+          }
+        },
+        {
+          "id": "chia",
+          "text": {
+            "vi": "Bảo khách: 'Bác đi, cháu chở hành lý theo sau'",
+            "en": "Tell the passenger: 'He'll take you, I'll follow with the bags'"
+          },
+          "outcome": {
+            "vi": "Hai xe cùng đi, chia đôi. Bác bảo: 'Thằng này biết điều.'",
+            "en": "Two bikes, fare split. He says: 'This one has manners.'"
+          },
+          "effect": {
+            "money_vnd": 20000,
+            "reputation": {
+              "hoi_xe_om_o_quan_chuong": 1
+            },
+            "time_min": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "re_shipper_giao_nham",
+      "tags": [
+        "kinh_te",
+        "minh",
+        "shipper"
+      ],
+      "name": {
+        "vi": "Shipper giao nhầm cho bạn",
+        "en": "Delivery to the wrong person"
+      },
+      "description": {
+        "vi": "Shipper dúi vào tay bạn túi đồ ăn: 'Anh Minh đúng không? Bún chả 2 suất, trả rồi.' Bạn không đặt.",
+        "en": "A rider pushes a food bag at you: 'Mr Minh, right? Two bún chả, already paid.' You ordered nothing."
+      },
+      "kind": "kinh_te",
+      "npc": "characters:amb_shipper",
+      "motive": {
+        "kho": "Đơn nhầm là tự bỏ tiền đền, 80 nghìn bằng 4 đơn.",
+        "tap": "Giao nhanh cho kịp chỉ tiêu, không kiểm tra tên."
+      },
+      "spawn": {
+        "hours": [
+          11,
+          13
+        ],
+        "protagonist": [
+          "characters:minh"
+        ],
+        "chance_per_game_hour": 0.08,
+        "cooldown_days": 3
+      },
+      "duration_s": 30,
+      "ignore_effect": {},
+      "choices": [
+        {
+          "id": "nhan_bua",
+          "text": {
+            "vi": "'Ừ, của anh.' Nhận luôn",
+            "en": "'Yes, mine.' Take it"
+          },
+          "outcome": {
+            "vi": "Hai suất bún chả không mất tiền. Ở ngõ bên, một anh Minh khác gọi tổng đài.",
+            "en": "Two free bún chả. In the next alley, another Minh is calling the hotline."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": -2
+            },
+            "heat": 0.5,
+            "items": [
+              "items:bun_cha",
+              "items:bun_cha"
+            ]
+          }
+        },
+        {
+          "id": "chi_dung",
+          "text": {
+            "vi": "'Nhầm rồi em, anh Minh kia ở ngõ 12'",
+            "en": "'Wrong one, the Minh you want is in alley 12'"
+          },
+          "outcome": {
+            "vi": "Cậu ta thở phào, biếu bạn chai trà chanh trong túi.",
+            "en": "He exhales and gives you the lemon tea from the bag."
+          },
+          "effect": {
+            "reputation": {
+              "cong_dong_tai_xe_vo": 1
+            },
+            "items": [
+              "items:tra_chanh"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

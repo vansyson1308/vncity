@@ -1,0 +1,332 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "random_events.schema.json",
+  "title": "Random street events",
+  "description": "Unscripted things that happen on the street between missions (GTA V's random events, Strangers and Freaks without a giver): a stalled bike, an old lady who cannot cross, a wedding blocking the lane. The runtime rolls `spawn.chance_per_game_hour` for events whose spawn filters match the player's district, road, hour, weather and active calendar events, respecting `cooldown_days`; the player may ignore the event (ignore_effect) or pick one of `choices`. Every NPC in an event acts from a motive (`motive`, Khổ-Tập of docs/gdd/08-nhan-qua.md §1) so the event is a person, not a prop.",
+  "x-collection": "random_events",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "collection": {
+      "const": "random_events"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "spawn",
+          "motive",
+          "choices"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/text",
+            "description": "What the player sees before deciding."
+          },
+          "kind": {
+            "description": "giup_nguoi = someone needs a hand; giao_thong = the road itself; hiem_hoa = danger to the player; co_hoi = money or a contact; van_hoa = a slice of Hanoi life to watch or join; kinh_te = a trade on the spot.",
+            "enum": [
+              "giup_nguoi",
+              "giao_thong",
+              "hiem_hoa",
+              "co_hoi",
+              "van_hoa",
+              "kinh_te"
+            ]
+          },
+          "npc": {
+            "$ref": "common.schema.json#/$defs/ref",
+            "description": "characters:<ambient archetype or story character> at the centre of the event."
+          },
+          "motive": {
+            "description": "Why the NPC does what they do (Khổ: what hurts; Tập: what they cling to). One line each, Vietnamese.",
+            "type": "object",
+            "required": [
+              "kho",
+              "tap"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kho": {
+                "type": "string"
+              },
+              "tap": {
+                "type": "string"
+              }
+            }
+          },
+          "spawn": {
+            "type": "object",
+            "required": [
+              "chance_per_game_hour"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "districts": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                },
+                "description": "districts:<id> where it can happen; empty = anywhere."
+              },
+              "landmarks": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                },
+                "description": "Within ~150 m of one of these landmarks."
+              },
+              "road_types": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "ngo",
+                    "pho",
+                    "duong_lon",
+                    "de",
+                    "cau",
+                    "via_he",
+                    "cho",
+                    "ben_xe"
+                  ]
+                }
+              },
+              "hours": {
+                "$ref": "common.schema.json#/$defs/hour_range"
+              },
+              "weather": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "clear",
+                    "cloudy",
+                    "rain",
+                    "storm",
+                    "fog",
+                    "drizzle",
+                    "hot",
+                    "cold"
+                  ]
+                }
+              },
+              "events_active": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              },
+              "protagonist": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              },
+              "on_vehicle": {
+                "type": "boolean",
+                "description": "true = only while riding; false = only on foot; absent = either."
+              },
+              "chance_per_game_hour": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "cooldown_days": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Game days before the same event can roll again."
+              },
+              "max_per_playthrough": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "requires": {
+            "$ref": "common.schema.json#/$defs/condition",
+            "description": "Player state needed (flags, reputation, missions)."
+          },
+          "duration_s": {
+            "type": "number",
+            "description": "Real seconds the event stays available before it resolves on its own."
+          },
+          "ignore_effect": {
+            "description": "Applied when the player rides past or lets duration_s run out. Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "money_vnd": {
+                "type": "integer"
+              },
+              "reputation": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                }
+              },
+              "heat": {
+                "type": "number"
+              },
+              "fine": {
+                "$ref": "common.schema.json#/$defs/ref"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              },
+              "skills": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Skills trained by this choice (characters/*.json skill ids)."
+              },
+              "time_min": {
+                "type": "integer",
+                "description": "Game minutes the choice costs."
+              },
+              "note": {
+                "type": "string",
+                "description": "Designer note on the longer consequence (e.g. the NPC remembers you)."
+              }
+            }
+          },
+          "choices": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "text",
+                "effect"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "text": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "outcome": {
+                  "$ref": "common.schema.json#/$defs/text",
+                  "description": "What the player sees after choosing."
+                },
+                "minigame": {
+                  "$ref": "common.schema.json#/$defs/ref",
+                  "description": "activities:<id> played to resolve this choice; chua_dat applies fail_effect."
+                },
+                "effect": {
+                  "description": "Applied when the choice is taken (or the minigame is passed). Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids.",
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "money_vnd": {
+                      "type": "integer"
+                    },
+                    "reputation": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "integer"
+                      }
+                    },
+                    "heat": {
+                      "type": "number"
+                    },
+                    "fine": {
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "common.schema.json#/$defs/ref"
+                      }
+                    },
+                    "skills": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Skills trained by this choice (characters/*.json skill ids)."
+                    },
+                    "time_min": {
+                      "type": "integer",
+                      "description": "Game minutes the choice costs."
+                    },
+                    "note": {
+                      "type": "string",
+                      "description": "Designer note on the longer consequence (e.g. the NPC remembers you)."
+                    }
+                  }
+                },
+                "fail_effect": {
+                  "description": "Applied instead of effect when the minigame ends chua_dat. Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids.",
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "money_vnd": {
+                      "type": "integer"
+                    },
+                    "reputation": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "integer"
+                      }
+                    },
+                    "heat": {
+                      "type": "number"
+                    },
+                    "fine": {
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "common.schema.json#/$defs/ref"
+                      }
+                    },
+                    "skills": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Skills trained by this choice (characters/*.json skill ids)."
+                    },
+                    "time_min": {
+                      "type": "integer",
+                      "description": "Game minutes the choice costs."
+                    },
+                    "note": {
+                      "type": "string",
+                      "description": "Designer note on the longer consequence (e.g. the NPC remembers you)."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

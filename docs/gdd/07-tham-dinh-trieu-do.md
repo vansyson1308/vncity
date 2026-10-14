@@ -86,9 +86,9 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 
 ## Có cuốn hút (giữ người chơi) không?
 
-- Vòng ngày của ba nghề là tốt, nhưng **không có sự kiện ngẫu nhiên trên phố** (GTA5 có ~57). Đây là
-  thứ làm thế giới sống giữa các nhiệm vụ; hiện 0. Danh sách 40 sự kiện đã có ở `04-danh-sach-noi-dung.md`
-  nhưng chưa thành dữ liệu.
+- Vòng ngày của ba nghề là tốt, nhưng lúc thẩm định **không có sự kiện ngẫu nhiên trên phố** (GTA5 có
+  ~57), thứ làm thế giới sống giữa các nhiệm vụ. **Đã sửa:** 45 sự kiện trong `random_events.json`,
+  mỗi sự kiện là một người có Khổ-Tập và một ngã rẽ có hậu quả đo được (02 §7.1).
 - Hệ kỹ năng 0-100 và uy tín phe phái có, nhưng chưa có thứ gì *mở khóa* bằng kỹ năng (ví dụ
   `thuoc_duong` 60 mở đường tắt, `nau_an` 70 mở món mới). Tiến trình phải nhìn thấy được.
 - Sưu tầm (120 ảnh xưa, 40 tem phiếu, 60 biển hiệu) là lý do tốt để đi khắp 12 quận; chỉ mới đặt
@@ -124,7 +124,7 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 | Logic dữ liệu | 5 | 5 | 0 lỗi chặn chơi |
 | Nhịp chơi | 3 | 4 | 45% thoại, nhiệm vụ 4 phút |
 | Kinh tế | 2 → **4** | 4 | Lúc thẩm định: Minh lỗ hàng tháng, mục tiêu 120 tr không bao giờ tới. Sau khi sửa: lỗ nếu chỉ chạy app (chủ ý), dư 5,8 tr nếu đi đủ bậc, góp vốn 40 tr sau 7 tháng game (01, 06) |
-| Thế giới sống | 2 → **3** | 4 | 0 sự kiện ngẫu nhiên; 6 quận trống đã có người, có khổ, có 3-4 nhiệm vụ mỗi quận (12); còn thiếu sự kiện ngẫu nhiên để lên 4 |
+| Thế giới sống | 2 → **4** | 4 | Lúc thẩm định: 0 sự kiện ngẫu nhiên, 6 quận trống. Sau khi sửa: 45 sự kiện ngẫu nhiên có Khổ-Tập, 122 lựa chọn, mỗi quận ≥ 20 sự kiện có thể nổ (02 §7.1); 14/14 quận có nhiệm vụ (12) |
 | Độc đáo / dễ kể cho báo chí | 5 | 5 | "Hà Nội thật, không bắn súng, ký ức như dữ liệu" |
 | Khả thi thương mại | 2 | 3 | Cần lát cắt dọc trước khi nói tiếp |
 
@@ -158,7 +158,9 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
    **Đã làm, theo yêu cầu "làm nốt 8 quận" của chủ dự án:** 26 nhiệm vụ người lạ, 15 nhân vật có
    Khổ-Tập-Diệt-Đạo, 44 cờ lựa chọn đều được đọc lại, kết ở đêm khai mạc Bảo tàng Hà Nội
    (`12-ho-so-quan.md`). Long Biên đã có s05, s06 và chương 2 (cầu Long Biên, ga Long Biên).
-7. 40 sự kiện ngẫu nhiên thành collection `random_events` (schema mới).
+7. ~~40 sự kiện ngẫu nhiên thành collection `random_events` (schema mới).~~ **Đã làm:** 45 sự kiện,
+   6 loại, 122 lựa chọn không trùng hậu quả, 43 NPC có Khổ-Tập, 9 lựa chọn qua minigame, 5 lựa chọn
+   dẫn tới phạt theo Nghị định 168; chuẩn ghim trong tests/test_random_events.py (02 §7.1).
 8. Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).
 9. Đường thứ hai tới nội dung băng 24 không qua sưu tầm.
 10. Kỹ năng mở khóa thứ nhìn thấy được (3 mốc mỗi kỹ năng).

@@ -28,6 +28,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | radio | `radio.json` | 7 | Nhạc gốc hoặc chờ cấp phép |
 | factions | `factions.json` | 10 | |
 | traffic_rules | `traffic_rules.json` | 15 | Nghị định 168/2024/NĐ-CP; 11 mục gắn `fine_unverified` |
+| random_events | `random_events.json` | 45 | Sự kiện ngẫu nhiên trên phố, 6 loại, 122 lựa chọn, mỗi NPC có Khổ-Tập (02 §7.1) |
 
 ## So với quy mô GTA5
 
@@ -35,7 +36,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | --- | --- | --- | --- |
 | Nhiệm vụ cốt truyện | ~69 | 12 | Chương 2-5: ~55 nhiệm vụ, 3 kết |
 | Nhiệm vụ phụ / người lạ | ~60 "Strangers and Freaks" | 40 | ~20; 8 quận ngoài phố cổ đã có 3-4 mỗi quận, còn phố cổ, Hoàn Kiếm, Ba Đình, Đống Đa, Tây Hồ, Long Biên mới có 1-3 |
-| Sự kiện ngẫu nhiên trên phố | ~57 | 0 (chỉ có sự kiện lịch) | Hệ thống + 40 sự kiện: xe chết máy giữa đường, bà cụ cần qua đường, khách quên điện thoại trên xe, cây đổ sau bão, đám cưới chắn đường, đám tang... |
+| Sự kiện ngẫu nhiên trên phố | ~57 | 45 (`random_events.json`) | Runtime `UHanoiRandomEventSubsystem` chưa viết; thêm ~12 mục cho Gia Lâm, Bắc Từ Liêm, Hoàng Mai (mới 20-23 mục mỗi quận) |
 | Hoạt động / minigame | ~40 | 24 | Bi-a, cầu lông công viên, cắt tóc vỉa hè, xem bói (hài, nhẹ), ô ăn quan, kéo co phố đi bộ, câu cá Hồ Tây, gói bánh chưng ngày Tết, nặn gốm Bát Tràng, quay phim Tóp Tóp |
 | Phương tiện | ~250+ | 26 | Biến thể màu, Cúp độ, Win 100 (xe phượt), xe điện du lịch phố cổ, xe đẩy hàng, xe cứu thương, xe cứu hỏa, xe rác, xe chở cây Tết, xe tải cẩu xe vi phạm, tàu metro tuyến 3 Nhổn - ga Hà Nội |
 | Đài radio | ~20 | 7 | Đài tiếng Anh cho khách nước ngoài, đài thể thao bóng đá, playlist thật cho từng đài |
@@ -87,7 +88,7 @@ Trạng thái: 3, 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem t
 7. **condition** thêm `max_heat`, `event_active`, `weekday`, `items_owned` (nhiều nhiệm vụ cần).
 8. **reward.cost_vnd**: lựa chọn thoại hiện chỉ cộng tiền (`money_vnd` ≥ 0); 11 lựa chọn mua bán ở
    `side_districts.json` (lụa, rau, bát, tiền trọ, hủy cuốc) cần trừ tiền người chơi (`12-ho-so-quan.md` §12).
-8. **collection mới**: `interiors`, `random_events`, `collectibles` (từng món: ảnh xưa với
+8. **collection mới**: `interiors`, ~~`random_events`~~ (đã có), `collectibles` (từng món: ảnh xưa với
    `archive_frame`, vị trí, giờ, mùa), `shops`, `phone_contacts`.
 9. **activities.pay** thêm `commission_rate` (app ăn chiết khấu) và `currency_note`.
 10. **characters.voice** thêm `dialect_region` chi tiết hơn (`thai_binh`, `nam_dinh`, `phu_tho`,
