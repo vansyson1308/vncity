@@ -1,0 +1,628 @@
+{
+  "collection": "missions",
+  "items": [
+    {
+      "id": "c5_01_quyet_dinh_cua_khoi",
+      "tags": [
+        "chapter_5",
+        "khoi",
+        "pho_co",
+        "hoan_kiem",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Phần của ông Khiêm"
+      },
+      "type": "story",
+      "chapter": 5,
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "Sáng đầu tiên trời trở lạnh. Khôi cầm giấy chứng nhận phần nhà của bố và cuộn băng, hay lời kể, có cái tên đã cháy. Theo luật phần ấy là của anh. Theo lời ông nội, nó là của người khác. Những cửa còn mở cho Khôi là những cửa anh đã tự mở hoặc tự đóng trong cả năm."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c4_07_muoi_thang_muoi"
+        ],
+        "flags": [
+          "ket_thuc_chuong_4"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "sang_lanh",
+          "kind": "talk",
+          "objective": {
+            "vi": "Sáu giờ sáng. Gió mùa về đêm qua. Sân thượng, hơi thở thành khói"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c5_01_sang_lanh",
+          "params": {
+            "time_of_day": 6.0
+          },
+          "next": "anh_dau_mua"
+        },
+        {
+          "id": "anh_dau_mua",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp phố Hàng Chiếu sáng đầu mùa lạnh từ sân thượng, đúng khung ông Khải chụp năm 1990: mái ngói, khói bếp, người đầu tiên mặc áo bông"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "match_threshold": 0.9,
+            "difficulty": 5,
+            "hours": [
+              6,
+              8
+            ],
+            "time_of_day": 6.5
+          },
+          "next": {
+            "dat": "cong_chung",
+            "chua_dat": "lo_nang",
+            "default": "lo_nang"
+          }
+        },
+        {
+          "id": "lo_nang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nắng lên, sương tan, khói bếp tắt"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c5_01_lo_nang",
+          "next": "cho_sang_mai"
+        },
+        {
+          "id": "cho_sang_mai",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Gió mùa còn ba ngày. Chờ sáng mai"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "until_hour": 6.0,
+            "hour": 6.0,
+            "skip_allowed": true
+          },
+          "next": "anh_dau_mua"
+        },
+        {
+          "id": "cong_chung",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đi bộ ra văn phòng công chứng phố Hàng Bài, qua bờ hồ"
+          },
+          "target": {
+            "lat": 21.0225,
+            "lon": 105.8525
+          },
+          "params": {
+            "on_foot": true,
+            "time_of_day": 8.5
+          },
+          "next": "quyet"
+        },
+        {
+          "id": "quyet",
+          "kind": "talk",
+          "objective": {
+            "vi": "Công chứng viên đẩy tờ khai sang. Phần nhà của ông Khiêm"
+          },
+          "target": {
+            "lat": 21.0225,
+            "lon": 105.8525
+          },
+          "dialogue": "dialogues:dlg_c5_01_quyet"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "to_dan_pho_hang_chieu": 5
+        }
+      },
+      "unlocks": [
+        "missions:c5_03_ngay_ky"
+      ]
+    },
+    {
+      "id": "c5_02_tiem_cua_minh",
+      "tags": [
+        "chapter_5",
+        "minh",
+        "thanh_xuan",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Tiệm của Minh"
+      },
+      "type": "story",
+      "chapter": 5,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:anh_duc_sua_xe",
+      "summary": {
+        "vi": "Anh Đức chốt ngày về Hưng Yên trồng nhãn. Tiệm đầu ngõ Khương Đình cần người sang lại trước Tết. Minh có những gì một năm cho anh có, và nợ những gì một năm bắt anh nợ. Trước khi nói chuyện tiền, anh Đức bắt Minh sửa một con xe."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c4_07_muoi_thang_muoi"
+        ]
+      },
+      "start": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "steps": [
+        {
+          "id": "sang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Sáng lạnh. Phòng trọ còn một giường"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_c5_02_sang",
+          "params": {
+            "time_of_day": 6.5
+          },
+          "next": "tiem"
+        },
+        {
+          "id": "tiem",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Ra tiệm anh Đức. Cửa cuốn đã dán tờ \"Sang nhượng\""
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "params": {
+            "on_foot": true
+          },
+          "next": "sua_xe"
+        },
+        {
+          "id": "sua_xe",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Con Sóng 2012 chết máy giữa ngõ: nghe tiếng, tìm bệnh, sửa trong bốn mươi phút, anh Đức đứng xem không nói"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "params": {
+            "activity": "activities:act_sua_xe_may",
+            "pass_score": 90,
+            "difficulty": 5,
+            "time_limit_s": 240,
+            "max_faults": 1,
+            "grader": "characters:anh_duc_sua_xe"
+          },
+          "next": {
+            "dat": "noi_chuyen",
+            "chua_dat": "chua_du_tay",
+            "default": "chua_du_tay"
+          }
+        },
+        {
+          "id": "chua_du_tay",
+          "kind": "talk",
+          "objective": {
+            "vi": "Anh Đức nổ máy lại sau ba phút"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "dialogue": "dialogues:dlg_c5_02_chua_du_tay",
+          "next": "sua_lai"
+        },
+        {
+          "id": "sua_lai",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Mai bảy giờ, con xe khác"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "params": {
+            "until_hour": 7.0,
+            "hour": 7.0,
+            "skip_allowed": true
+          },
+          "next": "sua_xe"
+        },
+        {
+          "id": "noi_chuyen",
+          "kind": "talk",
+          "objective": {
+            "vi": "Anh Đức pha ấm chè, đặt chùm chìa khóa lên bàn"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "dialogue": "dialogues:dlg_c5_02_quyet"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "cong_dong_tai_xe_vo": 5,
+          "hoi_xe_om_o_quan_chuong": 5
+        }
+      },
+      "unlocks": [
+        "missions:c5_03_ngay_ky"
+      ]
+    },
+    {
+      "id": "c5_03_ngay_ky",
+      "tags": [
+        "chapter_5",
+        "lan",
+        "pho_co",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Ngày ký"
+      },
+      "type": "story",
+      "chapter": 5,
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:ong_khang",
+      "summary": {
+        "vi": "Giữa tháng Mười Một, ngày các hộ Hàng Chiếu ký giấy tờ theo kết quả đêm 10/10. Không có kết thúc nào là thắng trắng. Phố giữ được bao nhiêu tùy phiếu bầu, phần của cô Hạnh, quyết định của Khôi và việc Vĩnh có đổi hướng hay không."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c5_01_quyet_dinh_cua_khoi",
+          "missions:c5_02_tiem_cua_minh"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "sang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tám giờ. Nhà văn hóa tổ 5 kê bàn dài, trải khăn"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c5_03_sang",
+          "params": {
+            "time_of_day": 8.0
+          },
+          "next": "e1"
+        },
+        {
+          "id": "e1",
+          "kind": "choice",
+          "objective": {
+            "vi": "Đêm 10/10 phố đã chọn gì?"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "bo_phieu_tu_quan": "e2",
+            "bo_phieu_chia": "e_hoa",
+            "default": "ket_c"
+          }
+        },
+        {
+          "id": "e2",
+          "kind": "choice",
+          "objective": {
+            "vi": "Phần của ông Khiêm về tay ai?"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "khoi_ban_kim_long": "ket_b",
+            "default": "ket_a"
+          }
+        },
+        {
+          "id": "e_hoa",
+          "kind": "choice",
+          "objective": {
+            "vi": "Kim Long đến bàn với tư cách gì?"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "vinh_doi_huong": "ket_b",
+            "default": "ket_c"
+          }
+        },
+        {
+          "id": "ket_a",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hai mươi chữ ký trên một tờ"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c5_03_tu_quan",
+          "set_flags": [
+            "ket_tu_quan"
+          ],
+          "next": "end"
+        },
+        {
+          "id": "ket_b",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hai cái bàn kê sát nhau"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c5_03_thoa_hiep",
+          "set_flags": [
+            "ket_thoa_hiep"
+          ],
+          "next": "end"
+        },
+        {
+          "id": "ket_c",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bàn của Kim Long dài hơn bàn của tổ"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c5_03_ban",
+          "set_flags": [
+            "ket_ban"
+          ]
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "to_dan_pho_hang_chieu": 5
+        }
+      },
+      "unlocks": [
+        "missions:c5_04_bat_pho_cuoi_cung"
+      ]
+    },
+    {
+      "id": "c5_04_bat_pho_cuoi_cung",
+      "tags": [
+        "chapter_5",
+        "set_piece",
+        "pho_co",
+        "lan",
+        "minh",
+        "khoi"
+      ],
+      "name": {
+        "vi": "Bát phở cuối cùng"
+      },
+      "type": "story",
+      "chapter": 5,
+      "protagonists": [
+        "characters:lan",
+        "characters:minh",
+        "characters:khoi"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "Bốn giờ sáng hôm sau. Cụ Thọ ngồi ghế mây cạnh nồi, lần đầu tiên không nếm. Lan nấu nồi đầu tiên của mùa lạnh một mình, Minh đi đón người khách đầu tiên, Khôi chụp tấm ảnh cuối cùng của câu chuyện. Phố ngoài kia là phố mà ba người đã chọn."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c5_03_ngay_ky"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "bon_gio",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Lan: 4 giờ sáng. Ông ngồi ghế mây, tay đặt lên đầu gối"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c5_04_bon_gio",
+          "params": {
+            "time_of_day": 4.0,
+            "protagonist": "characters:lan",
+            "minimap": false
+          },
+          "next": "nau"
+        },
+        {
+          "id": "nau",
+          "kind": "cook",
+          "objective": {
+            "vi": "Nồi đầu mùa lạnh: xương ống chần hai lần, gừng hành nướng cháy vỏ, quế hồi sao khô, lửa liu riu đến sáu giờ. Ông không nếm"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "recipe": "pho_bo_tai",
+            "servings": 60,
+            "pass_score": 90,
+            "time_limit_s": 360,
+            "max_faults": 1,
+            "activity": "activities:act_nau_pho"
+          },
+          "next": {
+            "dat": "don_khach",
+            "chua_dat": "ong_nem",
+            "default": "ong_nem"
+          }
+        },
+        {
+          "id": "ong_nem",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông với lấy thìa"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c5_04_ong_nem",
+          "next": "nau"
+        },
+        {
+          "id": "don_khach",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Minh: đón ông Thắng ở Ô Quan Chưởng, người khách đầu tiên của sáng nay"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "passenger": "characters:ong_thang",
+            "helmet_for_passenger": true,
+            "protagonist": "characters:minh",
+            "route_via": "landmarks:o_quan_chuong",
+            "comfort_weight": 0.6,
+            "time_limit_s": 240,
+            "max_faults": 1,
+            "time_of_day": 5.0
+          },
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ],
+          "next": "anh_cuoi"
+        },
+        {
+          "id": "anh_cuoi",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Khôi: quán Phở Thọ lúc sáu giờ, hơi nồi, ông ngồi ghế mây, khách đầu tiên, trong một khung như ông Khải chụp năm 1975"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "match_threshold": 0.9,
+            "difficulty": 5,
+            "hours": [
+              5.5,
+              7
+            ],
+            "protagonist": "characters:khoi",
+            "time_of_day": 6.0
+          },
+          "next": {
+            "dat": "bat_cuoi",
+            "chua_dat": "anh_nhoe",
+            "default": "anh_nhoe"
+          }
+        },
+        {
+          "id": "anh_nhoe",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hơi nồi phủ ống kính. Ảnh nhòe"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c5_04_anh_nhoe",
+          "next": "bat_cuoi"
+        },
+        {
+          "id": "bat_cuoi",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Bát phở đầu tiên của mùa lạnh"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c5_04_bat_cuoi",
+          "params": {
+            "time_of_day": 6.2,
+            "minimap": false,
+            "chapter_end": 5
+          }
+        }
+      ],
+      "reward": {
+        "set_flags": [
+          "ket_thuc_chuong_5"
+        ],
+        "reputation": {
+          "to_dan_pho_hang_chieu": 10,
+          "hoi_nguoi_cao_tuoi_phuong": 10
+        }
+      }
+    }
+  ]
+}

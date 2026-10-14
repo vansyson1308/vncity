@@ -166,9 +166,10 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 8. ~~Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).~~
     **Đã làm:** `collectibles.json` 220 món (120 ảnh, 40 tem phiếu, 60 biển hiệu), tọa độ từ landmarks hoặc
     trọng tâm phố trong đồ thị đường Overture/OSM, 14/14 quận có ảnh; tests/test_collectibles.py (02 §11).
-9. ~~Đường thứ hai tới nội dung băng 24 không qua sưu tầm.~~ **Đã thiết kế** (02 §11): băng 24 mở khi đủ
-    30 ảnh ở chương 3 *hoặc* ông Thắng kể ở chương 4 với giá cảm xúc (cờ `khoi_nghe_thang_ke_het`); viết
-    thành nhiệm vụ khi làm chương 3-4.
+9. ~~Đường thứ hai tới nội dung băng 24 không qua sưu tầm.~~ **Đã làm** (02 §11, `13-chuong-3-5.md`):
+    băng 24 là băng của truyện ở `c4_05_bang_24`, mở bằng giọng ông Khải nếu đêm nước lên Khôi cứu hộp
+    băng, hoặc bằng lời ông Thắng nếu Khôi cứu phim (cờ `khoi_nghe_thang_ke_het`). Chương 3-5 đã viết
+    thành dữ liệu: 19 nhiệm vụ, 88 đoạn thoại, ba kết ngang hàng.
 10. ~~Kỹ năng mở khóa thứ nhìn thấy được (3 mốc mỗi kỹ năng).~~ **Đã làm:** `skills.json` 12 kỹ năng x 3 mốc,
     `min_skills` trong điều kiện chung (C++ `EvaluateCondition`, playtest, validator), 25 cổng trong nội
     dung, chuẩn ghim trong tests/test_skill_unlocks.py (02 §10).

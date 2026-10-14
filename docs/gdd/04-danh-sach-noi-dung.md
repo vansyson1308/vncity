@@ -13,15 +13,17 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | building_archetypes | `world/building_archetypes.json` | 13 | Đúng 13 id pipeline dùng |
 | landmarks | `world/landmarks.json` | 84 | 36 mục `coords_verified_overture` (khớp Overture trong 300 m), 48 mục còn `coords_unverified` (phần lớn là hồ, cầu, phố, công viên: giữ mốc tay) |
 | characters | `characters/protagonists.json` | 3 | Minh, Lan, Khôi |
-| characters | `characters/story.json` | 49 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio; cụ Thọ 1957 (điều khiển được trong cold open), ông Khiêm, bà Thọ, ông Tư Hàng Bạc; 15 người của tám quận (`12-ho-so-quan.md`). Mọi nhân vật có khối `drive` Khổ-Tập-Diệt-Đạo (test bắt buộc) |
+| characters | `characters/story.json` | 54 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio; cụ Thọ 1957 (điều khiển được trong cold open), ông Khiêm, bà Thọ, ông Tư Hàng Bạc; 15 người của tám quận (`12-ho-so-quan.md`); 5 người của chương 3-5: anh Tùng, bà Liên, ông Bảy, bác sĩ Hòa, mẹ Tuấn (`13-chuong-3-5.md`). Mọi nhân vật có khối `drive` Khổ-Tập-Diệt-Đạo (test bắt buộc) |
 | characters | `characters/ambient.json` | 21 | Kiểu dân cư có lịch sinh hoạt; loa phường |
 | vehicles | `vehicles.json` | 26 | Tên parody, model thật chỉ ở `inspired_by` |
 | activities | `activities.json` | 24 | Việc làm, minigame, giải trí, sưu tầm, đua hợp pháp, kinh doanh |
 | missions | `missions/story_prologue.json` | 4 | Cold open 1957/1972 + mở đầu (chương 0) |
 | missions | `missions/story_chapter1.json` | 9 | Chương 1 |
+| missions | `missions/story_chapter2.json`, `side_chapter2.json` | 8 + 2 | Chương 2 "Mùa nồm" (`11-mo-man-va-he-qua.md`) |
+| missions | `missions/story_chapter3.json`, `story_chapter4.json`, `story_chapter5.json` | 8 + 7 + 4 | Chương 3 "Nước lên", 4 "10/10", 5 "Bát phở cuối cùng", ba kết (`13-chuong-3-5.md`) |
 | missions | `missions/side_stranger.json` | 12 | Phụ và người lạ (s02, s10 có nhánh thua) |
 | missions | `missions/side_districts.json` | 26 | 3-4 nhiệm vụ mỗi quận cho 8 quận ngoài phố cổ, kết ở đêm khai mạc Bảo tàng Hà Nội (`12-ho-so-quan.md`) |
-| dialogues | `dialogues/prologue.json`, `chapter1.json`, `chapter2.json`, `side.json`, `side_districts.json` | 157 (1.084 dòng) | Có bản `en` cho mọi dòng; 129 dòng chỉ một phần người chơi thấy (`lines[].condition`), xem `11-mo-man-va-he-qua.md` |
+| dialogues | `dialogues/prologue.json`, `chapter1.json` ... `chapter5.json`, `side.json`, `side_districts.json` | 248 (1.726 dòng) | Có bản `en` đến hết chương 1; chương 2-5 chỉ có tiếng Việt; 429 dòng chỉ một phần người chơi thấy (`lines[].condition`), xem `11-mo-man-va-he-qua.md`, `13-chuong-3-5.md` |
 | items | `items.json` | 52 | Đồ ăn, đồ dùng, 12 app điện thoại, giấy tờ, sưu tầm, vật phẩm nhiệm vụ (`la_dong`, `dieu_cua_be`) |
 | businesses | `businesses.json` | 11 | Đủ 10 loại hình |
 | events | `events.json` | 20 | Lịch âm, lịch dương, tuần, dữ liệu sống |
@@ -36,7 +38,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 
 | Hạng mục | GTA5 (ước tính công khai) | Hanoi City v0 | Còn thiếu |
 | --- | --- | --- | --- |
-| Nhiệm vụ cốt truyện | ~69 | 12 | Chương 2-5: ~55 nhiệm vụ, 3 kết |
+| Nhiệm vụ cốt truyện | ~69 | 40 | Đủ 5 chương và 3 kết; còn thiếu chiều dài (GTA5 có ~69) |
 | Nhiệm vụ phụ / người lạ | ~60 "Strangers and Freaks" | 40 | ~20; 8 quận ngoài phố cổ đã có 3-4 mỗi quận, còn phố cổ, Hoàn Kiếm, Ba Đình, Đống Đa, Tây Hồ, Long Biên mới có 1-3 |
 | Sự kiện ngẫu nhiên trên phố | ~57 | 45 (`random_events.json`) | Runtime `UHanoiRandomEventSubsystem` chưa viết; thêm ~12 mục cho Gia Lâm, Bắc Từ Liêm, Hoàng Mai (mới 20-23 mục mỗi quận) |
 | Hoạt động / minigame | ~40 | 24 | Bi-a, cầu lông công viên, cắt tóc vỉa hè, xem bói (hài, nhẹ), ô ăn quan, kéo co phố đi bộ, câu cá Hồ Tây, gói bánh chưng ngày Tết, nặn gốm Bát Tràng, quay phim Tóp Tóp |

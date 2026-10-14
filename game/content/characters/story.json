@@ -747,6 +747,176 @@
     {"id": "chu_sau_thoat_nuoc", "tags": ["worker", "thanh_xuan", "side_arc"], "name": {"vi": "Chú Sáu (công nhân thoát nước Tô Lịch)", "en": "Sáu (Tô Lịch drainage worker)"}, "role": "contact", "drive": {"kho": {"vi": "Ba mươi năm dưới lòng sông thối, da tay bong, người đi trên đường bịt mũi nhìn xuống; con gái xấu hổ vì nghề bố."}, "tap": {"vi": "Tin rằng làm việc thối mà nên người thì đừng để ai thấy mặt; bám vào cái khẩu trang và bóng tối ca đêm."}, "diet": {"vi": "Sông sạch, có người nói 'cảm ơn tổ nạo vét' mà không cần biết tên, con gái không phải giấu nghề bố."}, "dao": {"vi": "Làm đêm cho kịp hạn, kéo khẩu trang lên khi có máy ảnh, kể về con sông cho người chịu đứng gần mùi."}, "tell": "Kéo khẩu trang xuống cằm khi tin ai đó; chỉ xuống sông bằng cằm, không bằng tay."}, "age": 55, "gender": "male", "bio": {"vi": "Công nhân Công ty Thoát nước ba mươi năm, tổ nạo vét sông Tô Lịch đoạn Khương Đình. Mùa hè 2025 cả tổ làm đêm để kịp hạn nạo vét trước tháng Chín, trước khi bổ cập nước sông Hồng. Da tay bong vì nước thải. Con gái dặn 'bố đừng cho ai chụp mặt'.", "en": "Thirty years with the Drainage Company, on the dredging crew for the Khương Đình stretch of the Tô Lịch river. Summer 2025 the whole crew worked nights to finish dredging before September, before Red River water is let in. Skin on his hands peels from the sewage. His daughter told him 'don't let anyone photograph your face'."}, "home": {"lat": 20.993, "lon": 105.812}, "district": "districts:thanh_xuan", "occupation": {"vi": "Công nhân thoát nước", "en": "Drainage worker"}, "personality": ["chat_phac", "cham_chi", "tu_ai"], "voice": {"accent": "northern_rural", "notes": "Giọng Thường Tín, nói 'dưới ấy' là lòng sông, 'trên ấy' là mặt đường; đùa cộc, cười bằng mũi."}, "appearance": {"outfit": "Quần áo bảo hộ cam, ủng cao su đến đùi, găng dày, khẩu trang hai lớp kéo xuống cằm khi nói."}, "schedule": [{"hours": [21, 5], "activity": "nao_vet_dem_to_lich", "location": {"lat": 20.993, "lon": 105.812}}, {"hours": [8, 11], "activity": "ngu_lan_trai", "location": {"lat": 20.9935, "lon": 105.8125}}]},
     {"id": "chu_hoa_xe_om_my_dinh", "tags": ["xe_om", "my_dinh", "side_arc"], "name": {"vi": "Chú Hòa (xe ôm bến Mỹ Đình)", "en": "Hòa (xe ôm, Mỹ Đình coach station)"}, "role": "contact", "drive": {"kho": {"vi": "Khách tỉnh xuống bến năm giờ sáng bị cò vây, sợ cả xe ôm áo vàng; app lấy khách trẻ, cò lấy khách già, tổ còn khách nào."}, "tap": {"vi": "Tin rằng bến này còn trật tự là nhờ tổ áo vàng; bám vào vai 'người giữ bến' như một cái tên."}, "diet": {"vi": "Người xuống bến không sợ, cứ hỏi áo vàng là có giá đúng; tổ còn đứng được đến khi chú nghỉ."}, "dao": {"vi": "Quát cò, chỉ giá công khai, thử lòng xe ôm công nghệ nào dám đứng cạnh, nhớ ai từng nhường cuốc ở bến khác."}, "tell": "Hô giá trước khi khách hỏi; nhìn biển số xe người lạ trước khi nhìn mặt."}, "age": 58, "gender": "male", "bio": {"vi": "Tổ trưởng tổ xe ôm tự quản cổng bến xe Mỹ Đình, mười tám người mặc áo vàng có số. Bạn chạy xe với ông Lương Yên Nghĩa từ bến Kim Mã cũ. Ghét cò xe hơn ghét app, vì cò làm khách tỉnh về sợ cả bến. Cháu ở Lào Cai cũng xuống bến này đi làm.", "en": "Leader of the self-managed xe ôm team at the Mỹ Đình coach station gate, eighteen men in numbered yellow vests. Rode with Lương of Yên Nghĩa back at the old Kim Mã station. Hates touts more than apps, because touts make provincial arrivals fear the whole station. His own nephew from Lào Cai comes through this station for work."}, "home": {"lat": 21.0285, "lon": 105.776}, "district": "districts:my_dinh", "occupation": {"vi": "Xe ôm bến xe", "en": "Coach-station xe ôm"}, "personality": ["nghia_khi", "nong_tinh", "cong_bang"], "voice": {"accent": "hanoi", "notes": "Giọng Hà Nội ngoại thành, hô to 'khách Lào Cai xuống!', xưng 'chú' với mọi người dưới bốn mươi; nói về cò bằng từ 'bọn'."}, "appearance": {"outfit": "Áo gi-lê vàng số 01, mũ bảo hiểm nửa đầu có dán tên, còi cổ, Wave Alpha biển 29."}, "schedule": [{"hours": [4, 9], "activity": "don_xe_dem_ben_my_dinh", "location": {"lat": 21.0285, "lon": 105.776}}, {"hours": [16, 21], "activity": "don_xe_chieu", "location": {"lat": 21.0285, "lon": 105.776}}], "relationships": [{"with": "characters:ong_luong_xe_om_yen_nghia", "kind": "ban_chay_xe"}]},
     {"id": "dung_lao_cai", "tags": ["migrant", "my_dinh", "side_arc"], "name": {"vi": "Dũng (thợ xây từ Lào Cai)", "en": "Dũng (builder from Lào Cai)"}, "role": "contact", "drive": {"kho": {"vi": "Lần đầu xuống Hà Nội, bị cò vây, không biết ai thật; đi làm thợ xây gửi tiền về cho mẹ, sợ bị quỵt như người làng."}, "tap": {"vi": "Tin rằng ai nói chậm với mình là người tốt; bám vào đội tuyển như một thứ quê hương chung với người Hà Nội."}, "diet": {"vi": "Có một người ở Hà Nội mình gọi được khi gặp chuyện, và một lần đứng trong sân Mỹ Đình."}, "dao": {"vi": "Hỏi đường thật thà, nhớ ơn lâu, đi theo người tử tế, không đòi hỏi; rủ người ta đi xem bóng như trả ơn."}, "tell": "Cầm tờ giấy địa chỉ bằng hai tay; cười trước khi nói khi nhắc đến đội tuyển."}, "age": 24, "gender": "male", "bio": {"vi": "Người Tày ở Bắc Hà, xuống xe đêm Lào Cai ở bến Mỹ Đình lúc năm giờ sáng lần đầu, ba lô, tờ giấy ghi địa chỉ công trường ở Mỹ Đình. Bị cò hét 'xe ôm đây' ba lần. Mê bóng đá, đi bộ từ bến ra sân Mỹ Đình chỉ để sờ cổng.", "en": "A Tày man from Bắc Hà, off the overnight Lào Cai coach at Mỹ Đình station for the first time at five in the morning, a rucksack, a slip of paper with a building-site address. Shouted at by touts three times. Football-mad, walked from the station to Mỹ Đình stadium just to touch the gate."}, "home": {"lat": 21.0285, "lon": 105.776}, "district": "districts:my_dinh", "occupation": {"vi": "Thợ xây", "en": "Builder"}, "personality": ["that_tha", "nhut_nhat", "khoe"], "voice": {"accent": "northern_rural", "notes": "Giọng Lào Cai, tiếng Kinh chậm, hay nói 'em không biết' rồi vẫn làm; gọi mọi người là 'anh', 'chú' bất kể tuổi."}, "appearance": {"outfit": "Áo khoác bộ đội, ba lô dệt thổ cẩm, giày thể thao mới mua ở chợ, tay cầm điện thoại cũ dán bìa đội tuyển."}, "schedule": [{"hours": [5, 6], "activity": "xuong_ben_my_dinh", "location": {"lat": 21.0285, "lon": 105.776}}, {"hours": [7, 17], "activity": "cong_truong_my_dinh", "location": {"lat": 21.02, "lon": 105.77}}, {"hours": [19, 22], "activity": "quanh_san_my_dinh", "location": {"lat": 21.0206, "lon": 105.764}}], "relationships": [{"with": "characters:chu_hoa_xe_om_my_dinh", "kind": "chau_ho"}]},
-    {"id": "chi_quynh_bao_tang", "tags": ["curator", "my_dinh", "side_arc"], "name": {"vi": "Chị Quỳnh (phụ trách trưng bày Bảo tàng Hà Nội)", "en": "Quỳnh (exhibitions, Hanoi Museum)"}, "role": "contact", "drive": {"kho": {"vi": "Bảo tàng to nhất thành phố mà vắng; trưng bày toàn ảnh tư liệu không ai dừng lại xem; mười năm xin kinh phí."}, "tap": {"vi": "Tin rằng một triển lãm đúng sẽ kéo người Hà Nội vào kim tự tháp này; bám vào 'tác giả đang sống' như một chiến lược."}, "diet": {"vi": "Người Hà Nội đứng trước ảnh quận của mình và nhận ra người trong ảnh."}, "dao": {"vi": "Săn người chụp qua báo, mời bằng phòng trưng bày, không bằng tiền; hỏi ai đứng sau mỗi tấm trước khi hỏi tấm đẹp hay không."}, "tell": "Lật đến trang chú thích trước khi nhìn ảnh; nói 'chúng ta' khi nói về bảo tàng."}, "age": 36, "gender": "female", "bio": {"vi": "Phụ trách trưng bày ở Bảo tàng Hà Nội, cái kim tự tháp ngược ở Mỹ Đình xây hai nghìn mười mà mười năm sau vẫn vắng khách. Muốn làm triển lãm ảnh 'Hà Nội mười bốn quận' bằng ảnh của người đang sống, không phải ảnh tư liệu. Đọc mọi bài Phong đăng.", "en": "Runs exhibitions at the Hanoi Museum, the inverted pyramid in Mỹ Đình built in 2010 and still empty of visitors ten years on. Wants a photo show, 'Hanoi in fourteen districts', with pictures by people alive now, not archive prints. Reads everything Phong publishes."}, "home": {"lat": 21.007, "lon": 105.788}, "district": "districts:my_dinh", "occupation": {"vi": "Phụ trách trưng bày", "en": "Exhibition curator"}, "personality": ["sac_sao", "dieu_tinh", "kien_dinh"], "voice": {"accent": "hanoi", "notes": "Giọng Hà Nội học thuật, dùng 'tác giả', 'bản in', 'chú thích'; hỏi bằng câu khẳng định."}, "appearance": {"outfit": "Áo sơ mi lanh, kính gọng mảnh, thẻ nhân viên, giày bệt, tay cầm tập chú thích in A4."}, "schedule": [{"hours": [8.5, 12], "activity": "lam_viec_bao_tang", "location": {"lat": 21.007, "lon": 105.788}}, {"hours": [14, 17.5], "activity": "treo_trung_bay", "location": {"lat": 21.007, "lon": 105.788}}], "relationships": [{"with": "characters:phong_bien_tap", "kind": "dong_nghiep_cu"}]}
+    {"id": "chi_quynh_bao_tang", "tags": ["curator", "my_dinh", "side_arc"], "name": {"vi": "Chị Quỳnh (phụ trách trưng bày Bảo tàng Hà Nội)", "en": "Quỳnh (exhibitions, Hanoi Museum)"}, "role": "contact", "drive": {"kho": {"vi": "Bảo tàng to nhất thành phố mà vắng; trưng bày toàn ảnh tư liệu không ai dừng lại xem; mười năm xin kinh phí."}, "tap": {"vi": "Tin rằng một triển lãm đúng sẽ kéo người Hà Nội vào kim tự tháp này; bám vào 'tác giả đang sống' như một chiến lược."}, "diet": {"vi": "Người Hà Nội đứng trước ảnh quận của mình và nhận ra người trong ảnh."}, "dao": {"vi": "Săn người chụp qua báo, mời bằng phòng trưng bày, không bằng tiền; hỏi ai đứng sau mỗi tấm trước khi hỏi tấm đẹp hay không."}, "tell": "Lật đến trang chú thích trước khi nhìn ảnh; nói 'chúng ta' khi nói về bảo tàng."}, "age": 36, "gender": "female", "bio": {"vi": "Phụ trách trưng bày ở Bảo tàng Hà Nội, cái kim tự tháp ngược ở Mỹ Đình xây hai nghìn mười mà mười năm sau vẫn vắng khách. Muốn làm triển lãm ảnh 'Hà Nội mười bốn quận' bằng ảnh của người đang sống, không phải ảnh tư liệu. Đọc mọi bài Phong đăng.", "en": "Runs exhibitions at the Hanoi Museum, the inverted pyramid in Mỹ Đình built in 2010 and still empty of visitors ten years on. Wants a photo show, 'Hanoi in fourteen districts', with pictures by people alive now, not archive prints. Reads everything Phong publishes."}, "home": {"lat": 21.007, "lon": 105.788}, "district": "districts:my_dinh", "occupation": {"vi": "Phụ trách trưng bày", "en": "Exhibition curator"}, "personality": ["sac_sao", "dieu_tinh", "kien_dinh"], "voice": {"accent": "hanoi", "notes": "Giọng Hà Nội học thuật, dùng 'tác giả', 'bản in', 'chú thích'; hỏi bằng câu khẳng định."}, "appearance": {"outfit": "Áo sơ mi lanh, kính gọng mảnh, thẻ nhân viên, giày bệt, tay cầm tập chú thích in A4."}, "schedule": [{"hours": [8.5, 12], "activity": "lam_viec_bao_tang", "location": {"lat": 21.007, "lon": 105.788}}, {"hours": [14, 17.5], "activity": "treo_trung_bay", "location": {"lat": 21.007, "lon": 105.788}}], "relationships": [{"with": "characters:phong_bien_tap", "kind": "dong_nghiep_cu"}]},
+    {
+      "id": "ong_tung_hoa_lac",
+      "tags": ["chapter_3", "lender", "hoa_lac", "antagonist_minor"],
+      "name": {"vi": "Anh Tùng Hòa Lạc"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Ôm mười hai lô đất nền Hòa Lạc từ cơn sốt 2021, không bán được; chính anh cũng đang nợ ngân hàng và nợ người quen, lãi chạy từng ngày."},
+        "tap": {"vi": "Tin 'đất không bao giờ lỗ, chỉ người ôm đất lỗ'; tin tờ giấy có chữ ký là sòng phẳng, bất kể con số trên đó do ai đặt ra."},
+        "diet": {"vi": "Có tiền mặt trước khi ngân hàng siết lô đất cuối cùng, và không phải đứng trước công an."},
+        "dao": {"vi": "Cho người quen vay nóng ba nghìn một triệu một ngày, mỗi Tết đảo giấy cộng lãi vào gốc; khi sợ luật thì cắt lỗ, bán tờ giấy nợ cho người có tiền mặt; né mọi giao dịch trong tháng cô hồn."},
+        "tell": "Lần tràng hạt gỗ trầm khi nói về tiền; gọi mọi người là 'chỗ anh em'; nói 'chốt', 'cắt lỗ', 'lướt'."
+      },
+      "age": 52,
+      "gender": "male",
+      "bio": {"vi": "Môi giới đất ở Mỹ Đình từ 2007, cùng lứa với Vĩnh. Năm 2021 dồn tiền và tiền vay vào đất nền Hòa Lạc, cho cô Hạnh vay sáu trăm triệu để cùng 'lướt'. Đất đứng giá, sóng tan, anh thành chủ nợ của người quen và con nợ của ngân hàng cùng một lúc. Rằm tháng Giêng nào cũng lên Phủ Tây Hồ."},
+      "home": {"lat": 21.0285, "lon": 105.7795},
+      "district": "districts:my_dinh",
+      "occupation": {"vi": "Môi giới đất, cho vay người quen"},
+      "personality": ["xoay_xo", "me_tin", "so_luat"],
+      "voice": {"accent": "hanoi", "notes": "Giọng môi giới: 'chỗ anh em', 'đất không bao giờ lỗ', 'chốt cọc', 'cắt lỗ'; không bao giờ nói con số lãi bằng phần trăm, chỉ nói 'nghìn một triệu một ngày'."},
+      "appearance": {"outfit": "Áo polo cổ bẻ, dây chuyền vàng mảnh, tràng hạt gỗ trầm quấn cổ tay, điện thoại kẹp nách."},
+      "schedule": [
+        {
+          "hours": [8, 11],
+          "activity": "le_phu",
+          "location": {"lat": 21.0581, "lon": 105.8317}
+        },
+        {
+          "hours": [14, 18],
+          "activity": "dan_khach_xem_dat",
+          "location": {"lat": 21.0285, "lon": 105.7795}
+        }
+      ],
+      "relationships": [
+        {"with": "characters:vinh", "kind": "dong_nghiep_cu"},
+        {"with": "characters:co_hanh", "kind": "chu_no"}
+      ]
+    },
+    {
+      "id": "ba_lien_so_51",
+      "tags": ["chapter_3", "pho_co", "witness", "gian_dan"],
+      "name": {"vi": "Bà Liên (chủ cũ số 51 Hàng Chiếu)"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Bị giãn dân sang căn hộ tầng chín ở Việt Hưng; mất gánh nước chè đầu ngõ đã nuôi bà bốn mươi năm; ở chỗ mới không ai quen, không ai mua."},
+        "tap": {"vi": "Bám vào con ngõ cũ: sáng nào cũng đi xe buýt về Hàng Chiếu ngồi nhìn căn nhà của mình bị đục."},
+        "diet": {"vi": "Có người hỏi lại bà về con phố, và điều bà thấy được ghi lại đúng."},
+        "dao": {"vi": "Kể cho Khôi chuyện thợ cắt tường chung hôm mùng tám; sẵn sàng làm chứng trước tổ dân phố, phường, hay ban kiểm soát công ty."},
+        "tell": "Pha nước vối trong ấm đất cho mọi khách; gọi nhà cũ là 'nhà bà' dù đã giao lại."
+      },
+      "age": 70,
+      "gender": "female",
+      "bio": {"vi": "Bán nước chè đầu ngõ Hàng Chiếu bốn mươi năm, ở số 51 sát vách nhà cụ Thọ. Hai năm trước nhận căn hộ tái định cư theo dự án giãn dân phố cổ, nhà ở phố giao lại. Ông Khải chụp ảnh cưới cho bà năm 1984."},
+      "home": {"lat": 21.0575, "lon": 105.901},
+      "district": "districts:long_bien",
+      "occupation": {"vi": "Nghỉ hưu, từng bán nước chè"},
+      "personality": ["tinh_tuong", "co_doc", "thang_tinh"],
+      "voice": {"accent": "hanoi", "notes": "Giọng bà cụ phố cổ, xưng 'bà', câu ngắn, hay kết bằng 'đấy'."},
+      "appearance": {"outfit": "Áo bà ba nâu, khăn mỏ quạ ngày lạnh, túi cói đựng ấm và gói vối."},
+      "schedule": [
+        {
+          "hours": [6, 10],
+          "activity": "ngoi_dau_ngo_cu",
+          "location": {"lat": 21.0375, "lon": 105.85108}
+        },
+        {
+          "hours": [15, 20],
+          "activity": "o_nha",
+          "location": {"lat": 21.0575, "lon": 105.901}
+        }
+      ],
+      "relationships": [
+        {"with": "characters:cu_tho", "kind": "hang_xom_cu"},
+        {"with": "characters:bo_khai", "kind": "khach_quen"}
+      ]
+    },
+    {
+      "id": "ong_bay_bai_giua",
+      "tags": ["chapter_3", "long_bien", "bai_giua", "evacuee"],
+      "name": {"vi": "Ông Bảy bãi giữa"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Nước lên mỗi mùa bão, nhà cấp bốn ở bãi giữa sông Hồng ngập bậc thứ hai; già, một mình, không có xe."},
+        "tap": {"vi": "Bám vào bát hương của bố và mảnh đất ông ở từ năm 1968; tin 'đi là mất'."},
+        "diet": {"vi": "Bát hương còn khói và ông còn về được nhà sau khi nước rút."},
+        "dao": {"vi": "Không chịu sơ tán cho đến khi có người ông tin đến đón; chỉ đi khi được ôm bát hương theo."},
+        "tell": "Nói năm tháng bằng trận lũ: 'năm bảy mốt', 'năm Yagi'."
+      },
+      "age": 78,
+      "gender": "male",
+      "bio": {"vi": "Trồng rau và chở đò ở bãi giữa sông Hồng từ năm 1968. Năm 1972 chạy qua cầu Long Biên dưới bom. Mùa bão nào cũng là người cuối cùng rời bãi."},
+      "home": {"lat": 21.0441, "lon": 105.8615},
+      "district": "districts:long_bien",
+      "occupation": {"vi": "Trồng rau bãi giữa"},
+      "personality": ["gan_li", "tin_tam_linh", "it_noi"],
+      "voice": {"accent": "northern_rural", "notes": "Giọng ngoại thành, câu cụt, xưng 'tôi' với người lạ."},
+      "appearance": {"outfit": "Áo mưa cánh dơi, quần xắn, ôm bát hương sứ gói trong khăn."},
+      "schedule": [
+        {
+          "hours": [5, 11],
+          "activity": "lam_vuon",
+          "location": {"lat": 21.0441, "lon": 105.8615}
+        }
+      ],
+      "relationships": [
+        {"with": "characters:chu_cuong", "kind": "ban_cu"}
+      ]
+    },
+    {
+      "id": "bs_hoa_bach_mai",
+      "tags": ["chapter_4", "dong_da", "hospital"],
+      "name": {"vi": "Bác sĩ Hòa (cấp cứu Bạch Mai)"},
+      "role": "contact",
+      "drive": {
+        "kho": {"vi": "Ca trực ba mươi sáu tiếng, khoa cấp cứu quá tải, mùa mưa nào cũng nhận shipper ngã xe đường ngập."},
+        "tap": {"vi": "Tin mỗi bệnh nhân đều có người nhà đứng sau quầy viện phí; ghét nhất người nhà nói dối về tiền."},
+        "diet": {"vi": "Ca nào cũng có người ký giấy và đóng tạm ứng kịp để mổ, không phải chờ."},
+        "dao": {"vi": "Nói thẳng con số tạm ứng và hạn chót; ưu tiên mổ trước, hỏi tiền sau nếu người nhà nói thật."},
+        "tell": "Nói bằng giờ và con số; không bao giờ nói 'yên tâm'."
+      },
+      "age": 33,
+      "gender": "female",
+      "bio": {"vi": "Bác sĩ khoa cấp cứu bệnh viện Bạch Mai. Quê Nghệ An, học Y Hà Nội, ở lại vì 'ở đây không ai được phép mệt'."},
+      "home": {"lat": 21.001, "lon": 105.8411},
+      "district": "districts:dong_da",
+      "occupation": {"vi": "Bác sĩ cấp cứu"},
+      "personality": ["thang_than", "ben_bi", "nhanh"],
+      "voice": {"accent": "central", "notes": "Giọng Nghệ đã pha Hà Nội, câu ngắn, dùng giờ và mi-li-lít."},
+      "appearance": {"outfit": "Áo blouse xanh cấp cứu, khẩu trang kéo xuống cằm, ống nghe quàng cổ."},
+      "schedule": [
+        {
+          "hours": [7, 19],
+          "activity": "truc_cap_cuu",
+          "location": {"lat": 21.001, "lon": 105.8411}
+        }
+      ],
+      "relationships": []
+    },
+    {
+      "id": "me_tuan",
+      "tags": ["chapter_4", "phu_tho", "family"],
+      "name": {"vi": "Mẹ Tuấn"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Con trai một mình ở Hà Nội, nói qua video là 'con nổi tiếng trên mạng', chưa bao giờ kể tiền đâu ra; đồi chè sạt một góc từ bão Yagi."},
+        "tap": {"vi": "Tin con mình ổn vì con cười qua màn hình; bám vào câu 'Hà Nội có bạn nó'."},
+        "diet": {"vi": "Biết thật con mình sống thế nào, để còn lo được cho nó."},
+        "dao": {"vi": "Bắt xe khách lên Hà Nội ngay khi nghe tin; hỏi Minh, người bạn duy nhất bà biết tên, về mọi điều Tuấn giấu."},
+        "tell": "Mang theo túi chè búp tự sao làm quà cho tất cả mọi người, kể cả bác sĩ."
+      },
+      "age": 49,
+      "gender": "female",
+      "bio": {"vi": "Trồng chè ở Thanh Ba, Phú Thọ. Chồng mất sớm, một mình nuôi Tuấn ăn học hết cấp ba. Gọi Tuấn là 'thằng Béo' từ năm nó lên ba."},
+      "home": {"lat": 21.0012, "lon": 105.8415},
+      "district": "districts:dong_da",
+      "occupation": {"vi": "Trồng chè"},
+      "personality": ["chiu_kho", "de_xuc_dong", "thang_than"],
+      "voice": {"accent": "northern_rural", "notes": "Giọng trung du Phú Thọ, 'nhá', 'thế à', gọi Minh là 'cháu'."},
+      "appearance": {"outfit": "Áo khoác gió cũ, nón lá gấp trong túi, túi chè búp gói giấy báo."},
+      "schedule": [
+        {
+          "hours": [7, 20],
+          "activity": "trong_benh_vien",
+          "location": {"lat": 21.001, "lon": 105.8411}
+        }
+      ],
+      "relationships": [
+        {"with": "characters:tuan_beo", "kind": "me"}
+      ]
+    }
   ]
 }

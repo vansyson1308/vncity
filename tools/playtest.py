@@ -69,7 +69,8 @@ GOALS_VND = {"tiem_sua_xe_duc_coi": 120_000_000, "gop_von_duc_coi": 40_000_000, 
 RUNTIME_FLAGS = {"ho_so_sach_90_ngay": "90 game days without a traffic violation (docs/gdd/02-he-thong.md)",
                  "minh_nghe_dien_thoai_khi_lai": "gameplay: the player answered the phone while riding in c1_05 (docs/gdd/10 M2)"}
 # flags content sets for the runtime to read (no mission or dialogue needs to read them)
-RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1": "UHanoiHeatSubsystem caps heat one star lower for good"}
+RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1": "UHanoiHeatSubsystem caps heat one star lower for good",
+                      "ket_thuc_chuong_5": "the end of chapter 5 rolls the credits (docs/gdd/13-chuong-3-5.md)"}
 CONTROL_KINDS = {"go_to", "ride", "deliver", "photograph", "follow", "escape_traffic_police", "minigame", "cook", "collect", "drive_passenger"}
 STAKE_WORDS = ("tờ giấy", "bán nhà", "bán phần", "ký thỏa thuận", "nhà này của hai nhà", "không nhà nào bán")   # the central stake: the house and the 1957 paper
 

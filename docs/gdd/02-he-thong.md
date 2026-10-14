@@ -287,9 +287,10 @@ của phố cùng tên trong đồ thị đường Overture/OSM `data/noi_thanh/
   `year`. Chụp khớp trên 85% thì album mở tấm cũ chồng lên tấm mới và lời bố ở mặt sau.
 - **Băng cát-sét**: 21 tấm mang `unlocks_tape` (băng 1-21), mỗi băng gắn với một tấm, không tấm nào
   gắn hai băng. Băng 22-24 không nằm trên ảnh: băng 22 mở khi đủ 60 ảnh, băng 23 khi đủ 90, và băng
-  24 (lời giải 49 Hàng Chiếu) mở theo **hai đường**: đủ 30 ảnh ở chương 3 *hoặc* ông Thắng kể ở chương
-  4 với giá đắt hơn về cảm xúc (Khôi phải trả ông tấm ảnh 1989 và nghe ông nói thẳng vì sao bố bỏ đi;
-  cờ `khoi_nghe_thang_ke_het`). Người bỏ qua sưu tầm không bị khóa kết (07 mục 9).
+  24 (lời giải 49 Hàng Chiếu) là băng của truyện, mở ở `c4_05_bang_24` theo **hai đường** do lựa chọn đêm
+  nước lên quyết định: Khôi đã cứu hộp băng (`khoi_cuu_bang`) thì nghe giọng bố (`khoi_nghe_bang_24`);
+  đã cứu phim thì băng 24 hỏng và ông Thắng kể lại, giá đắt hơn về cảm xúc (`khoi_nghe_thang_ke_het`).
+  Cả hai đường đặt `biet_ten_chay`. Người bỏ qua sưu tầm không bị khóa kết (07 mục 9, `13-chuong-3-5.md`).
 - **Tem phiếu**: `hidden_in` nói runtime giấu ở đâu quanh tọa độ (nhà cũ, sạp đồng nát, hàng sách cũ
   Đinh Lễ, kho chợ, khu tập thể); `rarity` cực hiếm cho sổ gạo nhà 49 Hàng Chiếu, phiếu gạo cuối
   cùng 1989, phiếu Tam Đảo 1976, tập phiếu vải Bách hóa Tràng Tiền.

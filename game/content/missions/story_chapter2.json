@@ -1544,7 +1544,7 @@
           "to_dan_pho_hang_chieu": 5
         }
       },
-      "unlocks": []
+      "unlocks": ["missions:c3_01_ram_thang_gieng"]
     }
   ]
 }

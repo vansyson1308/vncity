@@ -17,10 +17,10 @@ TERMINAL = {"end", "success", "fail"}
 RUNTIME_FLAGS = {"ho_so_sach_90_ngay", "minh_nghe_dien_thoai_khi_lai"}  # set by C++ / gameplay (docs/gdd/02, docs/gdd/10 M2)
 # Chapter 0-1 flags whose read site is chapter 2 (PR #9, docs/gdd/10-sua-chuong-1.md, flag table at the end).
 # Delete entries as chapter 2 lands on main; a flag here is still a consequence, just one chapter later.
-# Progress flags whose reader is the next chapter (chapter 3 reads how the year was opened).
-READ_IN_NEXT_CHAPTER = {"da_xong_dat"}
+# Progress flags whose reader is the next chapter. Empty since chapter 3 reads da_xong_dat (docs/gdd/13-chuong-3-5.md).
+READ_IN_NEXT_CHAPTER = set()
 # Flags content sets for the engine to read (docs/gdd/02-he-thong.md §1); nothing in content needs to read them.
-RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1"}
+RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1", "ket_thuc_chuong_5"}   # ket_thuc_chuong_5: the engine rolls the end credits (docs/gdd/13-chuong-3-5.md)
 
 
 def _cond_flags(cond):

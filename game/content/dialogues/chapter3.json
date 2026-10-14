@@ -1,0 +1,3558 @@
+{
+  "collection": "dialogues",
+  "items": [
+    {
+      "id": "dlg_c3_01_sang_ram",
+      "tags": [
+        "chapter_3",
+        "lan"
+      ],
+      "context": "Sáng rằm tháng Giêng Đinh Mùi (20/2/2027), quán Phở Thọ chưa mở cửa. Cô Hạnh xách túi lễ: hương, oản, một đĩa hoa quả và một xấp tiền vàng mã.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Lan, cô xin cháu một buổi sáng. Rằm tháng Giêng, cả năm ăn chay không bằng rằm tháng Giêng. Cháu chở cô lên Phủ Tây Hồ."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Lễ Mẫu thì lễ chay. Đừng mang vàng mã vào điện, người ta cấm từ lâu rồi."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Con đốt ngoài sân, bố. Con biết."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cô, sáng nay cháu phải gõ cửa thêm ba nhà ký hồ sơ tự quản. Đi Phủ về là cháu đi luôn."
+          },
+          "condition": {
+            "flags": [
+              "lan_chot_tu_quan"
+            ]
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cô đi cầu gì thì cầu, nhà mình không bán. Cháu chở cô, cháu không thắp hương cho chuyện đó."
+          },
+          "condition": {
+            "flags": [
+              "lan_chot_khong_ban"
+            ]
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cô cầu cho cháu gặp được người giữ giấy nợ của cô. Cháu nói với anh Vĩnh là cháu đàm phán, giờ cháu chưa biết đàm phán với ai."
+          },
+          "condition": {
+            "flags": [
+              "lan_chot_giu_phan_co"
+            ]
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Rằm tháng Giêng. Đêm giao thừa mình xin anh Vĩnh đến hôm nay. Hôm nay là hôm nay rồi.)"
+          },
+          "condition": {
+            "flags": [
+              "lan_chot_xin_ram"
+            ]
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cháu chở cô."
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Từ hôm hai ba tháng Chạp nó ngủ được. Đi đi, rồi về ăn bát phở."
+          },
+          "condition": {
+            "flags": [
+              "lan_moi_co_cung"
+            ]
+          }
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "(không nhìn Lan) Mười chín hộ có ai chở cô đi lễ không? Thôi, đi."
+          },
+          "condition": {
+            "flags": [
+              "lan_loai_co_hanh"
+            ]
+          }
+        },
+        {
+          "id": "l11",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Cô hẹn một người ở Phủ. Người ta bảo phải gặp trước mùa mưa."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_01_vinh_ram",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "consequence"
+      ],
+      "context": "Cùng buổi sáng, điện thoại Lan rung. Đêm giao thừa Lan đã xin Vĩnh đợi đến rằm tháng Giêng.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Cô Lan. Rằm rồi. Tôi không giục, tôi chỉ nhắc: tôi giữ lời đến hôm nay."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Anh muốn câu trả lời qua điện thoại à?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Tôi muốn một câu thôi, tiếng Việt có câu \"một lời nói, một gói vàng\". Phần của cô Hạnh, cô có để cô ấy bán không?"
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Câu trả lời của tôi là..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Không. Không phần nào của nhà số 49 bán cả, kể cả phần của cô tôi."
+              },
+              "goto": "l05a",
+              "effect": {
+                "set_flags": [
+                  "lan_ram_khong_ban"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": 5,
+                  "kim_long_land": -10
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Phần của cô, cô quyết. Tôi chỉ giữ phần ông và phần anh Khôi."
+              },
+              "goto": "l05b",
+              "effect": {
+                "set_flags": [
+                  "lan_ram_de_co_ban"
+                ],
+                "reputation": {
+                  "kim_long_land": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l05a",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Tôi nghe rõ. Thế thì tôi làm việc với người đang cầm tờ giấy nợ của cô ấy, không làm việc với cô nữa. Chúc nhà cô một năm bình an."
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l05b",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Cô là người đầu tiên trong nhà ấy tách được việc nhà ra khỏi việc mình. Tôi sẽ nói chuyện thẳng với cô Hạnh."
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Anh ta không hỏi mình giữ phần ông bằng cách nào. Anh ta biết cô Hạnh nợ ai.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_01_ong_tung",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "consequence"
+      ],
+      "context": "Sân Phủ Tây Hồ, chín giờ sáng rằm tháng Giêng. Khói hương, người chen vai, dãy hàng bánh tôm và ốc luộc. Một người đàn ông năm mươi tuổi đeo tràng hạt gỗ trầm đứng cạnh ban Mẫu, điện thoại kẹp nách.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Chị Hạnh! Năm mới phát tài. Đây là cháu gái đích tôn à? Nghe tiếng lâu rồi, thẩm định viên ngân hàng."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Anh Tùng. Anh Tùng cho cô vay hồi đi đất Hòa Lạc, Lan ạ. Chỗ anh em."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Chỗ anh em nên tôi nói thẳng trước cửa Mẫu: đất Hòa Lạc của tôi cũng chết từ hai nghìn hai mốt, tôi cũng đang nợ. Tôi không giữ tờ giấy của chị Hạnh được nữa."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Nghe đâu cháu đưa khoản nợ của cô vào hồ sơ vay, bảo lãnh bằng doanh thu quán phở. Ngân hàng nào cho vay để trả nợ người quen hả cháu?"
+          },
+          "condition": {
+            "flags": [
+              "lan_bao_lanh_co_hanh"
+            ]
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Nghe đâu cả phố vay chung, trừ nhà chị Hạnh. Thế thì tờ giấy của chị chỉ còn một người muốn mua."
+          },
+          "condition": {
+            "flags": [
+              "lan_loai_co_hanh"
+            ]
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Có người trả tôi chín trăm triệu tiền mặt để mua tờ giấy một tỷ tám của chị. Tôi cắt lỗ. Hết tháng Bảy âm tôi chốt, tháng cô hồn tôi không ký gì."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Người đó là anh Vĩnh."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Anh em làm môi giới Mỹ Đình với nhau từ hai nghìn linh bảy. Đất không bao giờ lỗ, cháu ạ, chỉ người ôm đất lỗ."
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Anh Tùng, phần nhà của bác Khiêm theo băng ghi âm là để cho bố tôi. Nhà ấy không đơn giản như anh nghĩ đâu."
+          },
+          "condition": {
+            "flags": [
+              "lan_noi_bang_12_voi_co"
+            ]
+          }
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Băng với giấy cháy thì chị nói với người mua. Tôi chỉ bán tờ giấy có chữ ký của chị."
+          },
+          "condition": {
+            "flags": [
+              "lan_noi_bang_12_voi_co"
+            ]
+          }
+        },
+        {
+          "id": "l11",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Chín trăm triệu cho một tờ giấy một tỷ tám. Ai bán nợ rẻ một nửa là người biết tờ giấy ấy không đáng một tỷ tám.)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Cho cháu chụp lại tất cả các tờ giấy vay. Cô cháu ký gì, cháu phải đọc."
+              },
+              "goto": "l12a",
+              "effect": {
+                "set_flags": [
+                  "lan_xin_giay_no"
+                ]
+              }
+            },
+            {
+              "text": {
+                "vi": "Anh biết lãi anh tính cho cô cháu là cho vay nặng lãi chứ?"
+              },
+              "goto": "l12b",
+              "effect": {
+                "set_flags": [
+                  "lan_doi_mat_tung"
+                ],
+                "reputation": {
+                  "kim_long_land": -5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Anh bán cho người ta chín trăm. Cháu trả anh bằng ấy, anh bán cho cháu."
+              },
+              "goto": "l12c",
+              "condition": {
+                "flags": [
+                  "lan_chot_giu_phan_co"
+                ]
+              },
+              "effect": {
+                "set_flags": [
+                  "lan_hoi_gia_tung"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "l12a",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Giấy trắng mực đen, anh em sòng phẳng. (lật điện thoại) Sáu tờ, mỗi Tết một tờ. Cháu chụp đi, chụp cho kỹ."
+          },
+          "goto": "l13"
+        },
+        {
+          "id": "l12b",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "(lần tràng hạt, chậm lại) Trước cửa Mẫu mà cháu nói câu ấy. Chị Hạnh, chị dạy cháu thế à? Hết tháng Bảy, không thêm ngày nào."
+          },
+          "goto": "l13"
+        },
+        {
+          "id": "l12c",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Cháu có chín trăm tiền mặt trước tháng cô hồn thì tôi bán cho cháu, anh em ai cũng là khách. Không có thì đừng làm tôi lỡ khách."
+          },
+          "goto": "l13"
+        },
+        {
+          "id": "l13",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Thôi, rằm tháng Giêng, nói chuyện tiền mất lộc. Chị Hạnh vào lễ đi. Tôi còn ba ban nữa."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_01_duong_ve",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "consequence"
+      ],
+      "context": "Đường về theo Thanh Niên, cô Hạnh ngồi sau, không nói gì cho đến khi qua đền Quán Thánh.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Cháu nghĩ cô ngu lắm, phải không."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Cháu nói anh ấy cho vay nặng lãi trước mặt Mẫu. Cô xấu hổ. Mà cô cũng thấy... nhẹ người. Sáu năm nay chưa ai nói câu ấy ra miệng."
+          },
+          "condition": {
+            "flags": [
+              "lan_doi_mat_tung"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Cháu chụp sáu tờ giấy ấy rồi. Đừng cho ông xem. Ông xem thì ông không ăn được cơm."
+          },
+          "condition": {
+            "flags": [
+              "lan_xin_giay_no"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Cô đi lễ Mẫu sáu năm, năm nào cũng cầu bán được đất. Năm nay cô cầu có người đọc giùm cô mấy tờ giấy."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Anh Vĩnh gọi cô lúc cô đang khấn. Anh ấy bảo cháu nói phần của cô thì cô quyết. Cháu tách cô ra như tách một dòng trong bảng tính, Lan ạ."
+          },
+          "condition": {
+            "flags": [
+              "lan_ram_de_co_ban"
+            ]
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Anh Vĩnh gọi cô lúc cô đang khấn. Anh ấy bảo cháu nói không phần nào bán cả. Cháu giữ cả phần cô mà không hỏi cô có nuôi nổi nó không."
+          },
+          "condition": {
+            "flags": [
+              "lan_ram_khong_ban"
+            ]
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Tối nay cháu sang nhà cô. Cô mang hết điện thoại, sổ chốt đơn, sao kê ngân hàng ra. Cháu muốn biết cô nợ bao nhiêu thật, tính bằng luật, không tính bằng giấy."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Tính bằng luật thì được bao nhiêu?"
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cháu chưa biết. Tối nay biết."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_02_mo_so",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "consequence"
+      ],
+      "context": "Căn hộ tập thể của cô Hạnh ở Hai Bà Trưng, 21:30. Vòng đèn livestream còn ấm, ba thùng mỹ phẩm chưa giao. Trên bàn: hai điện thoại, cuốn sổ chốt đơn bìa hoa.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Đây. Sáu năm. Cô ghi cả vào sổ chốt đơn, lẫn với tiền kem trộn, cháu tự lọc."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cháu có ảnh sáu tờ giấy anh Tùng cho chụp ở Phủ rồi. Giờ chỉ cần ghép với từng lần cô chuyển khoản."
+          },
+          "condition": {
+            "flags": [
+              "lan_xin_giay_no"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Hôm hai ba tháng Chạp cô nói trước bàn thờ: một tỷ tám, lãi người quen. Hôm nay cháu muốn biết \"lãi người quen\" là bao nhiêu một ngày."
+          },
+          "condition": {
+            "flags": [
+              "lan_biet_no_that"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cô có giữ giấy vay nào không?"
+          }
+        },
+        {
+          "id": "l04b",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Anh Tùng giữ. Cô chỉ có ảnh tờ cuối, chụp vội. Cô đâu nghĩ có ngày phải đọc lại."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cuối năm cháu tính theo hồ sơ cô gửi, ra gốc một tỷ tám. Cháu tính trên giấy người ta đưa. Lần này cháu tính từ tiền cô thật sự đã chuyển đi."
+          },
+          "condition": {
+            "flags": [
+              "lan_tinh_no_cho_co"
+            ]
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Cô chuyển mười hai triệu một tháng, chưa tháng nào trễ quá năm ngày. Bán son, bán kem, livestream đến hai giờ sáng. Có tháng vay bạn trả anh ấy."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Thế thì từng đồng một. Cô ngồi đây, cháu hỏi tháng nào thì cô nhớ tháng ấy."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_02_sai_so",
+      "tags": [
+        "chapter_3",
+        "lan"
+      ],
+      "context": "Hai giờ sáng. Bảng tính lệch hơn hai trăm triệu so với giấy. Cô Hạnh ngồi trên ghế nhựa, nhìn cháu.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Không khớp. Có một năm cháu không biết tiền đi đâu."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Năm hai nghìn hai mốt cô trả bằng tiền mặt, anh ấy đến tận nhà lấy. Không có chuyển khoản."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Thế thì không có bằng chứng."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Có. Mỗi lần anh ấy lấy tiền cô đều chụp ảnh khoe lên nhóm chị em, \"trả nợ xong tháng này rồi các chị ơi\". Cô xóa nhóm rồi, nhưng ảnh còn trong máy cũ."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cô ngủ đi. Sáng cháu tìm cái máy cũ, tính lại."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_02_ket_qua",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "consequence"
+      ],
+      "context": "Sáng. Bảng tính khớp đến từng nghìn. Cô Hạnh pha hai cốc cà phê gói.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cô vay sáu trăm triệu năm hai nghìn hai mốt. Tờ đầu ghi lãi ba nghìn một triệu một ngày, tức hơn một trăm phần trăm một năm."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Sáu năm cô trả tổng cộng tám trăm hai mươi triệu tiền lãi. Phần lãi không trả nổi, mỗi Tết anh ấy cộng vào gốc, viết giấy mới. Một tỷ tám là thế."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Thế cô nợ bao nhiêu?"
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Bộ luật Dân sự cho lãi tối đa hai mươi phần trăm một năm, phần vượt không có hiệu lực. Tính đúng luật, tiền cô trả thừa trừ vào gốc. Cô còn nợ khoảng bốn trăm sáu mươi triệu. Không phải một tỷ tám."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "(im rất lâu) Bốn trăm sáu."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Anh Tùng bán tờ giấy cho anh Vĩnh chín trăm triệu. Anh ấy biết nó chỉ đáng bốn trăm sáu trước tòa. Thế nên mới vội bán trước tháng cô hồn."
+          },
+          "condition": {
+            "flags": [
+              "lan_hoi_gia_tung"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Thế nên anh Tùng mới vội bán tờ giấy cho anh Vĩnh, chín trăm triệu tiền mặt. Anh ấy biết ra tòa nó chỉ đáng bốn trăm sáu."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Và lãi trên năm lần mức luật cho phép, lời trên ba mươi triệu, là tội theo Bộ luật Hình sự, Điều 201. Không phải chuyện chỗ anh em."
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Cô không muốn ai đi tù. Anh Tùng cũng đang ôm đất như cô. Cháu nói cô phải làm gì."
+          }
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cháu nghĩ..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Cô làm đơn trình báo công an phường. Ảnh giấy vay, ảnh chuyển khoản, cháu làm hồ sơ."
+              },
+              "goto": "l11a",
+              "effect": {
+                "set_flags": [
+                  "lan_khuyen_bao_cong_an"
+                ],
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Cô cầm bảng tính này đến gặp anh Tùng. Trả đúng phần luật cho đòi, lấy lại sáu tờ giấy, không ai phải lên phường."
+              },
+              "goto": "l11b",
+              "effect": {
+                "set_flags": [
+                  "lan_khuyen_thuong_luong"
+                ]
+              }
+            },
+            {
+              "text": {
+                "vi": "Cháu tính cho cô rồi. Nợ của cô, cô quyết. Cháu không quyết thay cô lần nữa."
+              },
+              "goto": "l11c",
+              "effect": {
+                "set_flags": [
+                  "lan_de_co_quyet"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": -5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l11a",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Đơn ở phường... Cả phố biết. Cô livestream thế nào. (một lúc) Ừ. Cháu làm đi. Cô ký."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l11b",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Bốn trăm sáu cô cũng không có, Lan ạ. Nhưng bốn trăm sáu là con số cô nhìn được."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l11c",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "(cười, mắt đỏ) Lần đầu cháu nói chuyện với cô như người lớn nói với người lớn."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l12",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "Đừng nói với ông vội. Để cô tự nói."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_03_me_goi",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Năm giờ sáng đầu tháng Ba. Đêm mùng Một Minh đã nói thật với mẹ chuyện nợ, chuyện trọ, chuyện chạy xe mười bốn tiếng.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Minh à. Mẹ đây. Mẹ ra Giêng lên như mẹ hứa. Xe khách sáu giờ về Giáp Bát, con ra đón mẹ."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Mẹ lên thật à? Bố ai trông?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Cô Út sang trông ba hôm. Mẹ mang bánh cáy, mang gạo nếp, mang cả chục trứng gà nhà. Con đừng để cò xe nó vây mẹ."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Con ra luôn đây mẹ."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_03_phong_tro",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Phòng trọ mười hai mét vuông ngõ Khương Đình. Tường ố nồm, hai cái giường tầng, mùi trà sữa của Tuấn.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Con ở đây à."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Phòng này rẻ nhất ngõ mẹ ạ. Có cửa sổ."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "(sờ vết ố trên tường) Nhà mình ở quê ngập ba năm một lần mà tường không mốc bằng thế này."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Ối giời ơi, cháu chào bác! Bác lên mà thằng Minh không báo cháu dọn phòng. Bác ngồi giường cháu, giường cháu sạch hơn."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Cháu Tuấn béo đây à. Minh kể cháu nhiều. Cháu ăn bánh cáy không?"
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Con nói thật với mẹ chuyện bị app trừ điểm rồi. Mẹ không hiểu app, nhưng mẹ hiểu bị người ta chấm điểm. Mẹ bán bánh cáy cũng bị chấm."
+          },
+          "condition": {
+            "flags": [
+              "cg_minh_noi_that_app"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Đêm mùng Một con nói thật, mẹ khóc cả đêm. Rồi mẹ ngủ được. Biết thật vẫn hơn đoán."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Giờ con đưa mẹ đi ăn bát phở mà con kể cả năm. Mẹ muốn xem cái nhà người ta giữ được bảy mươi năm nó trông thế nào."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_03_so_do",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Quán Phở Thọ, mười giờ sáng. Cụ Thọ ngồi bàn trong cùng. Mẹ Minh ngồi đối diện, hai người già cùng ăn chậm.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Bà ở Kiến Xương à. Đất Thái Bình trồng lúa, Nam Định tôi trồng phở. Hai tỉnh cách con sông."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Phở của cụ ngọt nước xương, không ngọt mì chính. Con Minh nói đúng."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Thằng này đêm giao thừa ngồi ăn với nhà tôi. Nó bảo nó nói thật với mẹ rồi. Người dám nói thật với mẹ thì tôi tin được."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "(lấy trong túi vải ra một cuốn sổ đỏ bọc ni lông) Minh. Ba sào ruộng nhà mình. Mẹ hỏi ngân hàng huyện rồi, cầm sổ vay được bốn mươi triệu. Đủ cho con góp vốn tiệm anh Đức như con kể."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Mẹ..."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Bố con không làm ruộng được nữa. Mẹ thì làm được thêm mười năm. Con trẻ, con cần tiệm hơn mẹ cần ruộng."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "(đặt đũa) Năm năm tư tôi bán ruộng ở quê lấy tiền mua gánh phở. Đến giờ tôi không biết là được hay mất."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Con..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Con không cầm sổ mẹ ạ. Ruộng là để bố mẹ dưỡng già. Tiệm con tự góp, chậm thì chậm."
+              },
+              "goto": "l09a",
+              "effect": {
+                "set_flags": [
+                  "minh_giu_ruong_cho_me"
+                ],
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Con nhận, mẹ. Con hứa ba năm con trả ngân hàng, lấy sổ về cho mẹ."
+              },
+              "goto": "l09b",
+              "effect": {
+                "set_flags": [
+                  "minh_nhan_tien_ruong"
+                ],
+                "money_vnd": 40000000
+              }
+            }
+          ]
+        },
+        {
+          "id": "l09a",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "(gói sổ lại, chậm) Con giống bố. Bố con cũng không bao giờ cầm cái gì của mẹ."
+          },
+          "goto": "l10"
+        },
+        {
+          "id": "l09b",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Ba năm. Mẹ ghi vào lịch. (cười) Mẹ ghi cả vào sổ chốt nợ của mẹ đấy."
+          },
+          "goto": "l10"
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Ăn đi, phở nguội thì mất nết."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_03_bo_nga",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Năm giờ sáng đầu tháng Ba. Đêm mùng Một Minh đã nói với mẹ \"con ổn\". Một tin nhắn Alô Chat từ số chú Tư hàng xóm ở quê.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(đọc) \"Minh ơi bố mày ngã ở sân lần nữa, đập đầu vào bậc. Mẹ mày không cho chú báo, bảo mày đang ổn, đừng làm mày lo. Chú báo vì chú thấy bà đi vay hàng xóm tiền chụp phim.\""
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Lần nữa. Tháng trước ngã, mình không biết. Tháng này mình biết nhờ hàng xóm.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_03_goi_me",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Minh gọi về. Mẹ nghe máy sau hồi chuông thứ bảy.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Mẹ đây. Sớm thế con, có chuyện gì không?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Bố ngã à mẹ?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "(im một lúc) Ông Tư lắm mồm. Bố ổn. Chỉ sưng một tí. Bác sĩ bảo chụp cắt lớp cho chắc. Con lo việc con."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Chụp hết bao nhiêu mẹ?"
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:me_minh",
+          "text": {
+            "vi": "Mười triệu cả thuốc. Mẹ vay được sáu rồi. Con đừng gửi, con bảo con ổn mà. Con ổn thì mẹ cũng ổn."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Mẹ nói đúng câu mình nói đêm mùng Một. Đến hôm nay vẫn không ai trong nhà nói thật với ai.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_03_tien_o_dau",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Tiệm anh Đức đầu ngõ, bảy giờ sáng. Anh Đức đang mở cửa cuốn.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Mặt mày như xe chết máy. Ngồi đi."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Anh. Bố em ngã. Em cần mười triệu trước tối nay."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Tiệm tháng này anh cũng mới đủ tiền nhà. Năm triệu anh có, năm triệu nữa phải xoay. Mày tính lấy ở đâu?"
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Chị Thảo bảo tài xế Kim Long ứng được nửa tháng lương. Ứng là chị ấy biết nhà mình thế nào.)"
+          },
+          "condition": {
+            "flags": [
+              "minh_nhan_viec_kim_long"
+            ],
+            "not_flags": [
+              "minh_bo_viec_kim_long"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04b",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Mười triệu.)"
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Em..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Nhắn chị Thảo xin ứng nửa tháng lương lái xe."
+              },
+              "goto": "l06a",
+              "condition": {
+                "flags": [
+                  "minh_nhan_viec_kim_long"
+                ],
+                "not_flags": [
+                  "minh_bo_viec_kim_long"
+                ]
+              },
+              "effect": {
+                "set_flags": [
+                  "minh_ung_tien_kim_long"
+                ],
+                "money_vnd": 10000000,
+                "reputation": {
+                  "kim_long_land": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Vay anh năm triệu, còn lại em chạy hai đêm. Tháng sau em trả."
+              },
+              "goto": "l06b",
+              "effect": {
+                "set_flags": [
+                  "minh_vay_duc"
+                ],
+                "money_vnd": 10000000
+              }
+            },
+            {
+              "text": {
+                "vi": "Gọi lại cho mẹ, nói thật là con không ổn, rồi gửi về chỗ con có."
+              },
+              "goto": "l06c",
+              "effect": {
+                "set_flags": [
+                  "minh_goi_lai_noi_that"
+                ],
+                "money_vnd": 4000000
+              }
+            }
+          ]
+        },
+        {
+          "id": "l06a",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Thế thì từ giờ mày nợ người không ăn phở với mày. Nhớ đấy."
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06b",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "(đưa tiền) Không phải anh cho. Anh đầu tư vào thằng sẽ sang tiệm này. Hai đêm chạy thì đội mũ vào."
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06c",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "(đưa bốn triệu) Thêm bốn của anh. Gọi đi. Mẹ mày nói dối vì mày nói dối trước."
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Gửi về trước tối. Ra ngân hàng đầu ngõ.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_04_vet_tham",
+      "tags": [
+        "chapter_3",
+        "khoi",
+        "consequence"
+      ],
+      "context": "Tháng Tư, sau ba ngày mưa xuân. Gác hiệu Ảnh Khải. Một vệt nước sẫm chạy dọc bức tường chung với số 51, ngay sau tủ sắt đựng phim.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Tủ sắt của bố. Ba mươi lăm năm không thấm. Tháng này thấm.)"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "(gõ gậy dưới chân cầu thang) Khôi. Bên số 51 người ta đục từ Tết. Bà Liên bán nhà cho công ty rồi. Tường chung, đục bên ấy thì bên này khóc."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Số 51 là \"Hàng Chiếu Boutique\"?"
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Nhà mẫu. Người ta làm nhà mẫu để bán cả phố."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Cậu kể cho cái Lan nghe băng số mười hai rồi. Thế thì cậu biết tường này của hai nhà ông Khiêm với tôi xây chung năm năm bảy. Chụp nó đi."
+          },
+          "condition": {
+            "flags": [
+              "khoi_ke_bang_12"
+            ]
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Cậu giữ băng của bố cậu cho riêng cậu. Tường thì không giữ riêng được. Chụp nó đi."
+          },
+          "condition": {
+            "flags": [
+              "khoi_giu_bang_12"
+            ]
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Tháng trước mình bán ảnh phố cho báo. Lần này, ảnh này không bán.)"
+          },
+          "condition": {
+            "flags": [
+              "khoi_ban_anh_bao"
+            ]
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Mình đã giữ ảnh người phố cho người phố. Ảnh này cũng thế.)"
+          },
+          "condition": {
+            "flags": [
+              "khoi_giu_anh_nguoi_pho"
+            ]
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Lên sân thượng. Từ đó nhìn được sang mái số 51."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_04_bao_ve",
+      "tags": [
+        "chapter_3",
+        "khoi"
+      ],
+      "context": "Một người bảo vệ công trình mặc áo phản quang đi lên sân thượng số 51, rọi đèn sang.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_bao_ve",
+          "text": {
+            "vi": "Anh kia! Chụp gì đấy? Công trình tư nhân, cấm chụp."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Tôi chụp tường nhà tôi."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:amb_bao_ve",
+          "text": {
+            "vi": "Tường nhà anh thì anh chụp từ trong nhà anh. Anh chĩa máy sang đây là tôi báo chủ đầu tư. Tôi mất việc anh nuôi tôi à?"
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Anh ta cũng có lý do. Sáng mai đổi ca.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_04_ba_lien",
+      "tags": [
+        "chapter_3",
+        "khoi",
+        "consequence"
+      ],
+      "context": "Tầng chín khu tái định cư giãn dân phố cổ ở Việt Hưng. Cửa sổ nhìn xuống mái tôn và bãi đất trống. Bà Liên, bảy mươi tuổi, pha nước vối trong ấm đất.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ba_lien_so_51",
+          "text": {
+            "vi": "Con ông Khải đấy à. Ông ấy chụp ảnh cưới cho bà năm tám tư. Bà còn giữ."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bác Liên, bác bán số 51 cho Kim Long khi nào?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ba_lien_so_51",
+          "text": {
+            "vi": "Bà không bán cho Kim Long. Bà nhận căn hộ này theo dự án giãn dân, nhà ở phố giao lại cho nhà nước. Rồi không biết thế nào, Tết vừa rồi thấy công ty ấy vào đục."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bác về đây bao lâu rồi?"
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:ba_lien_so_51",
+          "text": {
+            "vi": "Hai năm. Ở phố bà bán nước chè đầu ngõ bốn mươi năm. Ở đây ai mua nước chè. Sáng nào bà cũng đi xe buýt số mười về Hàng Chiếu, ngồi đầu ngõ, nhìn người ta đục nhà mình."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:ba_lien_so_51",
+          "text": {
+            "vi": "Hôm mùng tám, bà thấy thợ cắt tường chung bằng máy, cắt một rãnh để đi ống nước mái. Bà bảo \"tường ấy của nhà cụ Thọ nữa\". Nó bảo \"bà về đi bà, nhà bà bán rồi\"."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:ba_lien_so_51",
+          "text": {
+            "vi": "Cô gái công ty ấy, cái cô hay đi giày cao gót, có lần ngồi uống nước chè của bà. Cô ấy bảo bà ngoại cô ấy cũng bán nước chè ngõ này. Cô ấy ngồi lâu lắm."
+          },
+          "condition": {
+            "flags": [
+              "thao_thay_ba_ngoai"
+            ]
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:ba_lien_so_51",
+          "text": {
+            "vi": "Người công ty chẳng ai ngồi lại với bà."
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bác có chịu kể lại chuyện hôm mùng tám với người khác không?"
+          }
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:ba_lien_so_51",
+          "text": {
+            "vi": "Bà bảy mươi tuổi, bà sợ gì. Bà chỉ sợ không ai hỏi."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_04_gui_anh",
+      "tags": [
+        "chapter_3",
+        "khoi",
+        "consequence"
+      ],
+      "context": "Tối, gác hiệu ảnh. Ba bức ảnh trên màn hình: rãnh cắt trên tường chung, ống thoát mái số 51 đổ vào hộp kỹ thuật chung, và bà Liên ngồi ở cửa sổ tầng chín.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Mùa mưa còn bốn tháng. Rãnh cắt này mà gặp mưa to thì nước mái số 51 chảy thẳng vào tủ phim của bố.)"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Hương ở báo Thủ Đô Nhanh vẫn nhắn hỏi mình có ảnh gì mới không. Mình dạy cô ấy chụp, cô ấy nợ mình một trang báo.)"
+          },
+          "condition": {
+            "flags": [
+              "cg_khoi_day_chup"
+            ]
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Gửi cho..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Báo Thủ Đô Nhanh. Một bài báo trước mùa mưa, công ty nào cũng sợ báo."
+              },
+              "goto": "l04a",
+              "effect": {
+                "set_flags": [
+                  "khoi_gui_bao_51"
+                ],
+                "reputation": {
+                  "hoi_bao_ton_pho_cu": 5,
+                  "kim_long_land": -10
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Ông Khang và tổ dân phố. Lập biên bản hiện trạng, cả phố cùng biết, cùng ký."
+              },
+              "goto": "l04b",
+              "effect": {
+                "set_flags": [
+                  "khoi_gui_to_dan_pho_51"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": 10
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Thảo. Cô ấy đã ngồi uống nước chè của bà Liên. Cô ấy có ban kiểm soát."
+              },
+              "goto": "l04c",
+              "condition": {
+                "flags": [
+                  "thao_thay_ba_ngoai"
+                ]
+              },
+              "effect": {
+                "set_flags": [
+                  "khoi_gui_thao_51"
+                ],
+                "reputation": {
+                  "kim_long_land": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l04a",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Gửi. Dòng trạng thái: \"Đã xem\". Không trả lời.)"
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04b",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "[Cuộc gọi] Anh Khôi, ảnh tôi nhận rồi. Sáng chủ nhật tôi mời đoàn của phường xuống lập biên bản, cả hai số nhà. \"Cẩn tắc vô áy náy.\""
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04c",
+          "speaker": "characters:thao",
+          "text": {
+            "vi": "[Tin nhắn] Tôi nhận được. Đừng gửi cho ai khác trong tuần này. Tôi cần làm đúng quy trình nội bộ, không thì người bị đuổi là tôi, không phải nhà thầu."
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Bố ơi, bố chụp nhà này ba mươi lăm năm. Con chụp nó một lần để giữ nó.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_05_chi_van",
+      "tags": [
+        "chapter_3",
+        "lan"
+      ],
+      "context": "Homestay năm phòng ngõ Tô Ngọc Vân. Chị Vân pha trà gừng, mở laptop với bảng công suất phòng mười hai tháng.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:chi_van_homestay",
+          "text": {
+            "vi": "Em cần số thật hay số đẹp? Hồ sơ vay thì người ta hay làm số đẹp."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Số thật. Số đẹp thì ngân hàng bóc trong năm phút, em làm nghề ấy."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:chi_van_homestay",
+          "text": {
+            "vi": "Thế thì đây. Mùa khô kín tám mươi phần trăm. Mùa mưa ba mươi. Mưa to một trận, đường Âu Cơ ngập, khách hủy cả tuần. Mùa nồm thì ga giường không khô, chị phải thuê giặt sấy."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Phương án tự quản của phố em tính cho thuê ba căn làm homestay. Chị nói mùa mưa ba mươi phần trăm thì em phải trừ đi gần một nửa doanh thu em đã viết."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:chi_van_homestay",
+          "text": {
+            "vi": "Em trừ đi. Chị vỡ hai lần vì tin số người khác viết cho mình."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:chi_van_homestay",
+          "text": {
+            "vi": "Hôm giao thừa em bảo anh Vĩnh muốn đầu tư thì đầu tư vào tự quản. Nếu phố em làm thật, chị muốn góp một phần, chị không có tiền nhưng có nghề."
+          },
+          "condition": {
+            "flags": [
+              "lan_chot_tu_quan"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:chi_van_homestay",
+          "text": {
+            "vi": "Phố em làm thật thì gọi chị. Chị có nghề, không có tiền."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Em cần cả hai, chị ạ."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_05_xung_dot",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "consequence"
+      ],
+      "context": "Thứ Hai, tầng 31 tòa tháp Phạm Hùng. Lan đã về làm thẩm định viên sau Tết. Trên bàn cô là hồ sơ vay tu bổ nhà cổ của chính phố Hàng Chiếu.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:quan_truong_phong",
+          "text": {
+            "vi": "Lan. Hồ sơ này em lập phương án cho phố, giờ em ngồi bàn thẩm định. Kiểm soát nội bộ gọi đấy là xung đột lợi ích. Anh không ký được nếu tên em ở cả hai đầu."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Em biết. Em là người viết quy trình đó cho phòng năm hai mươi ba."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:quan_truong_phong",
+          "text": {
+            "vi": "Một: em giao hồ sơ cho đồng nghiệp thẩm định, em đứng ngoài, mất quyền cãi số. Hai: em nghỉ, em đứng hẳn bên phía phố, mất lương ba mươi lăm triệu."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Ba mươi lăm triệu một tháng. Hay hồ sơ của phố mình rơi vào tay một người chưa từng ăn bát phở ở đó.)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Em nghỉ. Hồ sơ này em phải đứng ở phía phố, cãi từng con số."
+              },
+              "goto": "l05a",
+              "effect": {
+                "set_flags": [
+                  "lan_bo_ngan_hang"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": 10,
+                  "hoi_bao_ton_pho_cu": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Em giao hồ sơ cho chị Ngân. Em giữ việc, em tin quy trình."
+              },
+              "goto": "l05b",
+              "effect": {
+                "set_flags": [
+                  "lan_giao_ho_so_dong_nghiep"
+                ],
+                "money_vnd": 5000000
+              }
+            }
+          ]
+        },
+        {
+          "id": "l05a",
+          "speaker": "characters:quan_truong_phong",
+          "text": {
+            "vi": "(gập laptop) Lần thứ hai em bỏ anh. Lần này anh hiểu. Hồ sơ phố em anh vẫn trình, đúng quy trình."
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l05b",
+          "speaker": "characters:quan_truong_phong",
+          "text": {
+            "vi": "Đúng quy trình. Chị Ngân khó tính hơn em đấy, chuẩn bị tinh thần."
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Em đi gom chữ ký."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_05_truot",
+      "tags": [
+        "chapter_3",
+        "lan"
+      ],
+      "context": "Phòng tín dụng tầng 31. Câu hỏi thứ sáu về dòng tiền mùa mưa, Lan trả lời sai. Anh Quân không gập laptop.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:quan_truong_phong",
+          "text": {
+            "vi": "Em viết doanh thu mùa mưa bằng mùa khô. Ai thẩm định cũng thấy. Lần thứ hai rồi, Lan."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cho em trình bày lại. Lần này em có số thật của homestay Tây Hồ."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:quan_truong_phong",
+          "text": {
+            "vi": "Anh cho em lần nữa thì phải có người đứng ra bảo đảm là phố có làm thật. Ai?"
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Em nhờ..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Ông Khang. Tổ dân phố ký xác nhận cam kết, ông sẽ mất mặt nếu phố không làm."
+              },
+              "goto": "l05a",
+              "effect": {
+                "reputation": {
+                  "to_dan_pho_hang_chieu": -5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Chị Linh bên hội bảo tồn. Hội đứng tên tư vấn kỹ thuật, hội mất uy tín nếu phố bỏ dở."
+              },
+              "goto": "l05b",
+              "effect": {
+                "reputation": {
+                  "hoi_bao_ton_pho_cu": -5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l05a",
+          "speaker": "characters:quan_truong_phong",
+          "text": {
+            "vi": "Được. Tuần sau, chín giờ."
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l05b",
+          "speaker": "characters:quan_truong_phong",
+          "text": {
+            "vi": "Được. Tuần sau, chín giờ."
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Mình vừa đem uy tín của người khác ra cược cho số của mình. Lần này không được sai.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_05_bo_sot",
+      "tags": [
+        "chapter_3",
+        "lan"
+      ],
+      "context": "Nhà văn hóa tổ 5. Ông Khang lật cuốn sổ hộ khẩu cũ, chỉ vào một dòng Lan bỏ sót.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Số 33. Cụ ông mất năm hai nghìn mười chín, ba người con chưa chia thừa kế, một người ở Úc. Cháu để chữ ký của một người là ngân hàng trả hồ sơ."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cháu bỏ sót. Cháu xin lỗi ông."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Tôi đã đi gõ cửa nhà ấy năm lần vì quỹ khuyến học. Tôi gõ lần thứ sáu cho cháu. Nhưng cả tổ sẽ biết là cháu bỏ sót. \"Một lần bất tín, vạn lần bất tin\", cháu nhớ."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_05_chot",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "consequence"
+      ],
+      "context": "Đêm, quán phở đã đóng. Hai mươi bộ giấy tờ xếp trên bàn. Còn một dòng chưa điền: hộ số 49, phần của bà Hạnh.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Đủ rồi à."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Đủ mười chín, ông ạ. Cháu nghỉ ngân hàng rồi, giờ không còn ai trong phòng tín dụng cãi giùm phố mình. Cháu phải làm cho hồ sơ không cần ai cãi."
+          },
+          "condition": {
+            "flags": [
+              "lan_bo_ngan_hang"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Đủ mười chín, ông ạ. Chị Ngân thẩm định, cháu đứng ngoài. Cháu không được sai một chữ."
+          },
+          "condition": {
+            "flags": [
+              "lan_giao_ho_so_dong_nghiep"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Đủ mười chín, ông ạ."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Hồi Tết cháu bảo lãnh nợ của cô bằng doanh thu quán. Ngân hàng không chấp nhận khoản đó. Cháu phải chọn lại."
+          },
+          "condition": {
+            "flags": [
+              "lan_bao_lanh_co_hanh"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Hồi Tết cháu bỏ hộ cô ra. Cô khóc với anh Vĩnh. Cháu phải chọn lại."
+          },
+          "condition": {
+            "flags": [
+              "lan_loai_co_hanh"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Hộ thứ hai mươi là cô."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Con Hạnh ký thì cả nhà mình ký. Nó không ký thì nhà này chỉ có hai phần ba. Ba phần thì cái bàn mới đứng."
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Phần của cô..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Đưa cô vào gói vay, nhưng chỉ phần nợ bốn trăm sáu đúng luật, có bảng tính và giấy tờ đi kèm."
+              },
+              "goto": "l10a",
+              "condition": {
+                "flags": [
+                  "lan_biet_goc_that"
+                ]
+              },
+              "effect": {
+                "set_flags": [
+                  "ho_so_co_hanh_trong_goi"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Hồ sơ mười chín hộ. Phần của cô để riêng, cô tự lo."
+              },
+              "goto": "l10b",
+              "effect": {
+                "set_flags": [
+                  "ho_so_19_ho"
+                ],
+                "reputation": {
+                  "hoi_bao_ton_pho_cu": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Kêu gọi cả phố góp vốn giữ phần cô, mỗi nhà một ít, như ngày xưa góp họ."
+              },
+              "goto": "l10c",
+              "effect": {
+                "set_flags": [
+                  "lan_goi_von_cong_dong"
+                ],
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 5,
+                  "to_dan_pho_hang_chieu": -5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l10a",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Ngân hàng có cho vay để trả nợ không?"
+          },
+          "goto": "l11a"
+        },
+        {
+          "id": "l10b",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Nó là con tôi. Cháu để nó riêng thì nó đi với người khác."
+          },
+          "goto": "l11b"
+        },
+        {
+          "id": "l10c",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Góp họ. Năm năm bảy tôi với ông Khiêm cũng góp họ mà mua nhà này."
+          },
+          "goto": "l11c"
+        },
+        {
+          "id": "l11a",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Không cho vay trả nợ. Nhưng cho vay sửa nhà của cô, và nhà có tiền thuê thì cô có dòng tiền trả nợ. Cháu viết nó thành một phương án, không phải một lời xin."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l11b",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Thì cô phải chọn, ông ạ. Như cháu đã phải chọn."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l11c",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Ông Khang ghi sổ. Ai góp bao nhiêu, phố biết hết. Không ai cho không ai."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l12",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Đóng hồ sơ đi. Sắp mưa rồi."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_06_ban_tin",
+      "tags": [
+        "chapter_3",
+        "minh"
+      ],
+      "context": "Sáu giờ sáng cuối tháng Tám. Radio Kênh Đường Thông và loa phường cùng đọc một bản tin.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_loa_phuong",
+          "text": {
+            "vi": "Bão số ba đang di chuyển vào vịnh Bắc Bộ, dự báo đổ bộ đêm thứ Năm. Hà Nội mưa rất to từ chiều thứ Năm, lượng mưa phổ biến hai trăm đến bốn trăm mi-li-mét. Đề nghị bà con chằng chống nhà cửa, kiểm tra hệ thống thoát nước..."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "(ló đầu ở giường trên) Bão số ba à? Năm hai bốn bão Yagi tao còn ở Phú Thọ, đồi chè nhà tao sạt mất một góc. Năm nay mày định làm gì?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Chạy xe. Làm gì nữa."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_06_chu_sau",
+      "tags": [
+        "chapter_3",
+        "minh"
+      ],
+      "context": "Bờ sông Tô Lịch đoạn Khương Đình. Tổ thoát nước của chú Sáu đang vớt rác ở cửa cống, ủng cao đến đùi.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:chu_sau_thoat_nuoc",
+          "text": {
+            "vi": "Minh! Chở chú xuống Yên Sở một chuyến, chú phải nộp lịch trực bão. Xe tổ đi Kim Giang rồi."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Chú vớt rác giờ này làm gì, mai mưa là trôi hết."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:chu_sau_thoat_nuoc",
+          "text": {
+            "vi": "Vì mai mưa nên phải vớt hôm nay. Cửa cống mà tắc một túi ni lông thì cả phố ngập thêm một gang."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:chu_sau_thoat_nuoc",
+          "text": {
+            "vi": "Cháu biết vì sao năm hai lăm Hà Nội ngập dài thế không? Mưa ba trăm mi-li-mét, mà sông Hồng cũng lên. Nước sông cao hơn nước phố thì phố không tự chảy ra được. Cả lưu vực Tô Lịch trông vào máy bơm Yên Sở."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Thế máy bơm không kịp thì sao?"
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:chu_sau_thoat_nuoc",
+          "text": {
+            "vi": "Thì người ở phố cổ chèn bao cát, người ở Yên Sở ngồi trên nóc nhà, người như chú đứng ở cửa cống. Mỗi người một việc."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_06_don_x3",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Trạm bơm Yên Sở, chiều thứ Năm. Trời tối sầm. Điện thoại Minh rung liên tục: \"Vồ: Phụ phí mưa bão x3. Kiếm gấp ba trong tối nay!\"",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "[Tin nhắn] Mày thấy chưa!! App Đói cũng nhân ba. Tối nay một đơn bằng ba đơn. Thắng đời 1:0 luôn."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:ba_cuc_rau_den_lu",
+          "text": {
+            "vi": "[Cuộc gọi] Minh ơi, bà Cúc đây. Ruộng rau bà ở Thanh Trì sắp ngập. Cháu có cái ba gác của anh Đức không, chở giúp bà mấy chục bao cát chèn bờ. Bà trả được ít thôi."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "[Tin nhắn] Tiệm anh ở chỗ trũng. Mày rảnh thì chở giúp anh chục bao cát. Hàng Chiếu nhà cụ Thọ cũng chưa có bao nào."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Bốn mươi triệu của mẹ đang nằm trong tài khoản. Tháng này phải trả lãi ngân hàng huyện. Đơn nhân ba thì một đêm bằng một tuần.)"
+          },
+          "condition": {
+            "flags": [
+              "minh_nhan_tien_ruong"
+            ]
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Còn nợ anh Đức năm triệu. Đơn nhân ba thì một đêm là trả xong.)"
+          },
+          "condition": {
+            "flags": [
+              "minh_vay_duc"
+            ]
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Chiều nay..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Chạy đơn nhân ba. Một đêm bằng một tuần, mai chở bao cát sau."
+              },
+              "goto": "l07a",
+              "effect": {
+                "set_flags": [
+                  "minh_chay_don_bao"
+                ],
+                "money_vnd": 1800000,
+                "reputation": {
+                  "cong_dong_tai_xe_vo": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Mượn ba gác anh Đức, chở bao cát: rau bà Cúc, tiệm anh Đức, rồi Hàng Chiếu."
+              },
+              "goto": "l07b",
+              "effect": {
+                "set_flags": [
+                  "minh_cho_bao_cat"
+                ],
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 10,
+                  "to_dan_pho_hang_chieu": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l07a",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "[Tin nhắn] Chuẩn! Tao với mày chạy song song, ai về sau rửa bát cả tuần."
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07b",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "[Tin nhắn] Mày điên à? Đơn nhân ba đấy! Thôi tao chạy, mày làm người tốt đi."
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Đội mũ. Đi.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_06_tuan_dem_tien",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Nửa đêm, phòng trọ. Áo mưa ướt treo trên cửa. Tuấn ngồi trên giường đếm tiền app của Minh trên màn hình.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Một triệu tám. Một tối! Mày chạy nhanh thế qua mưa thế nào?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Đường Kim Giang ngập đến yên. Tao đi đường đê."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Tao được bảy trăm. Mai tao chạy như mày, không né đường ngập nữa. Mưa là tiền, căng đét."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Mày chạy xe số hai trăm ký tính cả người. Đừng có đi đường ngập."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Mày đi được thì tao đi được."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Mẹ không cầm sổ cho mình. Mình chạy đơn bão thì mình đang cầm cái gì?)"
+          },
+          "condition": {
+            "flags": [
+              "minh_giu_ruong_cho_me"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Hôm bố ngã mình gọi lại nói thật. Giờ mình phải nói thật với thằng Tuấn: mình cũng sợ.)"
+          },
+          "condition": {
+            "flags": [
+              "minh_goi_lai_noi_that"
+            ]
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Tối nay mình dạy nó một điều. Nó học nhanh hơn mình nghĩ.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_06_tuan_hoi",
+      "tags": [
+        "chapter_3",
+        "minh",
+        "consequence"
+      ],
+      "context": "Nửa đêm, phòng trọ. Minh về người đầy bùn cát. Tuấn đang đếm tiền app của mình.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Bảy trăm nghìn! Còn mày? Không đơn nào à? Đơn nhân ba mà mày đi chở cát không công?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Bà Cúc trả năm chục. Anh Đức trả bằng bát mì."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Mày bị làm sao? Hệ thống, chắc chắn có hệ thống, bọn người tốt lừa mày."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Rau bà Cúc mà ngập thì sáng mai chợ Đền Lừ không có rau, tháng sau bà không trả được tiền thuê ruộng. Cả năm của bà là một tối của mình."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "(im một lúc) Ừ. Mai tao chạy đơn, mày chở cát. Nhà mình có một người tốt là đủ."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Mình còn nợ chị Thảo nửa tháng lương. Mai chạy cũng phải chạy cho Kim Long.)"
+          },
+          "condition": {
+            "flags": [
+              "minh_ung_tien_kim_long"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Lãi ngân hàng huyện tháng này còn thiếu. Mình biết.)"
+          },
+          "condition": {
+            "flags": [
+              "minh_nhan_tien_ruong"
+            ]
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Đi đường ngập thì xuống dắt. Nghe chưa."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_07_loa_phuong",
+      "tags": [
+        "chapter_3",
+        "set_piece",
+        "minh",
+        "lan",
+        "khoi"
+      ],
+      "context": "18:00 thứ Năm. Mưa không ngớt từ trưa. Loa phường Hàng Chiếu đọc trong tiếng mưa.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_loa_phuong",
+          "text": {
+            "vi": "Thông báo khẩn. Mực nước sông Hồng tại trạm Long Biên lúc mười bảy giờ đạt mười mét bảy mươi, trên báo động hai. Ủy ban thành phố cấm người và phương tiện qua cầu Long Biên từ hai mươi giờ. Đề nghị các hộ ở bãi giữa sông Hồng di dời ngay..."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Năm bảy mốt nước lên thế này. Tôi chèn bao tải gạo ở cửa, ông Khiêm chèn bên kia."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Chiều qua anh Minh chở mười hai bao cát vào ngõ, ông ạ. Cửa trước mình chèn rồi."
+          },
+          "condition": {
+            "flags": [
+              "minh_cho_bao_cat"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Mình chưa có bao cát, ông. Cửa hàng vật liệu Hàng Chiếu bán hết từ trưa."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Ông Khang đã cho tổ đắp bao cát cả hai bên tường chung số 51, từ tuần trước. Nhờ cái biên bản."
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_to_dan_pho_51"
+            ]
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bên số 51 không ai chèn. Nhà mẫu không có người ở."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "[Cuộc gọi] Lan! Nhà ông Bảy ở bãi giữa chưa chịu đi. Ông ấy chỉ nghe chú Cường với tôi. Tôi xuống đây."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_07_ong_bay",
+      "tags": [
+        "chapter_3",
+        "set_piece",
+        "minh",
+        "consequence"
+      ],
+      "context": "Bãi giữa sông Hồng, 19:20. Nước đã ngập bậc thứ hai căn nhà cấp bốn. Ông Bảy, bảy mươi tám tuổi, ôm bát hương ngồi trên giường thờ.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_bay_bai_giua",
+          "text": {
+            "vi": "Tôi ở đây từ năm sáu tám. Nước năm bảy mốt còn to hơn. Tôi không đi đâu hết."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Ông ơi, cầu Long Biên tám giờ cấm rồi. Đường đê ngập đến trục bánh. Ông ở lại thì sáng mai không ai vào được."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_bay_bai_giua",
+          "text": {
+            "vi": "Bát hương này của bố tôi. Tôi đi thì ai thắp."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Ông mang bát hương theo. Ông ôm nó, cháu chở ông."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:ong_bay_bai_giua",
+          "text": {
+            "vi": "(đứng dậy, chậm) Cậu có mũ cho tôi không."
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Tối qua mình chạy đơn bão qua đường đê này. Mình biết chỗ nào đã sụt.)"
+          },
+          "condition": {
+            "flags": [
+              "minh_chay_don_bao"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Chiều qua mình chở cát qua Phúc Xá. Đường đó giờ là sông.)"
+          },
+          "condition": {
+            "flags": [
+              "minh_cho_bao_cat"
+            ]
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(19:45. Lối gần nhất là cầu Long Biên, có lệnh cấm từ 20:00 và rào đã dựng. Lối kia là vòng ra cầu Chương Dương, nước ngang trục bánh, ông Bảy ngồi sau ôm bát hương.)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Vượt rào cầu Long Biên. Mười lăm phút. Phạt thì chịu phạt."
+              },
+              "goto": "l09a",
+              "effect": {
+                "set_flags": [
+                  "minh_vuot_rao_cau"
+                ]
+              }
+            },
+            {
+              "text": {
+                "vi": "Đi vòng Chương Dương. Chậm, nhưng không vượt lệnh cấm."
+              },
+              "goto": "l09b",
+              "effect": {
+                "set_flags": [
+                  "minh_di_vong_chuong_duong"
+                ],
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l09a",
+          "speaker": "characters:ong_bay_bai_giua",
+          "text": {
+            "vi": "Năm bảy hai tôi chạy qua cầu này dưới bom. Đi."
+          },
+          "goto": "l10"
+        },
+        {
+          "id": "l09b",
+          "speaker": "characters:ong_bay_bai_giua",
+          "text": {
+            "vi": "Đi chậm thôi. Bát hương mà đổ thì tôi xuống sông tìm."
+          },
+          "goto": "l10"
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Ông ôm chặt vào."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_07_hai_dau_cau",
+      "tags": [
+        "chapter_3",
+        "set_piece",
+        "minh"
+      ],
+      "context": "Đầu cầu Long Biên phía ga, 20:05. Đèn pin rọi vào mặt. Thượng úy Hải mặc áo mưa, đứng cạnh rào.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:thuong_uy_hai",
+          "text": {
+            "vi": "Anh Minh. Có lệnh cấm từ tám giờ. Anh qua lúc tám giờ năm phút. Đề nghị anh xuất trình giấy tờ."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Anh Hải, ông này từ bãi giữa ra. Nhà ông ấy ngập bậc hai rồi."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:thuong_uy_hai",
+          "text": {
+            "vi": "(rọi đèn vào ông Bảy, bát hương, rồi về phía Minh) Tôi vẫn lập biên bản. Luật là luật. Lệnh cấm là để không ai chết trên cầu."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:thuong_uy_hai",
+          "text": {
+            "vi": "Và tôi ghi thêm một dòng: \"người vi phạm chở người dân sơ tán từ bãi giữa\". Biên bản ghi đúng thì người đọc sau hiểu đúng."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:thuong_uy_hai",
+          "text": {
+            "vi": "Anh có giấy khen an toàn giao thông của đội tôi. Đêm nay anh làm tôi ký tên vào hai tờ khác nhau cho cùng một người."
+          },
+          "condition": {
+            "flags": [
+              "giay_khen_an_toan_giao_thong"
+            ]
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:thuong_uy_hai",
+          "text": {
+            "vi": "Đưa ông ấy vào nhà văn hóa phường Phúc Xá, có chỗ ngủ, có cháo."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Cảm ơn anh."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_07_lan_bep",
+      "tags": [
+        "chapter_3",
+        "set_piece",
+        "lan",
+        "consequence"
+      ],
+      "context": "Quán Phở Thọ, 21:30. Mất điện. Nước đã tràn qua chân tường chung vào bếp, ngập mắt cá. Ngoài cửa, đội xung kích phường đội mưa từ trưa, chưa ai ăn gì.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Lan. Bếp gas còn mấy bình?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Một bình, ông. Nồi nước dùng ninh từ sáng. Nước bẩn tràn vào, cháu không biết còn dùng được không."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "(đứng ở cửa, áo mưa sũng) Cháu Lan, ông xin lỗi. Hai mươi người trong đội chưa ăn từ trưa. Phường gửi bánh mì nhưng xe không vào được ngõ."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Ông biết hồi Tết cháu nói ông ghi biên bản sai. Hôm nay ông không nhắc chuyện ấy."
+          },
+          "condition": {
+            "flags": [
+              "lan_phu_nhan"
+            ]
+          },
+          "goto": "l06"
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Bao cát tường chung đắp nhờ ảnh của anh Khôi. Không có thì giờ bếp nhà cháu ngập đầu gối rồi."
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_to_dan_pho_51"
+            ]
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "(nhìn nồi, nhìn Lan) Năm bảy hai, đêm Hà Nội bị ném bom, tôi nấu cho đội tự vệ bằng một bếp than. Phở không ngon, nhưng người ta nhớ."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Nấu giữa nước thì nồi nước dùng hôm nay mất, có khi cả gas và bếp. Đóng bếp thì cứu được bát, gạo, sổ sách lên gác.)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Nấu. Bốn mươi bát cho đội trực, bằng bình gas cuối cùng."
+              },
+              "goto": "l08a",
+              "effect": {
+                "set_flags": [
+                  "lan_nau_cho_nguoi_truc"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": 10,
+                  "hoi_nguoi_cao_tuoi_phuong": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Đóng bếp. Cứu đồ lên gác lửng trước. Nhà mất bếp thì mai không ai được ăn."
+              },
+              "goto": "l08b",
+              "effect": {
+                "set_flags": [
+                  "lan_dong_bep"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "l08a",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "\"Lá lành đùm lá rách\". Ông gọi các cháu vào."
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l08b",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "(gật) Cháu nói đúng. Ông sang xin nhà Hàng Bạc."
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Đèn pin ngậm ở miệng. Bắt đầu.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_07_nhat",
+      "tags": [
+        "chapter_3",
+        "set_piece",
+        "lan"
+      ],
+      "context": "Nước dùng nhạt. Nước mưa hắt qua mái tôn vào nồi.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_sinh_vien",
+          "text": {
+            "vi": "(một cậu sinh viên trong đội xung kích, húp hết bát) Nhạt nhưng nóng, chị ạ. Nóng là được."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Mai nấu lại. Đêm nay người ta cần nóng, không cần ngon."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_07_khoi_gac",
+      "tags": [
+        "chapter_3",
+        "set_piece",
+        "khoi",
+        "consequence"
+      ],
+      "context": "Gác hiệu Ảnh Khải, 22:40. Nước từ rãnh cắt trên tường chung chảy thành dòng, đổ xuống nóc tủ sắt. Đèn pin, hai tay, một chuyến lên sân thượng trước khi cầu thang gỗ ngập ướt.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Hộp mười hai cuộn băng còn lại và cái máy cát-sét. Hay ba hộp phim âm bản ba mươi lăm năm của bố. Hai tay. Một chuyến.)"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Báo không đăng bài số 51. Rãnh cắt vẫn ở đó.)"
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_bao_51"
+            ]
+          },
+          "goto": "l04"
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Thảo nói \"đúng quy trình\". Quy trình chưa kịp đến trước mưa.)"
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_thao_51"
+            ]
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "(gọi vọng lên) Khôi! Năm bảy hai tôi dập lửa bằng tay để cứu tờ giấy, con Hạnh khóc trong nôi ngay cạnh. Bàn tay này nhớ cả đời. Cứu cái gì thì cứu, đừng để mất người."
+          },
+          "condition": {
+            "flags": [
+              "tho_cuu_giay"
+            ]
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "(gọi vọng lên) Khôi! Năm bảy hai tôi bế con Hạnh xuống hầm, để tờ giấy cháy. Tôi không hối hận. Cậu cứu cái gì thì cứu, đừng để mất người."
+          },
+          "condition": {
+            "flags": [
+              "tho_cuu_con"
+            ]
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "(gọi vọng lên) Khôi! Cứu cái gì thì cứu, đừng để mất người."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Lấy..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Hộp băng của bố. Những gì bố chưa nói hết nằm trong đó."
+              },
+              "goto": "l08a",
+              "effect": {
+                "set_flags": [
+                  "khoi_cuu_bang"
+                ]
+              }
+            },
+            {
+              "text": {
+                "vi": "Phim âm bản. Ba mươi lăm năm Hà Nội không có bản thứ hai."
+              },
+              "goto": "l08b",
+              "effect": {
+                "set_flags": [
+                  "khoi_cuu_phim"
+                ],
+                "reputation": {
+                  "hoi_bao_ton_pho_cu": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l08a",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Băng. Máy cát-sét. Phim thì để lại trên nóc tủ, cầu cho nước không lên đến đó.)"
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l08b",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Phim. Ba hộp. Băng thì để lại trên nóc tủ, cầu cho nước không lên đến đó.)"
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(Na gut. Đi.)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_07_cau_thang",
+      "tags": [
+        "chapter_3",
+        "set_piece",
+        "minh",
+        "lan",
+        "khoi",
+        "consequence"
+      ],
+      "context": "Nửa đêm. Ba người và cụ Thọ ngồi trên cầu thang gỗ, nước ở bậc thứ tư. Đèn pin úp xuống. Ngoài ngõ tiếng máy bơm của phường.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Em bị anh Hải lập biên bản. Vượt rào cầu Long Biên. Ông Bảy ngủ ở nhà văn hóa Phúc Xá rồi, bát hương đặt cạnh gối."
+          },
+          "condition": {
+            "flags": [
+              "minh_vuot_rao_cau"
+            ]
+          },
+          "goto": "l03"
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Em đi vòng Chương Dương. Mất bốn mươi phút, xe chết máy hai lần. Ông Bảy ôm bát hương suốt, không đổ."
+          },
+          "condition": {
+            "flags": [
+              "minh_di_vong_chuong_duong"
+            ]
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Bốn mươi bát. Hết gas. Nồi nước dùng ninh từ sáng mất rồi, mai ninh lại."
+          },
+          "condition": {
+            "flags": [
+              "lan_nau_cho_nguoi_truc"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Bếp đóng. Bát, gạo, sổ trên gác lửng. Đội xung kích sang ăn nhờ nhà Hàng Bạc."
+          },
+          "condition": {
+            "flags": [
+              "lan_dong_bep"
+            ]
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Tôi mang băng lên sân thượng. Phim còn trên nóc tủ. Sáng mới biết."
+          },
+          "condition": {
+            "flags": [
+              "khoi_cuu_bang"
+            ]
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Tôi mang phim lên sân thượng. Hộp băng còn trên nóc tủ. Sáng mới biết."
+          },
+          "condition": {
+            "flags": [
+              "khoi_cuu_phim"
+            ]
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Năm bảy hai tôi chỉ cứu được một thứ. Đêm nay mỗi đứa cứu một thứ. Nhà này ba phần thì ba đứa ngồi đây."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Con Hạnh gọi chưa? Hồ sơ có tên nó mà đêm nay nó ở đâu."
+          },
+          "condition": {
+            "flags": [
+              "ho_so_co_hanh_trong_goi"
+            ]
+          },
+          "goto": "l10"
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Con Hạnh gọi chưa? Hồ sơ không có tên nó mà đêm nay nó vẫn gọi."
+          },
+          "condition": {
+            "flags": [
+              "ho_so_19_ho"
+            ]
+          }
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Cô gọi bốn lần. Cô hỏi ông có lạnh không."
+          }
+        },
+        {
+          "id": "l11",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Nước rút thì nợ còn. Ngủ đi."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_08_bien_ban",
+      "tags": [
+        "chapter_3",
+        "khoi",
+        "consequence"
+      ],
+      "context": "Sáu giờ sáng sau bão. Bùn trên bậc cửa. Ông Khang cầm loa cầm tay và cuốn sổ, cán bộ phường đo vệt nước trên tường.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Hộ số 49: nước vào qua tường chung với số 51, vệt cao bốn mươi phân trong bếp, sáu mươi phân trên gác qua rãnh cắt. Ghi biên bản."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Biên bản hiện trạng tháng Tư đã có ảnh rãnh cắt của anh Khôi, có chữ ký của cả tổ. Giờ là biên bản thứ hai. Hai tờ đặt cạnh nhau thì ai cũng đọc được."
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_to_dan_pho_51"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Anh Khôi gửi ảnh cho báo, báo không đăng. Biên bản của phường thì không ai giữ lại được."
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_bao_51"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Cô Thảo bên công ty nhắn tôi xin bản sao biên bản. Lần đầu công ty ấy xin, không phải đưa."
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_thao_51"
+            ]
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Đội xung kích nhờ tôi cảm ơn cháu Lan. Bốn mươi bát phở trong nước. Tôi ghi vào sổ của tổ, không ghi vào biên bản."
+          },
+          "condition": {
+            "flags": [
+              "lan_nau_cho_nguoi_truc"
+            ]
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Nhà cụ Thọ giữ được bếp. Hôm nay nhà nào cũng cần một cái bếp còn dùng được."
+          },
+          "condition": {
+            "flags": [
+              "lan_dong_bep"
+            ]
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Tôi chụp vệt nước được không, ông? Cùng góc với tấm \"Hàng Chiếu ngập 2008\" của bố tôi."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Chụp đi. Nắng lên là khô."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_08_bun_kho",
+      "tags": [
+        "chapter_3",
+        "khoi"
+      ],
+      "context": "Nắng lên, vệt nước trên tường khô mất một nửa. Bà Tâm xôi đứng xem.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ba_tam_xoi",
+          "text": {
+            "vi": "Ối giời, cháu chụp chậm thế. Năm 2008 bố cháu đứng đây từ năm giờ sáng, chụp xong mới ăn xôi."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Cháu chụp phần còn lại. Phần khô rồi thì có biên bản."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_08_vinh",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "khoi",
+        "consequence"
+      ],
+      "context": "Chín giờ sáng. Vĩnh đi ủng cao su, không có trợ lý, đứng trước số 51 nhìn vào nhà mẫu ngập bùn. Lần đầu ông đi bộ vào ngõ Hàng Chiếu.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Nhà thầu phụ của tôi cắt tường chung để đi ống mái. Tôi biết sáng nay, qua biên bản của phường. Tôi không đổ cho ai."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Anh Khôi gửi ảnh cho báo từ tháng Tư. Báo hỏi tôi, tôi bảo bên đó là \"tin đồn\". Tôi sai. Tôi bồi thường sửa tường và bếp số 49, theo giá của phường."
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_bao_51"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Biên bản tháng Tư có đủ chữ ký cả tổ, không ai cãi được. Tôi bồi thường sửa tường và bếp số 49, theo giá của phường."
+          },
+          "condition": {
+            "flags": [
+              "khoi_gui_to_dan_pho_51"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Tôi bồi thường sửa tường và bếp số 49, theo giá của phường."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Bồi thường thì phường tính. Còn chuyện tờ giấy nợ của cô tôi?"
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Rằm tháng Giêng cô nói không phần nào bán cả. Tôi tôn trọng. Nên tôi mua tờ giấy nợ, không mua phần nhà. Ai cầm giấy nợ thì người đó nói chuyện với cô Hạnh."
+          },
+          "condition": {
+            "flags": [
+              "lan_ram_khong_ban"
+            ]
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Rằm tháng Giêng cô nói phần của cô Hạnh để cô Hạnh quyết. Cô Hạnh chưa quyết. Tờ giấy nợ thì có người sắp quyết thay cô ấy."
+          },
+          "condition": {
+            "flags": [
+              "lan_ram_de_co_ban"
+            ]
+          },
+          "goto": "l09"
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Anh Tùng chào tôi chín trăm triệu. Hôm nay hết tháng cô hồn."
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Có thực mới vực được đạo, cô Lan. Nhà ngập một đêm, cô biết sửa nhà cần bao nhiêu tiền rồi đấy."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_c3_08_tung_goi",
+      "tags": [
+        "chapter_3",
+        "lan",
+        "consequence"
+      ],
+      "context": "Mười một giờ. Hết tháng cô hồn. Điện thoại: \"Tùng Hòa Lạc\". Cô Hạnh ngồi cạnh Lan trên bậc cửa còn bùn.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Cháu Lan. Hôm nay là ngày. Anh Vĩnh đặt cọc rồi, chiều tôi ký. Cháu gọi tôi trước thì tôi nghe cháu trước."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Rằm tháng Giêng cháu bảo tôi cho vay nặng lãi. Tôi về đọc luật rồi. Cho nên tôi bán, cho nên tôi vội."
+          },
+          "condition": {
+            "flags": [
+              "lan_doi_mat_tung"
+            ]
+          },
+          "goto": "l04"
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Cháu hỏi giá tôi từ rằm tháng Giêng. Chín trăm. Cháu có chưa?"
+          },
+          "condition": {
+            "flags": [
+              "lan_hoi_gia_tung"
+            ]
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "(thì thầm) Lan, đơn cô nộp phường từ tháng Năm, công an đã mời anh ấy lên một lần."
+          },
+          "condition": {
+            "flags": [
+              "lan_khuyen_bao_cong_an"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "(thì thầm) Cô cầm bảng tính đến gặp anh ấy hai lần. Anh ấy bảo \"bảng tính không phải tiền\"."
+          },
+          "condition": {
+            "flags": [
+              "lan_khuyen_thuong_luong"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "(thì thầm) Cô chưa quyết được, Lan. Sáu tháng rồi cô vẫn chưa quyết được."
+          },
+          "condition": {
+            "flags": [
+              "lan_de_co_quyet"
+            ]
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "(thì thầm) Lan..."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Sổ góp vốn của ông Khang có hai trăm ba mươi triệu của mười bốn nhà. Chưa đủ, nhưng không phải số không.)"
+          },
+          "condition": {
+            "flags": [
+              "lan_goi_von_cong_dong"
+            ]
+          },
+          "goto": "l10"
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(Hồ sơ vay có dòng của cô. Chưa duyệt. Nhưng có.)"
+          },
+          "condition": {
+            "flags": [
+              "ho_so_co_hanh_trong_goi"
+            ]
+          }
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Anh Tùng."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Tôi có ảnh sáu tờ giấy, tờ đầu ghi ba nghìn một triệu một ngày. Đơn đã nộp. Anh bán giấy ấy là bán tang vật."
+              },
+              "goto": "l11a",
+              "condition": {
+                "flags": [
+                  "lan_xin_giay_no",
+                  "lan_khuyen_bao_cong_an"
+                ]
+              },
+              "effect": {
+                "set_flags": [
+                  "lan_to_cao_tung"
+                ],
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 5,
+                  "kim_long_land": -5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Theo luật anh còn đòi được bốn trăm sáu mươi triệu. Chúng tôi trả đúng số ấy, anh trả lại sáu tờ giấy. Không ai phải lên phường."
+              },
+              "goto": "l11b",
+              "condition": {
+                "flags": [
+                  "lan_biet_goc_that"
+                ]
+              },
+              "effect": {
+                "set_flags": [
+                  "lan_thuong_luong_tung"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": 5
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Anh bán cho anh Vĩnh đi. Phần của cô tôi, tôi nói chuyện với anh Vĩnh."
+              },
+              "goto": "l11c",
+              "condition": {
+                "not_flags": [
+                  "lan_chot_khong_ban",
+                  "lan_ram_khong_ban"
+                ]
+              },
+              "effect": {
+                "set_flags": [
+                  "lan_cho_vinh_mua_no"
+                ],
+                "reputation": {
+                  "kim_long_land": 10,
+                  "to_dan_pho_hang_chieu": -10
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Cho cô tôi thêm ba tháng. Nhà vừa ngập, anh cũng có mẹ có nhà."
+              },
+              "goto": "l11d",
+              "effect": {
+                "set_flags": [
+                  "lan_xin_tung_ba_thang"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": -5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l11a",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "(im rất lâu) Thế thì không ai mua tờ giấy ấy nữa, kể cả tôi. Cháu giỏi. Cháu làm tôi mất chín trăm triệu và có khi mất cả cái tự do. Hẹn gặp ở phường."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l11b",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Bốn trăm sáu. Ít hơn anh Vĩnh bốn trăm bốn mươi. (thở dài) Nhưng anh Vĩnh không đến phường với tôi được. Cháu có đủ tiền trước mười tháng Mười thì tôi trả giấy. Không có thì tôi bán."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l11c",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Cháu nói câu ấy thì tôi nhẹ người. Chiều nay tôi ký với anh Vĩnh. Từ giờ chị Hạnh nợ người không lần tràng hạt."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l11d",
+          "speaker": "characters:ong_tung_hoa_lac",
+          "text": {
+            "vi": "Ba tháng, thêm mười phần trăm. Đến mười tháng Mười. Tôi không phải người ác, cháu ạ. Tôi chỉ là người cũng đang nợ."
+          },
+          "goto": "l12"
+        },
+        {
+          "id": "l12",
+          "speaker": "characters:co_hanh",
+          "text": {
+            "vi": "(nắm tay Lan, bùn khô trên móng tay sơn đỏ) Cô biết cô nợ bao nhiêu rồi. Lần đầu sau sáu năm."
+          }
+        }
+      ]
+    }
+  ]
+}
