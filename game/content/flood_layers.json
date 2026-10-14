@@ -96,8 +96,8 @@
           "id": "bai_giua_phuc_xa",
           "name": "Bãi giữa sông Hồng, nhà ông Bảy",
           "location": {
-            "lat": 21.045,
-            "lon": 105.862
+            "lat": 21.043194,
+            "lon": 105.857959
           },
           "radius_m": 450,
           "landmark": "landmarks:bai_giua_song_hong",
