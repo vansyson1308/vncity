@@ -1,0 +1,1238 @@
+<meta charset="utf-8">
+<title>Dạo phố Cầu Giấy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one full-screen street scene; HUD chips pinned to the corners. */
+:root {
+  --hud-bg: rgba(250, 250, 246, 0.86);
+  --hud-fg: #1d2420;
+  --hud-muted: #56615a;
+  --hud-line: rgba(29, 36, 32, 0.14);
+  --accent: #8a5a00;
+  --bg: #c9d3d8;
+  --f-ui: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --f-data: "Roboto Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hud-bg: rgba(20, 24, 21, 0.84); --hud-fg: #e5e8e2; --hud-muted: #9aa59e;
+    --hud-line: rgba(229, 232, 226, 0.14); --accent: #e8b960; --bg: #1a1f1b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --hud-bg: rgba(20, 24, 21, 0.84); --hud-fg: #e5e8e2; --hud-muted: #9aa59e;
+  --hud-line: rgba(229, 232, 226, 0.14); --accent: #e8b960; --bg: #1a1f1b; color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; margin: 0; background: var(--bg); color: var(--hud-fg); font-family: var(--f-ui); overflow: hidden; }
+#scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; }
+.hud { position: fixed; background: var(--hud-bg); border: 1px solid var(--hud-line); border-radius: 8px; padding: 10px 12px; font-size: 13px; line-height: 1.45; backdrop-filter: blur(6px); }
+.hud.tl { top: calc(12px + env(safe-area-inset-top, 0px)); left: 12px; max-width: min(360px, calc(100% - 24px)); }
+.hud.bl { bottom: calc(12px + env(safe-area-inset-bottom, 0px)); left: 12px; right: 12px; max-width: 560px; display: grid; gap: 6px; }
+h1 { margin: 0; font-size: 17px; font-weight: 800; letter-spacing: -0.01em; }
+h1 span { font-family: var(--f-data); font-weight: 500; color: var(--accent); }
+.keys { color: var(--hud-muted); margin-top: 4px; }
+kbd { font-family: var(--f-data); font-size: 11px; border: 1px solid var(--hud-line); border-radius: 4px; padding: 0 4px; }
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.row label { color: var(--hud-muted); }
+#hour { flex: 1 1 160px; min-width: 0; accent-color: var(--accent); }
+#hour-out, .mono { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+#where { color: var(--hud-muted); min-width: 0; overflow-wrap: anywhere; }
+#where b { color: var(--hud-fg); font-weight: 500; }
+a { color: var(--accent); }
+#loading { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); font-size: 15px; z-index: 5; }
+#loading div { display: grid; gap: 8px; justify-items: center; text-align: center; padding: 0 16px; }
+#loading b { font-size: 20px; font-weight: 800; }
+#photo-btn { font: 600 13px/1 var(--f-ui); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--hud-line); background: var(--accent); color: #fff; cursor: pointer; }
+#photo-btn:disabled { background: transparent; color: var(--hud-muted); cursor: default; }
+#photo-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#photo-info { color: var(--hud-muted); min-width: 0; overflow-wrap: anywhere; }
+#stick { position: fixed; left: 24px; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--hud-line); background: var(--hud-bg); touch-action: none; }
+#stick i { position: absolute; left: 35px; top: 35px; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); opacity: 0.8; }
+@media (hover: hover) and (pointer: fine) { #stick { display: none; } }
+</style>
+
+<canvas id="scene" tabindex="0" aria-label="Phố Cầu Giấy góc nhìn thứ ba"></canvas>
+<div id="loading"><div><b>Dạo phố Cầu Giấy</b><span id="load-msg">Đang tải dữ liệu bản đồ…</span></div></div>
+
+<div class="hud tl">
+  <h1>Cầu Giấy <span>1:1</span></h1>
+  <div class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> đi bộ · giữ <kbd>Shift</kbd> để chạy · kéo chuột để xoay · cuộn để đổi khoảng cách · <kbd>P</kbd> ảnh thật 360°</div>
+</div>
+
+<div class="hud bl">
+  <div class="row">
+    <label for="hour">Giờ</label>
+    <input id="hour" type="range" min="5.5" max="19" step="0.25" value="15.5">
+    <span id="hour-out">15:30</span>
+  </div>
+  <div id="where">Đang xác định vị trí…</div>
+  <div class="row"><button id="photo-btn" type="button" disabled>Ảnh thật 360° (P)</button><span id="photo-info"></span></div>
+</div>
+<div id="stick" aria-hidden="true"><i></i></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { Sky } from "three/addons/objects/Sky.js";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+
+// ---------- constants grounded in the place ----------
+const LAT_DEG = 21.03, DAY_OF_YEAR = 284;   // Hà Nội, mid-October
+const FLOOR_M = 3.3;
+const WALK_MS = 1.4, RUN_MS = 4.2;         // real pedestrian speeds
+const BODY_R = 0.3;
+const WALL_COLORS = ["#e3b04b", "#efe6d2", "#e8c4c0", "#bfd4dc", "#f2f2ee", "#cfe3cf", "#b9b6ae", "#e9d7a6", "#d8cfc0", "#f0d9b5"];
+const SIGNS = ["PHỞ BÒ", "CƠM BÌNH DÂN", "TẠP HÓA", "SỬA XE MÁY", "CÀ PHÊ", "BÁNH MÌ", "NHÀ THUỐC", "ĐIỆN THOẠI", "BÚN CHẢ", "PHOTO COPY", "TRÀ ĐÁ", "GỘI ĐẦU"];
+const SIGN_BG = ["#c8242b", "#f2c230", "#1f5fa8", "#1d7a46", "#e86a1a", "#ffffff"];
+const MAIN_ROADS = new Set(["trunk", "primary", "secondary", "tertiary"]);
+const SHOP_ROADS = new Set(["trunk", "primary", "secondary", "tertiary", "residential", "unclassified", "service", "living_street"]);
+
+const $ = (id) => document.getElementById(id);
+const HASH = new URLSearchParams(location.hash.slice(1));
+const LITE = HASH.has("lite");                  // no shadows, 1x pixels: for weak GPUs and phones
+
+const loadMsg = (t) => { $("load-msg").textContent = t; };
+
+// ---------- deterministic randomness per building ----------
+function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rngFor(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const pick = (r, arr) => arr[Math.floor(r() * arr.length) % arr.length];
+
+// ---------- renderer, sky, sun ----------
+const canvas = $("scene");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+renderer.setPixelRatio(LITE ? 1 : Math.min(window.devicePixelRatio, 1.75));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.8;
+renderer.shadowMap.enabled = !LITE;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 3000);
+const sky = new Sky();
+sky.scale.setScalar(5000);
+Object.assign(sky.material.uniforms, {});
+sky.material.uniforms.turbidity.value = 9;      // humid, hazy Hà Nội air
+sky.material.uniforms.rayleigh.value = 1.6;
+sky.material.uniforms.mieCoefficient.value = 0.012;
+sky.material.uniforms.mieDirectionalG.value = 0.82;
+scene.add(sky);
+scene.fog = new THREE.Fog(0xc4ccd0, 60, LITE ? 300 : 520);   // Hà Nội haze also hides the draw range
+
+const hemi = new THREE.HemisphereLight(0xdfe8f0, 0x6b6257, 0.9);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xfff0d8, 3.2);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -70, right: 70, top: 70, bottom: -70, near: 1, far: 500 });
+sun.shadow.bias = -0.0004;
+sun.shadow.normalBias = 0.04;
+scene.add(sun, sun.target);
+const sunDir = new THREE.Vector3();
+
+function solar(hour) {
+  // Declination and hour angle for local solar time at Hà Nội's latitude.
+  const decl = THREE.MathUtils.degToRad(23.44) * Math.sin((2 * Math.PI / 365) * (DAY_OF_YEAR - 81));
+  const lat = THREE.MathUtils.degToRad(LAT_DEG);
+  const ha = THREE.MathUtils.degToRad(15 * (hour - 12));
+  const sinEl = Math.sin(lat) * Math.sin(decl) + Math.cos(lat) * Math.cos(decl) * Math.cos(ha);
+  const el = Math.asin(sinEl);
+  let az = Math.acos(Math.min(1, Math.max(-1, (Math.sin(decl) - Math.sin(el) * Math.sin(lat)) / (Math.cos(el) * Math.cos(lat)))));
+  if (ha > 0) az = 2 * Math.PI - az;                 // afternoon: sun in the west
+  return { el, az };
+}
+const windowLitMat = new THREE.MeshStandardMaterial({ color: 0x2b3238, roughness: 0.2, metalness: 0.5, emissive: 0xffc070, emissiveIntensity: 0 });
+function setHour(h) {
+  const { el, az } = solar(h);
+  sunDir.set(Math.sin(az) * Math.cos(el), Math.sin(el), -Math.cos(az) * Math.cos(el));
+  sky.material.uniforms.sunPosition.value.copy(sunDir);
+  const day = THREE.MathUtils.clamp(Math.sin(el) * 3, 0, 1);
+  sun.intensity = 3.2 * day;
+  sun.color.setHSL(0.09, 0.6, 0.55 + 0.35 * day);
+  hemi.intensity = 0.25 + 0.75 * day;
+  scene.fog.color.setHSL(0.56, 0.12, 0.2 + 0.58 * day);
+  windowLitMat.emissiveIntensity = (1 - day) * 1.6;
+  const hh = Math.floor(h), mm = Math.round((h - hh) * 60);
+  $("hour-out").textContent = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+}
+$("hour").addEventListener("input", (e) => setHour(parseFloat(e.target.value)));
+
+// ---------- canvas textures ----------
+function canvasTex(w, h, draw, repeat = false) {
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  draw(c.getContext("2d"), w, h);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8;
+  if (repeat) t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
+const grimeTex = canvasTex(256, 256, (g, w, h) => {
+  // Plaster with rain streaks and a darker damp band at street level (u = 4 m, v = 4 m).
+  g.fillStyle = "#fff"; g.fillRect(0, 0, w, h);
+  const r = rngFor(7);
+  for (let i = 0; i < 2600; i++) { const v = 225 + r() * 30; g.fillStyle = `rgba(${v},${v},${v},0.3)`; g.fillRect(r() * w, r() * h, 2 + r() * 5, 2 + r() * 5); }
+  for (let i = 0; i < 26; i++) { const x = r() * w; const grd = g.createLinearGradient(0, 0, 0, h); grd.addColorStop(0, "rgba(90,85,78,0.09)"); grd.addColorStop(1, "rgba(90,85,78,0)"); g.fillStyle = grd; g.fillRect(x, 0, 2 + r() * 7, h * (0.3 + r() * 0.7)); }
+}, true);
+const shutterTex = canvasTex(64, 128, (g, w, h) => {
+  g.fillStyle = "#9aa0a3"; g.fillRect(0, 0, w, h);
+  for (let y = 0; y < h; y += 6) { g.fillStyle = "#7e8487"; g.fillRect(0, y, w, 2); g.fillStyle = "#b6bbbd"; g.fillRect(0, y + 2, w, 1); }
+}, true);
+const flagTex = canvasTex(96, 64, (g, w, h) => {
+  g.fillStyle = "#da251d"; g.fillRect(0, 0, w, h);
+  g.fillStyle = "#ffcd00"; g.beginPath();
+  const cx = w / 2, cy = h / 2, R = h * 0.3, r = R * 0.382;
+  for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5; const rr = i % 2 ? r : R; g.lineTo(cx + rr * Math.cos(a), cy + rr * Math.sin(a)); }
+  g.fill();
+});
+function signTex(text, bg) {
+  return canvasTex(512, 96, (g, w, h) => {
+    g.fillStyle = bg; g.fillRect(0, 0, w, h);
+    g.strokeStyle = "rgba(0,0,0,0.25)"; g.lineWidth = 6; g.strokeRect(3, 3, w - 6, h - 6);
+    g.fillStyle = bg === "#ffffff" || bg === "#f2c230" ? "#c8242b" : "#ffffff";
+    g.font = "800 58px 'Be Vietnam Pro', 'Segoe UI', sans-serif";
+    g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillText(text, w / 2, h / 2 + 3, w - 30);
+  });
+}
+
+// ---------- data loading ----------
+const loader = new GLTFLoader();
+async function fetchGlb(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+  const bin = atob((await res.text()).trim());
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+// data metres (east, north) -> three (x, z = -north)
+const V = (x, y, h = 0) => new THREE.Vector3(x, h, -y);
+
+// ---------- builders ----------
+const buildings = [];           // {poly:[[x,y]..], name, height, source, id}
+const grid = new Map();         // collision grid of building polygons
+const CELL = 25;
+const cellKey = (cx, cy) => `${cx},${cy}`;
+function addToGrid(b) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const [x, y] of b.poly) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+  b.bbox = [x0, y0, x1, y1];
+  for (let cx = Math.floor(x0 / CELL); cx <= Math.floor(x1 / CELL); cx++)
+    for (let cy = Math.floor(y0 / CELL); cy <= Math.floor(y1 / CELL); cy++) {
+      const k = cellKey(cx, cy); if (!grid.has(k)) grid.set(k, []); grid.get(k).push(b);
+    }
+}
+function ccw(poly) {
+  let a = 0; for (let i = 0; i < poly.length - 1; i++) a += poly[i][0] * poly[i + 1][1] - poly[i + 1][0] * poly[i][1];
+  return a >= 0 ? poly : poly.slice().reverse();
+}
+
+// Everything generated is bucketed into 200 m chunks: each chunk is frustum-culled and hidden
+// beyond the draw range, so only the streets around the walker cost anything.
+const CHUNK = 200;
+const chunks = new Map();
+function chunk(x, y) {
+  const cx = Math.floor(x / CHUNK), cy = Math.floor(y / CHUNK), k = cellKey(cx, cy);
+  if (!chunks.has(k)) chunks.set(k, { cx: (cx + 0.5) * CHUNK, cy: (cy + 0.5) * CHUNK, wall: { pos: [], nor: [], col: [], uv: [] }, roof: [], inst: {}, cables: [], group: null });
+  return chunks.get(k);
+}
+function pushQuad(c, a, b, h0, h1, n, col, u0, u1) {
+  const p = [[a[0], a[1], h0], [b[0], b[1], h0], [b[0], b[1], h1], [a[0], a[1], h0], [b[0], b[1], h1], [a[0], a[1], h1]];
+  const uv = [[u0, h0 / 4], [u1, h0 / 4], [u1, h1 / 4], [u0, h0 / 4], [u1, h1 / 4], [u0, h1 / 4]];
+  for (let i = 0; i < 6; i++) {
+    c.wall.pos.push(p[i][0], p[i][2], -p[i][1]); c.wall.nor.push(n[0], 0, -n[1]);
+    c.wall.col.push(col.r, col.g, col.b); c.wall.uv.push(uv[i][0], uv[i][1]);
+  }
+}
+
+const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), P = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0);
+function put(kind, x, y, h, yaw, sx, sy, sz, color) {
+  Q.setFromAxisAngle(UP, yaw); P.set(x, h, -y); S.set(sx, sy, sz);
+  (chunk(x, y).inst[kind] ||= []).push({ m: M.clone().compose(P, Q, S), c: color });
+}
+const poles = [], treeCells = new Set(), poleCells = new Set();
+const photoEdges = new Set();  // "<building id>_<edge index>" covered by a real photo facade
+const spawnEdges = [];          // shopfronts on everyday streets: where a walk should start
+
+function addBuilding(raw, ox, oy) {
+  const r = rngFor(hashStr(raw.id));
+  const poly = ccw(raw.footprint.map(([x, y]) => [x + ox, y + oy]));
+  const base = raw.min_height_m || 0, top = raw.height_m;
+  const tall = raw.floors >= 7;
+  const wall = new THREE.Color(tall ? pick(r, ["#cfd6da", "#b9c3c8", "#e6e4dc"]) : pick(r, WALL_COLORS));
+  wall.multiplyScalar(0.92 + r() * 0.12);
+  const ch = chunk(poly[0][0], poly[0][1]);
+  let u = 0;
+  for (let i = 0; i < poly.length - 1; i++) {
+    const a = poly[i], b = poly[i + 1];
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy);
+    if (L < 1e-3) continue;
+    pushQuad(ch, a, b, base, top, [dy / L, -dx / L], wall, u / 4, (u + L) / 4);
+    u += L;
+  }
+  // roof (flat concrete)
+  const contour = poly.slice(0, -1).map(([x, y]) => new THREE.Vector2(x, y));
+  for (const [i, j, k] of THREE.ShapeUtils.triangulateShape(contour, [])) {
+    for (const t of [i, j, k]) ch.roof.push(contour[t].x, top, -contour[t].y);
+  }
+  const b = { poly, name: raw.name, height: top, source: raw.height_source, id: raw.id };
+  buildings.push(b); addToGrid(b);
+
+  // facades along streets
+  for (const [ei, e] of raw.street_edges.entries()) {
+    const photo = photoEdges.has(`${raw.id}_${ei}`);
+    const ax = e.a[0] + ox, ay = e.a[1] + oy, bx = e.b[0] + ox, by = e.b[1] + oy;
+    const L = e.len, dx = (bx - ax) / L, dy = (by - ay) / L, nx = dy, ny = -dx;
+    // three yaw so local +x runs along the facade: data (dx, dy) is three (dx, 0, -dy), and a
+    // rotation by yaw about +Y takes +x to (cos yaw, 0, -sin yaw).
+    const yaw = Math.atan2(dy, dx);
+    const mx = (ax + bx) / 2, my = (ay + by) / 2;
+    const at = (t, off) => [ax + dx * t + nx * off, ay + dy * t + ny * off];
+    const floors = Math.max(1, Math.min(raw.floors, Math.floor((top - base) / FLOOR_M)));
+    const shopRoad = SHOP_ROADS.has(e.road);
+    if (!tall && L >= 4 && (e.road === "tertiary" || e.road === "residential" || e.road === "secondary"))
+      spawnEdges.push({ x: mx + nx * 2.2, y: my + ny * 2.2, dx, dy });
+
+    if (!tall && shopRoad && L >= 2.4) {
+      // ground floor: open shop or roller shutter, sign board above (a photo facade shows the real one)
+      const [sx, sy] = at(L / 2, 0.04);
+      const kind = r() < 0.45 ? "shutter" : "shopdark", sign = Math.floor(r() * SIGNS.length);
+      if (!photo) {
+        put(kind, sx, sy, kind === "shutter" ? 1.55 : 1.5, yaw, L * 0.86, kind === "shutter" ? 3.1 : 3.0, 1);
+        const [gx, gy] = at(L / 2, 0.22);
+        put(`sign${sign}`, gx, gy, 3.45, yaw, Math.min(L * 0.92, 9), 0.75, 0.16);
+      }
+      // motorbikes parked nose-in, stools for street food
+      if (MAIN_ROADS.has(e.road) || e.road === "residential" || e.road === "unclassified") {
+        const n = Math.floor(r() * Math.min(5, L / 0.8));
+        for (let k = 0; k < n; k++) {
+          const [px, py] = at(0.6 + k * 0.75 + r() * 0.15, 1.3 + r() * 0.3);
+          put("bike", px, py, 0, yaw + Math.PI / 2 + (r() - 0.5) * 0.2, 1, 1, 1, new THREE.Color(pick(r, ["#b3121b", "#1b1b1b", "#e9e9e9", "#1f4fa0", "#7a7f86", "#c9a227"])));
+        }
+        if (r() < 0.22) {
+          for (let k = 0; k < 4 + Math.floor(r() * 4); k++) {
+            const [px, py] = at(r() * L, 1.0 + r() * 2.2);
+            put("stool", px, py, 0, r() * 6, 1, 1, 1, new THREE.Color(pick(r, ["#1f6fd1", "#d12f2f", "#1f6fd1"])));
+          }
+        }
+      }
+      if (r() < 0.12) { const [fx, fy] = at(0.4, 0.5); put("flag", fx, fy, 4.6, yaw, 1.2, 0.8, 1); }
+    }
+    // upper floors
+    const winCount = Math.max(1, Math.floor(L / 2.4));
+    for (let f = tall ? 0 : 1; f < floors && !photo; f++) {
+      const h0 = base + f * FLOOR_M;
+      for (let w = 0; w < winCount; w++) {
+        const t = (w + 0.5) * (L / winCount);
+        const [wx, wy] = at(t, 0.03);
+        put(r() < 0.3 ? "winLit" : "win", wx, wy, h0 + 1.7, yaw, tall ? L / winCount * 0.92 : 1.3, tall ? 2.6 : 1.55, 1);
+      }
+      if (!tall && L >= 2.4) {
+        const [bx2, by2] = at(L / 2, 0.45);
+        put("slab", bx2, by2, h0 + 0.06, yaw, L - 0.4, 0.12, 0.9);
+        const [rx, ry] = at(L / 2, 0.88);
+        put("rail", rx, ry, h0 + 0.6, yaw, L - 0.4, 0.95, 0.04);
+        if (r() < 0.55) { const [cx, cy] = at(0.55, 0.6); put("ac", cx, cy, h0 + 0.45, yaw, 1, 1, 1); }
+      }
+      if (tall) { const [sx, sy] = at(L / 2, 0.05); put("band", sx, sy, h0, yaw, L, 0.35, 0.12); }
+    }
+    // rooftop water tank (Sơn Hà style, stainless, lying on a frame)
+    if (!tall && r() < 0.7 && L >= 2.4) {
+      const [tx, ty] = at(L / 2, -1.6);
+      put("tank", tx, ty, top + 0.85, yaw, 1, 1, 1);
+    }
+    // trees on main-road sidewalks, poles and cables along alleys
+    if (MAIN_ROADS.has(e.road)) {
+      for (let t = 4; t < L; t += 10) {
+        const [px, py] = at(t, 3.6);
+        const k = cellKey(Math.round(px / 7), Math.round(py / 7));
+        if (treeCells.has(k)) continue; treeCells.add(k);
+        const s = 0.8 + r() * 0.5;
+        put("trunk", px, py, 0, 0, s, s, s);
+        for (let c = 0; c < 4; c++) put("canopy", px + (r() - 0.5) * 2.4 * s, py + (r() - 0.5) * 2.4 * s, (4.6 + r() * 2.2) * s, r() * 6, 1.6 * s + r(), 1.2 * s + r() * 0.6, 1.6 * s + r(), new THREE.Color().setHSL(0.27 + r() * 0.06, 0.45, 0.22 + r() * 0.1));
+      }
+    }
+    if (e.road === "service" || e.road === "residential" || e.road === "unclassified" || MAIN_ROADS.has(e.road)) {
+      const [px, py] = at(L / 2, MAIN_ROADS.has(e.road) ? 4.8 : 0.7);
+      const k = cellKey(Math.round(px / 22), Math.round(py / 22));
+      if (!poleCells.has(k)) { poleCells.add(k); poles.push([px, py]); put("pole", px, py, 0, 0, 1, 1, 1); }
+    }
+  }
+}
+
+function cables() {
+  // Each pole strings 4-7 sagging cables to its two nearest neighbours: the Hà Nội tangle.
+  const pg = new Map();
+  poles.forEach((p, i) => { const k = cellKey(Math.floor(p[0] / 40), Math.floor(p[1] / 40)); if (!pg.has(k)) pg.set(k, []); pg.get(k).push(i); });
+  const done = new Set();
+  poles.forEach((p, i) => {
+    const cx = Math.floor(p[0] / 40), cy = Math.floor(p[1] / 40), near = [];
+    for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) for (const j of pg.get(cellKey(cx + a, cy + b)) || []) {
+      if (j === i) continue; const d = Math.hypot(poles[j][0] - p[0], poles[j][1] - p[1]); if (d < 38) near.push([d, j]);
+    }
+    near.sort((x, y) => x[0] - y[0]);
+    for (const [, j] of near.slice(0, 2)) {
+      const key = i < j ? `${i}-${j}` : `${j}-${i}`; if (done.has(key)) continue; done.add(key);
+      const r = rngFor(i * 7919 + j);
+      const q = poles[j], n = 4 + Math.floor(r() * 4), pts = chunk(p[0], p[1]).cables;
+      for (let c = 0; c < n; c++) {
+        const h0 = 6.3 + r() * 1.6, h1 = 6.3 + r() * 1.6, sag = 0.5 + r() * 1.3, off = (r() - 0.5) * 0.5;
+        let prev = null;
+        for (let s = 0; s <= 10; s++) {
+          const t = s / 10, x = p[0] + (q[0] - p[0]) * t + off, y = p[1] + (q[1] - p[1]) * t + off;
+          const h = h0 + (h1 - h0) * t - sag * 4 * t * (1 - t);
+          const v = [x, h, -y]; if (prev) pts.push(...prev, ...v); prev = v;
+        }
+      }
+    }
+  });
+}
+
+// ---------- instanced prop geometry ----------
+function boxGeo(w, h, d, oy = 0) { const g = new THREE.BoxGeometry(w, h, d); g.translate(0, oy, 0); return g; }
+function tint(g, hex) { const c = new THREE.Color(hex); const n = g.attributes.position.count; g.setAttribute("color", new THREE.Float32BufferAttribute(new Array(n).fill(0).flatMap(() => [c.r, c.g, c.b]), 3)); return g; }
+function bikeGeo() {
+  const body = tint(boxGeo(1.75, 0.32, 0.36, 0.62), "#ffffff");
+  const seat = tint(boxGeo(0.7, 0.1, 0.3, 0.84), "#1a1a1a"); seat.translate(-0.25, 0, 0);
+  const shield = tint(boxGeo(0.12, 0.55, 0.42, 0.7), "#ffffff"); shield.translate(0.62, 0, 0);
+  const bar = tint(boxGeo(0.08, 0.06, 0.72, 1.08), "#202020"); bar.translate(0.66, 0, 0);
+  const w1 = tint(new THREE.CylinderGeometry(0.3, 0.3, 0.1, 14).rotateX(Math.PI / 2).translate(0.62, 0.3, 0), "#111111");
+  const w2 = w1.clone().translate(-1.24, 0, 0);
+  return mergeGeometries([body, seat, shield, bar, w1, w2]);
+}
+function tankGeo() {
+  const tank = tint(new THREE.CylinderGeometry(0.48, 0.48, 1.7, 18).rotateZ(Math.PI / 2), "#ffffff");
+  const legs = tint(boxGeo(1.4, 0.5, 0.7, -0.6), "#4a4a4a");
+  return mergeGeometries([tank, legs]);
+}
+function poleGeo() {
+  const shaft = tint(new THREE.CylinderGeometry(0.11, 0.17, 8.6, 8).translate(0, 4.3, 0), "#9b978f");
+  const arm = tint(boxGeo(1.4, 0.1, 0.1, 7.6), "#6b6862");
+  const box1 = tint(boxGeo(0.35, 0.5, 0.3, 5.4), "#7d8086"); box1.translate(0.2, 0, 0);
+  return mergeGeometries([shaft, arm, box1]);
+}
+function stoolGeo() { return tint(new THREE.CylinderGeometry(0.15, 0.18, 0.45, 10).translate(0, 0.225, 0), "#ffffff"); }
+function acGeo() { const g = tint(boxGeo(0.82, 0.56, 0.3), "#e9e9e6"); const fan = tint(new THREE.CylinderGeometry(0.19, 0.19, 0.02, 14).rotateX(Math.PI / 2).translate(0.12, 0, 0.16), "#555"); return mergeGeometries([g, fan]); }
+
+const std = (o) => new THREE.MeshStandardMaterial({ roughness: 0.85, ...o });
+const PROPS = {
+  shutter: [new THREE.PlaneGeometry(1, 1), std({ map: shutterTex, metalness: 0.4, roughness: 0.6 })],
+  shopdark: [new THREE.PlaneGeometry(1, 1), std({ color: 0x2a221b, roughness: 0.95 })],
+  win: [new THREE.PlaneGeometry(1, 1), std({ color: 0x2b3238, roughness: 0.2, metalness: 0.5 })],
+  winLit: [new THREE.PlaneGeometry(1, 1), windowLitMat],
+  slab: [new THREE.BoxGeometry(1, 1, 1), std({ color: 0xd9d4ca })],
+  rail: [new THREE.BoxGeometry(1, 1, 1), std({ color: 0x2f3437, metalness: 0.6, roughness: 0.5 })],
+  band: [new THREE.BoxGeometry(1, 1, 1), std({ color: 0x8b9397 })],
+  ac: [acGeo(), std({ vertexColors: true })],
+  tank: [tankGeo(), std({ vertexColors: true, color: 0xd6dadc, metalness: 0.8, roughness: 0.3 })],
+  bike: [bikeGeo(), std({ vertexColors: true, metalness: 0.3, roughness: 0.45 })],
+  stool: [stoolGeo(), std({ vertexColors: true, roughness: 0.5 })],
+  pole: [poleGeo(), std({ vertexColors: true })],
+  trunk: [new THREE.CylinderGeometry(0.14, 0.22, 5.2, 7).translate(0, 2.6, 0), std({ color: 0x5b4a3a })],
+  canopy: [new THREE.IcosahedronGeometry(1, 1), std({ color: 0xffffff, roughness: 0.9, flatShading: true })],
+  flag: [new THREE.PlaneGeometry(1, 1), std({ map: flagTex, side: THREE.DoubleSide })],
+};
+SIGNS.forEach((text, i) => { PROPS[`sign${i}`] = [new THREE.BoxGeometry(1, 1, 1), std({ map: signTex(text, SIGN_BG[i % SIGN_BG.length]), roughness: 0.6 })]; });
+const NO_SHADOW = new Set(["win", "winLit", "shutter", "shopdark", "flag"]);
+
+const wallMat = std({ vertexColors: true, map: grimeTex, side: THREE.DoubleSide, roughness: 0.92 });
+const roofMat = std({ color: 0x8f8b84, side: THREE.DoubleSide });
+const cableMat = new THREE.LineBasicMaterial({ color: 0x151515 });
+function buildChunks() {
+  for (const c of chunks.values()) {
+    const g = new THREE.Group();
+    if (c.wall.pos.length) {
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.Float32BufferAttribute(c.wall.pos, 3));
+      geo.setAttribute("normal", new THREE.Float32BufferAttribute(c.wall.nor, 3));
+      geo.setAttribute("color", new THREE.Float32BufferAttribute(c.wall.col, 3));
+      geo.setAttribute("uv", new THREE.Float32BufferAttribute(c.wall.uv, 2));
+      const m = new THREE.Mesh(geo, wallMat); m.castShadow = m.receiveShadow = true; g.add(m);
+    }
+    if (c.roof.length) {
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.Float32BufferAttribute(c.roof, 3));
+      geo.computeVertexNormals();
+      const m = new THREE.Mesh(geo, roofMat); m.castShadow = m.receiveShadow = true; g.add(m);
+    }
+    for (const [kind, list] of Object.entries(c.inst)) {
+      const [geo, mat] = PROPS[kind];
+      const mesh = new THREE.InstancedMesh(geo, mat, list.length);
+      list.forEach((it, i) => { mesh.setMatrixAt(i, it.m); if (it.c) mesh.setColorAt(i, it.c); });
+      mesh.computeBoundingSphere();
+      mesh.castShadow = !NO_SHADOW.has(kind); mesh.receiveShadow = true;
+      g.add(mesh);
+    }
+    if (c.cables.length) {
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.Float32BufferAttribute(c.cables, 3));
+      g.add(new THREE.LineSegments(geo, cableMat));
+    }
+    for (const f of c.photo || []) g.add(photoFacade(f));
+    for (const p of c.panos || []) {
+      const post = new THREE.Mesh(panoMarkerGeo, panoMarkerMat), head = new THREE.Mesh(panoHeadGeo, panoMarkerMat);
+      post.position.set(p.x, 0, -p.y); head.position.copy(post.position); g.add(post, head);
+    }
+    c.group = g; c.wall = c.roof = c.inst = c.cables = c.photo = c.panos = null;   // release the build arrays
+    scene.add(g);
+  }
+}
+const DRAW_RANGE = LITE ? 280 : 480;
+function cullChunks() {
+  for (const c of chunks.values()) c.group.visible = Math.hypot(c.cx - player.x, c.cy - player.y) < DRAW_RANGE + CHUNK * 0.71;
+}
+
+// ---------- character ----------
+function makeWalker() {
+  const g = new THREE.Group();
+  const skin = std({ color: 0xd9a77f }), shirt = std({ color: 0xf2f2ee }), pants = std({ color: 0x1f2328 }), bag = std({ color: 0x6d7378 }), hair = std({ color: 0x18120e });
+  const part = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; g.add(m); return m; };
+  part(new THREE.BoxGeometry(0.42, 0.58, 0.24), shirt, 0, 1.22, 0);
+  part(new THREE.SphereGeometry(0.13, 16, 12), skin, 0, 1.66, 0);
+  part(new THREE.SphereGeometry(0.135, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), hair, 0, 1.68, 0);
+  part(new THREE.BoxGeometry(0.34, 0.44, 0.17), bag, 0, 1.24, 0.2);
+  const limb = (w, h, mat, x, y) => { const pivot = new THREE.Group(); pivot.position.set(x, y, 0); const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, w), mat); m.position.y = -h / 2; m.castShadow = true; pivot.add(m); g.add(pivot); return pivot; };
+  const legs = [limb(0.15, 0.9, pants, -0.1, 0.92), limb(0.15, 0.9, pants, 0.1, 0.92)];
+  const arms = [limb(0.1, 0.58, shirt, -0.27, 1.48), limb(0.1, 0.58, shirt, 0.27, 1.48)];
+  g.userData = { legs, arms };
+  return g;
+}
+const walker = makeWalker();
+scene.add(walker);
+
+// The walker is a real-looking person once models/walker.glb.txt arrives: Microsoft Rocketbox
+// avatar Male_Adult_09 with motion-captured idle / walk / run (MIT, see assets/ROCKETBOX_LICENSE.md;
+// converted by tools/character). Until then, and if it fails, the block figure stands in.
+let person = null;
+async function loadPerson() {
+  const gltf = await loader.parseAsync(await fetchGlb("models/walker.glb.txt"), "");
+  const body = gltf.scene;
+  body.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false; } });
+  // run on the spot: the root keeps its vertical bob, its drift across the ground is removed
+  const root = body.getObjectByName("Bip01"), rest = root.position.toArray();
+  const up = rest.map(Math.abs).indexOf(Math.max(...rest.map(Math.abs)));
+  for (const clip of gltf.animations) for (const t of clip.tracks) {
+    if (t.name !== "Bip01.position") continue;
+    for (let i = 0; i < t.values.length; i += 3) for (let a = 0; a < 3; a++) if (a !== up) t.values[i + a] = rest[a];
+  }
+  const mixer = new THREE.AnimationMixer(body), actions = {};
+  for (const clip of gltf.animations) { actions[clip.name] = mixer.clipAction(clip); actions[clip.name].play(); actions[clip.name].setEffectiveWeight(0); }
+  for (const c of walker.children) c.visible = false;
+  walker.add(body);
+  person = { mixer, actions, speed: 0 };
+}
+// Ground speed of each captured gait, measured from the planted foot (toes in stance move back
+// at exactly this speed): pacing a clip to speed / GAIT keeps the feet from sliding.
+const GAIT = { walk: 1.0, jog: 2.5, run: 3.25 };
+function animatePerson(dt, speed) {
+  person.speed += (speed - person.speed) * Math.min(1, dt * 8);
+  const s = person.speed, { idle, walk, jog, run } = person.actions;
+  // idle -> walk -> jog -> run, crossfaded by speed
+  const wi = Math.max(0, 1 - s / GAIT.walk);
+  const ww = s <= GAIT.walk ? s / GAIT.walk : Math.max(0, 1 - (s - GAIT.walk) / (GAIT.jog - GAIT.walk));
+  const wj = s <= GAIT.walk ? 0 : s <= GAIT.jog ? (s - GAIT.walk) / (GAIT.jog - GAIT.walk) : Math.max(0, 1 - (s - GAIT.jog) / (GAIT.run - GAIT.jog));
+  const wr = s <= GAIT.jog ? 0 : Math.min(1, (s - GAIT.jog) / (GAIT.run - GAIT.jog));
+  idle.setEffectiveWeight(wi); walk.setEffectiveWeight(ww); jog.setEffectiveWeight(wj); run.setEffectiveWeight(wr);
+  // the clips must stay in step with each other while blending: one shared phase rate
+  const rate = (g) => THREE.MathUtils.clamp(Math.max(s, 0.3) / GAIT[g], 0.4, 1.6);
+  walk.timeScale = rate("walk"); jog.timeScale = rate("jog"); run.timeScale = rate("run");
+  person.mixer.update(dt);
+}
+
+// ---------- collision ----------
+function inside(poly, x, y) {
+  let c = false;
+  for (let i = 0, j = poly.length - 2; i < poly.length - 1; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+function segDist(px, py, a, b) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], l2 = dx * dx + dy * dy;
+  const t = l2 ? Math.max(0, Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / l2)) : 0;
+  return Math.hypot(px - a[0] - t * dx, py - a[1] - t * dy);
+}
+function blocked(x, y) {
+  for (const b of grid.get(cellKey(Math.floor(x / CELL), Math.floor(y / CELL))) || []) {
+    const [x0, y0, x1, y1] = b.bbox;
+    if (x < x0 - BODY_R || x > x1 + BODY_R || y < y0 - BODY_R || y > y1 + BODY_R) continue;
+    if (inside(b.poly, x, y)) return true;
+    for (let i = 0; i < b.poly.length - 1; i++) if (segDist(x, y, b.poly[i], b.poly[i + 1]) < BODY_R) return true;
+  }
+  return false;
+}
+function nearestBuilding(x, y) {
+  let best = null, bd = 12;
+  for (let a = -1; a <= 1; a++) for (let c = -1; c <= 1; c++)
+    for (const b of grid.get(cellKey(Math.floor(x / CELL) + a, Math.floor(y / CELL) + c)) || []) {
+      for (let i = 0; i < b.poly.length - 1; i++) { const d = segDist(x, y, b.poly[i], b.poly[i + 1]); if (d < bd) { bd = d; best = b; } }
+    }
+  return best;
+}
+
+// ---------- ground height on sidewalks ----------
+const walkMeshes = new Map();   // tile key -> mesh
+const down = new THREE.Raycaster(); down.far = 3;
+function groundAt(x, y, tile) {
+  const m = walkMeshes.get(`${Math.floor(x / tile)},${Math.floor(y / tile)}`);
+  if (!m) return 0;
+  down.set(new THREE.Vector3(x, 2, -y), new THREE.Vector3(0, -1, 0));
+  const hit = down.intersectObject(m, true)[0];
+  return hit ? hit.point.y : 0;
+}
+
+// ---------- input ----------
+const keys = new Set();
+addEventListener("keydown", (e) => { keys.add(e.code); if (e.code.startsWith("Arrow") || e.code === "Space") e.preventDefault(); });
+addEventListener("keyup", (e) => keys.delete(e.code));
+let yaw = 0, pitch = 0.18, dist = 4.6, dragging = null;
+canvas.addEventListener("pointerdown", (e) => { canvas.focus(); dragging = [e.clientX, e.clientY]; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener("pointermove", (e) => {
+  if (!dragging) return;
+  yaw -= (e.clientX - dragging[0]) * 0.005; pitch = THREE.MathUtils.clamp(pitch + (e.clientY - dragging[1]) * 0.004, -0.35, 1.2);
+  dragging = [e.clientX, e.clientY];
+});
+canvas.addEventListener("pointerup", () => { dragging = null; });
+canvas.addEventListener("wheel", (e) => { dist = THREE.MathUtils.clamp(dist + e.deltaY * 0.004, 2.2, 14); e.preventDefault(); }, { passive: false });
+const stick = $("stick"), knob = stick.querySelector("i"); let stickVec = [0, 0];
+stick.addEventListener("pointerdown", (e) => stick.setPointerCapture(e.pointerId));
+stick.addEventListener("pointermove", (e) => {
+  if (!e.buttons && e.pointerType === "mouse") return;
+  const r = stick.getBoundingClientRect(); let x = (e.clientX - r.left - r.width / 2) / 45, y = (e.clientY - r.top - r.height / 2) / 45;
+  const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; }
+  stickVec = [x, -y]; knob.style.transform = `translate(${x * 35}px, ${-stickVec[1] * 35}px)`;
+});
+stick.addEventListener("pointerup", () => { stickVec = [0, 0]; knob.style.transform = ""; });
+
+// ---------- real photos (KartaView / Mapillary 360°, CC BY-SA 4.0) ----------
+const texLoader = new THREE.TextureLoader();
+let panos = [];
+function photoFacade(f) {
+  // A quad on the real wall, 6 cm proud of it, textured by projecting the panorama onto it.
+  const [ax, ay] = f.a, [bx, by] = f.b, L = Math.hypot(bx - ax, by - ay);
+  const nx = (by - ay) / L, ny = -(bx - ax) / L, h = f.height_m;
+  const g = new THREE.PlaneGeometry(L, h);
+  const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ roughness: 0.9, alphaTest: 0.5, side: THREE.DoubleSide }));
+  m.position.set((ax + bx) / 2 + nx * 0.06, h / 2, -((ay + by) / 2 + ny * 0.06));
+  m.rotation.y = Math.atan2(by - ay, bx - ax);
+  m.receiveShadow = true;
+  m.visible = false;   // hidden until its photo arrives, so no blank quad covers the wall
+  texLoader.load(f.file, (t) => {
+    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+    m.material.map = t; m.material.needsUpdate = true; m.visible = true;
+  });
+  return m;
+}
+const panoMarkerGeo = new THREE.CylinderGeometry(0.05, 0.05, 2.6, 6).translate(0, 1.3, 0);
+const panoMarkerMat = new THREE.MeshBasicMaterial({ color: 0x2fa8ff });
+const panoHeadGeo = new THREE.SphereGeometry(0.22, 12, 8).translate(0, 2.7, 0);
+
+// Street-view mode: stand where the camera stood and look around the real photo.
+const sphere = new THREE.Mesh(new THREE.SphereGeometry(400, 96, 48).scale(-1, 1, 1),
+  new THREE.MeshBasicMaterial({ fog: false, depthWrite: false }));
+sphere.visible = false; sphere.renderOrder = -1;
+scene.add(sphere);
+let photoMode = null, nearPano = null;
+function nearestPano() {
+  let best = null, bd = 25;
+  for (const p of panos) { const d = Math.hypot(p.x - player.x, p.y - player.y); if (d < bd) { bd = d; best = p; } }
+  return best && { pano: best, d: bd };
+}
+function enterPhoto(p) {
+  photoMode = { pano: p, yaw, pitch };
+  $("photo-info").textContent = `Đang tải ảnh chụp ${p.shot.slice(0, 10)}…`;
+  texLoader.load(p.file, (t) => {
+    if (photoMode?.pano !== p) return;
+    t.colorSpace = THREE.SRGBColorSpace;
+    sphere.material.map = t; sphere.material.needsUpdate = true;
+    // Image centre faces the capture heading; u grows clockwise. -X is the sphere's u=0.5.
+    const h = THREE.MathUtils.degToRad(p.heading);
+    sphere.rotation.y = Math.atan2(-Math.cos(h), -Math.sin(h));
+    sphere.position.set(p.x, panosCamH, -p.y);
+    for (const o of scene.children) if (o !== sphere && o !== sun && o !== sun.target && !o.isLight) { o.userData.wasVisible = o.visible; o.visible = false; }
+    sphere.visible = true;
+    const unsure = p.pose_quality === "uncertain" || p.pose_quality === "none";
+    $("photo-info").textContent = `Ảnh thật chụp ${p.shot.slice(0, 10)} · ${p.source || "KartaView"}, CC BY-SA 4.0${unsure ? " · hướng ảnh chưa xác định chắc, có thể lệch so với phố" : ""} · P hoặc Esc để quay lại`;
+    $("photo-btn").textContent = "Quay lại phố (P)";
+  }, undefined, () => { $("photo-info").textContent = "Không tải được ảnh này."; photoMode = null; });
+}
+function exitPhoto() {
+  if (!photoMode) return;
+  for (const o of scene.children) if (o !== sphere && "wasVisible" in o.userData) { o.visible = o.userData.wasVisible; delete o.userData.wasVisible; }
+  sphere.visible = false;
+  photoMode = null;
+  $("photo-btn").textContent = "Ảnh thật 360° (P)";
+  cullChunks();
+}
+function togglePhoto() { if (photoMode) exitPhoto(); else if (nearPano) enterPhoto(nearPano.pano); }
+$("photo-btn").addEventListener("click", togglePhoto);
+addEventListener("keydown", (e) => { if (e.code === "KeyP") togglePhoto(); if (e.code === "Escape") exitPhoto(); });
+let panosCamH = 1.8;
+
+// ---------- photo space: the real street rebuilt in 3D from one panorama ----------
+// Near a capture point the block world gives way to the panorama itself, lifted into 3D with
+// the depth `streetview.py depth` estimated from the photo: real walls, shopfronts, wires and
+// parked bikes at their measured distance. The walker moves inside it and collides with the
+// photo's walls. Inside PS_IN metres it is all photo; past PS_OUT the block world is back.
+const PS_IN = 5.5, PS_OUT = 10;
+const PS_CAM_R = 0.5;      // the camera keeps this close to where the photo was taken
+const PS_RIG_LAT = THREE.MathUtils.degToRad(-38);   // below: the capture rig (rider's hands, handlebar, car roof)
+const photoScene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+photoScene.add(new THREE.HemisphereLight(0xe8eef2, 0x6b6257, 0.5));
+const psSun = new THREE.DirectionalLight(0xfff0d8, 0.6);
+photoScene.add(psSun, psSun.target);
+// Contact shadow: the soft darkening where feet meet the ground. No cast sun shadow: estimating the
+// sun from one photo proved unreliable, and a hard shadow pointing the wrong way gives the person
+// away faster than none under Hà Nội's mostly overcast sky.
+const blob = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.1).rotateX(-Math.PI / 2),
+  new THREE.MeshBasicMaterial({ map: canvasTex(64, 64, (g, w2, h2) => {
+    const grd = g.createRadialGradient(w2 / 2, h2 / 2, 0, w2 / 2, h2 / 2, w2 / 2);
+    grd.addColorStop(0, "rgba(0,0,0,0.55)"); grd.addColorStop(0.35, "rgba(0,0,0,0.3)"); grd.addColorStop(1, "rgba(0,0,0,0)");
+    g.fillStyle = grd; g.fillRect(0, 0, w2, h2);
+  }), transparent: true, depthWrite: false, fog: false, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 }));
+blob.renderOrder = 1;
+photoScene.add(blob);
+let ps = null, psT = 0, psLoading = null;
+async function decodeDepth(url) {
+  // R*256+G = centimetres, B = class (0 surface, 128 sky, 255 no data): read the bytes untouched
+  const bmp = await createImageBitmap(await (await fetch(url)).blob(), { colorSpaceConversion: "none", premultiplyAlpha: "none" });
+  const c = document.createElement("canvas"); c.width = bmp.width; c.height = bmp.height;
+  const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(bmp, 0, 0);
+  const px = g.getImageData(0, 0, c.width, c.height).data;
+  const W = c.width, H = c.height, range = new Float32Array(W * H), cls = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) {
+    range[i] = (px[4 * i] * 256 + px[4 * i + 1]) / 100;
+    cls[i] = px[4 * i + 2] > 192 ? 2 : px[4 * i + 2] > 64 ? 1 : 0;
+  }
+  return { W, H, range, cls };
+}
+function levelGround(d) {
+  // A handheld or helmet camera is rarely level, and streets slope: find the road in the photo
+  // itself (RANSAC plane through points 1.5-14 m away below the horizon), then return the rotation
+  // that lays it flat and the scale that puts the lens panosCamH above it. Without this the
+  // person stands on an imagined plane and floats or sinks a few metres down the street.
+  const pts = [];
+  for (let row = Math.floor(d.H / 2); row < d.H; row += 2) {
+    const lat = Math.PI / 2 - ((row + 0.5) / d.H) * Math.PI;
+    if (lat > -0.08 || lat < -1.22) continue;          // down to -70°: a camera tipped back sees the road low
+    for (let col = 0; col < d.W; col += 3) {
+      const i = row * d.W + col; if (d.cls[i] !== 0) continue;
+      const lon = ((col + 0.5) / d.W) * 2 * Math.PI - Math.PI, rr = d.range[i], hor = Math.cos(lat) * rr;
+      if (hor > 1.5 && hor < 14) pts.push([Math.cos(lat) * Math.sin(lon) * rr, Math.sin(lat) * rr, Math.cos(lat) * Math.cos(lon) * rr]);
+    }
+  }
+  const none = { R: new THREE.Matrix3(), s: 1, tilt: 0 };
+  if (pts.length < 50) return none;
+  let seed = 12345; const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  let best = null;
+  for (let it = 0; it < 900; it++) {
+    const [a, b, c] = [0, 1, 2].map(() => pts[Math.floor(rnd() * pts.length)]);
+    const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], v = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+    let n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const l = Math.hypot(...n); if (l < 1e-6) continue;
+    n = n.map((q) => q / l); if (n[1] < 0) n = n.map((q) => -q);
+    if (n[1] < 0.82) continue;     // within ~35° of level: helmet cameras tip back 25° and more
+    const off = n[0] * a[0] + n[1] * a[1] + n[2] * a[2];
+    let cnt = 0; for (const q of pts) if (Math.abs(n[0] * q[0] + n[1] * q[1] + n[2] * q[2] - off) < 0.06) cnt++;
+    if (!best || cnt > best.cnt) best = { n, off, cnt };
+  }
+  if (!best || best.cnt < 0.06 * pts.length) return none;      // walls and shops outnumber the road
+  // refine: least squares y = ax + bz + c over the inliers
+  let S = [0, 0, 0, 0, 0, 0, 0, 0, 0], T = [0, 0, 0];
+  for (const q of pts) {
+    if (Math.abs(best.n[0] * q[0] + best.n[1] * q[1] + best.n[2] * q[2] - best.off) > 0.06) continue;
+    const row = [q[0], q[2], 1];
+    for (let i = 0; i < 3; i++) { T[i] += row[i] * q[1]; for (let j = 0; j < 3; j++) S[3 * i + j] += row[i] * row[j]; }
+  }
+  const M = new THREE.Matrix3().set(...S).invert();
+  const [A, B, C] = new THREE.Vector3(...T).applyMatrix3(M).toArray();
+  const n = new THREE.Vector3(-A, 1, -B).normalize(), hCam = -C * n.y;           // lens height above the road
+  if (!(hCam > 0.3)) return none;
+  const q = new THREE.Quaternion().setFromUnitVectors(n, new THREE.Vector3(0, 1, 0));
+  return { R: new THREE.Matrix3().setFromMatrix4(new THREE.Matrix4().makeRotationFromQuaternion(q)), s: panosCamH / hCam, tilt: THREE.MathUtils.radToDeg(Math.acos(n.y)) };
+}
+function photoMesh(p, d, tex) {
+  const GW = d.W, GH = d.H, h = THREE.MathUtils.degToRad(p.heading), ch = Math.cos(h), sh = Math.sin(h);
+  const lv = levelGround(d), dir = new THREE.Vector3(), back = lv.R.clone().transpose();
+  const pos = new Float32Array((GW + 1) * (GH + 1) * 3), uv = new Float32Array((GW + 1) * (GH + 1) * 2);
+  const r = new Float32Array((GW + 1) * (GH + 1)), k = new Uint8Array((GW + 1) * (GH + 1));
+  for (let j = 0; j <= GH; j++) for (let i = 0; i <= GW; i++) {
+    const v = j * (GW + 1) + i;
+    const col = Math.min(d.W - 1, Math.floor((i / GW) * d.W)) % d.W, row = Math.min(d.H - 1, Math.floor((j / GH) * d.H));
+    const lon = (i / GW) * 2 * Math.PI - Math.PI, lat = Math.PI / 2 - (j / GH) * Math.PI;
+    // the ray in the levelled camera frame (x right, y up, z along the capture heading)
+    dir.set(Math.cos(lat) * Math.sin(lon), Math.sin(lat), Math.cos(lat) * Math.cos(lon)).applyMatrix3(lv.R);
+    // The capture rig (rider, handlebar) hangs straight below the lens, so it is cut by true
+    // vertical, not by the tilted photo's rows: lay the road there instead.
+    const rig = dir.y < Math.sin(PS_RIG_LAT);
+    // "no data" above the rig line is mostly just very dark pixels (a shop interior, a shadow): keep them
+    k[v] = rig || d.cls[row * d.W + col] === 2 ? 0 : d.cls[row * d.W + col];
+    const toRoad = dir.y < -0.02 ? panosCamH / -dir.y : Infinity;
+    r[v] = rig ? toRoad : k[v] === 1 ? 400 : d.range[row * d.W + col] * lv.s;
+    // The estimated road is bumpy by a few centimetres; feet planted on it would sink into the
+    // bumps. Anything within 35 cm of the road plane is laid flat onto it.
+    if (!rig && k[v] === 0 && Math.abs(panosCamH + dir.y * r[v]) < 0.35 && toRoad < Infinity) r[v] = toRoad;
+    if (!Number.isFinite(r[v])) r[v] = 400;
+    const x = dir.x * r[v], y = dir.y * r[v], z = dir.z * r[v];
+    const E = x * ch + z * sh, N = -x * sh + z * ch;
+    pos.set([p.x + E, panosCamH + y, -(p.y + N)], 3 * v);
+    // under the rig the photo has no road: carry the road seen at the rig line, same bearing, inward
+    if (rig) {
+      const az = Math.atan2(dir.x, dir.z), c = Math.cos(PS_RIG_LAT);
+      const o = new THREE.Vector3(c * Math.sin(az), Math.sin(PS_RIG_LAT), c * Math.cos(az)).applyMatrix3(back);
+      uv.set([(Math.atan2(o.x, o.z) + Math.PI) / (2 * Math.PI), 0.5 + Math.asin(THREE.MathUtils.clamp(o.y, -1, 1)) / Math.PI], 2 * v);
+    } else uv.set([i / GW, 0.5 + lat / Math.PI], 2 * v);
+  }
+  const idx = [], xpos = [], xuv = [];
+  let nv = (GW + 1) * (GH + 1);
+  for (let j = 0; j < GH; j++) for (let i = 0; i < GW; i++) {
+    const q = [j * (GW + 1) + i, j * (GW + 1) + i + 1, (j + 1) * (GW + 1) + i, (j + 1) * (GW + 1) + i + 1];
+    const rs = q.map((v) => r[v]), lo = Math.min(...rs), hi = Math.max(...rs);
+    if (hi - lo <= 0.25 * lo) { idx.push(q[0], q[2], q[1], q[1], q[2], q[3]); continue; }
+    // A step in range between neighbouring rays is an object edge seen from the capture point
+    // (a roofline against the sky, a car against the road). Stretched across, it would smear the
+    // object onto what lies behind; dropped, it would leave a hole when seen from a step aside.
+    // Instead this quad gets its own copy pushed back to the far side, extending the background.
+    for (const v of q) {
+      const s = hi / r[v];
+      xpos.push(p.x + (pos[3 * v] - p.x) * s, panosCamH + (pos[3 * v + 1] - panosCamH) * s, -p.y + (pos[3 * v + 2] + p.y) * s);
+      xuv.push(uv[2 * v], uv[2 * v + 1]);
+    }
+    idx.push(nv, nv + 2, nv + 1, nv + 1, nv + 2, nv + 3); nv += 4;
+  }
+  const geo = new THREE.BufferGeometry();
+  const allPos = new Float32Array(pos.length + xpos.length); allPos.set(pos); allPos.set(xpos, pos.length);
+  const allUv = new Float32Array(uv.length + xuv.length); allUv.set(uv); allUv.set(xuv, uv.length);
+  geo.setAttribute("position", new THREE.BufferAttribute(allPos, 3));
+  geo.setAttribute("uv", new THREE.BufferAttribute(allUv, 2));
+  geo.setIndex(idx);
+  tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, fog: false, toneMapped: false, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
+  mesh.frustumCulled = false;
+  // A step off the lens opens slivers behind rooflines; far behind everything, the panorama as
+  // seen from the lens fills them (it is sky there, and at 300 m the offset is invisible).
+  const backdrop = new THREE.Mesh(new THREE.SphereGeometry(300, 64, 32).scale(-1, 1, 1),
+    new THREE.MeshBasicMaterial({ map: tex, fog: false, toneMapped: false, depthWrite: false }));
+  backdrop.rotation.y = Math.atan2(-Math.cos(h), -Math.sin(h));   // same orientation as the P view
+  backdrop.position.set(p.x, panosCamH, -p.y); backdrop.renderOrder = -1;
+  mesh.add(backdrop);
+  // what the mesh leaves open shows the photo's own mean horizon colour, not a white hole
+  const c = document.createElement("canvas"); c.width = 64; c.height = 32;
+  const g = c.getContext("2d"); g.drawImage(tex.image, 0, 0, 64, 32);
+  const band = g.getImageData(0, 15, 64, 2).data;
+  const rgb = [0, 1, 2].map((c3) => { let s = 0; for (let i = c3; i < band.length; i += 4) s += band[i]; return s / (band.length / 4) / 255; });
+  // free distance per heading bin: the nearest thing between knee and head height
+  const free = new Float32Array(d.W).fill(60);
+  for (let row = 0; row < d.H; row++) {
+    const lat = Math.PI / 2 - ((row + 0.5) / d.H) * Math.PI;
+    for (let col = 0; col < d.W; col++) {
+      const i = row * d.W + col; if (d.cls[i] !== 0) continue;
+      const lon = ((col + 0.5) / d.W) * 2 * Math.PI - Math.PI;
+      dir.set(Math.cos(lat) * Math.sin(lon), Math.sin(lat), Math.cos(lat) * Math.cos(lon)).applyMatrix3(lv.R);
+      if (dir.y < Math.sin(PS_RIG_LAT)) continue;
+      const rr = d.range[i] * lv.s, hgt = panosCamH + dir.y * rr, hor = Math.hypot(dir.x, dir.z) * rr;
+      // within arm's reach of the camera is the capture rig itself (handlebar, rider), not the street
+      if (hgt > 0.4 && hgt < 2.2 && hor > 0.8 && hor < free[col]) free[col] = hor;
+    }
+  }
+  return { pano: p, mesh, free, W: d.W, level: lv, clear: new THREE.Color().setRGB(...rgb, THREE.SRGBColorSpace) };
+}
+function envFromPano(tex, headingDeg) {
+  // three samples an equirect environment with u = atan2(z, x) / 2π + 0.5; the panorama's centre
+  // looks along the capture heading, so slide the image until that centre sits at the heading
+  const hd = THREE.MathUtils.degToRad(headingDeg);
+  const shift = ((Math.atan2(-Math.cos(hd), Math.sin(hd)) / (2 * Math.PI)) % 1 + 1) % 1;   // u_target - 0.5
+  const c = document.createElement("canvas"); c.width = 1024; c.height = 512;
+  const g = c.getContext("2d"), dx = Math.round(shift * 1024);
+  g.drawImage(tex.image, dx, 0, 1024, 512); g.drawImage(tex.image, dx - 1024, 0, 1024, 512);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.mapping = THREE.EquirectangularReflectionMapping;
+  return t;
+}
+function photoFree(x, y) {
+  const p = ps.pano, E = x - p.x, N = y - p.y, rr = Math.hypot(E, N);
+  if (rr < 0.3) return true;
+  const rel = Math.atan2(E, N) - THREE.MathUtils.degToRad(p.heading);
+  const c0 = Math.floor((((rel / (2 * Math.PI)) + 0.5) % 1 + 1) % 1 * ps.W);
+  const span = Math.ceil((BODY_R / rr) / (2 * Math.PI) * ps.W);
+  for (let c = c0 - span; c <= c0 + span; c++) if (rr > ps.free[(c + ps.W) % ps.W] - BODY_R - 0.1) return false;
+  return true;
+}
+function canStand(x, y) {
+  // inside a photo space the photo's walls are the walls; the blocks may be missing or misplaced
+  if (ps && Math.hypot(x - ps.pano.x, y - ps.pano.y) < PS_OUT - 1) return photoFree(x, y);
+  return !blocked(x, y);
+}
+function updatePhotoSpace() {
+  if (montage) { if (ps?.pano !== montage.pano && psLoading !== montage.pano) loadPhotoSpace(montage.pano); return; }
+  let best = null, bd = PS_OUT;
+  for (const p of panos) if (p.depth) { const d = Math.hypot(p.x - player.x, p.y - player.y); if (d < bd) { bd = d; best = p; } }
+  const cur = ps ? Math.hypot(ps.pano.x - player.x, ps.pano.y - player.y) : Infinity;
+  if (!best || (ps && (best === ps.pano || cur < bd + 1.5)) || psLoading === best) return;
+  loadPhotoSpace(best);
+}
+function loadPhotoSpace(best) {
+  psLoading = best;
+  Promise.all([texLoader.loadAsync(best.file), decodeDepth(best.depth)]).then(([tex, d]) => {
+    if (psLoading !== best) { tex.dispose(); return; }
+    if (ps) {
+      photoScene.remove(ps.mesh);
+      ps.mesh.traverse((o) => { if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); } });
+      ps.mesh.material.map.dispose();       // shared with the backdrop
+    }
+    ps = photoMesh(best, d, tex); photoScene.add(ps.mesh); psLoading = null;
+    // the person is lit by the very street they stand in: the panorama as image-based light
+    photoScene.environment?.dispose();
+    photoScene.environment = pmrem.fromEquirectangular(envFromPano(tex, best.heading)).texture;
+  }).catch(() => { psLoading = null; });
+}
+
+// ---------- main ----------
+let manifest, player = { x: 0, y: 0, h: 0, heading: 0 }, lastWhere = 0;
+async function main() {
+  manifest = await (await fetch("manifest.json")).json();
+  const tile = manifest.tile_size_m;
+  const lat0 = manifest.georeference.origin_lat, lon0 = manifest.georeference.origin_lon;
+  let done = 0; const total = manifest.tiles.length;
+  const optional = async (url) => { try { const r = await fetch(url); return r.ok ? await r.json() : null; } catch { return null; } };
+  const [facadeIdx, panoIdx] = await Promise.all([optional("facades.json"), optional("panos.json")]);
+  for (const f of facadeIdx?.facades || []) photoEdges.add(`${f.building}_${f.edge}`);
+  panos = panoIdx?.panos || [];
+  if (panoIdx) panosCamH = panoIdx.camera_height_m;
+  await Promise.all(manifest.tiles.map(async (t) => {
+    const [ox, oy] = t.origin_m;
+    const name = `bld_${t.key[0]}_${t.key[1]}.json`;
+    if (t.files.includes(name)) {
+      const data = await (await fetch(`tiles/${name}`)).json();
+      for (const b of data.buildings) if (b.footprint && b.footprint.length > 3) addBuilding(b, ox, oy);
+    }
+    for (const f of t.files.filter((x) => /^(road|walk)_.*\.glb$/.test(x))) {
+      const gltf = await loader.parseAsync(await fetchGlb(`tiles/${f}.txt`), "");
+      gltf.scene.traverse((o) => {
+        if (!o.isMesh) return;
+        const isWalk = f.startsWith("walk_");
+        o.material = std({ vertexColors: true, roughness: isWalk ? 0.9 : 0.75 });
+        o.receiveShadow = true;
+        if (isWalk) walkMeshes.set(`${t.key[0]},${t.key[1]}`, o);
+      });
+      scene.add(gltf.scene);
+    }
+    loadMsg(`Đã dựng ${++done}/${total} ô lưới`);
+  }));
+  loadMsg("Đang sinh mặt tiền, cây, cột điện…");
+  await new Promise((r) => setTimeout(r, 0));
+
+  cables();
+  for (const f of facadeIdx?.facades || []) {
+    const c = chunk((f.a[0] + f.b[0]) / 2, (f.a[1] + f.b[1]) / 2);
+    (c.photo ||= []).push(f);
+  }
+  for (const p of panos) (chunk(p.x, p.y).panos ||= []).push(p);
+  buildChunks();
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000), std({ color: 0x8c877d, roughness: 1 }));
+  ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+
+  // spawn on the sidewalk of a shop street nearest Hancorp Plaza, Trần Đăng Ninh (21.03832, 105.79434),
+  // looking along the street
+  const tx = (105.79434 - lon0) * 111320 * Math.cos(lat0 * Math.PI / 180), ty = (21.03832 - lat0) * 110574;
+  let best = null, bd = Infinity;
+  for (const c of spawnEdges) {
+    const d = Math.hypot(c.x - tx, c.y - ty);
+    if (d < bd && !blocked(c.x, c.y)) { bd = d; best = c; }
+  }
+  if (best) { player.x = best.x; player.y = best.y; yaw = Math.atan2(-best.dx, best.dy); }
+  else { player.x = tx; player.y = ty; }
+  // Prefer starting where a real 360° photo was taken, facing the way it was shot, so the
+  // real-photo view (P) is one key away.
+  const trusted = panos.filter((q) => q.pose_quality !== "uncertain" && q.pose_quality !== "none" && !blocked(q.x, q.y));
+  const asked = panos.find((q) => String(q.id) === HASH.get("pano"));    // #pano=<id>: start at that capture
+  if (asked || trusted.length) {
+    const q = asked || trusted.reduce((m, c) => (Math.hypot(c.x - tx, c.y - ty) < Math.hypot(m.x - tx, m.y - ty) ? c : m));
+    yaw = -THREE.MathUtils.degToRad(q.heading);   // camera view direction is (-sin yaw, cos yaw) in data axes
+    // with a photo space, stand a few steps ahead so the camera can sit where the photo was taken
+    const ahead = q.depth ? 2.6 : 0;
+    player.x = q.x - Math.sin(yaw) * ahead; player.y = q.y + Math.cos(yaw) * ahead;
+  }
+  player.heading = -yaw;                        // face the way the camera looks
+  const tourJson = HASH.has("tour") || HASH.has("record") ? await optional("tour.json") : null;
+  if (tourJson?.scenes) startMontage(tourJson);
+  else if (tourJson) startTour(tourJson);
+
+  cullChunks();
+  setHour(parseFloat($("hour").value));
+  $("loading").hidden = true;
+  addEventListener("resize", resize); resize();
+  renderer.autoClear = false;
+  updatePhotoSpace();
+  const personReady = loadPerson().catch((e) => console.warn("walker model:", e.message));
+  const draw = () => {
+    renderer.setClearColor(ps && psT >= 1 ? ps.clear : scene.fog.color); renderer.clear();
+    if (psT < 1 || photoMode) renderer.render(scene, camera);
+    if (psT > 0 && !photoMode) {
+      renderer.clearDepth();
+      renderer.toneMapping = THREE.NoToneMapping;          // photo radiance in, photo radiance out
+      renderer.render(photoScene, camera);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    }
+  };
+  if (HASH.has("record")) {
+    // Recording: the caller asks for each frame, simulation time advances by exactly dt, and a
+    // photo space that is still loading is waited for, so the video never shows a half state.
+    let simT = 0;
+    window.vncity = {
+      async frame(dt) {
+        await personReady;
+        while (psLoading) await new Promise((r) => setTimeout(r, 50));
+        simT += dt; step(dt, simT, tile, lat0, lon0);
+        if (psLoading) {                       // a new street arrived mid-step: lay the frame out again
+          while (psLoading) await new Promise((r) => setTimeout(r, 50));
+          step(0, simT, tile, lat0, lon0);
+        }
+        draw();
+        return renderer.domElement.toDataURL("image/jpeg", 0.92);
+      },
+      get done() { return montage ? montage.done : !tour || tour.done; },
+      get progress() { return montage ? (montage.k + 1) / montage.scenes.length : tour ? tour.s / tour.cum[tour.cum.length - 1] : 1; },
+      get scene() {
+        return montage && { k: montage.k, id: String(montage.pano.id), shot: montage.pano.shot, source: montage.pano.source,
+          tilt: ps?.level?.tilt, scale: ps?.level?.s };
+      },
+    };
+    return;
+  }
+  let last = performance.now(), frames = 0, fpsT = last;
+  renderer.setAnimationLoop((now) => {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (++frames && now - fpsT > 1000) { document.body.dataset.fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
+    step(dt, now / 1000, tile, lat0, lon0);
+    draw();
+  });
+}
+
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+
+let phase = 0, viewFwd = [0, 1], moved = 0;
+
+// ---------- tour: #tour runs the route `streetview.py tour` wrote, #record steps it frame by frame ----------
+const TOUR_MS = GAIT.run;     // the captured run, at its own pace
+let tour = null;
+function startTour(t) {
+  const path = t.path, cum = [0];
+  for (let i = 1; i < path.length; i++) cum.push(cum[i - 1] + Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]));
+  tour = { path, cum, s: 0, done: false, stops: t.stops };
+  [player.x, player.y] = path[0];
+  const [dx, dy] = [path[1][0] - path[0][0], path[1][1] - path[0][1]];
+  player.heading = Math.atan2(dx, dy); yaw = Math.atan2(-dx, dy);
+}
+// A montage (tour.json "scenes") is a run through one capture after another, cut like a film:
+// in each the camera stands exactly where the photo was taken, so every pixel of the street is
+// the photo itself, and the person runs away down the street or comes running up to the lens,
+// stopping short of whatever the photo shows in the way.
+let montage = null;
+function startMontage(t) {
+  montage = { scenes: t.scenes, k: -1, done: false };
+  nextScene();
+}
+function nextScene() {
+  const m = montage;
+  m.k++;
+  if (m.k >= m.scenes.length) {
+    m.done = true; m.k = m.scenes.length - 1;
+    if (!HASH.has("record")) montage = null;          // the film is over: the keys are yours again
+    return;
+  }
+  const sc = m.scenes[m.k];
+  m.pano = panos.find((q) => String(q.id) === String(sc.pano));
+  m.toward = sc.dir === "toward"; m.path = null; m.s = 0; m.rest = 0;
+  [player.x, player.y] = [m.pano.x, m.pano.y];
+  if (person) person.speed = 0;
+  updatePhotoSpace();
+}
+function scenePath() {
+  // Run along the open street the photo shows: of the headings within 35° of the camera's
+  // forward and backward, the one with the longest clear corridor (body-wide) wins.
+  const m = montage, p = m.pano, h0 = THREE.MathUtils.degToRad(p.heading);
+  const reach = (a) => {
+    const dir = [Math.sin(a), Math.cos(a)];
+    let r = 1.2;
+    while (r < 10.5 && photoFree(p.x + dir[0] * r, p.y + dir[1] * r)) r += 0.25;   // the levelled road holds best near the lens
+    return r;
+  };
+  let best = null;
+  for (const base of [0, Math.PI]) for (let off = -35; off <= 35; off += 2.5) {
+    const a = h0 + base + THREE.MathUtils.degToRad(off), r = reach(a) - Math.abs(off) * 0.02;   // prefer straight down the street
+    if (!best || r > best.r) best = { a, r };
+  }
+  const dir = [Math.sin(best.a), Math.cos(best.a)];
+  const at = (r) => [p.x + dir[0] * r, p.y + dir[1] * r], far = Math.max(3, best.r - 0.6);
+  // keep 3 m clear of the lens: below it is the capture rig (rider, handlebar, a car's bonnet)
+  const near = 3, far2 = Math.max(far, near + 3);
+  m.path = m.toward ? [at(far2), at(near)] : [at(near), at(far2)];
+  m.len = Math.hypot(m.path[1][0] - m.path[0][0], m.path[1][1] - m.path[0][1]);
+  [player.x, player.y] = m.path[0];
+  player.heading = Math.atan2(m.path[1][0] - m.path[0][0], m.path[1][1] - m.path[0][1]);
+}
+function montageStep(dt) {
+  const m = montage;
+  moved = 0;
+  if (m.done || !ps || ps.pano !== m.pano) return;                 // the next street is still loading
+  if (!m.path) scenePath();
+  const left = m.len - m.s;
+  if (left > 0.01) {
+    const speed = TOUR_MS * Math.min(1, 0.35 + m.s / 3) * Math.min(1, 0.25 + left / 3);   // start off, ease to a stop
+    const step = Math.min(left, speed * dt);
+    m.s += step; moved = step / Math.max(dt, 1e-3);
+    const f = m.s / m.len;
+    player.x = m.path[0][0] + (m.path[1][0] - m.path[0][0]) * f;
+    player.y = m.path[0][1] + (m.path[1][1] - m.path[0][1]) * f;
+    phase += dt * moved * 4.2;
+  } else if ((m.rest += dt) > 1.1) nextScene();
+}
+function tourAt(s) {
+  const { path, cum } = tour;
+  let i = 1; while (i < cum.length - 1 && cum[i] < s) i++;
+  const f = Math.min(1, Math.max(0, (s - cum[i - 1]) / Math.max(cum[i] - cum[i - 1], 1e-6)));
+  return [path[i - 1][0] + (path[i][0] - path[i - 1][0]) * f, path[i - 1][1] + (path[i][1] - path[i - 1][1]) * f];
+}
+function tourStep(dt) {
+  // the route lies on road centrelines and through each capture point: no collision needed
+  const total = tour.cum[tour.cum.length - 1];
+  const speed = tour.s < total ? TOUR_MS * Math.min(1, 0.4 + tour.s / 6) : 0;   // ease into the run
+  tour.s = Math.min(total, tour.s + speed * dt);
+  tour.done = tour.s >= total;
+  if (tour.done && !HASH.has("record")) { tour = null; moved = 0; return; }   // the run is over: the keys are yours again
+  const [x, y] = tourAt(tour.s), [ax, ay] = tourAt(Math.min(total, tour.s + 2.5));
+  moved = Math.hypot(x - player.x, y - player.y) / Math.max(dt, 1e-3);
+  phase += dt * moved * 4.2;
+  player.x = x; player.y = y;
+  if (Math.hypot(ax - x, ay - y) > 0.2) {
+    const target = Math.atan2(ax - x, ay - y);
+    let d = target - player.heading; d = Math.atan2(Math.sin(d), Math.cos(d));
+    player.heading += d * Math.min(1, dt * 6);
+    let dy2 = Math.atan2(-(ax - x), ay - y) - yaw; dy2 = Math.atan2(Math.sin(dy2), Math.cos(dy2));
+    yaw += dy2 * Math.min(1, dt * 2);                       // the camera swings round behind, unhurried
+  }
+}
+function step(dt, t, tile, lat0, lon0) {
+  if (photoMode) {
+    const p = photoMode.pano;
+    camera.position.set(p.x, panosCamH, -p.y);
+    camera.lookAt(p.x - Math.sin(yaw) * Math.cos(-pitch), panosCamH + Math.sin(-pitch), -p.y - Math.cos(yaw) * Math.cos(-pitch));
+    return;
+  }
+  let fx = 0, fz = 0;
+  if (montage) montageStep(dt);
+  else if (tour) tourStep(dt);
+  else {
+  if (keys.has("KeyW") || keys.has("ArrowUp")) fz += 1;
+  if (keys.has("KeyS") || keys.has("ArrowDown")) fz -= 1;
+  if (keys.has("KeyA") || keys.has("ArrowLeft")) fx -= 1;
+  if (keys.has("KeyD") || keys.has("ArrowRight")) fx += 1;
+  fx += stickVec[0]; fz += stickVec[1];
+  const mag = Math.min(1, Math.hypot(fx, fz));
+  const speed = (keys.has("ShiftLeft") || keys.has("ShiftRight") ? RUN_MS : WALK_MS) * mag;
+  if (mag > 0.05) {
+    // camera-relative direction in data coordinates (north = +y)
+    const fwd = viewFwd, right = [viewFwd[1], -viewFwd[0]];
+    let mx = fwd[0] * fz + right[0] * fx, my = fwd[1] * fz + right[1] * fx;
+    const l = Math.hypot(mx, my); mx /= l; my /= l;
+    const nx = player.x + mx * speed * dt, ny = player.y + my * speed * dt, ox = player.x, oy = player.y;
+    if (canStand(nx, ny)) { player.x = nx; player.y = ny; }
+    else if (canStand(nx, player.y)) player.x = nx;
+    else if (canStand(player.x, ny)) player.y = ny;
+    const target = Math.atan2(mx, my);
+    let d = target - player.heading; d = Math.atan2(Math.sin(d), Math.cos(d));
+    player.heading += d * Math.min(1, dt * 10);
+    phase += dt * speed * 4.2;
+    moved = Math.hypot(player.x - ox, player.y - oy) / Math.max(dt, 1e-3);
+  } else { phase *= 0.9; moved = 0; }
+  }
+  // photo space: fade with distance from the capture point; its ground is the camera's ground
+  const dPs = ps ? Math.hypot(player.x - ps.pano.x, player.y - ps.pano.y) : Infinity;
+  psT = montage ? (ps?.pano === montage.pano ? 1 : 0) : THREE.MathUtils.smoothstep(PS_OUT - dPs, 0, PS_OUT - PS_IN);
+  if (ps) {
+    for (const o of [ps.mesh, ...ps.mesh.children]) { o.material.opacity = psT; o.material.transparent = psT < 1; }
+    ps.mesh.visible = psT > 0;
+  }
+  const inPhoto = psT > 0.5;
+  if (inPhoto !== (walker.parent === photoScene)) (inPhoto ? photoScene : scene).add(walker);
+  const gh = inPhoto ? 0.01 : groundAt(player.x, player.y, tile);     // the photo's road is laid on the plane
+  blob.visible = inPhoto;
+  blob.position.set(player.x, gh + 0.01, -player.y);
+  player.h += (gh - player.h) * Math.min(1, dt * 14);
+  if (montage && dt === 0) player.h = gh;
+  walker.position.set(player.x, player.h, -player.y);
+  // heading is clockwise from north in data axes (x east, y north = three -z). A model facing three
+  // +z (the avatar) turned by θ faces (sin θ, cos θ) in three = (sin θ, -cos θ) in data, so θ = π - h;
+  // the block figure faces -z, so θ = -h.
+  walker.rotation.y = (person ? Math.PI : 0) - player.heading;
+  if (person) animatePerson(dt, moved);
+  const swing = Math.sin(phase) * Math.min(0.7, moved / 3);
+  walker.userData.legs[0].rotation.x = swing; walker.userData.legs[1].rotation.x = -swing;
+  walker.userData.arms[0].rotation.x = -swing * 0.8; walker.userData.arms[1].rotation.x = swing * 0.8;
+
+  // third-person camera: behind and above the shoulder, kept out of walls
+  const head = new THREE.Vector3(player.x, player.h + 1.55, -player.y);
+  let dd = dist;
+  for (let s = 0.5; s <= dist; s += 0.5) {
+    const cx = player.x + Math.sin(yaw) * Math.cos(pitch) * s, cy = player.y - Math.cos(yaw) * Math.cos(pitch) * s;
+    if (!canStand(cx, cy)) { dd = Math.max(1.2, s - 0.5); break; }
+  }
+  const cam = new THREE.Vector3(head.x + Math.sin(yaw) * Math.cos(pitch) * dd, head.y + Math.sin(pitch) * dd, head.z + Math.cos(yaw) * Math.cos(pitch) * dd);
+  if (ps && psT > 0) {
+    // Photo space: a photo is exact only from where it was taken. Seen from a step aside, the
+    // space behind every car and pillar opens up. So, like the fixed cameras of pre-rendered
+    // games, the camera keeps within PS_CAM_R of the capture point and turns to follow the
+    // walker, who moves inside the real street and is hidden by its real walls.
+    const C = new THREE.Vector3(ps.pano.x, panosCamH, -ps.pano.y);
+    const off = cam.clone().sub(C), hl = Math.hypot(off.x, off.z);
+    if (hl > PS_CAM_R) { off.x *= PS_CAM_R / hl; off.z *= PS_CAM_R / hl; }
+    off.y = THREE.MathUtils.clamp(off.y, -0.3, 0.5);
+    cam.lerp(C.add(off), psT);
+  }
+  if (montage && psT === 1) cam.set(ps.pano.x, panosCamH, -ps.pano.y);   // the lens of the real camera
+  // filming: a 46° lens held level keeps the frame clear of the capture rig below the panorama
+  const fov = montage && psT === 1 ? 46 : 62;
+  if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
+  camera.position.copy(cam);
+  // filming from the lens, keep the view about level, as a person holding a camera would
+  camera.lookAt(montage && psT === 1 ? head.clone().setY(Math.max(head.y, panosCamH - 0.15)) : head);
+  const vf = Math.hypot(head.x - cam.x, head.z - cam.z);
+  if (vf > 0.3) viewFwd = [(head.x - cam.x) / vf, -(head.z - cam.z) / vf];   // walking follows what the camera sees
+
+  sun.position.copy(walker.position).addScaledVector(sunDir, 160);
+  sun.target.position.copy(walker.position);
+  psSun.position.copy(walker.position).add(new THREE.Vector3(0, 10, 0));   // soft top light: Hà Nội's usual overcast
+  psSun.target.position.copy(walker.position);
+
+  if (t - lastWhere > 0.5) {
+    lastWhere = t;
+    cullChunks();
+    nearPano = nearestPano();
+    updatePhotoSpace();
+    $("photo-btn").disabled = !nearPano;
+    $("photo-info").textContent = inPhoto
+      ? `Không gian ảnh thật: dựng 3D từ ảnh ${ps.pano.source || "KartaView"} chụp ${ps.pano.shot.slice(0, 10)} (CC BY-SA 4.0), độ sâu ước lượng từ chính ảnh`
+      : nearPano ? `Điểm chụp thật cách ${nearPano.d.toFixed(0)} m (cột xanh): lại gần để bước vào phố thật` : (panos.length ? `${panos.length} điểm chụp 360° quanh khu vực: tìm cột xanh` : "");
+    const lat = lat0 + player.y / 110574, lon = lon0 + player.x / (111320 * Math.cos(lat0 * Math.PI / 180));
+    const nb = inPhoto ? null : nearestBuilding(player.x, player.y);    // the blocks say nothing inside a photo
+    const label = inPhoto ? "trong ảnh thật" : nb ? `${nb.name ? `<b>${nb.name.replace(/[<>&]/g, "")}</b> · ` : ""}nhà cao ${nb.height.toFixed(0)} m (${{ observed: "đo trong dữ liệu", derived_floors: "từ số tầng", derived_raster: "từ raster 2.5D", estimated: "ước lượng" }[nb.source]})` : "giữa phố";
+    $("where").innerHTML = `<span class="mono">${lat.toFixed(5)}, ${lon.toFixed(5)}</span> · ${label} · <a href="https://www.openstreetmap.org/#map=19/${lat.toFixed(6)}/${lon.toFixed(6)}" target="_blank" rel="noopener">đối chiếu bản đồ</a>`;
+  }
+}
+
+main().catch((e) => { loadMsg(`Không dựng được phố: ${e.message}`); });
+</script>

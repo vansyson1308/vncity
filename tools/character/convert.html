@@ -1,0 +1,33 @@
+<!doctype html><meta charset="utf-8"><body>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script type="module">
+import * as THREE from "three";
+import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
+const blank = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+const mgr = new THREE.LoadingManager(); mgr.setURLModifier((u) => (u.endsWith(".fbx") ? u : blank));
+const L = new FBXLoader(mgr), T = new THREE.TextureLoader();
+const tex = async (f, srgb, jpeg) => { const t = await T.loadAsync(f); t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; if (jpeg) t.userData.mimeType = "image/jpeg"; return t; };
+const av = await L.loadAsync("Male_Adult_09.fbx");
+const [bc, bn, hc, hn, op] = await Promise.all([tex("m017_body_color.jpg", 1, 1), tex("m017_body_normal.jpg", 0, 1), tex("m017_head_color.jpg", 1, 1), tex("m017_head_normal.jpg", 0, 1), tex("m017_opacity_color.png", 1, 0)]);
+av.traverse((o) => {
+  if (!o.isMesh) return;
+  o.material = [].concat(o.material).map((m) => {
+    if (m.name.endsWith("_body")) return new THREE.MeshStandardMaterial({ name: "body", map: bc, normalMap: bn, roughness: 0.8 });
+    if (m.name.endsWith("_head")) return new THREE.MeshStandardMaterial({ name: "head", map: hc, normalMap: hn, roughness: 0.6 });
+    return new THREE.MeshStandardMaterial({ name: "hair", map: op, alphaTest: 0.4, transparent: false, side: THREE.DoubleSide, roughness: 0.7 });
+  });
+});
+const clips = [];
+for (const [name, f] of [["idle", "m_idle_neutral_01.max.fbx"], ["walk", "m_walk_neutral_01.max.fbx"], ["run", "m_run_neutral_01.max.fbx"], ["jog", "m_run_slow_01.max.fbx"]]) {
+  const c = (await L.loadAsync(f)).animations[0];
+  // rotations drive the body; only the root keeps a position track (the bob of the gait)
+  // (and only bones the avatar has: the exporter drops a whole clip over one unknown node)
+  c.tracks = c.tracks.filter((t) => (t.name.endsWith(".quaternion") || t.name === "Bip01.position") && av.getObjectByName(t.name.split(".")[0]));
+  c.name = name; clips.push(c);
+}
+const root = new THREE.Group(); root.name = "walker"; av.scale.setScalar(0.01); root.add(av);   // centimetres -> metres
+const glb = await new GLTFExporter().parseAsync(root, { binary: true, animations: clips });
+const bytes = new Uint8Array(glb); let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+window.glb = btoa(s);
+</script>

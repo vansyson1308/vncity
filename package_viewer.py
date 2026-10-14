@@ -6,7 +6,7 @@ decodes and hands to GLTFLoader.parseAsync.
 
 Usage:
   python package_viewer.py --name caugiay [--overview out/hanoi/preview.png]
-  python -m http.server -d site/caugiay
+  python -m http.server -d site/caugiay   # map: /index.html, third-person walk: /walk.html
 """
 
 import argparse
@@ -31,12 +31,17 @@ def main():
         shutil.rmtree(dst)
     (dst / "tiles").mkdir(parents=True)
     shutil.copy(HERE / "viewer" / "index.html", dst / "index.html")
+    shutil.copy(HERE / "viewer" / "walk.html", dst / "walk.html")
     shutil.copy(src / "manifest.json", dst / "manifest.json")
     for f in sorted((src / "tiles").iterdir()):
         if f.suffix == ".json":
             shutil.copy(f, dst / "tiles" / f.name)
         elif f.suffix == ".glb":
             (dst / "tiles" / f"{f.name}.txt").write_text(base64.b64encode(f.read_bytes()).decode())
+    # the walker: Rocketbox avatar (MIT), shipped as base64 like the tiles
+    (dst / "models").mkdir()
+    (dst / "models" / "walker.glb.txt").write_text(base64.b64encode((HERE / "viewer" / "assets" / "walker.glb").read_bytes()).decode())
+    shutil.copy(HERE / "viewer" / "assets" / "ROCKETBOX_LICENSE.md", dst / "models" / "ROCKETBOX_LICENSE.md")
     if a.overview:
         shutil.copy(a.overview, dst / "hanoi_preview.png")
     print(f"viewer written to {dst}")

@@ -1,0 +1,4 @@
+# Only for `streetview.py depth` (runs on CPU, ~30 s per panorama on 4 cores):
+#   ./venv/bin/pip install -r requirements-depth.txt --extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.1
+transformers==5.19.0
