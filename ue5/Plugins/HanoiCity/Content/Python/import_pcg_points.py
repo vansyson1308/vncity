@@ -7,7 +7,9 @@
    Empty mesh = skipped, so this is safe to run before any art exists.
 
 Transform per row: location UE = (100 X, -100 Y, 100 Z), yaw UE = -Yaw + yaw_offset_deg,
-uniform scale = Scale * entry.scale.
+scale = Scale * entry.scale on the axes in entry.scale_axes ("xyz" default; "y" for shop signs and
+awnings, whose Scale is a width along the facade; "x" for cable spans, whose Scale is the span
+length), entry.scale on the others. entry.meshes (a list) picks one mesh per row by Variant.
 
 Usage: Tools > Hanoi City > Import PCG Points, or py import_pcg_points.py --city ../out/hoankiem
 """
@@ -31,6 +33,17 @@ def load_asset_map():
 
 def lookup(asset_map, set_name, kind):
     return asset_map.get(f"{set_name}/{kind}") or asset_map.get(f"{set_name}/*")
+
+
+def entry_meshes(entry):
+    """Mesh paths of an entry: `meshes` (variants) wins over the single `mesh`."""
+    return [m for m in (entry.get("meshes") or [entry.get("mesh", "")]) if m]
+
+
+def row_scale(entry, scale):
+    base = float(entry.get("scale", 1.0))
+    axes = entry.get("scale_axes", "xyz")
+    return [base * scale if a in axes else base for a in "xyz"]
 
 
 def import_tables(cfg, csv_paths):
@@ -58,32 +71,38 @@ def spawn_instances(csv_paths):
                 groups[(row["Set"], row["Kind"], row["Tile"])].append(row)
         for (set_name, kind, tile), rows in sorted(groups.items()):
             entry = lookup(asset_map, set_name, kind)
-            if not entry or not entry.get("mesh"):
+            paths = entry_meshes(entry) if entry else []
+            if not paths:
                 skipped[f"{set_name}/{kind}"] += len(rows)
                 continue
-            mesh = unreal.EditorAssetLibrary.load_asset(entry["mesh"])
-            if not isinstance(mesh, unreal.StaticMesh):
-                hc.warn(f"{set_name}/{kind}: {entry['mesh']} is not a StaticMesh")
-                continue
-            pts = [hanoi_geo.enu_to_ue(float(r["X"]), float(r["Y"]), float(r["Z"])) for r in rows]
-            cx = sum(p[0] for p in pts) / len(pts)
-            cy = sum(p[1] for p in pts) / len(pts)
-            transforms = []
-            for r, p in zip(rows, pts):
-                s = float(r["Scale"] or 1.0) * float(entry.get("scale", 1.0))
-                yaw = hanoi_geo.ue_yaw(float(r["Yaw"])) + float(entry.get("yaw_offset_deg", 0.0))
-                transforms.append(unreal.Transform(
-                    location=unreal.Vector(p[0] - cx, p[1] - cy, p[2]),
-                    rotation=unreal.Rotator(roll=0.0, pitch=0.0, yaw=yaw),
-                    scale=unreal.Vector(s, s, s)))
-            actor = sub.spawn_actor_from_class(unreal.HanoiPointSetActor, unreal.Vector(cx, cy, 0.0))
-            actor.set_editor_property("set", set_name)
-            actor.set_editor_property("kind", kind)
-            actor.set_editor_property("tile", tile)
-            actor.set_instances(mesh, transforms, float(entry.get("cull_distance_m", 0)))
-            actor.set_actor_label(f"{set_name}_{kind}_{tile}")
-            actor.set_folder_path(f"City/Points/{set_name}")
-            spawned += 1
+            by_mesh = collections.defaultdict(list)
+            for r in rows:
+                by_mesh[paths[int(r["Variant"] or 0) % len(paths)]].append(r)
+            for path_i, mesh_rows in sorted(by_mesh.items()):
+                mesh = unreal.EditorAssetLibrary.load_asset(path_i)
+                if not isinstance(mesh, unreal.StaticMesh):
+                    hc.warn(f"{set_name}/{kind}: {path_i} is not a StaticMesh")
+                    continue
+                pts = [hanoi_geo.enu_to_ue(float(r["X"]), float(r["Y"]), float(r["Z"])) for r in mesh_rows]
+                cx = sum(p[0] for p in pts) / len(pts)
+                cy = sum(p[1] for p in pts) / len(pts)
+                transforms = []
+                for r, p in zip(mesh_rows, pts):
+                    sx, sy, sz = row_scale(entry, float(r["Scale"] or 1.0))
+                    yaw = hanoi_geo.ue_yaw(float(r["Yaw"])) + float(entry.get("yaw_offset_deg", 0.0))
+                    transforms.append(unreal.Transform(
+                        location=unreal.Vector(p[0] - cx, p[1] - cy, p[2]),
+                        rotation=unreal.Rotator(roll=0.0, pitch=0.0, yaw=yaw),
+                        scale=unreal.Vector(sx, sy, sz)))
+                actor = sub.spawn_actor_from_class(unreal.HanoiPointSetActor, unreal.Vector(cx, cy, 0.0))
+                actor.set_editor_property("set", set_name)
+                actor.set_editor_property("kind", kind)
+                actor.set_editor_property("tile", tile)
+                actor.set_instances(mesh, transforms, float(entry.get("cull_distance_m", 0)))
+                suffix = f"_v{paths.index(path_i)}" if len(paths) > 1 else ""
+                actor.set_actor_label(f"{set_name}_{kind}_{tile}{suffix}")
+                actor.set_folder_path(f"City/Points/{set_name}")
+                spawned += 1
     if skipped:
         hc.log("no mesh mapped yet (fill Config/asset_map.json): "
                + ", ".join(f"{k}={n}" for k, n in sorted(skipped.items())))
