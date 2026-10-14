@@ -19,7 +19,7 @@
         "vi": "Quê Kiến Xương, Thái Bình. Bỏ dở năm ba Đại học Giao thông Vận tải khi bố bị tai biến, nợ viện phí 180 triệu. Giờ chạy xe ôm công nghệ trên app Vồ bằng con Sóng đời 2012 đã thay ba lần nhông xích, thuê trọ 12 m² ở ngõ Khương Đình, mỗi tháng gửi về quê 6 triệu. Thuộc đường nhanh hơn GPS, cãi tay đôi được với bất kỳ bà bán nước nào, và có tật vượt đèn vàng. Mơ một ngày mở tiệm sửa xe của riêng mình.",
         "en": "From Kiến Xương, Thái Bình. Dropped out of his third year at the transport university when his father had a stroke and the family took on a 180-million hospital debt. Now rides for the Vồ app on a 2012 Sóng whose chain he has replaced three times, rents a 12 m² room in a Khương Đình alley and sends 6 million home each month. Knows the streets faster than GPS, can out-argue any tea-stall auntie, and has a habit of running amber lights. Dreams of his own repair shop."
       },
-      "home": {"lat": 20.99050, "lon": 105.81500},
+      "home": {"lat": 20.990356, "lon": 105.813144},
       "district": "districts:thanh_xuan",
       "occupation": {"vi": "Tài xế xe ôm công nghệ", "en": "Ride-hailing motorbike driver"},
       "personality": ["lanh_loi", "hai_huoc", "lieu", "thuong_gia_dinh", "tu_ai_ngam", "khong_chiu_thua"],
@@ -29,10 +29,10 @@
         {"hours": [5.5, 9], "activity": "chay_cuoc_sang_cao_diem", "location": {"lat": 21.00300, "lon": 105.82000}},
         {"hours": [9, 11], "activity": "ngoi_tra_da_cho_cuoc", "location": {"lat": 21.02860, "lon": 105.82720}},
         {"hours": [11, 13.5], "activity": "giao_do_an_trua", "location": {"lat": 21.03300, "lon": 105.79500}},
-        {"hours": [13.5, 16], "activity": "ngu_trua_tai_phong_tro", "location": {"lat": 20.99050, "lon": 105.81500}},
+        {"hours": [13.5, 16], "activity": "ngu_trua_tai_phong_tro", "location": {"lat": 20.990356, "lon": 105.813144}},
         {"hours": [16, 20], "activity": "chay_cuoc_chieu", "location": {"lat": 21.01700, "lon": 105.78380}},
         {"hours": [20, 23], "activity": "phu_viec_tiem_sua_xe_duc", "location": {"lat": 20.99120, "lon": 105.81420}},
-        {"hours": [23, 5.5], "activity": "ngu", "location": {"lat": 20.99050, "lon": 105.81500}}
+        {"hours": [23, 5.5], "activity": "ngu", "location": {"lat": 20.990356, "lon": 105.813144}}
       ],
       "skills": {"lai_xe": 70, "thuoc_duong": 60, "sua_xe": 45, "an_noi": 65, "nau_an": 10, "chup_anh": 15, "the_luc": 55, "kinh_doanh": 20},
       "relationships": [
@@ -118,7 +118,7 @@
         {"hours": [5, 7.5], "activity": "chup_anh_binh_minh_bo_ho", "location": {"lat": 21.02880, "lon": 105.85240}},
         {"hours": [7.5, 9], "activity": "an_sang_quan_pho_tho", "location": {"lat": 21.03745, "lon": 105.85120}},
         {"hours": [9, 13], "activity": "phan_loai_kho_phim", "location": {"lat": 21.03745, "lon": 105.85120}},
-        {"hours": [13, 17], "activity": "di_tim_dia_diem_anh_xua", "location": {"lat": 21.04290, "lon": 105.85960}},
+        {"hours": [13, 17], "activity": "di_tim_dia_diem_anh_xua", "location": {"lat": 21.043541, "lon": 105.859315}},
         {"hours": [17, 19], "activity": "ngoi_ca_phe_voi_ong_thang", "location": {"lat": 21.03780, "lon": 105.85230}},
         {"hours": [19, 24], "activity": "trang_phim_bien_tap", "location": {"lat": 21.03745, "lon": 105.85120}},
         {"hours": [0, 5], "activity": "ngu_chap_chon_lech_mui_gio", "location": {"lat": 21.03745, "lon": 105.85120}}

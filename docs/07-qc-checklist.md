@@ -38,9 +38,9 @@
 | Tài liệu GDD lệch với dữ liệu | 🔧 4 chỗ |
 | Cốt truyện | 👤 vẫn là "bản nháp v0", chờ chủ dự án định hướng |
 | Đọc duyệt hội thoại bởi người Hà Nội (tiếng lóng, xưng hô) | 👤 |
-| Mức phạt theo Nghị định 168/2024 | 👤 11/15 luật còn gắn `fine_unverified` |
+| Mức phạt theo Nghị định 168/2024 | ✅ 16/16 luật đối chiếu NĐ 168/2024 và NĐ 238/2026, tra 14/10/2026 (`15-kiem-chung-du-lieu-thuc.md`) |
 | Tên quận/phường sau sáp nhập 1/7/2025, giá cả hiện hành | 👤 |
-| Tọa độ công trình biểu tượng | ✅ 24/44 khớp dữ liệu thật; 👤 20 cần người kiểm |
+| Tọa độ công trình biểu tượng | ✅ 84/84 trong 50 m của đối tượng OSM, khóa bằng `tests/test_landmark_coords.py` (`15-kiem-chung-du-lieu-thuc.md`) |
 
 ## 4. Harness UE 5.8
 

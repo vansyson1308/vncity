@@ -40,7 +40,7 @@ kiểm tra tự động. Những gì cần UE5 để chạy thử được đán
    Lớn, cầu Long Biên, chợ Đồng Xuân, Ô Quan Chưởng.
 7. **Mở rộng schema** theo 10 đề xuất trong `gdd/04-danh-sach-noi-dung.md` (nhánh nhiệm vụ, đổi nhân
    vật, điều kiện hội thoại, khoảng phạt…).
-8. **Kiểm tra lại mức phạt** theo Nghị định 168/2024 (11/15 luật đang gắn `fine_unverified`).
+8. ~~**Kiểm tra lại mức phạt** theo Nghị định 168/2024~~ Xong 14/10/2026: 16/16 luật đối chiếu NĐ 168/2024 và NĐ 238/2026 (`15-kiem-chung-du-lieu-thuc.md`).
 9. **Hiệu chỉnh mật độ xe máy** bằng SUMO (mô hình sublane) để có số liệu cho Mass traffic.
 
 ### Khi có UE5 (ngày cắm vào)

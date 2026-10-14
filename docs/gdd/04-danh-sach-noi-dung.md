@@ -11,7 +11,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | --- | --- | --- | --- |
 | districts | `world/districts.json` | 14 | Phố cổ, Hoàn Kiếm/khu Pháp, Ba Đình, Tây Hồ, Long Biên, Đống Đa, Hai Bà Trưng, Cầu Giấy, Thanh Xuân, Hà Đông, Hoàng Mai, Gia Lâm, Mỹ Đình, Bắc Từ Liêm. Tên phường theo ranh giới sau sáp nhập 7/2025 gắn tag `division_names_need_check` |
 | building_archetypes | `world/building_archetypes.json` | 13 | Đúng 13 id pipeline dùng |
-| landmarks | `world/landmarks.json` | 84 | 36 mục `coords_verified_overture` (khớp Overture trong 300 m), 48 mục còn `coords_unverified` (phần lớn là hồ, cầu, phố, công viên: giữ mốc tay) |
+| landmarks | `world/landmarks.json` | 84 | Cả 84 gắn `coords_verified_osm`: trong 50 m của đối tượng OSM (qua Overture), tham chiếu ở `game/reference/landmarks_osm.json`, khóa bằng `tests/test_landmark_coords.py` (docs/15) |
 | characters | `characters/protagonists.json` | 3 | Minh, Lan, Khôi |
 | characters | `characters/story.json` | 54 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio; cụ Thọ 1957 (điều khiển được trong cold open), ông Khiêm, bà Thọ, ông Tư Hàng Bạc; 15 người của tám quận (`12-ho-so-quan.md`); 5 người của chương 3-5: anh Tùng, bà Liên, ông Bảy, bác sĩ Hòa, mẹ Tuấn (`13-chuong-3-5.md`). Mọi nhân vật có khối `drive` Khổ-Tập-Diệt-Đạo (test bắt buộc) |
 | characters | `characters/ambient.json` | 21 | Kiểu dân cư có lịch sinh hoạt; loa phường |
@@ -29,7 +29,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | events | `events.json` | 20 | Lịch âm, lịch dương, tuần, dữ liệu sống |
 | radio | `radio.json` | 7 | Nhạc gốc hoặc chờ cấp phép |
 | factions | `factions.json` | 10 | |
-| traffic_rules | `traffic_rules.json` | 15 | Nghị định 168/2024/NĐ-CP; 11 mục gắn `fine_unverified` |
+| traffic_rules | `traffic_rules.json` | 16 | Nghị định 168/2024/NĐ-CP, sửa đổi bởi NĐ 238/2026; cả 16 gắn `fine_verified_nd168` (docs/15) |
 | collectibles | `collectibles.json` | 220 | 120 ảnh xưa, 40 tem phiếu, 60 biển hiệu, mỗi món một tọa độ thật (02 §11) |
 | skills | `skills.json` | 12 | 12 kỹ năng, 3 mốc mỗi kỹ năng, 36 thứ mở khóa; cổng `min_skills` ở 10 hoạt động, 3 cơ sở, 3 xe, 8 lựa chọn thoại, 1 sự kiện (02 §10) |
 | random_events | `random_events.json` | 46 | Sự kiện ngẫu nhiên trên phố, 6 loại, 122 lựa chọn, mỗi NPC có Khổ-Tập (02 §7.1) |
@@ -53,12 +53,11 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 
 ## Việc kiểm chứng còn treo
 
-1. **Toạ độ** 20 địa danh còn `coords_unverified` và tâm 13 quận: khớp với Overture places/OSM
-   (`pipeline/verify_landmarks.py`), bỏ tag `coords_unverified`.
+1. ~~**Toạ độ** địa danh~~ Xong 14/10/2026: 84/84 khớp OSM trong 50 m (`tools/landmark_audit.py`, docs/15).
+   Tâm 13 quận vẫn là ước lượng.
 2. **Tên phường** trong `overture_division_names`: đối chiếu ranh giới hành chính sau 1/7/2025 mà
    Overture đang dùng.
-3. **Mức phạt** 11 lỗi `fine_unverified`: đối chiếu Nghị định 168/2024/NĐ-CP (và sửa đổi nếu có)
-   theo đúng điều, khoản, điểm.
+3. ~~**Mức phạt**~~ Xong 14/10/2026: đối chiếu đúng điều, khoản, điểm của NĐ 168/2024 và NĐ 238/2026 (docs/15).
 4. **Giá cả**: cước app gọi xe, giá vé tàu 2A, lệ phí thi A1, giá sang nhượng quán phố cổ.
 5. **Lịch âm**: kiểm tra bộ đổi lịch Việt Nam cho các năm phát hành.
 6. **Duyệt văn hóa**: người Hà Nội đọc lại toàn bộ thoại (từ lóng, xưng hô, giọng Thái Bình, Nam

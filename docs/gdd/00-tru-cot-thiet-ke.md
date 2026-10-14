@@ -46,8 +46,8 @@ dùng bảng màu "Đông Nam Á chung chung" (tre, mái lá) cho nội đô.
   (xem `01-vong-lap-gameplay.md`).
 - Lịch sinh hoạt theo nhịp thật: phở mở từ 6 giờ, chợ Long Biên họp từ nửa đêm, các cụ tập dưỡng
   sinh lúc 5 giờ, phố đi bộ từ tối thứ Sáu, Tết thì thành phố vắng.
-- Luật giao thông thật, mức phạt thật (Nghị định 168/2024/NĐ-CP, đánh dấu `fine_unverified` khi
-  chưa đối chiếu văn bản gốc).
+- Luật giao thông thật, mức phạt thật (Nghị định 168/2024/NĐ-CP và Nghị định 238/2026/NĐ-CP sửa đổi,
+  đối chiếu văn bản gốc, ghi căn cứ trong `legal_basis`; docs/15).
 - Hài hước đến từ quan sát đời thường (app "Vồ", "con bò đi spa", tiếng rao), không từ chế giễu
   vùng miền, tầng lớp hay người khuyết tật.
 
@@ -58,9 +58,8 @@ dùng bảng màu "Đông Nam Á chung chung" (tre, mái lá) cho nội đô.
 - Tham chiếu hình ảnh: ảnh tự chụp của đội, Wikimedia Commons, Mapillary CC BY-SA (chỉ để xem).
 - Thời tiết, bụi mịn, mưa ngập lấy từ nguồn dữ liệu sống (`live_feed` trong `events.json`).
 - Giao thông: đồ thị đường `traffic/graph.json`, tuyến buýt từ GTFS Hà Nội (CC BY 4.0).
-- Toạ độ địa danh: 24/44 địa danh đã được `pipeline/verify_landmarks.py` khớp với Overture (tag
-  `coords_verified_overture`, không sửa tay); 20 địa danh còn lại là ước lượng, gắn tag
-  `coords_unverified`, phải khớp trước khi khóa.
+- Toạ độ địa danh: cả 84 nằm trong 50 m của đối tượng OSM cùng tên (tag `coords_verified_osm`), đo
+  bằng `tools/landmark_audit.py`; CI khóa bằng `tests/test_landmark_coords.py` (docs/15). Không sửa tay.
 
 ## Địa điểm trang nghiêm
 

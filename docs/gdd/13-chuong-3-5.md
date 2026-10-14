@@ -312,9 +312,9 @@ là cờ để engine chạy phần kết, nằm trong `RUNTIME_READ_FLAGS`.
 - Chủ dự án trả lời hai thẻ quyết định (bí mật băng 24, ba kết ngang hàng). Nếu chọn phương án còn lại,
   phải sửa `dlg_c4_05_bang_24`, `dlg_c4_05_ong_thang`, `dlg_c4_06_ten_chay`, `dlg_c5_01_quyet` và bảng §4.
 - Chủ dự án đọc lại thoại chương 3-5 (623 dòng); nhờ một người Hà Nội đọc to như với chương 2.
-- Kiểm lại hai điểm âm lịch năm 2027 trước khi khóa: ngày rằm tháng Giêng (bản này tính Tết Đinh Mùi là
-  6/2/2027, rằm là thứ Bảy 20/2) và khoảng tháng cô hồn (bản này tính hết tháng Bảy âm vào cuối tháng Tám
-  dương). Thứ của 10/10/2027 đã kiểm: Chủ nhật.
+- ~~Kiểm lại hai điểm âm lịch năm 2027~~ Đã kiểm 14/10/2026 bằng thời điểm sóc theo giờ Hà Nội
+  (docs/15 §3): Tết Đinh Mùi 6/2/2027, rằm tháng Giêng thứ Bảy 20/2, tháng Bảy âm 2/8-31/8/2027, năm
+  không nhuận, 10/10/2027 là Chủ nhật. Không phải sửa.
 - Runtime: xong cả hai engine. `flood_layers.json` (đêm bão `bao_so_3_2027`: mực sông Long Biên, mưa
   400 mm, 7 vùng ngập, lệnh cấm cầu Long Biên từ 20 giờ) và `minigame_modes.json` (4 chế độ, có đáp án,
   độ khó, bước cấm, sổ nợ 460 triệu) do `UHanoiFloodSubsystem`/`FloodSystem` và

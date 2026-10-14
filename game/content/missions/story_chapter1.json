@@ -33,8 +33,8 @@
         ]
       },
       "start": {
-        "lat": 21.045,
-        "lon": 105.862
+        "lat": 21.043194,
+        "lon": 105.857959
       },
       "steps": [
         {
@@ -509,8 +509,8 @@
             "en": "Ride home and say nothing"
           },
           "target": {
-            "lat": 20.9905,
-            "lon": 105.815
+            "lat": 20.990356,
+            "lon": 105.813144
           },
           "set_flags": [
             "minh_giu_kin_danh_sach"

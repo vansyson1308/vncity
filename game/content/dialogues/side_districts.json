@@ -3929,8 +3929,8 @@
           "choices": [
             {
               "text": {
-                "vi": "Đi bão đúng luật: 'Đội mũ dự phòng. Đi theo dòng, chậm, không vượt đèn, không bấm còi sau mười một giờ. Thế là vẫn bão.'",
-                "en": "Ride the storm by the rules: 'Spare helmet on. Go with the flow, slow, no red lights, no horn after eleven. That's still a storm.'"
+                "vi": "Đi bão đúng luật: 'Đội mũ dự phòng. Đi theo dòng, chậm, không vượt đèn, không bấm còi sau mười giờ đêm. Thế là vẫn bão.'",
+                "en": "Ride the storm by the rules: 'Spare helmet on. Go with the flow, slow, no red lights, no horn after ten at night. That's still a storm.'"
               },
               "goto": "l06",
               "effect": {

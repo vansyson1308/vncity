@@ -109,14 +109,14 @@ markdown; mọi đường dẫn file nhắc tới đều tồn tại.
 
 1. **Người Hà Nội đọc lại toàn bộ thoại**: xưng hô, từ lóng Gen Z của Linh, giọng Thái Bình (Minh,
    mẹ Minh), Nam Định (cụ Thọ), Phú Thọ (Tuấn), Hưng Yên (Đức); phụ đề tiếng Việt cho lời Mark.
-2. **11 mức phạt `fine_unverified`**: đã đối chiếu theo hiểu biết những mục chắc chắn (vượt đèn đỏ,
+2. ~~**11 mức phạt `fine_unverified`**~~ (xong 14/10/2026, docs/15): đã đối chiếu theo hiểu biết những mục chắc chắn (vượt đèn đỏ,
    mũ bảo hiểm, nồng độ cồn mức 1 và 3, không có tag). 11 mục còn lại có vẻ hợp lý nhưng phải đối
    chiếu đúng điều, khoản, điểm của Nghị định 168/2024/NĐ-CP; riêng số điểm trừ của lỗi dùng điện
    thoại và chạy quá tốc độ với xe máy cần kiểm tra.
 3. **Địa giới sau 1/7/2025**: Hà Nội không còn cấp quận; mô tả `districts` còn chữ "Quận..." và tên
    phường gắn `division_names_need_check`.
 4. **Giá lịch sử**: 12.000 đ công chở cây quất năm 1989, ấm trà 600 đ năm 1996, tem dầu hỏa 1984.
-5. **20 địa danh `coords_unverified`** và tâm 13 quận: chạy `pipeline/verify_landmarks.py`.
+5. ~~**20 địa danh `coords_unverified`**~~ (xong 14/10/2026: 84/84 khớp OSM, docs/15); tâm 13 quận còn ước lượng.
 6. **Bản quyền âm nhạc**: đài "Sân Đình" vẫn `licensed_tbd`.
 7. **Gió trong thoại `dlg_s06_xong`** ghi cứng "cấp ba, đông nam" trong khi minigame lấy gió thật:
    cần điều kiện cho dòng thoại (đề xuất schema 3) hoặc câu chung chung hơn.
