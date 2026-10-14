@@ -280,8 +280,8 @@
         ]
       },
       "start": {
-        "lat": 21.016,
-        "lon": 105.852
+        "lat": 21.017156,
+        "lon": 105.851782
       },
       "steps": [
         {
@@ -363,8 +363,8 @@
         ]
       },
       "start": {
-        "lat": 21.016,
-        "lon": 105.852
+        "lat": 21.017156,
+        "lon": 105.851782
       },
       "steps": [
         {
@@ -1508,16 +1508,31 @@
       },
       "steps": [
         {
+          "id": "ra_ga_cau_giay",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Gọi xe ôm ra ga Cầu Giấy, ga cuối phía nội thành của tuyến 3 trên cao",
+            "en": "Take a motorbike taxi to Cầu Giấy, the inner-city end of elevated Line 3"
+          },
+          "target": {
+            "lat": 21.029203,
+            "lon": 105.803354
+          },
+          "params": {
+            "duration_s": 60
+          },
+          "next": "len_tau"
+        },
+        {
           "id": "len_tau",
           "kind": "go_to",
           "objective": {
-            "vi": "Đi bộ ra ga Cầu Giấy, lên tàu Nhổn chuyến sáu giờ, xuống ga cuối",
-            "en": "Walk to Cầu Giấy station, take the six o'clock Nhổn train to the last stop"
+            "vi": "Lên tàu tuyến 3 chuyến sáu giờ, xuống ga cuối Nhổn",
+            "en": "Take the six o'clock Line 3 train to the Nhổn terminus"
           },
           "target": "landmarks:ga_nhon",
           "params": {
             "on_foot": true,
-            "vehicle": "vehicles:tau_dien_cat_linh",
             "duration_s": 90
           },
           "next": "gap_nhi"
@@ -2503,8 +2518,8 @@
           "id": "di_bao",
           "kind": "ride",
           "objective": {
-            "vi": "Đi bão theo dòng xe Lê Đức Thọ ra Hồ Gươm: hai người một xe, mũ đủ, cờ không che mắt, không vượt đèn, không bấm còi quá 11 giờ",
-            "en": "Ride the storm with the crowd down Lê Đức Thọ to Hoàn Kiếm: two on the bike, helmets on, flag out of the eyes, no red lights, no horn after eleven"
+            "vi": "Đi bão theo dòng xe Lê Đức Thọ ra Hồ Gươm: hai người một xe, mũ đủ, cờ không che mắt, không vượt đèn, không bấm còi sau 10 giờ đêm",
+            "en": "Ride the storm with the crowd down Lê Đức Thọ to Hoàn Kiếm: two on the bike, helmets on, flag out of the eyes, no red lights, no horn after 10 p.m."
           },
           "target": "landmarks:ho_hoan_kiem",
           "params": {

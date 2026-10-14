@@ -1,0 +1,1506 @@
+{
+ "_comment": "Written by tools/landmark_audit.py audit --fix. Reference point of each landmark on its OpenStreetMap feature (via Overture). tests/test_landmark_coords.py checks landmarks.json against it.",
+ "source": "Overture Maps 2026-09-23.0 (OpenStreetMap ODbL for water, land use, infrastructure, transportation, buildings)",
+ "tolerance_m": 50.0,
+ "overrides": {
+  "landmark_72": {
+   "ref_point": {
+    "lat": 21.017029,
+    "lon": 105.783894
+   },
+   "source": "Keangnam Hanoi Landmark Tower: OSM/Overture không có khối nhà của tháp; điểm tham chiếu là trung vị của 21 điểm Overture (places) mang tên 'Keangnam' hoặc 'Landmark 72' trong bán kính 300 m (ngân hàng, nhà hàng, sảnh tòa nhà trong tháp)",
+   "district_note": "Tháp ở phường Mễ Trì, quận Nam Từ Liêm trước 7/2025; theo ranh giới phường trên OSM, phần Mễ Trì này nay thuộc phường Yên Hòa."
+  },
+  "nga_tu_so": {
+   "osm": "way/1516401717",
+   "reason": "chính nút giao: cầu vượt Ngã Tư Sở trên giao lộ Trường Chinh, Nguyễn Trãi, Láng, Tây Sơn; ghim cũ nằm cách 800 m về phía nam trên Nguyễn Trãi",
+   "district_note": "Nút giao là ranh giới Đống Đa cũ (phường Ngã Tư Sở) và Thanh Xuân cũ; tâm cầu vượt rơi vào phường Khương Đình (2025)."
+  },
+  "go_dong_da": {
+   "osm": "node/5485636741",
+   "reason": "tượng đài Quang Trung, tài sản chính của công viên gò"
+  },
+  "pho_sach_dinh_le": {
+   "osm": "way/1510802054",
+   "reason": "khối phố sách trên phố 19 Tháng 12 (chuyển từ Đinh Lễ sang năm 2017)"
+  },
+  "pho_di_bo_trinh_cong_son": {
+   "osm": "way/336713598",
+   "reason": "phố Trịnh Công Sơn cạnh đầm sen Nhật Tân; ghim cũ lệch 1,6 km, gần phố Đặng Thai Mai"
+  },
+  "ngo_khuong_dinh": {
+   "osm": "way/601424451",
+   "reason": "phòng trọ của Minh là hư cấu nên đặt vào một ngõ có thật: ngõ 320 Khương Đình, phía sông Tô Lịch"
+  },
+  "cho_dau_moi_den_lu": {
+   "osm": "way/1533194130",
+   "reason": "nhà A chợ đầu mối phía Nam (Đền Lừ); khớp theo tên dễ nhầm sang công viên Đền Lừ"
+  },
+  "bai_giua_song_hong": {
+   "osm": "way/512285548",
+   "reason": "đường Bãi Giữa, lối đi xuyên bãi bồi dưới chân cầu Long Biên; bản thân bãi không có vùng mang tên trên OSM"
+  },
+  "de_song_hong_ngoc_thuy": {
+   "osm": "way/709678214",
+   "reason": "đường Ngọc Thụy, đường trên mặt đê tả Hồng đoạn Ngọc Thụy"
+  },
+  "lang_hoa_tay_tuu": {
+   "osm": "relation/19341251",
+   "reason": "ruộng hoa trải khắp phường; neo vào trong phường Tây Tựu (2025) vì đối tượng mang tên duy nhất, 'Hoa Tây Tựu', là một cửa hàng"
+  },
+  "cho_long_bien": {
+   "district_note": "Phường Hồng Hà (2025) gộp các phường ven sông của Ba Đình, Hoàn Kiếm, Tây Hồ, Hai Bà Trưng cũ; chợ (phường Phúc Xá cũ) được chơi như một phần vùng Phố cổ."
+  },
+  "con_duong_gom_su": {
+   "district_note": "Phường Hồng Hà (2025) gộp các phường ven sông của Ba Đình, Hoàn Kiếm, Tây Hồ, Hai Bà Trưng cũ; tường gốm chạy dọc đê sau lưng Hoàn Kiếm cũ."
+  },
+  "cau_nhat_tan": {
+   "district_note": "Phường Hồng Hà (2025) gộp các phường ven sông của Ba Đình, Hoàn Kiếm, Tây Hồ, Hai Bà Trưng cũ; đầu cầu phía nam thuộc Tây Hồ cũ (Phú Thượng, Nhật Tân)."
+  },
+  "vuon_dao_nhat_tan": {
+   "district_note": "Phường Hồng Hà (2025) nhận phần ven sông của phường Nhật Tân cũ (Tây Hồ), nơi có vườn đào."
+  },
+  "bai_da_song_hong": {
+   "district_note": "Phường Hồng Hà (2025) nhận phần ven sông của Tây Hồ cũ, nơi có Bãi đá sông Hồng."
+  },
+  "ga_ha_noi": {
+   "district_note": "Ga (120 Lê Duẩn) thuộc phường Cửa Nam, quận Hoàn Kiếm trước 7/2025; phần đó của Cửa Nam nay thuộc phường Văn Miếu - Quốc Tử Giám."
+  }
+ },
+ "landmarks": {
+  "ho_hoan_kiem": {
+   "name": "Hồ Hoàn Kiếm (Hồ Gươm)",
+   "match": "Hồ Hoàn Kiếm",
+   "layer": "water",
+   "class": "lake",
+   "overture_id": "64666130-3162-3330-a131-636236353966",
+   "osm": "relation/198437",
+   "ref_point": {
+    "lat": 21.0288,
+    "lon": 105.8524
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "thap_rua": {
+   "name": "Tháp Rùa",
+   "match": "Tháp Rùa",
+   "layer": "building",
+   "class": null,
+   "overture_id": "9653477a-a772-45cf-9066-9b71cd9e0d94",
+   "osm": "way/178995269",
+   "ref_point": {
+    "lat": 21.027873,
+    "lon": 105.852293
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "cau_the_huc": {
+   "name": "Cầu Thê Húc",
+   "match": "Cầu Thê Húc",
+   "layer": "infrastructure",
+   "class": "bridge",
+   "overture_id": "31653539-3738-3330-b337-306466623766",
+   "osm": "way/9566542",
+   "ref_point": {
+    "lat": 21.030756,
+    "lon": 105.852927
+   },
+   "offset_m": 28.5,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "den_ngoc_son": {
+   "name": "Đền Ngọc Sơn",
+   "match": "Đền Ngọc Sơn",
+   "layer": "building",
+   "class": "temple",
+   "overture_id": "5ec4ff1c-f5de-4dfc-b637-873a45d4be67",
+   "osm": "way/178995262",
+   "ref_point": {
+    "lat": 21.030726,
+    "lon": 105.852376
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "thap_but_dai_nghien": {
+   "name": "Tháp Bút - Đài Nghiên",
+   "match": "Tháp Bút",
+   "layer": "infrastructure",
+   "class": "artwork",
+   "overture_id": "30306566-3761-3165-b764-346437366136",
+   "osm": "node/5857310193",
+   "ref_point": {
+    "lat": 21.030639,
+    "lon": 105.853387
+   },
+   "offset_m": 49.9,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "nha_hat_lon": {
+   "name": "Nhà hát Lớn Hà Nội",
+   "match": "Nhà hát Lớn",
+   "layer": "building",
+   "class": null,
+   "overture_id": "68b0e91e-fdf9-4175-8c81-2684237da7a4",
+   "osm": "way/37933050",
+   "ref_point": {
+    "lat": 21.024183,
+    "lon": 105.857824
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Cửa Nam"
+   ],
+   "district_ok": true
+  },
+  "nha_tho_lon": {
+   "name": "Nhà thờ Lớn Hà Nội (Nhà thờ Chính tòa Thánh Giuse)",
+   "match": "Nhà thờ Lớn",
+   "layer": "building",
+   "class": "church",
+   "overture_id": "62e5eb2e-1e18-419b-a125-8fbff8a1d823",
+   "osm": "way/28912942",
+   "ref_point": {
+    "lat": 21.028708,
+    "lon": 105.84888
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "cau_long_bien": {
+   "name": "Cầu Long Biên",
+   "match": "Cầu Long Biên",
+   "layer": "infrastructure",
+   "class": "bridge",
+   "overture_id": "62323032-3765-3061-a537-633732613937",
+   "osm": "way/874082896",
+   "ref_point": {
+    "lat": 21.043541,
+    "lon": 105.859315
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hồng Hà"
+   ],
+   "district_ok": true
+  },
+  "ga_long_bien": {
+   "name": "Ga Long Biên",
+   "match": "Ga Long Biên",
+   "layer": "building",
+   "class": "train_station",
+   "overture_id": "c35fa944-ba38-4a6b-98f4-474fdebeb0aa",
+   "osm": "way/968898255",
+   "ref_point": {
+    "lat": 21.039859,
+    "lon": 105.850034
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "cho_long_bien": {
+   "name": "Chợ Long Biên",
+   "match": "Chợ Long Biên",
+   "layer": "place",
+   "class": null,
+   "overture_id": "568ea427-c0dc-4820-8617-a0adc601fef5",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.04119,
+    "lon": 105.850646
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hồng Hà"
+   ],
+   "district_ok": false,
+   "district_note": "Phường Hồng Hà (2025) gộp các phường ven sông của Ba Đình, Hoàn Kiếm, Tây Hồ, Hai Bà Trưng cũ; chợ (phường Phúc Xá cũ) được chơi như một phần vùng Phố cổ."
+  },
+  "van_mieu": {
+   "name": "Văn Miếu - Quốc Tử Giám",
+   "match": "Văn Miếu - Quốc Tử Giám",
+   "layer": "land_use",
+   "class": "religious",
+   "overture_id": "65366230-6335-3166-a530-303031336566",
+   "osm": "way/1220554188",
+   "ref_point": {
+    "lat": 21.029161,
+    "lon": 105.836084
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Văn Miếu - Quốc Tử Giám"
+   ],
+   "district_ok": true
+  },
+  "lang_bac": {
+   "name": "Lăng Chủ tịch Hồ Chí Minh",
+   "match": "Lăng Chủ tịch Hồ Chí Minh",
+   "layer": "building",
+   "class": null,
+   "overture_id": "cee010df-1fed-4280-9a0a-ee3925e24ae3",
+   "osm": "way/37625751",
+   "ref_point": {
+    "lat": 21.036779,
+    "lon": 105.834695
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "quang_truong_ba_dinh": {
+   "name": "Quảng trường Ba Đình",
+   "match": "Quảng trường Ba Đình",
+   "layer": "land_use",
+   "class": "plaza",
+   "overture_id": "62636234-6238-3365-b334-353364633938",
+   "osm": "way/1162603502",
+   "ref_point": {
+    "lat": 21.037,
+    "lon": 105.8362
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "chua_mot_cot": {
+   "name": "Chùa Một Cột (Diên Hựu tự)",
+   "match": "Chùa Một Cột",
+   "layer": "building",
+   "class": "temple",
+   "overture_id": "c0688f5a-59fe-4230-8643-0d93ae2a94e7",
+   "osm": "way/697326496",
+   "ref_point": {
+    "lat": 21.03583,
+    "lon": 105.833614
+   },
+   "offset_m": 3.6,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "phu_chu_tich": {
+   "name": "Phủ Chủ tịch",
+   "match": "Phủ Chủ Tịch",
+   "layer": "building",
+   "class": null,
+   "overture_id": "cd15f27c-52cd-4bff-a0ef-de33a3e426ee",
+   "osm": "way/37629570",
+   "ref_point": {
+    "lat": 21.039303,
+    "lon": 105.834439
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "hoang_thanh_thang_long": {
+   "name": "Hoàng thành Thăng Long",
+   "match": "Hoàng thành Thăng Long",
+   "layer": "land_use",
+   "class": "park",
+   "overture_id": "66666134-3430-3237-a236-326433383233",
+   "osm": "way/696913691",
+   "ref_point": {
+    "lat": 21.03497,
+    "lon": 105.840196
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "cot_co_ha_noi": {
+   "name": "Cột cờ Hà Nội",
+   "match": "Cột cờ Hà Nội",
+   "layer": "building",
+   "class": null,
+   "overture_id": "621a822d-4cd6-40b1-ba35-d4cb7cce9c36",
+   "osm": "way/184959290",
+   "ref_point": {
+    "lat": 21.032591,
+    "lon": 105.839825
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "cho_dong_xuan": {
+   "name": "Chợ Đồng Xuân",
+   "match": "Chợ Đồng Xuân",
+   "layer": "building",
+   "class": "retail",
+   "overture_id": "3a9351ad-9bec-4514-99e9-8e973e453f10",
+   "osm": "way/1255852379",
+   "ref_point": {
+    "lat": 21.038084,
+    "lon": 105.849418
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "o_quan_chuong": {
+   "name": "Ô Quan Chưởng (Đông Hà Môn)",
+   "match": "Ô Quan Chưởng",
+   "layer": "building",
+   "class": null,
+   "overture_id": "9515e12f-5ee8-4760-86a4-f7cd84957d4f",
+   "osm": "way/700627452",
+   "ref_point": {
+    "lat": 21.037332,
+    "lon": 105.8522
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "den_bach_ma": {
+   "name": "Đền Bạch Mã",
+   "match": "Đền Bạch Mã",
+   "layer": "building",
+   "class": null,
+   "overture_id": "bccf13b3-c593-473b-93c0-8220d55cc574",
+   "osm": "way/700840711",
+   "ref_point": {
+    "lat": 21.035915,
+    "lon": 105.850992
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "pho_ta_hien": {
+   "name": "Phố Tạ Hiện (phố bia)",
+   "match": "Phố Tạ Hiện",
+   "layer": "segment",
+   "class": "residential",
+   "overture_id": "8479acaf-5b28-4538-ad25-48ef635da787",
+   "osm": "way/765597030",
+   "ref_point": {
+    "lat": 21.035134,
+    "lon": 105.852036
+   },
+   "offset_m": 14.6,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "pho_duong_tau": {
+   "name": "Phố đường tàu (Phùng Hưng - Trần Phú)",
+   "match": "Phố Phùng Hưng",
+   "layer": "segment",
+   "class": "tertiary",
+   "overture_id": "2a8f6027-2b36-4b49-89ac-ba712fd30d8a",
+   "osm": "way/710297757",
+   "ref_point": {
+    "lat": 21.030338,
+    "lon": 105.844839
+   },
+   "offset_m": 17.3,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "ga_ha_noi": {
+   "name": "Ga Hà Nội (Ga Hàng Cỏ)",
+   "match": "Ga Hà Nội",
+   "layer": "building",
+   "class": "train_station",
+   "overture_id": "e66ee67c-9506-4737-8c02-1dd1fab03329",
+   "osm": "way/220305168",
+   "ref_point": {
+    "lat": 21.025111,
+    "lon": 105.84104
+   },
+   "offset_m": 25.8,
+   "wards_2025": [
+    "Phường Văn Miếu - Quốc Tử Giám"
+   ],
+   "district_ok": false,
+   "district_note": "Ga (120 Lê Duẩn) thuộc phường Cửa Nam, quận Hoàn Kiếm trước 7/2025; phần đó của Cửa Nam nay thuộc phường Văn Miếu - Quốc Tử Giám."
+  },
+  "buu_dien_bo_ho": {
+   "name": "Bưu điện Bờ Hồ (Bưu điện Hà Nội)",
+   "match": "Bưu điện Hà Nội",
+   "layer": "land_use",
+   "class": "commercial",
+   "overture_id": "65383461-3837-3336-a139-663130393565",
+   "osm": "way/704153617",
+   "ref_point": {
+    "lat": 21.0263,
+    "lon": 105.854
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "pho_sach_dinh_le": {
+   "name": "Phố sách Hà Nội (19 Tháng 12)",
+   "match": "Phố Sách Hà Nội",
+   "layer": "land_use",
+   "class": "park",
+   "overture_id": "30333530-6637-3038-a337-313535363964",
+   "osm": "way/1510802054",
+   "ref_point": {
+    "lat": 21.025567,
+    "lon": 105.84818
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Cửa Nam"
+   ],
+   "district_ok": true
+  },
+  "nha_tu_hoa_lo": {
+   "name": "Di tích Nhà tù Hỏa Lò",
+   "match": "Nhà tù Hỏa Lò",
+   "layer": "building",
+   "class": null,
+   "overture_id": "2b2681d4-7602-4d82-8555-678dcf1150c3",
+   "osm": "way/340128580",
+   "ref_point": {
+    "lat": 21.02534,
+    "lon": 105.846472
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Cửa Nam"
+   ],
+   "district_ok": true
+  },
+  "bao_tang_lich_su_quoc_gia": {
+   "name": "Bảo tàng Lịch sử Quốc gia",
+   "match": "Bảo tàng Lịch sử Quốc gia Việt Nam",
+   "layer": "land_use",
+   "class": "commercial",
+   "overture_id": "32363362-6134-3763-a333-316363666536",
+   "osm": "way/37933258",
+   "ref_point": {
+    "lat": 21.025264,
+    "lon": 105.858495
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàn Kiếm"
+   ],
+   "district_ok": true
+  },
+  "ho_tay": {
+   "name": "Hồ Tây",
+   "match": "Hồ Tây",
+   "layer": "water",
+   "class": "lake",
+   "overture_id": "63336164-3537-3536-b065-326636373337",
+   "osm": "way/9635863",
+   "ref_point": {
+    "lat": 21.056,
+    "lon": 105.819
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Tây Hồ"
+   ],
+   "district_ok": true
+  },
+  "chua_tran_quoc": {
+   "name": "Chùa Trấn Quốc",
+   "match": "Chùa Trấn Quốc",
+   "layer": "building",
+   "class": "house",
+   "overture_id": "116f5e46-d1a0-4112-a7bf-5dc6cdd95d4f",
+   "osm": "way/1230498818",
+   "ref_point": {
+    "lat": 21.04784,
+    "lon": 105.836752
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Tây Hồ"
+   ],
+   "district_ok": true
+  },
+  "den_quan_thanh": {
+   "name": "Đền Quán Thánh (Trấn Vũ Quán)",
+   "match": "Đền Quán Thánh",
+   "layer": "building",
+   "class": "religious",
+   "overture_id": "280d24d3-f3de-4f51-957c-18be73755970",
+   "osm": "way/207178320",
+   "ref_point": {
+    "lat": 21.043034,
+    "lon": 105.836454
+   },
+   "offset_m": 12.1,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "ho_truc_bach": {
+   "name": "Hồ Trúc Bạch",
+   "match": "Hồ Trúc Bạch",
+   "layer": "water",
+   "class": "lake",
+   "overture_id": "37363837-3538-3033-b166-663264313861",
+   "osm": "relation/9735266",
+   "ref_point": {
+    "lat": 21.0445,
+    "lon": 105.8409
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "phu_tay_ho": {
+   "name": "Phủ Tây Hồ",
+   "match": "Phủ Tây Hồ",
+   "layer": "place",
+   "class": null,
+   "overture_id": "c51b333d-28bd-4d03-b870-68f40018c379",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.05513,
+    "lon": 105.819753
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Tây Hồ"
+   ],
+   "district_ok": true
+  },
+  "landmark_72": {
+   "name": "Tòa tháp 72 tầng Phạm Hùng",
+   "match": "Keangnam Hanoi Landmark Tower: OSM/Overture không có khối nhà của tháp; điểm tham chiếu là trung vị của 21 điểm Overture (places) mang tên 'Keangnam' hoặc 'Landmark 72' trong bán kính 300 m (ngân hàng, nhà hàng, sảnh tòa nhà trong tháp)",
+   "layer": "manual",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.017029,
+    "lon": 105.783894
+   },
+   "offset_m": 10.3,
+   "wards_2025": [
+    "Phường Yên Hòa"
+   ],
+   "district_ok": false,
+   "district_note": "Tháp ở phường Mễ Trì, quận Nam Từ Liêm trước 7/2025; theo ranh giới phường trên OSM, phần Mễ Trì này nay thuộc phường Yên Hòa."
+  },
+  "lotte_center": {
+   "name": "Tòa tháp Liễu Giai",
+   "match": "Lotte Center Hanoi",
+   "layer": "building",
+   "class": "commercial",
+   "overture_id": "67526708-0f81-453d-87df-533d0658879b",
+   "osm": "way/727570329",
+   "ref_point": {
+    "lat": 21.031911,
+    "lon": 105.812412
+   },
+   "offset_m": 3.9,
+   "wards_2025": [
+    "Phường Giảng Võ"
+   ],
+   "district_ok": true
+  },
+  "cau_nhat_tan": {
+   "name": "Cầu Nhật Tân",
+   "match": "Cầu Nhật Tân",
+   "layer": "infrastructure",
+   "class": "bridge",
+   "overture_id": "64333132-3632-3063-a166-663234306166",
+   "osm": "way/251794091",
+   "ref_point": {
+    "lat": 21.08958,
+    "lon": 105.819382
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hồng Hà"
+   ],
+   "district_ok": false,
+   "district_note": "Phường Hồng Hà (2025) gộp các phường ven sông của Ba Đình, Hoàn Kiếm, Tây Hồ, Hai Bà Trưng cũ; đầu cầu phía nam thuộc Tây Hồ cũ (Phú Thượng, Nhật Tân)."
+  },
+  "cau_chuong_duong": {
+   "name": "Cầu Chương Dương",
+   "match": "Cầu Chương Dương",
+   "layer": "infrastructure",
+   "class": "bridge",
+   "overture_id": "64373263-3163-3539-b865-356237356264",
+   "osm": "way/874082897",
+   "ref_point": {
+    "lat": 21.038572,
+    "lon": 105.863072
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Bồ Đề"
+   ],
+   "district_ok": true
+  },
+  "bai_giua_song_hong": {
+   "name": "Bãi giữa sông Hồng",
+   "match": "Đường Bãi Giữa",
+   "layer": "segment",
+   "class": "residential",
+   "overture_id": "425579b8-2e5a-4a2d-a7f9-2168bce928af",
+   "osm": "way/512285548",
+   "ref_point": {
+    "lat": 21.043194,
+    "lon": 105.857959
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hồng Hà"
+   ],
+   "district_ok": true
+  },
+  "con_duong_gom_su": {
+   "name": "Con đường gốm sứ ven sông Hồng",
+   "match": "Con đường Gốm sứ",
+   "layer": "infrastructure",
+   "class": "city_wall",
+   "overture_id": "32383333-6662-3665-b365-663832633630",
+   "osm": "relation/16791080",
+   "ref_point": {
+    "lat": 21.035128,
+    "lon": 105.854992
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hồng Hà"
+   ],
+   "district_ok": false,
+   "district_note": "Phường Hồng Hà (2025) gộp các phường ven sông của Ba Đình, Hoàn Kiếm, Tây Hồ, Hai Bà Trưng cũ; tường gốm chạy dọc đê sau lưng Hoàn Kiếm cũ."
+  },
+  "nha_tho_cua_bac": {
+   "name": "Nhà thờ Cửa Bắc",
+   "match": "Nhà thờ Cửa Bắc",
+   "layer": "building",
+   "class": "church",
+   "overture_id": "88f944cf-bb0c-4dab-8266-f44468c54330",
+   "osm": "way/698018249",
+   "ref_point": {
+    "lat": 21.041439,
+    "lon": 105.840516
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "ga_cat_linh": {
+   "name": "Ga Cát Linh (tuyến 2A)",
+   "match": "Ga Cát Linh",
+   "layer": "building",
+   "class": "transportation",
+   "overture_id": "6b82af13-2f03-482e-b633-166c910e6ab3",
+   "osm": "way/512285543",
+   "ref_point": {
+    "lat": 21.028242,
+    "lon": 105.827284
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ô Chợ Dừa"
+   ],
+   "district_ok": true
+  },
+  "bao_tang_dan_toc_hoc": {
+   "name": "Bảo tàng Dân tộc học Việt Nam",
+   "match": "Bảo tàng Dân tộc học Việt Nam - Vietnam Museum of Ethnology",
+   "layer": "place",
+   "class": null,
+   "overture_id": "e55bab3c-c110-4ba6-a005-5c43986a6095",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.040393,
+    "lon": 105.798793
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Nghĩa Đô"
+   ],
+   "district_ok": true
+  },
+  "cong_vien_thong_nhat": {
+   "name": "Công viên Thống Nhất",
+   "match": "Công viên Thống Nhất",
+   "layer": "land_use",
+   "class": "park",
+   "overture_id": "32343234-3361-3665-b561-396466393137",
+   "osm": "way/37933849",
+   "ref_point": {
+    "lat": 21.0165,
+    "lon": 105.8438
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hai Bà Trưng"
+   ],
+   "district_ok": true
+  },
+  "svd_my_dinh": {
+   "name": "Sân vận động Quốc gia Mỹ Đình",
+   "match": "Sân vận động Quốc gia Mỹ Đình",
+   "layer": "land_use",
+   "class": "stadium",
+   "overture_id": "39626337-3030-3664-b365-623330363339",
+   "osm": "way/533838254",
+   "ref_point": {
+    "lat": 21.020486,
+    "lon": 105.763914
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Từ Liêm"
+   ],
+   "district_ok": true
+  },
+  "lang_gom_bat_trang": {
+   "name": "Làng gốm Bát Tràng",
+   "match": "Làng Gốm Bát Tràng",
+   "layer": "place",
+   "class": null,
+   "overture_id": "19063d93-1419-482b-ae3c-c8898d5500da",
+   "osm": null,
+   "ref_point": {
+    "lat": 20.97833,
+    "lon": 105.914479
+   },
+   "offset_m": 0.1,
+   "wards_2025": [
+    "Xã Bát Tràng"
+   ],
+   "district_ok": true
+  },
+  "cong_vien_thu_le": {
+   "name": "Công viên Thủ Lệ (Vườn thú Hà Nội)",
+   "match": "Công viên Thủ Lệ",
+   "layer": "land_use",
+   "class": "zoo",
+   "overture_id": "30316663-3463-3935-a533-303433666138",
+   "osm": "way/28945667",
+   "ref_point": {
+    "lat": 21.030721,
+    "lon": 105.806948
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Giảng Võ"
+   ],
+   "district_ok": true
+  },
+  "pho_phan_dinh_phung": {
+   "name": "Phố Phan Đình Phùng",
+   "match": "Phố Phan Đình Phùng",
+   "layer": "segment",
+   "class": "secondary",
+   "overture_id": "a2738a2f-3d6a-4aff-9db2-633317ad0f4a",
+   "osm": "way/708918485",
+   "ref_point": {
+    "lat": 21.040302,
+    "lon": 105.843961
+   },
+   "offset_m": 22.2,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "khu_tap_the_giang_vo": {
+   "name": "Khu tập thể Giảng Võ",
+   "match": "Khu tập thể Giảng Võ",
+   "layer": "land_use",
+   "class": "residential",
+   "overture_id": "34363465-3632-3434-b532-633564653830",
+   "osm": "way/1447295878",
+   "ref_point": {
+    "lat": 21.028643,
+    "lon": 105.821382
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Giảng Võ"
+   ],
+   "district_ok": true
+  },
+  "bao_tang_my_thuat": {
+   "name": "Bảo tàng Mỹ thuật Việt Nam",
+   "match": "Bảo tàng Mỹ thuật Việt Nam",
+   "layer": "place",
+   "class": null,
+   "overture_id": "ff3fac60-8e8c-4eeb-b378-f911b5215007",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.030693,
+    "lon": 105.836527
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Ba Đình"
+   ],
+   "district_ok": true
+  },
+  "ho_thien_quang": {
+   "name": "Hồ Thiền Quang",
+   "match": "Hồ Thiền Quang",
+   "layer": "water",
+   "class": "lake",
+   "overture_id": "30636635-3535-3464-a664-303134636637",
+   "osm": "relation/3375635",
+   "ref_point": {
+    "lat": 21.017729,
+    "lon": 105.84693
+   },
+   "offset_m": 8.0,
+   "wards_2025": [
+    "Phường Hai Bà Trưng"
+   ],
+   "district_ok": true
+  },
+  "times_city": {
+   "name": "Thời Gian City (khu đô thị Minh Khai)",
+   "match": "Vinhomes Times City",
+   "layer": "land_use",
+   "class": "residential",
+   "overture_id": "32643231-3239-3762-a665-613533313163",
+   "osm": "way/660081320",
+   "ref_point": {
+    "lat": 20.99491,
+    "lon": 105.867645
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Vĩnh Tuy"
+   ],
+   "district_ok": true
+  },
+  "dai_hoc_bach_khoa": {
+   "name": "Đại học Bách khoa Hà Nội",
+   "match": "Đại học Bách khoa Hà Nội",
+   "layer": "land_use",
+   "class": "university",
+   "overture_id": "65633163-3630-3437-a634-343766373664",
+   "osm": "relation/16092230",
+   "ref_point": {
+    "lat": 21.006388,
+    "lon": 105.842386
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Bạch Mai"
+   ],
+   "district_ok": true
+  },
+  "cho_hom": {
+   "name": "Chợ Hôm - Đức Viên",
+   "match": "Chợ Hôm",
+   "layer": "building",
+   "class": "commercial",
+   "overture_id": "10e74c18-30ea-48df-8902-85e047eecebc",
+   "osm": "relation/11623141",
+   "ref_point": {
+    "lat": 21.017156,
+    "lon": 105.851782
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hai Bà Trưng"
+   ],
+   "district_ok": true
+  },
+  "go_dong_da": {
+   "name": "Gò Đống Đa và tượng đài Quang Trung",
+   "match": "Tượng đài Quang Trung",
+   "layer": "infrastructure",
+   "class": "artwork",
+   "overture_id": "38643631-3362-3437-b462-353537333032",
+   "osm": "node/5485636741",
+   "ref_point": {
+    "lat": 21.012791,
+    "lon": 105.82398
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Đống Đa"
+   ],
+   "district_ok": true
+  },
+  "chua_lang": {
+   "name": "Chùa Láng",
+   "match": "Phố Chùa Láng",
+   "layer": "segment",
+   "class": "tertiary",
+   "overture_id": "a5025d28-11fc-4b9f-bbcd-3e8adfcb6d55",
+   "osm": "way/605128434",
+   "ref_point": {
+    "lat": 21.023294,
+    "lon": 105.802744
+   },
+   "offset_m": 11.3,
+   "wards_2025": [
+    "Phường Láng"
+   ],
+   "district_ok": true
+  },
+  "khu_tap_the_kim_lien": {
+   "name": "Khu tập thể Kim Liên",
+   "match": "Khu tập thể Kim Liên",
+   "layer": "land_use",
+   "class": "residential",
+   "overture_id": "61616136-6661-3161-b763-653238373732",
+   "osm": "way/888441068",
+   "ref_point": {
+    "lat": 21.006351,
+    "lon": 105.835131
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Kim Liên"
+   ],
+   "district_ok": true
+  },
+  "nga_tu_so": {
+   "name": "Ngã Tư Sở",
+   "match": "Cầu vượt Ngã Tư Sở",
+   "layer": "infrastructure",
+   "class": "bridge",
+   "overture_id": "34643565-3733-3236-b830-633537356135",
+   "osm": "way/1516401717",
+   "ref_point": {
+    "lat": 21.003205,
+    "lon": 105.820339
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Kim Liên"
+   ],
+   "district_ok": true,
+   "district_note": "Nút giao là ranh giới Đống Đa cũ (phường Ngã Tư Sở) và Thanh Xuân cũ; tâm cầu vượt rơi vào phường Khương Đình (2025)."
+  },
+  "vuon_dao_nhat_tan": {
+   "name": "Vườn đào Nhật Tân",
+   "match": "Làng Đào Nhật Tân",
+   "layer": "place",
+   "class": null,
+   "overture_id": "18d0af3f-38b0-4ffd-9260-00e7779faf44",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.077057,
+    "lon": 105.821652
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hồng Hà"
+   ],
+   "district_ok": false,
+   "district_note": "Phường Hồng Hà (2025) nhận phần ven sông của phường Nhật Tân cũ (Tây Hồ), nơi có vườn đào."
+  },
+  "bai_da_song_hong": {
+   "name": "Bãi đá sông Hồng",
+   "match": "Bãi đá Sông Hồng",
+   "layer": "land_use",
+   "class": "garden",
+   "overture_id": "35313032-3163-3331-b934-333161646633",
+   "osm": "way/1051466849",
+   "ref_point": {
+    "lat": 21.078213,
+    "lon": 105.835929
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hồng Hà"
+   ],
+   "district_ok": false,
+   "district_note": "Phường Hồng Hà (2025) nhận phần ven sông của Tây Hồ cũ, nơi có Bãi đá sông Hồng."
+  },
+  "chua_kim_lien": {
+   "name": "Chùa Kim Liên",
+   "match": "Chùa Kim Liên",
+   "layer": "place",
+   "class": null,
+   "overture_id": "3275eabf-018d-4caf-94e5-951538bd00b5",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.05851,
+    "lon": 105.832893
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Tây Hồ"
+   ],
+   "district_ok": true
+  },
+  "pho_di_bo_trinh_cong_son": {
+   "name": "Phố đi bộ Trịnh Công Sơn",
+   "match": "Phố Trịnh Công Sơn",
+   "layer": "segment",
+   "class": "residential",
+   "overture_id": "92bb2374-bf04-44b7-ad0b-43ecf915df8a",
+   "osm": "way/336713598",
+   "ref_point": {
+    "lat": 21.075987,
+    "lon": 105.815798
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Tây Hồ"
+   ],
+   "district_ok": true
+  },
+  "cong_vien_cau_giay": {
+   "name": "Công viên Cầu Giấy",
+   "match": "Công viên Cầu Giấy",
+   "layer": "land_use",
+   "class": "park",
+   "overture_id": "61373962-3464-3338-a565-383439323937",
+   "osm": "way/181575389",
+   "ref_point": {
+    "lat": 21.028217,
+    "lon": 105.790935
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Cầu Giấy"
+   ],
+   "district_ok": true
+  },
+  "dai_hoc_quoc_gia": {
+   "name": "Đại học Quốc gia Hà Nội (Xuân Thủy)",
+   "match": "Đại học Quốc gia Hà Nội",
+   "layer": "land_use",
+   "class": "university",
+   "overture_id": "36386361-3035-3632-a264-613139636130",
+   "osm": "way/1047437396",
+   "ref_point": {
+    "lat": 21.0375,
+    "lon": 105.7825
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Cầu Giấy"
+   ],
+   "district_ok": true
+  },
+  "chua_ha": {
+   "name": "Chùa Hà",
+   "match": "Chùa Hà",
+   "layer": "land_use",
+   "class": "religious",
+   "overture_id": "62333363-3739-3361-a431-306661646137",
+   "osm": "way/1118494921",
+   "ref_point": {
+    "lat": 21.037056,
+    "lon": 105.795202
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Cầu Giấy"
+   ],
+   "district_ok": true
+  },
+  "royal_city": {
+   "name": "Hoàng Gia City (khu đô thị Nguyễn Trãi)",
+   "match": "Aroma Vincom Mega Mall Royal City Hà Nôi",
+   "layer": "place",
+   "class": null,
+   "overture_id": "5fc85f9f-5c2b-447d-b537-2b53f613c9c5",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.002332,
+    "lon": 105.815403
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Thanh Xuân"
+   ],
+   "district_ok": true
+  },
+  "ngo_khuong_dinh": {
+   "name": "Ngõ Khương Đình (phòng trọ của Minh)",
+   "match": "Ngõ 320 Đường Khương Đình",
+   "layer": "segment",
+   "class": "residential",
+   "overture_id": "dd9d04a5-5d68-4b5f-9dbe-109774b02539",
+   "osm": "way/601424451",
+   "ref_point": {
+    "lat": 20.990356,
+    "lon": 105.813144
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Khương Đình"
+   ],
+   "district_ok": true
+  },
+  "cong_vien_thanh_xuan": {
+   "name": "Công viên Thanh Xuân (hồ Nhân Chính)",
+   "match": "Công viên Thanh Xuân",
+   "layer": "land_use",
+   "class": "park",
+   "overture_id": "38356133-6633-3166-b266-663439613965",
+   "osm": "way/497037748",
+   "ref_point": {
+    "lat": 21.002725,
+    "lon": 105.797201
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Thanh Xuân"
+   ],
+   "district_ok": true
+  },
+  "ho_linh_dam": {
+   "name": "Hồ Linh Đàm",
+   "match": "Hồ Linh Đàm",
+   "layer": "water",
+   "class": "lake",
+   "overture_id": "36356335-3131-3566-a338-623839386231",
+   "osm": "relation/12290505",
+   "ref_point": {
+    "lat": 20.967949,
+    "lon": 105.831316
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàng Liệt"
+   ],
+   "district_ok": true
+  },
+  "chung_cu_hh_linh_dam": {
+   "name": "Tổ hợp chung cư HH Linh Đàm",
+   "match": "HH Linh Đàm",
+   "layer": "place",
+   "class": null,
+   "overture_id": "fd35be50-3aa6-457e-bfa8-34d842969eb9",
+   "osm": null,
+   "ref_point": {
+    "lat": 20.963986,
+    "lon": 105.826953
+   },
+   "offset_m": 0.1,
+   "wards_2025": [
+    "Phường Hoàng Liệt"
+   ],
+   "district_ok": true
+  },
+  "cong_vien_yen_so": {
+   "name": "Công viên Yên Sở",
+   "match": "Công viên Yên Sở",
+   "layer": "land_use",
+   "class": "park",
+   "overture_id": "34643331-3530-3963-b964-346537373236",
+   "osm": "way/770299553",
+   "ref_point": {
+    "lat": 20.966051,
+    "lon": 105.856828
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàng Mai"
+   ],
+   "district_ok": true
+  },
+  "cho_dau_moi_den_lu": {
+   "name": "Chợ đầu mối phía Nam (Đền Lừ)",
+   "match": "Nhà A chợ đầu mối phía Nam",
+   "layer": "building",
+   "class": "warehouse",
+   "overture_id": "60c83ad3-0de0-4bd3-851a-965a30f28b67",
+   "osm": "way/1533194130",
+   "ref_point": {
+    "lat": 20.982584,
+    "lon": 105.86169
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hoàng Mai"
+   ],
+   "district_ok": true
+  },
+  "aeon_long_bien": {
+   "name": "Ê Ông Mall Long Biên",
+   "match": "AEON Mall Long Biên",
+   "layer": "building",
+   "class": null,
+   "overture_id": "1501d258-b7e1-46bb-a0e3-d5d729b462c1",
+   "osm": "way/840041412",
+   "ref_point": {
+    "lat": 21.02723,
+    "lon": 105.8995
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Long Biên"
+   ],
+   "district_ok": true
+  },
+  "cau_vinh_tuy": {
+   "name": "Cầu Vĩnh Tuy",
+   "match": "Cầu Vĩnh Tuy",
+   "layer": "infrastructure",
+   "class": "bridge",
+   "overture_id": "32353366-6331-3566-b939-623234346666",
+   "osm": "way/874082898",
+   "ref_point": {
+    "lat": 21.007216,
+    "lon": 105.878913
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Long Biên"
+   ],
+   "district_ok": true
+  },
+  "de_song_hong_ngoc_thuy": {
+   "name": "Đê sông Hồng đoạn Ngọc Thụy",
+   "match": "Đường Ngọc Thụy",
+   "layer": "segment",
+   "class": "tertiary",
+   "overture_id": "f0a58622-602a-486a-a11a-b26268005d2b",
+   "osm": "way/709678214",
+   "ref_point": {
+    "lat": 21.067816,
+    "lon": 105.875823
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Bồ Đề"
+   ],
+   "district_ok": true
+  },
+  "trung_tam_hoi_nghi_quoc_gia": {
+   "name": "Trung tâm Hội nghị Quốc gia",
+   "match": "Trung tâm Hội nghị Quốc gia Việt Nam",
+   "layer": "building",
+   "class": null,
+   "overture_id": "9da03c13-a7c8-4a23-bbe4-16945ffcbc5a",
+   "osm": "way/208251764",
+   "ref_point": {
+    "lat": 21.006474,
+    "lon": 105.787034
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Từ Liêm"
+   ],
+   "district_ok": true
+  },
+  "ben_xe_my_dinh": {
+   "name": "Bến xe Mỹ Đình",
+   "match": "Bến xe Mỹ Đình",
+   "layer": "building",
+   "class": "transportation",
+   "overture_id": "4b107212-1a89-4e3f-b6a2-262995a48194",
+   "osm": "way/816196360",
+   "ref_point": {
+    "lat": 21.028439,
+    "lon": 105.778164
+   },
+   "offset_m": 16.7,
+   "wards_2025": [
+    "Phường Từ Liêm"
+   ],
+   "district_ok": true
+  },
+  "bao_tang_ha_noi": {
+   "name": "Bảo tàng Hà Nội",
+   "match": "Bảo tàng Hà Nội",
+   "layer": "building",
+   "class": null,
+   "overture_id": "2d26c491-3281-4a47-b905-1548e55b5606",
+   "osm": "way/208255133",
+   "ref_point": {
+    "lat": 21.010013,
+    "lon": 105.786309
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Từ Liêm"
+   ],
+   "district_ok": true
+  },
+  "dinh_chem": {
+   "name": "Đình Chèm",
+   "match": "Đình Chèm",
+   "layer": "place",
+   "class": null,
+   "overture_id": "b9f8e8f2-0928-4bd9-9f25-7d5e2e92bb5f",
+   "osm": null,
+   "ref_point": {
+    "lat": 21.09375,
+    "lon": 105.774569
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Đông Ngạc"
+   ],
+   "district_ok": true
+  },
+  "cong_vien_hoa_binh": {
+   "name": "Công viên Hòa Bình",
+   "match": "Công viên Hòa Bình",
+   "layer": "land_use",
+   "class": "park",
+   "overture_id": "65373830-3737-3062-a333-373366613235",
+   "osm": "way/208188482",
+   "ref_point": {
+    "lat": 21.064914,
+    "lon": 105.787195
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Xuân Đỉnh"
+   ],
+   "district_ok": true
+  },
+  "lang_hoa_tay_tuu": {
+   "name": "Làng hoa Tây Tựu",
+   "match": "Phường Tây Tựu",
+   "layer": "division",
+   "class": "locality",
+   "overture_id": "c31b7a70-a5bd-41e9-b627-1b4ecb966fae",
+   "osm": "relation/19341251",
+   "ref_point": {
+    "lat": 21.064189,
+    "lon": 105.738826
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Tây Tựu"
+   ],
+   "district_ok": true
+  },
+  "ga_nhon": {
+   "name": "Ga Nhổn (depot tuyến 3)",
+   "match": "Ga Nhổn",
+   "layer": "building",
+   "class": "transportation",
+   "overture_id": "5cc01bad-0cc3-4fb4-862a-a3e7ecd592f8",
+   "osm": "way/872332873",
+   "ref_point": {
+    "lat": 21.052585,
+    "lon": 105.73523
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Tây Tựu"
+   ],
+   "district_ok": true
+  },
+  "lang_lua_van_phuc": {
+   "name": "Làng lụa Vạn Phúc",
+   "match": "Làng Lụa Vạn Phúc - Hà Đông",
+   "layer": "place",
+   "class": null,
+   "overture_id": "93dc63b6-adc5-40e8-86f7-7199841c57ce",
+   "osm": null,
+   "ref_point": {
+    "lat": 20.979812,
+    "lon": 105.774586
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hà Đông"
+   ],
+   "district_ok": true
+  },
+  "ga_yen_nghia": {
+   "name": "Ga Yên Nghĩa (cuối tuyến 2A)",
+   "match": "Ga Yên Nghĩa",
+   "layer": "building",
+   "class": "transportation",
+   "overture_id": "c6ff6385-99e6-4e18-a1f5-0fb85a50d91b",
+   "osm": "way/512285534",
+   "ref_point": {
+    "lat": 20.949768,
+    "lon": 105.748394
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Yên Nghĩa"
+   ],
+   "district_ok": true
+  },
+  "cho_ha_dong": {
+   "name": "Chợ Hà Đông",
+   "match": "Chợ Hà Đông",
+   "layer": "place",
+   "class": null,
+   "overture_id": "6a746b48-9853-4cb0-93b1-9eabc8b5bdb6",
+   "osm": null,
+   "ref_point": {
+    "lat": 20.97043,
+    "lon": 105.780088
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hà Đông"
+   ],
+   "district_ok": true
+  },
+  "ho_van_quan": {
+   "name": "Hồ Văn Quán",
+   "match": "Hồ Văn Quán",
+   "layer": "water",
+   "class": "lake",
+   "overture_id": "35613333-6363-3230-a163-393965323030",
+   "osm": "way/250707925",
+   "ref_point": {
+    "lat": 20.976018,
+    "lon": 105.791959
+   },
+   "offset_m": 0.0,
+   "wards_2025": [
+    "Phường Hà Đông"
+   ],
+   "district_ok": true
+  }
+ }
+}

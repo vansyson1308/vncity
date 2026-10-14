@@ -4,10 +4,10 @@
     {
       "id": "ho_hoan_kiem",
       "tags": [
-        "coords_unverified",
         "hero",
         "lake",
-        "walking_street"
+        "walking_street",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Hồ Hoàn Kiếm (Hồ Gươm)",
@@ -48,7 +48,7 @@
         "hero",
         "icon",
         "skyline_anchor",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Tháp Rùa",
@@ -85,9 +85,9 @@
     {
       "id": "cau_the_huc",
       "tags": [
-        "coords_unverified",
         "hero",
-        "red_bridge"
+        "red_bridge",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Cầu Thê Húc",
@@ -125,7 +125,7 @@
         "hero",
         "respectful_zone",
         "religious",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Đền Ngọc Sơn",
@@ -161,8 +161,8 @@
     {
       "id": "thap_but_dai_nghien",
       "tags": [
-        "coords_unverified",
-        "hero"
+        "hero",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Tháp Bút - Đài Nghiên",
@@ -193,7 +193,7 @@
       "tags": [
         "hero",
         "french_quarter",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Nhà hát Lớn Hà Nội",
@@ -232,7 +232,7 @@
         "hero",
         "religious",
         "respectful_zone",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Nhà thờ Lớn Hà Nội (Nhà thờ Chính tòa Thánh Giuse)",
@@ -265,19 +265,19 @@
     {
       "id": "cau_long_bien",
       "tags": [
-        "coords_unverified",
         "hero",
         "river",
         "railway",
-        "steel"
+        "steel",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Cầu Long Biên",
         "en": "Long Biên Bridge"
       },
       "location": {
-        "lat": 21.0429,
-        "lon": 105.8596
+        "lat": 21.043541,
+        "lon": 105.859315
       },
       "district": "districts:long_bien",
       "kind": "bridge",
@@ -305,7 +305,7 @@
       "id": "ga_long_bien",
       "tags": [
         "railway",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ga Long Biên",
@@ -338,7 +338,7 @@
       "tags": [
         "night_market",
         "wholesale",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chợ Long Biên",
@@ -377,7 +377,7 @@
         "heritage",
         "respectful_zone",
         "students",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Văn Miếu - Quốc Tử Giám",
@@ -419,7 +419,7 @@
         "respectful_zone",
         "no_gameplay_mockery",
         "no_vehicle_entry",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Lăng Chủ tịch Hồ Chí Minh",
@@ -452,10 +452,10 @@
     {
       "id": "quang_truong_ba_dinh",
       "tags": [
-        "coords_unverified",
         "state_site",
         "respectful_zone",
-        "flag_ceremony"
+        "flag_ceremony",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Quảng trường Ba Đình",
@@ -484,10 +484,10 @@
     {
       "id": "chua_mot_cot",
       "tags": [
-        "coords_unverified",
         "hero",
         "religious",
-        "respectful_zone"
+        "respectful_zone",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chùa Một Cột (Diên Hựu tự)",
@@ -519,7 +519,7 @@
         "state_site",
         "respectful_zone",
         "french_colonial",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Phủ Chủ tịch",
@@ -554,7 +554,7 @@
         "hero",
         "unesco",
         "heritage",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Hoàng thành Thăng Long",
@@ -591,7 +591,7 @@
       "tags": [
         "hero",
         "skyline_anchor",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Cột cờ Hà Nội",
@@ -626,7 +626,7 @@
         "hero",
         "market",
         "night_market",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chợ Đồng Xuân",
@@ -670,7 +670,7 @@
       "tags": [
         "hero",
         "city_gate",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ô Quan Chưởng (Đông Hà Môn)",
@@ -705,7 +705,7 @@
         "religious",
         "respectful_zone",
         "thang_long_tu_tran",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Đền Bạch Mã",
@@ -736,9 +736,9 @@
     {
       "id": "pho_ta_hien",
       "tags": [
-        "coords_unverified",
         "nightlife",
-        "street"
+        "street",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Phố Tạ Hiện (phố bia)",
@@ -773,10 +773,10 @@
     {
       "id": "pho_duong_tau",
       "tags": [
-        "coords_unverified",
         "hero",
         "railway",
-        "safety_restricted"
+        "safety_restricted",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Phố đường tàu (Phùng Hưng - Trần Phú)",
@@ -811,7 +811,7 @@
         "hero",
         "railway",
         "arrival",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ga Hà Nội (Ga Hàng Cỏ)",
@@ -840,8 +840,8 @@
     {
       "id": "buu_dien_bo_ho",
       "tags": [
-        "coords_unverified",
-        "landmark_clock"
+        "landmark_clock",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Bưu điện Bờ Hồ (Bưu điện Hà Nội)",
@@ -869,17 +869,17 @@
     {
       "id": "pho_sach_dinh_le",
       "tags": [
-        "coords_unverified",
         "books",
-        "pedestrian"
+        "pedestrian",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Phố sách Hà Nội (19 Tháng 12)",
         "en": "Hanoi Book Street"
       },
       "location": {
-        "lat": 21.0256,
-        "lon": 105.8506
+        "lat": 21.025567,
+        "lon": 105.84818
       },
       "district": "districts:hoan_kiem",
       "kind": "street",
@@ -904,7 +904,7 @@
       "tags": [
         "museum",
         "history",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Di tích Nhà tù Hỏa Lò",
@@ -943,7 +943,7 @@
         "museum",
         "french_quarter",
         "indochine_style",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Bảo tàng Lịch sử Quốc gia",
@@ -976,10 +976,10 @@
     {
       "id": "ho_tay",
       "tags": [
-        "coords_unverified",
         "hero",
         "lake",
-        "sunset"
+        "sunset",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Hồ Tây",
@@ -1017,7 +1017,7 @@
         "religious",
         "respectful_zone",
         "sunset",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chùa Trấn Quốc",
@@ -1055,7 +1055,7 @@
         "religious",
         "respectful_zone",
         "thang_long_tu_tran",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Đền Quán Thánh (Trấn Vũ Quán)",
@@ -1083,9 +1083,9 @@
     {
       "id": "ho_truc_bach",
       "tags": [
-        "coords_unverified",
         "lake",
-        "food"
+        "food",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Hồ Trúc Bạch",
@@ -1116,7 +1116,7 @@
         "religious",
         "respectful_zone",
         "food",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Phủ Tây Hồ",
@@ -1147,7 +1147,7 @@
         "hero",
         "skyline_anchor",
         "skyscraper",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Tòa tháp 72 tầng Phạm Hùng",
@@ -1181,7 +1181,7 @@
         "skyline_anchor",
         "skyscraper",
         "observation_deck",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Tòa tháp Liễu Giai",
@@ -1212,19 +1212,19 @@
     {
       "id": "cau_nhat_tan",
       "tags": [
-        "coords_unverified",
         "hero",
         "river",
         "cable_stayed",
-        "night_lights"
+        "night_lights",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Cầu Nhật Tân",
         "en": "Nhật Tân Bridge"
       },
       "location": {
-        "lat": 21.0875,
-        "lon": 105.8245
+        "lat": 21.08958,
+        "lon": 105.819382
       },
       "district": "districts:tay_ho",
       "kind": "bridge",
@@ -1246,16 +1246,16 @@
     {
       "id": "cau_chuong_duong",
       "tags": [
-        "coords_unverified",
-        "river"
+        "river",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Cầu Chương Dương",
         "en": "Chương Dương Bridge"
       },
       "location": {
-        "lat": 21.0365,
-        "lon": 105.864
+        "lat": 21.038572,
+        "lon": 105.863072
       },
       "district": "districts:long_bien",
       "kind": "bridge",
@@ -1276,18 +1276,18 @@
     {
       "id": "bai_giua_song_hong",
       "tags": [
-        "coords_unverified",
         "riverbank",
         "kites",
-        "reed_flowers"
+        "reed_flowers",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Bãi giữa sông Hồng",
         "en": "Red River middle sandbank"
       },
       "location": {
-        "lat": 21.045,
-        "lon": 105.862
+        "lat": 21.043194,
+        "lon": 105.857959
       },
       "district": "districts:long_bien",
       "kind": "park",
@@ -1310,17 +1310,17 @@
     {
       "id": "con_duong_gom_su",
       "tags": [
-        "coords_unverified",
         "public_art",
-        "dyke"
+        "dyke",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Con đường gốm sứ ven sông Hồng",
         "en": "Red River ceramic mosaic road"
       },
       "location": {
-        "lat": 21.036,
-        "lon": 105.857
+        "lat": 21.035128,
+        "lon": 105.854992
       },
       "district": "districts:hoan_kiem",
       "kind": "street",
@@ -1345,7 +1345,7 @@
         "religious",
         "respectful_zone",
         "art_deco",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Nhà thờ Cửa Bắc",
@@ -1378,7 +1378,7 @@
       "id": "ga_cat_linh",
       "tags": [
         "metro",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ga Cát Linh (tuyến 2A)",
@@ -1412,7 +1412,7 @@
       "tags": [
         "museum",
         "outdoor_houses",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Bảo tàng Dân tộc học Việt Nam",
@@ -1445,9 +1445,9 @@
     {
       "id": "cong_vien_thong_nhat",
       "tags": [
-        "coords_unverified",
         "park",
-        "exercise"
+        "exercise",
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Công viên Thống Nhất",
@@ -1481,7 +1481,7 @@
       "tags": [
         "stadium",
         "football",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Sân vận động Quốc gia Mỹ Đình",
@@ -1512,7 +1512,7 @@
       "tags": [
         "craft_village",
         "pottery",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Làng gốm Bát Tràng",
@@ -1541,15 +1541,15 @@
       "tags": [
         "park",
         "zoo",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Công viên Thủ Lệ (Vườn thú Hà Nội)",
         "en": "Thủ Lệ Park (Hanoi Zoo)"
       },
       "location": {
-        "lat": 21.0336,
-        "lon": 105.8068
+        "lat": 21.030721,
+        "lon": 105.806948
       },
       "district": "districts:ba_dinh",
       "kind": "park",
@@ -1576,7 +1576,7 @@
         "street",
         "trees",
         "photo_spot",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Phố Phan Đình Phùng",
@@ -1612,15 +1612,15 @@
       "tags": [
         "tap_the",
         "heritage_1980s",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Khu tập thể Giảng Võ",
         "en": "Giảng Võ collective housing"
       },
       "location": {
-        "lat": 21.028299,
-        "lon": 105.819943
+        "lat": 21.028643,
+        "lon": 105.821382
       },
       "district": "districts:ba_dinh",
       "kind": "other",
@@ -1647,7 +1647,7 @@
       "tags": [
         "museum",
         "colonial",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Bảo tàng Mỹ thuật Việt Nam",
@@ -1683,7 +1683,7 @@
       "tags": [
         "lake",
         "hoa_sua",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Hồ Thiền Quang",
@@ -1718,7 +1718,7 @@
       "tags": [
         "new_city",
         "mall",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Thời Gian City (khu đô thị Minh Khai)",
@@ -1752,7 +1752,7 @@
       "tags": [
         "university",
         "students",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Đại học Bách khoa Hà Nội",
@@ -1787,15 +1787,15 @@
       "tags": [
         "market",
         "fabric",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chợ Hôm - Đức Viên",
         "en": "Hôm Market"
       },
       "location": {
-        "lat": 21.016,
-        "lon": 105.852
+        "lat": 21.017156,
+        "lon": 105.851782
       },
       "district": "districts:hai_ba_trung",
       "kind": "market",
@@ -1825,15 +1825,15 @@
       "tags": [
         "heritage",
         "festival",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Gò Đống Đa và tượng đài Quang Trung",
         "en": "Đống Đa Mound and Quang Trung monument"
       },
       "location": {
-        "lat": 21.0133,
-        "lon": 105.8225
+        "lat": 21.012791,
+        "lon": 105.82398
       },
       "district": "districts:dong_da",
       "kind": "monument",
@@ -1859,7 +1859,7 @@
       "tags": [
         "pagoda",
         "village",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chùa Láng",
@@ -1892,15 +1892,15 @@
         "tap_the",
         "heritage_1960s",
         "story",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Khu tập thể Kim Liên",
         "en": "Kim Liên collective housing"
       },
       "location": {
-        "lat": 21.0085,
-        "lon": 105.839
+        "lat": 21.006351,
+        "lon": 105.835131
       },
       "district": "districts:dong_da",
       "kind": "other",
@@ -1929,15 +1929,15 @@
         "junction",
         "traffic",
         "metro",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ngã Tư Sở",
         "en": "Ngã Tư Sở junction"
       },
       "location": {
-        "lat": 20.9958,
-        "lon": 105.8205
+        "lat": 21.003205,
+        "lon": 105.820339
       },
       "district": "districts:dong_da",
       "kind": "other",
@@ -1962,15 +1962,15 @@
         "flowers",
         "seasonal",
         "photo_spot",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Vườn đào Nhật Tân",
         "en": "Nhật Tân peach orchards"
       },
       "location": {
-        "lat": 21.079,
-        "lon": 105.823
+        "lat": 21.077057,
+        "lon": 105.821652
       },
       "district": "districts:tay_ho",
       "kind": "park",
@@ -1997,15 +1997,15 @@
       "tags": [
         "river",
         "photo_spot",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Bãi đá sông Hồng",
         "en": "Red River stone beach"
       },
       "location": {
-        "lat": 21.079,
-        "lon": 105.831
+        "lat": 21.078213,
+        "lon": 105.835929
       },
       "district": "districts:tay_ho",
       "kind": "park",
@@ -2032,15 +2032,15 @@
       "tags": [
         "pagoda",
         "heritage",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chùa Kim Liên",
         "en": "Kim Liên Pagoda"
       },
       "location": {
-        "lat": 21.064576,
-        "lon": 105.829296
+        "lat": 21.05851,
+        "lon": 105.832893
       },
       "district": "districts:tay_ho",
       "kind": "pagoda",
@@ -2065,15 +2065,15 @@
         "walking_street",
         "lotus",
         "weekend",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Phố đi bộ Trịnh Công Sơn",
         "en": "Trịnh Công Sơn walking street"
       },
       "location": {
-        "lat": 21.064,
-        "lon": 105.825
+        "lat": 21.075987,
+        "lon": 105.815798
       },
       "district": "districts:tay_ho",
       "kind": "street",
@@ -2099,15 +2099,15 @@
       "tags": [
         "park",
         "new_city",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Công viên Cầu Giấy",
         "en": "Cầu Giấy Park"
       },
       "location": {
-        "lat": 21.0305,
-        "lon": 105.7905
+        "lat": 21.028217,
+        "lon": 105.790935
       },
       "district": "districts:cau_giay",
       "kind": "park",
@@ -2134,7 +2134,7 @@
       "tags": [
         "university",
         "students",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Đại học Quốc gia Hà Nội (Xuân Thủy)",
@@ -2169,15 +2169,15 @@
       "tags": [
         "pagoda",
         "youth",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chùa Hà",
         "en": "Hà Pagoda"
       },
       "location": {
-        "lat": 21.032,
-        "lon": 105.799
+        "lat": 21.037056,
+        "lon": 105.795202
       },
       "district": "districts:cau_giay",
       "kind": "pagoda",
@@ -2201,7 +2201,7 @@
         "new_city",
         "mall",
         "metro",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Hoàng Gia City (khu đô thị Nguyễn Trãi)",
@@ -2236,15 +2236,15 @@
         "story",
         "home",
         "alley",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ngõ Khương Đình (phòng trọ của Minh)",
         "en": "Khương Đình alley (Minh's rented room)"
       },
       "location": {
-        "lat": 20.9905,
-        "lon": 105.815
+        "lat": 20.990356,
+        "lon": 105.813144
       },
       "district": "districts:thanh_xuan",
       "kind": "street",
@@ -2268,15 +2268,15 @@
       "tags": [
         "park",
         "lake",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Công viên Thanh Xuân (hồ Nhân Chính)",
         "en": "Thanh Xuân Park (Nhân Chính lake)"
       },
       "location": {
-        "lat": 20.996,
-        "lon": 105.808
+        "lat": 21.002725,
+        "lon": 105.797201
       },
       "district": "districts:thanh_xuan",
       "kind": "park",
@@ -2303,15 +2303,15 @@
         "lake",
         "new_city",
         "dense",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Hồ Linh Đàm",
         "en": "Linh Đàm Lake"
       },
       "location": {
-        "lat": 20.963,
-        "lon": 105.83
+        "lat": 20.967949,
+        "lon": 105.831316
       },
       "district": "districts:hoang_mai",
       "kind": "lake",
@@ -2338,7 +2338,7 @@
         "dense",
         "new_city",
         "migrants",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Tổ hợp chung cư HH Linh Đàm",
@@ -2372,15 +2372,15 @@
         "park",
         "lake",
         "weekend",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Công viên Yên Sở",
         "en": "Yên Sở Park"
       },
       "location": {
-        "lat": 20.958,
-        "lon": 105.868
+        "lat": 20.966051,
+        "lon": 105.856828
       },
       "district": "districts:hoang_mai",
       "kind": "park",
@@ -2408,15 +2408,15 @@
         "market",
         "night",
         "wholesale",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chợ đầu mối phía Nam (Đền Lừ)",
         "en": "Southern wholesale market (Đền Lừ)"
       },
       "location": {
-        "lat": 20.987,
-        "lon": 105.86
+        "lat": 20.982584,
+        "lon": 105.86169
       },
       "district": "districts:hoang_mai",
       "kind": "market",
@@ -2447,15 +2447,15 @@
       "tags": [
         "mall",
         "new_city",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ê Ông Mall Long Biên",
         "en": "Ê Ông Mall Long Biên"
       },
       "location": {
-        "lat": 21.0298,
-        "lon": 105.8975
+        "lat": 21.02723,
+        "lon": 105.8995
       },
       "district": "districts:long_bien",
       "kind": "modern_tower",
@@ -2481,15 +2481,15 @@
       "tags": [
         "bridge",
         "river",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Cầu Vĩnh Tuy",
         "en": "Vĩnh Tuy Bridge"
       },
       "location": {
-        "lat": 21.0085,
-        "lon": 105.8775
+        "lat": 21.007216,
+        "lon": 105.878913
       },
       "district": "districts:long_bien",
       "kind": "bridge",
@@ -2514,15 +2514,15 @@
         "dike",
         "river",
         "village",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Đê sông Hồng đoạn Ngọc Thụy",
         "en": "Red River dike at Ngọc Thụy"
       },
       "location": {
-        "lat": 21.062,
-        "lon": 105.878
+        "lat": 21.067816,
+        "lon": 105.875823
       },
       "district": "districts:long_bien",
       "kind": "street",
@@ -2549,15 +2549,15 @@
       "tags": [
         "modern",
         "landmark_roof",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Trung tâm Hội nghị Quốc gia",
         "en": "National Convention Centre"
       },
       "location": {
-        "lat": 21.0045,
-        "lon": 105.785
+        "lat": 21.006474,
+        "lon": 105.787034
       },
       "district": "districts:my_dinh",
       "kind": "colonial_building",
@@ -2581,7 +2581,7 @@
       "tags": [
         "station",
         "story",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Bến xe Mỹ Đình",
@@ -2618,15 +2618,15 @@
       "tags": [
         "museum",
         "modern",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Bảo tàng Hà Nội",
         "en": "Hanoi Museum"
       },
       "location": {
-        "lat": 21.0052,
-        "lon": 105.787
+        "lat": 21.010013,
+        "lon": 105.786309
       },
       "district": "districts:my_dinh",
       "kind": "museum",
@@ -2655,15 +2655,15 @@
         "temple",
         "heritage",
         "village",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Đình Chèm",
         "en": "Chèm communal house"
       },
       "location": {
-        "lat": 21.096,
-        "lon": 105.778
+        "lat": 21.09375,
+        "lon": 105.774569
       },
       "district": "districts:bac_tu_liem",
       "kind": "temple",
@@ -2687,15 +2687,15 @@
       "tags": [
         "park",
         "kites",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Công viên Hòa Bình",
         "en": "Hòa Bình Park"
       },
       "location": {
-        "lat": 21.0695,
-        "lon": 105.783
+        "lat": 21.064914,
+        "lon": 105.787195
       },
       "district": "districts:bac_tu_liem",
       "kind": "park",
@@ -2724,15 +2724,15 @@
         "flowers",
         "village",
         "night",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Làng hoa Tây Tựu",
         "en": "Tây Tựu flower village"
       },
       "location": {
-        "lat": 21.0905,
-        "lon": 105.755
+        "lat": 21.064189,
+        "lon": 105.738826
       },
       "district": "districts:bac_tu_liem",
       "kind": "other",
@@ -2759,15 +2759,15 @@
       "tags": [
         "metro",
         "station",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ga Nhổn (depot tuyến 3)",
         "en": "Nhổn station and line 3 depot"
       },
       "location": {
-        "lat": 21.0505,
-        "lon": 105.742
+        "lat": 21.052585,
+        "lon": 105.73523
       },
       "district": "districts:bac_tu_liem",
       "kind": "station",
@@ -2792,7 +2792,7 @@
         "craft_village",
         "silk",
         "gate",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Làng lụa Vạn Phúc",
@@ -2827,15 +2827,15 @@
       "tags": [
         "metro",
         "station",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Ga Yên Nghĩa (cuối tuyến 2A)",
         "en": "Yên Nghĩa station (line 2A terminus)"
       },
       "location": {
-        "lat": 20.9545,
-        "lon": 105.748
+        "lat": 20.949768,
+        "lon": 105.748394
       },
       "district": "districts:ha_dong",
       "kind": "station",
@@ -2858,7 +2858,7 @@
       "id": "cho_ha_dong",
       "tags": [
         "market",
-        "coords_verified_overture"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Chợ Hà Đông",
@@ -2896,15 +2896,15 @@
       "tags": [
         "lake",
         "new_city",
-        "coords_unverified"
+        "coords_verified_osm"
       ],
       "name": {
         "vi": "Hồ Văn Quán",
         "en": "Văn Quán Lake"
       },
       "location": {
-        "lat": 20.979,
-        "lon": 105.792
+        "lat": 20.976018,
+        "lon": 105.791959
       },
       "district": "districts:ha_dong",
       "kind": "lake",

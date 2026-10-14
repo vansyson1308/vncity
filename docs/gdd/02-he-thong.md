@@ -40,8 +40,9 @@ mới tính từ ngày đầu). Bị phạt là cờ bị xóa và đếm lại.
 Nồng độ cồn: mọi đồ uống có cồn cộng `nong_do_con`. Chốt đo nồng độ xuất hiện tối 21h-1h. Thiết kế
 khuyến khích gọi xe về sau bia hơi (hoạt động bia hơi gợi ý sẵn).
 
-Mức phạt lấy theo Nghị định 168/2024/NĐ-CP theo hiểu biết hiện tại; mục nào chưa chắc gắn
-`fine_unverified` và **phải đối chiếu văn bản gốc trước khi khóa nội dung**.
+Mức phạt lấy theo Nghị định 168/2024/NĐ-CP, sửa đổi bởi Nghị định 238/2026/NĐ-CP (hiệu lực 15/8/2026);
+đã đối chiếu văn bản gốc từng điều, khoản, điểm ngày 14/10/2026 (`docs/15-kiem-chung-du-lieu-thuc.md`).
+Luật mới hoặc mức mới phải ghi căn cứ và ngày tra trong `legal_basis` như các mục hiện có.
 
 ## 2. Thời gian và thời tiết từ dữ liệu thật
 

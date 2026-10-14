@@ -37,7 +37,8 @@ python -m venv venv && ./venv/bin/pip install -r requirements.txt -r requirement
 ./venv/bin/python fetch.py --name noi_thanh --bbox 105.72,20.93,105.95,21.12
 ./venv/bin/python -m pipeline.fetch_context --name noi_thanh
 ./venv/bin/python -m pipeline.run_districts            # pipeline/districts.json: khung từng quận, gốc chung ở hồ Gươm
-./venv/bin/python -m pipeline.verify_landmarks --data noi_thanh --fix   # khớp tọa độ địa danh, không cần mạng
+./venv/bin/python -m pipeline.verify_landmarks --data noi_thanh   # báo cáo id Overture của địa danh, không cần mạng
+./venv/bin/python tools/landmark_audit.py fetch && ./venv/bin/python tools/landmark_audit.py audit --fix   # khớp tọa độ với OSM, khóa bằng test (docs/15)
 ./venv/bin/python tools/playtest.py                    # chơi thử cốt truyện bằng dữ liệu (docs/gdd/06, 07)
 ```
 

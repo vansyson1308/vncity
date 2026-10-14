@@ -206,8 +206,8 @@
         "en": "An ordinary morning for an app rider: an early start, the first fare, and by chance the passenger who will change a whole street."
       },
       "start": {
-        "lat": 20.9905,
-        "lon": 105.815
+        "lat": 20.990356,
+        "lon": 105.813144
       },
       "steps": [
         {
@@ -218,8 +218,8 @@
             "en": "Wake up in the Khương Đình rented room"
           },
           "target": {
-            "lat": 20.9905,
-            "lon": 105.815
+            "lat": 20.990356,
+            "lon": 105.813144
           },
           "dialogue": "dialogues:dlg_p1_phong_tro",
           "params": {

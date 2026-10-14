@@ -1677,7 +1677,7 @@
           },
           "effect": {
             "heat": 4,
-            "fine": "traffic_rules:vuot_toc_do_10_20"
+            "fine": "traffic_rules:khong_chap_hanh_hieu_lenh_csgt"
           }
         }
       ]
