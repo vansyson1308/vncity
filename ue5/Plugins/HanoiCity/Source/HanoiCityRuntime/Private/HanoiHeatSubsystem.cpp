@@ -80,6 +80,21 @@ void UHanoiHeatSubsystem::AddFine(int64 FineVnd, int32 LicencePoints)
 	}
 }
 
+int64 UHanoiHeatSubsystem::ApplyRuleFine(FName RuleId, bool bInCar)
+{
+	UGameInstance* GI = GetWorld() ? GetWorld()->GetGameInstance() : nullptr;
+	const UHanoiContentSubsystem* Content = GI ? GI->GetSubsystem<UHanoiContentSubsystem>() : nullptr;
+	const FHanoiTrafficRuleRow* Rule = Content ? Content->Find<FHanoiTrafficRuleRow>(TEXT("traffic_rules"), RuleId) : nullptr;
+	if (!Rule)
+	{
+		UE_LOG(LogHanoi, Warning, TEXT("Unknown traffic rule %s"), *RuleId.ToString());
+		return 0;
+	}
+	const int64 Fine = bInCar ? Rule->FineVnd.Car : Rule->FineVnd.Motorbike;
+	AddFine(Fine, Rule->LicencePoints);
+	return Fine;
+}
+
 bool UHanoiHeatSubsystem::ReportViolation(FName RuleId, bool bInCar, bool bSeenByPolice, bool bInCameraZone)
 {
 	UGameInstance* GI = GetWorld() ? GetWorld()->GetGameInstance() : nullptr;

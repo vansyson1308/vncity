@@ -1,0 +1,234 @@
+{
+  "collection": "flood_layers",
+  "items": [
+    {
+      "id": "bao_so_3_2027",
+      "tags": [
+        "chuong_3",
+        "bao",
+        "lu"
+      ],
+      "name": {
+        "vi": "Bão số 3 năm 2027, đêm nước lên",
+        "en": "Typhoon No. 3, 2027: the night the water rose"
+      },
+      "description": {
+        "vi": "Từ 18 giờ: bốn trăm mi-li-mét mưa trong một đêm, sông Hồng ở Long Biên trên báo động hai cả đêm nên cống phố không tự chảy ra sông được, chỉ còn trạm bơm. Bãi giữa ngập theo sông, ngõ Hàng Chiếu ngập theo mưa; cầu Long Biên cấm người và xe từ 20 giờ. Sáu giờ sáng hôm sau nước phố rút, bùn còn trên bậc cửa."
+      },
+      "duration_h": 18,
+      "step_h": 0.25,
+      "gauge": {
+        "name": "Long Biên",
+        "alarm_m": [
+          9.5,
+          10.5,
+          11.5
+        ]
+      },
+      "drainage": {
+        "gravity_block_river_m": 10.5,
+        "pump_share": 0.6
+      },
+      "timeline": [
+        {
+          "t_h": 0,
+          "river_m": 10.72,
+          "rain_mm_h": 30
+        },
+        {
+          "t_h": 1,
+          "river_m": 10.785,
+          "rain_mm_h": 50
+        },
+        {
+          "t_h": 2,
+          "river_m": 10.85,
+          "rain_mm_h": 70
+        },
+        {
+          "t_h": 3,
+          "river_m": 10.915,
+          "rain_mm_h": 80
+        },
+        {
+          "t_h": 4,
+          "river_m": 10.98,
+          "rain_mm_h": 70
+        },
+        {
+          "t_h": 5,
+          "river_m": 11.03,
+          "rain_mm_h": 50
+        },
+        {
+          "t_h": 6,
+          "river_m": 11.08,
+          "rain_mm_h": 30
+        },
+        {
+          "t_h": 7,
+          "river_m": 11.103,
+          "rain_mm_h": 15
+        },
+        {
+          "t_h": 8,
+          "river_m": 11.127,
+          "rain_mm_h": 5
+        },
+        {
+          "t_h": 9,
+          "river_m": 11.15,
+          "rain_mm_h": 0
+        },
+        {
+          "t_h": 12,
+          "river_m": 11.1,
+          "rain_mm_h": 0
+        },
+        {
+          "t_h": 18,
+          "river_m": 10.95,
+          "rain_mm_h": 0
+        }
+      ],
+      "zones": [
+        {
+          "id": "bai_giua_phuc_xa",
+          "name": "Bãi giữa sông Hồng, nhà ông Bảy",
+          "location": {
+            "lat": 21.045,
+            "lon": 105.862
+          },
+          "radius_m": 450,
+          "landmark": "landmarks:bai_giua_song_hong",
+          "district": "districts:long_bien",
+          "cause": "song",
+          "floor_m": 10.54,
+          "coords_source": "landmark",
+          "note": "Nhà ông Bảy: 19 giờ nước lên bậc thứ hai; từ khoảng 20 giờ xe máy không ra được nữa."
+        },
+        {
+          "id": "phuc_tan_ngoai_de",
+          "name": "Đường ngoài đê Phúc Tân ra cầu Chương Dương",
+          "location": {
+            "lat": 21.039,
+            "lon": 105.858
+          },
+          "radius_m": 300,
+          "district": "districts:hoan_kiem",
+          "cause": "song",
+          "floor_m": 10.63,
+          "coords_source": "uoc_luong",
+          "note": "Nước ngang trục bánh khoảng 20 giờ: còn đi được nhưng chậm, xe hay chết máy."
+        },
+        {
+          "id": "ngo_hang_chieu",
+          "name": "Ngõ Hàng Chiếu trước số 49 và 51",
+          "location": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "radius_m": 90,
+          "district": "districts:pho_co",
+          "cause": "mua",
+          "catchment": 2.8,
+          "drain_mm_h": 150,
+          "max_depth_m": 0.8,
+          "coords_source": "uoc_luong",
+          "note": "21:30 nước vào bếp qua chân tường chung; nửa đêm cao nhất; 6 giờ sáng rút."
+        },
+        {
+          "id": "phan_boi_chau",
+          "name": "Phan Bội Châu",
+          "location": {
+            "lat": 21.0262,
+            "lon": 105.8432
+          },
+          "radius_m": 200,
+          "district": "districts:hoan_kiem",
+          "cause": "mua",
+          "catchment": 3.5,
+          "drain_mm_h": 140,
+          "max_depth_m": 0.9,
+          "coords_source": "uoc_luong",
+          "note": "Điểm ngập quen thuộc (events:mua_ngap)."
+        },
+        {
+          "id": "nguyen_khuyen",
+          "name": "Nguyễn Khuyến",
+          "location": {
+            "lat": 21.029,
+            "lon": 105.839
+          },
+          "radius_m": 180,
+          "district": "districts:dong_da",
+          "cause": "mua",
+          "catchment": 3.2,
+          "drain_mm_h": 130,
+          "max_depth_m": 0.8,
+          "coords_source": "uoc_luong",
+          "note": "Điểm ngập quen thuộc (events:mua_ngap)."
+        },
+        {
+          "id": "thai_ha",
+          "name": "Thái Hà",
+          "location": {
+            "lat": 21.0125,
+            "lon": 105.8205
+          },
+          "radius_m": 250,
+          "district": "districts:dong_da",
+          "cause": "mua",
+          "catchment": 3.8,
+          "drain_mm_h": 120,
+          "max_depth_m": 1.0,
+          "coords_source": "uoc_luong",
+          "note": "Điểm ngập quen thuộc (events:mua_ngap)."
+        },
+        {
+          "id": "nguyen_trai",
+          "name": "Nguyễn Trãi",
+          "location": {
+            "lat": 20.996,
+            "lon": 105.808
+          },
+          "radius_m": 300,
+          "district": "districts:thanh_xuan",
+          "cause": "mua",
+          "catchment": 3.5,
+          "drain_mm_h": 120,
+          "max_depth_m": 0.9,
+          "coords_source": "uoc_luong",
+          "note": "Điểm ngập quen thuộc (events:mua_ngap)."
+        }
+      ],
+      "closures": [
+        {
+          "id": "cam_cau_long_bien",
+          "landmark": "landmarks:cau_long_bien",
+          "radius_m": 900,
+          "from_h": 2.0,
+          "river_m_at_least": 10.5,
+          "traffic_rule": "traffic_rules:di_vao_pho_di_bo_duong_cam",
+          "note": "Như ngày 11/9/2024: cấm người và xe qua cầu Long Biên cả hai chiều khi sông trên báo động hai. Loa phường c3_07: cấm từ 20 giờ."
+        }
+      ],
+      "passable_depth_m": {
+        "xe_may": 0.3,
+        "o_to": 0.4,
+        "xe_dap": 0.35,
+        "di_bo": 0.5
+      },
+      "slow_depth_m": 0.1,
+      "slow_speed_factor": 0.4,
+      "world_events": [
+        "events:mua_ngap"
+      ],
+      "sources": [
+        "docs/gdd/13-chuong-3-5.md §9: lũ sông Hồng do bão Yagi 11/9/2024 ở Long Biên (10,60 m lúc 1 giờ, 10,70 m lúc 7 giờ, 11,22 m lúc 17 giờ; báo động 2 là 10,5 m, báo động 3 là 11,5 m); cấm cầu Long Biên; sơ tán bãi giữa (VnExpress, SGGP, Vietnam News).",
+        "Mưa 30/9/2025: sông lên trên báo động thì nước phố không tự chảy ra được (VOV), lý do pump_share.",
+        "Thoại c3_07 (loa phường: 17 giờ 10,70 m; cấm cầu từ 20 giờ) và c3_08 (vệt nước 40 phân trong bếp số 49)."
+      ]
+    }
+  ]
+}

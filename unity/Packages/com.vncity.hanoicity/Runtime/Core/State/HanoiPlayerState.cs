@@ -45,6 +45,10 @@ namespace HanoiCity.State
         /// <summary>Cassette numbers 1-24 the player can play.</summary>
         public HashSet<int> Tapes = new HashSet<int>();
 
+        // ---- flood layer (FloodSystem): the running layer and the game time it started; null = none
+        public string ActiveFloodLayer;
+        public DateTime FloodLayerStart;
+
         // ---- economy
         /// <summary>Business id -> ownership (upgrades bought, loss streak).</summary>
         public Dictionary<string, OwnedBusiness> Businesses = new Dictionary<string, OwnedBusiness>();

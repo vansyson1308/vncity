@@ -856,7 +856,10 @@
             "lon": 105.8509
           },
           "dialogue": "dialogues:dlg_c3_05_bo_sot",
-          "next": "chot_ho_so"
+          "next": "chot_ho_so",
+          "set_flags": [
+            "lan_bo_sot_ho_33"
+          ]
         },
         {
           "id": "chot_ho_so",

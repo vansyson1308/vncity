@@ -23,6 +23,34 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHanoiProtagonistSignature, FName, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHanoiMinimapSignature, bool, bVisible);
 /** params.requires_event: the step cannot complete until SetWorldEventActive(EventId, true). */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FHanoiStepWaitingSignature, FName, MissionId, FName, StepId, FName, EventId);
+/** A skill reached a tier of skills.json (its refs are now in State.Unlocked). */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FHanoiSkillTierSignature, FName, SkillId, int32, Level, const FHanoiSkillsTier&, Tier);
+
+/**
+ * What the pawn is doing right now, pushed by pawn/vehicle code every time it changes (not saved).
+ * Random street events filter on it (spawn.on_vehicle, spawn.road_types) and the flood layer picks
+ * the vehicle class whose passable depth applies.
+ */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiPlayerContext
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	bool bOnVehicle = false;
+
+	/** Driving a car (car fines, car passable depth) rather than a two-wheeler. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	bool bInCar = false;
+
+	/** Riding a bicycle (xe_dap passable depth). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	bool bOnBicycle = false;
+
+	/** random_events road type under the pawn as the content spells it (ngo, pho, duong_lon, de, cau, via_he, cho, ben_xe); None = unknown. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName RoadType;
+};
 
 /**
  * Runs data-driven missions (collection "missions") one at a time.
@@ -44,7 +72,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FHanoiStepWaitingSignature, FName
  * Branching: Step.Next.Step, else Step.Next.Branches[Outcome] (falling back to "default"),
  * else the next step in array order. Next ids "end"/"success" finish, "fail" fails the mission.
  * fail_if entries: "time>N" (seconds in step), "heat>=N" (also > < <= ==), "event:<name>"
- * (ReportEvent), "flag:<name>". params.time_limit_s is shorthand for "time>N";
+ * (ReportEvent), "flag:<name>". params.time_limit_s is shorthand for "time>N", except on a step whose
+ * next has a chua_dat branch: there the time running out completes the step chua_dat (the loss has
+ * a price, not a game over; same rule in the Unity MissionRunner and tools/runtime_rules.py);
  * params.deadline_hour fails when the game clock passes that hour.
  * Step completion applies Step.SetFlags before the next step is resolved.
  * Conditions (FHanoiCondition, EvaluateCondition): missions_completed, min_reputation, hours,
@@ -194,6 +224,25 @@ public:
 	FHanoiPlayerState& MutableState() { return State; }
 	void NotifyStateChanged() { OnStateChanged.Broadcast(State); }
 
+	/** Pawn/vehicle code: what the player is riding and on which road (random events, floods). */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Player")
+	void SetPlayerContext(const FHanoiPlayerContext& InContext) { PlayerContext = InContext; }
+
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Player")
+	const FHanoiPlayerContext& GetPlayerContext() const { return PlayerContext; }
+
+	/** Adds Levels (Settings.SkillGainPerTraining when < 0) to a skill, 0-100; reaching a tier of skills.json unlocks its refs. Returns the new level. */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Progress")
+	int32 TrainSkill(FName SkillId, int32 Levels = -1);
+
+	/** A job or minigame of an activity was completed: trains each of its skills_trained once. */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Progress")
+	void TrainFromActivity(const FHanoiRef& Activity);
+
+	/** A story mission of this chapter or a later one is running or completed. */
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Missions")
+	bool HasReachedChapter(int32 Chapter) const;
+
 	/** A fine was issued now: restarts the clean-record counter and clears ho_so_sach_90_ngay. */
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Progress")
 	void RecordFine();
@@ -228,11 +277,21 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Hanoi|Missions")
 	FHanoiStepWaitingSignature OnStepWaitingForEvent;
 
+	UPROPERTY(BlueprintAssignable, Category = "Hanoi|Progress")
+	FHanoiSkillTierSignature OnSkillTierReached;
+
+	/** Outcome of a minigame/cook step that was won (mission branch key). */
+	static const FName OutcomePassed;
+	/** Outcome of a minigame/cook step that was lost; also what time_limit_s gives a step that branches on it. */
+	static const FName OutcomeFailed;
+
 private:
 	void EnterStep(int32 Index);
 	void Advance(FName Outcome);
 	void FinishMission(bool bSuccess, FName Reason);
 	bool ShouldFail(FName& OutReason) const;
+	/** The active step branches on OutcomeFailed (its time limit ends it chua_dat instead of failing the mission). */
+	bool StepBranchesOnFailure() const;
 	bool IsAutoComplete() const;
 	float GetParamNumber(const TCHAR* Key, float Default) const;
 	bool TryGetParamNumber(const TCHAR* Key, double& OutValue) const;
@@ -267,6 +326,7 @@ private:
 	TSet<FName> ActiveWorldEvents;
 	FName RequiredEvent;
 	bool bMinimapAllowed = true;
+	FHanoiPlayerContext PlayerContext;
 	/** params.deadline_hour: game hours allowed from step start, < 0 = none. */
 	double DeadlineGameHours = -1.0;
 	FDateTime StepStartGameTime;

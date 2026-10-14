@@ -24,6 +24,9 @@ namespace HanoiCity.Systems
     public sealed class MissionRunner
     {
         public const string End = "end", Success = "success", Fail = "fail", Default = "default";
+        /// <summary>Outcomes of a minigame/cook step (mission branch keys). A step whose next branches on
+        /// OutcomeFailed ends with it when its time_limit_s runs out, instead of failing the mission.</summary>
+        public const string OutcomePassed = "dat", OutcomeFailed = "chua_dat";
 
         /// <summary>The params this runner reads itself (tests keep it equal to missions.schema.json x-consumer runtime).</summary>
         public static readonly string[] RuntimeParams =
@@ -388,11 +391,14 @@ namespace HanoiCity.Systems
             }
         }
 
+        /// <summary>The active step branches on OutcomeFailed (its time limit ends it chua_dat).</summary>
+        bool StepBranchesOnFailure => ActiveStep?.Next != null && ActiveStep.Next.IsBranching && ActiveStep.Next.Branches.ContainsKey(OutcomeFailed);
+
         bool ShouldFail(out string reason)
         {
             reason = null;
             double limit = ParamNumber("time_limit_s", 0);
-            if (limit > 0 && stepElapsed > limit) { reason = "time_limit"; return true; }
+            if (limit > 0 && stepElapsed > limit && !StepBranchesOnFailure) { reason = "time_limit"; return true; }
             if (deadlineGameHours >= 0 && (world.Clock.Now - stepStartGameTime).TotalHours > deadlineGameHours) { reason = "deadline"; return true; }
             foreach (var rule in active.Steps[stepIndex].FailIf)
             {
@@ -425,6 +431,13 @@ namespace HanoiCity.Systems
         {
             if (!IsActive || ActiveStep == null) return;
             stepElapsed += realSeconds;
+            double limit = ParamNumber("time_limit_s", 0);
+            if (limit > 0 && stepElapsed > limit && StepBranchesOnFailure && StepGateOpen)
+            {
+                // The loss has a price, not a game over: the mission's chua_dat branch carries it.
+                Advance(OutcomeFailed);
+                return;
+            }
             if (ShouldFail(out var reason)) Finish(false, reason);
             else if (StepGateOpen && IsAutoComplete()) Advance(Success);
         }

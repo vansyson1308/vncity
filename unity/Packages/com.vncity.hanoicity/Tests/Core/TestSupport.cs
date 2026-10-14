@@ -45,6 +45,7 @@ namespace HanoiCity.Tests
         public Double3 PositionEnu { get; set; }
         public bool OnVehicle { get; set; } = true;
         public bool InCar { get; set; }
+        public bool OnBicycle { get; set; }
         public string RoadType { get; set; } = "pho";
     }
 

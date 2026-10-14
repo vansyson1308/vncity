@@ -38,6 +38,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Heat")
 	void AddHeat(float Amount);
 
+	/** A traffic rule's fine without a chase (random event "fine" effects): unpaid fine + licence points. Returns the fine. */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Heat")
+	int64 ApplyRuleFine(FName RuleId, bool bInCar);
+
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Heat")
 	void SetSeenByPolice(bool bInSeen);
 

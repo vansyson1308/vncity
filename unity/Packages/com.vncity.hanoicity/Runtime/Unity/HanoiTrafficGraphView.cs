@@ -30,6 +30,30 @@ namespace HanoiCity.UnityLayer
 
         void Awake() => LoadGraph();
 
+        // The flood layer (World.Floods) blocks and slows this graph's edges.
+        void Start()
+        {
+            var game = HanoiGame.Instance;
+            if (game == null || Graph == null) return;
+            if (game.World != null) Register(game.World);
+            else game.WorldReady += Register;
+        }
+
+        void Register(HanoiWorld world)
+        {
+            if (Graph != null && !world.TrafficGraphs.Contains(Graph)) world.TrafficGraphs.Add(Graph);
+        }
+
+        void OnDestroy()
+        {
+            var game = HanoiGame.Instance;
+            if (game != null)
+            {
+                game.WorldReady -= Register;
+                if (game.World != null && Graph != null) game.World.TrafficGraphs.Remove(Graph);
+            }
+        }
+
         void OnDrawGizmos()
         {
             if (!drawGizmos) return;

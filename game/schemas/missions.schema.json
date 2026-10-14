@@ -364,7 +364,7 @@
                       }
                     },
                     "flood_layer": {
-                      "description": "Flood data layer (live or baked).",
+                      "description": "Flood data layer: live = the weather-driven street flooding of chapter 1 (gameplay); otherwise a flood_layers id, started when the step starts and run by UHanoiFloodSubsystem / FloodSystem.",
                       "x-consumer": "gameplay",
                       "type": "string"
                     },
@@ -471,7 +471,7 @@
                       "type": "number"
                     },
                     "mode": {
-                      "description": "Minigame / follow mode.",
+                      "description": "Minigame / follow mode. A minigame_modes id is played by UHanoiMinigameSubsystem / MinigameSystem, which completes the step dat or chua_dat.",
                       "x-consumer": "gameplay",
                       "type": "string"
                     },

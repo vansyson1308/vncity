@@ -145,6 +145,45 @@ namespace HanoiCity.City
         public readonly List<Edge> Edges = new List<Edge>();
         readonly Dictionary<int, int> indexOfNode = new Dictionary<int, int>();
         readonly Dictionary<int, List<(int edge, int to)>> adjacency = new Dictionary<int, List<(int, int)>>();
+        readonly HashSet<int> blockedEdges = new HashSet<int>();
+        readonly Dictionary<int, double> edgeSpeedFactors = new Dictionary<int, double>();
+
+        /// <summary>Flooded or closed (FloodSystem): routing skips the edge. Index into Edges.</summary>
+        public void SetEdgeBlocked(int edgeIndex, bool blocked)
+        {
+            if (blocked) blockedEdges.Add(edgeIndex); else blockedEdges.Remove(edgeIndex);
+        }
+
+        /// <summary>Slowed by water: the edge costs length / factor (clamped 0.05-1; 1 removes the override).</summary>
+        public void SetEdgeSpeedFactor(int edgeIndex, double factor)
+        {
+            factor = Math.Max(0.05, Math.Min(1.0, factor));
+            if (factor >= 1.0) edgeSpeedFactors.Remove(edgeIndex); else edgeSpeedFactors[edgeIndex] = factor;
+        }
+
+        public void ClearEdgeOverrides()
+        {
+            blockedEdges.Clear();
+            edgeSpeedFactors.Clear();
+        }
+
+        public bool IsEdgeBlocked(int edgeIndex) => blockedEdges.Contains(edgeIndex);
+
+        public double EdgeSpeedFactor(int edgeIndex) => edgeSpeedFactors.TryGetValue(edgeIndex, out var f) ? f : 1.0;
+
+        /// <summary>Middle polyline vertex, else the midpoint of the end nodes (ENU metres).</summary>
+        public Double3 EdgeMidpoint(int edgeIndex)
+        {
+            var e = Edges[edgeIndex];
+            if (e.Polyline.Count > 0)
+            {
+                var p = e.Polyline[e.Polyline.Count / 2];
+                return new Double3(p.x, p.y, 0);
+            }
+            var a = NodeById(e.From).Position;
+            var b = NodeById(e.To).Position;
+            return new Double3((a.X + b.X) / 2, (a.Y + b.Y) / 2, (a.Z + b.Z) / 2);
+        }
 
         public static HanoiTrafficGraph Parse(string json)
         {
@@ -202,7 +241,7 @@ namespace HanoiCity.City
             return best;
         }
 
-        /// <summary>Shortest path by length (A*, straight-line heuristic). Node ids, empty if unreachable. motorbike=false skips motorbike_only edges.</summary>
+        /// <summary>Shortest path by length (A*, straight-line heuristic). Node ids, empty if unreachable. motorbike=false skips motorbike_only edges; blocked edges are skipped and slowed ones cost length / factor.</summary>
         public List<int> FindPath(int fromNode, int toNode, bool motorbike = true)
         {
             var goal = NodeById(toNode);
@@ -221,8 +260,9 @@ namespace HanoiCity.City
                 foreach (var (ei, to) in next)
                 {
                     var e = Edges[ei];
-                    if (!motorbike && e.MotorbikeOnly) continue;
-                    double cost = g[cur.id] + (e.LengthM > 0 ? e.LengthM : Double3.PlanDistance(NodeById(e.From).Position, NodeById(e.To).Position));
+                    if ((!motorbike && e.MotorbikeOnly) || blockedEdges.Contains(ei)) continue;
+                    double length = e.LengthM > 0 ? e.LengthM : Double3.PlanDistance(NodeById(e.From).Position, NodeById(e.To).Position);
+                    double cost = g[cur.id] + length / EdgeSpeedFactor(ei);
                     if (g.TryGetValue(to, out var old) && old <= cost) continue;
                     g[to] = cost;
                     came[to] = cur.id;

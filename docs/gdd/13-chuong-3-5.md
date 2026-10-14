@@ -196,6 +196,8 @@ là cờ để engine chạy phần kết, nằm trong `RUNTIME_READ_FLAGS`.
 | 3 | `khoi_gui_to_dan_pho_51` | c3_04_gui_anh | c3_07_lan_bep, c3_07_loa_phuong, c3_08_bien_ban, c3_08_vinh, c4_01_cung_gio, c4_07_muoi_thang_muoi |
 | 3 | `lan_biet_goc_that` | c3_02_so_no_cua_co.ket_qua | c3_05_chot, c3_08_tung_goi |
 | 3 | `lan_bo_ngan_hang` | c3_05_xung_dot | c3_05_chot, c4_07_vay_duyet |
+| 3 | `lan_bo_sot_ho_33` | c3_05_ho_so_hai_muoi_ho.bo_sot (thua minigame `tham_dinh_cheo`) | c4_07_khang |
+| 3 | `lan_di_go_cua_33` | c3_05_bo_sot (Lan đi gõ cửa cùng ông Khang; -2 danh tiếng tổ dân phố, chọn tự lo qua điện thoại thì -8) | c4_07_khang |
 | 3 | `lan_cho_vinh_mua_no` | c3_08_tung_goi | c4_06_phan_cua_be_hanh, c4_07_muoi_thang_muoi, c4_07_vinh_doi |
 | 3 | `lan_de_co_quyet` | c3_02_ket_qua | c3_08_tung_goi |
 | 3 | `lan_doi_mat_tung` | c3_01_ong_tung | c3_01_duong_ve, c3_08_tung_goi |
@@ -313,6 +315,10 @@ là cờ để engine chạy phần kết, nằm trong `RUNTIME_READ_FLAGS`.
 - Kiểm lại hai điểm âm lịch năm 2027 trước khi khóa: ngày rằm tháng Giêng (bản này tính Tết Đinh Mùi là
   6/2/2027, rằm là thứ Bảy 20/2) và khoảng tháng cô hồn (bản này tính hết tháng Bảy âm vào cuối tháng Tám
   dương). Thứ của 10/10/2027 đã kiểm: Chủ nhật.
-- Runtime: `flood_layer: bao_so_3_2027` (lớp nước ngập phố cổ đêm c3_07), minigame `dung_lai_dong_tien`,
-  `tham_dinh_cheo`, `cuu_phim_uot`, `cuu_bang_uot` mới chỉ có tên chế độ trong dữ liệu; C++ chưa có.
+- Runtime: xong cả hai engine. `flood_layers.json` (đêm bão `bao_so_3_2027`: mực sông Long Biên, mưa
+  400 mm, 7 vùng ngập, lệnh cấm cầu Long Biên từ 20 giờ) và `minigame_modes.json` (4 chế độ, có đáp án,
+  độ khó, bước cấm, sổ nợ 460 triệu) do `UHanoiFloodSubsystem`/`FloodSystem` và
+  `UHanoiMinigameSubsystem`/`MinigameSystem` chạy; luật viết thành `tools/runtime_rules.py`. Thua
+  `tham_dinh_cheo` nay có hệ quả: cờ `lan_bo_sot_ho_33`, danh tiếng tổ dân phố, và ông Khang nhắc lại ở
+  c4_07.
 - Bản tiếng Anh chương 3-5: chưa làm, theo lời chủ dự án.

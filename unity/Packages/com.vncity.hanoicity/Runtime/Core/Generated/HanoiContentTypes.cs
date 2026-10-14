@@ -169,6 +169,22 @@ namespace HanoiCity.Content
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
+    public enum HanoiFloodLayerZoneCause
+    {
+        Unset = 0,
+        [EnumMember(Value = "song")] Song,
+        [EnumMember(Value = "mua")] Mua,
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum HanoiFloodLayerZoneCoordsSource
+    {
+        Unset = 0,
+        [EnumMember(Value = "landmark")] Landmark,
+        [EnumMember(Value = "uoc_luong")] UocLuong,
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum HanoiItemCategory
     {
         Unset = 0,
@@ -213,6 +229,14 @@ namespace HanoiCity.Content
         [EnumMember(Value = "photogrammetry")] Photogrammetry,
         [EnumMember(Value = "gaussian_splat_reference")] GaussianSplatReference,
         [EnumMember(Value = "procedural_plus_kit")] ProceduralPlusKit,
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum HanoiMinigameModeMechanic
+    {
+        Unset = 0,
+        [EnumMember(Value = "phan_loai")] PhanLoai,
+        [EnumMember(Value = "sap_xep")] SapXep,
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -997,6 +1021,184 @@ namespace HanoiCity.Content
         public List<HanoiRef> RivalOf { get; set; } = new List<HanoiRef>();
     }
 
+    [Serializable]
+    public sealed partial class HanoiFloodLayerGauge
+    {
+        /// <summary>Hydrological station the river level is read at. [json: name (required)]</summary>
+        [JsonProperty("name", Required = Required.Always)]
+        public string DisplayName { get; set; }
+        /// <summary>Báo động 1, 2, 3 in metres at that station. [json: alarm_m (required)]</summary>
+        [JsonProperty("alarm_m", Required = Required.Always)]
+        public List<double> AlarmM { get; set; } = new List<double>();
+    }
+
+    [Serializable]
+    public sealed partial class HanoiFloodLayerDrainage
+    {
+        /// <summary>River level from which the city drains can no longer flow out by gravity. [json: gravity_block_river_m (required)]</summary>
+        [JsonProperty("gravity_block_river_m", Required = Required.Always)]
+        public double GravityBlockRiverM { get; set; }
+        /// <summary>Share of drain_mm_h that pumps keep up while gravity is blocked. [json: pump_share (required)]</summary>
+        [JsonProperty("pump_share", Required = Required.Always)]
+        public double PumpShare { get; set; }
+    }
+
+    [Serializable]
+    public sealed partial class HanoiFloodLayerTimelineEntry
+    {
+        /// <summary>[json: t_h (required)]</summary>
+        [JsonProperty("t_h", Required = Required.Always)]
+        public double TH { get; set; }
+        /// <summary>[json: river_m (required)]</summary>
+        [JsonProperty("river_m", Required = Required.Always)]
+        public double RiverM { get; set; }
+        /// <summary>[json: rain_mm_h (required)]</summary>
+        [JsonProperty("rain_mm_h", Required = Required.Always)]
+        public double RainMmH { get; set; }
+    }
+
+    [Serializable]
+    public sealed partial class HanoiFloodLayerZone
+    {
+        /// <summary>Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)]</summary>
+        [JsonProperty("id", Required = Required.Always)]
+        public string Id { get; set; }
+        /// <summary>[json: name (required)]</summary>
+        [JsonProperty("name", Required = Required.Always)]
+        public string DisplayName { get; set; }
+        /// <summary>WGS84 point. Converted to engine coordinates through the city manifest's georeference. [json: location (required)]</summary>
+        [JsonProperty("location", Required = Required.Always)]
+        public HanoiGeo Location { get; set; }
+        /// <summary>[json: radius_m (required)]</summary>
+        [JsonProperty("radius_m", Required = Required.Always)]
+        public double RadiusM { get; set; }
+        /// <summary>Reference to another record as '&lt;collection&gt;:&lt;id&gt;', checked by tools/validate.py. [json: landmark]</summary>
+        [JsonProperty("landmark")]
+        public HanoiRef Landmark { get; set; }
+        /// <summary>Reference to another record as '&lt;collection&gt;:&lt;id&gt;', checked by tools/validate.py. [json: district]</summary>
+        [JsonProperty("district")]
+        public HanoiRef District { get; set; }
+        /// <summary>song = under the river (floor_m); mua = rain that the drains cannot take. [json: cause (required)]</summary>
+        [JsonProperty("cause", Required = Required.Always)]
+        public HanoiFloodLayerZoneCause Cause { get; set; } = HanoiFloodLayerZoneCause.Unset;
+        /// <summary>song: ground level on the gauge's datum, metres. [json: floor_m]</summary>
+        [JsonProperty("floor_m")]
+        public double? FloorM { get; set; }
+        /// <summary>mua: how many times the rain falling on the zone runs into it from around (a low spot collects its street). [json: catchment]</summary>
+        [JsonProperty("catchment")]
+        public double? Catchment { get; set; }
+        /// <summary>mua: what the drains take away, in millimetres of depth per hour, with gravity outfalls open. [json: drain_mm_h]</summary>
+        [JsonProperty("drain_mm_h")]
+        public double? DrainMmH { get; set; }
+        /// <summary>mua: water spills elsewhere beyond this depth. [json: max_depth_m]</summary>
+        [JsonProperty("max_depth_m")]
+        public double? MaxDepthM { get; set; }
+        /// <summary>landmark = landmarks.json coordinate; uoc_luong = placed by hand on the street, to check against the map. [json: coords_source (required)]</summary>
+        [JsonProperty("coords_source", Required = Required.Always)]
+        public HanoiFloodLayerZoneCoordsSource CoordsSource { get; set; } = HanoiFloodLayerZoneCoordsSource.Unset;
+        /// <summary>[json: note]</summary>
+        [JsonProperty("note")]
+        public string Note { get; set; }
+    }
+
+    [Serializable]
+    public sealed partial class HanoiFloodLayerClosure
+    {
+        /// <summary>Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)]</summary>
+        [JsonProperty("id", Required = Required.Always)]
+        public string Id { get; set; }
+        /// <summary>Reference to another record as '&lt;collection&gt;:&lt;id&gt;', checked by tools/validate.py. [json: landmark (required)]</summary>
+        [JsonProperty("landmark", Required = Required.Always)]
+        public HanoiRef Landmark { get; set; }
+        /// <summary>Road graph edges whose midpoint is this close to the landmark are closed. [json: radius_m (required)]</summary>
+        [JsonProperty("radius_m", Required = Required.Always)]
+        public double RadiusM { get; set; }
+        /// <summary>The order takes effect at this t. [json: from_h (required)]</summary>
+        [JsonProperty("from_h", Required = Required.Always)]
+        public double FromH { get; set; }
+        /// <summary>The order stands while the river is at or above this level. [json: river_m_at_least (required)]</summary>
+        [JsonProperty("river_m_at_least", Required = Required.Always)]
+        public double RiverMAtLeast { get; set; }
+        /// <summary>traffic_rules:&lt;id&gt; broken by riding through the closure. [json: traffic_rule]</summary>
+        [JsonProperty("traffic_rule")]
+        public HanoiRef TrafficRule { get; set; }
+        /// <summary>[json: note]</summary>
+        [JsonProperty("note")]
+        public string Note { get; set; }
+    }
+
+    /// <summary>Depth from which a vehicle class cannot go through (motorbike: water at the exhaust and air intake).</summary>
+    [Serializable]
+    public sealed partial class HanoiFloodLayerPassableDepthM
+    {
+        /// <summary>[json: xe_may (required)]</summary>
+        [JsonProperty("xe_may", Required = Required.Always)]
+        public double XeMay { get; set; }
+        /// <summary>[json: o_to (required)]</summary>
+        [JsonProperty("o_to", Required = Required.Always)]
+        public double OTo { get; set; }
+        /// <summary>[json: xe_dap (required)]</summary>
+        [JsonProperty("xe_dap", Required = Required.Always)]
+        public double XeDap { get; set; }
+        /// <summary>[json: di_bo (required)]</summary>
+        [JsonProperty("di_bo", Required = Required.Always)]
+        public double DiBo { get; set; }
+    }
+
+    /// <summary>Row of collection 'flood_layers' (id unique in the collection). A night of rising water as cause and effect, switched on by a mission step's params.flood_layer (value 'live' keeps the live-weather path: events:mua_ngap). Time t is game hours since the step started. The river gauge (river_m) and the rain (rain_mm_h) come from `timeline`. A zone of cause 'song' is under the river: depth = river_m - floor_m. A zone of cause 'mua' fills with rain and empties through the drains: d(depth)/dt = (rain_mm_h x catchment - drain) / 1000 metres per hour, where drain = drain_mm_h, or drain_mm_h x pump_share while the river stands at or above gravity_block_river_m (the outfalls cannot run into a high river, only the pumps work). Depth is clamped to [0, max_depth_m] and integrated in steps of step_h. A road inside a zone is closed to a vehicle class when the depth reaches passable_depth_m of that class and slowed by slow_speed_factor from slow_depth_m; a motorbike ridden into impassable water stalls (gameplay event xe_chet_may). `closures` are orders (a bridge closed from an hour while the river is high). While any rain zone is deeper than slow_depth_m the layer keeps `world_events` on, so the economy and random events feel the flood. Runtime: UHanoiFloodSubsystem (UE), FloodSystem (Unity core); reference model and golden table: tools/runtime_rules.py.</summary>
+    [Serializable]
+    public sealed partial class HanoiFloodLayerRow : IHanoiRow
+    {
+        /// <summary>Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)]</summary>
+        [JsonProperty("id", Required = Required.Always)]
+        public string Id { get; set; }
+        /// <summary>[json: tags]</summary>
+        [JsonProperty("tags")]
+        public List<string> Tags { get; set; } = new List<string>();
+        /// <summary>Localised text. Vietnamese is the source language. [json: name (required)]</summary>
+        [JsonProperty("name", Required = Required.Always)]
+        public HanoiText DisplayName { get; set; }
+        /// <summary>Localised text. Vietnamese is the source language. [json: description (required)]</summary>
+        [JsonProperty("description", Required = Required.Always)]
+        public HanoiText Description { get; set; }
+        /// <summary>Game hours the layer lasts after it starts. [json: duration_h (required)]</summary>
+        [JsonProperty("duration_h", Required = Required.Always)]
+        public double DurationH { get; set; }
+        /// <summary>Integration step in game hours (both engines precompute the depth table with it). [json: step_h (required)]</summary>
+        [JsonProperty("step_h", Required = Required.Always)]
+        public double StepH { get; set; }
+        /// <summary>[json: gauge (required)]</summary>
+        [JsonProperty("gauge", Required = Required.Always)]
+        public HanoiFloodLayerGauge Gauge { get; set; } = new HanoiFloodLayerGauge();
+        /// <summary>[json: drainage (required)]</summary>
+        [JsonProperty("drainage", Required = Required.Always)]
+        public HanoiFloodLayerDrainage Drainage { get; set; } = new HanoiFloodLayerDrainage();
+        /// <summary>Keyframes in t order. river_m is interpolated linearly between keyframes; rain_mm_h holds from its keyframe to the next one. The first keyframe is at t = 0. [json: timeline (required)]</summary>
+        [JsonProperty("timeline", Required = Required.Always)]
+        public List<HanoiFloodLayerTimelineEntry> Timeline { get; set; } = new List<HanoiFloodLayerTimelineEntry>();
+        /// <summary>[json: zones (required)]</summary>
+        [JsonProperty("zones", Required = Required.Always)]
+        public List<HanoiFloodLayerZone> Zones { get; set; } = new List<HanoiFloodLayerZone>();
+        /// <summary>[json: closures]</summary>
+        [JsonProperty("closures")]
+        public List<HanoiFloodLayerClosure> Closures { get; set; } = new List<HanoiFloodLayerClosure>();
+        /// <summary>Depth from which a vehicle class cannot go through (motorbike: water at the exhaust and air intake). [json: passable_depth_m (required)]</summary>
+        [JsonProperty("passable_depth_m", Required = Required.Always)]
+        public HanoiFloodLayerPassableDepthM PassableDepthM { get; set; } = new HanoiFloodLayerPassableDepthM();
+        /// <summary>[json: slow_depth_m (required)]</summary>
+        [JsonProperty("slow_depth_m", Required = Required.Always)]
+        public double SlowDepthM { get; set; }
+        /// <summary>[json: slow_speed_factor (required)]</summary>
+        [JsonProperty("slow_speed_factor", Required = Required.Always)]
+        public double SlowSpeedFactor { get; set; }
+        /// <summary>events:&lt;id&gt; kept on while a rain zone is deeper than slow_depth_m. [json: world_events]</summary>
+        [JsonProperty("world_events")]
+        public List<HanoiRef> WorldEvents { get; set; } = new List<HanoiRef>();
+        /// <summary>[json: sources]</summary>
+        [JsonProperty("sources")]
+        public List<string> Sources { get; set; } = new List<string>();
+    }
+
     /// <summary>Row of collection 'items' (id unique in the collection). Inventory items, gear and consumables.</summary>
     [Serializable]
     public sealed partial class HanoiItemRow : IHanoiRow
@@ -1084,6 +1286,127 @@ namespace HanoiCity.Content
         /// <summary>[json: activities]</summary>
         [JsonProperty("activities")]
         public List<HanoiRef> Activities { get; set; } = new List<HanoiRef>();
+    }
+
+    [Serializable]
+    public sealed partial class HanoiMinigameModeLabel
+    {
+        /// <summary>Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)]</summary>
+        [JsonProperty("id", Required = Required.Always)]
+        public string Id { get; set; }
+        /// <summary>Localised text. Vietnamese is the source language. [json: text (required)]</summary>
+        [JsonProperty("text", Required = Required.Always)]
+        public HanoiText Text { get; set; }
+    }
+
+    [Serializable]
+    public sealed partial class HanoiMinigameModeTask
+    {
+        /// <summary>Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)]</summary>
+        [JsonProperty("id", Required = Required.Always)]
+        public string Id { get; set; }
+        /// <summary>Localised text. Vietnamese is the source language. [json: text (required)]</summary>
+        [JsonProperty("text", Required = Required.Always)]
+        public HanoiText Text { get; set; }
+        /// <summary>phan_loai: the right label id. [json: answer]</summary>
+        [JsonProperty("answer")]
+        public string Answer { get; set; }
+        /// <summary>sap_xep: position in the procedure; tasks sharing an order may be done in any order between themselves. [json: order]</summary>
+        [JsonProperty("order")]
+        public int? Order { get; set; }
+        /// <summary>sap_xep: an action that must never be done (it scores nothing and is a fault). [json: forbidden]</summary>
+        [JsonProperty("forbidden")]
+        public bool? Forbidden { get; set; }
+        /// <summary>Weight in the score (forbidden tasks: 0). [json: points (required)]</summary>
+        [JsonProperty("points", Required = Required.Always)]
+        public int Points { get; set; }
+        /// <summary>Faults counted when this task goes wrong (default 1). [json: fault_weight]</summary>
+        [JsonProperty("fault_weight")]
+        public int? FaultWeight { get; set; }
+        /// <summary>Getting this task wrong ends the minigame chua_dat at once, whatever the score (a dossier the bank will reject, a step that ruins the film). [json: critical]</summary>
+        [JsonProperty("critical")]
+        public bool? Critical { get; set; }
+        /// <summary>In play only when the step's params.difficulty is at least this (default 0). [json: min_difficulty]</summary>
+        [JsonProperty("min_difficulty")]
+        public int? MinDifficulty { get; set; }
+        /// <summary>Money on this ledger line (ledger modes). [json: amount_vnd]</summary>
+        [JsonProperty("amount_vnd")]
+        public long? AmountVnd { get; set; }
+        /// <summary>Month of this ledger line, YYYY-MM. [json: date]</summary>
+        [JsonProperty("date")]
+        public string Date { get; set; }
+        /// <summary>Vietnamese explanation shown after the answer (the cause the player should learn). [json: why]</summary>
+        [JsonProperty("why")]
+        public string Why { get; set; }
+    }
+
+    /// <summary>Ledger modes: how the runtime turns the sorted lines into the amount owed under the law (Bộ luật Dân sự 2015 Điều 468: interest above the legal cap has no effect; what was paid above the legal interest counts against the principal).</summary>
+    [Serializable]
+    public sealed partial class HanoiMinigameModeLedger
+    {
+        /// <summary>Label whose amounts are the real principal. [json: principal_label (required)]</summary>
+        [JsonProperty("principal_label", Required = Required.Always)]
+        public string PrincipalLabel { get; set; }
+        /// <summary>Label whose amounts are interest rolled into the principal on paper. [json: capitalized_label]</summary>
+        [JsonProperty("capitalized_label")]
+        public string CapitalizedLabel { get; set; }
+        /// <summary>Label whose amounts were paid to the lender. [json: paid_label (required)]</summary>
+        [JsonProperty("paid_label", Required = Required.Always)]
+        public string PaidLabel { get; set; }
+        /// <summary>Month the loan started. [json: start (required)]</summary>
+        [JsonProperty("start", Required = Required.Always)]
+        public string Start { get; set; }
+        /// <summary>Month the ledger is closed. [json: as_of (required)]</summary>
+        [JsonProperty("as_of", Required = Required.Always)]
+        public string AsOf { get; set; }
+        /// <summary>[json: legal_rate_per_year (required)]</summary>
+        [JsonProperty("legal_rate_per_year", Required = Required.Always)]
+        public double LegalRatePerYear { get; set; }
+        /// <summary>What the story says (dialogue); the runtime's number must round to it (tests). [json: expected_owed_vnd (required)]</summary>
+        [JsonProperty("expected_owed_vnd", Required = Required.Always)]
+        public long ExpectedOwedVnd { get; set; }
+        /// <summary>Rounding the story allows ('khoảng bốn trăm sáu mươi triệu'). [json: tolerance_vnd]</summary>
+        [JsonProperty("tolerance_vnd")]
+        public long? ToleranceVnd { get; set; }
+    }
+
+    /// <summary>Row of collection 'minigame_modes' (id unique in the collection). Rules of a minigame named by a mission step's params.mode (steps[].kind = minigame). The step gives the bar (pass_score, max_faults, time_limit_s, difficulty); the mode gives what is played: tasks the player answers (mechanic phan_loai: sort each task into one of `labels`) or performs (mechanic sap_xep: do the steps in `order`; `forbidden` tasks must never be done). Score = 100 x points of tasks done right / points of the tasks in play. A step passes (outcome dat) when every task is done, the score reaches pass_score, faults stay within max_faults, no critical task went wrong and time_limit_s did not run out; otherwise the step ends chua_dat and the mission's branch carries the consequence. Tasks with min_difficulty above the step's difficulty stay out of play, so the same mode is harder in a later chapter. Runtime: UHanoiMinigameSubsystem (UE), MinigameSystem (Unity core); reference model and golden plays: tools/runtime_rules.py.</summary>
+    [Serializable]
+    public sealed partial class HanoiMinigameModeRow : IHanoiRow
+    {
+        /// <summary>Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)]</summary>
+        [JsonProperty("id", Required = Required.Always)]
+        public string Id { get; set; }
+        /// <summary>[json: tags]</summary>
+        [JsonProperty("tags")]
+        public List<string> Tags { get; set; } = new List<string>();
+        /// <summary>Localised text. Vietnamese is the source language. [json: name (required)]</summary>
+        [JsonProperty("name", Required = Required.Always)]
+        public HanoiText DisplayName { get; set; }
+        /// <summary>What the player is doing and why it is hard, shown before the minigame. [json: description (required)]</summary>
+        [JsonProperty("description", Required = Required.Always)]
+        public HanoiText Description { get; set; }
+        /// <summary>characters:&lt;id&gt; who plays it (the mission step's protagonist). [json: protagonist (required)]</summary>
+        [JsonProperty("protagonist", Required = Required.Always)]
+        public HanoiRef Protagonist { get; set; }
+        /// <summary>phan_loai = sort every task into one label (a wrong label is a fault); sap_xep = perform tasks one at a time, a task is right only when every task of a lower order is already done, a forbidden task done is a fault. [json: mechanic (required)]</summary>
+        [JsonProperty("mechanic", Required = Required.Always)]
+        public HanoiMinigameModeMechanic Mechanic { get; set; } = HanoiMinigameModeMechanic.Unset;
+        /// <summary>Cause and effect of losing, in Vietnamese (Tứ diệu đế: what the loss costs and why). [json: stakes (required)]</summary>
+        [JsonProperty("stakes", Required = Required.Always)]
+        public string Stakes { get; set; }
+        /// <summary>phan_loai: the bins a task can be sorted into. [json: labels]</summary>
+        [JsonProperty("labels")]
+        public List<HanoiMinigameModeLabel> Labels { get; set; } = new List<HanoiMinigameModeLabel>();
+        /// <summary>[json: tasks (required)]</summary>
+        [JsonProperty("tasks", Required = Required.Always)]
+        public List<HanoiMinigameModeTask> Tasks { get; set; } = new List<HanoiMinigameModeTask>();
+        /// <summary>Ledger modes: how the runtime turns the sorted lines into the amount owed under the law (Bộ luật Dân sự 2015 Điều 468: interest above the legal cap has no effect; what was paid above the legal interest counts against the principal). [json: ledger]</summary>
+        [JsonProperty("ledger")]
+        public HanoiMinigameModeLedger Ledger { get; set; } = new HanoiMinigameModeLedger();
+        /// <summary>Where the procedure or the numbers come from. [json: sources]</summary>
+        [JsonProperty("sources")]
+        public List<string> Sources { get; set; } = new List<string>();
     }
 
     [Serializable]
@@ -1584,8 +1907,10 @@ namespace HanoiCity.Content
             { "districts", typeof(HanoiDistrictRow) },
             { "events", typeof(HanoiEventRow) },
             { "factions", typeof(HanoiFactionRow) },
+            { "flood_layers", typeof(HanoiFloodLayerRow) },
             { "items", typeof(HanoiItemRow) },
             { "landmarks", typeof(HanoiLandmarkRow) },
+            { "minigame_modes", typeof(HanoiMinigameModeRow) },
             { "missions", typeof(HanoiMissionRow) },
             { "radio", typeof(HanoiRadioStationRow) },
             { "random_events", typeof(HanoiRandomEventsRow) },

@@ -51,6 +51,30 @@ struct HANOICITYRUNTIME_API FHanoiPlayerState
 	/** Hanoi game time of the last fine (mission apply_fine or a noticed violation); zero = none yet. Drives the clean-record flag. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
 	FDateTime LastFineGameTime;
+
+	/** Random event id -> times it fired this playthrough (spawn.max_per_playthrough). UHanoiRandomEventSubsystem. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
+	TMap<FName, int32> RandomEventCounts;
+
+	/** Random event id -> game time it last fired (spawn.cooldown_days). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
+	TMap<FName, FDateTime> RandomEventLast;
+
+	/** Collectible ids found (collectibles.json). UHanoiCollectibleSubsystem. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
+	TSet<FName> Collected;
+
+	/** Cassette numbers 1-24 the player can play. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
+	TSet<int32> Tapes;
+
+	/** flood_layers id running (a mission step's params.flood_layer), None = no flood. UHanoiFloodSubsystem. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
+	FName ActiveFloodLayer;
+
+	/** Game time the running flood layer started (its t = 0). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
+	FDateTime FloodLayerStart;
 };
 
 UCLASS()

@@ -1849,6 +1849,71 @@
           "text": {
             "vi": "Tôi đã đi gõ cửa nhà ấy năm lần vì quỹ khuyến học. Tôi gõ lần thứ sáu cho cháu. Nhưng cả tổ sẽ biết là cháu bỏ sót. \"Một lần bất tín, vạn lần bất tin\", cháu nhớ."
           }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Dạ..."
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Lần thứ sáu cháu đi gõ cửa cùng ông. Cháu gọi sang Úc ngay trước mặt ông."
+              },
+              "goto": "l05a",
+              "effect": {
+                "set_flags": [
+                  "lan_di_go_cua_33"
+                ],
+                "reputation": {
+                  "to_dan_pho_hang_chieu": -2
+                }
+              }
+            },
+            {
+              "text": {
+                "vi": "Ông cho cháu số người ở Úc, cháu tự xử lý cho nhanh."
+              },
+              "goto": "l05a",
+              "effect": {
+                "reputation": {
+                  "to_dan_pho_hang_chieu": -8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "l05a",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Thế thì mai bảy giờ. Mang theo cái bút của cháu, nhà ấy không có bút đâu."
+          },
+          "condition": {
+            "flags": [
+              "lan_di_go_cua_33"
+            ]
+          }
+        },
+        {
+          "id": "l05b",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Số đây. Nhanh thì nhanh, nhưng người ta nhớ mặt người gõ cửa, không nhớ số điện thoại."
+          },
+          "condition": {
+            "not_flags": [
+              "lan_di_go_cua_33"
+            ]
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Thôi, ngồi xuống. Còn mười chín hộ nữa, soát lại từ đầu."
+          }
         }
       ]
     },

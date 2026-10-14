@@ -1,0 +1,702 @@
+{
+  "collection": "minigame_modes",
+  "items": [
+    {
+      "id": "dung_lai_dong_tien",
+      "tags": [
+        "chuong_3",
+        "lan",
+        "tai_chinh"
+      ],
+      "name": {
+        "vi": "Dựng lại dòng tiền",
+        "en": "Rebuild the cash flow"
+      },
+      "description": {
+        "vi": "Sáu năm chuyển khoản lẫn với tiền kem trộn trong sổ chốt đơn, sáu tờ giấy vay anh Tùng giữ. Lan xếp từng dòng vào đúng ô: gốc thật, lãi bị cộng vào gốc, tiền đã trả, hay không liên quan. Xếp đúng thì luật tự tính ra cô Hạnh còn nợ bao nhiêu."
+      },
+      "protagonist": "characters:lan",
+      "mechanic": "phan_loai",
+      "stakes": "Khổ: cô Hạnh tin mình nợ một tỷ tám. Tập: Lan tin con số trên giấy người ta đưa. Diệt: tính từ tiền thật sự đã chuyển. Đạo: xếp đúng từng dòng. Thua thì số không khớp, Lan phải ngủ trên sofa đến sáng và tính lại; cô Hạnh ngồi nhìn đến hai giờ sáng.",
+      "labels": [
+        {
+          "id": "goc_that",
+          "text": {
+            "vi": "Gốc thật (tiền cô thật sự nhận)"
+          }
+        },
+        {
+          "id": "lai_nhap_goc",
+          "text": {
+            "vi": "Lãi bị cộng vào gốc khi viết giấy mới"
+          }
+        },
+        {
+          "id": "da_tra",
+          "text": {
+            "vi": "Tiền đã trả cho anh Tùng"
+          }
+        },
+        {
+          "id": "khong_lien_quan",
+          "text": {
+            "vi": "Không liên quan đến khoản vay"
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "giay_1",
+          "text": {
+            "vi": "Tờ giấy vay số 1, tháng 11/2021: 600 triệu, lãi 3.000 đồng/triệu/ngày"
+          },
+          "points": 3,
+          "answer": "goc_that",
+          "amount_vnd": 600000000,
+          "date": "2021-11",
+          "critical": true,
+          "why": "Đây là số tiền cô Hạnh thật sự cầm về. Nhầm gốc thì mọi con số sau đều sai."
+        },
+        {
+          "id": "giay_2",
+          "text": {
+            "vi": "Tờ số 2, Tết Nhâm Dần 2022: gốc ghi 780 triệu (tăng 180 triệu)"
+          },
+          "points": 2,
+          "answer": "lai_nhap_goc",
+          "amount_vnd": 180000000,
+          "date": "2022-02",
+          "why": "Không có đồng nào chuyển cho cô; phần tăng là lãi không trả nổi bị viết thành gốc."
+        },
+        {
+          "id": "giay_3",
+          "text": {
+            "vi": "Tờ số 3, Tết Quý Mão 2023: gốc ghi 960 triệu (tăng 180 triệu)"
+          },
+          "points": 2,
+          "answer": "lai_nhap_goc",
+          "amount_vnd": 180000000,
+          "date": "2023-01"
+        },
+        {
+          "id": "giay_4",
+          "text": {
+            "vi": "Tờ số 4, Tết Giáp Thìn 2024: gốc ghi 1 tỷ 170 (tăng 210 triệu)"
+          },
+          "points": 2,
+          "answer": "lai_nhap_goc",
+          "amount_vnd": 210000000,
+          "date": "2024-02"
+        },
+        {
+          "id": "giay_5",
+          "text": {
+            "vi": "Tờ số 5, Tết Ất Tỵ 2025: gốc ghi 1 tỷ 450 (tăng 280 triệu)"
+          },
+          "points": 2,
+          "answer": "lai_nhap_goc",
+          "amount_vnd": 280000000,
+          "date": "2025-01"
+        },
+        {
+          "id": "giay_6",
+          "text": {
+            "vi": "Tờ số 6, Tết Bính Ngọ 2026, tờ cô chụp vội: gốc ghi 1 tỷ 800 (tăng 350 triệu)"
+          },
+          "points": 2,
+          "answer": "lai_nhap_goc",
+          "amount_vnd": 350000000,
+          "date": "2026-02",
+          "why": "Một tỷ tám là sáu trăm triệu gốc cộng một tỷ hai lãi đảo qua năm cái Tết."
+        },
+        {
+          "id": "tien_mat_2021",
+          "text": {
+            "vi": "Hai tháng cuối 2021: không có chuyển khoản, chỉ có ảnh cô khoe trong nhóm chị em 'trả nợ xong tháng này rồi'"
+          },
+          "points": 2,
+          "answer": "da_tra",
+          "amount_vnd": 24000000,
+          "date": "2021-12",
+          "why": "Anh Tùng đến tận nhà lấy tiền mặt. Ảnh trong máy cũ là bằng chứng."
+        },
+        {
+          "id": "ck_2022",
+          "text": {
+            "vi": "Mười hai lần chuyển khoản 12 triệu năm 2022, nội dung 'HANH CK'"
+          },
+          "points": 1,
+          "answer": "da_tra",
+          "amount_vnd": 144000000,
+          "date": "2022-12"
+        },
+        {
+          "id": "ck_2023",
+          "text": {
+            "vi": "Mười hai lần chuyển khoản 12 triệu năm 2023"
+          },
+          "points": 1,
+          "answer": "da_tra",
+          "amount_vnd": 144000000,
+          "date": "2023-12"
+        },
+        {
+          "id": "ck_2024",
+          "text": {
+            "vi": "Mười hai lần chuyển khoản 12 triệu năm 2024"
+          },
+          "points": 1,
+          "answer": "da_tra",
+          "amount_vnd": 144000000,
+          "date": "2024-12"
+        },
+        {
+          "id": "phat_tre_2024",
+          "text": {
+            "vi": "Tháng 2/2024 chuyển thêm 4 triệu, ghi 'phat tre 5 ngay'"
+          },
+          "points": 1,
+          "answer": "da_tra",
+          "amount_vnd": 4000000,
+          "date": "2024-02",
+          "min_difficulty": 3,
+          "why": "Tiền phạt trễ hạn cũng là tiền trả cho chủ nợ, phải trừ vào nợ."
+        },
+        {
+          "id": "ck_2025",
+          "text": {
+            "vi": "Mười hai lần chuyển khoản 12 triệu năm 2025"
+          },
+          "points": 1,
+          "answer": "da_tra",
+          "amount_vnd": 144000000,
+          "date": "2025-12"
+        },
+        {
+          "id": "ck_2026",
+          "text": {
+            "vi": "Mười hai lần chuyển khoản 12 triệu năm 2026"
+          },
+          "points": 1,
+          "answer": "da_tra",
+          "amount_vnd": 144000000,
+          "date": "2026-12"
+        },
+        {
+          "id": "ck_2027",
+          "text": {
+            "vi": "Sáu lần chuyển khoản 12 triệu, tháng 1 đến tháng 6/2027"
+          },
+          "points": 1,
+          "answer": "da_tra",
+          "amount_vnd": 72000000,
+          "date": "2027-06"
+        },
+        {
+          "id": "nhap_kem_tron",
+          "text": {
+            "vi": "Tháng 5/2023 chuyển 35 triệu cho xưởng kem trộn ở Thanh Trì"
+          },
+          "points": 1,
+          "answer": "khong_lien_quan",
+          "amount_vnd": 35000000,
+          "date": "2023-05",
+          "why": "Tiền hàng livestream, lẫn trong sổ chốt đơn."
+        },
+        {
+          "id": "vay_ban_2024",
+          "text": {
+            "vi": "Tháng 3/2024 chị Thoa chuyển vào 12 triệu, ghi 'cho Hanh muon'"
+          },
+          "points": 1,
+          "answer": "khong_lien_quan",
+          "amount_vnd": 12000000,
+          "date": "2024-03",
+          "min_difficulty": 3,
+          "why": "Tiền cô vay bạn để trả anh Tùng là một khoản nợ khác; khoản trả anh Tùng tháng ấy đã nằm trong mười hai lần chuyển khoản."
+        },
+        {
+          "id": "cod_2025",
+          "text": {
+            "vi": "Tháng 9/2025 ví nhận 18 triệu tiền thu hộ đơn hàng"
+          },
+          "points": 1,
+          "answer": "khong_lien_quan",
+          "amount_vnd": 18000000,
+          "date": "2025-09"
+        }
+      ],
+      "ledger": {
+        "principal_label": "goc_that",
+        "capitalized_label": "lai_nhap_goc",
+        "paid_label": "da_tra",
+        "start": "2021-11",
+        "as_of": "2027-07",
+        "legal_rate_per_year": 0.2,
+        "expected_owed_vnd": 460000000,
+        "tolerance_vnd": 5000000
+      },
+      "sources": [
+        "Bộ luật Dân sự 2015, Điều 468: lãi suất thỏa thuận tối đa 20%/năm, phần vượt không có hiệu lực.",
+        "Bộ luật Hình sự 2015, Điều 201: cho vay lãi nặng.",
+        "docs/gdd/13-chuong-3-5.md §9; thoại dlg_c3_02_ket_qua (gốc 600 triệu, đã trả 820 triệu, còn khoảng 460 triệu)."
+      ]
+    },
+    {
+      "id": "tham_dinh_cheo",
+      "tags": [
+        "chuong_3",
+        "lan",
+        "ho_so"
+      ],
+      "name": {
+        "vi": "Thẩm định chéo hồ sơ tự quản",
+        "en": "Cross-check the self-managed dossier"
+      },
+      "description": {
+        "vi": "Mười chín bộ giấy tờ nhà trên Hàng Chiếu, Hàng Bạc. Lan đọc từng bộ như phòng tín dụng sẽ đọc, tìm hộ đồng sở hữu chưa chia thừa kế trước khi ngân hàng tìm ra."
+      },
+      "protagonist": "characters:lan",
+      "mechanic": "phan_loai",
+      "stakes": "Khổ: một hộ sai là cả hồ sơ bị trả về. Tập: Lan quen tin chữ ký đầu tiên. Diệt: đọc tên trên sổ trước khi đọc chữ ký. Đạo: xếp từng hộ. Bỏ sót một hộ đồng sở hữu thì ông Khang phải gõ cửa thay, và cả tổ biết Lan bỏ sót.",
+      "labels": [
+        {
+          "id": "hop_le",
+          "text": {
+            "vi": "Đủ điều kiện"
+          }
+        },
+        {
+          "id": "dong_so_huu_chua_chia",
+          "text": {
+            "vi": "Đồng sở hữu chưa chia thừa kế: cần chữ ký đủ người thừa kế"
+          }
+        },
+        {
+          "id": "can_bo_sung",
+          "text": {
+            "vi": "Thiếu giấy tờ, bổ sung được trong ngày"
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "hc_33",
+          "text": {
+            "vi": "Số 33 Hàng Chiếu: sổ đỏ đứng tên cụ ông Đặng Văn Lộc. Người ký là con trai cả, kèm giấy chứng tử của cụ năm 2019."
+          },
+          "points": 3,
+          "answer": "dong_so_huu_chua_chia",
+          "critical": true,
+          "min_difficulty": 3,
+          "why": "Cụ mất chưa khai nhận thừa kế: ba người con đồng sở hữu, một người ở Úc. Chữ ký của một người thì ngân hàng trả hồ sơ."
+        },
+        {
+          "id": "hb_12",
+          "text": {
+            "vi": "Số 12 Hàng Bạc: sổ hồng đứng tên hai vợ chồng, ông chồng mất năm 2016. Bà vợ ký một mình."
+          },
+          "points": 3,
+          "answer": "dong_so_huu_chua_chia",
+          "critical": true,
+          "why": "Phần của ông chồng là di sản chưa chia; các con là người thừa kế phải cùng ký."
+        },
+        {
+          "id": "hc_58",
+          "text": {
+            "vi": "Số 58 Hàng Chiếu: ba anh em chia tầng bằng giấy viết tay năm 2005, sổ vẫn tên bố đã mất."
+          },
+          "points": 3,
+          "answer": "dong_so_huu_chua_chia",
+          "critical": true,
+          "why": "Giấy viết tay không phải văn bản phân chia di sản; về pháp lý nhà vẫn là di sản chung."
+        },
+        {
+          "id": "hc_21",
+          "text": {
+            "vi": "Số 21 Hàng Chiếu: chủ hộ ký đủ, ảnh căn cước công dân chụp mờ không đọc được số."
+          },
+          "points": 2,
+          "answer": "can_bo_sung"
+        },
+        {
+          "id": "hb_40",
+          "text": {
+            "vi": "Số 40 Hàng Bạc: chủ nhà ly hôn năm 2018, thiếu bản án chia tài sản."
+          },
+          "points": 2,
+          "answer": "can_bo_sung",
+          "min_difficulty": 3,
+          "why": "Ly hôn rồi thì phải có bản án hoặc thỏa thuận chia tài sản chứng minh nhà là của riêng."
+        },
+        {
+          "id": "hc_8",
+          "text": {
+            "vi": "Số 8 Hàng Chiếu: sổ hồng cấp 2012 đứng tên bà Hòa, bà ký, căn cước rõ."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hc_14",
+          "text": {
+            "vi": "Số 14 Hàng Chiếu: sổ tên hai vợ chồng, cả hai cùng ký."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hc_17",
+          "text": {
+            "vi": "Số 17 Hàng Chiếu: hộ bán nước chè, sổ tên ông Tám, ông ký."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hc_26",
+          "text": {
+            "vi": "Số 26 Hàng Chiếu: nhà đã khai nhận thừa kế năm 2020, văn bản công chứng kèm theo, hai chị em cùng ký."
+          },
+          "points": 1,
+          "answer": "hop_le",
+          "why": "Đã khai nhận và cùng ký thì đủ, dù từng là di sản."
+        },
+        {
+          "id": "hc_30",
+          "text": {
+            "vi": "Số 30 Hàng Chiếu: sổ tên anh Dũng, có giấy xác nhận độc thân."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hc_37",
+          "text": {
+            "vi": "Số 37 Hàng Chiếu: sổ tên hai vợ chồng, chồng đi làm ở Đài Loan, có giấy ủy quyền công chứng cho vợ."
+          },
+          "points": 1,
+          "answer": "hop_le",
+          "min_difficulty": 3,
+          "why": "Ủy quyền công chứng thì người vợ ký thay được."
+        },
+        {
+          "id": "hc_42",
+          "text": {
+            "vi": "Số 42 Hàng Chiếu: hộ làm chiếu cói cũ, sổ tên bà Mai, bà ký."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hc_45",
+          "text": {
+            "vi": "Số 45 Hàng Chiếu: sổ tên ông Hùng, ông ký, căn cước rõ."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hc_53",
+          "text": {
+            "vi": "Số 53 Hàng Chiếu: sổ tên hai vợ chồng trẻ, cả hai ký."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hc_62",
+          "text": {
+            "vi": "Số 62 Hàng Chiếu: sổ tên bà Lụa, bà ký bằng điểm chỉ có người làm chứng của phường."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hb_5",
+          "text": {
+            "vi": "Số 5 Hàng Bạc: tiệm vàng, sổ tên công ty gia đình, có biên bản họp thành viên đồng ý."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hb_19",
+          "text": {
+            "vi": "Số 19 Hàng Bạc: sổ tên ông Khang, ông ký."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hb_27",
+          "text": {
+            "vi": "Số 27 Hàng Bạc: sổ tên chị Ngọc, có giấy đăng ký kết hôn, chồng ký cùng."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        },
+        {
+          "id": "hb_33",
+          "text": {
+            "vi": "Số 33 Hàng Bạc: sổ tên ông bà Thịnh, hai người cùng ký."
+          },
+          "points": 1,
+          "answer": "hop_le"
+        }
+      ],
+      "sources": [
+        "Bộ luật Dân sự 2015, Điều 209 và 218: sở hữu chung, định đoạt tài sản chung cần sự đồng ý của các chủ sở hữu chung.",
+        "Bộ luật Dân sự 2015, Điều 623: thời hiệu chia di sản là bất động sản 30 năm.",
+        "Thoại dlg_c3_05_bo_sot (số 33, ba người con chưa chia, một người ở Úc)."
+      ]
+    },
+    {
+      "id": "cuu_phim_uot",
+      "tags": [
+        "chuong_4",
+        "khoi",
+        "tu_lieu"
+      ],
+      "name": {
+        "vi": "Cứu phim ướt",
+        "en": "Save the wet film"
+      },
+      "description": {
+        "vi": "Hộp phim âm bản dưới cùng đã ngấm nước bão. Khôi làm đúng thứ tự người làm lưu trữ vẫn làm, và tránh mấy việc ai vội cũng muốn làm."
+      },
+      "protagonist": "characters:khoi",
+      "mechanic": "sap_xep",
+      "stakes": "Khổ: kho phim của bố chạm nước, ba tuần sau mới mở. Tập: muốn nhanh, muốn sấy. Diệt: làm chậm, đúng thứ tự. Đạo: từng bước. Thua thì ba khung mất hẳn, triển lãm 10/10 có một khung trống (trien_lam_khung_trong), bảo tàng không nhận lưu trữ kho phim và lựa chọn ở lại làm người lưu trữ biến mất ở chương 5.",
+      "tasks": [
+        {
+          "id": "ngam_nuoc_sach",
+          "text": {
+            "vi": "Đặt cả hộp phim vào chậu nước sạch, lạnh, không để phần nào khô ra"
+          },
+          "points": 2,
+          "order": 1,
+          "why": "Phim ướt mà để khô dở thì nhũ dính vào nhau mãi mãi."
+        },
+        {
+          "id": "deo_gang",
+          "text": {
+            "vi": "Đeo găng nitrile, chỉ cầm mép phim"
+          },
+          "points": 1,
+          "order": 2
+        },
+        {
+          "id": "tach_trong_nuoc",
+          "text": {
+            "vi": "Gỡ từng dải ra khỏi cuộn ngay trong nước"
+          },
+          "points": 2,
+          "order": 3
+        },
+        {
+          "id": "rua_bun",
+          "text": {
+            "vi": "Rửa từng dải dưới vòi nước sạch chảy nhẹ, không chạm mặt nhũ"
+          },
+          "points": 2,
+          "order": 4
+        },
+        {
+          "id": "thuoc_lam_uot",
+          "text": {
+            "vi": "Nhúng qua dung dịch làm ướt pha loãng để nước không đọng vệt"
+          },
+          "points": 1,
+          "order": 5,
+          "min_difficulty": 4
+        },
+        {
+          "id": "treo_phoi",
+          "text": {
+            "vi": "Treo từng dải bằng kẹp, góc phòng thoáng, sạch bụi, nhiệt độ phòng"
+          },
+          "points": 2,
+          "order": 6
+        },
+        {
+          "id": "cat_vao_bia",
+          "text": {
+            "vi": "Khi khô hẳn: cắt dải sáu khung, cho vào bìa giấy không a-xít, ghi số cuộn"
+          },
+          "points": 1,
+          "order": 7,
+          "min_difficulty": 4
+        },
+        {
+          "id": "say_nong",
+          "text": {
+            "vi": "Sấy bằng máy sấy tóc cho nhanh"
+          },
+          "points": 0,
+          "forbidden": true,
+          "critical": true,
+          "fault_weight": 2,
+          "why": "Nhiệt làm nhũ gelatin chảy và dính, khung hình mất hẳn."
+        },
+        {
+          "id": "boc_khi_kho",
+          "text": {
+            "vi": "Bóc hai dải đã khô dính vào nhau"
+          },
+          "points": 0,
+          "forbidden": true,
+          "critical": true,
+          "fault_weight": 2,
+          "why": "Bóc khô là xé nhũ: ba khung hình thành vệt nâu."
+        },
+        {
+          "id": "phoi_nang",
+          "text": {
+            "vi": "Mang lên sân thượng phơi nắng"
+          },
+          "points": 0,
+          "forbidden": true,
+          "why": "Nắng làm phim cong, khô không đều, nứt nhũ."
+        },
+        {
+          "id": "lau_khan",
+          "text": {
+            "vi": "Lau khô mặt nhũ bằng khăn"
+          },
+          "points": 0,
+          "forbidden": true,
+          "min_difficulty": 4,
+          "why": "Khăn kéo bùn còn sót xước lên nhũ."
+        }
+      ],
+      "sources": [
+        "NEDCC (Northeast Document Conservation Center), hướng dẫn cứu ảnh và phim ướt: giữ ướt cho đến khi rửa được, rửa nước sạch, phơi tự nhiên, không dùng nhiệt.",
+        "Image Permanence Institute: nhũ gelatin mềm khi ướt, dính khi khô dở."
+      ]
+    },
+    {
+      "id": "cuu_bang_uot",
+      "tags": [
+        "chuong_4",
+        "khoi",
+        "tu_lieu"
+      ],
+      "name": {
+        "vi": "Cứu băng ướt",
+        "en": "Save the wet tapes"
+      },
+      "description": {
+        "vi": "Hộp băng cát-sét của bố ngấm nước từ đáy lên. Khôi tháo từng cuộn, phơi trong bóng râm và chép giọng bố ra trước khi băng mủn."
+      },
+      "protagonist": "characters:khoi",
+      "mechanic": "sap_xep",
+      "stakes": "Khổ: giọng bố chỉ còn trong mười hai cuộn băng. Tập: muốn nghe ngay xem còn tiếng không. Diệt: chưa nghe vội. Đạo: từng bước. Thua thì năm cuộn đứt, triển lãm mất giọng ông Khải (trien_lam_mat_tieng), bảo tàng không nhận lưu trữ và lựa chọn ở lại làm người lưu trữ biến mất ở chương 5.",
+      "tasks": [
+        {
+          "id": "lay_ra_khoi_hop",
+          "text": {
+            "vi": "Lấy từng cuộn ra khỏi hộp ngấm nước, đặt đứng trên khăn sạch"
+          },
+          "points": 1,
+          "order": 1
+        },
+        {
+          "id": "thao_vo",
+          "text": {
+            "vi": "Tháo năm con vít, mở vỏ, nhấc hai bánh băng ra nguyên vẹn"
+          },
+          "points": 2,
+          "order": 2
+        },
+        {
+          "id": "rua_nuoc_cat",
+          "text": {
+            "vi": "Bánh nào dính bùn thì nhúng nhẹ qua nước cất, không chà"
+          },
+          "points": 2,
+          "order": 3,
+          "min_difficulty": 4
+        },
+        {
+          "id": "phoi_bong_ram",
+          "text": {
+            "vi": "Đặt bánh băng đứng trong bóng râm, quạt nhẹ, nhiệt độ phòng, lật mỗi ngày"
+          },
+          "points": 2,
+          "order": 4
+        },
+        {
+          "id": "lau_dau_tu",
+          "text": {
+            "vi": "Lau đầu từ và trục kéo băng của máy bằng cồn và tăm bông"
+          },
+          "points": 1,
+          "order": 5
+        },
+        {
+          "id": "vo_moi",
+          "text": {
+            "vi": "Lắp băng đã khô vào vỏ cát-sét mới"
+          },
+          "points": 1,
+          "order": 6
+        },
+        {
+          "id": "so_hoa",
+          "text": {
+            "vi": "Chép ngay sang máy tính, mỗi cuộn chỉ cho chạy một lần"
+          },
+          "points": 2,
+          "order": 7
+        },
+        {
+          "id": "bam_thu",
+          "text": {
+            "vi": "Cho vào máy bấm thử xem còn tiếng không"
+          },
+          "points": 0,
+          "forbidden": true,
+          "critical": true,
+          "fault_weight": 2,
+          "why": "Băng ướt chạy qua đầu từ là dính, kéo đứt, và làm bẩn đầu từ cho mọi cuộn sau."
+        },
+        {
+          "id": "may_say",
+          "text": {
+            "vi": "Sấy bằng máy sấy tóc"
+          },
+          "points": 0,
+          "forbidden": true,
+          "fault_weight": 2,
+          "why": "Nhiệt làm băng co, lớp từ bong."
+        },
+        {
+          "id": "phoi_nang",
+          "text": {
+            "vi": "Phơi nắng trên sân thượng"
+          },
+          "points": 0,
+          "forbidden": true,
+          "why": "Nắng làm băng cong vênh, giòn."
+        },
+        {
+          "id": "keo_tay",
+          "text": {
+            "vi": "Kéo dải băng dính ra thật nhanh bằng tay"
+          },
+          "points": 0,
+          "forbidden": true,
+          "critical": true,
+          "fault_weight": 2,
+          "min_difficulty": 4,
+          "why": "Băng đứt từng đoạn, giọng trong đoạn ấy mất."
+        }
+      ],
+      "sources": [
+        "Library of Congress, hướng dẫn xử lý băng từ bị ướt: không chạy băng còn ướt, làm khô tự nhiên ở nhiệt độ phòng, không dùng nhiệt.",
+        "NEDCC, Emergency Salvage of Wet Materials: tách vỏ, phơi đứng, lưu thông không khí."
+      ]
+    }
+  ]
+}

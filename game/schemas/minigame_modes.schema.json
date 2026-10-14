@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "minigame_modes.schema.json",
+  "title": "Minigame modes",
+  "description": "Rules of a minigame named by a mission step's params.mode (steps[].kind = minigame). The step gives the bar (pass_score, max_faults, time_limit_s, difficulty); the mode gives what is played: tasks the player answers (mechanic phan_loai: sort each task into one of `labels`) or performs (mechanic sap_xep: do the steps in `order`; `forbidden` tasks must never be done). Score = 100 x points of tasks done right / points of the tasks in play. A step passes (outcome dat) when every task is done, the score reaches pass_score, faults stay within max_faults, no critical task went wrong and time_limit_s did not run out; otherwise the step ends chua_dat and the mission's branch carries the consequence. Tasks with min_difficulty above the step's difficulty stay out of play, so the same mode is harder in a later chapter. Runtime: UHanoiMinigameSubsystem (UE), MinigameSystem (Unity core); reference model and golden plays: tools/runtime_rules.py.",
+  "x-collection": "minigame_modes",
+  "type": "object",
+  "required": ["collection", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "collection": {"const": "minigame_modes"},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description", "protagonist", "mechanic", "stakes", "tasks"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"$ref": "common.schema.json#/$defs/id"},
+          "tags": {"$ref": "common.schema.json#/$defs/tags"},
+          "name": {"$ref": "common.schema.json#/$defs/text"},
+          "description": {"$ref": "common.schema.json#/$defs/text", "description": "What the player is doing and why it is hard, shown before the minigame."},
+          "protagonist": {"$ref": "common.schema.json#/$defs/ref", "description": "characters:<id> who plays it (the mission step's protagonist)."},
+          "mechanic": {
+            "description": "phan_loai = sort every task into one label (a wrong label is a fault); sap_xep = perform tasks one at a time, a task is right only when every task of a lower order is already done, a forbidden task done is a fault.",
+            "enum": ["phan_loai", "sap_xep"]
+          },
+          "stakes": {"type": "string", "description": "Cause and effect of losing, in Vietnamese (Tứ diệu đế: what the loss costs and why)."},
+          "labels": {
+            "description": "phan_loai: the bins a task can be sorted into.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "text"],
+              "additionalProperties": false,
+              "properties": {
+                "id": {"$ref": "common.schema.json#/$defs/id"},
+                "text": {"$ref": "common.schema.json#/$defs/text"}
+              }
+            }
+          },
+          "tasks": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["id", "text", "points"],
+              "additionalProperties": false,
+              "properties": {
+                "id": {"$ref": "common.schema.json#/$defs/id"},
+                "text": {"$ref": "common.schema.json#/$defs/text"},
+                "answer": {"$ref": "common.schema.json#/$defs/id", "description": "phan_loai: the right label id."},
+                "order": {"type": "integer", "minimum": 1, "description": "sap_xep: position in the procedure; tasks sharing an order may be done in any order between themselves."},
+                "forbidden": {"type": "boolean", "description": "sap_xep: an action that must never be done (it scores nothing and is a fault)."},
+                "points": {"type": "integer", "minimum": 0, "maximum": 10, "description": "Weight in the score (forbidden tasks: 0)."},
+                "fault_weight": {"type": "integer", "minimum": 1, "maximum": 5, "description": "Faults counted when this task goes wrong (default 1)."},
+                "critical": {"type": "boolean", "description": "Getting this task wrong ends the minigame chua_dat at once, whatever the score (a dossier the bank will reject, a step that ruins the film)."},
+                "min_difficulty": {"type": "integer", "minimum": 0, "maximum": 10, "description": "In play only when the step's params.difficulty is at least this (default 0)."},
+                "amount_vnd": {"$ref": "common.schema.json#/$defs/money_vnd", "description": "Money on this ledger line (ledger modes)."},
+                "date": {"type": "string", "pattern": "^\\d{4}-\\d{2}$", "description": "Month of this ledger line, YYYY-MM."},
+                "why": {"type": "string", "description": "Vietnamese explanation shown after the answer (the cause the player should learn)."}
+              }
+            }
+          },
+          "ledger": {
+            "description": "Ledger modes: how the runtime turns the sorted lines into the amount owed under the law (Bộ luật Dân sự 2015 Điều 468: interest above the legal cap has no effect; what was paid above the legal interest counts against the principal).",
+            "type": "object",
+            "required": ["principal_label", "paid_label", "start", "as_of", "legal_rate_per_year", "expected_owed_vnd"],
+            "additionalProperties": false,
+            "properties": {
+              "principal_label": {"$ref": "common.schema.json#/$defs/id", "description": "Label whose amounts are the real principal."},
+              "capitalized_label": {"$ref": "common.schema.json#/$defs/id", "description": "Label whose amounts are interest rolled into the principal on paper."},
+              "paid_label": {"$ref": "common.schema.json#/$defs/id", "description": "Label whose amounts were paid to the lender."},
+              "start": {"type": "string", "pattern": "^\\d{4}-\\d{2}$", "description": "Month the loan started."},
+              "as_of": {"type": "string", "pattern": "^\\d{4}-\\d{2}$", "description": "Month the ledger is closed."},
+              "legal_rate_per_year": {"type": "number", "minimum": 0, "maximum": 1},
+              "expected_owed_vnd": {"$ref": "common.schema.json#/$defs/money_vnd", "description": "What the story says (dialogue); the runtime's number must round to it (tests)."},
+              "tolerance_vnd": {"$ref": "common.schema.json#/$defs/money_vnd", "description": "Rounding the story allows ('khoảng bốn trăm sáu mươi triệu')."}
+            }
+          },
+          "sources": {"type": "array", "items": {"type": "string"}, "description": "Where the procedure or the numbers come from."}
+        }
+      }
+    }
+  }
+}
