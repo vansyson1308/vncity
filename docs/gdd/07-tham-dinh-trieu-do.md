@@ -150,10 +150,10 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
    người chơi; rồi về P1 (11 §3).
 4. ~~Ba hệ quả trong chương 1 đọc lại cờ của chính chương 1 (ví dụ ở trên).~~ **Đã làm:** 35 cặp
    (nhiệm vụ, cờ) trả trong chương 1, gồm cả hai ví dụ trên và bản sửa `10-sua-chuong-1.md` (11 §5).
-5. Viết chương 2 "Mùa nồm" thành dữ liệu: 9-10 nhiệm vụ, trả ít nhất 10 cờ; đưa vụ ông Tư Hàng
-   Bạc lên sớm làm hành động đầu tiên của Kim Long. **Đang làm ở PR #9 (luồng "Chơi thử và thẩm định
-   cốt truyện"): 8 nhiệm vụ, phủ cả 6 quận trống, điểm nhấn Giao thừa Hồ Gươm; bản nháp chương 2 của
-   luồng này đã bàn giao (11 §6).**
+5. ~~Viết chương 2 "Mùa nồm" thành dữ liệu: 9-10 nhiệm vụ, trả ít nhất 10 cờ; đưa vụ ông Tư Hàng
+   Bạc lên sớm làm hành động đầu tiên của Kim Long.~~ **Đã làm, PR #9 đã merge** (luồng "Chơi thử và
+   thẩm định cốt truyện"): 9 nhiệm vụ `c2_01..c2_08` + `s13`, 32 thoại, phủ 14/14 quận, điểm nhấn Giao
+   thừa Hồ Gươm, minigame thua có giá; dàn ý chương 3-5 trong `08-nhan-qua.md`.
 6. ~~Mỗi quận trống một nhiệm vụ truyện hoặc người lạ: Cầu Giấy (Khôi bán ảnh cho báo ở Duy Tân), Hai
    Bà Trưng (Lan mua vải chợ Hôm, Bách Khoa), Hoàng Mai (chợ Đền Lừ 2h sáng, HH Linh Đàm), Hà Đông
    (Vạn Phúc, ga Yên Nghĩa), Bắc Từ Liêm (Tây Tựu hoa đêm, đình Chèm), Long Biên (Aeon, đê Ngọc Thụy).~~
