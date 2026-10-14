@@ -20,5 +20,7 @@ jobs:
           git diff --exit-code -- ue5/
       - name: Unit tests
         run: python -m pytest -q
+      - name: Story dry run reaches every mission (no dead ends)
+        run: python tools/playtest.py > /dev/null
       - name: Asset prompt pack matches the asset contract
         run: python tools/asset_prompts.py --check

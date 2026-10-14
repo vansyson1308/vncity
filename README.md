@@ -7,11 +7,11 @@ pipeline dựng thành phố, dữ liệu thiết kế game, và harness để n
 | Thư mục | Nội dung |
 | --- | --- |
 | `fetch.py`, `build.py` | Lấy dữ liệu mở (Overture Maps, Copernicus DEM) và dựng khối 3D theo ô |
-| `pipeline/` | Lớp ngữ nghĩa: 13 kiểu nhà Hà Nội, mặt tiền hướng phố, đồ thị giao thông, đạo cụ đường phố cho PCG |
+| `pipeline/` | Lớp ngữ nghĩa: 13 kiểu nhà Hà Nội, mặt tiền hướng phố, đồ thị giao thông, đạo cụ đường phố cho PCG; `run_districts.py` dựng 12 quận nội thành chung một gốc tọa độ |
 | `live/` | Thời tiết thật (hoặc khí hậu nướng sẵn), cập nhật bản đồ khi Overture ra bản mới |
 | `game/schemas`, `game/content` | Thiết kế game dạng dữ liệu: quận, công trình, nhân vật, xe, việc làm, nhiệm vụ, hội thoại, sự kiện, luật giao thông |
 | `ue5/` | Project UE 5.8, plugin `HanoiCity` (C++), script import Python |
-| `tools/` | Kiểm tra nội dung, sinh USTRUCT từ schema, xuất bản xem trước web |
+| `tools/` | Kiểm tra nội dung, giả lập chơi thử cốt truyện (`playtest.py`), sinh USTRUCT từ schema, xuất bản xem trước web |
 | `docs/` | Nghiên cứu, kiến trúc, giấy phép dữ liệu, hướng dẫn tích hợp UE5, lộ trình, tài liệu thiết kế game |
 
 Đọc trước: [docs/02-kien-truc.md](docs/02-kien-truc.md), rồi [docs/06-lo-trinh.md](docs/06-lo-trinh.md). Ngày cắm UE5: [docs/05-tich-hop-ue5.md](docs/05-tich-hop-ue5.md); kết quả QC cuối: [docs/07-qc-checklist.md](docs/07-qc-checklist.md).
@@ -27,6 +27,15 @@ python -m venv venv && ./venv/bin/pip install -r requirements.txt -r requirement
 ./venv/bin/python tools/validate.py      # nội dung game khớp schema, tham chiếu đúng
 ./venv/bin/python -m pytest -q           # kiểm thử
 ./venv/bin/python -m live.weather        # thời tiết Hà Nội ngay lúc này
+```
+
+```bash
+# 12 quận nội thành từ một lần tải (xem docs/11-cac-quan.md): ~5 phút tải, ~2-4 phút dựng mỗi quận
+./venv/bin/python fetch.py --name noi_thanh --bbox 105.72,20.93,105.95,21.12
+./venv/bin/python -m pipeline.fetch_context --name noi_thanh
+./venv/bin/python -m pipeline.run_districts            # pipeline/districts.json: khung từng quận, gốc chung ở hồ Gươm
+./venv/bin/python -m pipeline.verify_landmarks --data noi_thanh --fix   # khớp tọa độ địa danh, không cần mạng
+./venv/bin/python tools/playtest.py                    # chơi thử cốt truyện bằng dữ liệu (docs/gdd/06, 07)
 ```
 
 Kết quả trên khung Hoàn Kiếm (Overture 2026-09-23.0): 17.688 tòa nhà được phân loại theo 13 kiểu

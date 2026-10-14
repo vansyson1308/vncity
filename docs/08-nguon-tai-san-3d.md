@@ -344,3 +344,31 @@ Nguồn: **R** = dùng lại (ghi tên kho), **M** = Megascans hoặc vật li�
 đã chọn ở mục 4 rồi ghi `sources.json`; (3) dựng tay cột điện, dây điện, đèn và kerb (Cao, nhanh);
 (4) thử pipeline AI với 3 đạo cụ (`xe_day_hoa_qua`, `atm`, `scooter`); (5) kit `nha_ong_pho_co`;
 (6) landmark bằng photogrammetry tự chụp.
+
+## Tài sản bổ sung cho 12 quận nội thành
+
+Khi dựng rộng ra 12 quận (Ba Đình, Hoàn Kiếm, Đống Đa, Hai Bà Trưng, Tây Hồ, Cầu Giấy, Thanh Xuân,
+Hoàng Mai, Long Biên, Nam Từ Liêm, Bắc Từ Liêm, Hà Đông), `game/assets/asset_specs.json` có thêm 38 đạo cụ
+trong 11 set mới (tổng 106 đạo cụ, 13 kit mặt tiền giữ nguyên) và key `district_sets` ghi set nào cần nhất ở
+quận nào (id quận theo `pipeline/districts.json`). `ue5/Config/asset_map.json` đã có slot trống cho từng set;
+`prompts.jsonl` sinh lại được 750 prompt. Ký hiệu nguồn như bảng mục 9 (R/M/G/H).
+
+| Set | Nội dung | Nguồn đề xuất |
+| --- | --- | --- |
+| `metro_rail` | Trụ cầu cạn, nhịp dầm chữ U 30 m (scale X), mô-đun ga trên cao 24 m (2 biến thể: tuyến 2A Cát Linh–Hà Đông, tuyến 3 Nhổn–ga Hà Nội) | H (procedural theo spline, lặp nhịp như cầu Long Biên) + M bê tông |
+| `national_rail` | Đoạn ray khổ 1 m (scale X, tà vẹt bê tông/gỗ), chắn tàu sọc đỏ trắng kèm chòi gác | H + M; ray và ba-lát CC0 có sẵn, chắn tàu dựng tay |
+| `river_dike` | Tường đê bê tông 1 m (scale X; biến thể gốm sứ Con đường gốm sứ), cửa khẩu đê, bậc xuống chân đê | H + M; mảng gốm sứ dùng texture tự chụp hoặc G (hoa văn không chữ) |
+| `lakeside` | Lan can ven hồ (3 kiểu: Hồ Tây, Hồ Gươm, hồ mới), thuyền thiên nga, mảng sen, ghế đá có giàn hoa giấy, chỗ câu cá | H cho lan can; G cho thuyền và chỗ câu; sen làm bằng PVE/Blender (H + M) |
+| `rooftop_clutter` | Bồn nước inox trên giá, máy nước nóng mặt trời, cụm cục nóng điều hoà gắn tường | H (hình trụ, khung đơn giản); cục nóng G rồi H tinh chỉnh; tuyệt đối không chữ hãng |
+| `kdt_moi` | Cổng khu đô thị có barie và chòi bảo vệ, barie bãi xe, rào tôn công trường 2,4 m (scale X, in áp phích không chữ), cần trục tháp | H; cần trục R (nhiều model CC0, đổi màu vàng, bỏ chữ); áp phích rào tôn G |
+| `road_structures` | Cầu vượt bộ hành thép, pano quảng cáo cột đơn 12×6 m, nhà chờ BRT giữa đường 20 m, rào dải phân cách 1 m (scale X) | H; mặt pano G theo cách biển hiệu (khung tay, nền sinh, chữ render trong UE) |
+| `ktt_addons` | Chuồng cọp cơi nới (6 biến thể, gắn mặt tường), loa phường trên cột, trạm biến áp kiosk | H + M (tôn, sắt gỉ Poly Haven); chuồng cọp là add-on cho kit `khu_tap_the` |
+| `lang_trong_pho` | Cổng làng (3 kiểu), giếng làng, lan can ao làng 2 m (scale X), cây đa đầu làng | H + M; cây đa H (PVE/Blender) + vỏ, rễ tự chụp; bảng tên cổng để trống, render chữ trong UE |
+| `cho_coc` | Sạp chợ cóc có bạt (6 loại hàng), xe đẩy chè, xe đẩy bắp luộc/khoai nướng | G (imagegen rồi image-to-3D) như `street_vendors`; người bán là nhân vật riêng |
+| `pavement_clutter` | Xe ba gác đồng nát, lò hoá vàng, thùng rác công cộng (3 kiểu), xe gom rác đẩy tay | G cho xe; thùng rác R (CC0 wheelie bin, đổi màu xanh) / H; lò hoá vàng H |
+
+Ghi chú: các mục scale theo một trục (`scale_axes: "x"`) dựng như `cable_spans` — một đoạn chuẩn có hai đầu
+khớp nhau, PCG kéo dài bằng Scale. `billboard_pano` và `hoarding_panel` dùng `route` =
+`hand_mesh_generated_print` nhưng không có dòng `sign_print` trong `prompts.jsonl` (generator chỉ sinh print
+cho `shop_signs`); viết prompt mặt in bằng tay khi làm. Thuyền thiên nga chỉ đặt ở hồ công viên (Bảy Mẫu,
+Thủ Lệ, Trúc Bạch) vì Hồ Tây đã dừng dịch vụ này.

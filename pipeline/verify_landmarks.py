@@ -9,6 +9,7 @@ hand-made asset.
 
 Usage:
   python -m pipeline.verify_landmarks [--radius 700] [--fix]
+  python -m pipeline.verify_landmarks --data noi_thanh --fix   # offline, against a fetched cache
 """
 
 import argparse
@@ -51,6 +52,7 @@ def main():
     ap.add_argument("--min-score", type=float, default=0.6)
     ap.add_argument("--fix", action="store_true")
     ap.add_argument("--max-fix", type=float, default=300.0, help="never move a landmark further than this (m)")
+    ap.add_argument("--data", help="name of a fetched cache under data/ to query instead of Overture on S3")
     a = ap.parse_args()
     doc = json.loads(LANDMARKS.read_text(encoding="utf-8"))
     items = doc["items"]
@@ -63,9 +65,14 @@ def main():
     con = connect()
     feats = []
     for kind, theme, typ in (("place", "places", "place"), ("building", "buildings", "building")):
-        rows = con.sql(f"""SELECT id, names.primary, ST_Y(ST_Centroid(geometry)), ST_X(ST_Centroid(geometry))
-                           FROM {overture(theme, typ)}
-                           WHERE {bbox_filter(w, s, e, n)} AND names.primary IS NOT NULL""").fetchall()
+        if a.data:
+            src = ROOT / "data" / a.data / f"{theme}.parquet"
+            rows = con.sql(f"""SELECT id, name, ST_Y(ST_Centroid(ST_GeomFromWKB(wkb))), ST_X(ST_Centroid(ST_GeomFromWKB(wkb)))
+                               FROM read_parquet('{src}') WHERE name IS NOT NULL""").fetchall()
+        else:
+            rows = con.sql(f"""SELECT id, names.primary, ST_Y(ST_Centroid(geometry)), ST_X(ST_Centroid(geometry))
+                               FROM {overture(theme, typ)}
+                               WHERE {bbox_filter(w, s, e, n)} AND names.primary IS NOT NULL""").fetchall()
         feats += [(kind, *r) for r in rows]
     print(f"{len(feats):,} named features in the landmark bbox")
 
@@ -92,7 +99,7 @@ def main():
             # Big jumps are more often a namesake (a café called after the tower) than a fix.
             if a.fix and lm["kind"] not in AREA_KINDS and d <= a.max_fix:
                 lm["location"] = {"lat": round(flat, 6), "lon": round(flon, 6)}
-                lm["tags"] = [t for t in lm.get("tags", []) if t != "coords_unverified"] + ["coords_verified_overture"]
+                lm["tags"] = [t for t in lm.get("tags", []) if t not in ("coords_unverified", "coords_verified_overture")] + ["coords_verified_overture"]
                 if kind == "building":
                     lm["overture_ids"] = sorted(set(lm.get("overture_ids", [])) | {fid})
                 fixed += 1

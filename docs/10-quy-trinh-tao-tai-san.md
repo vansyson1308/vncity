@@ -9,8 +9,8 @@ tên, đúng kích thước, có nguồn gốc, là bước import UE tự đặ
 
 | File | Vai trò |
 | --- | --- |
-| `game/assets/asset_specs.json` | Hợp đồng: 68 đạo cụ (mọi `Set/Kind` mà pipeline rải) và 13 bộ kit mặt tiền, mỗi mục có kích thước, pivot, trục, ngân sách tam giác, số biến thể, đường làm (`route`) |
-| `game/assets/prompts.jsonl` | 712 prompt sinh ảnh, mỗi dòng một ảnh, có sẵn đường dẫn lưu (`out`). Sinh lại bằng `python tools/asset_prompts.py` |
+| `game/assets/asset_specs.json` | Hợp đồng: 106 đạo cụ (mọi `Set/Kind` mà pipeline rải) và 13 bộ kit mặt tiền, mỗi mục có kích thước, pivot, trục, ngân sách tam giác, số biến thể, đường làm (`route`) |
+| `game/assets/prompts.jsonl` | 750 prompt sinh ảnh, mỗi dòng một ảnh, có sẵn đường dẫn lưu (`out`). Sinh lại bằng `python tools/asset_prompts.py` |
 | `game/assets/sources.json` | Sổ nguồn gốc: mỗi file mesh/texture nộp vào phải có một dòng (nguồn, tác giả, giấy phép) |
 | `tools/check_assets.py` | Kiểm mesh nộp về theo hợp đồng: kích thước, pivot, tam giác, UV, giấy phép |
 | `ue5/Config/asset_map.json` | Nối `Set/Kind` với mesh trong UE (`meshes` là danh sách biến thể) |

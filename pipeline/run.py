@@ -2,9 +2,12 @@
 
   python -m pipeline.run --name hoankiem --bbox 105.840,21.020,105.860,21.042
   python -m pipeline.run --name hanoi --region VN-HN --tile 1000 --skip-fetch
+  python -m pipeline.run --name ba_dinh --from noi_thanh --bbox 105.80,21.02,105.85,21.05 --origin 21.0288,105.8524
 
 Steps: fetch.py → pipeline.fetch_context → pipeline.semantics → build.py →
        pipeline.traffic → pipeline.scatter → pipeline.preview
+With --from, the first two steps are replaced by pipeline.subset (cut out of a fetched cache).
+--origin pins the world origin so several areas share one coordinate frame (pipeline/districts.json).
 """
 
 import argparse
@@ -30,17 +33,24 @@ def main():
     area.add_argument("--region")
     ap.add_argument("--tile", default="500")
     ap.add_argument("--skip-fetch", action="store_true", help="reuse data/<name> from an earlier fetch")
+    ap.add_argument("--from", dest="src", help="cut data/<name> out of this fetched cache instead of fetching")
+    ap.add_argument("--origin", help="lat,lon of the world origin (default: bbox centre)")
     a = ap.parse_args()
     n = ["--name", a.name]
-    if not a.skip_fetch:
+    o = ["--origin", a.origin] if a.origin else []
+    if a.src:
+        if not a.bbox:
+            ap.error("--from needs --bbox")
+        step("-m", "pipeline.subset", "--from", a.src, *n, "--bbox", a.bbox)
+    elif not a.skip_fetch:
         if not (a.bbox or a.region):
             ap.error("--bbox or --region is required unless --skip-fetch")
         step("fetch.py", *n, *(["--bbox", a.bbox] if a.bbox else ["--region", a.region]))
         step("-m", "pipeline.fetch_context", *n)
-    step("-m", "pipeline.semantics", *n, "--tile", a.tile)
-    step("build.py", *n, "--tile", a.tile)
-    step("-m", "pipeline.traffic", *n)
-    step("-m", "pipeline.scatter", *n, "--tile", a.tile)
+    step("-m", "pipeline.semantics", *n, "--tile", a.tile, *o)
+    step("build.py", *n, "--tile", a.tile, *o)
+    step("-m", "pipeline.traffic", *n, *o)
+    step("-m", "pipeline.scatter", *n, "--tile", a.tile, *o)
     step("-m", "pipeline.preview", *n)
 
     out = pathlib.Path("out") / a.name

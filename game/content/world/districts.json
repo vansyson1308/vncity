@@ -3,211 +3,1034 @@
   "items": [
     {
       "id": "pho_co",
-      "tags": ["core", "tourist", "walkable", "division_names_need_check"],
-      "name": {"vi": "Phố cổ (36 phố phường)", "en": "Old Quarter (36 Streets)"},
-      "center": {"lat": 21.03440, "lon": 105.85080},
-      "overture_division_names": ["Hoàn Kiếm", "Phường Hoàn Kiếm", "Quận Hoàn Kiếm", "Hàng Bạc", "Hàng Đào", "Hàng Buồm", "Hàng Bồ", "Hàng Mã", "Đồng Xuân", "Hàng Gai", "Lý Thái Tổ"],
+      "tags": [
+        "core",
+        "tourist",
+        "walkable",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Phố cổ (36 phố phường)",
+        "en": "Old Quarter (36 Streets)"
+      },
+      "center": {
+        "lat": 21.0344,
+        "lon": 105.8508
+      },
+      "overture_division_names": [
+        "Hoàn Kiếm",
+        "Phường Hoàn Kiếm",
+        "Quận Hoàn Kiếm",
+        "Hàng Bạc",
+        "Hàng Đào",
+        "Hàng Buồm",
+        "Hàng Bồ",
+        "Hàng Mã",
+        "Đồng Xuân",
+        "Hàng Gai",
+        "Lý Thái Tổ"
+      ],
       "identity": {
         "vi": "Mạng phố hẹp mang tên nghề: Hàng Bạc, Hàng Mã, Hàng Thiếc, Hàng Chiếu. Nhà ống mặt tiền 3-4 m sâu hút vào trong, tầng một bán hàng, tầng trên ở, ban công treo đầy chậu cây và quần áo. Vỉa hè là của xe máy và ghế nhựa đỏ. Mùi phở lúc 6 giờ sáng, tiếng rao 'xôi đâyyy', tiếng thợ gò Hàng Thiếc, đêm thì loa bia Tạ Hiện.",
         "en": "Narrow streets named after crafts: Silver St, Paper Offerings St, Tin St, Mat St. Tube houses 3-4 m wide and deep, shop downstairs, home upstairs, balconies full of plants and laundry. Pavements belong to parked motorbikes and red plastic stools. Pho at 6 a.m., vendor calls, tinsmiths hammering on Hàng Thiếc, and beer-street speakers at night."
       },
-      "era_mix": {"nha_ong_pho_co": 0.55, "nha_ong_hien_dai": 0.25, "dinh_chua": 0.06, "biet_thu_phap": 0.04, "cho": 0.03, "cong_trinh_cong_cong": 0.04, "nha_thap_tang": 0.03},
+      "era_mix": {
+        "nha_ong_pho_co": 0.55,
+        "nha_ong_hien_dai": 0.25,
+        "dinh_chua": 0.06,
+        "biet_thu_phap": 0.04,
+        "cho": 0.03,
+        "cong_trinh_cong_cong": 0.04,
+        "nha_thap_tang": 0.03
+      },
       "density": "very_high",
-      "ambient_audio": ["coi_xe_may_day_dac", "rao_hang_rong_xoi_banh_mi", "go_kim_loai_hang_thiec", "loa_quan_bia_ta_hien_dem", "tieng_cho_dong_xuan_sang", "chuong_xe_dap_ban_hoa"],
-      "population_profile": ["characters:amb_ba_ban_xoi", "characters:amb_ban_hang_rong_quang_ganh", "characters:amb_khach_tay_ba_lo", "characters:amb_xe_om_truyen_thong", "characters:amb_shipper", "characters:amb_tieu_thuong_cho", "characters:amb_ban_hoa_xe_dap", "characters:amb_thu_mua_dong_nat"],
-      "traffic_profile": {"motorbike_share": 0.88, "car_share": 0.04, "peak_hours": [[7, 9], [17, 19.5], [20, 23]]}
+      "ambient_audio": [
+        "coi_xe_may_day_dac",
+        "rao_hang_rong_xoi_banh_mi",
+        "go_kim_loai_hang_thiec",
+        "loa_quan_bia_ta_hien_dem",
+        "tieng_cho_dong_xuan_sang",
+        "chuong_xe_dap_ban_hoa"
+      ],
+      "population_profile": [
+        "characters:amb_ba_ban_xoi",
+        "characters:amb_ban_hang_rong_quang_ganh",
+        "characters:amb_khach_tay_ba_lo",
+        "characters:amb_xe_om_truyen_thong",
+        "characters:amb_shipper",
+        "characters:amb_tieu_thuong_cho",
+        "characters:amb_ban_hoa_xe_dap",
+        "characters:amb_thu_mua_dong_nat"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.88,
+        "car_share": 0.04,
+        "peak_hours": [
+          [
+            7,
+            9
+          ],
+          [
+            17,
+            19.5
+          ],
+          [
+            20,
+            23
+          ]
+        ]
+      }
     },
     {
       "id": "hoan_kiem",
-      "tags": ["core", "tourist", "lake", "french_quarter", "walking_street", "division_names_need_check"],
-      "name": {"vi": "Hồ Hoàn Kiếm và khu phố Pháp", "en": "Hoàn Kiếm Lake and the French Quarter"},
-      "center": {"lat": 21.02560, "lon": 105.85350},
-      "overture_division_names": ["Hoàn Kiếm", "Cửa Nam", "Phường Cửa Nam", "Tràng Tiền", "Hàng Bài", "Phan Chu Trinh", "Lý Thái Tổ", "Trần Hưng Đạo"],
+      "tags": [
+        "core",
+        "tourist",
+        "lake",
+        "french_quarter",
+        "walking_street",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Hồ Hoàn Kiếm và khu phố Pháp",
+        "en": "Hoàn Kiếm Lake and the French Quarter"
+      },
+      "center": {
+        "lat": 21.0256,
+        "lon": 105.8535
+      },
+      "overture_division_names": [
+        "Hoàn Kiếm",
+        "Cửa Nam",
+        "Phường Cửa Nam",
+        "Tràng Tiền",
+        "Hàng Bài",
+        "Phan Chu Trinh",
+        "Lý Thái Tổ",
+        "Trần Hưng Đạo"
+      ],
       "identity": {
         "vi": "Trái tim thành phố. Hồ Gươm với Tháp Rùa, cầu Thê Húc đỏ son; phía nam là đại lộ có hàng sấu, biệt thự vàng cửa chớp xanh, Nhà hát Lớn, Tràng Tiền. Sáng sớm các cụ tập dưỡng sinh, tối cuối tuần phố đi bộ đông nghịt, kem Tràng Tiền và chụp ảnh cưới.",
         "en": "The heart of the city. Sword Lake with Turtle Tower and the red Huc Bridge; to the south, tamarind-lined boulevards, ochre villas with green shutters, the Opera House, Tràng Tiền. Elderly tai chi at dawn, packed walking street on weekend nights, ice cream and wedding shoots."
       },
-      "era_mix": {"biet_thu_phap": 0.30, "cong_trinh_phap_cong": 0.20, "nha_ong_hien_dai": 0.20, "nha_ong_pho_co": 0.10, "van_phong_cao_tang": 0.08, "cong_trinh_cong_cong": 0.07, "dinh_chua": 0.05},
+      "era_mix": {
+        "biet_thu_phap": 0.3,
+        "cong_trinh_phap_cong": 0.2,
+        "nha_ong_hien_dai": 0.2,
+        "nha_ong_pho_co": 0.1,
+        "van_phong_cao_tang": 0.08,
+        "cong_trinh_cong_cong": 0.07,
+        "dinh_chua": 0.05
+      },
       "density": "high",
-      "ambient_audio": ["nhac_duong_sinh_sang_som", "gio_la_cay_ven_ho", "tieng_tre_con_pho_di_bo", "chuong_nha_tho_lon", "coi_xe_may_vua"],
-      "population_profile": ["characters:amb_ba_tap_the_duc", "characters:amb_khach_tay_ba_lo", "characters:amb_co_dau_chu_re", "characters:amb_ong_cu_choi_co", "characters:amb_ban_hoa_xe_dap", "characters:amb_csgt", "characters:amb_cong_nhan_moi_truong", "characters:amb_dan_van_phong"],
-      "traffic_profile": {"motorbike_share": 0.78, "car_share": 0.12, "peak_hours": [[7, 9], [17, 19]]}
+      "ambient_audio": [
+        "nhac_duong_sinh_sang_som",
+        "gio_la_cay_ven_ho",
+        "tieng_tre_con_pho_di_bo",
+        "chuong_nha_tho_lon",
+        "coi_xe_may_vua"
+      ],
+      "population_profile": [
+        "characters:amb_ba_tap_the_duc",
+        "characters:amb_khach_tay_ba_lo",
+        "characters:amb_co_dau_chu_re",
+        "characters:amb_ong_cu_choi_co",
+        "characters:amb_ban_hoa_xe_dap",
+        "characters:amb_csgt",
+        "characters:amb_cong_nhan_moi_truong",
+        "characters:amb_dan_van_phong"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.78,
+        "car_share": 0.12,
+        "peak_hours": [
+          [
+            7,
+            9
+          ],
+          [
+            17,
+            19
+          ]
+        ]
+      }
     },
     {
       "id": "ba_dinh",
-      "tags": ["core", "political", "heritage", "respectful_zone", "division_names_need_check"],
-      "name": {"vi": "Ba Đình", "en": "Ba Đình"},
-      "center": {"lat": 21.03500, "lon": 105.83600},
-      "overture_division_names": ["Ba Đình", "Phường Ba Đình", "Ngọc Hà", "Giảng Võ", "Quận Ba Đình", "Điện Biên", "Quán Thánh", "Trúc Bạch", "Đội Cấn", "Kim Mã"],
+      "tags": [
+        "core",
+        "political",
+        "heritage",
+        "respectful_zone",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Ba Đình",
+        "en": "Ba Đình"
+      },
+      "center": {
+        "lat": 21.035,
+        "lon": 105.836
+      },
+      "overture_division_names": [
+        "Ba Đình",
+        "Phường Ba Đình",
+        "Ngọc Hà",
+        "Giảng Võ",
+        "Quận Ba Đình",
+        "Điện Biên",
+        "Quán Thánh",
+        "Trúc Bạch",
+        "Đội Cấn",
+        "Kim Mã"
+      ],
       "identity": {
         "vi": "Khu trung tâm chính trị: Quảng trường Ba Đình, Lăng Chủ tịch Hồ Chí Minh, Phủ Chủ tịch, Hoàng thành Thăng Long, Cột cờ. Đại lộ rộng, cây cổ thụ, vỉa hè sạch, trật tự. Xa hơn về phía tây là khu tập thể Giảng Võ, Ngọc Khánh và phố Kim Mã đông xe.",
         "en": "The political centre: Ba Đình Square, the Mausoleum, the Presidential Palace, the Imperial Citadel, the Flag Tower. Wide avenues, old trees, tidy pavements. Further west, the Giảng Võ and Ngọc Khánh housing blocks and busy Kim Mã."
       },
-      "era_mix": {"cong_trinh_phap_cong": 0.15, "biet_thu_phap": 0.15, "cong_trinh_cong_cong": 0.15, "khu_tap_the": 0.20, "nha_ong_hien_dai": 0.20, "van_phong_cao_tang": 0.08, "dinh_chua": 0.04, "chung_cu_cao_tang": 0.03},
+      "era_mix": {
+        "cong_trinh_phap_cong": 0.15,
+        "biet_thu_phap": 0.15,
+        "cong_trinh_cong_cong": 0.15,
+        "khu_tap_the": 0.2,
+        "nha_ong_hien_dai": 0.2,
+        "van_phong_cao_tang": 0.08,
+        "dinh_chua": 0.04,
+        "chung_cu_cao_tang": 0.03
+      },
       "density": "medium",
-      "ambient_audio": ["gio_cay_co_thu", "buoc_chan_doan_tham_quan", "coi_xe_may_xa", "chim_se_sang"],
-      "population_profile": ["characters:amb_dan_van_phong", "characters:amb_ba_tap_the_duc", "characters:amb_hoc_sinh", "characters:amb_csgt", "characters:amb_khach_du_lich_noi_dia", "characters:amb_bao_ve"],
-      "traffic_profile": {"motorbike_share": 0.72, "car_share": 0.20, "peak_hours": [[7, 8.5], [16.5, 18.5]]}
+      "ambient_audio": [
+        "gio_cay_co_thu",
+        "buoc_chan_doan_tham_quan",
+        "coi_xe_may_xa",
+        "chim_se_sang"
+      ],
+      "population_profile": [
+        "characters:amb_dan_van_phong",
+        "characters:amb_ba_tap_the_duc",
+        "characters:amb_hoc_sinh",
+        "characters:amb_csgt",
+        "characters:amb_khach_du_lich_noi_dia",
+        "characters:amb_bao_ve"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.72,
+        "car_share": 0.2,
+        "peak_hours": [
+          [
+            7,
+            8.5
+          ],
+          [
+            16.5,
+            18.5
+          ]
+        ]
+      }
     },
     {
       "id": "tay_ho",
-      "tags": ["lake", "expat", "leisure", "lotus", "division_names_need_check"],
-      "name": {"vi": "Tây Hồ", "en": "West Lake"},
-      "center": {"lat": 21.05800, "lon": 105.82300},
-      "overture_division_names": ["Tây Hồ", "Phường Tây Hồ", "Phú Thượng", "Quận Tây Hồ", "Quảng An", "Nhật Tân", "Yên Phụ", "Thụy Khuê", "Xuân La", "Bưởi"],
+      "tags": [
+        "lake",
+        "expat",
+        "leisure",
+        "lotus",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Tây Hồ",
+        "en": "West Lake"
+      },
+      "center": {
+        "lat": 21.058,
+        "lon": 105.823
+      },
+      "overture_division_names": [
+        "Tây Hồ",
+        "Phường Tây Hồ",
+        "Phú Thượng",
+        "Quận Tây Hồ",
+        "Quảng An",
+        "Nhật Tân",
+        "Yên Phụ",
+        "Thụy Khuê",
+        "Xuân La",
+        "Bưởi"
+      ],
       "identity": {
         "vi": "Hồ nước lớn nhất nội đô, đường ven hồ 17 km cho xe đạp và chạy bộ. Quảng An - Tô Ngọc Vân là khu người nước ngoài với quán cà phê, tiệm bánh, biệt thự cho thuê; Nhật Tân là vườn đào, Quảng Bá có đầm sen. Hoàng hôn trên Chùa Trấn Quốc, ốc bánh tôm Thanh Niên, vịt thiên nga đạp nước.",
         "en": "The largest lake in the city, with a 17 km shoreline loved by cyclists and runners. Quảng An is expat territory full of cafés, bakeries and rental villas; Nhật Tân grows peach blossom, Quảng Bá has lotus ponds. Sunset over Trấn Quốc Pagoda, shrimp cakes on Thanh Niên road, swan pedal boats."
       },
-      "era_mix": {"nha_ong_hien_dai": 0.35, "biet_thu_phap": 0.05, "lien_ke_kdt": 0.15, "chung_cu_cao_tang": 0.10, "nha_thap_tang": 0.20, "dinh_chua": 0.07, "van_phong_cao_tang": 0.05, "cong_trinh_cong_cong": 0.03},
+      "era_mix": {
+        "nha_ong_hien_dai": 0.35,
+        "biet_thu_phap": 0.05,
+        "lien_ke_kdt": 0.15,
+        "chung_cu_cao_tang": 0.1,
+        "nha_thap_tang": 0.2,
+        "dinh_chua": 0.07,
+        "van_phong_cao_tang": 0.05,
+        "cong_trinh_cong_cong": 0.03
+      },
       "density": "medium",
-      "ambient_audio": ["song_nuoc_ho_tay", "gio_ho", "tieng_xe_dap_dong_doan", "nhac_cafe_acoustic", "chim_cuoc_ven_dam_sen"],
-      "population_profile": ["characters:amb_khach_tay_ba_lo", "characters:amb_sinh_vien", "characters:amb_co_dau_chu_re", "characters:amb_ban_hoa_xe_dap", "characters:amb_xe_om_cong_nghe", "characters:amb_dan_van_phong"],
-      "traffic_profile": {"motorbike_share": 0.74, "car_share": 0.18, "peak_hours": [[7, 9], [17, 19]]}
+      "ambient_audio": [
+        "song_nuoc_ho_tay",
+        "gio_ho",
+        "tieng_xe_dap_dong_doan",
+        "nhac_cafe_acoustic",
+        "chim_cuoc_ven_dam_sen"
+      ],
+      "population_profile": [
+        "characters:amb_khach_tay_ba_lo",
+        "characters:amb_sinh_vien",
+        "characters:amb_co_dau_chu_re",
+        "characters:amb_ban_hoa_xe_dap",
+        "characters:amb_xe_om_cong_nghe",
+        "characters:amb_dan_van_phong"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.74,
+        "car_share": 0.18,
+        "peak_hours": [
+          [
+            7,
+            9
+          ],
+          [
+            17,
+            19
+          ]
+        ]
+      }
     },
     {
       "id": "long_bien",
-      "tags": ["river", "bridge", "riverbank", "mixed", "division_names_need_check"],
-      "name": {"vi": "Long Biên và bãi giữa sông Hồng", "en": "Long Biên and the Red River sandbank"},
-      "center": {"lat": 21.04500, "lon": 105.87500},
-      "overture_division_names": ["Long Biên", "Phường Long Biên", "Bồ Đề", "Việt Hưng", "Phúc Lợi", "Quận Long Biên", "Ngọc Thụy", "Ngọc Lâm", "Gia Thụy", "Hồng Hà", "Phúc Xá"],
+      "tags": [
+        "river",
+        "bridge",
+        "riverbank",
+        "mixed",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Long Biên và bãi giữa sông Hồng",
+        "en": "Long Biên and the Red River sandbank"
+      },
+      "center": {
+        "lat": 21.045,
+        "lon": 105.875
+      },
+      "overture_division_names": [
+        "Long Biên",
+        "Phường Long Biên",
+        "Bồ Đề",
+        "Việt Hưng",
+        "Phúc Lợi",
+        "Quận Long Biên",
+        "Ngọc Thụy",
+        "Ngọc Lâm",
+        "Gia Thụy",
+        "Hồng Hà",
+        "Phúc Xá"
+      ],
       "identity": {
         "vi": "Bên kia cầu Long Biên. Dưới gầm cầu là bãi giữa: ruộng ngô, vườn chuối, nhà tạm, người thả diều và chụp ảnh lau trắng tháng 10. Ngoài đê là Long Biên mới với khu đô thị, trung tâm thương mại lớn, phố Nguyễn Văn Cừ, Ngọc Lâm. Gió sông, tiếng tàu hỏa chạy chậm trên cầu sắt.",
         "en": "Across the Long Biên bridge. Beneath it lies the sandbank: maize fields, banana groves, makeshift houses, kite flyers and October reed-flower photo shoots. Beyond the dyke, new Long Biên with townhouse estates, a big mall and Nguyễn Văn Cừ road. River wind and slow trains rattling over the steel bridge."
       },
-      "era_mix": {"nha_ong_hien_dai": 0.35, "lien_ke_kdt": 0.20, "nha_thap_tang": 0.20, "chung_cu_cao_tang": 0.10, "khu_tap_the": 0.05, "nha_xuong": 0.05, "dinh_chua": 0.03, "cho": 0.02},
+      "era_mix": {
+        "nha_ong_hien_dai": 0.35,
+        "lien_ke_kdt": 0.2,
+        "nha_thap_tang": 0.2,
+        "chung_cu_cao_tang": 0.1,
+        "khu_tap_the": 0.05,
+        "nha_xuong": 0.05,
+        "dinh_chua": 0.03,
+        "cho": 0.02
+      },
       "density": "medium",
-      "ambient_audio": ["gio_song_hong", "tau_hoa_tren_cau_sat", "ga_gay_bai_giua", "dieu_sao_vi_vu", "coi_xe_tai_tren_de"],
-      "population_profile": ["characters:amb_tieu_thuong_cho", "characters:amb_thu_mua_dong_nat", "characters:amb_xe_om_cong_nghe", "characters:amb_shipper", "characters:amb_tho_xay", "characters:amb_hoc_sinh"],
-      "traffic_profile": {"motorbike_share": 0.80, "car_share": 0.12, "peak_hours": [[6.5, 8.5], [16.5, 19]]}
+      "ambient_audio": [
+        "gio_song_hong",
+        "tau_hoa_tren_cau_sat",
+        "ga_gay_bai_giua",
+        "dieu_sao_vi_vu",
+        "coi_xe_tai_tren_de"
+      ],
+      "population_profile": [
+        "characters:amb_tieu_thuong_cho",
+        "characters:amb_thu_mua_dong_nat",
+        "characters:amb_xe_om_cong_nghe",
+        "characters:amb_shipper",
+        "characters:amb_tho_xay",
+        "characters:amb_hoc_sinh"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.8,
+        "car_share": 0.12,
+        "peak_hours": [
+          [
+            6.5,
+            8.5
+          ],
+          [
+            16.5,
+            19
+          ]
+        ]
+      }
     },
     {
       "id": "dong_da",
-      "tags": ["dense", "heritage", "students", "tap_the", "division_names_need_check"],
-      "name": {"vi": "Đống Đa", "en": "Đống Đa"},
-      "center": {"lat": 21.01800, "lon": 105.82900},
-      "overture_division_names": ["Đống Đa", "Phường Đống Đa", "Kim Liên", "Văn Miếu - Quốc Tử Giám", "Láng", "Ô Chợ Dừa", "Quận Đống Đa", "Khâm Thiên", "Hàng Bột", "Trung Tự", "Khương Thượng", "Láng Hạ"],
+      "tags": [
+        "dense",
+        "heritage",
+        "students",
+        "tap_the",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Đống Đa",
+        "en": "Đống Đa"
+      },
+      "center": {
+        "lat": 21.018,
+        "lon": 105.829
+      },
+      "overture_division_names": [
+        "Đống Đa",
+        "Phường Đống Đa",
+        "Kim Liên",
+        "Văn Miếu - Quốc Tử Giám",
+        "Láng",
+        "Ô Chợ Dừa",
+        "Quận Đống Đa",
+        "Khâm Thiên",
+        "Hàng Bột",
+        "Trung Tự",
+        "Khương Thượng",
+        "Láng Hạ"
+      ],
       "identity": {
         "vi": "Quận đông dân nhất nội thành cũ. Văn Miếu - Quốc Tử Giám rêu phong, phố Khâm Thiên dài với ngõ nhỏ như mê cung, khu tập thể Kim Liên - Trung Tự lồng sắt chi chít, chợ Kim Liên, phố sinh viên quanh Đại học Y, Thủy Lợi. Hồ Đống Đa, gò Đống Đa nhắc trận Kỷ Dậu 1789.",
         "en": "The most crowded of the old inner districts. The mossy Temple of Literature, long Khâm Thiên street with labyrinthine alleys, Kim Liên - Trung Tự housing blocks bristling with iron cages, student streets around the medical and water-resources universities, and the Đống Đa mound recalling the 1789 victory."
       },
-      "era_mix": {"khu_tap_the": 0.30, "nha_ong_hien_dai": 0.35, "nha_thap_tang": 0.10, "van_phong_cao_tang": 0.07, "dinh_chua": 0.05, "cho": 0.03, "cong_trinh_cong_cong": 0.07, "chung_cu_cao_tang": 0.03},
+      "era_mix": {
+        "khu_tap_the": 0.3,
+        "nha_ong_hien_dai": 0.35,
+        "nha_thap_tang": 0.1,
+        "van_phong_cao_tang": 0.07,
+        "dinh_chua": 0.05,
+        "cho": 0.03,
+        "cong_trinh_cong_cong": 0.07,
+        "chung_cu_cao_tang": 0.03
+      },
       "density": "very_high",
-      "ambient_audio": ["ngo_hep_tieng_tivi", "rao_mua_do_dong_nat", "tieng_doc_bai_truong_hoc", "xe_may_ngo_nho", "loa_phuong_sang"],
-      "population_profile": ["characters:amb_sinh_vien", "characters:amb_hoc_sinh", "characters:amb_thu_mua_dong_nat", "characters:amb_ba_ban_xoi", "characters:amb_shipper", "characters:amb_ba_tap_the_duc", "characters:amb_tieu_thuong_cho"],
-      "traffic_profile": {"motorbike_share": 0.84, "car_share": 0.09, "peak_hours": [[6.5, 9], [16.5, 19.5]]}
+      "ambient_audio": [
+        "ngo_hep_tieng_tivi",
+        "rao_mua_do_dong_nat",
+        "tieng_doc_bai_truong_hoc",
+        "xe_may_ngo_nho",
+        "loa_phuong_sang"
+      ],
+      "population_profile": [
+        "characters:amb_sinh_vien",
+        "characters:amb_hoc_sinh",
+        "characters:amb_thu_mua_dong_nat",
+        "characters:amb_ba_ban_xoi",
+        "characters:amb_shipper",
+        "characters:amb_ba_tap_the_duc",
+        "characters:amb_tieu_thuong_cho"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.84,
+        "car_share": 0.09,
+        "peak_hours": [
+          [
+            6.5,
+            9
+          ],
+          [
+            16.5,
+            19.5
+          ]
+        ]
+      }
     },
     {
       "id": "hai_ba_trung",
-      "tags": ["dense", "tap_the", "markets", "lakes", "division_names_need_check"],
-      "name": {"vi": "Hai Bà Trưng", "en": "Hai Bà Trưng"},
-      "center": {"lat": 21.00800, "lon": 105.85400},
-      "overture_division_names": ["Hai Bà Trưng", "Phường Hai Bà Trưng", "Vĩnh Tuy", "Bạch Mai", "Quận Hai Bà Trưng", "Bùi Thị Xuân", "Lê Đại Hành", "Phố Huế", "Bách Khoa", "Thanh Nhàn", "Minh Khai"],
+      "tags": [
+        "dense",
+        "tap_the",
+        "markets",
+        "lakes",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Hai Bà Trưng",
+        "en": "Hai Bà Trưng"
+      },
+      "center": {
+        "lat": 21.008,
+        "lon": 105.854
+      },
+      "overture_division_names": [
+        "Hai Bà Trưng",
+        "Phường Hai Bà Trưng",
+        "Vĩnh Tuy",
+        "Bạch Mai",
+        "Quận Hai Bà Trưng",
+        "Bùi Thị Xuân",
+        "Lê Đại Hành",
+        "Phố Huế",
+        "Bách Khoa",
+        "Thanh Nhàn",
+        "Minh Khai"
+      ],
       "identity": {
         "vi": "Phố Huế - Bà Triệu sầm uất, chợ Hôm, công viên Thống Nhất với hồ Bảy Mẫu, Đại học Bách Khoa - Kinh tế Quốc dân, phố Lò Đúc với phở bò cũ, cụm chung cư cao tầng phía đông nam. Biệt thự Pháp xen nhà ống, khu tập thể Thanh Nhàn, Bách Khoa.",
         "en": "Busy Huế and Bà Triệu streets, Hôm market, Thống Nhất park and its lake, the Polytechnic and Economics universities, old-school beef pho on Lò Đúc, and a cluster of apartment towers to the south-east. French villas squeezed between tube houses and housing blocks."
       },
-      "era_mix": {"nha_ong_hien_dai": 0.35, "khu_tap_the": 0.20, "biet_thu_phap": 0.08, "chung_cu_cao_tang": 0.10, "nha_thap_tang": 0.10, "cong_trinh_cong_cong": 0.07, "cho": 0.04, "van_phong_cao_tang": 0.06},
+      "era_mix": {
+        "nha_ong_hien_dai": 0.35,
+        "khu_tap_the": 0.2,
+        "biet_thu_phap": 0.08,
+        "chung_cu_cao_tang": 0.1,
+        "nha_thap_tang": 0.1,
+        "cong_trinh_cong_cong": 0.07,
+        "cho": 0.04,
+        "van_phong_cao_tang": 0.06
+      },
       "density": "very_high",
-      "ambient_audio": ["cho_hom_buoi_sang", "coi_xe_may_day_dac", "tieng_sinh_vien_ky_tuc", "nhac_tap_aerobic_cong_vien"],
-      "population_profile": ["characters:amb_sinh_vien", "characters:amb_tieu_thuong_cho", "characters:amb_dan_van_phong", "characters:amb_ba_tap_the_duc", "characters:amb_shipper", "characters:amb_xe_om_cong_nghe"],
-      "traffic_profile": {"motorbike_share": 0.82, "car_share": 0.11, "peak_hours": [[7, 9], [16.5, 19]]}
+      "ambient_audio": [
+        "cho_hom_buoi_sang",
+        "coi_xe_may_day_dac",
+        "tieng_sinh_vien_ky_tuc",
+        "nhac_tap_aerobic_cong_vien"
+      ],
+      "population_profile": [
+        "characters:amb_sinh_vien",
+        "characters:amb_tieu_thuong_cho",
+        "characters:amb_dan_van_phong",
+        "characters:amb_ba_tap_the_duc",
+        "characters:amb_shipper",
+        "characters:amb_xe_om_cong_nghe"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.82,
+        "car_share": 0.11,
+        "peak_hours": [
+          [
+            7,
+            9
+          ],
+          [
+            16.5,
+            19
+          ]
+        ]
+      }
     },
     {
       "id": "cau_giay",
-      "tags": ["universities", "office", "new_city", "division_names_need_check"],
-      "name": {"vi": "Cầu Giấy", "en": "Cầu Giấy"},
-      "center": {"lat": 21.03300, "lon": 105.79500},
-      "overture_division_names": ["Cầu Giấy", "Phường Cầu Giấy", "Nghĩa Đô", "Yên Hòa", "Quận Cầu Giấy", "Dịch Vọng", "Dịch Vọng Hậu", "Quan Hoa", "Mai Dịch", "Trung Hòa"],
+      "tags": [
+        "universities",
+        "office",
+        "new_city",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Cầu Giấy",
+        "en": "Cầu Giấy"
+      },
+      "center": {
+        "lat": 21.033,
+        "lon": 105.795
+      },
+      "overture_division_names": [
+        "Cầu Giấy",
+        "Phường Cầu Giấy",
+        "Nghĩa Đô",
+        "Yên Hòa",
+        "Quận Cầu Giấy",
+        "Dịch Vọng",
+        "Dịch Vọng Hậu",
+        "Quan Hoa",
+        "Mai Dịch",
+        "Trung Hòa"
+      ],
       "identity": {
         "vi": "Quận của sinh viên và dân văn phòng: Đại học Quốc gia, Sư phạm, Báo chí; tòa văn phòng Duy Tân, công viên Cầu Giấy, Bảo tàng Dân tộc học. Phố ăn vặt quanh trường, trà chanh vỉa hè, phòng trọ chen chúc trong ngõ, tắc đường giờ cao điểm Xuân Thủy.",
         "en": "Students and office workers: the national university, teacher-training and journalism schools, the Duy Tân office towers, Cầu Giấy park and the Museum of Ethnology. Snack streets near campuses, lemon tea on pavements, rented rooms packed in alleys, rush-hour gridlock on Xuân Thủy."
       },
-      "era_mix": {"nha_ong_hien_dai": 0.35, "van_phong_cao_tang": 0.15, "chung_cu_cao_tang": 0.15, "nha_thap_tang": 0.15, "khu_tap_the": 0.08, "cong_trinh_cong_cong": 0.08, "lien_ke_kdt": 0.04},
+      "era_mix": {
+        "nha_ong_hien_dai": 0.35,
+        "van_phong_cao_tang": 0.15,
+        "chung_cu_cao_tang": 0.15,
+        "nha_thap_tang": 0.15,
+        "khu_tap_the": 0.08,
+        "cong_trinh_cong_cong": 0.08,
+        "lien_ke_kdt": 0.04
+      },
       "density": "high",
-      "ambient_audio": ["tra_chanh_via_he_noi_chuyen", "coi_xe_ket_xe", "loa_quang_cao_cua_hang", "chuong_truong_hoc"],
-      "population_profile": ["characters:amb_sinh_vien", "characters:amb_dan_van_phong", "characters:amb_shipper", "characters:amb_xe_om_cong_nghe", "characters:amb_ba_ban_xoi", "characters:amb_bao_ve"],
-      "traffic_profile": {"motorbike_share": 0.76, "car_share": 0.17, "peak_hours": [[7, 9], [17, 19.5]]}
+      "ambient_audio": [
+        "tra_chanh_via_he_noi_chuyen",
+        "coi_xe_ket_xe",
+        "loa_quang_cao_cua_hang",
+        "chuong_truong_hoc"
+      ],
+      "population_profile": [
+        "characters:amb_sinh_vien",
+        "characters:amb_dan_van_phong",
+        "characters:amb_shipper",
+        "characters:amb_xe_om_cong_nghe",
+        "characters:amb_ba_ban_xoi",
+        "characters:amb_bao_ve"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.76,
+        "car_share": 0.17,
+        "peak_hours": [
+          [
+            7,
+            9
+          ],
+          [
+            17,
+            19.5
+          ]
+        ]
+      }
     },
     {
       "id": "thanh_xuan",
-      "tags": ["residential", "tap_the", "metro", "division_names_need_check"],
-      "name": {"vi": "Thanh Xuân", "en": "Thanh Xuân"},
-      "center": {"lat": 20.99500, "lon": 105.81000},
-      "overture_division_names": ["Thanh Xuân", "Phường Thanh Xuân", "Khương Đình", "Phương Liệt", "Quận Thanh Xuân", "Nhân Chính", "Thượng Đình", "Khương Trung", "Kim Giang"],
+      "tags": [
+        "residential",
+        "tap_the",
+        "metro",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Thanh Xuân",
+        "en": "Thanh Xuân"
+      },
+      "center": {
+        "lat": 20.995,
+        "lon": 105.81
+      },
+      "overture_division_names": [
+        "Thanh Xuân",
+        "Phường Thanh Xuân",
+        "Khương Đình",
+        "Phương Liệt",
+        "Quận Thanh Xuân",
+        "Nhân Chính",
+        "Thượng Đình",
+        "Khương Trung",
+        "Kim Giang"
+      ],
       "identity": {
         "vi": "Trục Nguyễn Trãi với tàu điện Cát Linh - Hà Đông chạy trên cao, khu tập thể Thanh Xuân Bắc, tổ hợp chung cư có trung tâm thương mại dưới lòng đất, ngõ Khương Đình đầy phòng trọ của người tỉnh lên làm ăn. Đây là nơi Minh thuê trọ: 2,5 triệu một tháng, chung nhà vệ sinh.",
         "en": "Nguyễn Trãi avenue with the elevated Cát Linh - Hà Đông metro overhead, the Thanh Xuân Bắc housing blocks, a tower complex with an underground mall, and Khương Đình alleys full of rooms rented by people from the provinces. Minh rents here: 2.5 million a month, shared toilet."
       },
-      "era_mix": {"nha_ong_hien_dai": 0.35, "khu_tap_the": 0.15, "chung_cu_cao_tang": 0.20, "nha_thap_tang": 0.15, "van_phong_cao_tang": 0.07, "nha_xuong": 0.03, "cong_trinh_cong_cong": 0.05},
+      "era_mix": {
+        "nha_ong_hien_dai": 0.35,
+        "khu_tap_the": 0.15,
+        "chung_cu_cao_tang": 0.2,
+        "nha_thap_tang": 0.15,
+        "van_phong_cao_tang": 0.07,
+        "nha_xuong": 0.03,
+        "cong_trinh_cong_cong": 0.05
+      },
       "density": "very_high",
-      "ambient_audio": ["tau_dien_tren_cao", "coi_xe_ket_xe", "phong_tro_tieng_noi_que", "rao_banh_mi_dem"],
-      "population_profile": ["characters:amb_xe_om_cong_nghe", "characters:amb_shipper", "characters:amb_sinh_vien", "characters:amb_tho_xay", "characters:amb_dan_van_phong", "characters:amb_ba_ban_xoi"],
-      "traffic_profile": {"motorbike_share": 0.80, "car_share": 0.13, "peak_hours": [[6.5, 9], [16.5, 19.5]]}
+      "ambient_audio": [
+        "tau_dien_tren_cao",
+        "coi_xe_ket_xe",
+        "phong_tro_tieng_noi_que",
+        "rao_banh_mi_dem"
+      ],
+      "population_profile": [
+        "characters:amb_xe_om_cong_nghe",
+        "characters:amb_shipper",
+        "characters:amb_sinh_vien",
+        "characters:amb_tho_xay",
+        "characters:amb_dan_van_phong",
+        "characters:amb_ba_ban_xoi"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.8,
+        "car_share": 0.13,
+        "peak_hours": [
+          [
+            6.5,
+            9
+          ],
+          [
+            16.5,
+            19.5
+          ]
+        ]
+      }
     },
     {
       "id": "ha_dong",
-      "tags": ["suburb", "silk_village", "metro", "division_names_need_check"],
-      "name": {"vi": "Hà Đông", "en": "Hà Đông"},
-      "center": {"lat": 20.97100, "lon": 105.77900},
-      "overture_division_names": ["Hà Đông", "Phường Hà Đông", "Dương Nội", "Yên Nghĩa", "Phú Lương", "Kiến Hưng", "Quận Hà Đông", "Vạn Phúc", "Mộ Lao", "Văn Quán"],
+      "tags": [
+        "suburb",
+        "silk_village",
+        "metro",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Hà Đông",
+        "en": "Hà Đông"
+      },
+      "center": {
+        "lat": 20.971,
+        "lon": 105.779
+      },
+      "overture_division_names": [
+        "Hà Đông",
+        "Phường Hà Đông",
+        "Dương Nội",
+        "Yên Nghĩa",
+        "Phú Lương",
+        "Kiến Hưng",
+        "Quận Hà Đông",
+        "Vạn Phúc",
+        "Mộ Lao",
+        "Văn Quán"
+      ],
       "identity": {
         "vi": "Thị xã Hà Đông cũ, nay là đô thị vệ tinh: ga cuối tuyến tàu điện Cát Linh, làng lụa Vạn Phúc với khung cửi và cổng làng, khu đô thị Văn Quán, Mộ Lao, Dương Nội san sát chung cư. Chợ Hà Đông, phố Quang Trung dài thẳng tắp.",
         "en": "The former town of Hà Đông, now a satellite city: terminus of the Cát Linh metro, Vạn Phúc silk village with looms and a village gate, and the Văn Quán, Mộ Lao and Dương Nội estates crowded with apartment towers."
       },
-      "era_mix": {"chung_cu_cao_tang": 0.25, "lien_ke_kdt": 0.20, "nha_ong_hien_dai": 0.30, "nha_thap_tang": 0.12, "dinh_chua": 0.04, "cho": 0.03, "nha_xuong": 0.03, "cong_trinh_cong_cong": 0.03},
+      "era_mix": {
+        "chung_cu_cao_tang": 0.25,
+        "lien_ke_kdt": 0.2,
+        "nha_ong_hien_dai": 0.3,
+        "nha_thap_tang": 0.12,
+        "dinh_chua": 0.04,
+        "cho": 0.03,
+        "nha_xuong": 0.03,
+        "cong_trinh_cong_cong": 0.03
+      },
       "density": "high",
-      "ambient_audio": ["tieng_khung_cui_van_phuc", "tau_dien_tren_cao", "cong_truong_xay_dung", "coi_xe_may_vua"],
-      "population_profile": ["characters:amb_dan_van_phong", "characters:amb_tho_xay", "characters:amb_tieu_thuong_cho", "characters:amb_hoc_sinh", "characters:amb_shipper"],
-      "traffic_profile": {"motorbike_share": 0.76, "car_share": 0.16, "peak_hours": [[6.5, 8.5], [17, 19]]}
+      "ambient_audio": [
+        "tieng_khung_cui_van_phuc",
+        "tau_dien_tren_cao",
+        "cong_truong_xay_dung",
+        "coi_xe_may_vua"
+      ],
+      "population_profile": [
+        "characters:amb_dan_van_phong",
+        "characters:amb_tho_xay",
+        "characters:amb_tieu_thuong_cho",
+        "characters:amb_hoc_sinh",
+        "characters:amb_shipper"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.76,
+        "car_share": 0.16,
+        "peak_hours": [
+          [
+            6.5,
+            8.5
+          ],
+          [
+            17,
+            19
+          ]
+        ]
+      }
     },
     {
       "id": "hoang_mai",
-      "tags": ["residential", "dense", "new_city", "division_names_need_check"],
-      "name": {"vi": "Hoàng Mai", "en": "Hoàng Mai"},
-      "center": {"lat": 20.97900, "lon": 105.85000},
-      "overture_division_names": ["Hoàng Mai", "Phường Hoàng Mai", "Vĩnh Hưng", "Tương Mai", "Định Công", "Hoàng Liệt", "Yên Sở", "Lĩnh Nam", "Quận Hoàng Mai", "Linh Đàm", "Đại Kim"],
+      "tags": [
+        "residential",
+        "dense",
+        "new_city",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Hoàng Mai",
+        "en": "Hoàng Mai"
+      },
+      "center": {
+        "lat": 20.979,
+        "lon": 105.85
+      },
+      "overture_division_names": [
+        "Hoàng Mai",
+        "Phường Hoàng Mai",
+        "Vĩnh Hưng",
+        "Tương Mai",
+        "Định Công",
+        "Hoàng Liệt",
+        "Yên Sở",
+        "Lĩnh Nam",
+        "Quận Hoàng Mai",
+        "Linh Đàm",
+        "Đại Kim"
+      ],
       "identity": {
         "vi": "Quận đông dân nhất Hà Nội. Bán đảo Linh Đàm với hàng chục tòa HH chung cư giá rẻ, chợ cóc dưới chân tòa nhà, công viên Yên Sở rộng mênh mông, phố Giải Phóng ầm ầm xe khách vào bến Giáp Bát, đường Tam Trinh, Lĩnh Nam bụi xe tải.",
         "en": "Hanoi's most populous district. The Linh Đàm peninsula with dozens of budget HH towers and makeshift markets at their feet, the vast Yên Sở park, Giải Phóng road roaring with coaches heading to Giáp Bát bus station, dusty truck routes."
       },
-      "era_mix": {"chung_cu_cao_tang": 0.30, "nha_ong_hien_dai": 0.35, "lien_ke_kdt": 0.10, "nha_thap_tang": 0.12, "khu_tap_the": 0.05, "cho": 0.03, "nha_xuong": 0.05},
+      "era_mix": {
+        "chung_cu_cao_tang": 0.3,
+        "nha_ong_hien_dai": 0.35,
+        "lien_ke_kdt": 0.1,
+        "nha_thap_tang": 0.12,
+        "khu_tap_the": 0.05,
+        "cho": 0.03,
+        "nha_xuong": 0.05
+      },
       "density": "high",
-      "ambient_audio": ["cho_coc_chan_chung_cu", "xe_khach_bop_coi", "tieng_tre_con_san_chung_cu", "cong_truong_xay_dung"],
-      "population_profile": ["characters:amb_tieu_thuong_cho", "characters:amb_ba_tap_the_duc", "characters:amb_shipper", "characters:amb_tho_xay", "characters:amb_hoc_sinh", "characters:amb_xe_om_truyen_thong"],
-      "traffic_profile": {"motorbike_share": 0.79, "car_share": 0.12, "peak_hours": [[6.5, 9], [16.5, 19.5]]}
+      "ambient_audio": [
+        "cho_coc_chan_chung_cu",
+        "xe_khach_bop_coi",
+        "tieng_tre_con_san_chung_cu",
+        "cong_truong_xay_dung"
+      ],
+      "population_profile": [
+        "characters:amb_tieu_thuong_cho",
+        "characters:amb_ba_tap_the_duc",
+        "characters:amb_shipper",
+        "characters:amb_tho_xay",
+        "characters:amb_hoc_sinh",
+        "characters:amb_xe_om_truyen_thong"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.79,
+        "car_share": 0.12,
+        "peak_hours": [
+          [
+            6.5,
+            9
+          ],
+          [
+            16.5,
+            19.5
+          ]
+        ]
+      }
     },
     {
       "id": "gia_lam",
-      "tags": ["suburb", "pottery_village", "periphery", "map_edge", "division_names_need_check"],
-      "name": {"vi": "Gia Lâm và khu đô thị sinh thái", "en": "Gia Lâm and the eco-township"},
-      "center": {"lat": 21.00800, "lon": 105.93300},
-      "overture_division_names": ["Gia Lâm", "Thuận An", "Bát Tràng", "Phù Đổng", "Huyện Gia Lâm", "Trâu Quỳ", "Đa Tốn", "Kiêu Kỵ", "Dương Xá"],
+      "tags": [
+        "suburb",
+        "pottery_village",
+        "periphery",
+        "map_edge",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Gia Lâm và khu đô thị sinh thái",
+        "en": "Gia Lâm and the eco-township"
+      },
+      "center": {
+        "lat": 21.008,
+        "lon": 105.933
+      },
+      "overture_division_names": [
+        "Gia Lâm",
+        "Thuận An",
+        "Bát Tràng",
+        "Phù Đổng",
+        "Huyện Gia Lâm",
+        "Trâu Quỳ",
+        "Đa Tốn",
+        "Kiêu Kỵ",
+        "Dương Xá"
+      ],
       "identity": {
         "vi": "Rìa đông của bản đồ. Học viện Nông nghiệp ở Trâu Quỳ, làng gốm Bát Tràng với lò nung và chợ gốm, làng nghề quỳ vàng Kiêu Kỵ, đồng ruộng ven đê; xa hơn là một khu đô thị sinh thái lớn (thực tế thuộc Văn Giang, Hưng Yên: ta chỉ dựng phần nhìn thấy làm phông nền).",
         "en": "The eastern map edge. The agriculture academy at Trâu Quỳ, Bát Tràng pottery village with kilns and a ceramics market, Kiêu Kỵ gold-leaf village, fields along the dyke; beyond lies a large eco-township (actually in Văn Giang, Hưng Yên, so only its skyline is built as backdrop)."
       },
-      "era_mix": {"nha_ong_hien_dai": 0.30, "lien_ke_kdt": 0.20, "nha_thap_tang": 0.25, "nha_xuong": 0.10, "dinh_chua": 0.06, "chung_cu_cao_tang": 0.06, "cho": 0.03},
+      "era_mix": {
+        "nha_ong_hien_dai": 0.3,
+        "lien_ke_kdt": 0.2,
+        "nha_thap_tang": 0.25,
+        "nha_xuong": 0.1,
+        "dinh_chua": 0.06,
+        "chung_cu_cao_tang": 0.06,
+        "cho": 0.03
+      },
       "density": "low",
-      "ambient_audio": ["lo_gom_bat_trang", "dong_ruong_ech_keu", "gio_de_song_hong", "xe_tai_tren_de"],
-      "population_profile": ["characters:amb_sinh_vien", "characters:amb_tieu_thuong_cho", "characters:amb_tho_xay", "characters:amb_khach_du_lich_noi_dia", "characters:amb_hoc_sinh"],
-      "traffic_profile": {"motorbike_share": 0.78, "car_share": 0.14, "peak_hours": [[6.5, 8], [17, 18.5]]}
+      "ambient_audio": [
+        "lo_gom_bat_trang",
+        "dong_ruong_ech_keu",
+        "gio_de_song_hong",
+        "xe_tai_tren_de"
+      ],
+      "population_profile": [
+        "characters:amb_sinh_vien",
+        "characters:amb_tieu_thuong_cho",
+        "characters:amb_tho_xay",
+        "characters:amb_khach_du_lich_noi_dia",
+        "characters:amb_hoc_sinh"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.78,
+        "car_share": 0.14,
+        "peak_hours": [
+          [
+            6.5,
+            8
+          ],
+          [
+            17,
+            18.5
+          ]
+        ]
+      }
     },
     {
       "id": "my_dinh",
-      "tags": ["new_city", "skyscrapers", "stadium", "office", "division_names_need_check"],
-      "name": {"vi": "Mỹ Đình và Nam Từ Liêm", "en": "Mỹ Đình and Nam Từ Liêm"},
-      "center": {"lat": 21.02000, "lon": 105.77000},
-      "overture_division_names": ["Từ Liêm", "Phường Từ Liêm", "Xuân Phương", "Tây Mỗ", "Đại Mỗ", "Quận Nam Từ Liêm", "Mỹ Đình 1", "Mỹ Đình 2", "Mễ Trì", "Phú Đô", "Cầu Diễn"],
+      "tags": [
+        "new_city",
+        "skyscrapers",
+        "stadium",
+        "office",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Mỹ Đình và Nam Từ Liêm",
+        "en": "Mỹ Đình and Nam Từ Liêm"
+      },
+      "center": {
+        "lat": 21.02,
+        "lon": 105.77
+      },
+      "overture_division_names": [
+        "Từ Liêm",
+        "Phường Từ Liêm",
+        "Xuân Phương",
+        "Tây Mỗ",
+        "Đại Mỗ",
+        "Quận Nam Từ Liêm",
+        "Mỹ Đình 1",
+        "Mỹ Đình 2",
+        "Mễ Trì",
+        "Phú Đô",
+        "Cầu Diễn"
+      ],
       "identity": {
         "vi": "Hà Nội mới: tòa tháp 72 tầng sừng sững trên đại lộ Phạm Hùng, sân vận động Mỹ Đình, bến xe Mỹ Đình, Trung tâm Hội nghị Quốc gia, các khu đô thị mới, đại lộ Thăng Long thẳng tắp ra phía tây. Kính, thép, đèn LED, quán nhậu dưới chân chung cư.",
         "en": "New Hanoi: the 72-storey tower looming over Phạm Hùng boulevard, Mỹ Đình stadium and coach station, the National Convention Centre, glossy township estates, the straight Thăng Long avenue running west. Glass, steel, LED signs and beer joints beneath apartment towers."
       },
-      "era_mix": {"van_phong_cao_tang": 0.20, "chung_cu_cao_tang": 0.30, "lien_ke_kdt": 0.20, "nha_ong_hien_dai": 0.18, "cong_trinh_cong_cong": 0.07, "nha_thap_tang": 0.05},
+      "era_mix": {
+        "van_phong_cao_tang": 0.2,
+        "chung_cu_cao_tang": 0.3,
+        "lien_ke_kdt": 0.2,
+        "nha_ong_hien_dai": 0.18,
+        "cong_trinh_cong_cong": 0.07,
+        "nha_thap_tang": 0.05
+      },
       "density": "medium",
-      "ambient_audio": ["gio_giua_toa_cao_tang", "xe_khach_ben_mien_tay", "coi_xe_dai_lo", "co_vu_san_van_dong"],
-      "population_profile": ["characters:amb_dan_van_phong", "characters:amb_bao_ve", "characters:amb_xe_om_cong_nghe", "characters:amb_shipper", "characters:amb_sinh_vien", "characters:amb_tho_xay"],
-      "traffic_profile": {"motorbike_share": 0.66, "car_share": 0.26, "peak_hours": [[7, 9], [17, 19.5]]}
+      "ambient_audio": [
+        "gio_giua_toa_cao_tang",
+        "xe_khach_ben_mien_tay",
+        "coi_xe_dai_lo",
+        "co_vu_san_van_dong"
+      ],
+      "population_profile": [
+        "characters:amb_dan_van_phong",
+        "characters:amb_bao_ve",
+        "characters:amb_xe_om_cong_nghe",
+        "characters:amb_shipper",
+        "characters:amb_sinh_vien",
+        "characters:amb_tho_xay"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.66,
+        "car_share": 0.26,
+        "peak_hours": [
+          [
+            7,
+            9
+          ],
+          [
+            17,
+            19.5
+          ]
+        ]
+      }
+    },
+    {
+      "id": "bac_tu_liem",
+      "tags": [
+        "suburb",
+        "villages",
+        "flowers",
+        "metro",
+        "new_city",
+        "division_names_need_check"
+      ],
+      "name": {
+        "vi": "Bắc Từ Liêm",
+        "en": "Bắc Từ Liêm"
+      },
+      "center": {
+        "lat": 21.065,
+        "lon": 105.765
+      },
+      "overture_division_names": [
+        "Bắc Từ Liêm",
+        "Quận Bắc Từ Liêm",
+        "Phú Diễn",
+        "Xuân Đỉnh",
+        "Đông Ngạc",
+        "Thượng Cát",
+        "Tây Tựu",
+        "Cổ Nhuế 1",
+        "Cổ Nhuế 2",
+        "Minh Khai",
+        "Đức Thắng",
+        "Liên Mạc",
+        "Thụy Phương",
+        "Phúc Diễn",
+        "Xuân Tảo"
+      ],
+      "identity": {
+        "vi": "Vành đai làng cũ đang thành phố: Đông Ngạc, Chèm với đình cổ ven đê; Tây Tựu trồng hoa thắp đèn đêm; Cổ Nhuế, Phú Diễn phòng trọ sinh viên; đường Phạm Văn Đồng tám làn xe tải ra sân bay, depot tàu điện Nhổn, công viên Hòa Bình thả diều.",
+        "en": "A ring of old villages turning into city: Đông Ngạc and Chèm with ancient communal houses by the dike; Tây Tựu's flower fields lit at night; student rentals in Cổ Nhuế and Phú Diễn; eight-lane Phạm Văn Đồng with trucks to the airport, the Nhổn metro depot, kites over Hòa Bình park."
+      },
+      "era_mix": {
+        "nha_ong_hien_dai": 0.32,
+        "nha_thap_tang": 0.2,
+        "chung_cu_cao_tang": 0.15,
+        "lien_ke_kdt": 0.12,
+        "dinh_chua": 0.05,
+        "nha_xuong": 0.08,
+        "cong_trinh_cong_cong": 0.05,
+        "cho": 0.03
+      },
+      "density": "medium",
+      "ambient_audio": [
+        "xe_tai_pham_van_dong",
+        "ga_gay_lang_ven_de",
+        "tau_dien_tren_cao",
+        "loa_phuong_sang_som"
+      ],
+      "population_profile": [
+        "characters:amb_sinh_vien",
+        "characters:amb_tho_xay",
+        "characters:amb_tieu_thuong_cho",
+        "characters:amb_shipper",
+        "characters:amb_bao_ve"
+      ],
+      "traffic_profile": {
+        "motorbike_share": 0.72,
+        "car_share": 0.18,
+        "peak_hours": [
+          [
+            6.5,
+            8.5
+          ],
+          [
+            17,
+            19
+          ]
+        ]
+      }
     }
   ]
 }

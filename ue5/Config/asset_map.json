@@ -73,6 +73,139 @@
     "yaw_offset_deg": 0.0,
     "cull_distance_m": 150
   },
+  "metro_rail/viaduct_span": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 1500,
+    "scale_axes": "x"
+  },
+  "metro_rail/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 1500
+  },
+  "national_rail/track": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 300,
+    "scale_axes": "x"
+  },
+  "national_rail/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 300
+  },
+  "river_dike/dike_wall": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 500,
+    "scale_axes": "x"
+  },
+  "river_dike/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 500
+  },
+  "lakeside/railing": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 250,
+    "scale_axes": "x"
+  },
+  "lakeside/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 250
+  },
+  "rooftop_clutter/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 250
+  },
+  "kdt_moi/hoarding_panel": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 800,
+    "scale_axes": "x"
+  },
+  "kdt_moi/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 800
+  },
+  "road_structures/median_fence": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 800,
+    "scale_axes": "x"
+  },
+  "road_structures/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 800
+  },
+  "ktt_addons/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 250
+  },
+  "lang_trong_pho/ao_lang_fence": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 400,
+    "scale_axes": "x"
+  },
+  "lang_trong_pho/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 400
+  },
+  "cho_coc/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 120
+  },
+  "pavement_clutter/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 120
+  },
   "_example/tree_sau": {
     "meshes": [
       "/Game/Hanoi/Props/Trees/SM_tree_sau_v0.SM_tree_sau_v0",

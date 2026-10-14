@@ -1116,15 +1116,15 @@
         "religious",
         "respectful_zone",
         "food",
-        "coords_unverified"
+        "coords_verified_overture"
       ],
       "name": {
         "vi": "Phủ Tây Hồ",
         "en": "Tây Hồ Shrine"
       },
       "location": {
-        "lat": 21.0551,
-        "lon": 105.8195
+        "lat": 21.05513,
+        "lon": 105.819753
       },
       "district": "districts:tay_ho",
       "kind": "temple",
@@ -1533,6 +1533,1392 @@
           "own_photo_survey"
         ]
       }
+    },
+    {
+      "id": "cong_vien_thu_le",
+      "tags": [
+        "park",
+        "zoo",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Công viên Thủ Lệ (Vườn thú Hà Nội)",
+        "en": "Thủ Lệ Park (Hanoi Zoo)"
+      },
+      "location": {
+        "lat": 21.0336,
+        "lon": 105.8068
+      },
+      "district": "districts:ba_dinh",
+      "kind": "park",
+      "description": {
+        "vi": "Vườn thú giữa phố với hồ Thủ Lệ, đền Voi Phục bên cạnh, cổng trên đường Kim Mã; điểm hẹn cuối tuần của gia đình và đôi chụp ảnh cưới.",
+        "en": "The city zoo around Thủ Lệ lake, Voi Phục temple next door, gates on Kim Mã; weekend spot for families and wedding photo shoots."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "pho_phan_dinh_phung",
+      "tags": [
+        "street",
+        "trees",
+        "photo_spot",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Phố Phan Đình Phùng",
+        "en": "Phan Đình Phùng Street"
+      },
+      "location": {
+        "lat": 21.0405,
+        "lon": 105.844
+      },
+      "district": "districts:ba_dinh",
+      "kind": "street",
+      "description": {
+        "vi": "Con phố ba hàng sấu cổ thụ, vỉa hè rộng, biệt thự Pháp và tường gạch Hoàng thành; mùa sấu rụng là nơi cả Hà Nội ra chụp ảnh.",
+        "en": "Three rows of old dracontomelon trees, wide pavements, French villas and the citadel's brick wall; when the fruit falls the whole city comes to take photos."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ],
+        "notes": "Hàng cây xà cừ/sấu đặt theo PCG street_trees với mật độ dày; biệt thự theo kit biet_thu_phap; tường Hoàng thành dựng tay."
+      },
+      "activities": [
+        "activities:act_chup_anh_pho",
+        "activities:act_chup_lai_anh_xua"
+      ]
+    },
+    {
+      "id": "khu_tap_the_giang_vo",
+      "tags": [
+        "tap_the",
+        "heritage_1980s",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Khu tập thể Giảng Võ",
+        "en": "Giảng Võ collective housing"
+      },
+      "location": {
+        "lat": 21.028299,
+        "lon": 105.819943
+      },
+      "district": "districts:ba_dinh",
+      "kind": "other",
+      "description": {
+        "vi": "Các dãy nhà lắp ghép 5 tầng thập niên 1970-80 quanh hồ Giảng Võ, chuồng cọp chi chít, sân chơi giữa các khối, quán trà đá dưới gốc bàng.",
+        "en": "Five-storey prefab slabs from the 1970s-80s around Giảng Võ lake, cage balconies everywhere, playgrounds between blocks, tea stalls under almond trees."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_suu_tam_tem_phieu",
+        "activities:act_co_tuong"
+      ]
+    },
+    {
+      "id": "bao_tang_my_thuat",
+      "tags": [
+        "museum",
+        "colonial",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Bảo tàng Mỹ thuật Việt Nam",
+        "en": "Vietnam Fine Arts Museum"
+      },
+      "location": {
+        "lat": 21.030693,
+        "lon": 105.836527
+      },
+      "district": "districts:ba_dinh",
+      "kind": "museum",
+      "description": {
+        "vi": "Tòa nhà Pháp vàng ốc ba tầng trên phố Nguyễn Thái Học, đối diện Văn Miếu, nơi Khôi so ảnh xưa với tranh phố của Bùi Xuân Phái.",
+        "en": "A three-storey ochre French building on Nguyễn Thái Học facing the Temple of Literature; where Khôi compares his father's frames with Bùi Xuân Phái's street paintings."
+      },
+      "built_year": 1937,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "opening_hours": [
+        8.5,
+        17.0
+      ]
+    },
+    {
+      "id": "ho_thien_quang",
+      "tags": [
+        "lake",
+        "hoa_sua",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Hồ Thiền Quang",
+        "en": "Thiền Quang Lake"
+      },
+      "location": {
+        "lat": 21.0177,
+        "lon": 105.847
+      },
+      "district": "districts:hai_ba_trung",
+      "kind": "lake",
+      "description": {
+        "vi": "Hồ vuông vức giữa phố Trần Nhân Tông và Nguyễn Du, hàng hoa sữa thơm tháng Mười, sân khấu ngoài trời cuối tuần, ông bà tập thể dục sáng.",
+        "en": "A square lake between Trần Nhân Tông and Nguyễn Du, milk-flower trees scenting October, a weekend outdoor stage, elders exercising at dawn."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_tap_duong_sinh",
+        "activities:act_chay_bo_ho_guom"
+      ]
+    },
+    {
+      "id": "times_city",
+      "tags": [
+        "new_city",
+        "mall",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Times City (Vinhomes Times City)",
+        "en": "Times City estate"
+      },
+      "location": {
+        "lat": 20.99491,
+        "lon": 105.867645
+      },
+      "district": "districts:hai_ba_trung",
+      "kind": "modern_tower",
+      "description": {
+        "vi": "Cụm chung cư cao tầng trên nền nhà máy cũ Minh Khai, trung tâm thương mại và thủy cung dưới lòng đất, nhạc nước buổi tối; thế giới 'Hà Nội mới' đối lập với phố cổ.",
+        "en": "High-rise cluster on the old Minh Khai factory land, an underground mall and aquarium, evening fountain shows; the 'new Hanoi' that the Old Quarter is measured against."
+      },
+      "built_year": 2013,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ],
+        "notes": "Tên thật của khu đô thị: chỉ dùng trong dữ liệu tham chiếu; trong game dùng tên nhại nếu cần."
+      }
+    },
+    {
+      "id": "dai_hoc_bach_khoa",
+      "tags": [
+        "university",
+        "students",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Đại học Bách khoa Hà Nội",
+        "en": "Hanoi University of Science and Technology"
+      },
+      "location": {
+        "lat": 21.006388,
+        "lon": 105.842386
+      },
+      "district": "districts:hai_ba_trung",
+      "kind": "other",
+      "description": {
+        "vi": "Khuôn viên rộng nhất nội thành, nhà C1 kiểu Liên Xô, hồ Bách Khoa, con đường Tạ Quang Bửu đầy quán sinh viên; sân đá cầu, đá bóng buổi chiều.",
+        "en": "The largest campus in the inner city, the Soviet-style C1 hall, Bách Khoa lake, Tạ Quang Bửu street lined with student eateries; afternoon shuttlecock and football."
+      },
+      "built_year": 1956,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_da_cau"
+      ]
+    },
+    {
+      "id": "cho_hom",
+      "tags": [
+        "market",
+        "fabric",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Chợ Hôm - Đức Viên",
+        "en": "Hôm Market"
+      },
+      "location": {
+        "lat": 21.016,
+        "lon": 105.852
+      },
+      "district": "districts:hai_ba_trung",
+      "kind": "market",
+      "description": {
+        "vi": "Chợ vải lớn nhất Hà Nội trên phố Huế, tầng trên cuộn vải chất tới trần, tầng dưới hàng ăn; nơi Lan mua vải may tạp dề và biển vải cho quán.",
+        "en": "Hanoi's biggest fabric market on phố Huế, bolts stacked to the ceiling upstairs, food stalls below; where Lan buys cloth for aprons and shop banners."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "opening_hours": [
+        6.0,
+        18.0
+      ],
+      "activities": [
+        "activities:act_mac_ca_cho_dau_moi"
+      ]
+    },
+    {
+      "id": "go_dong_da",
+      "tags": [
+        "heritage",
+        "festival",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Gò Đống Đa và tượng đài Quang Trung",
+        "en": "Đống Đa Mound and Quang Trung monument"
+      },
+      "location": {
+        "lat": 21.0133,
+        "lon": 105.8225
+      },
+      "district": "districts:dong_da",
+      "kind": "monument",
+      "description": {
+        "vi": "Gò đất trận Ngọc Hồi - Đống Đa 1789, tượng đài vua Quang Trung, lễ hội mùng 5 Tết với múa rồng lửa; công viên nhỏ dân phố tập thể dục.",
+        "en": "The mound of the 1789 battle, the Quang Trung monument, the fifth-day-of-Tết festival with fire-dragon dances; a small park where locals exercise."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_tap_duong_sinh"
+      ]
+    },
+    {
+      "id": "chua_lang",
+      "tags": [
+        "pagoda",
+        "village",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Chùa Láng",
+        "en": "Láng Pagoda"
+      },
+      "location": {
+        "lat": 21.023395,
+        "lon": 105.802727
+      },
+      "district": "districts:dong_da",
+      "kind": "pagoda",
+      "description": {
+        "vi": "Chùa thờ thiền sư Từ Đạo Hạnh giữa làng Láng cũ, cổng tam quan, sân muỗm cổ thụ, hội chùa Láng mùng 7 tháng Ba âm; xung quanh là ngõ chật và quán trà sinh viên.",
+        "en": "Pagoda to the monk Từ Đạo Hạnh in old Láng village, triple gate, ancient mango trees, festival on the seventh of the third lunar month; tight alleys and student tea stalls around."
+      },
+      "built_year": 1100,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      }
+    },
+    {
+      "id": "khu_tap_the_kim_lien",
+      "tags": [
+        "tap_the",
+        "heritage_1960s",
+        "story",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Khu tập thể Kim Liên",
+        "en": "Kim Liên collective housing"
+      },
+      "location": {
+        "lat": 21.0085,
+        "lon": 105.839
+      },
+      "district": "districts:dong_da",
+      "kind": "other",
+      "description": {
+        "vi": "Khu tập thể đầu tiên của Hà Nội (1959-65), nhà 4 tầng gạch, cầu thang ngoài, chợ Kim Liên, karaoke Kim Liên trong truyện; bối cảnh cuộn băng ông Khải thời bao cấp.",
+        "en": "Hanoi's first collective housing (1959-65), four-storey brick blocks with outside stairs, Kim Liên market, the story's Kim Liên karaoke; setting of ông Khải's subsidy-era tapes."
+      },
+      "built_year": 1959,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_karaoke",
+        "activities:act_suu_tam_tem_phieu"
+      ]
+    },
+    {
+      "id": "nga_tu_so",
+      "tags": [
+        "junction",
+        "traffic",
+        "metro",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Ngã Tư Sở",
+        "en": "Ngã Tư Sở junction"
+      },
+      "location": {
+        "lat": 20.9958,
+        "lon": 105.8205
+      },
+      "district": "districts:dong_da",
+      "kind": "other",
+      "description": {
+        "vi": "Nút giao tắc nhất phía tây nam: cầu vượt, chợ Ngã Tư Sở, ga tàu điện 2A trên cao, dòng xe máy ken đặc giờ tan tầm; bài thi 'thuộc đường' của Minh.",
+        "en": "The south-west's worst bottleneck: a flyover, Ngã Tư Sở market, the elevated line 2A station, motorbikes packed solid at rush hour; Minh's street-knowledge exam."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ],
+        "notes": "Cầu vượt và ga tàu điện dựng tay; nhịp cầu dùng prop rail/metro_viaduct."
+      }
+    },
+    {
+      "id": "vuon_dao_nhat_tan",
+      "tags": [
+        "flowers",
+        "seasonal",
+        "photo_spot",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Vườn đào Nhật Tân",
+        "en": "Nhật Tân peach orchards"
+      },
+      "location": {
+        "lat": 21.079,
+        "lon": 105.823
+      },
+      "district": "districts:tay_ho",
+      "kind": "park",
+      "description": {
+        "vi": "Những vườn đào bích, đào phai ven đê, tháng Chạp đỏ rực người chụp ảnh áo dài; mùa hè là vườn hướng dương, cúc họa mi tháng Mười Một.",
+        "en": "Peach orchards along the dike, scarlet in the last lunar month with áo dài photo shoots; sunflowers in summer, daisies in November."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ],
+        "notes": "Cây đào là prop theo mùa (events: tet_nguyen_dan)."
+      },
+      "activities": [
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "bai_da_song_hong",
+      "tags": [
+        "river",
+        "photo_spot",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Bãi đá sông Hồng",
+        "en": "Red River stone beach"
+      },
+      "location": {
+        "lat": 21.079,
+        "lon": 105.831
+      },
+      "district": "districts:tay_ho",
+      "kind": "park",
+      "description": {
+        "vi": "Bãi bồi ven sông dưới chân cầu Nhật Tân, vườn hoa chụp ảnh, cỏ lau mùa đông, hoàng hôn trên sông; nơi Khôi chụp lại bức ảnh bãi sông 1992.",
+        "en": "Floodplain under Nhật Tân bridge, flower gardens for photos, winter reeds, river sunsets; where Khôi re-shoots the 1992 riverbank frame."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_chup_lai_anh_xua",
+        "activities:act_tha_dieu"
+      ]
+    },
+    {
+      "id": "chua_kim_lien",
+      "tags": [
+        "pagoda",
+        "heritage",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Chùa Kim Liên",
+        "en": "Kim Liên Pagoda"
+      },
+      "location": {
+        "lat": 21.064576,
+        "lon": 105.829296
+      },
+      "district": "districts:tay_ho",
+      "kind": "pagoda",
+      "description": {
+        "vi": "Chùa gỗ ba nếp hình chữ tam bên Hồ Tây, mái đao cong, cổng tam quan gạch rêu; yên tĩnh giữa làng Nghi Tàm quất cảnh.",
+        "en": "A three-hall wooden pagoda on West Lake, curving roof corners, a mossy brick gate; quiet amid the kumquat gardens of Nghi Tàm village."
+      },
+      "built_year": 1639,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      }
+    },
+    {
+      "id": "pho_di_bo_trinh_cong_son",
+      "tags": [
+        "walking_street",
+        "lotus",
+        "weekend",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Phố đi bộ Trịnh Công Sơn",
+        "en": "Trịnh Công Sơn walking street"
+      },
+      "location": {
+        "lat": 21.064,
+        "lon": 105.825
+      },
+      "district": "districts:tay_ho",
+      "kind": "street",
+      "description": {
+        "vi": "Phố đi bộ cuối tuần ven hồ sen Tây Hồ, sân khấu nhạc Trịnh, hàng quà vặt, đầm sen tháng Sáu; không gian thử giọng cho nhân vật phụ ca sĩ phố.",
+        "en": "Weekend walking street by the West Lake lotus ponds, a Trịnh music stage, snack stalls, lotus in June."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "cong_vien_cau_giay",
+      "tags": [
+        "park",
+        "new_city",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Công viên Cầu Giấy",
+        "en": "Cầu Giấy Park"
+      },
+      "location": {
+        "lat": 21.0305,
+        "lon": 105.7905
+      },
+      "district": "districts:cau_giay",
+      "kind": "park",
+      "description": {
+        "vi": "Công viên mới với hồ, đường chạy, sân trượt patin, trường học bao quanh; nơi dân văn phòng Duy Tân chạy bộ chiều và sinh viên hẹn hò.",
+        "en": "A new park with a lake, running loop and skate rink, ringed by schools; evening runs for Duy Tân office workers, student dates."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_chay_bo_ho_guom",
+        "activities:act_da_cau"
+      ]
+    },
+    {
+      "id": "dai_hoc_quoc_gia",
+      "tags": [
+        "university",
+        "students",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Đại học Quốc gia Hà Nội (Xuân Thủy)",
+        "en": "Vietnam National University, Xuân Thủy campus"
+      },
+      "location": {
+        "lat": 21.0375,
+        "lon": 105.7825
+      },
+      "district": "districts:cau_giay",
+      "kind": "other",
+      "description": {
+        "vi": "Dãy trường Đại học Quốc gia, Sư phạm, Báo chí nối nhau trên Xuân Thủy; cổng trường đông kín xe ôm, trà chanh, xôi sáng; tắc đường giờ tan học.",
+        "en": "The row of national, teacher-training and journalism campuses on Xuân Thủy; gates crowded with ride-hail bikes, lemon tea and sticky rice; gridlock when classes end."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_xe_om_cong_nghe",
+        "activities:act_giao_do_an"
+      ]
+    },
+    {
+      "id": "chua_ha",
+      "tags": [
+        "pagoda",
+        "youth",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Chùa Hà",
+        "en": "Hà Pagoda"
+      },
+      "location": {
+        "lat": 21.032,
+        "lon": 105.799
+      },
+      "district": "districts:cau_giay",
+      "kind": "pagoda",
+      "description": {
+        "vi": "Ngôi chùa người trẻ Hà Nội đến cầu duyên, lễ vật hoa hồng, sân chùa đông mùng Một và ngày Rằm; cổng vào phố Chùa Hà đầy hàng hoa và bánh.",
+        "en": "The pagoda young Hanoians visit to pray for love, offerings of roses, crowded on the first and fifteenth lunar days; Chùa Hà street outside is all flower and cake stalls."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 3,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      }
+    },
+    {
+      "id": "royal_city",
+      "tags": [
+        "new_city",
+        "mall",
+        "metro",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Royal City (Vincom Mega Mall Royal City)",
+        "en": "Royal City estate"
+      },
+      "location": {
+        "lat": 21.002332,
+        "lon": 105.815403
+      },
+      "district": "districts:thanh_xuan",
+      "kind": "modern_tower",
+      "description": {
+        "vi": "Khu đô thị trên nền nhà máy Cơ khí Hà Nội, tháp cao kiểu tân cổ điển, trung tâm thương mại ngầm với sân trượt băng; cổng lớn trên Nguyễn Trãi dưới đường sắt 2A.",
+        "en": "High-rise estate on the old Hanoi Mechanical Works site, neoclassical towers, an underground mall with an ice rink; the main gate on Nguyễn Trãi under line 2A."
+      },
+      "built_year": 2013,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ],
+        "notes": "Tên thật của khu đô thị: chỉ dùng trong dữ liệu tham chiếu; trong game dùng tên nhại nếu cần."
+      }
+    },
+    {
+      "id": "ngo_khuong_dinh",
+      "tags": [
+        "story",
+        "home",
+        "alley",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Ngõ Khương Đình (phòng trọ của Minh)",
+        "en": "Khương Đình alley (Minh's rented room)"
+      },
+      "location": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "district": "districts:thanh_xuan",
+      "kind": "street",
+      "description": {
+        "vi": "Ngõ nhà trọ sinh viên và công nhân ven sông Tô Lịch, tường ẩm, dây điện chằng chịt, quán cơm bụi 25 nghìn; phòng 12 m² của Minh và Tuấn Béo ở tầng ba.",
+        "en": "An alley of student and worker rentals by the Tô Lịch river, damp walls, tangled wires, 25k rice canteens; Minh and Tuấn Béo's 12 m² room on the third floor."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ],
+        "notes": "Nhà trọ của Minh dựng tay (nội thất vào được), ngõ còn lại theo kit nha_ong_hien_dai."
+      }
+    },
+    {
+      "id": "cong_vien_thanh_xuan",
+      "tags": [
+        "park",
+        "lake",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Công viên Thanh Xuân (hồ Nhân Chính)",
+        "en": "Thanh Xuân Park (Nhân Chính lake)"
+      },
+      "location": {
+        "lat": 20.996,
+        "lon": 105.808
+      },
+      "district": "districts:thanh_xuan",
+      "kind": "park",
+      "description": {
+        "vi": "Hồ Nhân Chính và công viên quanh hồ giữa các tòa chung cư Lê Văn Lương; sáng tập thể dục, chiều câu cá, tối ghế đá hẹn hò.",
+        "en": "Nhân Chính lake and its park among the Lê Văn Lương towers; dawn exercise, afternoon fishing, evening benches."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_tap_duong_sinh"
+      ]
+    },
+    {
+      "id": "ho_linh_dam",
+      "tags": [
+        "lake",
+        "new_city",
+        "dense",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Hồ Linh Đàm",
+        "en": "Linh Đàm Lake"
+      },
+      "location": {
+        "lat": 20.963,
+        "lon": 105.83
+      },
+      "district": "districts:hoang_mai",
+      "kind": "lake",
+      "description": {
+        "vi": "Hồ lớn phía nam với bán đảo Linh Đàm, đường dạo và hàng cây; xung quanh là tổ hợp chung cư HH mười hai tòa 40 tầng chen chúc nhất Hà Nội.",
+        "en": "The south's big lake with the Linh Đàm peninsula, promenade and trees; around it the HH complex, twelve 40-storey towers, the densest housing in Hanoi."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_chay_bo_ho_guom"
+      ]
+    },
+    {
+      "id": "chung_cu_hh_linh_dam",
+      "tags": [
+        "dense",
+        "new_city",
+        "migrants",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Tổ hợp chung cư HH Linh Đàm",
+        "en": "HH Linh Đàm towers"
+      },
+      "location": {
+        "lat": 20.963986,
+        "lon": 105.826953
+      },
+      "district": "districts:hoang_mai",
+      "kind": "modern_tower",
+      "description": {
+        "vi": "Mười hai tòa nhà 36-41 tầng trên một ô đất, hơn 30.000 người, hành lang hẹp, thang máy chen chúc, chợ cóc dưới chân; biểu tượng của 'nhà cho người nhập cư'.",
+        "en": "Twelve 36-41 storey towers on one plot, over 30,000 residents, narrow corridors, packed lifts, a makeshift market at the base; the symbol of migrant housing."
+      },
+      "built_year": 2015,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ],
+        "notes": "Dùng kit chung_cu_cao_tang với mật độ cao; đặt chợ cóc và bãi xe bằng prop."
+      }
+    },
+    {
+      "id": "cong_vien_yen_so",
+      "tags": [
+        "park",
+        "lake",
+        "weekend",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Công viên Yên Sở",
+        "en": "Yên Sở Park"
+      },
+      "location": {
+        "lat": 20.958,
+        "lon": 105.868
+      },
+      "district": "districts:hoang_mai",
+      "kind": "park",
+      "description": {
+        "vi": "Công viên lớn nhất Hà Nội với chuỗi hồ điều hòa, bãi cỏ cắm trại cuối tuần, đường chạy dài; cửa ngõ phía nam cạnh cao tốc Pháp Vân.",
+        "en": "Hanoi's largest park with a chain of regulating lakes, weekend camping lawns, long running loops; the southern gateway by the Pháp Vân expressway."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_tha_dieu",
+        "activities:act_chay_bo_ho_guom"
+      ]
+    },
+    {
+      "id": "cho_dau_moi_den_lu",
+      "tags": [
+        "market",
+        "night",
+        "wholesale",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Chợ đầu mối phía Nam (Đền Lừ)",
+        "en": "Southern wholesale market (Đền Lừ)"
+      },
+      "location": {
+        "lat": 20.987,
+        "lon": 105.86
+      },
+      "district": "districts:hoang_mai",
+      "kind": "market",
+      "description": {
+        "vi": "Chợ rau quả đầu mối họp từ nửa đêm, xe tải từ Hưng Yên, Hà Nam đổ hàng, ánh đèn vàng và tiếng mặc cả; nơi Lan lấy hành, rau thơm cho quán khi chợ Long Biên đóng.",
+        "en": "Wholesale produce market running from midnight, trucks from Hưng Yên and Hà Nam unloading, yellow lamps and haggling; Lan's fallback for herbs when Long Biên market shuts."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "opening_hours": [
+        0.0,
+        8.0
+      ],
+      "activities": [
+        "activities:act_mac_ca_cho_dau_moi",
+        "activities:act_cho_hang_ba_gac"
+      ]
+    },
+    {
+      "id": "aeon_long_bien",
+      "tags": [
+        "mall",
+        "new_city",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Aeon Mall Long Biên",
+        "en": "Aeon Mall Long Biên"
+      },
+      "location": {
+        "lat": 21.0298,
+        "lon": 105.8975
+      },
+      "district": "districts:long_bien",
+      "kind": "modern_tower",
+      "description": {
+        "vi": "Trung tâm thương mại lớn đầu tiên bên kia sông, bãi xe máy mênh mông, chuyến xe buýt miễn phí; nơi giới trẻ Long Biên, Gia Lâm hẹn hò cuối tuần.",
+        "en": "The first big mall east of the river, a vast motorbike park, free shuttle buses; where Long Biên and Gia Lâm teenagers meet on weekends."
+      },
+      "built_year": 2015,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ],
+        "notes": "Tên thật: chỉ dùng tham chiếu; trong game dùng tên nhại."
+      }
+    },
+    {
+      "id": "cau_vinh_tuy",
+      "tags": [
+        "bridge",
+        "river",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Cầu Vĩnh Tuy",
+        "en": "Vĩnh Tuy Bridge"
+      },
+      "location": {
+        "lat": 21.0085,
+        "lon": 105.8775
+      },
+      "district": "districts:long_bien",
+      "kind": "bridge",
+      "description": {
+        "vi": "Cầu bê tông đôi nối Hai Bà Trưng với Long Biên, mặt cầu rộng, gió sông lớn, hoàng hôn phía Chương Dương; tuyến tắt của Minh ra Aeon.",
+        "en": "Twin concrete bridge joining Hai Bà Trưng and Long Biên, wide deck, strong river wind, sunsets toward Chương Dương; Minh's shortcut to Aeon."
+      },
+      "built_year": 2010,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      }
+    },
+    {
+      "id": "de_song_hong_ngoc_thuy",
+      "tags": [
+        "dike",
+        "river",
+        "village",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Đê sông Hồng đoạn Ngọc Thụy",
+        "en": "Red River dike at Ngọc Thụy"
+      },
+      "location": {
+        "lat": 21.062,
+        "lon": 105.878
+      },
+      "district": "districts:long_bien",
+      "kind": "street",
+      "description": {
+        "vi": "Con đê đất cao chạy dọc bờ bắc, đường bê tông trên mặt đê, bãi chuối và ngô phía sông, làng cũ phía trong; nhìn thấy cả cầu Long Biên và Nhật Tân.",
+        "en": "The high earth dike along the north bank, a concrete road on top, banana and maize fields riverside, old village inside; both Long Biên and Nhật Tân bridges in view."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_tha_dieu",
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "trung_tam_hoi_nghi_quoc_gia",
+      "tags": [
+        "modern",
+        "landmark_roof",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Trung tâm Hội nghị Quốc gia",
+        "en": "National Convention Centre"
+      },
+      "location": {
+        "lat": 21.0045,
+        "lon": 105.785
+      },
+      "district": "districts:my_dinh",
+      "kind": "colonial_building",
+      "description": {
+        "vi": "Mái 'sóng biển Đông' nhấp nhô trên Phạm Hùng, quảng trường rộng, hồ và cây xanh; bối cảnh hội nghị trong truyện và điểm chụp ảnh kiến trúc.",
+        "en": "The rolling 'East Sea wave' roof on Phạm Hùng, a wide plaza, lake and lawns; a story conference venue and an architecture photo spot."
+      },
+      "built_year": 2006,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      }
+    },
+    {
+      "id": "ben_xe_my_dinh",
+      "tags": [
+        "station",
+        "story",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Bến xe Mỹ Đình",
+        "en": "Mỹ Đình bus station"
+      },
+      "location": {
+        "lat": 21.028463,
+        "lon": 105.778005
+      },
+      "district": "districts:my_dinh",
+      "kind": "station",
+      "description": {
+        "vi": "Bến xe khách lớn nhất phía tây, xe đi Phú Thọ, Lào Cai, Thái Bình; hàng xe ôm, hàng quà vặt, loa gọi tên tuyến; nơi mẹ Minh lên xe về quê.",
+        "en": "The west's biggest coach station, buses to Phú Thọ, Lào Cai, Thái Bình; ride-hail queues, snack stalls, loudspeakers calling routes; where Minh's mother boards for home."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_xe_om_cong_nghe"
+      ],
+      "overture_ids": [
+        "4b107212-1a89-4e3f-b6a2-262995a48194"
+      ]
+    },
+    {
+      "id": "bao_tang_ha_noi",
+      "tags": [
+        "museum",
+        "modern",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Bảo tàng Hà Nội",
+        "en": "Hanoi Museum"
+      },
+      "location": {
+        "lat": 21.0052,
+        "lon": 105.787
+      },
+      "district": "districts:my_dinh",
+      "kind": "museum",
+      "description": {
+        "vi": "Kim tự tháp ngược bốn tầng cạnh Trung tâm Hội nghị, sảnh xoắn ốc, vườn tượng và nhà cổ dựng lại; nơi Khôi định tặng kho ảnh.",
+        "en": "A four-storey inverted pyramid next to the convention centre, spiral hall, sculpture garden and reconstructed old houses; where Khôi considers donating the archive."
+      },
+      "built_year": 2010,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "opening_hours": [
+        8.0,
+        17.0
+      ]
+    },
+    {
+      "id": "dinh_chem",
+      "tags": [
+        "temple",
+        "heritage",
+        "village",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Đình Chèm",
+        "en": "Chèm communal house"
+      },
+      "location": {
+        "lat": 21.096,
+        "lon": 105.778
+      },
+      "district": "districts:bac_tu_liem",
+      "kind": "temple",
+      "description": {
+        "vi": "Ngôi đình cổ nhất Hà Nội bên sông Hồng thờ Lý Ông Trọng, cổng nghi môn, sân gạch, cây đa, hội đình tháng Năm âm với rước nước trên sông.",
+        "en": "Hanoi's oldest communal house on the Red River, honouring Lý Ông Trọng; a ceremonial gate, brick yard, banyan, a fifth-lunar-month festival with river water procession."
+      },
+      "built_year": 866,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      }
+    },
+    {
+      "id": "cong_vien_hoa_binh",
+      "tags": [
+        "park",
+        "kites",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Công viên Hòa Bình",
+        "en": "Hòa Bình Park"
+      },
+      "location": {
+        "lat": 21.0695,
+        "lon": 105.783
+      },
+      "district": "districts:bac_tu_liem",
+      "kind": "park",
+      "description": {
+        "vi": "Công viên rộng với tượng đài Hòa Bình, hồ lớn, bãi cỏ thả diều, quảng trường tập dance buổi tối; cửa ngõ Phạm Văn Đồng đi sân bay.",
+        "en": "A big park with the Peace monument, a large lake, kite lawns, evening dance squares; the Phạm Văn Đồng gateway toward the airport."
+      },
+      "built_year": 2010,
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_tha_dieu",
+        "activities:act_tap_duong_sinh"
+      ]
+    },
+    {
+      "id": "lang_hoa_tay_tuu",
+      "tags": [
+        "flowers",
+        "village",
+        "night",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Làng hoa Tây Tựu",
+        "en": "Tây Tựu flower village"
+      },
+      "location": {
+        "lat": 21.0905,
+        "lon": 105.755
+      },
+      "district": "districts:bac_tu_liem",
+      "kind": "other",
+      "description": {
+        "vi": "Cánh đồng hoa cúc, hoa hồng, lay ơn trải dài, nhà kính và đèn thắp đêm cho hoa cúc; xe máy chở hoa cao ngất về chợ Quảng Bá lúc 2 giờ sáng.",
+        "en": "Fields of chrysanthemums, roses and gladioli, greenhouses and night lamps forcing the mums; motorbikes stacked with flowers heading to Quảng Bá market at 2 a.m."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_cho_hang_ba_gac",
+        "activities:act_chup_anh_pho"
+      ]
+    },
+    {
+      "id": "ga_nhon",
+      "tags": [
+        "metro",
+        "station",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Ga Nhổn (depot tuyến 3)",
+        "en": "Nhổn station and line 3 depot"
+      },
+      "location": {
+        "lat": 21.0505,
+        "lon": 105.742
+      },
+      "district": "districts:bac_tu_liem",
+      "kind": "station",
+      "description": {
+        "vi": "Ga đầu tuyến metro Nhổn - ga Hà Nội và depot, đoàn tàu xanh lá, đường sắt trên cao chạy dọc Hồ Tùng Mậu - Xuân Thủy - Cầu Giấy.",
+        "en": "Terminus of the Nhổn - Hanoi Station metro and its depot, green trains, the viaduct along Hồ Tùng Mậu - Xuân Thủy - Cầu Giấy."
+      },
+      "built_year": 2024,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      }
+    },
+    {
+      "id": "lang_lua_van_phuc",
+      "tags": [
+        "craft_village",
+        "silk",
+        "gate",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Làng lụa Vạn Phúc",
+        "en": "Vạn Phúc silk village"
+      },
+      "location": {
+        "lat": 20.979812,
+        "lon": 105.774586
+      },
+      "district": "districts:ha_dong",
+      "kind": "gate",
+      "description": {
+        "vi": "Cổng làng lợp ngói, phố ô che đủ màu, tiếng khung cửi từ các nhà, cửa hàng lụa san sát, đình làng và cây đa đầu làng.",
+        "en": "A tiled village gate, a street of colourful umbrellas, looms clacking inside houses, silk shops side by side, the communal house and a banyan at the entrance."
+      },
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 1,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_chup_anh_pho",
+        "activities:act_huong_dan_vien"
+      ]
+    },
+    {
+      "id": "ga_yen_nghia",
+      "tags": [
+        "metro",
+        "station",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Ga Yên Nghĩa (cuối tuyến 2A)",
+        "en": "Yên Nghĩa station (line 2A terminus)"
+      },
+      "location": {
+        "lat": 20.9545,
+        "lon": 105.748
+      },
+      "district": "districts:ha_dong",
+      "kind": "station",
+      "description": {
+        "vi": "Ga cuối tàu điện Cát Linh - Hà Đông cạnh bến xe Yên Nghĩa, tàu xanh lá trên cao, cánh đồng và chung cư mới phía xa.",
+        "en": "Terminus of the Cát Linh - Hà Đông metro beside Yên Nghĩa coach station, green trains overhead, fields and new towers beyond."
+      },
+      "built_year": 2021,
+      "modelling": {
+        "method": "hand_modelled",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      }
+    },
+    {
+      "id": "cho_ha_dong",
+      "tags": [
+        "market",
+        "coords_verified_overture"
+      ],
+      "name": {
+        "vi": "Chợ Hà Đông",
+        "en": "Hà Đông Market"
+      },
+      "location": {
+        "lat": 20.97043,
+        "lon": 105.780088
+      },
+      "district": "districts:ha_dong",
+      "kind": "market",
+      "description": {
+        "vi": "Chợ trung tâm thị xã cũ trên phố Quang Trung, hàng vải lụa, hàng ăn, chợ cóc tràn vỉa hè quanh bưu điện Hà Đông.",
+        "en": "The old town's central market on Quang Trung, silk and fabric stalls, eateries, a makeshift market spilling onto the pavement by the Hà Đông post office."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "opening_hours": [
+        5.0,
+        19.0
+      ],
+      "activities": [
+        "activities:act_mac_ca_cho_dau_moi"
+      ]
+    },
+    {
+      "id": "ho_van_quan",
+      "tags": [
+        "lake",
+        "new_city",
+        "coords_unverified"
+      ],
+      "name": {
+        "vi": "Hồ Văn Quán",
+        "en": "Văn Quán Lake"
+      },
+      "location": {
+        "lat": 20.979,
+        "lon": 105.792
+      },
+      "district": "districts:ha_dong",
+      "kind": "lake",
+      "description": {
+        "vi": "Hồ giữa khu đô thị Văn Quán, đường dạo, hàng liễu, chung cư thấp tầng kiểu 2005, quán cà phê và lớp học nhảy buổi tối.",
+        "en": "A lake at the heart of the Văn Quán estate, promenade, willows, 2005-style mid-rise blocks, cafés and evening dance classes."
+      },
+      "modelling": {
+        "method": "procedural_plus_kit",
+        "priority": 2,
+        "reference_sources": [
+          "own_photo_survey",
+          "wikimedia_commons",
+          "osm_footprint"
+        ]
+      },
+      "activities": [
+        "activities:act_tap_duong_sinh"
+      ]
     }
   ]
 }

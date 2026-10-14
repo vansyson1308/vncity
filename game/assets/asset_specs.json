@@ -2245,6 +2245,1254 @@
     "readable trademarks"
    ],
    "route": "generate"
+  },
+  {
+   "id": "metro_rail/viaduct_pier",
+   "set": "metro_rail",
+   "kind": "viaduct_pier",
+   "name_vi": "Trụ cầu cạn đường sắt đô thị",
+   "category": "structure",
+   "variants": 2,
+   "ue_name": "SM_metro_rail_viaduct_pier_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/metro_rail",
+   "size_m": {
+    "x": 2.2,
+    "y": 7.0,
+    "z": 9.0
+   },
+   "pivot": "base_center",
+   "forward": "+X along the track (pier cap runs across it, along Y)",
+   "scale_axes": "xyz",
+   "tris_lod0": 6000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "metal",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "single-column reinforced-concrete viaduct pier of a Hanoi urban-rail line: tapered rectangular shaft about 2 m x 2.5 m, flared hammer-head cap 7 m wide carrying two U-girder tracks, elastomeric bearing pads on top, drainage downpipe clipped to one face, grey concrete streaked black by rain, pier number stencilled near the base; variant 0 = line 2A Cát Linh–Hà Đông (plain chamfered shaft), variant 1 = line 3 Nhổn–ga Hà Nội (rounded shaft with a cable duct recess)",
+   "references_vi": "Đường Nguyễn Trãi (Thanh Xuân), Hào Nam (Đống Đa), Xuân Thủy–Cầu Giấy, Hồ Tùng Mậu (Bắc Từ Liêm)",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "metro_rail/viaduct_span",
+   "set": "metro_rail",
+   "kind": "viaduct_span",
+   "name_vi": "Nhịp dầm chữ U cầu cạn metro",
+   "category": "structure",
+   "variants": 1,
+   "ue_name": "SM_metro_rail_viaduct_span_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/metro_rail",
+   "size_m": {
+    "x": 30.0,
+    "y": 10.0,
+    "z": 2.4
+   },
+   "pivot": "center of the bottom face at the first pier axis; the span runs from x=0 to x=30 along +X; z=0 is the pier cap top",
+   "forward": "+X along the track; only X is scaled (Scale = span length / 30 m)",
+   "scale_axes": "x",
+   "tris_lod0": 12000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "metal",
+    "ballastless_track"
+   ],
+   "texture_px": 2048,
+   "look_en": "twin pre-cast concrete U-shaped box girders of a Hanoi urban-rail viaduct, each 5 m wide with 1.2 m side walls acting as parapet and noise barrier, ballastless slab track with two rails and a third-rail shoe cover on the inner side, cable troughs and handrail along the walkway edge, expansion joint cover at each end; grey concrete with rust runs below the drainage spouts",
+   "references_vi": "Cầu cạn tuyến 2A dọc Nguyễn Trãi–Quang Trung (Hà Đông), tuyến 3 dọc Xuân Thủy–Cầu Giấy",
+   "avoid": [],
+   "note": "author as a full 30 m span whose ends meet seamlessly; typical 2A spans are 25-32 m",
+   "route": "hand"
+  },
+  {
+   "id": "metro_rail/station_module",
+   "set": "metro_rail",
+   "kind": "station_module",
+   "name_vi": "Mô-đun ga trên cao",
+   "category": "structure",
+   "variants": 2,
+   "ue_name": "SM_metro_rail_station_module_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/metro_rail",
+   "size_m": {
+    "x": 24.0,
+    "y": 24.0,
+    "z": 13.0
+   },
+   "pivot": "base_center of the module at street level, under the track centre line",
+   "forward": "+X along the track",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "steel",
+    "roof_cladding",
+    "glass",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "one 24 m module of a Hanoi elevated metro station straddling the viaduct: concourse floor at +7 m on paired columns, side platforms at +13 m under a long arched roof, glass-and-louvre side walls, escalator/stair towers coming down to the pavement on both sides; variant 0 = line 2A (dark green-grey curved roof, beige concrete, red-brown trim), variant 1 = line 3 (white steel wave roof, light grey cladding, blue trim); station name board left blank for UE text",
+   "references_vi": "Ga Cát Linh, ga Láng, ga Thượng Đình, ga Hà Đông (tuyến 2A); ga Cầu Giấy, ga Lê Đức Thọ, ga Cầu Diễn (tuyến 3)",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "real station names"
+   ],
+   "note": "a station = 4-6 modules placed end to end along the track; the viaduct_span continues through it",
+   "route": "hand"
+  },
+  {
+   "id": "national_rail/track",
+   "set": "national_rail",
+   "kind": "track",
+   "name_vi": "Đoạn ray đường sắt khổ 1 m",
+   "category": "structure",
+   "variants": 2,
+   "ue_name": "SM_national_rail_track_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/national_rail",
+   "size_m": {
+    "x": 1.0,
+    "y": 2.6,
+    "z": 0.3
+   },
+   "pivot": "center of the top of the sleepers at x=0; the piece runs from x=-0.5 to x=+0.5 along +X",
+   "forward": "+X along the rails; only X is scaled (Scale = segment length in metres)",
+   "scale_axes": "x",
+   "tris_lod0": 1200,
+   "nanite": false,
+   "material_slots": [
+    "rail_steel",
+    "sleeper",
+    "ballast"
+   ],
+   "texture_px": 1024,
+   "look_en": "1 m piece of Vietnamese metre-gauge railway: two rusty-brown rails 1000 mm apart on concrete sleepers (variant 0) or old wooden sleepers (variant 1), grey ballast, ties, oil-stained; through a Hanoi street the rail runs flush with houses on both sides and locals put plant pots and stools next to it",
+   "references_vi": "Phố đường tàu Phùng Hưng–Trần Phú, đường Lê Duẩn, Giải Phóng, Khâm Thiên, ga Long Biên",
+   "avoid": [],
+   "note": "author as a 1 m long piece whose ends meet seamlessly",
+   "route": "hand"
+  },
+  {
+   "id": "national_rail/crossing_barrier",
+   "set": "national_rail",
+   "kind": "crossing_barrier",
+   "name_vi": "Chắn tàu ngang đường",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_national_rail_crossing_barrier_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/national_rail",
+   "size_m": {
+    "x": 6.5,
+    "y": 0.6,
+    "z": 1.3
+   },
+   "pivot": "base_center of the barrier post; the boom extends along +X when lowered",
+   "forward": "+X along the rails (the boom lies across the road, parallel to the track)",
+   "scale_axes": "xyz",
+   "tris_lod0": 6000,
+   "nanite": true,
+   "material_slots": [
+    "steel",
+    "painted_stripes",
+    "concrete"
+   ],
+   "texture_px": 2048,
+   "look_en": "Vietnamese railway level-crossing barrier: a hand-cranked or sliding steel boom painted red and white stripes with a mesh skirt, concrete post with a red lamp and bell, a 'DỪNG LẠI QUAN SÁT' style warning post left blank for UE text, small guard hut with blue door beside it",
+   "references_vi": "Chắn tàu Khâm Thiên, Lê Duẩn–Trần Hưng Đạo, Giải Phóng–Trường Chinh, Phú Diễn, Cổ Nhuế",
+   "avoid": [],
+   "note": "boom is a separate socketed mesh so UE can swing it; the hut is included in the mesh",
+   "route": "hand"
+  },
+  {
+   "id": "river_dike/dike_wall",
+   "set": "river_dike",
+   "kind": "dike_wall",
+   "name_vi": "Tường đê bê tông",
+   "category": "structure",
+   "variants": 3,
+   "ue_name": "SM_river_dike_dike_wall_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/river_dike",
+   "size_m": {
+    "x": 1.0,
+    "y": 0.5,
+    "z": 2.6
+   },
+   "pivot": "center of the bottom face at x=0; the piece runs from x=-0.5 to x=+0.5 along +X",
+   "forward": "+X along the dike; only X is scaled (Scale = segment length in metres); +Y faces the city-side road",
+   "scale_axes": "x",
+   "tris_lod0": 800,
+   "nanite": false,
+   "material_slots": [
+    "concrete",
+    "mosaic",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "1 m piece of the Hanoi Red River flood wall on the city-side of the dike road: reinforced-concrete wall 2.6 m tall with a 0.5 m coping, pilaster every 4 m; variant 0 = bare grey concrete with moss and posters, variant 1 = covered by the 'Con đường gốm sứ' ceramic mosaic mural (colourful glazed tile fragments, folk-art motifs, no text), variant 2 = painted flood-level marks and wall-mounted cable trays",
+   "references_vi": "Đường Trần Quang Khải–Trần Nhật Duật, Yên Phụ, Âu Cơ, Nghi Tàm, Bạch Đằng, Lĩnh Nam",
+   "avoid": [],
+   "note": "author as a 1 m piece whose ends meet seamlessly; the mosaic variant tiles over 4 m",
+   "route": "hand"
+  },
+  {
+   "id": "river_dike/dike_gate",
+   "set": "river_dike",
+   "kind": "dike_gate",
+   "name_vi": "Cửa khẩu đê",
+   "category": "structure",
+   "variants": 1,
+   "ue_name": "SM_river_dike_dike_gate_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/river_dike",
+   "size_m": {
+    "x": 2.0,
+    "y": 9.0,
+    "z": 5.0
+   },
+   "pivot": "base_center on the dike-road level at the opening centre",
+   "forward": "+X toward the river (outside the dike)",
+   "scale_axes": "xyz",
+   "tris_lod0": 10000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "steel",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "opening through the Hanoi Red River flood wall for a road down to the riverside wards: two massive concrete abutments with slots for steel flood stop-logs, a steel sliding flood gate parked open on one side, a blue 'CỬA KHẨU' sign plate left blank for UE text, a guard kiosk and sandbag heap",
+   "references_vi": "Cửa khẩu An Dương, Chương Dương Độ, Tân Ấp, Vạn Kiếp, Lĩnh Nam",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "river_dike/embankment_steps",
+   "set": "river_dike",
+   "kind": "embankment_steps",
+   "name_vi": "Bậc xuống chân đê",
+   "category": "structure",
+   "variants": 2,
+   "ue_name": "SM_river_dike_embankment_steps_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/river_dike",
+   "size_m": {
+    "x": 6.0,
+    "y": 3.0,
+    "z": 3.5
+   },
+   "pivot": "center of the top edge of the steps, on the dike crest",
+   "forward": "+X down the slope (toward the lower ground)",
+   "scale_axes": "xyz",
+   "tris_lod0": 6000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "stone",
+    "grass_decal"
+   ],
+   "texture_px": 2048,
+   "look_en": "concrete stair down the grass slope of the Red River dike in Hanoi: 18-20 wide treads with a low parapet, cracked and mossy, variant 1 with a steel pipe handrail and a motorbike ramp beside the steps",
+   "references_vi": "Dốc đê Yên Phụ, An Dương, Phúc Xá, bãi giữa sông Hồng, Ngọc Thụy (Long Biên)",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "lakeside/railing",
+   "set": "lakeside",
+   "kind": "railing",
+   "name_vi": "Lan can ven hồ",
+   "category": "street_furniture",
+   "variants": 3,
+   "ue_name": "SM_lakeside_railing_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lakeside",
+   "size_m": {
+    "x": 2.0,
+    "y": 0.2,
+    "z": 1.0
+   },
+   "pivot": "center of the bottom face at x=0; the module runs from x=-1 to x=+1 along +X",
+   "forward": "+X along the shore; only X is scaled (Scale = length / 2 m); +Y faces the water",
+   "scale_axes": "x",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "concrete",
+    "steel",
+    "stone"
+   ],
+   "texture_px": 1024,
+   "look_en": "2 m module of a Hanoi lakeside balustrade: variant 0 = white-painted concrete baluster rail of Hồ Tây on Thanh Niên road, variant 1 = low grey granite kerb with iron chain posts of Hồ Gươm, variant 2 = green steel pipe railing with concrete posts of the newer lakes (Linh Đàm, Văn Quán); mossy base, fishing line tangles on the top rail",
+   "references_vi": "Đường Thanh Niên, Trích Sài, Trúc Bạch, Hồ Gươm, Hồ Linh Đàm",
+   "avoid": [],
+   "note": "author as a 2 m piece whose ends meet seamlessly",
+   "route": "hand"
+  },
+  {
+   "id": "lakeside/pedal_boat",
+   "set": "lakeside",
+   "kind": "pedal_boat",
+   "name_vi": "Thuyền đạp nước thiên nga",
+   "category": "vehicle_static",
+   "variants": 3,
+   "ue_name": "SM_lakeside_pedal_boat_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lakeside",
+   "size_m": {
+    "x": 3.2,
+    "y": 1.6,
+    "z": 1.9
+   },
+   "pivot": "center of the hull at the water line (z=0 is the water surface)",
+   "forward": "+X = bow (swan head)",
+   "scale_axes": "xyz",
+   "tris_lod0": 12000,
+   "nanite": true,
+   "material_slots": [
+    "fibreglass",
+    "plastic",
+    "metal"
+   ],
+   "texture_px": 2048,
+   "look_en": "fibreglass swan-shaped two-seat pedal boat as rented on Hanoi park lakes: white hull with a tall swan neck and head at the bow, faded pink or yellow seats, chipped paint, green algae at the water line, numbered hull with a fictional 2-digit number; variants = white, pink, blue",
+   "references_vi": "Hồ Bảy Mẫu (công viên Thống Nhất), hồ Thủ Lệ, hồ Trúc Bạch, công viên Yên Sở",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "readable numbers"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "lakeside/lotus_patch",
+   "set": "lakeside",
+   "kind": "lotus_patch",
+   "name_vi": "Mảng sen hồ",
+   "category": "vegetation",
+   "variants": 3,
+   "ue_name": "SM_lakeside_lotus_patch_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lakeside",
+   "size_m": {
+    "x": 4.0,
+    "y": 4.0,
+    "z": 1.4
+   },
+   "pivot": "center of the patch at the water line (z=0 is the water surface)",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 25000,
+   "nanite": true,
+   "material_slots": [
+    "leaves",
+    "flowers",
+    "stems"
+   ],
+   "texture_px": 2048,
+   "look_en": "4 m patch of pink lotus (Nelumbo nucifera) and water lily on a Hanoi lake: large upright and floating round leaves, pink buds and open flowers on tall stems, brown seed pods, a few yellowed leaves; variant 0 = full bloom (June), variant 1 = buds, variant 2 = late season with seed pods",
+   "references_vi": "Đầm sen Hồ Tây (Quảng Bá, Nhật Tân), hồ Trúc Bạch, hồ Linh Đàm",
+   "avoid": [],
+   "scale_range": [
+    0.7,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "lakeside/bench_trellis",
+   "set": "lakeside",
+   "kind": "bench_trellis",
+   "name_vi": "Ghế đá có giàn hoa giấy",
+   "category": "furniture",
+   "variants": 2,
+   "ue_name": "SM_lakeside_bench_trellis_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lakeside",
+   "size_m": {
+    "x": 1.4,
+    "y": 2.2,
+    "z": 2.4
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the water",
+   "scale_axes": "xyz",
+   "tris_lod0": 15000,
+   "nanite": true,
+   "material_slots": [
+    "stone",
+    "steel",
+    "leaves",
+    "flowers"
+   ],
+   "texture_px": 2048,
+   "look_en": "grey stone bench of a Hanoi lakeside promenade under a small welded-steel pergola overgrown with magenta bougainvillea (hoa giấy); variant 1 with a climbing jasmine instead; peeling green paint on the steel, fallen petals on the seat",
+   "references_vi": "Hồ Trúc Bạch, đường Thanh Niên, hồ Thiền Quang, hồ Văn Quán",
+   "avoid": [],
+   "route": "reuse_or_hand"
+  },
+  {
+   "id": "lakeside/fishing_stool",
+   "set": "lakeside",
+   "kind": "fishing_stool",
+   "name_vi": "Chỗ câu cá ven hồ",
+   "category": "furniture",
+   "variants": 3,
+   "ue_name": "SM_lakeside_fishing_stool_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lakeside",
+   "size_m": {
+    "x": 4.5,
+    "y": 0.9,
+    "z": 1.1
+   },
+   "pivot": "base_center under the stool; rods extend along +X over the water",
+   "forward": "+X toward the water",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "plastic",
+    "metal",
+    "fabric"
+   ],
+   "texture_px": 2048,
+   "look_en": "Hanoi lakeside angler's spot: a folding camp stool or small plastic stool, two long telescopic rods on an aluminium rod rest pointing over the water, a bait bucket, a cloth bag, a thermos; variants = different stools and umbrella on one; the angler is a separate character, not part of the mesh",
+   "references_vi": "Hồ Tây (Quảng Bá, Nhật Tân), hồ Linh Đàm, hồ Định Công, hồ Yên Sở",
+   "avoid": [],
+   "route": "generate"
+  },
+  {
+   "id": "rooftop_clutter/water_tank",
+   "set": "rooftop_clutter",
+   "kind": "water_tank",
+   "name_vi": "Bồn nước inox trên mái",
+   "category": "street_furniture",
+   "variants": 3,
+   "ue_name": "SM_rooftop_clutter_water_tank_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/rooftop_clutter",
+   "size_m": {
+    "x": 1.6,
+    "y": 1.0,
+    "z": 1.5
+   },
+   "pivot": "base_center of the steel stand",
+   "forward": "+X = tank axis",
+   "scale_axes": "xyz",
+   "tris_lod0": 3000,
+   "nanite": true,
+   "material_slots": [
+    "stainless",
+    "steel",
+    "pipes"
+   ],
+   "texture_px": 1024,
+   "look_en": "horizontal stainless-steel domestic water tank on a galvanised steel stand as seen on every Hanoi roof: ribbed cylinder 1-2 m3, domed ends, overflow and inlet pipes with a float valve, rust streaks under the stand feet, no brand lettering; variants = 1 m3, 1.5 m3, pair of tanks",
+   "references_vi": "Mái nhà tập thể Kim Liên, Thành Công, nhà ống phố Khương Trung, Cầu Giấy",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "brand lettering on the tank"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "rooftop_clutter/solar_heater",
+   "set": "rooftop_clutter",
+   "kind": "solar_heater",
+   "name_vi": "Máy nước nóng năng lượng mặt trời",
+   "category": "street_furniture",
+   "variants": 2,
+   "ue_name": "SM_rooftop_clutter_solar_heater_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/rooftop_clutter",
+   "size_m": {
+    "x": 1.2,
+    "y": 2.0,
+    "z": 1.4
+   },
+   "pivot": "base_center of the frame",
+   "forward": "+X = downhill side of the tilted tube panel",
+   "scale_axes": "xyz",
+   "tris_lod0": 4000,
+   "nanite": true,
+   "material_slots": [
+    "glass_tubes",
+    "stainless",
+    "steel"
+   ],
+   "texture_px": 1024,
+   "look_en": "rooftop solar water heater of the type common in Hanoi: a rack of 15-20 black evacuated glass tubes tilted at 30-40 degrees with a horizontal stainless tank on top, galvanised frame, dusty tubes; variant 1 is smaller with 12 tubes",
+   "references_vi": "Mái nhà liền kề KĐT Văn Quán, Việt Hưng, Mỹ Đình, Cổ Nhuế",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "brand lettering on the tank"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "rooftop_clutter/ac_cluster",
+   "set": "rooftop_clutter",
+   "kind": "ac_cluster",
+   "name_vi": "Cụm cục nóng điều hoà",
+   "category": "street_furniture",
+   "variants": 4,
+   "ue_name": "SM_rooftop_clutter_ac_cluster_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/rooftop_clutter",
+   "size_m": {
+    "x": 0.45,
+    "y": 2.4,
+    "z": 1.6
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (fans blow +X); Y along the facade",
+   "scale_axes": "xyz",
+   "tris_lod0": 6000,
+   "nanite": true,
+   "material_slots": [
+    "plastic",
+    "metal",
+    "pipes",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "cluster of 3-5 split air-conditioner outdoor units on rusty wall brackets stacked on a Hanoi facade: grey plastic casings yellowed and dirt-stained, copper pipes wrapped in cracked white tape, drip hoses, a bundle of cables, one unit under a corrugated-iron hood; variants = 3, 4, 5 units and a two-column stack",
+   "references_vi": "Mặt sau nhà tập thể Thành Công, Nguyễn Công Trứ; ngõ Khương Trung, Trung Kính, Hà Đông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.0,
+   "route": "generate"
+  },
+  {
+   "id": "kdt_moi/kdt_gate",
+   "set": "kdt_moi",
+   "kind": "kdt_gate",
+   "name_vi": "Cổng khu đô thị có barie",
+   "category": "structure",
+   "variants": 2,
+   "ue_name": "SM_kdt_moi_kdt_gate_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/kdt_moi",
+   "size_m": {
+    "x": 4.0,
+    "y": 11.0,
+    "z": 5.5
+   },
+   "pivot": "base_center on the road axis",
+   "forward": "+X = direction of entry (into the compound)",
+   "scale_axes": "xyz",
+   "tris_lod0": 25000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "steel",
+    "glass",
+    "stone_cladding",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "entrance gate of a Hanoi gated residential compound: stone-clad portal frame over the road, central guard booth with glass windows and a uniformed-guard chair, one boom barrier per lane with 'STOP' lollipop sign, speed hump, planters with ornamental palms, name board left blank for UE text; variant 1 = cheaper version with a steel sliding gate and a tin-roof guard hut",
+   "references_vi": "Times City, Royal City, KĐT Linh Đàm, KĐT Mỹ Đình, KĐT Văn Quán, KĐT Việt Hưng",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "real estate developer names"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "kdt_moi/parking_barrier",
+   "set": "kdt_moi",
+   "kind": "parking_barrier",
+   "name_vi": "Barie bãi đỗ xe tự động",
+   "category": "street_furniture",
+   "variants": 2,
+   "ue_name": "SM_kdt_moi_parking_barrier_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/kdt_moi",
+   "size_m": {
+    "x": 0.5,
+    "y": 4.5,
+    "z": 1.1
+   },
+   "pivot": "base_center of the barrier housing",
+   "forward": "+X faces the approaching car; the boom extends along +Y",
+   "scale_axes": "xyz",
+   "tris_lod0": 2500,
+   "nanite": true,
+   "material_slots": [
+    "metal",
+    "painted_stripes",
+    "plastic"
+   ],
+   "texture_px": 1024,
+   "look_en": "automatic car-park boom barrier: orange or white steel housing, 4 m aluminium boom with red-white reflective stripes and a rubber bumper, loop detector plate, ticket post with a small screen and a 'DỪNG LẠI' plate left blank for UE text; variant 1 = boom raised",
+   "references_vi": "Hầm xe Vincom Phạm Ngọc Thạch, bãi xe Keangnam, Mỹ Đình, The Manor, KĐT Dương Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "kdt_moi/hoarding_panel",
+   "set": "kdt_moi",
+   "kind": "hoarding_panel",
+   "name_vi": "Rào tôn công trường",
+   "category": "structure",
+   "variants": 3,
+   "ue_name": "SM_kdt_moi_hoarding_panel_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/kdt_moi",
+   "size_m": {
+    "x": 2.4,
+    "y": 0.12,
+    "z": 2.6
+   },
+   "pivot": "center of the bottom edge at x=0; the panel runs from x=-1.2 to x=+1.2 along +X",
+   "forward": "+X along the fence; only X is scaled (Scale = length / 2.4 m); +Y faces the street (printed side)",
+   "scale_axes": "x",
+   "tris_lod0": 600,
+   "nanite": false,
+   "material_slots": [
+    "corrugated_steel",
+    "print",
+    "steel"
+   ],
+   "texture_px": 2048,
+   "look_en": "2.4 m panel of a Hanoi construction-site hoarding: corrugated galvanised steel sheet 2.6 m tall on a steel-tube frame, variant 0 = painted blue with white band, variant 1 = green, variant 2 = covered with a weathered vinyl print of a luxury high-rise rendering and palm trees (no text), mud splashes at the foot, loose sheet corners",
+   "references_vi": "Công trường Phạm Hùng, Tây Hồ Tây, Dương Nội, Linh Đàm, Vành Đai 3",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "real estate developer names",
+    "phone numbers"
+   ],
+   "texture_atlas": "print slot uses one 1:1 graphic per variant tiled every 4 panels; prompt it by hand (not in prompts.jsonl)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "kdt_moi/tower_crane",
+   "set": "kdt_moi",
+   "kind": "tower_crane",
+   "name_vi": "Cần trục tháp công trường",
+   "category": "structure",
+   "variants": 1,
+   "ue_name": "SM_kdt_moi_tower_crane_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/kdt_moi",
+   "size_m": {
+    "x": 60.0,
+    "y": 4.0,
+    "z": 55.0
+   },
+   "pivot": "base_center of the foundation block",
+   "forward": "+X along the jib (counter-jib points -X)",
+   "scale_axes": "xyz",
+   "tris_lod0": 40000,
+   "nanite": true,
+   "material_slots": [
+    "steel",
+    "painted_steel",
+    "concrete"
+   ],
+   "texture_px": 2048,
+   "look_en": "hammerhead tower crane on a Hanoi high-rise site: yellow-painted lattice mast 55 m, 60 m jib with trolley and hook block, counterweight slabs, operator cab, red aircraft warning lamp, Vietnamese red flag on the cab roof, no company lettering",
+   "references_vi": "Công trường Tây Hồ Tây, Phạm Hùng, Minh Khai (Hai Bà Trưng), Dương Nội, Vành Đai 3",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "company lettering on the mast"
+   ],
+   "note": "the jib is a separate socketed mesh so UE can slew it slowly",
+   "route": "reuse_or_hand"
+  },
+  {
+   "id": "road_structures/pedestrian_flyover",
+   "set": "road_structures",
+   "kind": "pedestrian_flyover",
+   "name_vi": "Cầu vượt bộ hành",
+   "category": "structure",
+   "variants": 2,
+   "ue_name": "SM_road_structures_pedestrian_flyover_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/road_structures",
+   "size_m": {
+    "x": 9.0,
+    "y": 32.0,
+    "z": 6.5
+   },
+   "pivot": "base_center under the mid-span, on the road surface",
+   "forward": "+X along the road (the stairs run along the pavements); Y spans across the road",
+   "scale_axes": "xyz",
+   "tris_lod0": 30000,
+   "nanite": true,
+   "material_slots": [
+    "steel",
+    "painted_steel",
+    "concrete",
+    "roof_sheet"
+   ],
+   "texture_px": 2048,
+   "look_en": "steel pedestrian footbridge over a Hanoi arterial road: 32 m truss span on two circular concrete columns, 5 m clearance, green-painted steel railings 1.4 m high with mesh, a curved polycarbonate roof, L-shaped stairs on both pavements, motorbike-blocking bollards at the stair foot, posters pasted on the columns; variant 1 = older unroofed type with blue railings",
+   "references_vi": "Cầu vượt bộ hành Xuân Thủy, Nguyễn Trãi (ĐH Khoa học Tự nhiên), Giải Phóng (Bạch Mai), Trần Duy Hưng, Hồ Tùng Mậu",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "road_structures/billboard_pano",
+   "set": "road_structures",
+   "kind": "billboard_pano",
+   "name_vi": "Pano quảng cáo tấm lớn",
+   "category": "sign",
+   "variants": 3,
+   "ue_name": "SM_road_structures_billboard_pano_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/road_structures",
+   "size_m": {
+    "x": 1.2,
+    "y": 12.0,
+    "z": 15.0
+   },
+   "pivot": "base_center of the single steel pole",
+   "forward": "+X = face direction (toward oncoming traffic)",
+   "scale_axes": "xyz",
+   "tris_lod0": 5000,
+   "nanite": true,
+   "material_slots": [
+    "steel",
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "large roadside advertising billboard (pano) on a single 9 m steel monopole with a 12 x 6 m panel on top, steel catwalk and floodlights along the lower edge, printed vinyl face; variant 0 = single face, variant 1 = V-shaped double face, variant 2 = facing both ways on a rooftop frame",
+   "references_vi": "Ngã Tư Sở, Phạm Hùng, Khuất Duy Tiến, Giải Phóng, Nguyễn Văn Cừ, Võ Chí Công",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "texture_atlas": "print slot uses a 2:1 graphic per variant; prompt it by hand like a sign print (not in prompts.jsonl); ad text is rendered in UE",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "road_structures/brt_shelter",
+   "set": "road_structures",
+   "kind": "brt_shelter",
+   "name_vi": "Nhà chờ BRT giữa đường",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_road_structures_brt_shelter_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/road_structures",
+   "size_m": {
+    "x": 5.0,
+    "y": 20.0,
+    "z": 3.5
+   },
+   "pivot": "base_center of the platform at road level",
+   "forward": "+X faces the bus lane (doors side); Y along the road",
+   "scale_axes": "xyz",
+   "tris_lod0": 30000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "steel",
+    "glass",
+    "roof_sheet",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "Hanoi BRT median station: 20 m raised concrete platform 0.6 m above the road, grey-white steel frame with a flat roof, glass side walls with sliding platform doors, tinted end panels, a ramp and turnstile lobby at one end, route board and station name left blank for UE text, green and white colour scheme",
+   "references_vi": "Tuyến BRT 01 Kim Mã–Yên Nghĩa: Giảng Võ, Láng Hạ, Lê Văn Lương, Tố Hữu, Hà Đông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "real station names"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "road_structures/median_fence",
+   "set": "road_structures",
+   "kind": "median_fence",
+   "name_vi": "Hàng rào dải phân cách",
+   "category": "street_furniture",
+   "variants": 2,
+   "ue_name": "SM_road_structures_median_fence_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/road_structures",
+   "size_m": {
+    "x": 1.0,
+    "y": 0.1,
+    "z": 1.1
+   },
+   "pivot": "center of the bottom face at x=0; the piece runs from x=-0.5 to x=+0.5 along +X",
+   "forward": "+X along the road; only X is scaled (Scale = length in metres)",
+   "scale_axes": "x",
+   "tris_lod0": 400,
+   "nanite": false,
+   "material_slots": [
+    "painted_steel",
+    "concrete"
+   ],
+   "texture_px": 1024,
+   "look_en": "1 m piece of a Hanoi central-reservation fence: vertical steel bars on a low concrete kerb, variant 0 = white and green paint, variant 1 = white and blue; dusty, dented, posters tied on with string",
+   "references_vi": "Nguyễn Trãi, Giải Phóng, Xuân Thủy, Trần Duy Hưng, Nguyễn Văn Cừ, Quang Trung (Hà Đông)",
+   "avoid": [],
+   "note": "author as a 1 m piece whose ends meet seamlessly",
+   "route": "hand"
+  },
+  {
+   "id": "ktt_addons/chuong_cop",
+   "set": "ktt_addons",
+   "kind": "chuong_cop",
+   "name_vi": "Chuồng cọp (ban công cơi nới)",
+   "category": "structure",
+   "variants": 6,
+   "ue_name": "SM_ktt_addons_chuong_cop_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/ktt_addons",
+   "size_m": {
+    "x": 1.8,
+    "y": 3.2,
+    "z": 2.9
+   },
+   "pivot": "center of the back face, on the wall plane, at the floor slab",
+   "forward": "+X out of the wall; Y along the facade",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "steel_bars",
+    "corrugated_sheet",
+    "plaster",
+    "props"
+   ],
+   "texture_px": 2048,
+   "look_en": "'tiger cage' balcony extension bolted to a 1960s-80s Hanoi collective housing block: welded steel-bar cage 1.8 m deep cantilevered on angle-iron struts, closed with corrugated iron or asbestos sheet, sometimes bricked and plastered, laundry on a rod, plant pots, a bird cage, an air-con unit; 6 variants = bare cage, half-sheeted, bricked, with awning, two-storey stack, rusted and sagging",
+   "references_vi": "Khu tập thể Kim Liên, Trung Tự, Thành Công, Giảng Võ, Nguyễn Công Trứ, Thanh Xuân Bắc",
+   "avoid": [],
+   "mount_z_m": 3.3,
+   "route": "hand"
+  },
+  {
+   "id": "ktt_addons/loa_phuong",
+   "set": "ktt_addons",
+   "kind": "loa_phuong",
+   "name_vi": "Loa phường",
+   "category": "street_furniture",
+   "variants": 2,
+   "ue_name": "SM_ktt_addons_loa_phuong_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/ktt_addons",
+   "size_m": {
+    "x": 0.7,
+    "y": 0.9,
+    "z": 0.7
+   },
+   "pivot": "center of the bracket, on the pole axis",
+   "forward": "+X = direction the main horn points",
+   "scale_axes": "xyz",
+   "tris_lod0": 2000,
+   "nanite": true,
+   "material_slots": [
+    "metal",
+    "plastic"
+   ],
+   "texture_px": 1024,
+   "look_en": "ward public-address loudspeakers of Hanoi: a pair (variant 0) or triple (variant 1) of grey aluminium horn speakers on a steel bracket clamped to a utility pole, weathered, a twisted feed cable running down",
+   "references_vi": "Cột điện ở Kim Liên, Thành Công, ngõ Khâm Thiên, làng Mễ Trì, Cổ Nhuế",
+   "avoid": [],
+   "mount_z_m": 6.0,
+   "route": "hand"
+  },
+  {
+   "id": "ktt_addons/transformer_kiosk",
+   "set": "ktt_addons",
+   "kind": "transformer_kiosk",
+   "name_vi": "Trạm biến áp kiosk",
+   "category": "street_furniture",
+   "variants": 2,
+   "ue_name": "SM_ktt_addons_transformer_kiosk_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/ktt_addons",
+   "size_m": {
+    "x": 2.2,
+    "y": 3.2,
+    "z": 2.5
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street (door side)",
+   "scale_axes": "xyz",
+   "tris_lod0": 7000,
+   "nanite": true,
+   "material_slots": [
+    "painted_steel",
+    "concrete",
+    "decals",
+    "metal"
+   ],
+   "texture_px": 2048,
+   "look_en": "Hanoi distribution transformer station: a green-grey steel kiosk cabinet 3 x 2 m on a concrete plinth, louvred doors, insulated cable risers, a steel-mesh fence with a padlocked gate, a yellow triangle 'danger' skull plate (no text), posters and motorbike parking against the fence; variant 1 = pole-top transformer platform on two concrete poles with the cabinet below",
+   "references_vi": "Ngõ Giảng Võ, Trung Tự, Nghĩa Tân, phố Hào Nam, Định Công",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "readable warning text"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "lang_trong_pho/cong_lang",
+   "set": "lang_trong_pho",
+   "kind": "cong_lang",
+   "name_vi": "Cổng làng",
+   "category": "structure",
+   "variants": 3,
+   "ue_name": "SM_lang_trong_pho_cong_lang_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lang_trong_pho",
+   "size_m": {
+    "x": 2.2,
+    "y": 6.5,
+    "z": 6.5
+   },
+   "pivot": "base_center on the road axis under the arch",
+   "forward": "+X = direction into the village",
+   "scale_axes": "xyz",
+   "tris_lod0": 20000,
+   "nanite": true,
+   "material_slots": [
+    "brick_plaster",
+    "roof_tile",
+    "wood",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "northern-Vietnamese village gate now swallowed by Hanoi: brick-and-lime-plaster arch 3.5 m wide between two square pillars, a small tiled yin-yang roof with upturned corners on top, moulded panels with a blank name tablet (UE text) and blank vertical couplet strips, moss and faded ochre wash, a motorbike repair stall leaning on one pillar; variant 1 = triple-arch gate, variant 2 = plain pillar gate with a steel 'Làng văn hoá' banner frame",
+   "references_vi": "Cổng làng Vạn Phúc (Hà Đông), làng Láng, Đông Ngạc, Cổ Nhuế, Nghi Tàm, Mễ Trì, Phú Đô",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "readable Chinese characters or Vietnamese text"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "lang_trong_pho/gieng_lang",
+   "set": "lang_trong_pho",
+   "kind": "gieng_lang",
+   "name_vi": "Giếng làng",
+   "category": "structure",
+   "variants": 2,
+   "ue_name": "SM_lang_trong_pho_gieng_lang_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lang_trong_pho",
+   "size_m": {
+    "x": 3.5,
+    "y": 3.5,
+    "z": 1.0
+   },
+   "pivot": "base_center",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 6000,
+   "nanite": true,
+   "material_slots": [
+    "stone",
+    "brick",
+    "water",
+    "moss"
+   ],
+   "texture_px": 2048,
+   "look_en": "communal village well of a Hanoi village: round laterite-stone or brick rim 3 m across and 0.8 m high, surrounding stone-flagged apron, moss and fern in the joints, a bucket on a rope, incense stubs in a small altar niche; variant 1 = square well with a tiled roof shelter",
+   "references_vi": "Giếng làng Đông Ngạc, giếng Mễ Trì, giếng cổ làng Yên Phụ, Vạn Phúc, Phú Thượng",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "lang_trong_pho/ao_lang_fence",
+   "set": "lang_trong_pho",
+   "kind": "ao_lang_fence",
+   "name_vi": "Lan can ao làng",
+   "category": "street_furniture",
+   "variants": 2,
+   "ue_name": "SM_lang_trong_pho_ao_lang_fence_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lang_trong_pho",
+   "size_m": {
+    "x": 2.0,
+    "y": 0.25,
+    "z": 0.9
+   },
+   "pivot": "center of the bottom face at x=0; the module runs from x=-1 to x=+1 along +X",
+   "forward": "+X along the pond edge; only X is scaled (Scale = length / 2 m); +Y faces the water",
+   "scale_axes": "x",
+   "tris_lod0": 2500,
+   "nanite": false,
+   "material_slots": [
+    "stone",
+    "concrete",
+    "moss"
+   ],
+   "texture_px": 1024,
+   "look_en": "2 m module of a village pond edge in Hanoi: variant 0 = carved grey-stone balustrade with lotus-bud posts, variant 1 = cheap concrete baluster rail painted white; algae stains at the base, a washing stone step at every 10 m",
+   "references_vi": "Ao làng Vạn Phúc, Đông Ngạc, Xuân Đỉnh, Nhân Chính, Định Công, Mễ Trì",
+   "avoid": [],
+   "note": "author as a 2 m piece whose ends meet seamlessly",
+   "route": "hand"
+  },
+  {
+   "id": "lang_trong_pho/cay_da",
+   "set": "lang_trong_pho",
+   "kind": "cay_da",
+   "name_vi": "Cây đa đầu làng",
+   "category": "tree",
+   "variants": 2,
+   "ue_name": "SM_lang_trong_pho_cay_da_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/lang_trong_pho",
+   "size_m": {
+    "x": 18.0,
+    "y": 18.0,
+    "z": 16.0
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 80000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves",
+    "roots"
+   ],
+   "texture_px": 2048,
+   "look_en": "old banyan (Ficus benghalensis / Ficus elastica type) at the entrance of a Hanoi village: massive buttressed trunk, curtains of aerial roots some reaching the ground as secondary trunks, wide dense crown, red votive strips and a small incense altar between the roots, concrete bench ring around the base; tropical northern-Vietnam village tree",
+   "references_vi": "Cây đa làng Láng, làng Vạn Phúc, Đông Ngạc, Phú Thượng, đền Quán Thánh",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.2
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "placed with Scale 0.8-1.2; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "cho_coc/stall_tarp",
+   "set": "cho_coc",
+   "kind": "stall_tarp",
+   "name_vi": "Sạp chợ cóc có bạt",
+   "category": "vendor",
+   "variants": 6,
+   "ue_name": "SM_cho_coc_stall_tarp_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/cho_coc",
+   "size_m": {
+    "x": 2.2,
+    "y": 2.6,
+    "z": 2.3
+   },
+   "pivot": "base_center",
+   "forward": "+X = customer side",
+   "scale_axes": "xyz",
+   "tris_lod0": 15000,
+   "nanite": true,
+   "material_slots": [
+    "tarpaulin",
+    "metal",
+    "wood",
+    "goods"
+   ],
+   "texture_px": 2048,
+   "look_en": "informal Hanoi street-market stall: galvanised-pipe frame with a sagging blue or orange tarpaulin, a folding table or wooden bench with plastic baskets, a hanging scale, a low plastic stool; 6 variants = vegetables, fish in basins, pork on a board, fruit, tofu and greens, dry goods; the seller is a separate character",
+   "references_vi": "Chợ cóc ngõ Kim Liên, chợ Thành Công, chợ Nghĩa Tân, chợ Xanh (Cầu Giấy), chợ Hà Đông, chợ Phùng Khoang",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "cho_coc/xe_day_che",
+   "set": "cho_coc",
+   "kind": "xe_day_che",
+   "name_vi": "Xe đẩy chè",
+   "category": "vendor",
+   "variants": 3,
+   "ue_name": "SM_cho_coc_xe_day_che_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/cho_coc",
+   "size_m": {
+    "x": 1.4,
+    "y": 0.7,
+    "z": 1.9
+   },
+   "pivot": "base_center",
+   "forward": "+X = front of the cart",
+   "scale_axes": "xyz",
+   "tris_lod0": 15000,
+   "nanite": true,
+   "material_slots": [
+    "metal",
+    "glass",
+    "goods",
+    "plastic"
+   ],
+   "texture_px": 2048,
+   "look_en": "Hanoi sweet-soup (chè) pushcart: stainless-steel trolley with a glass case of coloured jars of beans, jelly, coconut, tapioca and fruit, an ice box, stacked plastic cups, a folded umbrella on a bracket; variants = jars and umbrella colours; the vendor is a separate character",
+   "references_vi": "Cổng trường Chu Văn An, Hàng Bè, chợ Nhà Xanh, Nguyễn Trãi, Lê Thanh Nghị",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "cho_coc/xe_day_bap_luoc",
+   "set": "cho_coc",
+   "kind": "xe_day_bap_luoc",
+   "name_vi": "Xe đẩy bắp luộc / khoai nướng",
+   "category": "vendor",
+   "variants": 3,
+   "ue_name": "SM_cho_coc_xe_day_bap_luoc_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/cho_coc",
+   "size_m": {
+    "x": 1.3,
+    "y": 0.7,
+    "z": 1.5
+   },
+   "pivot": "base_center",
+   "forward": "+X = front of the cart",
+   "scale_axes": "xyz",
+   "tris_lod0": 12000,
+   "nanite": true,
+   "material_slots": [
+    "metal",
+    "goods",
+    "charcoal"
+   ],
+   "texture_px": 2048,
+   "look_en": "Hanoi night-time pushcart selling boiled corn and grilled sweet potato: a steel trolley with a big aluminium pot on a charcoal brazier, a mesh grill with potatoes, a stack of corn cobs, a small kerosene lamp, plastic bags on a hook; variants = pot vs grill emphasis; the vendor is a separate character",
+   "references_vi": "Đường Thanh Niên, Nguyễn Chí Thanh, Giải Phóng, cổng KTX Mễ Trì",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "pavement_clutter/xe_ba_gac",
+   "set": "pavement_clutter",
+   "kind": "xe_ba_gac",
+   "name_vi": "Xe ba gác chở đồng nát",
+   "category": "vehicle_static",
+   "variants": 3,
+   "ue_name": "SM_pavement_clutter_xe_ba_gac_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/pavement_clutter",
+   "size_m": {
+    "x": 2.7,
+    "y": 1.0,
+    "z": 2.0
+   },
+   "pivot": "ground under the midpoint of the rear wheels",
+   "forward": "+X = front wheel direction",
+   "scale_axes": "xyz",
+   "tris_lod0": 20000,
+   "nanite": true,
+   "material_slots": [
+    "metal",
+    "rubber",
+    "cardboard",
+    "goods"
+   ],
+   "texture_px": 2048,
+   "look_en": "three-wheeled cargo tricycle of a Hanoi scrap collector: rusty welded frame with a flat rear bed, bicycle (variant 0) or motorbike (variant 1-2) front, piled high with flattened cardboard, sacks of cans and plastic bottles tied with rubber straps, a hand scale hanging off the side",
+   "references_vi": "Phố Minh Khai, Đê La Thành, Cầu Giấy, Trương Định, Phùng Khoang",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "real licence plate numbers"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "pavement_clutter/lo_hoa_vang",
+   "set": "pavement_clutter",
+   "kind": "lo_hoa_vang",
+   "name_vi": "Lò hoá vàng",
+   "category": "street_furniture",
+   "variants": 2,
+   "ue_name": "SM_pavement_clutter_lo_hoa_vang_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/pavement_clutter",
+   "size_m": {
+    "x": 0.5,
+    "y": 0.5,
+    "z": 0.9
+   },
+   "pivot": "base_center",
+   "forward": "+X = opening side",
+   "scale_axes": "xyz",
+   "tris_lod0": 1500,
+   "nanite": true,
+   "material_slots": [
+    "metal",
+    "ash"
+   ],
+   "texture_px": 1024,
+   "look_en": "small votive-paper burner kept outside Hanoi shops and houses for the 1st and 15th lunar day: a cylindrical sheet-steel or cast-iron drum with a conical mesh chimney, soot-blackened, ash and half-burnt gold-paper around the foot; variant 1 = brick-built type with a tin roof",
+   "references_vi": "Vỉa hè Hàng Mã, Hàng Bạc, ngõ Thổ Quan, Kim Liên, Định Công, Vạn Phúc",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "pavement_clutter/rubbish_bin",
+   "set": "pavement_clutter",
+   "kind": "rubbish_bin",
+   "name_vi": "Thùng rác công cộng",
+   "category": "street_furniture",
+   "variants": 3,
+   "ue_name": "SM_pavement_clutter_rubbish_bin_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/pavement_clutter",
+   "size_m": {
+    "x": 0.7,
+    "y": 0.8,
+    "z": 1.1
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 3000,
+   "nanite": true,
+   "material_slots": [
+    "plastic",
+    "metal",
+    "decals"
+   ],
+   "texture_px": 1024,
+   "look_en": "Hanoi public rubbish bins: variant 0 = green 240 L wheeled plastic bin with a 'bỏ rác' pictogram, variant 1 = orange-and-green two-compartment pedestal bin on a steel post, variant 2 = concrete-cast bin with a steel lid; overflowing bags, scuffed, no readable text",
+   "references_vi": "Đường phố 12 quận: Trần Hưng Đạo, Xuân Thủy, Nguyễn Trãi, Giải Phóng, Quang Trung (Hà Đông)",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "reuse_or_hand"
+  },
+  {
+   "id": "pavement_clutter/trash_cart",
+   "set": "pavement_clutter",
+   "kind": "trash_cart",
+   "name_vi": "Xe gom rác đẩy tay",
+   "category": "vehicle_static",
+   "variants": 2,
+   "ue_name": "SM_pavement_clutter_trash_cart_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/pavement_clutter",
+   "size_m": {
+    "x": 1.8,
+    "y": 1.0,
+    "z": 1.5
+   },
+   "pivot": "ground under the midpoint of the wheels",
+   "forward": "+X = handle side (pushed along +X)",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "painted_steel",
+    "rubber",
+    "goods"
+   ],
+   "texture_px": 2048,
+   "look_en": "green steel hand-pushed refuse cart used by Hanoi sanitation workers: 400-660 L body on four small wheels, hinged lid, a broom and shovel strapped to the side, bulging rubbish bags, worn green paint with a white band and no readable text; variant 1 = empty with lid open",
+   "references_vi": "Góc phố Hàng Chiếu, Khâm Thiên, Trần Khát Chân, Cầu Giấy, Hà Đông lúc chiều tối",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
   }
  ],
  "facade_kits": [
@@ -3951,6 +5199,192 @@
   "storey_m": 3.3,
   "widths": "the PCG kit picks the widest module set that fits each frontage edge from semantics/footprints_*.json, then fills the rest with smaller ones",
   "ground_floor": "shopfront edges get ground_* modules; other street edges get mid_* modules at ground level"
+ },
+ "district_sets": {
+  "_comment": "Prop sets most needed per inner-city district (ids as in pipeline/districts.json); used to order asset work and to check PCG coverage per district.",
+  "hoan_kiem": {
+   "sets": [
+    "shop_signs",
+    "awnings",
+    "parked_motorbikes",
+    "pavement_seating",
+    "street_vendors",
+    "cable_spans",
+    "power_poles",
+    "street_trees",
+    "lakeside",
+    "river_dike",
+    "national_rail",
+    "pavement_clutter",
+    "cho_coc"
+   ],
+   "note_vi": "Phố cổ và Hồ Gươm: biển hiệu, dây điện, hàng rong; thêm bờ Hồ Gươm, đê Trần Nhật Duật, phố đường tàu Phùng Hưng."
+  },
+  "ba_dinh": {
+   "sets": [
+    "street_trees",
+    "street_lights",
+    "infrastructure",
+    "ktt_addons",
+    "lakeside",
+    "road_structures",
+    "metro_rail",
+    "national_rail",
+    "lang_trong_pho",
+    "rooftop_clutter",
+    "cho_coc"
+   ],
+   "note_vi": "Phố cây xanh Phan Đình Phùng, KTT Giảng Võ–Thành Công, hồ Trúc Bạch/Thủ Lệ, BRT Kim Mã, tuyến 3 qua Kim Mã, làng Ngọc Hà."
+  },
+  "dong_da": {
+   "sets": [
+    "metro_rail",
+    "ktt_addons",
+    "national_rail",
+    "shop_signs",
+    "cable_spans",
+    "power_poles",
+    "road_structures",
+    "lang_trong_pho",
+    "cho_coc",
+    "pavement_clutter",
+    "rooftop_clutter"
+   ],
+   "note_vi": "Tuyến 2A Cát Linh–Láng–Thái Hà, KTT Kim Liên–Trung Tự, ga Hà Nội và chắn tàu Khâm Thiên, Ngã Tư Sở, làng Láng."
+  },
+  "hai_ba_trung": {
+   "sets": [
+    "ktt_addons",
+    "lakeside",
+    "river_dike",
+    "kdt_moi",
+    "rooftop_clutter",
+    "road_structures",
+    "national_rail",
+    "shop_signs",
+    "street_trees",
+    "cho_coc",
+    "pavement_clutter"
+   ],
+   "note_vi": "KTT Nguyễn Công Trứ–Quỳnh Mai, hồ Thiền Quang/Bảy Mẫu, Times City, đê Bạch Đằng, đường sắt Giải Phóng."
+  },
+  "tay_ho": {
+   "sets": [
+    "lakeside",
+    "river_dike",
+    "lang_trong_pho",
+    "kdt_moi",
+    "street_trees",
+    "rooftop_clutter",
+    "cho_coc",
+    "pavement_clutter",
+    "road_structures"
+   ],
+   "note_vi": "Hồ Tây (lan can, sen, câu cá), đê Âu Cơ–Nghi Tàm, làng Nhật Tân–Quảng Bá–Phú Thượng, Ciputra, pano Võ Chí Công."
+  },
+  "cau_giay": {
+   "sets": [
+    "metro_rail",
+    "kdt_moi",
+    "rooftop_clutter",
+    "road_structures",
+    "lang_trong_pho",
+    "cho_coc",
+    "shop_signs",
+    "parked_motorbikes",
+    "street_lights",
+    "pavement_clutter"
+   ],
+   "note_vi": "Tuyến 3 dọc Xuân Thủy–Cầu Giấy, cầu vượt bộ hành Xuân Thủy, KĐT Dịch Vọng–Trung Hoà, làng Vòng–Dịch Vọng Hậu, chợ Xanh."
+  },
+  "thanh_xuan": {
+   "sets": [
+    "metro_rail",
+    "kdt_moi",
+    "rooftop_clutter",
+    "ktt_addons",
+    "road_structures",
+    "lang_trong_pho",
+    "pavement_clutter",
+    "shop_signs",
+    "cable_spans",
+    "cho_coc"
+   ],
+   "note_vi": "Tuyến 2A dọc Nguyễn Trãi (Thượng Đình, Phùng Khoang), Royal City, KTT Thanh Xuân Bắc, rào dải phân cách Nguyễn Trãi, làng Nhân Chính–Khương Đình."
+  },
+  "hoang_mai": {
+   "sets": [
+    "lakeside",
+    "kdt_moi",
+    "rooftop_clutter",
+    "road_structures",
+    "national_rail",
+    "river_dike",
+    "lang_trong_pho",
+    "cho_coc",
+    "pavement_clutter",
+    "ktt_addons"
+   ],
+   "note_vi": "Hồ Linh Đàm–Yên Sở, chung cư HH Linh Đàm, ga Giáp Bát, đê Lĩnh Nam, làng Định Công–Đại Kim, pano Giải Phóng–Vành Đai 3."
+  },
+  "long_bien": {
+   "sets": [
+    "river_dike",
+    "national_rail",
+    "kdt_moi",
+    "lang_trong_pho",
+    "road_structures",
+    "rooftop_clutter",
+    "cho_coc",
+    "street_trees",
+    "pavement_clutter"
+   ],
+   "note_vi": "Đê Ngọc Thụy–Ngọc Lâm, bãi giữa và bến đò, đường sắt qua cầu Long Biên–ga Gia Lâm, KĐT Việt Hưng, làng Bồ Đề–Cự Khối."
+  },
+  "nam_tu_liem": {
+   "sets": [
+    "kdt_moi",
+    "metro_rail",
+    "rooftop_clutter",
+    "road_structures",
+    "lang_trong_pho",
+    "street_lights",
+    "cho_coc",
+    "pavement_clutter",
+    "lakeside"
+   ],
+   "note_vi": "Mỹ Đình–Mễ Trì (cổng KĐT, cần trục, pano Phạm Hùng), ga Lê Đức Thọ tuyến 3, BRT Tố Hữu, làng Mễ Trì–Phú Đô–Tây Mỗ."
+  },
+  "bac_tu_liem": {
+   "sets": [
+    "metro_rail",
+    "lang_trong_pho",
+    "river_dike",
+    "kdt_moi",
+    "rooftop_clutter",
+    "national_rail",
+    "cho_coc",
+    "cable_spans",
+    "power_poles",
+    "pavement_clutter"
+   ],
+   "note_vi": "Depot Nhổn và các ga Minh Khai–Phú Diễn–Cầu Diễn, làng Đông Ngạc–Cổ Nhuế–Xuân Đỉnh, đê Thượng Cát–Liên Mạc, Tây Hồ Tây, ga Phú Diễn."
+  },
+  "ha_dong": {
+   "sets": [
+    "metro_rail",
+    "road_structures",
+    "lang_trong_pho",
+    "kdt_moi",
+    "rooftop_clutter",
+    "lakeside",
+    "cho_coc",
+    "pavement_clutter",
+    "shop_signs",
+    "cable_spans"
+   ],
+   "note_vi": "Tuyến 2A La Khê–Văn Khê–Yên Nghĩa, bến BRT Yên Nghĩa, làng lụa Vạn Phúc, KĐT Văn Quán–Văn Phú–Dương Nội, hồ Văn Quán, chợ Hà Đông."
+  }
  },
  "landmarks_priority_1": [
   "thap_rua",

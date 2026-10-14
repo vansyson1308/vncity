@@ -43,11 +43,11 @@ def main():
     out = pathlib.Path(a.out_dir) / a.name
     fetched = json.loads((pathlib.Path(a.data) / a.name / "fetch.json").read_text())
     w, s, e, n = fetched["bbox"]
-    _, _, tf = local_projection((s + n) / 2, (w + e) / 2)
-    cx, cy = (0.0, 0.0)
-    if a.center:
-        lat, lon = map(float, a.center.split(","))
-        cx, cy = tf.transform(lon, lat)
+    geo = json.loads((out / "manifest.json").read_text()).get("georeference", {})
+    lat0, lon0 = geo.get("origin_lat", (s + n) / 2), geo.get("origin_lon", (w + e) / 2)
+    _, _, tf = local_projection(lat0, lon0)  # same frame as build.py (which may use --origin)
+    lat, lon = (map(float, a.center.split(",")) if a.center else ((s + n) / 2, (w + e) / 2))
+    cx, cy = tf.transform(lon, lat)
     r = a.radius
     inside = lambda x, y: abs(x - cx) < r and abs(y - cy) < r  # noqa: E731
 
