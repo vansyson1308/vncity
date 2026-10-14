@@ -39,7 +39,7 @@
     },
     "tags": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9_]+$"}, "uniqueItems": true},
     "condition": {
-      "description": "Gate evaluated by the runtime. All listed fields must hold.",
+      "description": "Gate evaluated by the runtime (UHanoiMissionSubsystem::EvaluateCondition). All listed fields must hold: flags all set, not_flags none set, events_active all currently active (SetWorldEventActive).",
       "type": "object",
       "properties": {
         "missions_completed": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
@@ -47,7 +47,9 @@
         "hours": {"$ref": "#/$defs/hour_range"},
         "weather": {"type": "array", "items": {"enum": ["clear", "cloudy", "rain", "storm", "fog", "drizzle", "hot", "cold"]}},
         "protagonist": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
-        "flags": {"type": "array", "items": {"type": "string"}}
+        "flags": {"type": "array", "items": {"type": "string"}},
+        "not_flags": {"description": "None of these flags may be set.", "type": "array", "items": {"type": "string"}},
+        "events_active": {"description": "World events (collection events) that must currently be active.", "type": "array", "items": {"$ref": "#/$defs/ref"}}
       },
       "additionalProperties": false
     },

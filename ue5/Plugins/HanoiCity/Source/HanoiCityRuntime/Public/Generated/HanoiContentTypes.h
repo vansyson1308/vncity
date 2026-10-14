@@ -235,7 +235,7 @@ enum class EHanoiWeather : uint8
 	Cold UMETA(DisplayName = "cold"),
 };
 
-/** Gate evaluated by the runtime. All listed fields must hold. */
+/** Gate evaluated by the runtime (UHanoiMissionSubsystem::EvaluateCondition). All listed fields must hold: flags all set, not_flags none set, events_active all currently active (SetWorldEventActive). */
 USTRUCT(BlueprintType)
 struct HANOICITYRUNTIME_API FHanoiCondition
 {
@@ -264,6 +264,14 @@ struct HANOICITYRUNTIME_API FHanoiCondition
 	/** [json: flags] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TArray<FString> Flags;
+
+	/** None of these flags may be set. [json: not_flags] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FString> NotFlags;
+
+	/** World events (collection events) that must currently be active. [json: events_active] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> EventsActive;
 };
 
 USTRUCT(BlueprintType)
@@ -366,11 +374,11 @@ struct HANOICITYRUNTIME_API FHanoiActivityRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiText Description;
 
-	/** Gate evaluated by the runtime. All listed fields must hold. [json: unlock] */
+	/** Gate evaluated by the runtime (UHanoiMissionSubsystem::EvaluateCondition). All listed fields must hold: flags all set, not_flags none set, events_active all currently active (SetWorldEventActive). [json: unlock] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiCondition Unlock;
 
-	/** Gate evaluated by the runtime. All listed fields must hold. [json: available] */
+	/** Gate evaluated by the runtime (UHanoiMissionSubsystem::EvaluateCondition). All listed fields must hold: flags all set, not_flags none set, events_active all currently active (SetWorldEventActive). [json: available] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiCondition Available;
 
@@ -601,7 +609,7 @@ struct HANOICITYRUNTIME_API FHanoiBusinessRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TArray<FHanoiBusinessUpgrade> Upgrades;
 
-	/** Gate evaluated by the runtime. All listed fields must hold. [json: unlock] */
+	/** Gate evaluated by the runtime (UHanoiMissionSubsystem::EvaluateCondition). All listed fields must hold: flags all set, not_flags none set, events_active all currently active (SetWorldEventActive). [json: unlock] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiCondition Unlock;
 };
@@ -758,6 +766,10 @@ struct HANOICITYRUNTIME_API FHanoiDialogueLineChoice
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FName Goto;
 
+	/** Offered only while this holds. Every line with choices keeps at least one unconditional choice (tools/validate.py). [json: condition] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiCondition Condition;
+
 	/** [json: effect] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiReward Effect;
@@ -783,6 +795,10 @@ struct HANOICITYRUNTIME_API FHanoiDialogueLine
 	/** [json: emotion] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FString Emotion;
+
+	/** Shown only while this holds; otherwise the runtime skips the line and continues with the next line in list order (its goto and choices are ignored). [json: condition] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiCondition Condition;
 
 	/** [json: choices] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
@@ -1177,7 +1193,7 @@ struct HANOICITYRUNTIME_API FHanoiMissionRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiText Summary;
 
-	/** Gate evaluated by the runtime. All listed fields must hold. [json: requires] */
+	/** Gate evaluated by the runtime (UHanoiMissionSubsystem::EvaluateCondition). All listed fields must hold: flags all set, not_flags none set, events_active all currently active (SetWorldEventActive). [json: requires] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiCondition Requires;
 

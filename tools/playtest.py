@@ -114,7 +114,7 @@ class World:
                     if k == "set_flags" and isinstance(v, list):
                         for f in v:
                             self.flag_writers[f].add(mid)
-                    elif k == "flags" and isinstance(v, list):
+                    elif k in ("flags", "not_flags") and isinstance(v, list):
                         for f in v:
                             self.flag_readers[f].add(mid)
                     elif k in ("reacts_to_flags", "variant_from_flags") and isinstance(v, (list, dict)):
@@ -184,6 +184,7 @@ class Session:
         self.done, self.failed = [], []
         self.unlocked_activities, self.unlocked_businesses = set(), set()
         self.events_seen, self.chars_met, self.landmarks_seen, self.districts_seen = set(), set(), set(), set()
+        self.skipped_lines, self.conditional_choices_seen = 0, 0
         self.hour, self.day = 5.0, 1          # the prologue starts at 5 a.m.
         self.pos = world.characters["minh"]["home"]
         self.protagonist = "minh"
@@ -243,7 +244,24 @@ class Session:
             elif coll == "businesses":
                 self.unlocked_businesses.add(uid)
 
-    def run_dialogue(self, did, mission, step):
+    def condition_holds(self, cond, active_events=()):
+        """UHanoiMissionSubsystem::EvaluateCondition on this session's state (hours/weather pass)."""
+        c = cond or {}
+        if any(x.split(":", 1)[1] not in self.done for x in c.get("missions_completed", [])):
+            return False
+        if any(self.rep[k] < v for k, v in (c.get("min_reputation") or {}).items()):
+            return False
+        if c.get("protagonist") and all(x.split(":", 1)[1] != self.protagonist for x in c["protagonist"]):
+            return False
+        if any(f not in self.flags for f in c.get("flags", [])):
+            return False
+        if any(f in self.flags for f in c.get("not_flags", [])):
+            return False
+        if any(x.split(":", 1)[1] not in active_events for x in c.get("events_active", [])):
+            return False
+        return True
+
+    def run_dialogue(self, did, mission, step, active_events=()):
         d = self.w.dialogues.get(did)
         if not d:
             self.issue("error", mission, step, f"dialogue {did} does not exist")
@@ -257,14 +275,25 @@ class Session:
                 self.issue("error", mission, step, f"dialogue {did}: goto '{cur}' is not a line")
                 return
             line = lines[cur]
+            if "condition" in line and not self.condition_holds(line["condition"], active_events):
+                self.skipped_lines += 1   # ResolveDialogueLine: continue in list order
+                i = order.index(cur)
+                cur = order[i + 1] if i + 1 < len(order) else None
+                continue
             sp = line["speaker"].split(":", 1)[1]
             if sp != self.protagonist and sp != "player":
                 self.chars_met.add(sp)
             seen.add(cur)
             if line.get("choices"):
-                opts = [(c["goto"], c["text"]["vi"]) for c in line["choices"]]
+                offered = [c for c in line["choices"] if self.condition_holds(c.get("condition"), active_events)]
+                if not offered:
+                    self.issue("error", mission, step, f"dialogue {did}/{cur}: no choice available")
+                    return
+                if len(offered) < len(line["choices"]):
+                    self.conditional_choices_seen += 1
+                opts = [(c["goto"], c["text"]["vi"]) for c in offered]
                 pick = self.p.choose(opts)
-                choice = next(c for c in line["choices"] if c["goto"] == pick)
+                choice = next(c for c in offered if c["goto"] == pick)
                 self.choices.append({"mission": mission, "dialogue": did, "line": cur, "chose": choice["text"]["vi"][:60]})
                 self.apply_reward(choice.get("effect"), self.protagonist, mission, f"{did}/{cur}")
                 cur = pick
@@ -336,7 +365,8 @@ class Session:
                 fine = fine if isinstance(fine, (int, float)) else (fine or {}).get("motorbike", 0)
                 self.money[self.protagonist] -= fine or 0
             if s.get("dialogue"):
-                self.run_dialogue(s["dialogue"].split(":", 1)[1], mid, cur)
+                active = {ev.split(":", 1)[1] for ev in (pr.get("requires_event"), pr.get("force_event")) if ev}
+                self.run_dialogue(s["dialogue"].split(":", 1)[1], mid, cur, active)
             for f in s.get("set_flags", []):
                 self.flags.add(f)
             # choose the next step
@@ -495,6 +525,7 @@ def summarize(w, sessions, static):
         per[s.p.name] = {"days": s.day, "real_hours": round(s.real_minutes / 60, 1), "missions": len(s.done),
                          "violations": s.violations,
                          "failed": s.failed, "money": s.money, "flags": sorted(s.flags), "km": {k: round(v, 1) for k, v in s.km.items()},
+                         "skipped_lines": s.skipped_lines, "conditional_choices_seen": s.conditional_choices_seen,
                          "choices": s.choices, "timeline": s.timeline, "issues": s.issues, "notes": s.notes}
     return {
         "missions": len(w.missions), "story_missions": len(story), "side_missions": len(w.missions) - len(story),

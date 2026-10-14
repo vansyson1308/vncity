@@ -97,6 +97,27 @@ def check_missions(docs, items):
     return errors
 
 
+def check_dialogues(docs):
+    """Conditional lines/choices (UHanoiMissionSubsystem::ResolveDialogueLine / GetAvailableChoices):
+    a line with choices keeps at least one unconditional choice, so the UI always has something to
+    offer, and the last line of a dialogue carries no condition (skipping it would end the dialogue
+    silently)."""
+    errors = []
+    for p, name, doc in docs:
+        if name != "dialogues":
+            continue
+        for d in doc.get("items", []):
+            lines = d.get("lines", [])
+            where = f"{p}: dialogues:{d.get('id')}"
+            for line in lines:
+                choices = line.get("choices") or []
+                if choices and all("condition" in c for c in choices):
+                    errors.append(f"{where}.{line.get('id')}: every choice has a condition; keep one unconditional")
+            if lines and "condition" in lines[-1] and "goto" not in lines[-1] and not lines[-1].get("choices"):
+                errors.append(f"{where}.{lines[-1].get('id')}: the last line is conditional; add an unconditional closing line")
+    return errors
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default="game")
@@ -135,6 +156,7 @@ def main():
                     errors.append(f"{p}: {path}: unresolved reference {ref}")
 
     errors += check_missions(docs, items)
+    errors += check_dialogues(docs)
 
     counts = {}
     for _, name, doc in docs:
