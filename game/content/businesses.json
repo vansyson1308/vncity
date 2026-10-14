@@ -101,6 +101,9 @@
         ],
         "min_reputation": {
           "to_dan_pho_hang_chieu": 40
+        },
+        "min_skills": {
+          "nau_an": 50
         }
       }
     },
@@ -461,6 +464,9 @@
       "unlock": {
         "min_reputation": {
           "ban_quan_ly_cho_dong_xuan": 60
+        },
+        "min_skills": {
+          "kinh_doanh": 60
         }
       }
     },
@@ -502,7 +508,10 @@
         ],
         "flags": [
           "tx_minh_gop_von"
-        ]
+        ],
+        "min_skills": {
+          "sua_xe": 40
+        }
       }
     }
   ]

@@ -337,6 +337,26 @@
                   "cg_khoi_day_chup"
                 ]
               }
+            },
+            {
+              "text": {
+                "vi": "[Chụp ảnh 80] Chụp lại ngay tại chỗ: mượn sân bảo tàng, ánh sáng 4 giờ chiều, năm khung mới cho Hương trong 40 phút, ảnh của mình vẫn giữ.",
+                "en": "[Photography 80] Re-shoot on the spot: the museum yard, 4 p.m. light, five new frames for Hương in 40 minutes, your own prints stay yours."
+              },
+              "goto": "l06",
+              "condition": {
+                "min_skills": {
+                  "chup_anh": 80
+                }
+              },
+              "effect": {
+                "set_flags": [
+                  "cg_khoi_cho_anh"
+                ],
+                "reputation": {
+                  "hoi_bao_ton_pho_cu": 1
+                }
+              }
             }
           ]
         },
@@ -1165,6 +1185,24 @@
                   "hm_lan_rau_re"
                 ]
               }
+            },
+            {
+              "text": {
+                "vi": "[Mặc cả 50] Mặc cả với bà Cúc: 'Cháu lấy cả tuần, bà bớt cháu hai giá, cháu trả tiền trước.' Lấy rau sạch, giá rau rẻ.",
+                "en": "[Haggling 50] Haggle with bà Cúc: 'I'll take the whole week, two grades off, I pay up front.' Clean greens at the cheap price."
+              },
+              "goto": "l06",
+              "condition": {
+                "min_skills": {
+                  "mac_ca": 50
+                }
+              },
+              "effect": {
+                "set_flags": [
+                  "hm_lan_rau_cuc"
+                ],
+                "money_vnd": 40000
+              }
             }
           ]
         },
@@ -1233,8 +1271,8 @@
           "choices": [
             {
               "text": {
-                "vi": "Nhận khiêng gas và nước lấy tiền: 'Ba trăm. Gas trước, nước sau, thuốc tôi cầm theo.'",
-                "en": "Carry the gas and the water for money: 'Three hundred. Gas first, then water, I keep the pills on me.'"
+                "vi": "[Thể lực 40] Nhận khiêng gas và nước lấy tiền: 'Ba trăm. Gas trước, nước sau, thuốc tôi cầm theo.'",
+                "en": "[Stamina 40] Carry the gas and the water for money: 'Three hundred. Gas first, then water, I keep the pills on me.'"
               },
               "goto": "l05",
               "effect": {
@@ -1242,6 +1280,11 @@
                 "set_flags": [
                   "hm_minh_lay_tien_khieng"
                 ]
+              },
+              "condition": {
+                "min_skills": {
+                  "the_luc": 40
+                }
               }
             },
             {
@@ -1647,6 +1690,26 @@
                 "set_flags": [
                   "hd_minh_lay_cuoc"
                 ]
+              }
+            },
+            {
+              "text": {
+                "vi": "[Thuộc đường 60] Nhường cuốc và chỉ chú Lương lối tắt qua ngõ Ba La tránh đèn Quang Trung: 'Chú đi ngõ này, ba cây còn hai.'",
+                "en": "[Street knowledge 60] Give the fare up and show Lương the Ba La alley that skips the Quang Trung lights: 'This way, three kilometres become two.'"
+              },
+              "goto": "l04",
+              "condition": {
+                "min_skills": {
+                  "thuoc_duong": 60
+                }
+              },
+              "effect": {
+                "set_flags": [
+                  "hd_minh_nhuong_cuoc"
+                ],
+                "reputation": {
+                  "hoi_xe_om_o_quan_chuong": 1
+                }
               }
             }
           ]
@@ -2554,6 +2617,26 @@
                   "btl_lan_khuyen_hoc"
                 ]
               }
+            },
+            {
+              "text": {
+                "vi": "[Giao tiếp 60] Gọi chị Loan ra, nói chuyện ba người: 'Nhi làm quán cháu ba tháng thử, tiền công gửi thẳng cho mẹ, học tối ở Trần Phú.'",
+                "en": "[People 60] Call Loan over for a three-way talk: 'Nhi works my shop three months on trial, wages go straight to her mother, evening classes on Trần Phú.'"
+              },
+              "goto": "l04",
+              "condition": {
+                "min_skills": {
+                  "giao_tiep": 60
+                }
+              },
+              "effect": {
+                "set_flags": [
+                  "btl_lan_nhan_nhi"
+                ],
+                "reputation": {
+                  "hoi_ban_hang_rong": 1
+                }
+              }
             }
           ]
         },
@@ -2679,6 +2762,26 @@
                 "set_flags": [
                   "gl_minh_giau_nut"
                 ]
+              }
+            },
+            {
+              "text": {
+                "vi": "[Ăn nói 50] Nói khéo: 'Thằng bé đóng kỹ lắm, nhưng cầu Chương Dương xóc, cháu chịu nửa tiền men. Lần sau cháu chèn thêm rơm.'",
+                "en": "[Talk 50] Talk it round: 'The boy packed it well, but Chương Dương bridge shakes; I'll cover half the glaze. Next time I pad it with straw.'"
+              },
+              "goto": "l04",
+              "condition": {
+                "min_skills": {
+                  "an_noi": 50
+                }
+              },
+              "effect": {
+                "set_flags": [
+                  "gl_minh_bao_nut"
+                ],
+                "reputation": {
+                  "cong_dong_tai_xe_vo": 1
+                }
               }
             }
           ]
@@ -3103,14 +3206,19 @@
             },
             {
               "text": {
-                "vi": "Mặc cả bằng tay nghề: 'Cháu sửa máy bơm với dây điện cả dãy tối nay. Bà giữ giá cũ cho cháu một năm.'",
-                "en": "Bargain with his hands: 'I fix the pump and the wiring for the whole row tonight. You keep my old rent for a year.'"
+                "vi": "[Sửa xe 40] Mặc cả bằng tay nghề: 'Cháu sửa máy bơm với dây điện cả dãy tối nay. Bà giữ giá cũ cho cháu một năm.'",
+                "en": "[Mechanics 40] Bargain with his hands: 'I fix the pump and the wiring for the whole row tonight. You keep my old rent for a year.'"
               },
               "goto": "l06",
               "effect": {
                 "set_flags": [
                   "tx_minh_mac_ca_sua"
                 ]
+              },
+              "condition": {
+                "min_skills": {
+                  "sua_xe": 40
+                }
               }
             }
           ]
@@ -3479,6 +3587,26 @@
                 "set_flags": [
                   "tx_lan_tu_choi_mall"
                 ]
+              }
+            },
+            {
+              "text": {
+                "vi": "[Kinh doanh 70] Đề nghị ngược: 'Mười phần trăm, giữ tên Phở Thọ, giữ công thức, hợp đồng một năm. Không thì thôi.'",
+                "en": "[Business 70] Counter-offer: 'Ten percent, the Phở Thọ name stays, the recipe stays, a one-year contract. Or nothing.'"
+              },
+              "goto": "l04",
+              "condition": {
+                "min_skills": {
+                  "kinh_doanh": 70
+                }
+              },
+              "effect": {
+                "set_flags": [
+                  "tx_lan_tu_choi_mall"
+                ],
+                "reputation": {
+                  "hoi_bao_ton_pho_cu": 1
+                }
               }
             }
           ]

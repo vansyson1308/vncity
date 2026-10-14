@@ -89,8 +89,9 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 - Vòng ngày của ba nghề là tốt, nhưng lúc thẩm định **không có sự kiện ngẫu nhiên trên phố** (GTA5 có
   ~57), thứ làm thế giới sống giữa các nhiệm vụ. **Đã sửa:** 45 sự kiện trong `random_events.json`,
   mỗi sự kiện là một người có Khổ-Tập và một ngã rẽ có hậu quả đo được (02 §7.1).
-- Hệ kỹ năng 0-100 và uy tín phe phái có, nhưng chưa có thứ gì *mở khóa* bằng kỹ năng (ví dụ
-  `thuoc_duong` 60 mở đường tắt, `nau_an` 70 mở món mới). Tiến trình phải nhìn thấy được.
+- Hệ kỹ năng 0-100 và uy tín phe phái có, nhưng lúc thẩm định chưa có thứ gì *mở khóa* bằng kỹ năng.
+  **Đã sửa:** `skills.json` khai 3 mốc cho 12 kỹ năng (36 thứ mở khóa: xe, hoạt động, cơ sở, lựa chọn
+  thoại kiểu speech check, sự kiện ngẫu nhiên), cổng `min_skills` trong nội dung đặt đúng mức mốc (02 §10).
 - Sưu tầm (120 ảnh xưa, 40 tem phiếu, 60 biển hiệu) là lý do tốt để đi khắp 12 quận; chỉ mới đặt
   tên, chưa có từng món. Đây là việc nội dung rẻ, hiệu quả cao.
 - Ngày 48 phút trên bản đồ 1:1 là vấn đề cốt lõi của *cảm giác*: GTA5 có bản đồ 1:4 nên 48 phút khớp.
@@ -163,7 +164,9 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
    dẫn tới phạt theo Nghị định 168; chuẩn ghim trong tests/test_random_events.py (02 §7.1).
 8. Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).
 9. Đường thứ hai tới nội dung băng 24 không qua sưu tầm.
-10. Kỹ năng mở khóa thứ nhìn thấy được (3 mốc mỗi kỹ năng).
+10. ~~Kỹ năng mở khóa thứ nhìn thấy được (3 mốc mỗi kỹ năng).~~ **Đã làm:** `skills.json` 12 kỹ năng x 3 mốc,
+    `min_skills` trong điều kiện chung (C++ `EvaluateCondition`, playtest, validator), 25 cổng trong nội
+    dung, chuẩn ghim trong tests/test_skill_unlocks.py (02 §10).
 11. ~~Đổi tên nhại cho mọi thương hiệu thật trong `landmarks.json` khi xuất ra game (giữ tên thật chỉ
     trong dữ liệu tham chiếu, đã ghi chú trong từng mục).~~ **Đã làm:** Thời Gian City, Hoàng Gia City,
     Ê Ông Mall, Lốt Tê, Tháp Bảy Hai; tên thật chỉ còn ở `modelling.real_name`; tests/test_brand_names.py

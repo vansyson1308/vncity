@@ -123,6 +123,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "unlock": {
+            "$ref": "common.schema.json#/$defs/condition",
+            "description": "Condition to be able to buy or borrow this vehicle (skill tiers, missions). Absent = always on sale."
           }
         },
         "additionalProperties": false

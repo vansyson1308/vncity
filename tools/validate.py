@@ -59,7 +59,7 @@ def iter_refs(schema_node, value, path, schemas):
 
 
 TERMINAL_STEPS = {"end", "success", "fail"}
-DIALOGUE_CONDITION_KEYS = {"flags", "not_flags", "events_active", "min_reputation", "protagonist"}  # UHanoiMissionSubsystem::ResolveDialogueLine  # common.schema.json#/$defs/step_id; UHanoiMissionSubsystem::Advance
+DIALOGUE_CONDITION_KEYS = {"flags", "not_flags", "events_active", "min_reputation", "min_skills", "protagonist"}  # UHanoiMissionSubsystem::ResolveDialogueLine  # common.schema.json#/$defs/step_id; UHanoiMissionSubsystem::Advance
 
 
 def check_missions(docs, items):
@@ -101,7 +101,7 @@ def check_missions(docs, items):
 def check_dialogues(docs):
     """Dialogue graphs: every goto names a line of the same dialogue, line ids are unique, a line with
     choices has no goto of its own, and `condition` on lines/choices only uses state the dialogue UI
-    can evaluate mid-conversation (flags, not_flags, events_active, min_reputation, protagonist).
+    can evaluate mid-conversation (flags, not_flags, events_active, min_reputation, min_skills, protagonist).
     Conditional lines/choices (UHanoiMissionSubsystem::ResolveDialogueLine / GetAvailableChoices):
     a line with choices keeps at least one unconditional choice, so the UI always has something to
     offer, and the last line of a dialogue carries no condition (skipping it would end the dialogue

@@ -245,3 +245,30 @@ một khối `condition` (cùng kiểu với `requires` của nhiệm vụ, `com
 - Công cụ: `tools/validate.py` kiểm hai quy tắc trên; `tools/playtest.py` chơi theo đúng ngữ nghĩa
   (bỏ dòng không thỏa, chỉ chọn trong lựa chọn đang hiện) và đếm cờ trong `condition` là *cờ được
   đọc*, nên một lựa chọn đặt cờ mà về sau có dòng thoại đọc cờ đó không còn bị báo "không hệ quả".
+
+## 10. Kỹ năng mở khóa thứ nhìn thấy được
+
+Kỹ năng 0-100 (`characters/*.json`) lên theo cách chơi (`skills_trained` của hoạt động, `skills` của
+lựa chọn sự kiện ngẫu nhiên). Để con số trên điện thoại có nghĩa, `skills.json` khai ba mốc cho mỗi
+kỹ năng; tới mốc là `refs` của mốc được thêm vào `State.Unlocked`, và mọi cổng `condition.min_skills`
+trong nội dung (hoạt động `available`/`unlock`, cơ sở kinh doanh `unlock`, xe `unlock`, lựa chọn thoại,
+sự kiện ngẫu nhiên `requires`) phải đặt đúng một mức của mốc, nên người chơi luôn thấy trước cái mình
+sắp mở (tests/test_skill_unlocks.py). Lựa chọn thoại có cổng ghi rõ `[Kỹ năng mức]` ở đầu, kiểu
+speech check: không có kỹ năng thì không thấy lựa chọn, có thì thấy mình khác người. Playtest giả lập
+dùng kỹ năng xuất phát của nhân vật (không mô phỏng luyện), nên lựa chọn có cổng là lựa chọn mà
+người chơi mới chưa với tới.
+
+| Kỹ năng | Mốc 1 | Mốc 2 | Mốc 3 |
+| --- | --- | --- | --- |
+| `lai_xe` Lái xe | **30** Quen tay: Nhận đơn giao đồ ăn trên App Đói. | **60** Lách ngõ: Được mua Giamaha Phấn Khích 155 ở cửa hàng xe. | **85** Tay lái phố cổ: Được mua Ve Sầu Primavera và Hồng Đạt Sang Hơn 160i; cuốc liên quận trả gấp rưỡi. |
+| `thuoc_duong` Thuộc đường | **40** Biết ngõ: Nhận việc chở hàng ba gác chợ Long Biên. | **60** Tắt bản đồ: Năng lực 'Thuộc đường' (tô sáng đường tắt 30 giây); chỉ đường tắt cho xe ôm khác trong thoại. | **90** Bản đồ sống: Bản Đồ Ơi tự tắt; khách đặt cuốc đích danh qua App Vồ (+20% cuốc). |
+| `sua_xe` Sửa xe | **40** Thợ phụ: Mặc cả tiền trọ bằng tay nghề; được góp vốn tiệm Đức Còi. | **60** Thợ chính: Sửa xe chết máy trên phố lấy tiền (sự kiện ngẫu nhiên trả 100 nghìn thay vì cảm ơn). | **85** Thợ cả: Được mua đứt tiệm Đức Còi khi ông nghỉ. |
+| `an_noi` Ăn nói | **50** Dẻo miệng: Lựa chọn 'nói khéo' trong thoại: nhận lỗi mà không mất khách. | **75** Có duyên: Khách bo thêm 10% mỗi cuốc; bán hàng rong đắt khách hơn. | **90** Người kể chuyện: Dẫn tour phố cổ như Khôi. |
+| `giao_tiep` Giao tiếp | **40** Biết chào: Dẫn khách phố cổ (cùng ngoại ngữ 40). | **60** Giữ mối: Lựa chọn 'nói chuyện ba người' trong thoại: gọi cả người thứ ba vào bàn. | **85** Cả phố quen: Được mời ngồi bàn các cụ ở bia hơi Tạ Hiện: nghe tin phố trước một ngày. |
+| `mac_ca` Mặc cả | **30** Biết trả giá: Minigame mặc cả chợ đầu mối Đền Lừ. | **50** Giá gốc: Lựa chọn mặc cả rau sạch trong thoại: bà Cúc bớt mà không mất lòng. | **75** Dân chợ: Tem phiếu cũ mua được dưới giá niêm yết 30%. |
+| `kinh_doanh` Kinh doanh | **40** Sổ sách: App Sổ Tay Bán Hàng: quản lý từ xa cơ sở đã mua. | **60** Chủ sạp: Được mua sạp gia vị chợ Đồng Xuân. | **70** Biết nói không: Lựa chọn đề nghị ngược trong thoại với trung tâm thương mại. |
+| `nau_an` Nấu ăn | **30** Bếp phụ: Pha cà phê trứng ở quán Hàng Gai. | **50** Đứng bếp: Được mở chi nhánh Phở Thọ Linh Đàm. | **80** Tay ông: Thêm phở gà vào thực đơn (+15% doanh thu quán). |
+| `chup_anh` Chụp ảnh | **30** Biết bấm: Sưu tầm biển hiệu cũ bằng máy ảnh. | **50** Mắt nhà nghề: Chụp chồng ảnh xưa (năng lực đặc biệt của Khôi). | **80** Tay máy: Lựa chọn chụp lại tại chỗ trong thoại; ảnh cưới trả gấp đôi. |
+| `ngoai_ngu` Ngoại ngữ | **40** Đủ hiểu: Dẫn khách phố cổ (cùng giao tiếp 40). | **60** Nói chuyện: Xích lô du lịch quanh hồ Gươm. | **85** Phiên dịch: Khách Tây say ở Tạ Hiện và khách lạc đường trả gấp đôi. |
+| `the_luc` Thể lực | **40** Dẻo dai: Đua xe đạp Hồ Tây; lựa chọn khiêng gas lên tầng cao trong thoại. | **50** Khỏe: Chở hàng ba gác chợ Long Biên (cùng thuộc đường 40). | **70** Trâu bò: Thức đêm không giảm hồi phục; đá cầu với đội công viên Thống Nhất. |
+| `co_tuong` Cờ tướng | **30** Biết thủ: Cụ Bảo thách đấu ăn tiền trên phố (sự kiện ngẫu nhiên). | **60** Biết công: Giải CLB cờ tướng bờ Hồ, cược 200 nghìn. | **90** Kỳ thủ: Thắng cụ Bảo: cụ kể nốt chuyện năm 1972. |

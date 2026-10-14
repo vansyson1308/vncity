@@ -102,6 +102,7 @@ class World:
         self.rules = {r["id"]: r for r in load("traffic_rules")}
         self.flag_readers = collections.defaultdict(set)
         self.flag_writers = collections.defaultdict(set)
+        self.skills = {c["id"]: dict(c.get("skills") or {}) for c in self.characters.values()}  # starting skills; min_skills gates
         self.flag_read_kinds = collections.defaultdict(set)   # flag -> {mission_gate, step_branch, step_variant, fail_if, dialogue_line, dialogue_choice, activity}
         self.choice_flags = set()                             # flags only a player decision can set
         self.index_flags()
@@ -178,7 +179,9 @@ class World:
 
     def holds(self, cond, flags, rep, protagonist, active_events=(), done=None):
         """A dialogue/mission condition the way UHanoiMissionSubsystem::EvaluateCondition reads it
-        (state only: flags, not_flags, events_active, min_reputation, protagonist, missions_completed)."""
+        (state only: flags, not_flags, events_active, min_reputation, min_skills, protagonist, missions_completed).
+        Skills are the protagonist's starting values (training is not simulated), so a skill-gated
+        choice is the one a fresh player cannot take yet."""
         c = cond or {}
         if any(f not in flags for f in c.get("flags", [])):
             return False
@@ -189,6 +192,8 @@ class World:
         if done is not None and any(x.split(":", 1)[1] not in done for x in c.get("missions_completed", [])):
             return False
         if any(rep[k] < v for k, v in (c.get("min_reputation") or {}).items()):
+            return False
+        if any(self.skills.get(protagonist, {}).get(k, 0) < v for k, v in (c.get("min_skills") or {}).items()):
             return False
         if c.get("protagonist") and protagonist not in [x.split(":", 1)[1] for x in c["protagonist"]]:
             return False

@@ -298,6 +298,10 @@ struct HANOICITYRUNTIME_API FHanoiCondition
 	/** World events (collection events) that must currently be active. [json: events_active] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TArray<FHanoiRef> EventsActive;
+
+	/** Skill id (characters/*.json skills, skills.json) -> minimum level 0-100 the current protagonist must have. Levels used as gates must be a tier level in skills.json so the unlock is visible (tests/test_skill_unlocks.py). [json: min_skills] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TMap<FName, int32> MinSkills;
 };
 
 USTRUCT(BlueprintType)
@@ -1590,6 +1594,59 @@ struct HANOICITYRUNTIME_API FHanoiRandomEventsRow : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiSkillsTier
+{
+	GENERATED_BODY()
+
+	/** [json: level (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 Level = 0;
+
+	/** Rank shown on the phone, e.g. 'Lách ngõ'. [json: name (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText DisplayName;
+
+	/** What the player sees unlocked at this level. [json: unlocks (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Unlocks;
+
+	/** Content unlocked at this level (added to State.Unlocked); gates in content use min_skills at this same level. [json: refs] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> Refs;
+};
+
+/** Row of collection 'skills' (DataTable row name = id). The 0-100 skills of characters/*.json made visible: three tiers per skill, each naming what the player gets at that level. The runtime adds every ref of a reached tier to the player's Unlocked set, and content gates (condition.min_skills on activities, businesses, vehicles, dialogue choices, random events) use the same levels so progress is always something the player can see coming (docs/gdd/02-he-thong.md §10). */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiSkillsRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** [json: tags] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FName> Tags;
+
+	/** Localised text. Vietnamese is the source language. [json: name (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText DisplayName;
+
+	/** Localised text. Vietnamese is the source language. [json: description (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Description;
+
+	/** How the level goes up, in the player's words. [json: trained_by (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText TrainedBy;
+
+	/** [json: tiers (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiSkillsTier> Tiers;
+};
+
+USTRUCT(BlueprintType)
 struct HANOICITYRUNTIME_API FHanoiTrafficRuleDetection
 {
 	GENERATED_BODY()
@@ -1753,6 +1810,10 @@ struct HANOICITYRUNTIME_API FHanoiVehicleRow : public FTableRowBase
 	/** [json: liveries] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TArray<FString> Liveries;
+
+	/** Condition to be able to buy or borrow this vehicle (skill tiers, missions). Absent = always on sale. [json: unlock] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiCondition Unlock;
 };
 
 namespace HanoiGenerated
@@ -1773,6 +1834,7 @@ namespace HanoiGenerated
 		Fn(FName(TEXT("missions")), FHanoiMissionRow::StaticStruct());
 		Fn(FName(TEXT("radio")), FHanoiRadioStationRow::StaticStruct());
 		Fn(FName(TEXT("random_events")), FHanoiRandomEventsRow::StaticStruct());
+		Fn(FName(TEXT("skills")), FHanoiSkillsRow::StaticStruct());
 		Fn(FName(TEXT("traffic_rules")), FHanoiTrafficRuleRow::StaticStruct());
 		Fn(FName(TEXT("vehicles")), FHanoiVehicleRow::StaticStruct());
 	}
