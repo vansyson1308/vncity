@@ -136,6 +136,19 @@
               "maximum": 100
             }
           },
+          "drive": {
+            "description": "Motive block (Tứ diệu đế): kho = what hurts now, tap = what they cling to / the cause, diet = the end state they believe ends the hurt (their purpose), dao = what they actually do about it in the game (behaviour), tell = how it shows in dialogue or action. Every line and action of the character must trace to it (docs/gdd/08-nhan-qua.md).",
+            "type": "object",
+            "required": ["kho", "tap", "diet", "dao"],
+            "properties": {
+              "kho": {"$ref": "common.schema.json#/$defs/text"},
+              "tap": {"$ref": "common.schema.json#/$defs/text"},
+              "diet": {"$ref": "common.schema.json#/$defs/text"},
+              "dao": {"$ref": "common.schema.json#/$defs/text"},
+              "tell": {"type": "string"}
+            },
+            "additionalProperties": false
+          },
           "relationships": {
             "type": "array",
             "items": {

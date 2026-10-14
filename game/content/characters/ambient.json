@@ -6,6 +6,13 @@
       "tags": ["vendor", "morning", "pavement"],
       "name": {"vi": "Bà bán xôi sáng", "en": "Morning sticky-rice granny"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Dậy 3 giờ sáng, đội trật tự đuổi vỉa hè."},
+        "tap": {"vi": "Con cháu cần tiền; thúng xôi là tất cả vốn liếng."},
+        "diet": {"vi": "Bán hết trước 8 giờ, không bị tịch thu ghế."},
+        "dao": {"vi": "Ngồi đầu ngõ, mời chào, bê thúng chạy khi thấy áo xanh."},
+        "tell": "Xúc xôi nhanh hơn khi thấy xe trật tự."
+      },
       "age": 62,
       "gender": "female",
       "bio": {"vi": "Ngồi ghế nhựa thấp đầu ngõ với thúng xôi phủ lá chuối, nồi ruốc, hành phi. Xúc xôi bằng tay đeo găng nilon, gói lá dong buộc chun.", "en": "Sits on a low plastic stool at an alley mouth with a basket of sticky rice under banana leaves, pork floss and fried shallots. Scoops with a plastic-gloved hand, wraps in dong leaves with a rubber band."},
@@ -19,6 +26,13 @@
       "tags": ["vendor", "walking", "iconic"],
       "name": {"vi": "Người bán hàng rong quang gánh", "en": "Shoulder-pole street vendor"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Từ ngoại thành vào 4 giờ sáng, bị đuổi, bị khách Tây xin đội gánh chụp ảnh rồi không mua."},
+        "tap": {"vi": "Tiền học của con; tin gánh đi là có lộc."},
+        "diet": {"vi": "Bán hết gánh, về trước trưa."},
+        "dao": {"vi": "Rao, nhận chụp ảnh đổi một túi bánh, đi vòng phố cấm hàng rong."},
+        "tell": "Đổi vai khi gánh nặng; ra giá bằng tiếng Anh ba từ."
+      },
       "age": 48,
       "gender": "female",
       "bio": {"vi": "Từ ngoại thành vào phố từ 4 giờ sáng, gánh hoa quả, bánh rán, bánh khúc hoặc hoa. Khách Tây hay xin đội thử gánh để chụp ảnh rồi phải mua một túi bánh.", "en": "Comes in from the outskirts at 4 a.m. carrying fruit, doughnuts, cudweed cakes or flowers on a shoulder pole. Backpackers borrow the pole for a photo and end up buying a bag."},
@@ -32,6 +46,13 @@
       "tags": ["driver", "corner"],
       "name": {"vi": "Xe ôm truyền thống", "en": "Traditional xe ôm driver"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "App cướp khách; cả buổi sáng không ai gọi."},
+        "tap": {"vi": "Tin thuộc đường là đủ sống; không chịu học app."},
+        "diet": {"vi": "Đủ cuốc nuôi gia đình, không phải bán xe."},
+        "dao": {"vi": "Gọi 'xe ôm không?', mặc cả theo mặt khách, giữ góc phố."},
+        "tell": "Nằm vắt vẻo trên yên, mũ cối."
+      },
       "age": 55,
       "gender": "male",
       "bio": {"vi": "Nằm vắt vẻo trên yên xe đầu phố, đội mũ cối, hút thuốc, gọi 'Xe ôm không?' với mọi người đi bộ. Giá theo cảm giác, có thể mặc cả.", "en": "Lounges across his saddle at the street corner in a pith helmet, smoking, calling 'Xe ôm?' at every pedestrian. Prices by gut feeling; negotiable."},
@@ -45,6 +66,13 @@
       "tags": ["driver", "app"],
       "name": {"vi": "Tài xế xe ôm công nghệ", "en": "Ride-hailing driver"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "App chấm điểm, khách hủy, thưởng theo mốc cuốc."},
+        "tap": {"vi": "Nợ xe trả góp; tin chỉ cần chăm là thoát."},
+        "diet": {"vi": "Đạt mốc thưởng tuần, trả xong xe."},
+        "dao": {"vi": "Gom cuộc, dừng ở cổng tòa nhà, chạy ẩu giờ cao điểm."},
+        "tell": "Nhìn điện thoại nhiều hơn nhìn đường."
+      },
       "age": 27,
       "gender": "male",
       "bio": {"vi": "Áo khoác xanh lá Vồ hoặc vàng-đỏ app đối thủ, điện thoại kẹp trên tay lái, sạc dự phòng trong túi, hai mũ bảo hiểm. Dừng gom cuộc ở cổng tòa nhà và cổng trường.", "en": "Green Vồ jacket or a rival app's colours, phone clamped to the handlebars, power bank in pocket, two helmets. Gathers outside office towers and school gates."},
@@ -58,6 +86,13 @@
       "tags": ["courier", "app"],
       "name": {"vi": "Shipper giao hàng", "en": "Delivery courier"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Bom hàng, thùng nóng, mưa, phạt trễ đơn."},
+        "tap": {"vi": "Tin một ngày chạy đủ đơn là một ngày thắng."},
+        "diet": {"vi": "Một ngày không bị bom hàng."},
+        "dao": {"vi": "Gọi khách, đỗ tạm, chạy nhanh, ăn trên yên."},
+        "tell": "'Alô, em ship hàng ạ.'"
+      },
       "age": 25,
       "gender": "male",
       "bio": {"vi": "Xe chất thùng giữ nhiệt hoặc bao tải hàng online, chạy nhanh, đỗ tạm, gọi 'Alô, em ship hàng ạ, chị xuống nhận giúp em'. Hay bị khách bom hàng.", "en": "Bike stacked with an insulated box or sacks of online orders; rides fast, parks anywhere, calls 'Hello, delivery, could you come down?' Often ghosted by customers."},
@@ -71,6 +106,13 @@
       "tags": ["student", "young"],
       "name": {"vi": "Sinh viên", "en": "University student"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Tiền trọ, deadline, bố mẹ hỏi 'bao giờ có việc'."},
+        "tap": {"vi": "Sợ lỡ cơ hội; tin Hà Nội là nơi duy nhất để thành người."},
+        "diet": {"vi": "Ra trường có việc ở Hà Nội, tự trả tiền trọ."},
+        "dao": {"vi": "Xe buýt, trà chanh, làm thêm, học khuya."},
+        "tell": "Balo nặng; ăn bánh mì đứng."
+      },
       "age": 20,
       "gender": "unspecified",
       "bio": {"vi": "Đeo balo, đi xe đạp điện hoặc xe buýt, ăn trưa bánh mì, tối trà chanh vỉa hè. Đông nhất quanh Cầu Giấy, Bách Khoa, Kim Liên.", "en": "Backpack, e-bike or bus, bánh mì for lunch, lemon tea on the pavement at night. Thickest around Cầu Giấy, the Polytechnic and Kim Liên."},
@@ -83,6 +125,13 @@
       "tags": ["pupil", "school_run"],
       "name": {"vi": "Học sinh", "en": "School pupil"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Học thêm kín tuần, kẹp giữa hai người lớn trên xe máy."},
+        "tap": {"vi": "Muốn được khen; sợ bị so với 'con nhà người ta'."},
+        "diet": {"vi": "Một chiều được chơi ở sân."},
+        "dao": {"vi": "Ngồi im giữa xe, chạy ra cổng khi tan trường."},
+        "tell": "Khăn quàng đỏ lệch."
+      },
       "age": 12,
       "gender": "unspecified",
       "bio": {"vi": "Khăn quàng đỏ, áo đồng phục trắng, được bố mẹ chở xe máy kẹp giữa hai người lớn. Giờ tan trường cổng trường tắc nghẽn.", "en": "Red scarf, white uniform shirt, sandwiched between parents on a motorbike. School gates jam at closing time."},
@@ -94,6 +143,13 @@
       "tags": ["tourist", "foreigner"],
       "name": {"vi": "Khách Tây ba lô", "en": "Western backpacker"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Không dám sang đường, sợ bị chặt chém, sợ lừa."},
+        "tap": {"vi": "Tin đi rẻ mới là 'thật'; tin mọi lời khuyên trên mạng."},
+        "diet": {"vi": "Một trải nghiệm thật để kể lại ở nhà."},
+        "dao": {"vi": "Mặc cả 5 đô thành 3, chụp ảnh giữa đường, ngồi ghế nhựa Tạ Hiện."},
+        "tell": "Quần alibaba voi; đứng chết giữa ngã tư."
+      },
       "age": 26,
       "gender": "unspecified",
       "bio": {"vi": "Quần alibaba voi, ba lô to, đứng giữa đường chụp ảnh, không dám sang đường. Ngồi ghế nhựa Tạ Hiện uống bia 15 nghìn, mặc cả 5 đô thành 3 đô.", "en": "Elephant-print pants, huge backpack, stands in the road taking photos, too scared to cross. Sits on Tạ Hiện stools with 15k beer, haggles 5 dollars down to 3."},
@@ -106,6 +162,13 @@
       "tags": ["tourist", "domestic"],
       "name": {"vi": "Đoàn khách du lịch trong nước", "en": "Domestic tour group"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Lịch trình kín, sợ lạc đoàn, chân đau."},
+        "tap": {"vi": "Muốn có ảnh tập thể ở đủ chỗ; tin hướng dẫn viên."},
+        "diet": {"vi": "Về kể với cả làng là đã đến Lăng Bác."},
+        "dao": {"vi": "Đi theo cờ, xếp hàng, chụp tập thể."},
+        "tell": "Mũ cùng màu."
+      },
       "age": 45,
       "gender": "unspecified",
       "bio": {"vi": "Đi theo cờ hướng dẫn viên, mũ cùng màu, xếp hàng viếng Lăng và chụp ảnh tập thể ở Văn Miếu, Hồ Gươm.", "en": "Follows a guide's flag in matching caps, queues to visit the Mausoleum, takes group photos at the Temple of Literature and Sword Lake."},
@@ -118,6 +181,13 @@
       "tags": ["police", "heat_system"],
       "name": {"vi": "Cảnh sát giao thông", "en": "Traffic police officer"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Bị nghĩ xấu; ca trực nắng 38 độ; tai nạn trên tuyến mình."},
+        "tap": {"vi": "Chỉ tiêu và kỷ luật; tin chốt dày thì người đi cẩn thận."},
+        "diet": {"vi": "Ca trực không tai nạn."},
+        "dao": {"vi": "Ra hiệu dừng, kiểm tra giấy tờ, lập biên bản; không bao giờ dùng vũ lực."},
+        "tell": "Chốt dày hơn khi mức 'Chú ý' cao."
+      },
       "age": 32,
       "gender": "male",
       "bio": {"vi": "Đứng chốt ở ngã tư lớn hoặc tổ tuần tra hai xe. Mức 'Chú ý' càng cao thì chốt càng dày. Không bao giờ dùng vũ lực trong game: chỉ ra hiệu dừng, kiểm tra giấy tờ, lập biên bản, tạm giữ xe.", "en": "Stands at major junctions or patrols in pairs. Higher Attention means denser checkpoints. Never uses force in game: only signals to stop, checks papers, writes tickets, impounds bikes."},
@@ -131,6 +201,13 @@
       "tags": ["night_worker", "sanitation"],
       "name": {"vi": "Công nhân môi trường", "en": "Street sanitation worker"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Quét đêm 18 giờ đến 2 giờ, rác tràn sau mỗi lễ hội."},
+        "tap": {"vi": "Lương; sợ bị thay bằng xe quét máy."},
+        "diet": {"vi": "Phố sạch trước khi trời sáng."},
+        "dao": {"vi": "Gõ kẻng, quét, nhắc đổ rác đúng giờ."},
+        "tell": "Tiếng kẻng 18 giờ."
+      },
       "age": 50,
       "gender": "female",
       "bio": {"vi": "Áo phản quang cam, chổi tre cán dài, xe đẩy rác sắt. Quét đêm từ 18 giờ đến 2 giờ sáng, gõ kẻng báo đổ rác.", "en": "Orange reflective vest, long bamboo broom, steel push-cart. Sweeps from 6 p.m. to 2 a.m., striking a bell to tell residents to bring out rubbish."},
@@ -143,6 +220,13 @@
       "tags": ["elderly", "morning", "exercise"],
       "name": {"vi": "Các cụ tập thể dục sáng", "en": "Dawn exercise elders"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Con cháu bận, nhà rộng mà vắng; tuổi già."},
+        "tap": {"vi": "Hội bạn bờ hồ; tin khỏe là không phiền con."},
+        "diet": {"vi": "Khỏe để không phải nằm viện."},
+        "dao": {"vi": "Dưỡng sinh 5 giờ sáng, loa kéo, đi bộ ngược chiều kim đồng hồ."},
+        "tell": "Vỗ tay vào cây."
+      },
       "age": 68,
       "gender": "female",
       "bio": {"vi": "Từ 5 giờ sáng tập dưỡng sinh, nhảy dân vũ, đi bộ ngược chiều kim đồng hồ quanh hồ, vỗ tay vào cây. Loa kéo mở nhạc trữ tình về Hà Nội.", "en": "From 5 a.m.: tai chi, line dancing, counter-clockwise walks round the lake, palms slapping tree trunks. A trolley speaker plays old Hanoi ballads."},
@@ -156,6 +240,13 @@
       "tags": ["elderly", "chess", "afternoon"],
       "name": {"vi": "Ông cụ chơi cờ tướng vỉa hè", "en": "Pavement chess grandpa"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Nhàn rỗi, mất bạn cờ, nhà không ai nghe chuyện."},
+        "tap": {"vi": "Thích thắng, thích mách nước."},
+        "diet": {"vi": "Một ván cờ hay mỗi chiều."},
+        "dao": {"vi": "Đứng xem, mách nước, cãi nhau về nước cờ."},
+        "tell": "Bốn người xem, ai cũng mách."
+      },
       "age": 72,
       "gender": "male",
       "bio": {"vi": "Ván cờ trên ghế đá, bốn người xem đứng sau ai cũng mách nước. Ấm trà đá, điếu cày dựng bên gốc cây.", "en": "A game on a stone bench, four spectators each whispering advice. Iced tea, a bamboo water pipe leaning on the tree."},
@@ -168,6 +259,13 @@
       "tags": ["vendor", "flowers", "photo_bait"],
       "name": {"vi": "Cô bán hoa xe đạp", "en": "Flower-bicycle vendor"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Hoa héo theo giờ; dân mạng chụp ảnh xe hoa mà không mua."},
+        "tap": {"vi": "Mùa nào hoa ấy nuôi con; tin đứng chỗ đông là bán được."},
+        "diet": {"vi": "Bán hết trước khi hoa héo."},
+        "dao": {"vi": "Dừng chỗ nhiều người chụp, thu 20 nghìn một lần chụp, bán theo mùa."},
+        "tell": "Xe đạp chất đầy hoa theo mùa."
+      },
       "age": 45,
       "gender": "female",
       "bio": {"vi": "Chiếc xe đạp cũ chất đầy hoa theo mùa: loa kèn tháng 4, sen tháng 6, cúc họa mi tháng 11, đào ngày Tết. Dân mạng xin chụp ảnh cùng xe hoa.", "en": "An old bicycle heaped with seasonal flowers: April lilies, June lotus, November daisies, Tết peach blossom. Social-media fans ask to pose with it."},
@@ -180,6 +278,13 @@
       "tags": ["market", "vendor"],
       "name": {"vi": "Tiểu thương chợ", "en": "Market trader"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Khách ra siêu thị và mua online; thuế và phí sạp."},
+        "tap": {"vi": "Sạp thừa kế từ mẹ; tin chợ không bao giờ chết."},
+        "diet": {"vi": "Giữ sạp qua đời mình, con không phải đi làm thuê."},
+        "dao": {"vi": "Vừa bán vừa ăn bún vừa livestream."},
+        "tell": "Túi tiền đeo ngang bụng."
+      },
       "age": 52,
       "gender": "female",
       "bio": {"vi": "Ngồi trên sạp cao giữa núi hàng, đeo túi tiền ngang bụng, vừa bán vừa ăn bún, vừa xem livestream.", "en": "Perched on a raised stall amid mountains of stock, money pouch round the waist, selling while eating noodles and watching livestreams."},
@@ -192,6 +297,13 @@
       "tags": ["recycler", "bicycle"],
       "name": {"vi": "Người thu mua đồng nát", "en": "Scrap collector"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Giá phế liệu rớt; đạp xe cả ngày."},
+        "tap": {"vi": "Con ăn học; tin đồ cũ của người này là tiền của người kia."},
+        "diet": {"vi": "Một chuyến xe đầy, bán được tem phiếu cho người sưu tầm."},
+        "dao": {"vi": "Rao loa, mua biển hiệu cũ, tem phiếu, bán lại cho người sưu tầm."},
+        "tell": "Loa 'ai đồng nát sắt vụn bán đi'."
+      },
       "age": 47,
       "gender": "female",
       "bio": {"vi": "Đạp xe chất đầy bìa các-tông, chai nhựa, loa phát sẵn tiếng rao 'Ai đồng nát sắt vụn bán đi'. Nguồn tem phiếu, biển hiệu cũ cho người sưu tầm.", "en": "Pedals a bicycle piled with cardboard and bottles, a speaker looping 'Any scrap metal to sell?'. A source of old ration stamps and signs for collectors."},
@@ -204,6 +316,13 @@
       "tags": ["office", "commuter"],
       "name": {"vi": "Dân văn phòng", "en": "Office worker"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Tắc đường 18 giờ, KPI, sếp nhắn sau giờ làm."},
+        "tap": {"vi": "Sợ mất việc; tin cà phê muối 15 giờ cứu được buổi chiều."},
+        "diet": {"vi": "Về nhà trước 19 giờ."},
+        "dao": {"vi": "Luồn ngõ, cà phê muối, cơm văn phòng 40 nghìn."},
+        "tell": "Thẻ nhân viên đeo cổ."
+      },
       "age": 30,
       "gender": "unspecified",
       "bio": {"vi": "Áo sơ mi, thẻ nhân viên đeo cổ, xe tay ga, cơm văn phòng 40 nghìn, cà phê muối lúc 15 giờ, tắc đường lúc 18 giờ.", "en": "Shirt, lanyard, scooter, 40k office lunch, salted coffee at 3 p.m., traffic jam at 6 p.m."},
@@ -216,6 +335,13 @@
       "tags": ["guard", "parking"],
       "name": {"vi": "Bảo vệ, trông xe", "en": "Security guard and parking attendant"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Lương thấp, ngồi chòi cả ngày; mất xe là đền."},
+        "tap": {"vi": "Chút quyền lực nhỏ: chỗ để xe; tin còi là luật."},
+        "diet": {"vi": "Ca trực không mất xe."},
+        "dao": {"vi": "Ghi phấn lên yên, thổi còi, chỉ chỗ dắt xe."},
+        "tell": "Gửi xe 5 nghìn, tối 10 nghìn."
+      },
       "age": 58,
       "gender": "male",
       "bio": {"vi": "Ngồi chòi ở cổng tòa nhà, ghi vé xe bằng phấn lên yên, thổi còi chỉ chỗ dắt xe. Gửi xe máy 5 nghìn, buổi tối 10 nghìn.", "en": "Sits in a booth at the building gate, chalks ticket numbers on saddles, whistles you into a slot. Motorbike parking 5k by day, 10k at night."},
@@ -228,6 +354,13 @@
       "tags": ["wedding", "photo"],
       "name": {"vi": "Cặp đôi chụp ảnh cưới", "en": "Wedding-photo couple"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Một ngày để đẹp; khách qua đường phá khung hình; ê-kíp tính giờ."},
+        "tap": {"vi": "Tin ảnh cưới là ký ức duy nhất giữ được."},
+        "diet": {"vi": "Bộ ảnh hoàn hảo trước khi nắng gắt."},
+        "dao": {"vi": "Chiếm cầu Long Biên 5 giờ sáng, nhờ người đi khỏi khung hình."},
+        "tell": "Ê-kíp cầm hắt sáng."
+      },
       "age": 28,
       "gender": "unspecified",
       "bio": {"vi": "Váy cưới trắng, vest, ê-kíp cầm hắt sáng. Xuất hiện ở Nhà hát Lớn, Nhà thờ Lớn, cầu Long Biên, phố Phan Đình Phùng mùa lá vàng. Họ cần bạn đi khỏi khung hình.", "en": "White gown, suit, crew holding reflectors. Found at the Opera House, Cathedral, Long Biên bridge and Phan Đình Phùng in leaf-fall season. They need you out of the frame."},
@@ -239,6 +372,13 @@
       "tags": ["construction", "worker"],
       "name": {"vi": "Thợ xây", "en": "Construction worker"},
       "role": "ambient_archetype",
+      "drive": {
+        "kho": {"vi": "Xa quê, công trình nguy hiểm, nợ lương."},
+        "tap": {"vi": "Tiền gửi về; tin xong công trình này là về."},
+        "diet": {"vi": "Công trình xong, về quê ăn Tết."},
+        "dao": {"vi": "Làm thêm giờ, ngủ võng giữa công trình, ăn cơm hộp."},
+        "tell": "Cơm hộp trên giàn giáo tre."
+      },
       "age": 40,
       "gender": "male",
       "bio": {"vi": "Mũ nhựa vàng, khăn quấn cổ, ăn trưa cơm hộp ngồi trên giàn giáo tre, ngủ trưa trên võng giữa công trình.", "en": "Yellow plastic hard hat, scarf, boxed lunch eaten on bamboo scaffolding, noon nap in a hammock strung across the site."},
