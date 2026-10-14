@@ -1,0 +1,5 @@
+<!-- IL2CPP: Newtonsoft builds the content classes by reflection, so keep them and their constructors. -->
+<linker>
+  <assembly fullname="HanoiCity.Core" preserve="all" />
+  <assembly fullname="Newtonsoft.Json" preserve="all" />
+</linker>
