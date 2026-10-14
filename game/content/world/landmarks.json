@@ -1171,7 +1171,8 @@
           "own_photo_survey",
           "wikimedia_commons"
         ],
-        "notes": "Tên thương mại thật không xuất hiện trên biển hiệu trong game; dùng tên parody 'Tháp Bảy Hai'."
+        "notes": "Tên thương mại thật không xuất hiện trên biển hiệu trong game; dùng tên parody 'Tháp Bảy Hai'.",
+        "real_name": "Keangnam Hanoi Landmark Tower (Landmark 72)"
       }
     },
     {
@@ -1204,7 +1205,8 @@
           "own_photo_survey",
           "wikimedia_commons"
         ],
-        "notes": "Biển hiệu trong game dùng tên parody 'Lốt Tê Tower'."
+        "notes": "Biển hiệu trong game dùng tên parody 'Lốt Tê Tower'.",
+        "real_name": "Lotte Center Hanoi"
       }
     },
     {
@@ -1719,8 +1721,8 @@
         "coords_verified_overture"
       ],
       "name": {
-        "vi": "Times City (Vinhomes Times City)",
-        "en": "Times City estate"
+        "vi": "Thời Gian City (khu đô thị Minh Khai)",
+        "en": "Thời Gian City estate"
       },
       "location": {
         "lat": 20.99491,
@@ -1741,7 +1743,8 @@
           "wikimedia_commons",
           "osm_footprint"
         ],
-        "notes": "Tên thật của khu đô thị: chỉ dùng trong dữ liệu tham chiếu; trong game dùng tên nhại nếu cần."
+        "notes": "Tên thật ở modelling.real_name (chỉ tham chiếu); `name` là tên nhại dùng trong game.",
+        "real_name": "Vinhomes Times City"
       }
     },
     {
@@ -2201,8 +2204,8 @@
         "coords_verified_overture"
       ],
       "name": {
-        "vi": "Royal City (Vincom Mega Mall Royal City)",
-        "en": "Royal City estate"
+        "vi": "Hoàng Gia City (khu đô thị Nguyễn Trãi)",
+        "en": "Hoàng Gia City estate"
       },
       "location": {
         "lat": 21.002332,
@@ -2223,7 +2226,8 @@
           "wikimedia_commons",
           "osm_footprint"
         ],
-        "notes": "Tên thật của khu đô thị: chỉ dùng trong dữ liệu tham chiếu; trong game dùng tên nhại nếu cần."
+        "notes": "Tên thật ở modelling.real_name (chỉ tham chiếu); `name` là tên nhại dùng trong game.",
+        "real_name": "Vincom Mega Mall Royal City / Vinhomes Royal City"
       }
     },
     {
@@ -2446,8 +2450,8 @@
         "coords_unverified"
       ],
       "name": {
-        "vi": "Aeon Mall Long Biên",
-        "en": "Aeon Mall Long Biên"
+        "vi": "Ê Ông Mall Long Biên",
+        "en": "Ê Ông Mall Long Biên"
       },
       "location": {
         "lat": 21.0298,
@@ -2468,7 +2472,8 @@
           "wikimedia_commons",
           "osm_footprint"
         ],
-        "notes": "Tên thật: chỉ dùng tham chiếu; trong game dùng tên nhại."
+        "notes": "Tên thật ở modelling.real_name (chỉ tham chiếu); `name` là tên nhại dùng trong game.",
+        "real_name": "AEON Mall Long Biên"
       }
     },
     {
@@ -2489,8 +2494,8 @@
       "district": "districts:long_bien",
       "kind": "bridge",
       "description": {
-        "vi": "Cầu bê tông đôi nối Hai Bà Trưng với Long Biên, mặt cầu rộng, gió sông lớn, hoàng hôn phía Chương Dương; tuyến tắt của Minh ra Aeon.",
-        "en": "Twin concrete bridge joining Hai Bà Trưng and Long Biên, wide deck, strong river wind, sunsets toward Chương Dương; Minh's shortcut to Aeon."
+        "vi": "Cầu bê tông đôi nối Hai Bà Trưng với Long Biên, mặt cầu rộng, gió sông lớn, hoàng hôn phía Chương Dương; tuyến tắt của Minh ra Ê Ông Mall.",
+        "en": "Twin concrete bridge joining Hai Bà Trưng and Long Biên, wide deck, strong river wind, sunsets toward Chương Dương; Minh's shortcut to Ê Ông Mall."
       },
       "built_year": 2010,
       "modelling": {

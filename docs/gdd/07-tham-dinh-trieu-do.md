@@ -164,7 +164,9 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 8. Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).
 9. Đường thứ hai tới nội dung băng 24 không qua sưu tầm.
 10. Kỹ năng mở khóa thứ nhìn thấy được (3 mốc mỗi kỹ năng).
-11. Đổi tên nhại cho mọi thương hiệu thật trong `landmarks.json` khi xuất ra game (giữ tên thật chỉ
-    trong dữ liệu tham chiếu, đã ghi chú trong từng mục).
+11. ~~Đổi tên nhại cho mọi thương hiệu thật trong `landmarks.json` khi xuất ra game (giữ tên thật chỉ
+    trong dữ liệu tham chiếu, đã ghi chú trong từng mục).~~ **Đã làm:** Thời Gian City, Hoàng Gia City,
+    Ê Ông Mall, Lốt Tê, Tháp Bảy Hai; tên thật chỉ còn ở `modelling.real_name`; tests/test_brand_names.py
+    quét toàn bộ nội dung người chơi nhìn thấy (02 §4).
 12. Lát cắt dọc: phố cổ + hồ Gươm + Ba Đình + Long Biên, mở đầu + chương 1 + 2, demo 60 phút cho
     người Hà Nội chơi thử và ghi lại phản ứng ở ba chỗ: cold open, cuốc xe đầu, lời mời của Thảo.

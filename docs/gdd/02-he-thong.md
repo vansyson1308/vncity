@@ -93,6 +93,12 @@ Mức phạt lấy theo Nghị định 168/2024/NĐ-CP theo hiểu biết hiện
 Dùng điện thoại khi xe đang chạy (mở app, nghe gọi) là lỗi `dung_dien_thoai_khi_lai`. Muốn nhận cuốc
 phải tấp vào lề: một lựa chọn rủi ro nhỏ lặp lại hàng trăm lần.
 
+Cùng quy tắc nhại cho mọi thương hiệu thật mà người chơi nhìn thấy (biển hiệu, bản đồ, thoại), như
+GTA đổi Facebook thành Lifeinvader: xe máy là Hồng Đạt / Giamaha / Phóng, địa danh thương mại là Thời
+Gian City (Times City), Hoàng Gia City (Royal City), Ê Ông Mall (Aeon), Lốt Tê (Lotte), Tháp Bảy Hai
+(Landmark 72). Tên thật chỉ nằm trong trường tham chiếu (`modelling.real_name`, `inspired_by`,
+`name_keywords`), và tests/test_brand_names.py chặn mọi tên thật lọt vào văn bản người chơi thấy.
+
 ## 5. Uy tín và phe phái
 
 Mỗi phe trong `factions.json` có thanh uy tín -100 đến 100 chung cho cả ba nhân vật (phố biết họ là

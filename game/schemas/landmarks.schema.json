@@ -101,6 +101,10 @@
               },
               "notes": {
                 "type": "string"
+              },
+              "real_name": {
+                "type": "string",
+                "description": "Trademarked real-world name of the place (reference only; never shown in game). `name` holds the parody name used on in-game signage, maps and dialogue, like GTA's Lifeinvader for Facebook."
               }
             },
             "additionalProperties": false
