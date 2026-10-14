@@ -1,0 +1,23 @@
+{
+  "_comment": "Build areas for the inner city, named after the pre-July-2025 urban districts (quận) because open map data, Street View imagery and everyday speech still use them. Hanoi abolished the district level on 1/7/2025 (wards now report straight to the city); the ids below are game zones, not current administrative units. Boxes are west,south,east,north in WGS84 and overlap on purpose so streets along a boundary are built on both sides. All districts share one world origin so their tiles land in one frame.",
+  "origin": {"lat": 21.0288, "lon": 105.8524, "note": "Hồ Hoàn Kiếm; x = east, y = north in metres"},
+  "cache": {"name": "noi_thanh", "bbox": [105.72, 20.93, 105.95, 21.12]},
+  "districts": {
+    "hoan_kiem":     {"bbox": [105.840, 21.010, 105.870, 21.045], "game_districts": ["pho_co", "hoan_kiem"]},
+    "ba_dinh":       {"bbox": [105.800, 21.020, 105.850, 21.050], "game_districts": ["ba_dinh"]},
+    "dong_da":       {"bbox": [105.800, 20.995, 105.845, 21.030], "game_districts": ["dong_da"]},
+    "hai_ba_trung":  {"bbox": [105.840, 20.985, 105.880, 21.020], "game_districts": ["hai_ba_trung"]},
+    "tay_ho":        {"bbox": [105.790, 21.040, 105.860, 21.100], "game_districts": ["tay_ho"]},
+    "cau_giay":      {"bbox": [105.770, 21.015, 105.810, 21.055], "game_districts": ["cau_giay"]},
+    "thanh_xuan":    {"bbox": [105.785, 20.980, 105.830, 21.010], "game_districts": ["thanh_xuan"]},
+    "hoang_mai":     {"bbox": [105.830, 20.945, 105.900, 20.995], "game_districts": ["hoang_mai"]},
+    "long_bien":     {"bbox": [105.860, 21.020, 105.940, 21.090], "game_districts": ["long_bien"]},
+    "nam_tu_liem":   {"bbox": [105.740, 20.990, 105.790, 21.040], "game_districts": ["my_dinh"]},
+    "bac_tu_liem":   {"bbox": [105.730, 21.035, 105.800, 21.100], "game_districts": ["bac_tu_liem"]},
+    "ha_dong":       {"bbox": [105.740, 20.935, 105.800, 21.000], "game_districts": ["ha_dong"]}
+  },
+  "later": {
+    "gia_lam":   {"bbox": [105.900, 20.980, 105.980, 21.060], "game_districts": ["gia_lam"], "note": "huyện ngoại thành, ngoài khung cache"},
+    "dong_anh":  {"bbox": [105.780, 21.090, 105.900, 21.200], "note": "huyện ngoại thành, ngoài khung cache"}
+  }
+}

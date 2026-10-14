@@ -1,6 +1,7 @@
 # 04. Danh sách nội dung và phần còn thiếu
 
-Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Nhật ký QC nội dung gần nhất:
+Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `./venv/bin/python tools/playtest.py`
+(giả lập chơi hết, kết quả `06-gia-lap-choi-thu.md`, thẩm định `07-tham-dinh-trieu-do.md`). Nhật ký QC nội dung gần nhất:
 `05-qc-noi-dung.md`. Mọi file là
 `{"collection": "...", "items": [...]}` theo `game/schemas/<collection>.schema.json`.
 
@@ -8,9 +9,9 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu). Nhậ
 
 | Collection | File | Số mục | Ghi chú |
 | --- | --- | --- | --- |
-| districts | `world/districts.json` | 13 | Phố cổ, Hoàn Kiếm/khu Pháp, Ba Đình, Tây Hồ, Long Biên, Đống Đa, Hai Bà Trưng, Cầu Giấy, Thanh Xuân, Hà Đông, Hoàng Mai, Gia Lâm, Mỹ Đình. Tên phường theo ranh giới sau sáp nhập 7/2025 gắn tag `division_names_need_check` |
+| districts | `world/districts.json` | 14 | Phố cổ, Hoàn Kiếm/khu Pháp, Ba Đình, Tây Hồ, Long Biên, Đống Đa, Hai Bà Trưng, Cầu Giấy, Thanh Xuân, Hà Đông, Hoàng Mai, Gia Lâm, Mỹ Đình, Bắc Từ Liêm. Tên phường theo ranh giới sau sáp nhập 7/2025 gắn tag `division_names_need_check` |
 | building_archetypes | `world/building_archetypes.json` | 13 | Đúng 13 id pipeline dùng |
-| landmarks | `world/landmarks.json` | 44 | 24 mục `coords_verified_overture`, 20 mục còn `coords_unverified` |
+| landmarks | `world/landmarks.json` | 84 | 36 mục `coords_verified_overture` (khớp Overture trong 300 m), 48 mục còn `coords_unverified` (phần lớn là hồ, cầu, phố, công viên: giữ mốc tay) |
 | characters | `characters/protagonists.json` | 3 | Minh, Lan, Khôi |
 | characters | `characters/story.json` | 24 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio |
 | characters | `characters/ambient.json` | 20 | Kiểu dân cư có lịch sinh hoạt |

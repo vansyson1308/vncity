@@ -1,13 +1,13 @@
 # Lộ trình
 
-Trạng thái tính đến 13/10/2026 (sau QC cuối, xem `07-qc-checklist.md`). "Xong" nghĩa là có code chạy được và kiểm thử, hoặc có dữ liệu qua
+Trạng thái tính đến 14/10/2026 (sau QC cuối `07-qc-checklist.md` và đợt dựng 12 quận `12-cac-quan.md`). "Xong" nghĩa là có code chạy được và kiểm thử, hoặc có dữ liệu qua
 kiểm tra tự động. Những gì cần UE5 để chạy thử được đánh dấu riêng.
 
 ## Đã có trong repo
 
 | Hạng mục | Trạng thái | Ghi chú |
 | --- | --- | --- |
-| Pipeline khối nhà, đường, địa hình | Xong | Chạy được cả TP Hà Nội (2,5 triệu tòa nhà) |
+| Pipeline khối nhà, đường, địa hình | Xong | Chạy được cả TP Hà Nội (2,5 triệu tòa nhà); 12 quận nội thành đã dựng chung một gốc tọa độ (`12-cac-quan.md`) |
 | Phân loại 13 kiểu nhà Hà Nội | Xong, cần tinh chỉnh | Luật trong `pipeline/semantics.py`; vùng phố cổ / phố Pháp vẽ tay xấp xỉ |
 | Chiều cao theo kiểu nhà | Xong | 98,7% tòa nhà ở Hoàn Kiếm không có chiều cao gốc |
 | Mặt tiền hướng phố | Xong | Có kiểm tra tầm nhìn, không nhận nhầm tường chung |
@@ -15,10 +15,10 @@ kiểm tra tự động. Những gì cần UE5 để chạy thử được đán
 | Đạo cụ đường phố (10 bộ) | Xong | Biển hiệu theo cửa hàng thật, xe máy, ghế nhựa, hàng rong, cây, cột điện, dây, đèn |
 | Thời tiết thật / khí hậu | Xong | `live/weather.py`, có chế độ nướng sẵn cho bản thương mại |
 | Cập nhật bản đồ theo release Overture | Xong | `live/update_city.py` báo ô nào cần dựng lại |
-| Kiểm tra tọa độ công trình biểu tượng | Xong | 24/44 khớp dữ liệu thật trong 300 m; còn lại cần người kiểm |
+| Kiểm tra tọa độ công trình biểu tượng | Xong | 36/84 khớp dữ liệu thật trong 300 m (chạy offline trên cache); còn lại là hồ, cầu, phố giữ mốc tay |
 | Schema dữ liệu game (14 bộ) | Xong | `game/schemas` |
-| Nội dung game | Bản đầu, đã QC | 363 mục: 13 quận, 44 công trình, 47 nhân vật, 26 xe, 24 việc làm, 24 nhiệm vụ, 57 hội thoại… |
-| Cốt truyện | Bản nháp v0, đã chơi thử | Mở đầu + chương 1 chơi được dạng dữ liệu; 5 hồi dàn ý. Thẩm định và đề xuất sửa: `11-tham-dinh-choi-thu.md`. Chờ chủ dự án định hướng |
+| Nội dung game | Bản đầu, đã QC | 404 mục: 14 quận, 84 công trình, 47 nhân vật, 26 xe, 24 việc làm, 24 nhiệm vụ, 57 hội thoại… |
+| Cốt truyện | Bản nháp v0, đã giả lập chơi thử | Mở đầu + chương 1 chơi được dạng dữ liệu, 0 lỗi chặn chơi (`gdd/06-gia-lap-choi-thu.md`); thẩm định chi tiết lời thoại và logic: `11-tham-dinh-choi-thu.md`; hệ thống, kinh tế, đồng hồ và 12 việc cần làm: `gdd/07-tham-dinh-trieu-do.md`. Chờ chủ dự án định hướng |
 | Harness UE 5.8 | Viết xong, đã soát kỹ, **chưa biên dịch** | Plugin C++, sinh USTRUCT từ schema, script import, runtime đọc đủ tham số nhiệm vụ; danh sách API cần kiểm ở `05-tich-hop-ue5.md` mục 7 |
 | Xem trước 3D trên web | Xong | `viewer/city.html` |
 
@@ -31,7 +31,7 @@ kiểm tra tự động. Những gì cần UE5 để chạy thử được đán
    duy nhất để làm bộ kit mặt tiền "y hệt".
 2. **Tinh chỉnh phân loại kiểu nhà** bằng ảnh khảo sát: vẽ lại vùng phố cổ / phố Pháp chính xác,
    thêm luật nhận biệt khu tập thể (Kim Liên, Thành Công, Giảng Võ).
-3. **Chạy toàn thành phố** (`pipeline.run --region VN-HN --tile 1000`), đo thời gian và dung lượng.
+3. ~~Chạy toàn thành phố~~ **Đã dựng 12 quận nội thành** (`12-cac-quan.md`); còn lại: huyện ngoại thành (Gia Lâm, Đông Anh, Thanh Trì) bằng `pipeline/districts.json` mục `later`.
 4. **Bộ kit mặt tiền trong Blender** (quy trình: `10-quy-trinh-tao-tai-san.md`; nguồn: `08-nguon-tai-san-3d.md`): 13 kiểu × 3 biến thể, mỗi kit chia
    module tầng trệt / tầng giữa / mái để PCG lắp. Bắt đầu từ `nha_ong_pho_co`.
 5. **Đạo cụ** theo `Kind` trong `out/*/pcg/*.csv` (khoảng 40 mesh): xe máy (tên nhại), ghế nhựa,
