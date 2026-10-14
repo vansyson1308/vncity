@@ -27,6 +27,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FHanoiStepWaitingSignature, FName
 /**
  * Runs data-driven missions (collection "missions") one at a time.
  *
+ * Starting: CanStartMission also fails while the first step's params.requires_event is not active
+ * (the player is not locked into a mission waiting days for Trung thu or the weekend walking street).
+ * StartMission possesses the mission's first `protagonists` entry when the current protagonist is
+ * not one of them (OnProtagonistSwitched), so Lan's cooking mission is never played as Minh.
+ * Clean record: the flag ho_so_sach_90_ngay is set after Settings.CleanRecordDays game days without
+ * a fine (State.LastFineGameTime, updated by apply_fine and UHanoiHeatSubsystem) and cleared on a fine.
+ *
  * Step completion by kind:
  *  - go_to, ride, deliver, drive_passenger, follow: player pawn within params.radius_m
  *    (default Settings.MissionArriveRadiusM) of the step target, in plan (XY).
@@ -56,7 +63,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override;
-	virtual bool IsTickable() const override { return bReady && bActive; }
+	virtual bool IsTickable() const override { return bReady; }
 	virtual ETickableTickType GetTickableTickType() const override { return ETickableTickType::Conditional; }
 
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Missions")
@@ -157,6 +164,13 @@ public:
 	FHanoiPlayerState& MutableState() { return State; }
 	void NotifyStateChanged() { OnStateChanged.Broadcast(State); }
 
+	/** A fine was issued now: restarts the clean-record counter and clears ho_so_sach_90_ngay. */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Progress")
+	void RecordFine();
+
+	/** Flag set after Settings.CleanRecordDays game days without a fine. */
+	static const FName CleanRecordFlag;
+
 	UPROPERTY(BlueprintAssignable, Category = "Hanoi|Missions")
 	FHanoiMissionStepSignature OnStepStarted;
 
@@ -197,6 +211,10 @@ private:
 	const TArray<TSharedPtr<FJsonValue>>* GetParamArray(const TCHAR* Key) const;
 	TSharedPtr<FJsonObject> GetParamObject(const TCHAR* Key) const;
 	bool IsStepGateOpen() const;
+	/** params.requires_event of a mission's first step, or empty. */
+	static FName FirstStepRequiredEvent(const FHanoiMissionRow& Row);
+	bool CanStartNow(const FHanoiMissionRow& Row, FString& OutReason) const;
+	void UpdateCleanRecord();
 	void ApplyStepParamsOnEnter(const FHanoiMissionStep& Step);
 	void ApplyFine(FName RuleId);
 	void SwitchProtagonist(const FHanoiRef& Character, FName LineId);

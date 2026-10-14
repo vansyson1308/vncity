@@ -43,6 +43,10 @@ struct HANOICITYRUNTIME_API FHanoiPlayerState
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
 	FDateTime GameTime;
+
+	/** Hanoi game time of the last fine (mission apply_fine or a noticed violation); zero = none yet. Drives the clean-record flag. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
+	FDateTime LastFineGameTime;
 };
 
 UCLASS()

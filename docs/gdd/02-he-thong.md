@@ -32,8 +32,10 @@ rõ ràng, không giáo điều).
 2024). Hết điểm thì không được lái cho đến khi thi lại phần lý thuyết (minigame trắc nghiệm luật).
 Điểm phục hồi đủ 12 nếu giữ hồ sơ sạch đủ lâu (luật thật: 12 tháng không bị trừ điểm, cần kiểm
 tra; game nén thành 60 ngày game). Giữ sạch 90 ngày game mở nhiệm vụ phụ tích cực với CSGT
-(`s12_mu_bao_hiem_cho_be`): runtime tự đặt cờ `ho_so_sach_90_ngay` khi đủ 90 ngày game không bị
-lập biên bản (không nhiệm vụ hay thoại nào đặt cờ này).
+(`s12_mu_bao_hiem_cho_be`): runtime tự đặt cờ `ho_so_sach_90_ngay` khi đủ
+`Settings.CleanRecordDays` (mặc định 90) ngày game kể từ lần bị phạt gần nhất
+(`State.LastFineGameTime`, ghi bởi `apply_fine` của nhiệm vụ và `UHanoiHeatSubsystem::AddFine`; ván
+mới tính từ ngày đầu). Bị phạt là cờ bị xóa và đếm lại. Không nhiệm vụ hay thoại nào đặt cờ này.
 
 Nồng độ cồn: mọi đồ uống có cồn cộng `nong_do_con`. Chốt đo nồng độ xuất hiện tối 21h-1h. Thiết kế
 khuyến khích gọi xe về sau bia hơi (hoạt động bia hơi gợi ý sẵn).
@@ -159,12 +161,18 @@ Mọi khóa trong `steps[].params` đều được khai báo có kiểu trong `m
 - **Runtime đọc**: `radius_m` (bán kính tới đích, mặc định 15 m); `wait_until`: `hours`
   `[từ, đến)` hoặc `until_hour`/`hour` (cửa sổ một giờ); `escape_traffic_police`: `heat` (cộng khi
   vào bước, mặc định 2); `requires_event` (`events:<id>`: bước không hoàn thành được cho tới khi
-  gameplay gọi `SetWorldEventActive(id, true)`; phát `OnStepWaitingForEvent`); `apply_fine`
+  gameplay gọi `SetWorldEventActive(id, true)`; phát `OnStepWaitingForEvent`; ở **bước đầu tiên**
+  nó còn chặn cả `CanStartMission`/`GetAvailableMissions` cho tới khi sự kiện đang diễn ra, để
+  người chơi không bị khóa trong nhiệm vụ chờ Trung thu hay chờ tối thứ Sáu); `apply_fine`
   (`traffic_rules:<id>`: lúc vào bước cộng tiền phạt xe máy và trừ điểm bằng vào phạt chưa nộp;
   phát `OnFineApplied`); `protagonist` (đổi nhân vật điều khiển khi vào bước) và
   `switch_protagonist_on_line` (`{dòng thoại: characters:<id>}`; UI thoại gọi
   `NotifyDialogueLine(dòng)`); cả hai phát `OnProtagonistSwitched`; `minimap: false` ẩn bản đồ
   nhỏ trong bước (`OnMinimapVisibilityChanged`, tự bật lại khi sang bước khác/hết nhiệm vụ).
+- **Nhân vật của nhiệm vụ**: `StartMission` đổi sang mục đầu của `protagonists` nếu nhân vật đang
+  điều khiển không nằm trong danh sách (phát `OnProtagonistSwitched`), nên "Nồi nước dùng lúc bốn
+  giờ" luôn chơi bằng Lan dù người chơi đang là Minh. Nhiệm vụ nhiều nhân vật đổi tiếp bằng
+  `params.protagonist` / `switch_protagonist_on_line`.
 - **Gameplay đọc** (ví dụ): đua xe `scripted_winner_npc` + `max_player_rank` (NPC luôn thắng,
   người chơi tối đa hạng đó), `rivals`, `vehicle`, `passenger`, `cargo`, `recipe`, `pass_score`,
   `match_threshold`, `time_of_day` (giờ dàn cảnh)… xem mô tả từng khóa trong schema.
