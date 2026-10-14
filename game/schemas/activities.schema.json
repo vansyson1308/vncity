@@ -107,6 +107,15 @@
               },
               "rating": {
                 "type": "boolean"
+              },
+              "weekly_bonus_vnd": {
+                "description": "App weekly bonus paid when weekly_bonus_min_jobs jobs were completed with rating >= 4.8 (docs/gdd/01 §kinh tế).",
+                "$ref": "common.schema.json#/$defs/money_vnd"
+              },
+              "weekly_bonus_min_jobs": {
+                "description": "Jobs per week needed for weekly_bonus_vnd.",
+                "type": "integer",
+                "minimum": 1
               }
             },
             "additionalProperties": false

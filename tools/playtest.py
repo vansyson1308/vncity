@@ -58,7 +58,13 @@ STEP_REAL_MIN = {"talk": 1.5, "cutscene": 2.0, "photograph": 2.5, "minigame": 6.
 START_MONEY = {"minh": 1_200_000, "lan": 9_500_000, "khoi": 42_000_000}   # before the prologue (GDD bios); other playable characters start at 0
 DAILY_NET_INCOME = {"minh": 350_000, "lan": 1_600_000, "khoi": 650_000}  # a working day between missions (GDD §kinh tế)
 DAILY_COST = {"minh": 90_000, "lan": 120_000, "khoi": 150_000}           # food, parking, fuel
-GOALS_VND = {"tiem_sua_xe_duc_coi": 120_000_000, "ca_phe_trung_hang_gai": 450_000_000,
+# Minh's income ladder (docs/gdd/01 §kinh tế, docs/gdd/07 item 2): what a diligent player adds to a day of rides
+MINH_EXTRA_INCOME = {"act_sua_xe_may": 100_000,        # two evening hours at Đức's, three bikes (unlocked by c1_05)
+                     "hd_minh_nhan_so_khach": 60_000,  # thirty phone regulars, no 30% app commission (q_hd_04)
+                     "thuong_tuan_app": 400_000 / 7}   # Vồ weekly bonus, 60 rides/week at rating >= 4.8 (activities.json)
+MINH_MONTHLY = {"tro": 2_500_000, "me": 2_000_000, "no_vien_phi": 4_000_000}   # rent; to his mother; the 180 tr hospital loan, 60 instalments
+MINH_DEBT_MONTHS = 60
+GOALS_VND = {"tiem_sua_xe_duc_coi": 120_000_000, "gop_von_duc_coi": 40_000_000, "ca_phe_trung_hang_gai": 450_000_000,
              "phan_nha_co_hanh": 3_000_000_000}
 RUNTIME_FLAGS = {"ho_so_sach_90_ngay": "90 game days without a traffic violation (docs/gdd/02-he-thong.md)",
                  "minh_nghe_dien_thoai_khi_lai": "gameplay: the player answered the phone while riding in c1_05 (docs/gdd/10 M2)"}
@@ -499,17 +505,30 @@ class Session:
         if d > 12:
             self.issue("warn", mid, step, f"{d:.1f} km hop in one step (from the previous target)")
 
+    def minh_extra_income(self):
+        """Income a day of free play adds on top of rides, from what the player has unlocked and chosen."""
+        extra = 0
+        if "act_sua_xe_may" in self.unlocked_activities:
+            extra += MINH_EXTRA_INCOME["act_sua_xe_may"]
+        if "hd_minh_nhan_so_khach" in self.flags:
+            extra += MINH_EXTRA_INCOME["hd_minh_nhan_so_khach"]
+        if self.p.name != "lieu":   # a reckless rider's rating drops below the bonus bar
+            extra += MINH_EXTRA_INCOME["thuong_tuan_app"]
+        return extra
+
     def idle_day(self):
         """A day of free play between story beats: flat income, costs, rent. Free play is the player's time."""
         self.control_log.append((self.real_minutes, True))
         for who in self.money:
             self.money[who] += DAILY_NET_INCOME.get(who, 0) - DAILY_COST.get(who, 0)
+        self.money["minh"] += self.minh_extra_income()
         self.day += 1
         self.hour = 6.0
         self.real_minutes += GAME_DAY_REAL_MIN
         self.control_log.append((self.real_minutes, True))
         if self.day % 30 == 0:
-            self.money["minh"] -= 2_500_000 + 6_000_000   # rent + money home (GDD)
+            months = self.day // 30
+            self.money["minh"] -= MINH_MONTHLY["tro"] + MINH_MONTHLY["me"] + (MINH_MONTHLY["no_vien_phi"] if months <= MINH_DEBT_MONTHS else 0)
         if self.p.name == "lieu":
             self.violations += 1 if self.day % 7 == 0 else 0   # a reckless player gets caught weekly
         if self.day >= 90 and self.violations == 0:
@@ -666,14 +685,25 @@ def summarize(w, sessions, static):
 
 
 def economy(w):
-    """Minh's monthly balance from the GDD numbers alone (no story money)."""
-    month_income = DAILY_NET_INCOME["minh"] * 30
-    month_cost = DAILY_COST["minh"] * 30 + 2_500_000 + 6_000_000
-    net = month_income - month_cost
-    months = GOALS_VND["tiem_sua_xe_duc_coi"] / net if net > 0 else None
-    return {"minh_month_income": month_income, "minh_month_cost": month_cost, "minh_month_net": net,
-            "months_to_repair_shop": None if months is None else round(months, 1),
-            "real_hours_to_repair_shop": None if months is None else round(months * 30 * GAME_DAY_REAL_MIN / 60)}
+    """Minh's monthly balance from the GDD numbers alone (no story money), for two players: one who only
+    rides, and one who takes every rung of the ladder (evening repairs, phone regulars, the app's weekly
+    bonus). docs/gdd/07 item 2: the first must stay negative (that is Minh's khổ), the second must clear
+    a few million so the shop is reachable without Kim Long's money."""
+    fixed = MINH_MONTHLY["tro"] + MINH_MONTHLY["me"] + MINH_MONTHLY["no_vien_phi"]
+    month_cost = DAILY_COST["minh"] * 30 + fixed
+    rides = DAILY_NET_INCOME["minh"] * 30
+    cham = rides + sum(MINH_EXTRA_INCOME.values()) * 30
+    def months_to(goal, net):
+        return None if net <= 0 else round(goal / net, 1)
+    net_rides, net_cham = rides - month_cost, cham - month_cost
+    return {"minh_month_income": rides, "minh_month_cost": month_cost, "minh_month_net": net_rides,
+            "minh_month_income_cham": round(cham), "minh_month_net_cham": round(net_cham),
+            "fixed": dict(MINH_MONTHLY), "debt_months": MINH_DEBT_MONTHS,
+            "months_to_repair_shop": months_to(GOALS_VND["tiem_sua_xe_duc_coi"], net_rides),
+            "months_to_repair_shop_cham": months_to(GOALS_VND["tiem_sua_xe_duc_coi"], net_cham),
+            "months_to_gop_von_cham": months_to(GOALS_VND["gop_von_duc_coi"], net_cham),
+            "real_hours_to_repair_shop": None if net_rides <= 0 else round(GOALS_VND["tiem_sua_xe_duc_coi"] / net_rides * 30 * GAME_DAY_REAL_MIN / 60),
+            "real_hours_to_gop_von_cham": None if net_cham <= 0 else round(GOALS_VND["gop_von_duc_coi"] / net_cham * 30 * GAME_DAY_REAL_MIN / 60)}
 
 
 def render_report(summary, w):
@@ -709,13 +739,15 @@ def render_report(summary, w):
              f"đúng với thiết kế nhưng chương 2-5 cần các cú hích tiền từ truyện.\n")
     ec = summary["economy"]
     L.append("## Kinh tế của Minh theo số liệu GDD\n")
-    L.append(f"- Thu một tháng chạy xe chăm: {ec['minh_month_income']/1e6:.1f} tr. Chi: ăn uống, xăng, gửi xe {DAILY_COST['minh']*30/1e6:.1f} tr + "
-             f"trọ 2,5 tr + gửi về quê 6 tr = {ec['minh_month_cost']/1e6:.1f} tr. **Dư: {ec['minh_month_net']/1e6:.1f} tr/tháng.**")
-    if ec["months_to_repair_shop"] is None:
-        L.append("- Với số liệu này Minh **không bao giờ** tự gom được 120 tr mua tiệm Đức Còi bằng chạy xe; mục tiêu đời của nhân vật chính chỉ đạt được qua tiền thưởng cốt truyện. "
-                 "Hoặc là chủ ý (chương 2-5 phải trả), hoặc là phải nâng thu nhập ngày / giảm khoản gửi quê (hiện gần bằng cả tháng dư).")
-    else:
-        L.append(f"- Gom 120 tr mua tiệm mất khoảng {ec['months_to_repair_shop']} tháng game = {ec['real_hours_to_repair_shop']} giờ chơi thật nếu chỉ chạy xe.")
+    fx = ec["fixed"]
+    L.append(f"- Chỉ chạy xe: thu {ec['minh_month_income']/1e6:.1f} tr/tháng. Chi: ăn uống, xăng, gửi xe {DAILY_COST['minh']*30/1e6:.1f} tr + "
+             f"trọ {fx['tro']/1e6:.1f} tr + gửi mẹ {fx['me']/1e6:.0f} tr + trả góp viện phí {fx['no_vien_phi']/1e6:.0f} tr ({ec['debt_months']} tháng) = {ec['minh_month_cost']/1e6:.1f} tr. "
+             f"**Dư: {ec['minh_month_net']/1e6:.1f} tr/tháng.** Đây là nỗi khổ của Minh, đúng thiết kế: một mình app không nuôi được anh.")
+    L.append(f"- Chăm và đi đủ các bậc (tối sửa xe ở tiệm Đức, 30 khách quen gọi điện không mất 30% app, thưởng tuần 60 cuốc): thu "
+             f"{ec['minh_month_income_cham']/1e6:.1f} tr, **dư {ec['minh_month_net_cham']/1e6:.1f} tr/tháng**. "
+             f"Góp vốn 40 tr với anh Đức sau {ec['months_to_gop_von_cham']} tháng game ({ec['real_hours_to_gop_von_cham']} giờ chơi thật); "
+             f"mua đứt 120 tr sau {ec['months_to_repair_shop_cham']} tháng nếu không có tiền truyện.")
+    L.append("- Một lần vượt đèn đỏ (5 tr) xóa một tháng dư của người chăm; hết nợ viện phí (tháng 60) Minh dư thêm 4 tr/tháng.")
     L.append("")
     ac = summary["alt_clock"]
     L.append("## Hai cách chạy đồng hồ trong nhiệm vụ\n")

@@ -4459,6 +4459,38 @@
           "text": {
             "vi": "Anh chạy xe mười bốn quận từ hồi mới lên. Chưa bao giờ xuống xe ở quận nào. Mười bốn người này anh xuống xe cả.",
             "en": "I've ridden all fourteen districts since I came to the city. Never got off the bike in any of them. These fourteen, I got off for every one."
+          },
+          "condition": {
+            "not_flags": [
+              "tx_minh_gop_von",
+              "tx_minh_tu_mua"
+            ]
+          }
+        },
+        {
+          "id": "l02b",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Anh chạy xe mười bốn quận từ hồi mới lên. Chưa bao giờ xuống xe ở quận nào. Mười bốn người này anh xuống xe cả. Năm nay anh góp bốn chục với anh Đức. Tiệm vẫn tên Đức Còi, mà có một phần là của anh.",
+            "en": "I've ridden all fourteen districts since I came to the city. Never got off the bike in any of them. These fourteen, I got off for every one. This year I'm buying into Đức's shop. Still called Đức Còi, but a piece of it is mine."
+          },
+          "condition": {
+            "flags": [
+              "tx_minh_gop_von"
+            ]
+          }
+        },
+        {
+          "id": "l02c",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Anh chạy xe mười bốn quận từ hồi mới lên. Chưa bao giờ xuống xe ở quận nào. Mười bốn người này anh xuống xe cả. Một trăm hai anh vẫn gom, chưa đến. Anh Đức bảo đợi đến vụ nhãn.",
+            "en": "I've ridden all fourteen districts since I came to the city. Never got off the bike in any of them. These fourteen, I got off for every one. I'm still saving the hundred and twenty, not there yet. Đức says he'll wait till the harvest."
+          },
+          "condition": {
+            "flags": [
+              "tx_minh_tu_mua"
+            ]
           }
         },
         {
@@ -4475,6 +4507,211 @@
           "text": {
             "vi": "Tấm cuối chưa treo. Số 49, năm nay. Anh còn thời gian đến khi cô Hạnh ký, hoặc không ký. Chỗ trống này tôi để đến lúc ấy.",
             "en": "The last frame isn't up yet. Number 49, this year. You have until Hạnh signs, or doesn't. I'm leaving this space empty until then."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_q_tx_04_sua_lai",
+      "context": "Tiệm Đức Còi, 9 giờ tối. Cái Dream dựng chân chống giữa, anh Đức tựa cửa.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Hai lần sai. Mày tháo chế hòa khí, tháo bugi, đúng bài. Nhưng tiếng nó khục một cái rồi im, là IC. Xe này còn đi được, người mới hỏng.",
+            "en": "Two wrong. You pulled the carb, pulled the plug, by the book. But it coughs once and dies, that's the ignition unit. This bike can still run, it's the person that's broken."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Em học mãi chưa nghe được tiếng ấy.",
+            "en": "I still can't hear that sound."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Hai mươi năm tao mới nghe được. Mày mới ba tháng. Ngồi xuống, uống chè.",
+            "en": "Took me twenty years. You've had three months. Sit down, have some tea."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_q_tx_04_de_nghi",
+      "context": "Ghế nhựa trước tiệm, ấm chè, đèn tuýp. Anh Đức chưa bao giờ nói giá với ai.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Tao tính hộ mày rồi. Chạy xe chăm ba trăm rưỡi một ngày, mười triệu rưỡi một tháng. Trọ hai triệu rưỡi, ăn với xăng gần ba, gửi về quê sáu. Mày âm bảy trăm nghìn. Tháng nào cũng âm. Mày gom một trăm hai mươi triệu kiểu gì?",
+            "en": "I've done your sums. Riding hard, three-fifty a day, ten and a half a month. Rent two and a half, food and petrol near three, six home. You're seven hundred thousand short. Every month. How do you ever save a hundred and twenty million?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Sáu triệu ấy là hai triệu cho mẹ, bốn triệu trả góp viện phí của bố. Còn ba năm nữa là hết nợ.",
+            "en": "That six is two for Mum and four on Dad's hospital loan. Three more years and the debt's gone."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Ba năm. Tao sáu mươi hai. Vụ nhãn Hưng Yên không đợi mày ba năm.",
+            "en": "Three years. I'm sixty-two. The longan harvest in Hưng Yên won't wait three years for you."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Bà Tư kể mày sửa máy bơm đổi tiền trọ. Thế là mày biết tay mày đáng tiền. Tao nói giá, lần đầu trong hai mươi năm.",
+            "en": "Mrs Tư says you fixed the pump for your rent. So you know your hands are worth money. I'll name a price, first time in twenty years."
+          },
+          "condition": {
+            "flags": [
+              "tx_minh_mac_ca_sua"
+            ]
+          }
+        },
+        {
+          "id": "l04b",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Bà Tư kể mày gật thêm năm trăm tiền trọ không nói một câu. Người gật nhanh là người tính xong rồi, hoặc chưa tính. Tao tính hộ mày lần nữa. Tao nói giá, lần đầu trong hai mươi năm.",
+            "en": "Mrs Tư says you nodded to five hundred more rent without a word. People who nod fast have done the sums, or haven't started. I'll do them for you once more. I'll name a price, first time in twenty years."
+          },
+          "condition": {
+            "flags": [
+              "tx_minh_tra_them"
+            ]
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Ông Lương Yên Nghĩa giao mày ba mươi khách quen. Khách gọi điện thì app không ăn ba mươi phần trăm. Thế là mày có đầu vào không phải của app. Tao thích cái đó.",
+            "en": "Lương at Yên Nghĩa gave you thirty regulars. Customers who phone, the app doesn't take thirty percent. So you've got income the app doesn't own. I like that."
+          },
+          "condition": {
+            "flags": [
+              "hd_minh_nhan_so_khach"
+            ]
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Bốn mươi triệu. Mày góp, làm chung, tên tiệm giữ 'Đức Còi', lãi chia mày bốn tao sáu. Tao về Hưng Yên nửa năm, mày trông. Hai năm sau mày sang nốt phần tao bằng lãi, tao không lấy thêm. Hoặc mày cứ gom một trăm hai, tao đợi được đến vụ nhãn sang năm.",
+            "en": "Forty million. You buy in, we run it together, the name stays 'Đức Còi', profits forty to you, sixty to me. I go to Hưng Yên half the year, you mind the shop. In two years you buy my share out of the profits, I take nothing extra. Or you keep saving for a hundred and twenty, I can wait till next year's harvest."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Chọn)",
+            "en": "(Choose)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Góp vốn: 'Bốn mươi. Chăm thì cuối năm em gom được. Em làm chung với anh.'",
+                "en": "Buy in: 'Forty. If I work hard I'll have it by the end of the year. I'll do it with you.'"
+              },
+              "goto": "l08",
+              "effect": {
+                "set_flags": [
+                  "tx_minh_gop_von"
+                ]
+              }
+            },
+            {
+              "text": {
+                "vi": "Mua đứt: 'Em mua đứt. Một trăm hai. Em không muốn nợ ai nữa, kể cả anh.'",
+                "en": "Buy out: 'I buy it outright. One twenty. I don't want to owe anyone again, not even you.'"
+              },
+              "goto": "l09",
+              "effect": {
+                "set_flags": [
+                  "tx_minh_tu_mua"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "(rót chè) Tao chưa nói giá với ai. Mày là người đầu tiên tao nói, và là người đầu tiên không trả giá. Mai sáu giờ, mày học tiếng IC.",
+            "en": "(pouring tea) I've never named a price to anyone. You're the first I told, and the first who didn't haggle. Six tomorrow, you learn the ignition sound."
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "(im, rồi cười bằng mũi) Xe này còn đi được, người mới hỏng. Mày là cái người ấy. Mua đứt thì mua, tao đợi đến vụ nhãn. Nhưng mày phải sống bằng cái gì ngoài app, không thì một trăm hai là số trên trời.",
+            "en": "(silent, then a snort of a laugh) The bike can still run, it's the person that's broken. That's you. Buy it outright then, I'll wait till the harvest. But you need to live on something besides the app, or one twenty is a number in the sky."
+          }
+        },
+        {
+          "id": "l10",
+          "speaker": "characters:anh_duc_sua_xe",
+          "text": {
+            "vi": "Tối nào cũng ra đây hai tiếng, ba cái xe, một trăm nghìn. Thưởng tuần của app mày cứ lấy, sáu mươi cuốc một tuần là được. Cộng lại thì tháng mày dư năm triệu. Đấy là tiền thật, không phải tiền của người mặc vest.",
+            "en": "Two hours here every evening, three bikes, a hundred thousand. Take the app's weekly bonus, sixty rides a week does it. Add it up and you clear five million a month. That's real money, not money from men in suits."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_q_tx_04_ve_phong",
+      "context": "Phòng trọ 12 mét vuông, 10 giờ đêm. Tuấn béo ngồi đếm đơn trên điện thoại.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Ối giời ơi, mày góp vốn với Đức Còi à? Căng đét. Bốn chục. Tao góp được hai triệu, lấy không?",
+            "en": "Oh my days, you're buying into Skinny Đức's? Mental. Forty. I can put in two million, want it?"
+          },
+          "condition": {
+            "flags": [
+              "tx_minh_gop_von"
+            ]
+          }
+        },
+        {
+          "id": "l01b",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Ối giời ơi, Đức Còi nói giá mà mày đòi mua đứt? Một trăm hai? Mày bị làm sao thế. Tao chở hai mươi cốc trà sữa còn biết chia nhau cầm.",
+            "en": "Oh my days, Skinny Đức names a price and you say you'll buy it outright? One twenty? What's wrong with you. Even I know to share a twenty-cup bubble-tea order."
+          },
+          "condition": {
+            "flags": [
+              "tx_minh_tu_mua"
+            ]
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Ngủ đi. Mai sáu giờ anh Đức dạy nghe IC.",
+            "en": "Sleep. Six tomorrow, Đức's teaching me the ignition sound."
           }
         }
       ]

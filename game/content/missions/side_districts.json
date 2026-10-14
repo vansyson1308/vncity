@@ -2761,6 +2761,130 @@
           "cong_dong_tai_xe_vo": 3
         }
       }
+    },
+    {
+      "id": "q_tx_04_gop_von_duc_coi",
+      "tags": [
+        "side",
+        "thanh_xuan",
+        "economy",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Góp vốn hay mua đứt",
+        "en": "Buy in or buy out"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:anh_duc_sua_xe",
+      "summary": {
+        "vi": "Tối ở tiệm Đức Còi. Anh Đức đưa Minh một cái xe khó rồi nói giá lần đầu sau hai mươi năm: góp bốn mươi triệu làm chung, lãi chia bốn sáu, tiệm giữ tên, hai năm sau sang nốt bằng lãi. Hoặc Minh tự gom một trăm hai mươi triệu như anh vẫn tính.",
+        "en": "Evening at Skinny Đức's. Đức hands Minh a hard job, then names a price for the first time in twenty years: forty million buys in, profits split forty-sixty, the shop keeps its name, the rest bought out of profits after two years. Or Minh keeps saving for the full hundred and twenty on his own, the way he always planned."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:s07_xe_chet_may_sau_mua",
+          "missions:q_tx_01_tang_tien_tro"
+        ],
+        "hours": [
+          20,
+          21
+        ]
+      },
+      "start": {
+        "lat": 20.993,
+        "lon": 105.812
+      },
+      "steps": [
+        {
+          "id": "den_tiem",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đi bộ ra tiệm Đức Còi đầu ngõ, cửa cuốn kéo nửa chừng",
+            "en": "Walk to Skinny Đức's at the mouth of the alley, the shutter half down"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "params": {
+            "on_foot": true
+          },
+          "next": "viec_kho"
+        },
+        {
+          "id": "viec_kho",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Xe Dream của khách quen: chết máy không rõ bệnh. Nghe tiếng máy, đoán đúng trong hai lần",
+            "en": "A regular's Dream: stalls for no clear reason. Listen to the engine, diagnose within two tries"
+          },
+          "target": "activities:act_sua_xe_may",
+          "params": {
+            "activity": "activities:act_sua_xe_may",
+            "fault_pool": [
+              "che_hoa_khi_ngap",
+              "ic_chet",
+              "nhong_xich_dao",
+              "bugi_moi_lua"
+            ],
+            "max_faults": 2,
+            "difficulty": 4,
+            "duration_s": 240
+          },
+          "next": {
+            "dat": "de_nghi",
+            "chua_dat": "sua_lai",
+            "default": "de_nghi"
+          }
+        },
+        {
+          "id": "sua_lai",
+          "kind": "talk",
+          "objective": {
+            "vi": "Đoán sai hai lần. Anh Đức nghe một tiếng, chỉ cái IC",
+            "en": "Two wrong guesses. Đức listens once and points at the ignition unit"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "dialogue": "dialogues:dlg_q_tx_04_sua_lai",
+          "next": "de_nghi"
+        },
+        {
+          "id": "de_nghi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Anh Đức rót chè, nói giá",
+            "en": "Đức pours tea and names a price"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "dialogue": "dialogues:dlg_q_tx_04_de_nghi",
+          "next": "ve_phong"
+        },
+        {
+          "id": "ve_phong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Về phòng, Tuấn béo đang đếm đơn",
+            "en": "Back in the room, Tuấn is counting orders"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_q_tx_04_ve_phong"
+        }
+      ],
+      "reward": {
+        "money_vnd": 80000,
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 1
+        }
+      }
     }
   ]
 }

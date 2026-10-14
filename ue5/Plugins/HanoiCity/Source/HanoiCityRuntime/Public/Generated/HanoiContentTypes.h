@@ -346,6 +346,14 @@ struct HANOICITYRUNTIME_API FHanoiActivityPay
 	/** [json: rating] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	bool bRating = false;
+
+	/** App weekly bonus paid when weekly_bonus_min_jobs jobs were completed with rating >= 4.8 (docs/gdd/01 §kinh tế). [json: weekly_bonus_vnd] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int64 WeeklyBonusVnd = 0;
+
+	/** Jobs per week needed for weekly_bonus_vnd. [json: weekly_bonus_min_jobs] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 WeeklyBonusMinJobs = 0;
 };
 
 /** Row of collection 'activities' (DataTable row name = id). Repeatable gameplay loops (GTA side activities, minus crime). Each defines how a session is generated, scored and paid. */

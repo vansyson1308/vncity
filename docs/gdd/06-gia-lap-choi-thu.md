@@ -4,7 +4,7 @@ Sinh tự động bởi `tools/playtest.py`: đi qua toàn bộ nhiệm vụ nh�
 
 ## Kết quả nhanh
 
-- Nhiệm vụ: 61 (21 cốt truyện, 40 phụ). Không chơi tới được: không có.
+- Nhiệm vụ: 62 (21 cốt truyện, 41 phụ). Không chơi tới được: không có.
 - Lỗi logic chặn chơi: **0**. Cảnh báo (thời gian, khoảng cách): 0. Lựa chọn chưa có hệ quả: 3.
 - Quận cốt truyện đi qua: 14/14 (ba_dinh, bac_tu_liem, cau_giay, dong_da, gia_lam, ha_dong, hai_ba_trung, hoan_kiem, hoang_mai, long_bien, my_dinh, pho_co, tay_ho, thanh_xuan). Chưa bao giờ tới: không.
 - Địa danh dùng trong nhiệm vụ: 36/84. Nhân vật gặp qua thoại: 57/70.
@@ -13,17 +13,18 @@ Sinh tự động bởi `tools/playtest.py`: đi qua toàn bộ nhiệm vụ nh�
 
 | Kiểu | Ngày game | Giờ chơi thật | Nhiệm vụ xong | Tiền Minh | Tiền Lan | Tiền Khôi | Km đi |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| tu_te | 101 | 50.1 h | 60 | 10.6 tr | 41.8 tr | 58.6 tr | 569 |
-| lieu | 120 | 64.8 h | 59 | 2.3 tr | 76.4 tr | 69.1 tr | 548 |
-| toi_uu_tien | 101 | 50.0 h | 61 | 15.6 tr | 41.8 tr | 62.1 tr | 564 |
-| ngau_nhien | 105 | 49.9 h | 60 | -6.6 tr | 41.6 tr | 61.6 tr | 558 |
+| tu_te | 101 | 50.2 h | 61 | 13.1 tr | 41.8 tr | 58.6 tr | 570 |
+| lieu | 120 | 65.0 h | 60 | 7.1 tr | 76.4 tr | 69.1 tr | 549 |
+| toi_uu_tien | 101 | 50.1 h | 62 | 18.2 tr | 41.8 tr | 62.1 tr | 565 |
+| ngau_nhien | 105 | 50.1 h | 61 | -4.1 tr | 41.6 tr | 61.6 tr | 559 |
 
-Mục tiêu tiền lớn (GDD): tiệm Đức Còi 120 tr, cà phê trứng 450 tr, phần nhà cô Hạnh 3 tỷ. Sau toàn bộ nội dung đã viết (mở đầu + chương 1 + 12 nhiệm vụ phụ) Minh có khoảng 11 tr: còn xa mục tiêu đầu tiên, nghĩa là vòng lặp làm việc tự do phải gánh phần lớn tiến trình, đúng với thiết kế nhưng chương 2-5 cần các cú hích tiền từ truyện.
+Mục tiêu tiền lớn (GDD): tiệm Đức Còi 120 tr, cà phê trứng 450 tr, phần nhà cô Hạnh 3 tỷ. Sau toàn bộ nội dung đã viết (mở đầu + chương 1 + 12 nhiệm vụ phụ) Minh có khoảng 13 tr: còn xa mục tiêu đầu tiên, nghĩa là vòng lặp làm việc tự do phải gánh phần lớn tiến trình, đúng với thiết kế nhưng chương 2-5 cần các cú hích tiền từ truyện.
 
 ## Kinh tế của Minh theo số liệu GDD
 
-- Thu một tháng chạy xe chăm: 10.5 tr. Chi: ăn uống, xăng, gửi xe 2.7 tr + trọ 2,5 tr + gửi về quê 6 tr = 11.2 tr. **Dư: -0.7 tr/tháng.**
-- Với số liệu này Minh **không bao giờ** tự gom được 120 tr mua tiệm Đức Còi bằng chạy xe; mục tiêu đời của nhân vật chính chỉ đạt được qua tiền thưởng cốt truyện. Hoặc là chủ ý (chương 2-5 phải trả), hoặc là phải nâng thu nhập ngày / giảm khoản gửi quê (hiện gần bằng cả tháng dư).
+- Chỉ chạy xe: thu 10.5 tr/tháng. Chi: ăn uống, xăng, gửi xe 2.7 tr + trọ 2.5 tr + gửi mẹ 2 tr + trả góp viện phí 4 tr (60 tháng) = 11.2 tr. **Dư: -0.7 tr/tháng.** Đây là nỗi khổ của Minh, đúng thiết kế: một mình app không nuôi được anh.
+- Chăm và đi đủ các bậc (tối sửa xe ở tiệm Đức, 30 khách quen gọi điện không mất 30% app, thưởng tuần 60 cuốc): thu 17.0 tr, **dư 5.8 tr/tháng**. Góp vốn 40 tr với anh Đức sau 6.9 tháng game (165 giờ chơi thật); mua đứt 120 tr sau 20.6 tháng nếu không có tiền truyện.
+- Một lần vượt đèn đỏ (5 tr) xóa một tháng dư của người chăm; hết nợ viện phí (tháng 60) Minh dư thêm 4 tr/tháng.
 
 ## Hai cách chạy đồng hồ trong nhiệm vụ
 
@@ -44,21 +45,21 @@ Chuẩn 5/5 (docs/gdd/07): cầm lái trước phút 1, lựa chọn đầu trư
 
 ## Hệ quả lựa chọn
 
-- Cờ do lựa chọn đặt: **113**, được đọc lại: **113** (100%), tổng 220 chỗ đọc. Chưa đọc: không.
-- Loại hệ quả: dialogue_choice 8, dialogue_line 111, mission_gate 2, step_branch 10, step_variant 4.
+- Cờ do lựa chọn đặt: **115**, được đọc lại: **115** (100%), tổng 227 chỗ đọc. Chưa đọc: không.
+- Loại hệ quả: dialogue_choice 8, dialogue_line 113, mission_gate 2, step_branch 10, step_variant 4.
 - Cờ tiến trình (không do lựa chọn): 22, chưa đọc: da_xong_dat.
 - Hệ quả trả ngay trong chương 1 cho lựa chọn chương 0-1: 40 cặp (nhiệm vụ, cờ).
-- Độ phân nhánh giữa các kiểu người chơi: 359/1084 dòng thoại và 45 bước chỉ một phần người chơi thấy.
+- Độ phân nhánh giữa các kiểu người chơi: 363/1103 dòng thoại và 45 bước chỉ một phần người chơi thấy.
 | Kiểu | Hệ quả kiểm tra | Đã kích hoạt | Cờ lựa chọn đã trả |
 | --- | --- | --- | --- |
-| tu_te | 215 | 99 | 55 |
-| lieu | 226 | 101 | 56 |
-| toi_uu_tien | 221 | 101 | 57 |
-| ngau_nhien | 223 | 99 | 53 |
+| tu_te | 223 | 102 | 57 |
+| lieu | 234 | 105 | 58 |
+| toi_uu_tien | 229 | 105 | 59 |
+| ngau_nhien | 231 | 103 | 55 |
 
 ## Nhịp chơi
 
-- 335 bước trong 61 nhiệm vụ: 157 bước thoại/cắt cảnh (46%), 125 bước hành động (37%: lái, giao, minigame, nấu, chụp), 13 bước lựa chọn tường minh.
+- 340 bước trong 62 nhiệm vụ: 160 bước thoại/cắt cảnh (47%), 126 bước hành động (37%: lái, giao, minigame, nấu, chụp), 13 bước lựa chọn tường minh.
 - Nhiệm vụ dài nhất: c2_06_cho_hoa_hang_luoc (111 phút thật); ngắn nhất: s04_thach_dau_khong_gps (4 phút). GTA5 thường 15-40 phút một nhiệm vụ truyện; các nhiệm vụ dưới 8 phút nên gộp hoặc thêm đoạn chơi.
 
 ## Lựa chọn chưa có hệ quả
@@ -126,8 +127,9 @@ Chuẩn 5/5 (docs/gdd/07): cầm lái trước phút 1, lựa chọn đầu trư
 | 95 | 7.8 | s05_anh_cuoi_cau_long_bien | khoi | 5.5 | success |
 | 96 | 22.5 | s06_dieu_sao_bai_giua | minh | 13.0 | success |
 | 97 | 13.6 | s07_xe_chet_may_sau_mua | minh | 9.0 | success |
-| 98 | 4.6 | s08_tem_phieu_bao_cap | lan | 30.0 | success |
-| 98 | 8.1 | s09_bien_hieu_hang_thiec | khoi | 5.5 | success |
-| 99 | 6.4 | s10_vong_ho_tay_luc_5_gio | minh | 44.5 | success |
+| 98 | 0.8 | q_tx_04_gop_von_duc_coi | minh | 8.8 | success (bỏ qua: sua_lai) |
+| 98 | 15.8 | s08_tem_phieu_bao_cap | lan | 30.0 | success |
+| 98 | 19.3 | s09_bien_hieu_hang_thiec | khoi | 5.5 | success |
+| 99 | 17.6 | s10_vong_ho_tay_luc_5_gio | minh | 44.5 | success |
 | 100 | 3.6 | s11_cu_ba_lac_duong | minh | 14.9 | success |
 | 101 | 16.2 | s12_mu_bao_hiem_cho_be | minh | 12.8 | success |
