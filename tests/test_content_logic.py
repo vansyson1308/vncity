@@ -14,7 +14,10 @@ HEAT_CPP = MISSION_CPP.with_name("HanoiHeatSubsystem.cpp")
 TERMINAL = {"end", "success", "fail"}
 
 # Flags the runtime sets itself (docs/gdd/02-he-thong.md §1); content may read them without setting them.
-RUNTIME_FLAGS = {"ho_so_sach_90_ngay"}
+RUNTIME_FLAGS = {"ho_so_sach_90_ngay", "minh_nghe_dien_thoai_khi_lai"}  # set by C++ / gameplay (docs/gdd/02, docs/gdd/10 M2)
+# Chapter 0-1 flags whose read site is chapter 2 (PR #9, docs/gdd/10-sua-chuong-1.md, flag table at the end).
+# Delete entries as chapter 2 lands on main; a flag here is still a consequence, just one chapter later.
+READ_IN_CHAPTER_2 = {"khoi_hoc_tu_keo_ly", "biet_giay_1957", "ket_thuc_chuong_1"}
 # Flags content sets for the engine to read (docs/gdd/02-he-thong.md §1); nothing in content needs to read them.
 RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1"}
 
@@ -90,7 +93,7 @@ def test_every_flag_set_is_read_somewhere():
     """A choice with no consequence is a bug in this project (docs/gdd/07 scores it): every flag content
     sets is read by a mission gate, a step branch/variant, a dialogue condition, or the engine."""
     flags_set, flags_read = _flag_graph()
-    unread = sorted(f for f in flags_set - RUNTIME_FLAGS - RUNTIME_READ_FLAGS if f not in flags_read)
+    unread = sorted(f for f in flags_set - RUNTIME_FLAGS - RUNTIME_READ_FLAGS - READ_IN_CHAPTER_2 if f not in flags_read)
     assert not unread, f"flags set but never read: {unread}"
 
 

@@ -414,14 +414,14 @@
           "params": {
             "time_of_day": 3.5
           },
-          "next": "nuong_gung_hanh"
+          "next": "so_che"
         },
         {
-          "id": "nuong_gung_hanh",
+          "id": "so_che",
           "kind": "cook",
           "objective": {
-            "vi": "Nướng gừng và hành củ đến khi cháy vỏ, thơm ruột",
-            "en": "Char ginger and shallots until blackened outside, fragrant inside"
+            "vi": "Nướng gừng, hành; rang quế, hồi, thảo quả",
+            "en": "Char the ginger and shallots; toast the cinnamon, star anise and cardamom"
           },
           "target": {
             "lat": 21.03745,
@@ -429,24 +429,7 @@
           },
           "params": {
             "recipe": "nuoc_dung_pho_bo",
-            "stage": "nuong_gung_hanh"
-          },
-          "next": "rang_gia_vi"
-        },
-        {
-          "id": "rang_gia_vi",
-          "kind": "cook",
-          "objective": {
-            "vi": "Rang quế, hồi, thảo quả, đừng để khét",
-            "en": "Toast cinnamon, star anise and black cardamom without scorching"
-          },
-          "target": {
-            "lat": 21.03745,
-            "lon": 105.8512
-          },
-          "params": {
-            "recipe": "nuoc_dung_pho_bo",
-            "stage": "rang_gia_vi"
+            "stage": "so_che"
           },
           "next": "vot_bot"
         },
@@ -651,24 +634,6 @@
             "lon": 105.8512
           },
           "dialogue": "dialogues:dlg_p3_bang_cassette_1",
-          "next": "cho_sang"
-        },
-        {
-          "id": "cho_sang",
-          "kind": "wait_until",
-          "objective": {
-            "vi": "Chờ đến 5:30 sáng hôm sau",
-            "en": "Wait until 5:30 next morning"
-          },
-          "target": {
-            "lat": 21.03745,
-            "lon": 105.8512
-          },
-          "params": {
-            "until_hour": 5.5,
-            "skip_allowed": true,
-            "hour": 5.5
-          },
           "next": "ra_bo_ho"
         },
         {
@@ -682,6 +647,21 @@
           "params": {
             "on_foot": true,
             "reason": "khoi_chua_biet_lai_xe_may"
+          },
+          "next": "cho_sang"
+        },
+        {
+          "id": "cho_sang",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Ngủ đến 5:30 trên ghế đá Bờ Hồ (HUD hiện nút 'Ngủ đến 5:30' ngay khi vào bước)",
+            "en": "Sleep till 5:30 on a lakeside bench (the HUD offers 'Sleep till 5:30' as the step begins)"
+          },
+          "target": "landmarks:ho_hoan_kiem",
+          "params": {
+            "until_hour": 5.5,
+            "skip_allowed": true,
+            "hour": 5.5
           },
           "next": "chup_lai"
         },

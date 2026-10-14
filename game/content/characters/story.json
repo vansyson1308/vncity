@@ -473,37 +473,6 @@
       "appearance": {"outfit": "Áo len cổ lọ, kính lúp đeo trán, tay đen vì bạc.", "metahuman_preset": "MH_VN_Male_80s"},
       "schedule": [{"hours": [7, 11], "activity": "ngoi_ban_cham_bac", "location": {"lat": 21.0337, "lon": 105.8521}}, {"hours": [14, 18], "activity": "ngoi_ban_cham_bac", "location": {"lat": 21.0337, "lon": 105.8521}}],
       "relationships": [{"with": "characters:cu_tho", "kind": "ban_co_lau_nam"}]
-    },
-    {
-      "id": "hung_hang_dau",
-      "tags": ["xe_om", "alo_chat", "foil_for_minh"],
-      "name": {"vi": "Hùng Hàng Đậu", "en": "Hùng from Hàng Đậu"},
-      "role": "story",
-      "age": 31,
-      "gender": "male",
-      "bio": {"vi": "Tài xế xe ôm công nghệ, trưởng nhóm Alô Chat 'Anh em Vồ phố cổ', người đầu tiên nhận bán tin nhà nào sắp bán cho Kim Long. Không ác, chỉ nợ. Là tấm gương Minh soi vào ở chương 2.", "en": "App rider, admin of the 'Vồ brothers, Old Quarter' chat group, the first to sell Kim Long tips about which houses might sell. Not evil, just in debt. The mirror Minh looks into in chapter 2."},
-      "home": {"lat": 21.0405, "lon": 105.8488},
-      "district": "districts:pho_co",
-      "occupation": {"vi": "Tài xế xe ôm công nghệ", "en": "App rider"},
-      "personality": ["bat_nhanh", "no_nan", "noi_nhieu"],
-      "voice": {"accent": "northern_rural", "notes": "Giọng Thái Bình, gọi mọi người là 'ông' kể cả người trẻ hơn."},
-      "appearance": {"outfit": "Áo khoác Vồ bạc màu, hai điện thoại gắn ghi đông.", "metahuman_preset": "MH_VN_Male_30s"},
-      "relationships": [{"with": "characters:minh", "kind": "dong_nghiep"}, {"with": "characters:thao", "kind": "nguoi_ban_tin"}]
-    },
-    {
-      "id": "anh_phuc_ngan_hang",
-      "tags": ["bank", "lan_past", "chapter_2"],
-      "name": {"vi": "Anh Phúc (trưởng phòng thẩm định)", "en": "Phúc (head of credit appraisal)"},
-      "role": "story",
-      "age": 41,
-      "gender": "male",
-      "bio": {"vi": "Sếp cũ của Lan ở ngân hàng, người ký hồ sơ vay của Kim Long mà Lan từng thẩm định. Nếu Lan lộ thông tin mật ở tổ dân phố, anh là người triệu tập cô lên; nếu Lan đề xuất phương án tự quản, anh là người cô phải thuyết phục cho vay.", "en": "Lan's former boss at the bank, who signed off the Kim Long loan file Lan appraised. If Lan leaked confidential information at the residents' meeting he is the one who summons her; if she proposed the self-managed plan he is the one she must persuade to lend."},
-      "home": {"lat": 21.0245, "lon": 105.8497},
-      "district": "districts:hoan_kiem",
-      "occupation": {"vi": "Trưởng phòng thẩm định tín dụng", "en": "Head of credit appraisal"},
-      "personality": ["dung_muc", "so_trach_nhiem", "quy_lan"],
-      "voice": {"accent": "hanoi", "notes": "Nói chuyện bằng thuật ngữ, xưng 'anh/em' với Lan như hồi còn làm chung."},
-      "relationships": [{"with": "characters:lan", "kind": "sep_cu"}, {"with": "characters:vinh", "kind": "khach_hang_lon"}]
     }
   ]
 }

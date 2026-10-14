@@ -356,8 +356,8 @@
           "id": "l03",
           "speaker": "characters:amb_xe_om_truyen_thong",
           "text": {
-            "vi": "Đặt app à? Thằng app nó đến chậm lắm. Việt kiều à? Nói tiếng Việt sõi thế.",
-            "en": "On the app? App guys are slow. Overseas Vietnamese? Your Vietnamese is good."
+            "vi": "Đặt app à? Thằng app nó đến chậm lắm. Việt kiều à? Giọng thì ngõ Hàng Chiếu mà từ thì như ông tớ.",
+            "en": "Booked on the app? The app guy takes forever. Overseas Vietnamese? Hàng Chiếu accent, but you talk like my grandad."
           }
         },
         {
@@ -382,6 +382,22 @@
           "text": {
             "vi": "Giờ không đội là bốn trăm đến sáu trăm nghìn anh ạ, bằng mười bát phở. Anh về Hàng Chiếu đúng không? Va li anh để giữa hai chân em.",
             "en": "Now no helmet costs four to six hundred thousand, ten bowls of pho. You're going to Hàng Chiếu? Put the suitcase between my feet."
+          }
+        },
+        {
+          "id": "l06b",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Bốn trăm nghìn... (tính) hồi tôi đi, bốn trăm là một chỉ vàng.",
+            "en": "Four hundred thousand... (working it out) when I left, four hundred bought a chỉ of gold."
+          }
+        },
+        {
+          "id": "l06c",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Giờ một chỉ là hơn chục triệu anh ạ. Bốn trăm nghìn là mười bát phở thôi.",
+            "en": "A chỉ is over ten million now. Four hundred thousand is ten bowls of phở, that's all."
           }
         },
         {
@@ -842,16 +858,16 @@
           "id": "l04",
           "speaker": "characters:lan",
           "text": {
-            "vi": "Cô ký cái gì cơ ạ? Nhà này ba người đứng tên. Ông, cô, và bác Khải. Bác Khải mới mất được ba tuần.",
-            "en": "You signed what? This house has three names on it. Grandpa, you, and Uncle Khải. Uncle Khải died three weeks ago."
+            "vi": "Cô ký cái gì cơ ạ? Nhà này ba người đứng tên. Ông, cô, và bác Khải. Phần của cô là phần của bố cháu, cô nhớ chứ. Bác Khải mới mất được ba tuần.",
+            "en": "You signed what? Three names on this house. Ông, you, and uncle Khải. Your share was my father's, remember. Uncle Khải has been gone three weeks."
           }
         },
         {
           "id": "l05",
           "speaker": "characters:co_hanh",
           "text": {
-            "vi": "Thì cô biết! Nhưng thằng Khôi bên Đức, nó cần gì cái nhà này? Còn cô nợ ngân hàng gần ba tỷ, lãi mỗi tháng ba chục triệu, cháu là dân ngân hàng cháu hiểu thế là gì mà.",
-            "en": "I know! But Khôi lives in Germany, what does he need this house for? And I owe the bank almost three billion, thirty million interest a month. You're a banker, you know what that means."
+            "vi": "Bố cháu ở Busan mười lăm năm có về nhìn ông lần nào không mà cháu nhắc? Thì cô biết! Nhưng thằng Khôi bên Đức, nó cần gì cái nhà này? Còn cô nợ ngân hàng gần ba tỷ, lãi mỗi tháng ba chục triệu, cháu là dân ngân hàng cháu hiểu thế là gì mà.",
+            "en": "Your father has been in Busan fifteen years, has he come back once to look at ông, that you bring him up? I know! But Khôi lives in Germany, what does he need this house for? And I owe the bank almost three billion, thirty million interest a month. You're a banker, you know what that means."
           }
         },
         {
@@ -926,8 +942,8 @@
           "id": "l10",
           "speaker": "characters:co_hanh",
           "text": {
-            "vi": "Con chỉ muốn cả nhà đỡ khổ. (đứng dậy) Bố giữ sức khỏe. Cuối tuần họ giới thiệu dự án với tổ dân phố đấy, cả nhà nên đến nghe.",
-            "en": "I just want the family to suffer less. (standing) Look after yourself, Dad. They're presenting to the neighbourhood this weekend; you should all come."
+            "vi": "Con chỉ muốn cả nhà đỡ khổ. (đứng dậy) Bố giữ sức khỏe. Sắp tới họ giới thiệu dự án với tổ dân phố đấy, ông Khang sẽ báo, cả nhà nên đến nghe.",
+            "en": "I just want the family to suffer less. (standing) Look after yourself, Dad. They're presenting to the neighbourhood soon; you should all come."
           }
         },
         {
@@ -936,6 +952,14 @@
           "text": {
             "vi": "(một mình, nhìn nồi nước dùng) Ba người đứng tên. Ông không bán. Cô muốn bán. Vậy là... anh Khôi.",
             "en": "(alone, staring at the pot) Three names. Grandpa won't sell. Auntie will. So it's... Khôi."
+          }
+        },
+        {
+          "id": "l11b",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "(nhìn điện thoại, mục 'Bố') Hai câu một năm. Mùng một và sinh nhật ông.",
+            "en": "(looking at the phone, the entry 'Dad') Two messages a year. New Year's Day and ông's birthday."
           }
         }
       ]

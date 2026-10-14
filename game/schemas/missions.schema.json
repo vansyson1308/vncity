@@ -227,7 +227,7 @@
                       "type": "string"
                     },
                     "auto_violation_if_answered_moving": {
-                      "description": "traffic_rules:<id> reported if the player answers the phone while moving.",
+                      "description": "traffic_rules:<id> reported if the player answers the phone while moving; when that violation fires, gameplay also sets the flag minh_nghe_dien_thoai_khi_lai (read by the co_bi_chu_y branch of c1_05, docs/gdd/10-sua-chuong-1.md M2).",
                       "x-consumer": "gameplay",
                       "$ref": "common.schema.json#/$defs/ref"
                     },

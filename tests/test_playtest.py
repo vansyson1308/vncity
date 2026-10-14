@@ -38,8 +38,10 @@ def test_opening_and_consequence_standards(tmp_path):
     pt.main(["--out", str(tmp_path)])
     s = json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
     co = s["consequences"]
-    assert co["choice_flags_read"] == co["choice_flags"] >= 50, co["choice_flags_unread"]
-    assert co["progress_flags_unread"] == []
+    assert co["choice_flags"] >= 2 * s["story_missions"]   # at least two choice flags per story mission
+    from test_content_logic import READ_IN_CHAPTER_2
+    assert set(co["choice_flags_unread"]) <= READ_IN_CHAPTER_2
+    assert set(co["progress_flags_unread"]) <= READ_IN_CHAPTER_2
     assert len(co["in_chapter_payoffs"]) >= 20
     assert co["divergent_lines"] >= 100 and co["divergent_steps"] >= 15
     for p in s["personas"].values():

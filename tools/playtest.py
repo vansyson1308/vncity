@@ -60,7 +60,8 @@ DAILY_NET_INCOME = {"minh": 350_000, "lan": 1_600_000, "khoi": 650_000}  # a wor
 DAILY_COST = {"minh": 90_000, "lan": 120_000, "khoi": 150_000}           # food, parking, fuel
 GOALS_VND = {"tiem_sua_xe_duc_coi": 120_000_000, "ca_phe_trung_hang_gai": 450_000_000,
              "phan_nha_co_hanh": 3_000_000_000}
-RUNTIME_FLAGS = {"ho_so_sach_90_ngay": "90 game days without a traffic violation (docs/gdd/02-he-thong.md)"}
+RUNTIME_FLAGS = {"ho_so_sach_90_ngay": "90 game days without a traffic violation (docs/gdd/02-he-thong.md)",
+                 "minh_nghe_dien_thoai_khi_lai": "gameplay: the player answered the phone while riding in c1_05 (docs/gdd/10 M2)"}
 # flags content sets for the runtime to read (no mission or dialogue needs to read them)
 RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1": "UHanoiHeatSubsystem caps heat one star lower for good"}
 CONTROL_KINDS = {"go_to", "ride", "deliver", "photograph", "follow", "escape_traffic_police", "minigame", "cook", "collect", "drive_passenger"}

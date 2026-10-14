@@ -65,6 +65,22 @@
           }
         },
         {
+          "id": "l07b",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Sát hạch là thi? Và A1 là... hạng bét?",
+            "en": "'Sát hạch' means an exam? And A1 is... the bottom grade?"
+          }
+        },
+        {
+          "id": "l07c",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Là hạng xe máy anh ạ. Bét thì bét, không có là mất xe.",
+            "en": "It's the motorbike class. Bottom or not, without it they take the bike."
+          }
+        },
+        {
           "id": "l08",
           "speaker": "characters:khoi",
           "text": {
@@ -754,8 +770,8 @@
           "id": "l05",
           "speaker": "characters:ba_lua_dong_xuan",
           "text": {
-            "vi": "Ông Thọ á? Ngửi từ cửa là biết. Nhưng cháu tính, quán đang cần tiền.",
-            "en": "Thọ? He'd smell it from the doorway. But you do your sums; the shop needs money."
+            "vi": "Ông Thọ á? Ngửi từ cửa là biết. Nhưng cháu tính, quán đang cần tiền. Mẹ cháu ngày xưa cũng đứng đây mặc cả với bà, giỏi hơn cháu.",
+            "en": "Thọ? He'd smell it from the doorway. But you do your sums; the shop needs money. Your mother used to stand right here haggling with me, better than you."
           }
         },
         {
@@ -816,15 +832,15 @@
           "id": "l09",
           "speaker": "characters:lan",
           "text": {
-            "vi": "Cháu cảm ơn bà. Cháu phải về kịp giờ ninh.",
-            "en": "Thank you. I have to get back for the simmer."
+            "vi": "Cháu cảm ơn bà. Cháu về trước giờ tắc, mai ninh mẻ mới, ông nếm là biết ngay.",
+            "en": "Thank you, bà. I'll get back before the jam; tomorrow's batch gets simmered with these, and ông will know from the first spoon."
           }
         }
       ]
     },
     {
       "id": "dlg_c1_04_cu_tho_khen",
-      "context": "Cụ Thọ nếm nước dùng nấu bằng gia vị chuẩn.",
+      "context": "Cụ Thọ nếm nước dùng nấu bằng gia vị chuẩn. 6 giờ sáng hôm sau, thìa đầu tiên của mẻ mới.",
       "lines": [
         {
           "id": "l01",
@@ -854,7 +870,7 @@
     },
     {
       "id": "dlg_c1_04_cu_tho_che",
-      "context": "Cụ Thọ nếm nước dùng nấu bằng gia vị rẻ.",
+      "context": "Cụ Thọ nếm nước dùng nấu bằng gia vị rẻ. 6 giờ sáng hôm sau, thìa đầu tiên của mẻ mới.",
       "lines": [
         {
           "id": "l01",
@@ -967,8 +983,21 @@
           "id": "l06",
           "speaker": "characters:minh",
           "text": {
-            "vi": "Em đang dừng... à không. Em tấp vào lề ngay đây ạ.",
-            "en": "I'm stopped... well, no. Pulling over right now."
+            "vi": "Em đang dừng... à không. Em tấp vào lề... (tiếng còi) Thôi chết, chốt Kim Mã.",
+            "en": "I'm stopped... no, I'm pulling over... (a whistle) Damn, the Kim Mã checkpoint."
+          },
+          "condition": {
+            "flags": [
+              "minh_nghe_dien_thoai_khi_lai"
+            ]
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Em tấp vào lề rồi ạ. Chị đóng bình đi, mười phút nữa em tới.",
+            "en": "I've pulled over. Pack the flasks, I'm there in ten."
           }
         }
       ]
@@ -994,6 +1023,32 @@
           }
         },
         {
+          "id": "l02b",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "[Tin nhắn Lan] Phở giao xong chưa? Tiền chị chuyển rồi.",
+            "en": "[Message from Lan] Delivered yet? I've sent the money."
+          },
+          "condition": {
+            "flags": [
+              "minh_giu_kin_danh_sach"
+            ]
+          }
+        },
+        {
+          "id": "l02c",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "[Tin nhắn Lan] Về cẩn thận. Chị cảm ơn chuyện hôm nọ.",
+            "en": "[Message from Lan] Ride home carefully. Thank you for the other day."
+          },
+          "condition": {
+            "flags": [
+              "lan_biet_danh_sach"
+            ]
+          }
+        },
+        {
           "id": "l03",
           "speaker": "characters:tuan_beo",
           "text": {
@@ -1010,8 +1065,8 @@
           "id": "l03b",
           "speaker": "characters:tuan_beo",
           "text": {
-            "vi": "Vâng ạ. À Minh, nhóm Alô Chat bảo có công ty bất động sản trả năm trăm nghìn mỗi tin 'nhà nào sắp bán' ở phố cổ. Thằng Hùng Hàng Đậu nhận rồi. Mà mày cũng nhận rồi còn gì: chị Thảo gì đó khoe trên nhóm là có 'anh Minh Phở Thọ' làm cho bên ấy.",
-            "en": "Yes sir. Oh, Minh, the Alô Chat group says a property firm pays five hundred thousand per tip on 'which house is about to sell' in the Old Quarter. Hùng from Hàng Đậu took it. And so did you, didn't you: some Thảo bragged on the group that 'Minh from Phở Thọ' works for them."
+            "vi": "Vâng ạ. À Minh, thằng Hùng Hàng Đậu nhận rồi đấy, năm trăm nghìn mỗi tin 'nhà nào sắp bán'. Mà mày cũng nhận rồi còn gì, chị Thảo khoe trong nhóm.",
+            "en": "Yes, sir. Oh, Minh, Hùng from Hàng Đậu took it, five hundred thousand per tip on 'which house is about to sell'. And you took it too, didn't you, Thảo bragged in the group."
           },
           "condition": {
             "flags": [
@@ -1836,8 +1891,40 @@
           "id": "l07",
           "speaker": "characters:linh_bao_ton",
           "text": {
-            "vi": "Đấy là lý do em mời anh.",
-            "en": "That's exactly why I asked you."
+            "vi": "Đấy là lý do em mời anh. Anh keo lỳ thật.",
+            "en": "That's why I invited you. You're so 'keo lỳ'."
+          }
+        },
+        {
+          "id": "lx1",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Keo... lỳ?",
+            "en": "Keo... lỳ?"
+          }
+        },
+        {
+          "id": "lx2",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Là bám chắc, anh. Cô ấy khen đấy.",
+            "en": "It means you hold on tight. That was a compliment."
+          }
+        },
+        {
+          "id": "lx3",
+          "speaker": "characters:linh_bao_ton",
+          "text": {
+            "vi": "Ra đường em nể mỗi anh.",
+            "en": "Out here you're the only one I respect."
+          }
+        },
+        {
+          "id": "lx4",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Na gut.",
+            "en": "Na gut."
           }
         }
       ]
@@ -2045,6 +2132,19 @@
       "context": "Quầy bar tầng thượng tòa tháp Phạm Hùng. Đỗ Quang Vĩnh đưa ra đề nghị.",
       "lines": [
         {
+          "id": "l00b",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Tôi đã đọc biên bản họp tổ dân phố. 'Tự quản'. Hai chữ đắt đấy, cô Lan.",
+            "en": "I read the minutes of the residents' meeting. 'Self-managed'. An expensive pair of words, Miss Lan."
+          },
+          "condition": {
+            "flags": [
+              "lan_de_xuat_tu_quan"
+            ]
+          }
+        },
+        {
           "id": "l01",
           "speaker": "characters:vinh",
           "text": {
@@ -2096,6 +2196,22 @@
           }
         },
         {
+          "id": "l02x",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(thì thầm lại) Nồng độ... cồn? Hồi tôi đi, uống bia xong vẫn đạp xe về.",
+            "en": "(whispering back) Blood... alcohol? When I left, you drank your beer and cycled home."
+          }
+        },
+        {
+          "id": "l02y",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Giờ là mất bằng, anh. Im.",
+            "en": "Now it costs you your licence. Shh."
+          }
+        },
+        {
           "id": "l02b",
           "speaker": "characters:vinh",
           "text": {
@@ -2105,6 +2221,19 @@
           "condition": {
             "flags": [
               "khoi_co_bang_a1"
+            ]
+          }
+        },
+        {
+          "id": "l02z",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Anh Minh thì có giấy khen an toàn giao thông của phường, chín mươi ngày không một lỗi. Tôi cũng có xem.",
+            "en": "Mr. Minh holds the ward's road-safety certificate, ninety days without a single offence. I looked at that too."
+          },
+          "condition": {
+            "flags": [
+              "giay_khen_an_toan_giao_thong"
             ]
           }
         },
@@ -2133,6 +2262,19 @@
           }
         },
         {
+          "id": "l05a0",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Anh Minh thì đã là người của tôi rồi. Thảo kể bạn anh ở tiệm sửa xe khuyên bỏ, anh nói 'việc là việc'. Tôi thích người nói thế.",
+            "en": "Mr. Minh is already my man. Thảo tells me your friend at the repair shop told you to quit and you said 'work is work'. I like people who say that."
+          },
+          "condition": {
+            "flags": [
+              "minh_giu_viec_kim_long"
+            ]
+          }
+        },
+        {
           "id": "l05a",
           "speaker": "characters:vinh",
           "text": {
@@ -2144,7 +2286,8 @@
               "minh_nhan_viec_kim_long"
             ],
             "not_flags": [
-              "minh_bo_viec_kim_long"
+              "minh_bo_viec_kim_long",
+              "minh_giu_viec_kim_long"
             ]
           }
         },
@@ -2305,6 +2448,19 @@
           }
         },
         {
+          "id": "l11a",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Anh Khôi xin thời gian ở tổ dân phố rồi. Cô Lan trả lời thay cả nhà được không?",
+            "en": "Mr. Khôi already asked the residents for time. Miss Lan, can you answer for the whole house?"
+          },
+          "condition": {
+            "flags": [
+              "khoi_xin_thoi_gian"
+            ]
+          }
+        },
+        {
           "id": "l11",
           "speaker": "characters:vinh",
           "text": {
@@ -2389,6 +2545,31 @@
                   "lan_moi_vinh_dau_tu_tu_quan"
                 ]
               }
+            },
+            {
+              "text": {
+                "vi": "'Mười bốn số nhà trong danh sách của chị Thảo, tôi đã đọc hết trước tổ dân phố. Anh còn gì để mời?'",
+                "en": "'The fourteen addresses on Thảo's list, I read every one to the residents. What else do you have to offer?'"
+              },
+              "goto": "l13d",
+              "condition": {
+                "flags": [
+                  "lan_biet_danh_sach"
+                ],
+                "not_flags": [
+                  "lan_cong_khai_danh_sach"
+                ]
+              },
+              "effect": {
+                "reputation": {
+                  "to_dan_pho_hang_chieu": 15,
+                  "kim_long_land": -25
+                },
+                "set_flags": [
+                  "lan_cong_khai_danh_sach",
+                  "thao_nghi_minh"
+                ]
+              }
             }
           ]
         },
@@ -2435,6 +2616,15 @@
               "lan_de_xuat_tu_quan"
             ]
           }
+        },
+        {
+          "id": "l13d",
+          "speaker": "characters:vinh",
+          "text": {
+            "vi": "Thì ra anh Minh. (rót trà cho Minh) Danh sách là của chị Thảo, anh Minh ạ. Chị ấy sẽ hỏi anh.",
+            "en": "So it was Mr. Minh. (pours Minh tea) The list is Thảo's, Mr. Minh. She will be asking you."
+          },
+          "goto": "l16b"
         },
         {
           "id": "l13b",
@@ -2504,6 +2694,19 @@
             ],
             "not_flags": [
               "linh_dang_anh_thao"
+            ]
+          }
+        },
+        {
+          "id": "l16g",
+          "speaker": "characters:thao",
+          "text": {
+            "vi": "(không tiễn ra thang máy; nói với Lan) Chị không nên nói chuyện hồ sơ vay ở chỗ đông người. Tôi nói với tư cách người cũng có sếp.",
+            "en": "(not walking them to the lift; to Lan) You shouldn't talk about loan files in a crowded room. I say that as someone who also has a boss."
+          },
+          "condition": {
+            "flags": [
+              "lan_lo_thong_tin_mat"
             ]
           }
         },

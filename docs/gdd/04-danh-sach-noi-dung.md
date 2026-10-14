@@ -13,16 +13,15 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | building_archetypes | `world/building_archetypes.json` | 13 | Đúng 13 id pipeline dùng |
 | landmarks | `world/landmarks.json` | 84 | 36 mục `coords_verified_overture` (khớp Overture trong 300 m), 48 mục còn `coords_unverified` (phần lớn là hồ, cầu, phố, công viên: giữ mốc tay) |
 | characters | `characters/protagonists.json` | 3 | Minh, Lan, Khôi |
-| characters | `characters/story.json` | 30 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio; cụ Thọ 1957 (điều khiển được trong cold open), ông Khiêm, bà Thọ, ông Tư Hàng Bạc, Hùng Hàng Đậu, anh Phúc ngân hàng |
+| characters | `characters/story.json` | 28 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio; cụ Thọ 1957 (điều khiển được trong cold open), ông Khiêm, bà Thọ, ông Tư Hàng Bạc (khối `drive` của bốn người này nằm ở handoff, PR #9 dán vào khi schema có) |
 | characters | `characters/ambient.json` | 21 | Kiểu dân cư có lịch sinh hoạt; loa phường |
 | vehicles | `vehicles.json` | 26 | Tên parody, model thật chỉ ở `inspired_by` |
 | activities | `activities.json` | 24 | Việc làm, minigame, giải trí, sưu tầm, đua hợp pháp, kinh doanh |
 | missions | `missions/story_prologue.json` | 4 | Cold open 1957/1972 + mở đầu (chương 0) |
 | missions | `missions/story_chapter1.json` | 9 | Chương 1 |
-| missions | `missions/story_chapter2.json` | 8 | Chương 2 "Mùa nồm": 7 truyện + 1 phụ sau giao thừa |
-| missions | `missions/side_stranger.json` | 13 | Phụ và người lạ |
-| dialogues | `dialogues/prologue.json`, `chapter1.json`, `chapter2.json`, `side.json` | 91 (626 dòng) | Có bản `en` cho mọi dòng; 186 dòng có điều kiện (`lines[].condition`), xem `08-mo-man-va-he-qua.md` |
-| items | `items.json` | 55 | Đồ ăn, đồ dùng, 12 app điện thoại, giấy tờ, sưu tầm, vật phẩm nhiệm vụ (`la_dong`, `dieu_cua_be`, `giay_1957`, `bang_cassette_12_khai`) |
+| missions | `missions/side_stranger.json` | 12 | Phụ và người lạ (s02, s10 có nhánh thua) |
+| dialogues | `dialogues/prologue.json`, `chapter1.json`, `side.json` | 63 (449 dòng) | Có bản `en` cho mọi dòng; 129 dòng chỉ một phần người chơi thấy (`lines[].condition`), xem `11-mo-man-va-he-qua.md` |
+| items | `items.json` | 52 | Đồ ăn, đồ dùng, 12 app điện thoại, giấy tờ, sưu tầm, vật phẩm nhiệm vụ (`la_dong`, `dieu_cua_be`) |
 | businesses | `businesses.json` | 11 | Đủ 10 loại hình |
 | events | `events.json` | 20 | Lịch âm, lịch dương, tuần, dữ liệu sống |
 | radio | `radio.json` | 7 | Nhạc gốc hoặc chờ cấp phép |

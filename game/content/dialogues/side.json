@@ -937,163 +937,45 @@
       ]
     },
     {
-      "id": "dlg_s13_tin_nhan",
-      "tags": [
-        "kim_long",
-        "minh"
-      ],
-      "context": "Alô Chat, 7 giờ sáng. Thảo giao 'việc thử' đầu tiên cho Minh sau khi anh nhận cả hai việc ở Quảng An.",
+      "id": "dlg_s02_thua",
+      "context": "Cụ Bảo thắng. Mời trà.",
       "lines": [
         {
           "id": "l01",
-          "speaker": "characters:thao",
+          "speaker": "characters:ong_bao_co_tuong",
           "text": {
-            "vi": "[Tin nhắn] Anh Minh, việc đầu tiên: Hàng Bạc có nhà nào con cái ở xa, bố mẹ già, đang khó? Anh em xe ôm biết hết. Năm triệu một tin đúng.",
-            "en": "[Message] Minh, first task: on Hàng Bạc, which house has children far away, old parents, hard times? Your rider friends know it all. Five million per correct tip."
+            "vi": "Nước này cậu ăn hay nhịn? Cậu nhịn, nên cậu đói. Mai ra, tôi chấp xe.",
+            "en": "That move, did you take it or hold back? You held back, so you went hungry. Come tomorrow, I'll spot you a chariot."
           }
         },
         {
           "id": "l02",
-          "speaker": "characters:minh",
+          "speaker": "characters:khoi",
           "text": {
-            "vi": "(nhìn màn hình) Năm triệu. Hai tháng tiền thuốc của bố.",
-            "en": "(looking at the screen) Five million. Two months of Dad's medicine."
+            "vi": "Mai cháu ra.",
+            "en": "I'll be here tomorrow."
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "dlg_s10_ve_bet",
+      "context": "Về đích ngoài top 3 vòng Hồ Tây.",
+      "lines": [
         {
-          "id": "l03",
+          "id": "l01",
           "speaker": "characters:tuan_beo",
           "text": {
-            "vi": "Mày nhìn điện thoại như nhìn người yêu. Đi làm đi.",
-            "en": "You stare at that phone like it's your girlfriend. Go to work."
-          }
-        }
-      ]
-    },
-    {
-      "id": "dlg_s13_ong_tu",
-      "tags": [
-        "kim_long",
-        "minh",
-        "ong_tu"
-      ],
-      "context": "Hàng Bạc, 10 giờ. Ông Tư ngồi chạm bạc trước cửa, nói chuyện với một 'anh xe ôm hỏi đường'.",
-      "lines": [
-        {
-          "id": "l01",
-          "speaker": "characters:ong_tu_hang_bac",
-          "text": {
-            "vi": "Hỏi đường đến Hàng Bạc mà đứng ở Hàng Bạc. Cậu muốn hỏi gì thì hỏi thẳng.",
-            "en": "Asking the way to Hàng Bạc while standing on Hàng Bạc. Ask what you want to ask."
+            "vi": "Ông cụ Hàn Quốc bảy mươi tuổi vẫn qua mày. Thôi, có clip mày thở là tao đủ content.",
+            "en": "The seventy-year-old Korean still beat you. Fine, a clip of you gasping is content enough for me."
           }
         },
         {
           "id": "l02",
           "speaker": "characters:minh",
           "text": {
-            "vi": "Dạ... cháu hỏi nhà bác có bán bạc nguyên miếng không ạ.",
-            "en": "Er... I wanted to ask if you sell silver by the piece."
-          }
-        },
-        {
-          "id": "l03",
-          "speaker": "characters:ong_tu_hang_bac",
-          "text": {
-            "vi": "Có. Và tôi không bán nhà, nếu cậu định hỏi câu thứ hai. Con tôi trong Sài Gòn nó muốn. Tôi ở đây tám mươi mốt năm. Cái đe này là của cụ tôi.",
-            "en": "I do. And I don't sell the house, if that was your second question. My son in Saigon wants to. I've been here eighty-one years. This anvil was my great-grandfather's."
-          }
-        },
-        {
-          "id": "l04",
-          "speaker": "characters:minh",
-          "text": {
-            "vi": "(thầm) Con ở xa, bố già, đang khó. Đúng tin chị Thảo cần.",
-            "en": "(to himself) Child far away, old father, hard times. Exactly the tip Thảo wants."
-          }
-        },
-        {
-          "id": "l05",
-          "speaker": "characters:ong_tu_hang_bac",
-          "text": {
-            "vi": "Cậu ăn phở Thọ không? Lão Thọ với tôi đánh cờ bốn mươi năm. Bảo lão là tôi còn nợ lão một ván.",
-            "en": "Do you eat at Thọ's? Old Thọ and I have played chess forty years. Tell him I still owe him a game."
-          }
-        }
-      ]
-    },
-    {
-      "id": "dlg_s13_gui_tin",
-      "tags": [
-        "kim_long",
-        "minh",
-        "choice"
-      ],
-      "context": "Tối, phòng trọ. Minh soạn tin nhắn cho Thảo. Lựa chọn này được ông Tư, Hùng Hàng Đậu và chị Thảo nhắc lại ở chương 2.",
-      "lines": [
-        {
-          "id": "l01",
-          "speaker": "characters:minh",
-          "text": {
-            "vi": "(gõ rồi xóa, gõ rồi xóa)",
-            "en": "(types, deletes, types, deletes)"
-          },
-          "choices": [
-            {
-              "text": {
-                "vi": "Gửi tin: 'Hàng Bạc số 7, ông cụ 81 tuổi, con trai ở Sài Gòn muốn bán.'",
-                "en": "Send: 'Hàng Bạc no. 7, 81-year-old, son in Saigon wants to sell.'"
-              },
-              "goto": "l02",
-              "effect": {
-                "money_vnd": 5000000,
-                "reputation": {
-                  "kim_long_land": 10
-                },
-                "set_flags": [
-                  "minh_ban_tin_ong_tu"
-                ]
-              }
-            },
-            {
-              "text": {
-                "vi": "Gửi tin giả: 'Em hỏi cả phố rồi, Hàng Bạc không nhà nào bán.'",
-                "en": "Send a false tip: 'I asked the whole street, nobody on Hàng Bạc is selling.'"
-              },
-              "goto": "l03",
-              "effect": {
-                "reputation": {
-                  "kim_long_land": -5
-                },
-                "set_flags": [
-                  "minh_khong_ban_tin"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "id": "l02",
-          "speaker": "characters:thao",
-          "text": {
-            "vi": "[Tin nhắn] Tốt. Chuyển khoản rồi. Tuần sau Hàng Buồm.",
-            "en": "[Message] Good. Transferred. Next week Hàng Buồm."
-          },
-          "goto": "l04"
-        },
-        {
-          "id": "l03",
-          "speaker": "characters:thao",
-          "text": {
-            "vi": "[Tin nhắn] Lạ nhỉ. Hùng Hàng Đậu vừa gửi tin Hàng Bạc số 7. Anh hỏi kỹ chưa?",
-            "en": "[Message] Strange. Hùng from Hàng Đậu just sent Hàng Bạc no. 7. Did you ask properly?"
-          }
-        },
-        {
-          "id": "l04",
-          "speaker": "characters:minh",
-          "text": {
-            "vi": "(tắt màn hình, nằm nhìn trần nhà) Con ổn mà mẹ.",
-            "en": "(screen off, lying there looking at the ceiling) I'm fine, Mum."
+            "vi": "Mai tao đạp lại. Năm giờ.",
+            "en": "Tomorrow I ride again. Five o'clock."
           }
         }
       ]

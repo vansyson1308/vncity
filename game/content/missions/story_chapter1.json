@@ -100,7 +100,27 @@
             ],
             "max_faults": 2
           },
-          "next": "ra_pho"
+          "next": {
+            "dat": "ra_pho",
+            "chua_dat": "thi_lai",
+            "default": "thi_lai"
+          }
+        },
+        {
+          "id": "thi_lai",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Trượt vòng số tám. Mai thi lại, lệ phí 100 nghìn",
+            "en": "Failed the figure eight. Retake tomorrow, fee 100 thousand"
+          },
+          "target": "landmarks:bai_giua_song_hong",
+          "params": {
+            "until_hour": 8.0,
+            "hour": 8.0,
+            "cost_vnd": 100000,
+            "skip_allowed": true
+          },
+          "next": "thi_sat_hach"
         },
         {
           "id": "ra_pho",
@@ -207,6 +227,21 @@
             "vehicle": "vehicles:xich_lo",
             "driver": "characters:ong_thang",
             "commentary_trigger": "theo_vi_tri"
+          },
+          "next": "cho_nang_xien"
+        },
+        {
+          "id": "cho_nang_xien",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Ông Thắng dừng ở đầu cầu Long Biên: 'Chờ nắng xiên, đúng như ảnh của bố cậu'",
+            "en": "Ông Thắng stops at the Long Biên bridgehead: 'Wait for the slanting light, like in your father's photo'"
+          },
+          "target": "landmarks:cau_long_bien",
+          "params": {
+            "until_hour": 16.5,
+            "hour": 16.5,
+            "skip_allowed": true
           },
           "next": "chup"
         },
@@ -603,16 +638,34 @@
           "id": "ve_quan",
           "kind": "deliver",
           "objective": {
-            "vi": "Chở hàng về quán trước giờ ninh xương",
-            "en": "Bring the goods back before the simmer starts"
+            "vi": "Chở hàng về quán trước giờ cao điểm 7 giờ",
+            "en": "Bring the goods back before the 7 o'clock rush"
           },
           "target": {
             "lat": 21.03745,
             "lon": 105.8512
           },
           "params": {
-            "time_limit_s": 600,
-            "cargo_fragile": false
+            "cargo_fragile": false,
+            "deadline_hour": 7.0
+          },
+          "next": "sang_hom_sau"
+        },
+        {
+          "id": "sang_hom_sau",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Ninh mẻ xương mới lúc 3:30 sáng hôm sau với gia vị vừa mua",
+            "en": "Simmer the next batch at 3:30 the following morning with the spices you bought"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "until_hour": 3.5,
+            "hour": 3.5,
+            "skip_allowed": true
           },
           "next": "nem"
         },
@@ -620,15 +673,33 @@
           "id": "ve_quan_re",
           "kind": "deliver",
           "objective": {
-            "vi": "Chở hàng về quán trước giờ ninh xương",
-            "en": "Bring the goods back before the simmer starts"
+            "vi": "Chở hàng về quán trước giờ cao điểm 7 giờ",
+            "en": "Bring the goods back before the 7 o'clock rush"
           },
           "target": {
             "lat": 21.03745,
             "lon": 105.8512
           },
           "params": {
-            "time_limit_s": 600
+            "deadline_hour": 7.0
+          },
+          "next": "sang_hom_sau_re"
+        },
+        {
+          "id": "sang_hom_sau_re",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Ninh mẻ xương mới lúc 3:30 sáng hôm sau với gia vị vừa mua",
+            "en": "Simmer the next batch at 3:30 the following morning with the spices you bought"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "until_hour": 3.5,
+            "hour": 3.5,
+            "skip_allowed": true
           },
           "next": "nem_re"
         },
@@ -636,8 +707,8 @@
           "id": "nem",
           "kind": "talk",
           "objective": {
-            "vi": "Ông nếm nước dùng",
-            "en": "Grandpa tastes the broth"
+            "vi": "6 giờ sáng hôm sau, ông nếm thìa đầu tiên của mẻ mới",
+            "en": "Six the next morning, ông tastes the first spoon of the new batch"
           },
           "target": {
             "lat": 21.03745,
@@ -650,8 +721,8 @@
           "id": "nem_re",
           "kind": "talk",
           "objective": {
-            "vi": "Ông nếm nước dùng",
-            "en": "Grandpa tastes the broth"
+            "vi": "6 giờ sáng hôm sau, ông nếm thìa đầu tiên của mẻ mới",
+            "en": "Six the next morning, ông tastes the first spoon of the new batch"
           },
           "target": {
             "lat": 21.03745,
@@ -761,11 +832,30 @@
             "spill_sensitive": true,
             "flood_layer": "live"
           },
-          "next": "chu_y_csgt",
+          "next": "co_bi_chu_y",
           "fail_if": [
             "event:do_qua_5_suat",
             "event:xe_chet_may_va_khong_dat_kip"
           ]
+        },
+        {
+          "id": "co_bi_chu_y",
+          "kind": "choice",
+          "objective": {
+            "vi": "Tổ tuần tra có nhìn thấy bạn nghe điện thoại không?",
+            "en": "Did the patrol see you take that call?"
+          },
+          "target": {
+            "lat": 21.0315,
+            "lon": 105.8215
+          },
+          "params": {
+            "branch_source": "flag"
+          },
+          "next": {
+            "minh_nghe_dien_thoai_khi_lai": "chu_y_csgt",
+            "default": "cuu_tuan"
+          }
         },
         {
           "id": "chu_y_csgt",
@@ -1159,7 +1249,10 @@
             "time_of_day": 19.0,
             "requires_event": "events:pho_di_bo_cuoi_tuan"
           },
-          "next": "minh_cho_anh"
+          "next": "minh_cho_anh",
+          "set_flags": [
+            "khoi_hoc_tu_keo_ly"
+          ]
         },
         {
           "id": "minh_cho_anh",

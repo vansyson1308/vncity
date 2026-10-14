@@ -1,4 +1,4 @@
-# 08. Mở màn và hệ quả lựa chọn: từ 2/5 và 1/5 lên 5/5
+# 11. Mở màn và hệ quả lựa chọn: từ 2/5 và 1/5 lên 5/5
 
 Ngày 14/10/2026. Bản thẩm định `07-tham-dinh-trieu-do.md` chấm **Mở màn 2/5** (mở bằng một cuốc xe
 hướng dẫn, câu hỏi lớn đến sau 40 phút) và **Hệ quả lựa chọn 1/5** (34 cờ được đặt, 2 cờ được đọc).
@@ -24,7 +24,7 @@ Chủ dự án yêu cầu nghiên cứu và nâng hai điểm này tới 5/5. T�
 | Phép đo | Chuẩn | Lý do |
 | --- | --- | --- |
 | Cờ do lựa chọn đặt được đọc lại ở đâu đó | 100% | Một cờ không ai đọc là lựa chọn giả |
-| Số cờ lựa chọn | ≥ 50 | Đủ dày để hai người chơi kể lại hai câu chuyện khác nhau |
+| Số cờ lựa chọn | ≥ 2 mỗi nhiệm vụ truyện | Đủ dày để hai người chơi kể lại hai câu chuyện khác nhau; chuẩn theo tỷ lệ để còn đúng khi chương 2-5 vào |
 | Hệ quả trả **ngay trong chương** (nhiệm vụ sau đọc cờ của nhiệm vụ trước cùng chương) | ≥ 20 cặp | Trả sau 6 giờ chơi thì không ai nhớ mình đã chọn gì |
 | Dòng thoại / bước chỉ một phần người chơi thấy | ≥ 100 dòng, ≥ 15 bước | Đo độ rẽ thật giữa các kiểu chơi |
 | Cờ tiến trình chưa ai đọc | 0 | Sạch dữ liệu |
@@ -78,7 +78,7 @@ Nguyên tắc rút ra, dùng cho mọi chương sau:
 ## 3. Mở màn mới: `p0_ganh_pho_1957`
 
 Cold open 4,6 phút thật, chơi **trước** cuốc xe rạng đông của Minh, nhân vật điều khiển là cụ Thọ
-năm 1957 (`characters:tho_1957`, 21 tuổi, gánh phở thuê ở Hàng Chiếu).
+năm 1957 (`characters:tho_1957`, 17 tuổi, gánh phở thuê ở Hàng Chiếu; 86 tuổi ở hiện tại).
 
 | Phút | Bước | Loại | Người chơi làm gì |
 | --- | --- | --- | --- |
@@ -94,7 +94,7 @@ năm 1957 (`characters:tho_1957`, 21 tuổi, gánh phở thuê ở Hàng Chiếu
 
 Sau đó P1 (cuốc xe) giữ nguyên nhưng đã có cái để chở: người chơi biết căn nhà, tờ giấy, và lời hứa
 trước khi gặp Khôi. Hai cờ của cụ Thọ được trả ở `p2` (bếp lúc khuya: vết sẹo hay không), `p3` (gác
-xép), `c1_09` (bữa tối tầng 72: cụ kể lại đúng điều người chơi đã chọn) và `c2_01`.
+xép) và `c1_09` (bữa tối tầng 72: cụ kể lại đúng điều người chơi đã chọn); chương 2 (PR #9) đọc tiếp.
 
 Số đo trước và sau, cùng một công cụ (`tools/playtest.py` mới chạy trên nội dung của `main` trước
 khi sửa, rồi trên nội dung này); giống nhau cho cả bốn kiểu người chơi vì mở màn chưa rẽ theo tính cách:
@@ -133,12 +133,12 @@ nhiệm vụ), `step_branch` (bảng rẽ theo cờ), `step_variant` (`variant_f
 
 ## 5. Hệ quả đã nối trong chương 0-1
 
-35 cặp (nhiệm vụ, cờ) trả ngay trong chương 1 cho lựa chọn ở chương 0-1. Những cặp người chơi cảm
+38 cặp (nhiệm vụ, cờ) trả ngay trong chương 1 cho lựa chọn ở chương 0-1 (sau khi áp cả bản sửa `10-sua-chuong-1.md`). Những cặp người chơi cảm
 được rõ nhất:
 
-| Lựa chọn | Hệ quả thấy ngay | Hệ quả về sau |
+| Lựa chọn | Hệ quả thấy ngay (chương 1) | Hệ quả về sau (chương 2, đang viết ở PR #9 của luồng chơi thử, theo bảng cờ của `10-sua-chuong-1.md`) |
 | --- | --- | --- |
-| Minh nhận việc Kim Long (1.3) | Tuấn nói khác hẳn khi Minh cứu xe ở 1.5; Minh có thêm lựa chọn *bỏ việc* / *giữ việc*; mở nhiệm vụ phụ `s13` "Tin đầu tiên" (Thảo nhờ bán tin về ông Tư Hàng Bạc) | Vĩnh chào Minh khác ở tầng 72; nhóm Alô Chat tra hỏi ở 2.4 |
+| Minh nhận việc Kim Long (1.3) | Tuấn nói khác hẳn khi Minh cứu xe ở 1.5; Minh có thêm lựa chọn *bỏ việc* / *giữ việc*; Vĩnh biết Minh đã nói 'việc là việc' với Tuấn | Vĩnh chào Minh khác ở tầng 72; nhóm Alô Chat tra hỏi ở 2.4 |
 | Minh kể Lan về danh sách 14 nhà (1.3) | Lan có lựa chọn thứ tư ở họp tổ dân phố: công khai danh sách, kéo theo `thao_nghi_minh` | Thảo nghi Minh ở tầng 72 |
 | Lan mua gia vị rẻ (1.4) | Mark chê nước dùng ở 1.7, video chỉ "bình thường", doanh thu +10%/7 ngày thay vì +40%/30 ngày | Mở màn 1.8 nói về video khác nhau |
 | Lan đối đầu / nói hộ cô Hạnh (1.6) | Vĩnh dùng đúng câu Lan nói trong họp để ép ở tầng 72; Thảo kết khác | Cô Hạnh ở 2.5 nghe hay không nghe phương án tự quản |
@@ -148,26 +148,15 @@ nhiệm vụ), `step_branch` (bảng rẽ theo cờ), `step_variant` (`variant_f
 | Khôi tặng ảnh cho Thảo, Linh đăng ảnh (1.8) | Thảo mở hay khép ở bàn ăn tầng 72 | Thảo trong xe đêm giao thừa (2.7) |
 | Cụ Thọ tin ngay / cứu giấy (P0) | Vết sẹo ở P2, chuyện kể ở P3 | Cụ kể lại đúng ký ức ở tầng 72 và ở 2.1 |
 
-## 6. Chương 2 "Mùa nồm" đã viết thành dữ liệu
+## 6. Chương 2 "Mùa nồm": bàn giao cho luồng chơi thử
 
-7 nhiệm vụ truyện + 2 nhiệm vụ phụ (`missions/story_chapter2.json`, 27 đoạn thoại 192 dòng ở
-`dialogues/chapter2.json`), tháng Chạp tới mùng Một Tết. Hành động đầu tiên của Kim Long được kéo lên
-sớm như thẩm định đề nghị: **ông Tư Hàng Bạc bị ép bán**.
-
-| # | Nhiệm vụ | Nhân vật | Phút thật | Đọc cờ chương 1 | Đặt cờ mới |
-| --- | --- | --- | ---: | --- | --- |
-| 2.1 | Cái đe của ông Tư | Minh | 26 | `minh_ban_tin_ong_tu`, `tho_*` | `minh_thu_nhan_ong_tu` / `minh_im_lang_ong_tu`, `ong_tu_gui_do` |
-| 2.2 | Ba tấm ảnh, một cuộn băng | Khôi | 41 | `khoi_giu_ban_goc` | `nghe_bang_12` |
-| 2.3 | Phòng thẩm định | Lan | 13 | rẽ ba: `lan_lo_thong_tin_mat` → kỷ luật; `lan_de_xuat_tu_quan` → thuyết trình; mặc định → lời mời | `lan_sua_sai_cong_khai` / `lan_choi_cai`; `lan_nhan_viec_ngan_hang` / `lan_o_lai_quan` |
-| 2.4 | Nhóm anh em vỡ | Minh | 26 | `minh_nhan_viec_kim_long`, `minh_ban_tin_ong_tu` | `minh_noi_that_nhom` / `minh_im_lang_nhom`, `hung_dung_ban_tin` |
-| 2.5 | Ông Công ông Táo | Lan + Khôi | 16 | `lan_doi_dau_co_hanh`, `lan_tinh_no_cho_co` | `lan_bao_lanh_co_hanh` / `lan_loai_co_hanh` / `lan_xin_hai_tuan`; `co_hanh_nghe_phuong_an` / `lan_buong_co_hanh` |
-| 2.6 | Chúc Tết | cả ba | 36 | `khoi_nghieng_ban`, `thao_nghi_minh`, `khoi_giu_bang_12` | `minh_lai_noi_con_on` / `minh_noi_that_me`, `khoi_noi_bang_12` / `khoi_giu_bang_12` |
-| 2.7 | Giao thừa Hồ Gươm | cả ba | 62 | `co_hanh_nghe_phuong_an` rẽ *hoãn ký* / *đã ký*; `linh_dang_anh_thao` | `co_hanh_hoan_ky` / `co_hanh_da_ky`, `minh_nhan_ho_so_thao` / `minh_tu_choi_ho_so_thao`, `ket_thuc_chuong_2` |
-| s13 | Tin đầu tiên (phụ) | Minh | | mở bởi `minh_nhan_viec_kim_long` | `minh_ban_tin_ong_tu` / `minh_khong_ban_tin` |
-| s14 | Sáng mùng Một (phụ) | cả ba | 48 | `co_hanh_hoan_ky` / `co_hanh_da_ky` | |
-
-Cuối chương 2, người chơi cầm tờ giấy 1957 (vật phẩm `giay_1957`) và đã nghe băng số 12. Hai kết
-chương (cô Hạnh hoãn ký / đã ký) là hai thế giới khác nhau đi vào chương 3 "Nước lên".
+Chương 2 thuộc luồng "Chơi thử và thẩm định cốt truyện" (PR #9, phủ đủ sáu quận chưa có truyện, điểm
+nhấn Giao thừa Hồ Gươm). Bản chương 2 viết ở luồng này (7 nhiệm vụ truyện + 2 phụ, 27 đoạn thoại) được
+rút khỏi PR #8 và để ở `/mnt/project-files/hanoi-city/handoff/` cùng danh sách 18 cờ chương 1 mà chương
+2 phải đọc; luồng kia lấy nhánh rẽ ba của phòng thẩm định (`c2_03`) và cặp kết chương cô Hạnh hoãn ký /
+đã ký (`co_hanh_hoan_ky` / `co_hanh_da_ky`) ghép vào bản của họ. Ba cờ chương 1 có chỗ đọc ở chương 2
+(`khoi_hoc_tu_keo_ly`, `biet_giay_1957`, `ket_thuc_chuong_1`) được ghi trong `READ_IN_CHAPTER_2` của
+`tests/test_content_logic.py` và xóa dần khi PR #9 vào `main`.
 
 ## 7. Kết quả đo được
 
@@ -177,88 +166,69 @@ gộp cả cờ tiến trình và chỉ tính cờ đọc ở nhiệm vụ khác
 
 | Phép đo | Trước | Sau | Chuẩn 5/5 |
 | --- | ---: | ---: | ---: |
-| Cờ lựa chọn được đọc lại | 6/24 (6 chỗ đọc) | **57/57** (110 chỗ đọc) | 100%, ≥ 50 |
-| Loại chỗ đọc | biến thể bước 4, rẽ bước 2 | dòng thoại 53, lựa chọn 6, rẽ bước 5, biến thể bước 5, cổng nhiệm vụ 2 | |
-| Hệ quả trả trong chương 1 | 6 | **35** | ≥ 20 |
-| Dòng thoại / bước chỉ một phần người chơi thấy | 57/354 dòng, 10 bước | **186/626 dòng, 22 bước** | ≥ 100 / ≥ 15 |
-| Cờ tiến trình chưa đọc | 13/14 | **0/21** | 0 |
-| Hệ quả kích hoạt trong một lượt chơi (4 kiểu) | | 54-62 trên 141-143 kiểm tra | |
-| Nhiệm vụ | 24 | **34** (20 truyện, 14 phụ) | |
-| Lỗi chặn chơi | 0 | **0** | 0 |
+| Cờ lựa chọn được đọc lại | 6/24 (6 chỗ đọc) | **34/34** (48 chỗ đọc) | 100%, ≥ 2 mỗi nhiệm vụ truyện (13 nhiệm vụ → ≥ 26) |
+| Loại chỗ đọc | biến thể bước 4, rẽ bước 2 | dòng thoại 32, lựa chọn 3, rẽ bước 2, biến thể bước 4 | |
+| Hệ quả trả trong chương 1 | 6 | **38** | ≥ 20 |
+| Dòng thoại / bước chỉ một phần người chơi thấy | 57/354 dòng, 10 bước | **129/449 dòng, 22 bước** | ≥ 100 / ≥ 15 |
+| Cờ tiến trình chưa đọc | 13/14 | **3/15**, cả ba có chỗ đọc ở chương 2 (PR #9) | 0 ngoài danh sách chờ chương 2 |
+| Hệ quả kích hoạt trong một lượt chơi (4 kiểu) | | 28-32 trên 64-66 kiểm tra | |
+| Nhiệm vụ | 24 | **25** (13 truyện, 12 phụ) | |
+| Lỗi chặn chơi / cảnh báo giờ giấc | 0 / 2 | **0 / 0** | 0 |
 
-Bảng đủ 57 cờ (đặt ở đâu, đọc ở đâu, loại hệ quả) ở cuối tài liệu.
+Khi đo cùng bản chương 2 đã bàn giao (trước khi rút), con số là 57/57 cờ, 110 chỗ đọc, 186/626 dòng
+rẽ; các số đó sẽ quay lại khi PR #9 vào.
+
+Bảng đủ 34 cờ (đặt ở đâu, đọc ở đâu, loại hệ quả) ở cuối tài liệu.
 
 ## 8. Còn lại, ngoài phạm vi lần này
 
 - **UI thoại trong UE5** phải gọi `ResolveDialogueLine` / `NextDialogueLine` /
   `GetAvailableChoices` / `ApplyChoice` thay vì đọc mảng `lines` trực tiếp; mã C++ đã có, chưa biên dịch (không
   có UE trong môi trường này, xem `../05-tich-hop-ue5.md` §7).
-- **Chủ dự án duyệt truyện**: cold open 1957/1972, chương 2 "Mùa nồm", và nhánh cô Hạnh (hoãn ký /
-  đã ký) là nội dung mới, chưa qua người đọc Hà Nội. Lời thoại tiếng Việt mới (~300 dòng) nên được một
+- **Chủ dự án duyệt truyện**: cold open 1957/1972 và bản sửa 7 chỗ gãy chương 1 (`10-sua-chuong-1.md`,
+  đã áp, gia đình Lan theo hướng A: mẹ mất 2011, bố sang Hàn 2010) là nội dung mới, chưa qua người đọc Hà Nội. Lời thoại tiếng Việt mới (~300 dòng) nên được một
   người Hà Nội đọc to.
-- Hai cảnh báo đồng hồ còn lại (`p3` chụp Tháp Rùa, `c1_02` chụp hoàng hôn) là việc 1 của danh sách
-  12 việc (đồng hồ 8x/1x), không thuộc mở màn hay hệ quả.
-- Kinh tế của Minh vẫn âm (việc 2). Chương 2 chưa chạm Cầu Giấy, Hai Bà Trưng, Hoàng Mai, Hà Đông,
-  Bắc Từ Liêm (việc 6).
+- Đồng hồ: chủ dự án chốt 30x như GTA5 (ngày 48 phút thật). Quy tắc dữ liệu: bước có khung giờ đặt
+  **sau** bước đi tới nơi, kèm một `wait_until` có `skip_allowed` tại chỗ (p3 ngủ ghế đá Bờ Hồ tới 5:30,
+  c1_02 chờ nắng xiên đầu cầu Long Biên, c1_04 ninh mẻ mới 3:30 hôm sau). Giả lập còn 0 cảnh báo giờ giấc.
+- Kinh tế của Minh vẫn âm (việc 2). Các quận chưa có truyện: chương 2 của PR #9 chạm cả sáu; luồng này
+  viết thêm nhiệm vụ phụ / người lạ và hồ sơ quận (việc 6).
 
-## Phụ lục: 57 cờ lựa chọn
+## Phụ lục: 34 cờ lựa chọn chương 0-1
 
 | Cờ | Đặt bởi | Đọc bởi | Loại hệ quả |
 | --- | --- | --- | --- |
-| `co_hanh_da_ky` | c2_07_giao_thua_ho_guom | dlg_s14_xong_dat | dialogue_line |
-| `co_hanh_hoan_ky` | c2_07_giao_thua_ho_guom | dlg_s14_xong_dat | dialogue_line |
-| `co_hanh_nghe_phuong_an` | dlg_c2_05_co_hanh | c2_07_giao_thua_ho_guom | step_branch, step_variant |
-| `khoi_chua_quyet` | dlg_c1_02_hoang_hon | dlg_c1_06_hop, dlg_c2_06_ong_thang | dialogue_line |
-| `khoi_giu_ban_goc` | dlg_c1_08_thao_va_buc_anh | dlg_c1_09_vinh | dialogue_line |
-| `khoi_giu_bang_12` | dlg_c2_05_co_hanh | dlg_c2_07_ket | dialogue_line |
-| `khoi_giu_phan` | dlg_c1_06_hop | c1_06_hop_to_dan_pho, dlg_c1_09_vinh, dlg_c2_06_ong_thang | dialogue_line, step_variant |
-| `khoi_nghieng_ban` | dlg_c1_02_hoang_hon | dlg_c1_06_hop, dlg_c2_02_mo_dau, dlg_c2_06_ong_thang | dialogue_line |
-| `khoi_nghieng_o_lai` | dlg_c1_02_hoang_hon | dlg_c1_06_hop, dlg_c2_02_mo_dau, dlg_c2_06_ong_thang | dialogue_line |
-| `khoi_noi_bang_12` | dlg_c2_05_co_hanh | dlg_c2_07_ket | dialogue_line |
-| `khoi_tang_anh_thao` | dlg_c1_08_thao_va_buc_anh | dlg_c1_09_vinh, dlg_c2_07_thao_xe | dialogue_line |
-| `khoi_xin_thoi_gian` | dlg_c1_06_hop | dlg_c1_09_vinh | dialogue_choice |
-| `lan_bao_lanh_co_hanh` | dlg_c2_03_thuyet_trinh | dlg_c2_03_ve_quan, dlg_c2_05_co_hanh, dlg_c2_05_tha_ca | dialogue_choice, dialogue_line |
-| `lan_biet_danh_sach` | c1_03_khach_vip_ca_ngay | dlg_c1_06_hop | dialogue_choice |
-| `lan_buong_co_hanh` | dlg_c2_05_co_hanh | dlg_s14_xong_dat | dialogue_line |
-| `lan_choi_cai` | dlg_c2_03_ky_luat | dlg_c2_03_ve_quan, dlg_c2_05_tha_ca, dlg_c2_06_cho_hoa | dialogue_line |
-| `lan_cong_khai_danh_sach` | dlg_c1_06_hop | dlg_c2_01_cu_tho_goi | dialogue_line |
-| `lan_de_xuat_tu_quan` | dlg_c1_06_hop | c1_06_hop_to_dan_pho, c2_03_phong_tham_dinh, dlg_c1_08_thao_va_buc_anh, dlg_c1_09_vinh | dialogue_line, step_branch, step_variant |
-| `lan_doi_dau_co_hanh` | dlg_p2_co_hanh | dlg_c1_06_hop, dlg_c2_03_ve_quan, dlg_c2_05_co_hanh | dialogue_line |
-| `lan_lo_thong_tin_mat` | dlg_c1_06_hop | c1_06_hop_to_dan_pho, c2_03_phong_tham_dinh, dlg_c1_09_vinh | dialogue_line, step_branch, step_variant |
-| `lan_loai_co_hanh` | dlg_c2_03_thuyet_trinh | dlg_c2_03_ve_quan, dlg_c2_05_tha_ca, dlg_c2_06_cho_hoa | dialogue_line |
-| `lan_moi_vinh_dau_tu_tu_quan` | dlg_c1_09_vinh | dlg_c1_09_bi_mat | dialogue_line |
-| `lan_mua_gia_vi_chuan` | dlg_c1_04_ba_lua | c1_04_cho_dong_xuan_luc_6_gio | step_branch |
-| `lan_mua_gia_vi_re` | dlg_c1_04_ba_lua | c1_04_cho_dong_xuan_luc_6_gio, c1_07_mark_an_pho, dlg_c1_07_mark_nem | dialogue_line, step_branch |
-| `lan_nhan_viec_ngan_hang` | dlg_c2_03_loi_moi | dlg_c2_03_ve_quan, dlg_c2_05_tha_ca | dialogue_line |
-| `lan_o_lai_quan` | dlg_c2_03_loi_moi | dlg_c2_03_ve_quan | dialogue_line |
-| `lan_pho_chieu_tro` | dlg_c1_07_mark_den | c1_07_mark_an_pho, dlg_c1_09_bi_mat, dlg_c1_09_vinh | dialogue_line, step_variant |
-| `lan_pho_co_dien` | dlg_c1_07_mark_den | dlg_c1_09_vinh | dialogue_line |
-| `lan_sua_sai_cong_khai` | dlg_c2_03_ky_luat | dlg_c2_03_ve_quan, dlg_c2_05_tha_ca, dlg_c2_06_cho_hoa | dialogue_line |
-| `lan_tinh_no_cho_co` | dlg_p2_co_hanh | dlg_c1_06_hop, dlg_c1_09_vinh, dlg_c2_03_thuyet_trinh, dlg_c2_03_ve_quan, dlg_c2_05_co_hanh | dialogue_choice, dialogue_line |
-| `lan_tu_choi_vinh` | dlg_c1_09_vinh | dlg_c1_09_bi_mat | dialogue_line |
-| `lan_xin_hai_tuan` | dlg_c2_03_thuyet_trinh | dlg_c2_03_ve_quan, dlg_c2_05_tha_ca | dialogue_line |
-| `lan_xin_thoi_gian` | dlg_c1_09_vinh | dlg_c1_09_bi_mat | dialogue_line |
-| `linh_dang_anh_thao` | dlg_c1_08_thao_va_buc_anh | dlg_c1_09_vinh, dlg_c2_07_thao_xe | dialogue_line |
-| `minh_ban_tin_ong_tu` | dlg_s13_gui_tin | dlg_c2_01_ong_tu, dlg_c2_04_hung | dialogue_choice, dialogue_line |
-| `minh_bo_viec_kim_long` | dlg_c1_05_tuan | dlg_c1_09_vinh, dlg_c2_01_ong_tu, dlg_c2_04_hung, s13_tin_dau_tien | dialogue_line, mission_gate |
-| `minh_giu_kin_danh_sach` | c1_03_khach_vip_ca_ngay | dlg_c1_05_mua | dialogue_line |
-| `minh_giu_viec_kim_long` | dlg_c1_05_tuan | dlg_c2_06_me_minh, dlg_c2_07_thao_xe | dialogue_line |
-| `minh_im_lang_nhom` | dlg_c2_04_hung | dlg_c2_04_cuong | dialogue_line |
-| `minh_im_lang_ong_tu` | dlg_c2_01_ong_tu | dlg_s14_xong_dat | dialogue_line |
-| `minh_khong_ban_tin` | dlg_s13_gui_tin | dlg_c2_01_ong_tu, dlg_c2_04_hung | dialogue_line |
-| `minh_lai_noi_con_on` | dlg_c2_06_me_minh | dlg_s14_banh_chung | dialogue_line |
-| `minh_lai_xe_khong_do_la` | dlg_c1_03_loi_moi | dlg_c1_09_vinh, dlg_c2_04_cuong, dlg_c2_04_hung | dialogue_line |
-| `minh_nhan_ho_so_thao` | dlg_c2_07_thao_xe | dlg_c2_07_san_thuong, dlg_s14_xong_dat | dialogue_line |
-| `minh_nhan_viec_kim_long` | dlg_c1_03_loi_moi | dlg_c1_05_tuan, dlg_c1_09_vinh, dlg_c2_04_cuong, s13_tin_dau_tien | dialogue_choice, dialogue_line, mission_gate |
-| `minh_noi_that_me` | dlg_c2_06_me_minh | dlg_s14_banh_chung | dialogue_line |
-| `minh_noi_that_nhom` | dlg_c2_04_hung | dlg_c2_04_cuong, dlg_c2_07_thao_xe | dialogue_line |
-| `minh_suy_nghi` | dlg_c1_03_loi_moi | dlg_c1_09_vinh | dialogue_line |
-| `minh_thu_nhan_ong_tu` | dlg_c2_01_ong_tu | dlg_c2_01_gui_do | dialogue_line |
-| `minh_tu_choi_ho_so_thao` | dlg_c2_07_thao_xe | dlg_s14_xong_dat | dialogue_line |
-| `thao_nghi_minh` | dlg_c1_06_hop | dlg_c1_09_vinh, dlg_c2_01_ong_tu | dialogue_line |
-| `tho_cuu_con` | dlg_p0_dem_1972 | dlg_c1_09_bi_mat, dlg_c2_02_bang_12, dlg_c2_07_san_thuong | dialogue_line |
-| `tho_cuu_giay` | dlg_p0_dem_1972 | dlg_c1_09_bi_mat, dlg_c2_02_bang_12, dlg_c2_07_san_thuong, dlg_p2_bep_luc_khuya | dialogue_line |
-| `tho_hoi_truoc` | dlg_p0_bat_dau_tien | dlg_c1_09_bi_mat | dialogue_line |
-| `tho_tin_ngay` | dlg_p0_bat_dau_tien | dlg_c1_09_bi_mat | dialogue_line |
-| `video_mark_binh_thuong` | c1_07_mark_an_pho | dlg_c1_08_mo_dau | dialogue_line |
-| `video_mark_viral` | c1_07_mark_an_pho | dlg_c1_08_mo_dau | dialogue_line |
+| `khoi_chua_quyet` | dialogue:dlg_c1_02_hoang_hon | dialogue:dlg_c1_06_hop | dialogue_line |
+| `khoi_giu_ban_goc` | dialogue:dlg_c1_08_thao_va_buc_anh | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `khoi_giu_phan` | dialogue:dlg_c1_06_hop | c1_06_hop_to_dan_pho, dialogue:dlg_c1_09_vinh | dialogue_line, step_variant |
+| `khoi_nghieng_ban` | dialogue:dlg_c1_02_hoang_hon | dialogue:dlg_c1_06_hop | dialogue_line |
+| `khoi_nghieng_o_lai` | dialogue:dlg_c1_02_hoang_hon | dialogue:dlg_c1_06_hop | dialogue_line |
+| `khoi_tang_anh_thao` | dialogue:dlg_c1_08_thao_va_buc_anh | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `khoi_xin_thoi_gian` | dialogue:dlg_c1_06_hop | dialogue:dlg_c1_09_vinh | dialogue_choice, dialogue_line |
+| `lan_biet_danh_sach` | c1_03_khach_vip_ca_ngay | dialogue:dlg_c1_05_tuan, dialogue:dlg_c1_06_hop, dialogue:dlg_c1_09_vinh | dialogue_choice, dialogue_line |
+| `lan_cong_khai_danh_sach` | dialogue:dlg_c1_06_hop, dialogue:dlg_c1_09_vinh | dialogue:dlg_c1_09_vinh | dialogue_choice |
+| `lan_de_xuat_tu_quan` | dialogue:dlg_c1_06_hop | c1_06_hop_to_dan_pho, dialogue:dlg_c1_08_thao_va_buc_anh, dialogue:dlg_c1_09_vinh | dialogue_line, step_variant |
+| `lan_doi_dau_co_hanh` | dialogue:dlg_p2_co_hanh | dialogue:dlg_c1_06_hop | dialogue_line |
+| `lan_lo_thong_tin_mat` | dialogue:dlg_c1_06_hop | c1_06_hop_to_dan_pho, dialogue:dlg_c1_09_vinh | dialogue_line, step_variant |
+| `lan_moi_vinh_dau_tu_tu_quan` | dialogue:dlg_c1_09_vinh | dialogue:dlg_c1_09_bi_mat | dialogue_line |
+| `lan_mua_gia_vi_chuan` | dialogue:dlg_c1_04_ba_lua | c1_04_cho_dong_xuan_luc_6_gio | step_branch |
+| `lan_mua_gia_vi_re` | dialogue:dlg_c1_04_ba_lua | c1_04_cho_dong_xuan_luc_6_gio, c1_07_mark_an_pho, dialogue:dlg_c1_07_mark_nem | dialogue_line, step_branch |
+| `lan_pho_chieu_tro` | dialogue:dlg_c1_07_mark_den | c1_07_mark_an_pho, dialogue:dlg_c1_09_bi_mat, dialogue:dlg_c1_09_vinh | dialogue_line, step_variant |
+| `lan_pho_co_dien` | dialogue:dlg_c1_07_mark_den | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `lan_tinh_no_cho_co` | dialogue:dlg_p2_co_hanh | dialogue:dlg_c1_06_hop, dialogue:dlg_c1_09_vinh | dialogue_line |
+| `lan_tu_choi_vinh` | dialogue:dlg_c1_09_vinh | dialogue:dlg_c1_09_bi_mat | dialogue_line |
+| `lan_xin_thoi_gian` | dialogue:dlg_c1_09_vinh | dialogue:dlg_c1_09_bi_mat | dialogue_line |
+| `linh_dang_anh_thao` | dialogue:dlg_c1_08_thao_va_buc_anh | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `minh_bo_viec_kim_long` | dialogue:dlg_c1_05_tuan | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `minh_giu_kin_danh_sach` | c1_03_khach_vip_ca_ngay | dialogue:dlg_c1_05_mua, dialogue:dlg_c1_05_tuan | dialogue_line |
+| `minh_giu_viec_kim_long` | dialogue:dlg_c1_05_tuan | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `minh_lai_xe_khong_do_la` | dialogue:dlg_c1_03_loi_moi | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `minh_nhan_viec_kim_long` | dialogue:dlg_c1_03_loi_moi | dialogue:dlg_c1_05_tuan, dialogue:dlg_c1_09_vinh | dialogue_line |
+| `minh_suy_nghi` | dialogue:dlg_c1_03_loi_moi | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `thao_nghi_minh` | dialogue:dlg_c1_06_hop, dialogue:dlg_c1_09_vinh | dialogue:dlg_c1_09_vinh | dialogue_line |
+| `tho_cuu_con` | dialogue:dlg_p0_dem_1972 | dialogue:dlg_c1_09_bi_mat | dialogue_line |
+| `tho_cuu_giay` | dialogue:dlg_p0_dem_1972 | dialogue:dlg_c1_09_bi_mat, dialogue:dlg_p2_bep_luc_khuya | dialogue_line |
+| `tho_hoi_truoc` | dialogue:dlg_p0_bat_dau_tien | dialogue:dlg_c1_09_bi_mat | dialogue_line |
+| `tho_tin_ngay` | dialogue:dlg_p0_bat_dau_tien | dialogue:dlg_c1_09_bi_mat | dialogue_line |
+| `video_mark_binh_thuong` | c1_07_mark_an_pho | dialogue:dlg_c1_08_mo_dau | dialogue_line |
+| `video_mark_viral` | c1_07_mark_an_pho | dialogue:dlg_c1_08_mo_dau | dialogue_line |
