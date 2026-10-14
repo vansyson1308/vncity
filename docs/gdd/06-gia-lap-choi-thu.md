@@ -4,21 +4,21 @@ Sinh tự động bởi `tools/playtest.py`: đi qua toàn bộ nhiệm vụ nh�
 
 ## Kết quả nhanh
 
-- Nhiệm vụ: 25 (13 cốt truyện, 12 phụ). Không chơi tới được: không có.
-- Lỗi logic chặn chơi: **0**. Cảnh báo (thời gian, khoảng cách): 0. Lựa chọn chưa có hệ quả: 5.
-- Quận cốt truyện đi qua: 8/14 (ba_dinh, dong_da, hoan_kiem, long_bien, my_dinh, pho_co, tay_ho, thanh_xuan). Chưa bao giờ tới: bac_tu_liem, cau_giay, gia_lam, ha_dong, hai_ba_trung, hoang_mai.
-- Địa danh dùng trong nhiệm vụ: 10/84. Nhân vật gặp qua thoại: 30/49.
+- Nhiệm vụ: 61 (21 cốt truyện, 40 phụ). Không chơi tới được: không có.
+- Lỗi logic chặn chơi: **0**. Cảnh báo (thời gian, khoảng cách): 0. Lựa chọn chưa có hệ quả: 3.
+- Quận cốt truyện đi qua: 14/14 (ba_dinh, bac_tu_liem, cau_giay, dong_da, gia_lam, ha_dong, hai_ba_trung, hoan_kiem, hoang_mai, long_bien, my_dinh, pho_co, tay_ho, thanh_xuan). Chưa bao giờ tới: không.
+- Địa danh dùng trong nhiệm vụ: 36/84. Nhân vật gặp qua thoại: 57/70.
 
 ## Mỗi kiểu người chơi
 
 | Kiểu | Ngày game | Giờ chơi thật | Nhiệm vụ xong | Tiền Minh | Tiền Lan | Tiền Khôi | Km đi |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| tu_te | 90 | 63.3 h | 25 | 3.8 tr | 106.4 tr | 77.6 tr | 138 |
-| lieu | 120 | 86.8 h | 24 | -1.9 tr | 150.8 tr | 92.6 tr | 135 |
-| toi_uu_tien | 90 | 63.3 h | 25 | 3.8 tr | 106.4 tr | 77.6 tr | 138 |
-| ngau_nhien | 90 | 63.8 h | 25 | 3.9 tr | 106.4 tr | 77.6 tr | 144 |
+| tu_te | 101 | 50.1 h | 60 | 10.6 tr | 41.8 tr | 58.6 tr | 569 |
+| lieu | 120 | 64.8 h | 59 | 2.3 tr | 76.4 tr | 69.1 tr | 548 |
+| toi_uu_tien | 101 | 50.0 h | 61 | 15.6 tr | 41.8 tr | 62.1 tr | 564 |
+| ngau_nhien | 105 | 49.9 h | 60 | -6.6 tr | 41.6 tr | 61.6 tr | 558 |
 
-Mục tiêu tiền lớn (GDD): tiệm Đức Còi 120 tr, cà phê trứng 450 tr, phần nhà cô Hạnh 3 tỷ. Sau toàn bộ nội dung đã viết (mở đầu + chương 1 + 12 nhiệm vụ phụ) Minh có khoảng 4 tr: còn xa mục tiêu đầu tiên, nghĩa là vòng lặp làm việc tự do phải gánh phần lớn tiến trình, đúng với thiết kế nhưng chương 2-5 cần các cú hích tiền từ truyện.
+Mục tiêu tiền lớn (GDD): tiệm Đức Còi 120 tr, cà phê trứng 450 tr, phần nhà cô Hạnh 3 tỷ. Sau toàn bộ nội dung đã viết (mở đầu + chương 1 + 12 nhiệm vụ phụ) Minh có khoảng 11 tr: còn xa mục tiêu đầu tiên, nghĩa là vòng lặp làm việc tự do phải gánh phần lớn tiến trình, đúng với thiết kế nhưng chương 2-5 cần các cú hích tiền từ truyện.
 
 ## Kinh tế của Minh theo số liệu GDD
 
@@ -44,30 +44,28 @@ Chuẩn 5/5 (docs/gdd/07): cầm lái trước phút 1, lựa chọn đầu trư
 
 ## Hệ quả lựa chọn
 
-- Cờ do lựa chọn đặt: **34**, được đọc lại: **34** (100%), tổng 48 chỗ đọc. Chưa đọc: không.
-- Loại hệ quả: dialogue_choice 3, dialogue_line 32, step_branch 2, step_variant 4.
-- Cờ tiến trình (không do lựa chọn): 15, chưa đọc: biet_giay_1957, ket_thuc_chuong_1, khoi_hoc_tu_keo_ly.
-- Hệ quả trả ngay trong chương 1 cho lựa chọn chương 0-1: 38 cặp (nhiệm vụ, cờ).
-- Độ phân nhánh giữa các kiểu người chơi: 129/449 dòng thoại và 22 bước chỉ một phần người chơi thấy.
+- Cờ do lựa chọn đặt: **113**, được đọc lại: **113** (100%), tổng 220 chỗ đọc. Chưa đọc: không.
+- Loại hệ quả: dialogue_choice 8, dialogue_line 111, mission_gate 2, step_branch 10, step_variant 4.
+- Cờ tiến trình (không do lựa chọn): 22, chưa đọc: da_xong_dat.
+- Hệ quả trả ngay trong chương 1 cho lựa chọn chương 0-1: 40 cặp (nhiệm vụ, cờ).
+- Độ phân nhánh giữa các kiểu người chơi: 359/1084 dòng thoại và 45 bước chỉ một phần người chơi thấy.
 | Kiểu | Hệ quả kiểm tra | Đã kích hoạt | Cờ lựa chọn đã trả |
 | --- | --- | --- | --- |
-| tu_te | 64 | 28 | 19 |
-| lieu | 65 | 32 | 20 |
-| toi_uu_tien | 66 | 31 | 20 |
-| ngau_nhien | 64 | 31 | 18 |
+| tu_te | 215 | 99 | 55 |
+| lieu | 226 | 101 | 56 |
+| toi_uu_tien | 221 | 101 | 57 |
+| ngau_nhien | 223 | 99 | 53 |
 
 ## Nhịp chơi
 
-- 141 bước trong 25 nhiệm vụ: 65 bước thoại/cắt cảnh (46%), 49 bước hành động (34%: lái, giao, minigame, nấu, chụp), 6 bước lựa chọn tường minh.
-- Nhiệm vụ dài nhất: c1_03_khach_vip_ca_ngay (59 phút thật); ngắn nhất: s04_thach_dau_khong_gps (4 phút). GTA5 thường 15-40 phút một nhiệm vụ truyện; các nhiệm vụ dưới 8 phút nên gộp hoặc thêm đoạn chơi.
+- 335 bước trong 61 nhiệm vụ: 157 bước thoại/cắt cảnh (46%), 125 bước hành động (37%: lái, giao, minigame, nấu, chụp), 13 bước lựa chọn tường minh.
+- Nhiệm vụ dài nhất: c2_06_cho_hoa_hang_luoc (111 phút thật); ngắn nhất: s04_thach_dau_khong_gps (4 phút). GTA5 thường 15-40 phút một nhiệm vụ truyện; các nhiệm vụ dưới 8 phút nên gộp hoặc thêm đoạn chơi.
 
 ## Lựa chọn chưa có hệ quả
 
 - flag 'ho_so_sach_90_ngay' is set by the runtime (90 game days without a traffic violation (docs/gdd/02-he-thong.md)), required by ['s12_mu_bao_hiem_cho_be']
-- flag 'minh_nghe_dien_thoai_khi_lai' is set by the runtime (gameplay: the player answered the phone while riding in c1_05 (docs/gdd/10 M2)), required by ['c1_05_mua_ngap_pho', 'dialogue:dlg_c1_05_mua']
-- flag 'biet_giay_1957' set by ['c1_09_bua_toi_tang_72'] is never read (choice without consequence yet)
-- flag 'ket_thuc_chuong_1' set by ['c1_09_bua_toi_tang_72'] is never read (choice without consequence yet)
-- flag 'khoi_hoc_tu_keo_ly' set by ['c1_08_pho_di_bo_toi_thu_bay'] is never read (choice without consequence yet)
+- flag 'minh_nghe_dien_thoai_khi_lai' is set by the runtime (gameplay: the player answered the phone while riding in c1_05 (docs/gdd/10 M2)), required by ['c1_05_mua_ngap_pho', 'dialogue:dlg_c1_05_mua', 'dialogue:dlg_c2_03_hai', 'q_md_02_dem_doi_tuyen']
+- flag 'da_xong_dat' set by ['c2_08_xong_dat'] is never read (choice without consequence yet)
 
 ## Dòng thời gian (kiểu tử tế)
 
@@ -86,15 +84,50 @@ Chuẩn 5/5 (docs/gdd/07): cầm lái trước phút 1, lựa chọn đầu trư
 | 20 | 15.2 | c1_07_mark_an_pho | lan | 12.5 | success (bỏ qua: viral_vua) |
 | 22 | 3.7 | c1_08_pho_di_bo_toi_thu_bay | khoi | 17.4 | success |
 | 24 | 23.0 | c1_09_bua_toi_tang_72 | khoi | 56.0 | success |
-| 27 | 10.4 | s01_la_dong_cho_ba_tam | minh | 10.7 | success |
-| 28 | 2.2 | s02_ky_thu_bo_ho | khoi | 22.5 | success |
-| 28 | 7.9 | s03_mark_qua_duong | khoi | 10.8 | success |
-| 28 | 18.6 | s04_thach_dau_khong_gps | minh | 3.6 | success |
-| 29 | 7.8 | s05_anh_cuoi_cau_long_bien | khoi | 5.5 | success |
-| 30 | 22.5 | s06_dieu_sao_bai_giua | minh | 13.0 | success |
-| 31 | 13.6 | s07_xe_chet_may_sau_mua | minh | 9.0 | success |
-| 32 | 4.6 | s08_tem_phieu_bao_cap | lan | 30.0 | success |
-| 32 | 8.1 | s09_bien_hieu_hang_thiec | khoi | 5.5 | success |
-| 33 | 6.4 | s10_vong_ho_tay_luc_5_gio | minh | 44.5 | success |
-| 34 | 3.6 | s11_cu_ba_lac_duong | minh | 14.9 | success |
-| 90 | 16.2 | s12_mu_bao_hiem_cho_be | minh | 12.8 | success |
+| 27 | 20.4 | c2_01_bang_so_12 | khoi | 24.5 | success (bỏ qua: ga_sai_nang, cho_sang_ga, cho_hom_mai, kim_lien_mai) |
+| 30 | 13.2 | c2_02_ngan_hang_cu_goi | lan | 46.7 | success (bỏ qua: thuyet_trinh, hoi_dap, hoi_dap_truot) |
+| 32 | 4.6 | c2_03_danh_sach_thu_hai | minh | 45.3 | success |
+| 34 | 21.9 | c2_04_giay_uy_quyen | minh | 27.8 | success (bỏ qua: goi_cuong, goi_thao) |
+| 40 | 12.7 | c2_05_ong_cong_ong_tao | lan | 110.4 | success (bỏ qua: tra_them) |
+| 45 | 5.6 | c2_06_cho_hoa_hang_luoc | khoi | 110.8 | success (bỏ qua: hang_luoc_mai, chup_minh_lai) |
+| 51 | 1.0 | c2_07_giao_thua_ho_guom | minh | 22.3 | success (bỏ qua: sua_mam, chup_lai_phao) |
+| 54 | 6.8 | c2_08_xong_dat | minh | 22.1 | success (bỏ qua: khoi_xong) |
+| 59 | 5.5 | s13_hoa_tet_tay_tuu | minh | 74.6 | success |
+| 61 | 9.5 | q_btl_01_cuc_ram_thang_bay | minh | 41.4 | success (bỏ qua: chay_duong_32) |
+| 62 | 2.1 | q_btl_02_nuoc_len_dinh_chem | khoi | 33.3 | success (bỏ qua: chup_lai) |
+| 63 | 3.8 | q_btl_03_ga_nhon_di_lam | lan | 44.1 | success (bỏ qua: cam_lai) |
+| 63 | 18.9 | q_cg_01_hoa_hong_chua_ha | minh | 10.9 | success |
+| 64 | 18.7 | q_cg_02_anh_nha_rong | khoi | 5.5 | success |
+| 65 | 18.2 | q_cg_03_bai_bao_xe_om | minh | 7.4 | success |
+| 67 | 21.1 | q_gl_01_sau_muoi_bat | minh | 58.8 | success |
+| 68 | 15.3 | q_hbt_01_tap_de_cho_hom | lan | 8.0 | success |
+| 69 | 2.5 | q_hbt_02_cuon_vai_bach_khoa | minh | 9.4 | success |
+| 70 | 0.6 | q_hbt_03_dem_hoa_sua | khoi | 6.0 | success |
+| 71 | 11.2 | q_hd_01_tau_cuoi_yen_nghia | minh | 14.6 | success |
+| 73 | 1.7 | q_hd_02_lua_that_lua_gia | lan | 33.4 | success (bỏ qua: thu_lai) |
+| 74 | 6.9 | q_hd_03_anh_cho_shop_lua | khoi | 33.9 | success |
+| 76 | 1.3 | q_hd_04_so_khach_quen | minh | 28.7 | success |
+| 76 | 11.8 | q_hm_01_rau_den_lu | lan | 21.0 | success (bỏ qua: tra_du) |
+| 78 | 8.2 | q_gl_02_ve_bat_pho_tho | lan | 31.8 | success (bỏ qua: ve_lai) |
+| 79 | 22.2 | q_gl_03_tuong_than_to_ong | khoi | 31.4 | success (bỏ qua: chup_lai) |
+| 81 | 17.2 | q_hm_02_thang_may_hong | minh | 30.8 | success |
+| 82 | 8.5 | q_hm_03_dieu_yen_so | khoi | 30.6 | success (bỏ qua: chup_lai) |
+| 83 | 17.8 | q_md_01_ben_xe_5_gio_sang | minh | 25.5 | success (bỏ qua: cho_dung) |
+| 85 | 14.1 | q_md_02_dem_doi_tuyen | minh | 72.8 | success (bỏ qua: ve_som) |
+| 86 | 5.8 | q_tx_01_tang_tien_tro | minh | 5.1 | success (bỏ qua: sua_bom, goi_duc) |
+| 87 | 16.5 | q_tx_02_song_to_lich | khoi | 23.6 | success (bỏ qua: chup_lai) |
+| 89 | 7.4 | q_md_03_bao_tang_ha_noi | khoi | 27.2 | success |
+| 90 | 1.6 | q_tx_03_san_bang_royal | lan | 21.2 | success (bỏ qua: nem_lai) |
+| 91 | 14.5 | q_md_04_khai_mac | lan | 26.2 | success |
+| 93 | 10.4 | s01_la_dong_cho_ba_tam | minh | 10.7 | success |
+| 94 | 2.2 | s02_ky_thu_bo_ho | khoi | 22.5 | success |
+| 94 | 7.9 | s03_mark_qua_duong | khoi | 10.8 | success |
+| 94 | 18.6 | s04_thach_dau_khong_gps | minh | 3.6 | success |
+| 95 | 7.8 | s05_anh_cuoi_cau_long_bien | khoi | 5.5 | success |
+| 96 | 22.5 | s06_dieu_sao_bai_giua | minh | 13.0 | success |
+| 97 | 13.6 | s07_xe_chet_may_sau_mua | minh | 9.0 | success |
+| 98 | 4.6 | s08_tem_phieu_bao_cap | lan | 30.0 | success |
+| 98 | 8.1 | s09_bien_hieu_hang_thiec | khoi | 5.5 | success |
+| 99 | 6.4 | s10_vong_ho_tay_luc_5_gio | minh | 44.5 | success |
+| 100 | 3.6 | s11_cu_ba_lac_duong | minh | 14.9 | success |
+| 101 | 16.2 | s12_mu_bao_hiem_cho_be | minh | 12.8 | success |
