@@ -5,7 +5,7 @@ Thư mục `unity/` là "khung" dự án Unity cho Hanoi City, song song với `
 CSV, `traffic/graph.json`) và chạy **cùng luật** nhiệm vụ, thoại, cờ, phạt CSGT. Khác với `ue5/`:
 
 * Phần lõi C# không phụ thuộc Unity, nên **đã được biên dịch và chạy test thật** trong cloud
-  bằng .NET 8 (107 test, gồm chạy tự động hết 62 nhiệm vụ thật). CI chạy lại mỗi lần đẩy code.
+  bằng .NET 8 (108 test, gồm chạy tự động hết 62 nhiệm vụ thật). CI chạy lại mỗi lần đẩy code.
 * Phần dính vào Unity (MonoBehaviour, editor, import glTF) **đã biên dịch thử** với thư viện tham
   chiếu của Unity 2021.3 (không có Unity 6 trong cloud) và **chưa chạy trong Unity lần nào**.
   Danh sách kiểm tra ở mục 6.
@@ -145,7 +145,7 @@ Hub báo phiên bản trong `ProjectVersion.txt` khác bản đã cài thì ch�
 * Menu **Tools > Hanoi City** có các mục Run Full Setup, Copy Runtime Data, Validate Content,
   Import City Tiles, Import PCG Points, Spawn Verify Markers.
 * Window > General > **Test Runner** > EditMode: nhóm `HanoiCity.Core.Tests` chạy hết, xanh
-  (cùng 107 test như CI).
+  (cùng 108 test như CI).
 
 **Khi đổi schema:** chạy lại `tools/codegen_unity.py`, quay lại Unity, chờ biên dịch lại. Không
 sửa tay `HanoiContentTypes.cs`.
@@ -292,7 +292,7 @@ Cùng feed với UE: `python -m live.weather --serve 8765` phục vụ
 
 ## 7. Độ chính xác đã kiểm bằng test (không cần Unity)
 
-`dotnet test unity/dotnet` (CI job `unity-core`), 107 test:
+`dotnet test unity/dotnet` (CI job `unity-core`), 108 test:
 
 * Nội dung: mọi file `game/content` nạp chặt vào lớp sinh tự động, số dòng khớp JSON gốc; khoá lạ
   và enum sai bị từ chối; danh sách khoá `params` runtime khớp `x-consumer: runtime` của schema.
@@ -314,8 +314,9 @@ Cùng feed với UE: `python -m live.weather --serve 8765` phục vụ
 * **Kỹ năng lưu theo từng nhân vật** (Minh lái xe giỏi không làm Lan lái xe giỏi); UE lưu một
   bảng chung. `min_skills` đọc kỹ năng của nhân vật đang điều khiển.
 * **`deadline_hour` bắt đầu đúng giờ hạn** (ví dụ nhận nhiệm vụ lúc 07:00, hạn 7 giờ sáng) tính là
-  24 giờ, không phải 0. UE (`HanoiMissionSubsystem.cpp`, `FMath::Fmod`) cho 0 nên nhiệm vụ
-  `s09_bien_hieu_hang_thiec` thất bại ngay nếu nhận đúng 07:00: cần sửa một dòng bên UE.
+  24 giờ, không phải 0. Đây không còn là khác biệt: PR này sửa cả bên UE
+  (`HanoiMissionSubsystem.cpp`), trước đó `s09_bien_hieu_hang_thiec` thất bại ngay nếu nhận đúng 07:00.
+  Test `test_deadline_at_its_own_hour_means_tomorrow_in_both_engines` giữ hai bên cùng luật.
 * Lịch sự kiện (`WorldEventCalendar`) tự bật `events` theo ngày; `SetWorldEventActive` vẫn ghi đè
   bằng tay. UE chỉ có bật tay.
 * Hệ thống mới chỉ có ở đây: sự kiện ngẫu nhiên, sưu tầm và băng, kinh tế, hoá đơn tháng.
@@ -348,4 +349,3 @@ menu/script trong `Editor/` (lặp lại được), không thao tác tay trong s
 3. **Giao thông**: ECS (Entities) hoặc job system đọc `HanoiTrafficGraph`, tỉ lệ xe máy theo quận.
 4. **UI**: nối `Missions.StepStarted`, `ChoiceRequested`, `RandomEvents.Started`, `Collectibles.TapeUnlocked`,
    `Economy.BillCharged` vào UI Toolkit.
-5. Sửa dòng `deadline_hour` bên UE (mục 8) nếu vẫn giữ UE.

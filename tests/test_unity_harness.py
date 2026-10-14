@@ -135,3 +135,11 @@ def test_check_machine_sh_probes_this_machine():
     kv = dict(line.split("=", 1) for line in out.stdout.splitlines() if "=" in line)
     assert int(kv["ram_gb"]) > 0 and int(kv["threads"]) > 0
     assert kv["recommendation"] in {"ue5", "unity_hdrp", "unity_urp", "none"}
+
+
+def test_deadline_at_its_own_hour_means_tomorrow_in_both_engines():
+    """A step with deadline_hour H started at hour H has 24 game hours, not 0 (s09 at 07:00)."""
+    ue = (ROOT / "ue5" / "Plugins" / "HanoiCity" / "Source" / "HanoiCityRuntime" / "Private" / "HanoiMissionSubsystem.cpp").read_text()
+    cs = (PKG / "Runtime" / "Core" / "Systems" / "MissionRunner.cs").read_text()
+    assert re.search(r"if \(DeadlineGameHours < 1\.0 / 60\.0\)\s*\{\s*DeadlineGameHours = 24\.0;", ue)
+    assert re.search(r"if \(deadlineGameHours < 1\.0 / 60\.0\) deadlineGameHours = 24\.0;", cs)

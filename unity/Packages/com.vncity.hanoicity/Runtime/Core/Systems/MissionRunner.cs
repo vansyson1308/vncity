@@ -188,7 +188,7 @@ namespace HanoiCity.Systems
                 stepStartGameTime = world.Clock.Now;
                 deadlineGameHours = ((deadline - world.Clock.HourOfDay) % 24.0 + 24.0) % 24.0;
                 // Starting at the deadline hour itself means the same hour tomorrow, not zero hours left.
-                // (UE's Fmod gives 0 here; see docs/13-tich-hop-unity.md §8.)
+                // (same rule as UHanoiMissionSubsystem; tests/test_unity_harness.py checks both).
                 if (deadlineGameHours < 1.0 / 60.0) deadlineGameHours = 24.0;
             }
 

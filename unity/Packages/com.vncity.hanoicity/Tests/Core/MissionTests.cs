@@ -135,6 +135,22 @@ namespace HanoiCity.Tests
         }
 
         [Test]
+        public void DeadlineStartedAtItsOwnHourLastsADay()
+        {
+            var w = World();
+            w.Clock.Set(new DateTime(2026, 10, 12, 9, 0, 0));
+            string reason = null;
+            w.Missions.MissionEnded += (m, s, r) => reason = r;
+            w.Missions.StartMission("m_deadline");
+            w.Clock.Advance(TimeSpan.FromHours(23.5));
+            w.Tick(0.01);
+            Assert.That(w.Missions.IsActive, "accepted at 09:00 with deadline_hour 9 = until 09:00 tomorrow");
+            w.Clock.Advance(TimeSpan.FromHours(1));
+            w.Tick(0.01);
+            Assert.That(reason, Is.EqualTo("deadline"));
+        }
+
+        [Test]
         public void CleanRecordFlagAfterNinetyDaysWithoutFines()
         {
             var w = World();
