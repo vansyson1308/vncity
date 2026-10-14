@@ -29,8 +29,8 @@ tiền đề, nhân vật, sự cụ thể; điểm thấp ở mở màn, hệ q
 | Lựa chọn có hệ quả về sau | **2/34 cờ được đọc lại** (chỉ cặp gia vị chuẩn/rẻ) **[đã sửa: 34/34 cờ lựa chọn chương 0-1 được đọc ở 48 chỗ, 38 hệ quả ngay trong chương 1; xem 11]** | Gần như toàn bộ lựa chọn chương 1 chưa trả gì, vì chương 2-5 chưa viết. Người chơi bản v0 sẽ thấy "chọn gì cũng thế" |
 | Tiền của Minh sau 90 ngày game | **âm** (dư -0,7 tr/tháng theo bảng giá GDD) | Mục tiêu đời của Minh (tiệm 120 tr) không thể đạt bằng vòng lặp tự do; gửi quê 6 tr/tháng nuốt hết |
 | Nhiệm vụ phụ "Mũ bảo hiểm cho bé" | cần 90 ngày sạch = **72 giờ chơi thật** | Một nhiệm vụ nhỏ bị khóa sau một điều kiện của game 100 giờ |
-| Quận cốt truyện chạm tới | 8/14 | Cầu Giấy, Hai Bà Trưng, Hoàng Mai, Hà Đông, Bắc Từ Liêm, Gia Lâm chưa có lý do để tới |
-| Địa danh có trong nhiệm vụ | 10/84 | 74 địa danh vừa dựng chưa có truyện |
+| Quận cốt truyện chạm tới | 8/14 **[đã sửa: 14/14 qua chương 2 (PR #9) và 26 nhiệm vụ người lạ của 8 quận, xem 12]** | Cầu Giấy, Hai Bà Trưng, Hoàng Mai, Hà Đông, Bắc Từ Liêm, Gia Lâm chưa có lý do để tới |
+| Địa danh có trong nhiệm vụ | 10/84 **[đã sửa: 36/84]** | 74 địa danh vừa dựng chưa có truyện |
 | Tỷ lệ bước thoại/cắt cảnh | 45% | Nặng thoại so với GTA (ước 20-25%); Yakuza-like thì chấp nhận được |
 | Nhiệm vụ ngắn nhất / dài nhất | 4 phút / 71 phút thật | "Họp tổ dân phố" 4 phút là một cảnh, không phải nhiệm vụ; "Khách VIP cả ngày" 71 phút cần điểm nghỉ |
 
@@ -124,7 +124,7 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 | Logic dữ liệu | 5 | 5 | 0 lỗi chặn chơi |
 | Nhịp chơi | 3 | 4 | 45% thoại, nhiệm vụ 4 phút |
 | Kinh tế | 2 | 4 | Minh lỗ hàng tháng |
-| Thế giới sống | 2 | 4 | 0 sự kiện ngẫu nhiên, 6 quận trống |
+| Thế giới sống | 2 → **3** | 4 | 0 sự kiện ngẫu nhiên; 6 quận trống đã có người, có khổ, có 3-4 nhiệm vụ mỗi quận (12); còn thiếu sự kiện ngẫu nhiên để lên 4 |
 | Độc đáo / dễ kể cho báo chí | 5 | 5 | "Hà Nội thật, không bắn súng, ký ức như dữ liệu" |
 | Khả thi thương mại | 2 | 3 | Cần lát cắt dọc trước khi nói tiếp |
 
@@ -146,9 +146,12 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
    Bạc lên sớm làm hành động đầu tiên của Kim Long. **Đang làm ở PR #9 (luồng "Chơi thử và thẩm định
    cốt truyện"): 8 nhiệm vụ, phủ cả 6 quận trống, điểm nhấn Giao thừa Hồ Gươm; bản nháp chương 2 của
    luồng này đã bàn giao (11 §6).**
-6. Mỗi quận trống một nhiệm vụ truyện hoặc người lạ: Cầu Giấy (Khôi bán ảnh cho báo ở Duy Tân), Hai
+6. ~~Mỗi quận trống một nhiệm vụ truyện hoặc người lạ: Cầu Giấy (Khôi bán ảnh cho báo ở Duy Tân), Hai
    Bà Trưng (Lan mua vải chợ Hôm, Bách Khoa), Hoàng Mai (chợ Đền Lừ 2h sáng, HH Linh Đàm), Hà Đông
-   (Vạn Phúc, ga Yên Nghĩa), Bắc Từ Liêm (Tây Tựu hoa đêm, đình Chèm), Long Biên (Aeon, đê Ngọc Thụy).
+   (Vạn Phúc, ga Yên Nghĩa), Bắc Từ Liêm (Tây Tựu hoa đêm, đình Chèm), Long Biên (Aeon, đê Ngọc Thụy).~~
+   **Đã làm, theo yêu cầu "làm nốt 8 quận" của chủ dự án:** 26 nhiệm vụ người lạ, 15 nhân vật có
+   Khổ-Tập-Diệt-Đạo, 44 cờ lựa chọn đều được đọc lại, kết ở đêm khai mạc Bảo tàng Hà Nội
+   (`12-ho-so-quan.md`). Long Biên đã có s05, s06 và chương 2 (cầu Long Biên, ga Long Biên).
 7. 40 sự kiện ngẫu nhiên thành collection `random_events` (schema mới).
 8. Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).
 9. Đường thứ hai tới nội dung băng 24 không qua sưu tầm.

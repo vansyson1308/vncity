@@ -13,14 +13,15 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | building_archetypes | `world/building_archetypes.json` | 13 | Đúng 13 id pipeline dùng |
 | landmarks | `world/landmarks.json` | 84 | 36 mục `coords_verified_overture` (khớp Overture trong 300 m), 48 mục còn `coords_unverified` (phần lớn là hồ, cầu, phố, công viên: giữ mốc tay) |
 | characters | `characters/protagonists.json` | 3 | Minh, Lan, Khôi |
-| characters | `characters/story.json` | 28 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio; cụ Thọ 1957 (điều khiển được trong cold open), ông Khiêm, bà Thọ, ông Tư Hàng Bạc (khối `drive` của bốn người này nằm ở handoff, PR #9 dán vào khi schema có) |
+| characters | `characters/story.json` | 49 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio; cụ Thọ 1957 (điều khiển được trong cold open), ông Khiêm, bà Thọ, ông Tư Hàng Bạc; 15 người của tám quận (`12-ho-so-quan.md`). Mọi nhân vật có khối `drive` Khổ-Tập-Diệt-Đạo (test bắt buộc) |
 | characters | `characters/ambient.json` | 21 | Kiểu dân cư có lịch sinh hoạt; loa phường |
 | vehicles | `vehicles.json` | 26 | Tên parody, model thật chỉ ở `inspired_by` |
 | activities | `activities.json` | 24 | Việc làm, minigame, giải trí, sưu tầm, đua hợp pháp, kinh doanh |
 | missions | `missions/story_prologue.json` | 4 | Cold open 1957/1972 + mở đầu (chương 0) |
 | missions | `missions/story_chapter1.json` | 9 | Chương 1 |
 | missions | `missions/side_stranger.json` | 12 | Phụ và người lạ (s02, s10 có nhánh thua) |
-| dialogues | `dialogues/prologue.json`, `chapter1.json`, `side.json` | 63 (449 dòng) | Có bản `en` cho mọi dòng; 129 dòng chỉ một phần người chơi thấy (`lines[].condition`), xem `11-mo-man-va-he-qua.md` |
+| missions | `missions/side_districts.json` | 26 | 3-4 nhiệm vụ mỗi quận cho 8 quận ngoài phố cổ, kết ở đêm khai mạc Bảo tàng Hà Nội (`12-ho-so-quan.md`) |
+| dialogues | `dialogues/prologue.json`, `chapter1.json`, `chapter2.json`, `side.json`, `side_districts.json` | 157 (1.084 dòng) | Có bản `en` cho mọi dòng; 129 dòng chỉ một phần người chơi thấy (`lines[].condition`), xem `11-mo-man-va-he-qua.md` |
 | items | `items.json` | 52 | Đồ ăn, đồ dùng, 12 app điện thoại, giấy tờ, sưu tầm, vật phẩm nhiệm vụ (`la_dong`, `dieu_cua_be`) |
 | businesses | `businesses.json` | 11 | Đủ 10 loại hình |
 | events | `events.json` | 20 | Lịch âm, lịch dương, tuần, dữ liệu sống |
@@ -33,7 +34,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | Hạng mục | GTA5 (ước tính công khai) | Hanoi City v0 | Còn thiếu |
 | --- | --- | --- | --- |
 | Nhiệm vụ cốt truyện | ~69 | 12 | Chương 2-5: ~55 nhiệm vụ, 3 kết |
-| Nhiệm vụ phụ / người lạ | ~60 "Strangers and Freaks" | 12 | ~50, ưu tiên mỗi quận ít nhất 4 |
+| Nhiệm vụ phụ / người lạ | ~60 "Strangers and Freaks" | 40 | ~20; 8 quận ngoài phố cổ đã có 3-4 mỗi quận, còn phố cổ, Hoàn Kiếm, Ba Đình, Đống Đa, Tây Hồ, Long Biên mới có 1-3 |
 | Sự kiện ngẫu nhiên trên phố | ~57 | 0 (chỉ có sự kiện lịch) | Hệ thống + 40 sự kiện: xe chết máy giữa đường, bà cụ cần qua đường, khách quên điện thoại trên xe, cây đổ sau bão, đám cưới chắn đường, đám tang... |
 | Hoạt động / minigame | ~40 | 24 | Bi-a, cầu lông công viên, cắt tóc vỉa hè, xem bói (hài, nhẹ), ô ăn quan, kéo co phố đi bộ, câu cá Hồ Tây, gói bánh chưng ngày Tết, nặn gốm Bát Tràng, quay phim Tóp Tóp |
 | Phương tiện | ~250+ | 26 | Biến thể màu, Cúp độ, Win 100 (xe phượt), xe điện du lịch phố cổ, xe đẩy hàng, xe cứu thương, xe cứu hỏa, xe rác, xe chở cây Tết, xe tải cẩu xe vi phạm, tàu metro tuyến 3 Nhổn - ga Hà Nội |
@@ -84,6 +85,8 @@ Trạng thái: 3, 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem t
 6. **landmarks.footprint_ref / geometry**: polygon hoặc id Overture building để thay thế khối procedural
    (hiện chỉ có `overture_ids`, chưa điền).
 7. **condition** thêm `max_heat`, `event_active`, `weekday`, `items_owned` (nhiều nhiệm vụ cần).
+8. **reward.cost_vnd**: lựa chọn thoại hiện chỉ cộng tiền (`money_vnd` ≥ 0); 11 lựa chọn mua bán ở
+   `side_districts.json` (lụa, rau, bát, tiền trọ, hủy cuốc) cần trừ tiền người chơi (`12-ho-so-quan.md` §12).
 8. **collection mới**: `interiors`, `random_events`, `collectibles` (từng món: ảnh xưa với
    `archive_frame`, vị trí, giờ, mùa), `shops`, `phone_contacts`.
 9. **activities.pay** thêm `commission_rate` (app ăn chiết khấu) và `currency_note`.

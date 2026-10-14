@@ -1,0 +1,2766 @@
+{
+  "collection": "missions",
+  "items": [
+    {
+      "id": "q_cg_01_hoa_hong_chua_ha",
+      "tags": [
+        "stranger",
+        "cau_giay",
+        "delivery",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Hoa hồng cho chùa Hà",
+        "en": "Roses for Chùa Hà"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:huong_bao_chi",
+      "summary": {
+        "vi": "Sáu giờ sáng, xe của Hương chết máy với hai mươi bó hồng phải tới chùa Hà trước giờ người ta vào lễ. Minh chở cả hoa lẫn người; một bó dập dọc đường.",
+        "en": "Six in the morning, Hương's bike dies with twenty bunches of roses due at Chùa Hà before the first prayers. Minh carries flowers and courier; one bunch gets crushed on the way."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p1_cuoc_xe_luc_rang_dong"
+        ],
+        "hours": [
+          5,
+          6.5
+        ]
+      },
+      "start": {
+        "lat": 21.0378,
+        "lon": 105.784
+      },
+      "steps": [
+        {
+          "id": "gap_huong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Một cô gái ôm hai mươi bó hồng vẫy xe ở cổng Đại học Quốc gia",
+            "en": "A girl hugging twenty bunches of roses flags you down at the university gate"
+          },
+          "target": "landmarks:dai_hoc_quoc_gia",
+          "dialogue": "dialogues:dlg_q_cg_01_gap",
+          "next": "cho_hoa"
+        },
+        {
+          "id": "cho_hoa",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Chở hai mươi bó hồng và Hương tới chùa Hà trước 7 giờ",
+            "en": "Get twenty bunches of roses and Hương to Chùa Hà before seven"
+          },
+          "target": "landmarks:chua_ha",
+          "params": {
+            "cargo": "hoa_hong_20_bo",
+            "cargo_fragile": true,
+            "passenger": "characters:huong_bao_chi",
+            "helmet_for_passenger": true,
+            "max_speed_kmh": 40,
+            "time_limit_s": 420
+          },
+          "next": "bo_hoa_dap"
+        },
+        {
+          "id": "bo_hoa_dap",
+          "kind": "talk",
+          "objective": {
+            "vi": "Một bó hồng dập cánh. Khách đã đứng chờ ở sân chùa",
+            "en": "One bunch is bruised. The customer is already waiting in the temple yard"
+          },
+          "target": "landmarks:chua_ha",
+          "dialogue": "dialogues:dlg_q_cg_01_hoa_dap"
+        }
+      ],
+      "reward": {
+        "money_vnd": 150000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 3
+        }
+      },
+      "unlocks": [
+        "missions:q_cg_02_anh_nha_rong"
+      ]
+    },
+    {
+      "id": "q_cg_02_anh_nha_rong",
+      "tags": [
+        "side",
+        "cau_giay",
+        "photo",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Nhà rông giữa Cầu Giấy",
+        "en": "A stilt house in Cầu Giấy"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:huong_bao_chi",
+      "summary": {
+        "vi": "Hương xin Khôi dạy chụp 'ảnh báo chí' ở Bảo tàng Dân tộc học. Ông Phúc bảo vệ cấm chân máy, rồi nhận ra họ của Khôi: ông từng ở Hàng Bạc.",
+        "en": "Hương asks Khôi to teach her 'press photography' at the Museum of Ethnology. Phúc the guard bans tripods, then recognises Khôi's family name: he used to live on Hàng Bạc."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p3_tu_sat_tren_gac",
+          "missions:c1_01_hoc_lai_xe_may",
+          "missions:q_cg_01_hoa_hong_chua_ha"
+        ],
+        "hours": [
+          8.5,
+          16
+        ]
+      },
+      "start": {
+        "lat": 21.0404,
+        "lon": 105.7988
+      },
+      "steps": [
+        {
+          "id": "cong_bao_tang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Gặp Hương ở cổng Bảo tàng Dân tộc học",
+            "en": "Meet Hương at the museum gate"
+          },
+          "target": "landmarks:bao_tang_dan_toc_hoc",
+          "dialogue": "dialogues:dlg_q_cg_02_cong",
+          "next": "chup_nha_rong"
+        },
+        {
+          "id": "chup_nha_rong",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp nhà rông Ba Na và nhà dài Ê Đê trong vườn bảo tàng, không chân máy, năm khung hình kể được một chuyện",
+            "en": "Shoot the Ba Na communal house and the Ê Đê long house in the museum garden, no tripod, five frames that tell one story"
+          },
+          "target": "landmarks:bao_tang_dan_toc_hoc",
+          "params": {
+            "targets": 5,
+            "require_consent": true,
+            "on_foot": true
+          },
+          "next": "ong_phuc"
+        },
+        {
+          "id": "ong_phuc",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông Phúc gọi Khôi lại ở cổng",
+            "en": "Phúc calls Khôi over at the gate"
+          },
+          "target": "landmarks:bao_tang_dan_toc_hoc",
+          "dialogue": "dialogues:dlg_q_cg_02_ong_phuc"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 3
+        }
+      },
+      "unlocks": [
+        "missions:q_cg_03_bai_bao_xe_om"
+      ]
+    },
+    {
+      "id": "q_cg_03_bai_bao_xe_om",
+      "tags": [
+        "stranger",
+        "cau_giay",
+        "interview",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Bài báo về xe ôm",
+        "en": "The article on app drivers"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:huong_bao_chi",
+      "summary": {
+        "vi": "Hương phỏng vấn Minh cho bài về xe ôm công nghệ ở cổng Xuân Thủy. Minh nói thật về phí app và tiền phạt, hay nói 'con ổn' như với mẹ.",
+        "en": "Hương interviews Minh for her article on app drivers at the Xuân Thủy gate. Minh tells the truth about app commissions and fines, or says 'I'm fine' the way he does to his mother."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_cg_02_anh_nha_rong"
+        ],
+        "hours": [
+          6,
+          7
+        ]
+      },
+      "start": {
+        "lat": 21.0375,
+        "lon": 105.7825
+      },
+      "steps": [
+        {
+          "id": "tra_da",
+          "kind": "talk",
+          "objective": {
+            "vi": "Trà đá cổng Đại học Quốc gia, 6 giờ sáng",
+            "en": "Iced tea at the National University gate, six in the morning"
+          },
+          "target": "landmarks:dai_hoc_quoc_gia",
+          "dialogue": "dialogues:dlg_q_cg_03_phong_van",
+          "next": "mot_cuoc"
+        },
+        {
+          "id": "mot_cuoc",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở Hương theo một cuốc thật từ Xuân Thủy ra Cầu Giấy giờ cao điểm, để cô thấy nghề",
+            "en": "Take Hương on a real ride from Xuân Thủy to Cầu Giấy in rush hour so she sees the job"
+          },
+          "target": "landmarks:cong_vien_cau_giay",
+          "params": {
+            "passenger": "characters:huong_bao_chi",
+            "helmet_for_passenger": true,
+            "phone_feed": "app_vo_don_lien_tuc",
+            "max_speed_kmh": 35
+          },
+          "next": "ket"
+        },
+        {
+          "id": "ket",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hương đọc lại câu trích của Minh",
+            "en": "Hương reads Minh's quote back to him"
+          },
+          "target": "landmarks:cong_vien_cau_giay",
+          "dialogue": "dialogues:dlg_q_cg_03_ket"
+        }
+      ],
+      "reward": {
+        "money_vnd": 40000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 2
+        }
+      }
+    },
+    {
+      "id": "q_hbt_01_tap_de_cho_hom",
+      "tags": [
+        "side",
+        "hai_ba_trung",
+        "market",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Sáu cái tạp dề",
+        "en": "Six aprons"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:ba_nhung_cho_hom",
+      "summary": {
+        "vi": "Lan lên tầng hai chợ Hôm mua vải may tạp dề đồng phục cho quán. Bà Nhung mặc cả bằng tay sờ lụa; vải thật hay vải pha là quyết định đầu tiên của chủ quán.",
+        "en": "Lan climbs to the second floor of Chợ Hôm to buy fabric for the shop's uniform aprons. Mrs Nhung bargains by the feel of the silk; real fabric or blended is the shop owner's first decision."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p2_noi_nuoc_dung_4_gio"
+        ],
+        "hours": [
+          8,
+          16.5
+        ]
+      },
+      "start": {
+        "lat": 21.016,
+        "lon": 105.852
+      },
+      "steps": [
+        {
+          "id": "len_tang_hai",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Lên tầng hai chợ Hôm, sạp 214 giữa núi cuộn vải",
+            "en": "Up to the second floor of Chợ Hôm, stall 214 among mountains of bolts"
+          },
+          "target": "landmarks:cho_hom",
+          "params": {
+            "on_foot": true
+          },
+          "next": "mac_ca"
+        },
+        {
+          "id": "mac_ca",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Mặc cả sáu mét vải với bà Nhung",
+            "en": "Haggle six metres of fabric with Mrs Nhung"
+          },
+          "target": "landmarks:cho_hom",
+          "params": {
+            "activity": "activities:act_mac_ca_cho_dau_moi",
+            "haggle": true,
+            "budget_vnd": 1200000
+          },
+          "next": "chon_vai"
+        },
+        {
+          "id": "chon_vai",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bà Nhung đặt hai cuộn lên bàn: lụa Vạn Phúc và vải pha",
+            "en": "Mrs Nhung lays two bolts on the counter: Vạn Phúc silk and a blend"
+          },
+          "target": "landmarks:cho_hom",
+          "dialogue": "dialogues:dlg_q_hbt_01_chon_vai"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_ban_hang_rong": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_hbt_02_cuon_vai_bach_khoa"
+      ]
+    },
+    {
+      "id": "q_hbt_02_cuon_vai_bach_khoa",
+      "tags": [
+        "stranger",
+        "hai_ba_trung",
+        "delivery",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Bốn mươi cân vải",
+        "en": "Forty kilos of fabric"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:dat_bach_khoa",
+      "summary": {
+        "vi": "Đạt cần bốn mươi cân vải từ chợ Hôm sang hội trường Bách Khoa trước giờ dựng sân khấu, trời đang dọa mưa. Trên đường, Đạt nhờ Minh một việc khó nói hơn: giúp mẹ livestream.",
+        "en": "Đạt needs forty kilos of fabric from Chợ Hôm to the Bách Khoa hall before the stage build, with rain threatening. On the way he asks Minh something harder: help his mother livestream."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_hbt_01_tap_de_cho_hom"
+        ],
+        "hours": [
+          13,
+          17
+        ]
+      },
+      "start": {
+        "lat": 21.016,
+        "lon": 105.852
+      },
+      "steps": [
+        {
+          "id": "nhan_hang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nhận vải ở sạp 214",
+            "en": "Pick up the fabric at stall 214"
+          },
+          "target": "landmarks:cho_hom",
+          "dialogue": "dialogues:dlg_q_hbt_02_nhan_hang",
+          "next": "cho_vai"
+        },
+        {
+          "id": "cho_vai",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Chở bốn mươi cân vải tới hội trường C2 Bách Khoa, không ướt, không rơi",
+            "en": "Carry forty kilos of fabric to hall C2 at Bách Khoa, dry and intact"
+          },
+          "target": "landmarks:dai_hoc_bach_khoa",
+          "params": {
+            "cargo": "vai_40kg",
+            "cargo_fragile": true,
+            "carry_weight": "nang",
+            "force_weather": "drizzle",
+            "max_speed_kmh": 35,
+            "time_limit_s": 900
+          },
+          "next": "san_khau"
+        },
+        {
+          "id": "san_khau",
+          "kind": "talk",
+          "objective": {
+            "vi": "Đạt dỡ vải ở hội trường và nói chuyện với Minh",
+            "en": "Đạt unloads at the hall and talks to Minh"
+          },
+          "target": "landmarks:dai_hoc_bach_khoa",
+          "dialogue": "dialogues:dlg_q_hbt_02_san_khau"
+        }
+      ],
+      "reward": {
+        "money_vnd": 120000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_hbt_03_dem_hoa_sua"
+      ]
+    },
+    {
+      "id": "q_hbt_03_dem_hoa_sua",
+      "tags": [
+        "side",
+        "hai_ba_trung",
+        "photo",
+        "event",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Đêm hoa sữa Thiền Quang",
+        "en": "Milk-flower night at Thiền Quang"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:dat_bach_khoa",
+      "summary": {
+        "vi": "Mùa hoa sữa, bà Nhung livestream lần đầu bên hồ Thiền Quang. Khôi chụp ảnh cho sạp 214 và quyết định có tặng bà tấm ảnh chợ Hôm năm 1989 của ông Khải hay không.",
+        "en": "Milk-flower season, Mrs Nhung's first livestream by Thiền Quang lake. Khôi shoots photos for stall 214 and decides whether to give her Khải's 1989 photograph of Chợ Hôm."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_hbt_02_cuon_vai_bach_khoa",
+          "missions:c1_01_hoc_lai_xe_may"
+        ],
+        "hours": [
+          18.5,
+          20
+        ]
+      },
+      "start": {
+        "lat": 21.0177,
+        "lon": 105.847
+      },
+      "steps": [
+        {
+          "id": "den_ho",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Tới hồ Thiền Quang, góc Nguyễn Du, dưới hàng hoa sữa",
+            "en": "Get to Thiền Quang lake, the Nguyễn Du corner, under the milk-flower trees"
+          },
+          "target": "landmarks:ho_thien_quang",
+          "params": {
+            "force_event": "events:mua_hoa_sua",
+            "max_speed_kmh": 40
+          },
+          "next": "live"
+        },
+        {
+          "id": "live",
+          "kind": "talk",
+          "objective": {
+            "vi": "Buổi live đầu tiên của bà Nhung",
+            "en": "Mrs Nhung's first live"
+          },
+          "target": "landmarks:ho_thien_quang",
+          "dialogue": "dialogues:dlg_q_hbt_03_live",
+          "next": "chup"
+        },
+        {
+          "id": "chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp ba khung cho sạp 214: tay bà Nhung trên lụa, Đạt cầm điện thoại, hồ đêm",
+            "en": "Three frames for stall 214: Mrs Nhung's hands on silk, Đạt holding the phone, the lake at night"
+          },
+          "target": "landmarks:ho_thien_quang",
+          "params": {
+            "targets": 3,
+            "require_consent": true
+          },
+          "next": "tam_anh"
+        },
+        {
+          "id": "tam_anh",
+          "kind": "talk",
+          "objective": {
+            "vi": "Khôi mở kho ảnh của bố trên điện thoại",
+            "en": "Khôi opens his father's archive on his phone"
+          },
+          "target": "landmarks:ho_thien_quang",
+          "dialogue": "dialogues:dlg_q_hbt_03_tam_anh"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 3,
+          "hoi_ban_hang_rong": 3
+        }
+      }
+    },
+    {
+      "id": "q_hm_01_rau_den_lu",
+      "tags": [
+        "side",
+        "hoang_mai",
+        "market",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Rau nhà, một giờ sáng",
+        "en": "Home-grown, one in the morning"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:ba_cuc_rau_den_lu",
+      "summary": {
+        "vi": "Đồng Xuân tăng giá hành mùi, Lan phóng xe ra chợ đầu mối Đền Lừ lúc một giờ sáng. Bà Cúc bán rau Thanh Trì không mặc cả quá một giá; sạp bên bán rẻ hơn một nửa và không nói rau ở đâu ra.",
+        "en": "Đồng Xuân raised the price of herbs, so Lan rides out to the Đền Lừ wholesale market at one in the morning. Mrs Cúc sells Thanh Trì greens and bargains exactly once; the next stall is half the price and won't say where its greens come from."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p2_noi_nuoc_dung_4_gio",
+          "missions:c1_04_cho_dong_xuan_luc_6_gio"
+        ],
+        "hours": [
+          1,
+          2.5
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "ra_cho",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ra chợ đầu mối Đền Lừ trước hai giờ, đường Giải Phóng vắng nhưng xe tải rau đi ngược",
+            "en": "Get to the Đền Lừ wholesale market before two, Giải Phóng is empty but the greens trucks come the other way"
+          },
+          "target": "landmarks:cho_dau_moi_den_lu",
+          "params": {
+            "max_speed_kmh": 45,
+            "time_limit_s": 900
+          },
+          "next": "gap_ba_cuc"
+        },
+        {
+          "id": "gap_ba_cuc",
+          "kind": "talk",
+          "objective": {
+            "vi": "Sạp rau của bà Cúc ở dãy ngoài cùng, đèn pin đội đầu",
+            "en": "Mrs Cúc's stall on the outer row, headlamp on"
+          },
+          "target": "landmarks:cho_dau_moi_den_lu",
+          "dialogue": "dialogues:dlg_q_hm_01_gap",
+          "next": "mac_ca"
+        },
+        {
+          "id": "mac_ca",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Mặc cả mười cân hành, mùi, húng với bà Cúc: bà chỉ xuống giá đúng một lần",
+            "en": "Haggle ten kilos of spring onion, coriander and basil with Mrs Cúc: she drops the price exactly once"
+          },
+          "target": "activities:act_mac_ca_cho_dau_moi",
+          "params": {
+            "activity": "activities:act_mac_ca_cho_dau_moi",
+            "haggle": true,
+            "budget_vnd": 400000,
+            "difficulty": 2,
+            "duration_s": 120
+          },
+          "next": {
+            "dat": "chon_rau",
+            "chua_dat": "tra_du",
+            "default": "chon_rau"
+          }
+        },
+        {
+          "id": "tra_du",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mặc cả quá một giá, bà Cúc quay đi; Lan trả đủ giá bà nói ban đầu",
+            "en": "Pushed past the one price, Mrs Cúc turns away; Lan pays the first price she named"
+          },
+          "target": "landmarks:cho_dau_moi_den_lu",
+          "dialogue": "dialogues:dlg_q_hm_01_tra_du",
+          "next": "chon_rau"
+        },
+        {
+          "id": "chon_rau",
+          "kind": "talk",
+          "objective": {
+            "vi": "Sạp bên cạnh gọi: 'Hành đây, nửa giá'",
+            "en": "The next stall calls: 'Spring onion here, half price'"
+          },
+          "target": "landmarks:cho_dau_moi_den_lu",
+          "dialogue": "dialogues:dlg_q_hm_01_chon_rau"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_ban_hang_rong": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_hm_02_thang_may_hong"
+      ]
+    },
+    {
+      "id": "q_hm_02_thang_may_hong",
+      "tags": [
+        "stranger",
+        "hoang_mai",
+        "delivery",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Tầng ba mươi sáu, thang máy hỏng",
+        "en": "Thirty-sixth floor, lift out of order"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:chu_binh_bao_ve_hh",
+      "summary": {
+        "vi": "Chú Bình gọi Minh: cả bốn thang máy tòa HH4C hỏng, bà mẹ vợ ở tầng ba mươi sáu hết thuốc huyết áp. Minh leo bộ. Sảnh tòa, hai chục người vây lấy xin khiêng gas, nước, trả tiền.",
+        "en": "Bình calls Minh: all four lifts in tower HH4C are down and his mother-in-law on the thirty-sixth floor is out of blood-pressure pills. Minh climbs. In the lobby, twenty people crowd him asking him to carry gas, water, for money."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_hm_01_rau_den_lu"
+        ],
+        "hours": [
+          17,
+          19
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "toi_hh",
+          "kind": "ride",
+          "objective": {
+            "vi": "Tới sảnh tòa HH4C Linh Đàm trước khi hiệu thuốc đóng cửa",
+            "en": "Get to the HH4C Linh Đàm lobby before the pharmacy shuts"
+          },
+          "target": "landmarks:chung_cu_hh_linh_dam",
+          "params": {
+            "max_speed_kmh": 45,
+            "time_limit_s": 1500
+          },
+          "next": "sanh"
+        },
+        {
+          "id": "sanh",
+          "kind": "talk",
+          "objective": {
+            "vi": "Sảnh tòa: chú Bình, túi thuốc, và hai chục người ôm bình gas, thùng nước",
+            "en": "The lobby: Bình, a bag of pills, and twenty people hugging gas cylinders and water cans"
+          },
+          "target": "landmarks:chung_cu_hh_linh_dam",
+          "dialogue": "dialogues:dlg_q_hm_02_sanh",
+          "next": "leo"
+        },
+        {
+          "id": "leo",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Leo bộ ba mươi sáu tầng với túi thuốc; cầu thang thoát hiểm tối, có người ngồi nghỉ ở mỗi chiếu",
+            "en": "Climb thirty-six floors on foot with the pills; the fire stairs are dark, someone resting on every landing"
+          },
+          "target": "landmarks:chung_cu_hh_linh_dam",
+          "params": {
+            "on_foot": true,
+            "carry_weight": "nhe",
+            "time_limit_s": 420,
+            "reason": "thuoc_huyet_ap",
+            "duration_s": 240
+          },
+          "next": "tang_36"
+        },
+        {
+          "id": "tang_36",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tầng ba mươi sáu, cửa căn 3612 mở sẵn",
+            "en": "Thirty-sixth floor, flat 3612's door already open"
+          },
+          "target": "landmarks:chung_cu_hh_linh_dam",
+          "dialogue": "dialogues:dlg_q_hm_02_tang_36"
+        }
+      ],
+      "reward": {
+        "money_vnd": 50000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_hm_03_dieu_yen_so"
+      ]
+    },
+    {
+      "id": "q_hm_03_dieu_yen_so",
+      "tags": [
+        "side",
+        "hoang_mai",
+        "photo",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Mười hai tòa nhìn từ Yên Sở",
+        "en": "Twelve towers seen from Yên Sở"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:chu_binh_bao_ve_hh",
+      "summary": {
+        "vi": "Chiều Chủ nhật ở công viên Yên Sở, Khôi chụp mười hai tòa HH Linh Đàm nhìn qua mặt hồ, nơi từng là ruộng rau của bà Cúc. Chú Bình xin ảnh gửi kèm đơn kiến nghị sổ đỏ; Phong ở báo cũng muốn tấm ấy.",
+        "en": "A Sunday afternoon in Yên Sở park: Khôi shoots the twelve HH Linh Đàm towers across the lake, on what used to be Mrs Cúc's vegetable fields. Bình wants the picture for the residents' petition; Phong at the paper wants the same frame."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_hm_02_thang_may_hong",
+          "missions:c1_01_hoc_lai_xe_may"
+        ],
+        "hours": [
+          15.5,
+          17.5
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "toi_yen_so",
+          "kind": "ride",
+          "objective": {
+            "vi": "Tới công viên Yên Sở, bãi cỏ phía hồ, giờ thả diều",
+            "en": "Get to Yên Sở park, the lakeside lawn, kite hour"
+          },
+          "target": "landmarks:cong_vien_yen_so",
+          "params": {
+            "max_speed_kmh": 45
+          },
+          "next": "gap"
+        },
+        {
+          "id": "gap",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bà Cúc, cháu ngoại và con diều; chú Bình đến sau ca ngủ bù",
+            "en": "Mrs Cúc, her grandson and a kite; Bình arrives after his catch-up sleep"
+          },
+          "target": "landmarks:cong_vien_yen_so",
+          "dialogue": "dialogues:dlg_q_hm_03_gap",
+          "next": "chup"
+        },
+        {
+          "id": "chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp mười hai tòa HH qua mặt hồ Yên Sở, một khung có diều, một khung có người; hồ đang chói ngược sáng",
+            "en": "Shoot the twelve HH towers across Yên Sở lake, one frame with a kite, one with a person; the lake is blazing backlight"
+          },
+          "target": "landmarks:cong_vien_yen_so",
+          "params": {
+            "targets": 3,
+            "require_consent": true,
+            "difficulty": 3,
+            "duration_s": 150
+          },
+          "next": {
+            "dat": "ai_lay_anh",
+            "chua_dat": "chup_lai",
+            "default": "ai_lay_anh"
+          }
+        },
+        {
+          "id": "chup_lai",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Ngược sáng cháy hết. Đợi mặt trời xuống sau tòa HH3, chụp lại",
+            "en": "Backlight burned everything. Wait for the sun to drop behind HH3 and reshoot"
+          },
+          "target": "landmarks:cong_vien_yen_so",
+          "params": {
+            "targets": 2,
+            "require_consent": true,
+            "difficulty": 2,
+            "duration_s": 120
+          },
+          "next": "ai_lay_anh"
+        },
+        {
+          "id": "ai_lay_anh",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chú Bình và điện thoại của Phong cùng hỏi một tấm ảnh",
+            "en": "Bình and a call from Phong both ask for the same picture"
+          },
+          "target": "landmarks:cong_vien_yen_so",
+          "dialogue": "dialogues:dlg_q_hm_03_ai_lay_anh"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 2
+        }
+      }
+    },
+    {
+      "id": "q_hd_01_tau_cuoi_yen_nghia",
+      "tags": [
+        "stranger",
+        "ha_dong",
+        "ride",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Chuyến cuối ở Yên Nghĩa",
+        "en": "Last run at Yên Nghĩa"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:ong_luong_xe_om_yen_nghia",
+      "summary": {
+        "vi": "Mười giờ đêm, Minh nhận cuốc Vồ từ Hà Đông ra bến Yên Nghĩa: một cô sinh viên phải kịp xe khách cuối về Xuân Mai lúc mười giờ rưỡi. Ở cổng bến, ông Lương xe ôm đứng với tờ báo có bài của Hương về xe ôm công nghệ.",
+        "en": "Ten at night, Minh takes a Vồ fare from Hà Đông to Yên Nghĩa station: a student has to make the last coach to Xuân Mai at half past ten. At the station gate stands Lương the xe ôm, holding the newspaper with Hương's article on app drivers."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_cg_03_bai_bao_xe_om"
+        ],
+        "hours": [
+          21.75,
+          22.25
+        ]
+      },
+      "start": {
+        "lat": 20.971,
+        "lon": 105.777
+      },
+      "steps": [
+        {
+          "id": "don_khach",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Đón sinh viên ở chợ Hà Đông, chạy Quang Trung ra bến Yên Nghĩa trước mười giờ rưỡi",
+            "en": "Pick the student up at Hà Đông market and ride Quang Trung to Yên Nghĩa station before half past ten"
+          },
+          "target": "landmarks:ga_yen_nghia",
+          "params": {
+            "passenger": "characters:amb_sinh_vien",
+            "helmet_for_passenger": true,
+            "max_speed_kmh": 50,
+            "time_limit_s": 600
+          },
+          "next": "cong_ben"
+        },
+        {
+          "id": "cong_ben",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cổng bến Yên Nghĩa, xe Xuân Mai nổ máy; ông Lương chặn xe Minh",
+            "en": "Yên Nghĩa gate, the Xuân Mai coach idling; Lương blocks Minh's bike"
+          },
+          "target": "landmarks:ga_yen_nghia",
+          "dialogue": "dialogues:dlg_q_hd_01_cong_ben",
+          "next": "cuoc_ve"
+        },
+        {
+          "id": "cuoc_ve",
+          "kind": "talk",
+          "objective": {
+            "vi": "Một khách xuống tàu Cát Linh cuối, hỏi xe về Ba La",
+            "en": "A passenger off the last Cát Linh train asks for a ride to Ba La"
+          },
+          "target": "landmarks:ga_yen_nghia",
+          "dialogue": "dialogues:dlg_q_hd_01_cuoc_ve"
+        }
+      ],
+      "reward": {
+        "money_vnd": 45000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 1
+        }
+      },
+      "unlocks": [
+        "missions:q_hd_04_so_khach_quen"
+      ]
+    },
+    {
+      "id": "q_hd_02_lua_that_lua_gia",
+      "tags": [
+        "side",
+        "ha_dong",
+        "craft",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Đốt một sợi lụa",
+        "en": "Burn one silk thread"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:co_tham_van_phuc",
+      "summary": {
+        "vi": "Bà Nhung gửi Lan về Vạn Phúc gặp cô Thắm, người dệt tấm lụa cho tạp dề. Cô dạy Lan thử lụa bằng cách đốt sợi; rồi Lan nhìn thấy kho hàng của Ngân, con gái cô, toàn tem 'Vạn Phúc' dán lên lụa Quảng Châu.",
+        "en": "Mrs Nhung sends Lan out to Vạn Phúc to meet Thắm, who wove the apron silk. Thắm teaches Lan to test silk by burning a thread; then Lan sees the stock of Thắm's daughter Ngân, 'Vạn Phúc' labels stuck on Guangzhou silk."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_hbt_01_tap_de_cho_hom"
+        ],
+        "hours": [
+          9,
+          11
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "ve_van_phuc",
+          "kind": "ride",
+          "objective": {
+            "vi": "Về làng lụa Vạn Phúc, cổng làng có cây đa, đường vào treo ô màu",
+            "en": "Ride out to Vạn Phúc silk village, the banyan at the gate, coloured umbrellas over the lane"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "params": {
+            "max_speed_kmh": 45
+          },
+          "next": "khung_cui"
+        },
+        {
+          "id": "khung_cui",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cô Thắm ở khung cửi gỗ, dệt tám mươi sợi",
+            "en": "Thắm at the wooden loom, eighty threads"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "dialogue": "dialogues:dlg_q_hd_02_khung_cui",
+          "next": "dot_soi"
+        },
+        {
+          "id": "dot_soi",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Thử ba tấm lụa bằng cách đốt sợi: lụa thật cháy chậm, thơm như tóc cháy, tro bóp tan; lụa pha cháy xèo, vón cục",
+            "en": "Test three bolts by burning a thread: real silk burns slow, smells of burnt hair, the ash crumbles; blends sizzle and bead up"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "params": {
+            "test": "dot_soi_lua",
+            "difficulty": 2,
+            "pass_score": 2,
+            "duration_s": 120
+          },
+          "next": {
+            "dat": "kho_ngan",
+            "chua_dat": "thu_lai",
+            "default": "kho_ngan"
+          }
+        },
+        {
+          "id": "thu_lai",
+          "kind": "talk",
+          "objective": {
+            "vi": "Lan đoán sai hai tấm. Cô Thắm đốt lại từng sợi cho xem",
+            "en": "Lan got two bolts wrong. Thắm burns each thread again to show her"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "dialogue": "dialogues:dlg_q_hd_02_thu_lai",
+          "next": "kho_ngan"
+        },
+        {
+          "id": "kho_ngan",
+          "kind": "talk",
+          "objective": {
+            "vi": "Trong buồng, Ngân đang dán tem lên một kiện lụa vừa về",
+            "en": "In the back room, Ngân is sticking labels on a bale of silk that just arrived"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "dialogue": "dialogues:dlg_q_hd_02_kho_ngan"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_ban_hang_rong": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_hd_03_anh_cho_shop_lua"
+      ]
+    },
+    {
+      "id": "q_hd_03_anh_cho_shop_lua",
+      "tags": [
+        "side",
+        "ha_dong",
+        "photo",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Ảnh cho shop lụa",
+        "en": "Pictures for the silk shop"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:ngan_shop_lua",
+      "summary": {
+        "vi": "Ngân thuê Khôi chụp bộ ảnh sản phẩm ở sân đình Vạn Phúc. Tùy Lan đã nói gì với cô Thắm, Ngân xin ảnh cho 'lụa pha, ghi đúng tên' hay cho 'lụa Vạn Phúc dệt tay' như cũ. Khôi quyết định chụp cái gì, và chụp cho ai.",
+        "en": "Ngân hires Khôi for a product shoot in the Vạn Phúc communal-house yard. Depending on what Lan told Thắm, Ngân asks for pictures of 'blended silk, labelled honestly' or of 'hand-woven Vạn Phúc silk' as before. Khôi decides what he shoots, and for whom."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_hd_02_lua_that_lua_gia",
+          "missions:c1_01_hoc_lai_xe_may"
+        ],
+        "hours": [
+          14,
+          16
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "ve_lang",
+          "kind": "ride",
+          "objective": {
+            "vi": "Về Vạn Phúc, sân đình, giờ phơi lụa",
+            "en": "Ride out to Vạn Phúc, the communal-house yard, silk-drying hour"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "params": {
+            "max_speed_kmh": 45
+          },
+          "next": "brief"
+        },
+        {
+          "id": "brief",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ngân bày hàng trên sân đình, cô Thắm phơi lụa thật ở dây bên cạnh",
+            "en": "Ngân lays out stock in the yard, Thắm hangs real silk on the line beside"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "dialogue": "dialogues:dlg_q_hd_03_brief",
+          "next": "chup"
+        },
+        {
+          "id": "chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp bộ ảnh sản phẩm: ánh nắng xiên qua lụa, tay cô Thắm, khung cửi ở nền",
+            "en": "Shoot the product set: slanting sun through silk, Thắm's hands, the loom in the background"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "params": {
+            "targets": 4,
+            "require_consent": true,
+            "difficulty": 2,
+            "duration_s": 150
+          },
+          "next": "giao_anh"
+        },
+        {
+          "id": "giao_anh",
+          "kind": "talk",
+          "objective": {
+            "vi": "Giao ảnh. Ngân xem từng tấm trên máy",
+            "en": "Hand over the pictures. Ngân checks each one on the camera"
+          },
+          "target": "landmarks:lang_lua_van_phuc",
+          "dialogue": "dialogues:dlg_q_hd_03_giao_anh"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 2
+        }
+      }
+    },
+    {
+      "id": "q_hd_04_so_khach_quen",
+      "tags": [
+        "stranger",
+        "ha_dong",
+        "ride",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Sổ khách quen",
+        "en": "The book of regulars"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:ong_luong_xe_om_yen_nghia",
+      "summary": {
+        "vi": "Năm giờ sáng ở Yên Nghĩa, ông Lương chạy cuốc cuối: chở bà Thịnh ra chợ Hà Đông như hai mươi năm nay, Minh chạy theo. Rồi ông đưa cuốn sổ ba mươi số điện thoại khách quen, hỏi Minh có nhận không.",
+        "en": "Five in the morning at Yên Nghĩa, Lương rides his last fare: Mrs Thịnh to Hà Đông market as he has for twenty years, Minh following. Then he holds out a notebook with thirty regulars' phone numbers and asks whether Minh will take it."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_hd_01_tau_cuoi_yen_nghia",
+          "missions:q_hd_03_anh_cho_shop_lua"
+        ],
+        "hours": [
+          4.75,
+          5.25
+        ]
+      },
+      "start": {
+        "lat": 20.971,
+        "lon": 105.777
+      },
+      "steps": [
+        {
+          "id": "toi_ben",
+          "kind": "ride",
+          "objective": {
+            "vi": "Tới cổng bến Yên Nghĩa trước năm giờ, đường Quang Trung còn tối",
+            "en": "Reach the Yên Nghĩa gate before five, Quang Trung still dark"
+          },
+          "target": "landmarks:ga_yen_nghia",
+          "params": {
+            "max_speed_kmh": 50,
+            "time_limit_s": 600
+          },
+          "next": "cuoc_cuoi"
+        },
+        {
+          "id": "cuoc_cuoi",
+          "kind": "follow",
+          "objective": {
+            "vi": "Chạy theo xe Dream của ông Lương ra chợ Hà Đông, không vượt, không mất dấu",
+            "en": "Follow Lương's Dream to Hà Đông market, don't overtake, don't lose him"
+          },
+          "target": "landmarks:cho_ha_dong",
+          "params": {
+            "follow": "characters:ong_luong_xe_om_yen_nghia",
+            "max_gap_m": 60,
+            "max_speed_kmh": 35
+          },
+          "next": "cuon_so"
+        },
+        {
+          "id": "cuon_so",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cổng chợ Hà Đông, năm giờ hai mươi. Ông Lương rút cuốn sổ",
+            "en": "Hà Đông market gate, twenty past five. Lương takes out the notebook"
+          },
+          "target": "landmarks:cho_ha_dong",
+          "dialogue": "dialogues:dlg_q_hd_04_cuon_so"
+        }
+      ],
+      "reward": {
+        "money_vnd": 30000,
+        "reputation": {
+          "hoi_xe_om_o_quan_chuong": 3
+        }
+      }
+    },
+    {
+      "id": "q_btl_01_cuc_ram_thang_bay",
+      "tags": [
+        "stranger",
+        "bac_tu_liem",
+        "delivery",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Cúc rằm tháng Bảy",
+        "en": "Chrysanthemums for the seventh-month full moon"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:chi_loan_tay_tuu",
+      "summary": {
+        "vi": "Ba giờ sáng rằm tháng Bảy, xe hoa của chị Loan gãy giá ở Tây Tựu, bốn trăm bó cúc vàng phải tới chợ Quảng Bá trước bốn rưỡi, khi các chùa lấy hoa Vu Lan. Chị chỉ đường đê sông Hồng: nhanh hơn hai mươi phút, tối, không đèn.",
+        "en": "Three in the morning on the seventh-month full moon, Loan's flower bike snaps its rack in Tây Tựu; four hundred bunches of yellow chrysanthemums must reach Quảng Bá market before half past four, when the pagodas buy for Vu Lan. She points to the Red River dyke road: twenty minutes faster, dark, no lights."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p1_cuoc_xe_luc_rang_dong"
+        ],
+        "hours": [
+          3,
+          3.5
+        ]
+      },
+      "start": {
+        "lat": 21.045,
+        "lon": 105.78
+      },
+      "steps": [
+        {
+          "id": "ra_tay_tuu",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ra làng hoa Tây Tựu, cuối đường 32, ba giờ sáng",
+            "en": "Out to Tây Tựu flower village, the end of Route 32, three in the morning"
+          },
+          "target": "landmarks:lang_hoa_tay_tuu",
+          "params": {
+            "max_speed_kmh": 55,
+            "force_event": "events:vu_lan"
+          },
+          "next": "gap_loan"
+        },
+        {
+          "id": "gap_loan",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chị Loan ngồi giữa bốn trăm bó cúc, giá xe gãy đôi",
+            "en": "Loan sits among four hundred bunches, the rack snapped in two"
+          },
+          "target": "landmarks:lang_hoa_tay_tuu",
+          "dialogue": "dialogues:dlg_q_btl_01_gap",
+          "next": "chon_duong"
+        },
+        {
+          "id": "chon_duong",
+          "kind": "choice",
+          "objective": {
+            "vi": "Đi đê sông Hồng tối om, hay đường 32 có đèn mà xa hơn hai mươi phút?",
+            "en": "The pitch-black Red River dyke, or Route 32 with streetlights and twenty minutes longer?"
+          },
+          "target": "landmarks:lang_hoa_tay_tuu",
+          "params": {
+            "branch_source": "player_input",
+            "player_input": "chon_duong_de_hay_duong_32",
+            "reason": "hoa_phai_toi_truoc_4_30"
+          },
+          "next": {
+            "di_de": "chay_de",
+            "di_duong": "chay_duong_32"
+          }
+        },
+        {
+          "id": "chay_de",
+          "kind": "ride",
+          "objective": {
+            "vi": "Chạy đê Liên Mạc qua cầu Thăng Long tới Quảng Bá: không đèn, mặt đê lồi lõm, xe tải cát đi ngược",
+            "en": "Ride the Liên Mạc dyke under Thăng Long bridge to Quảng Bá: no lights, a rutted surface, sand trucks coming the other way"
+          },
+          "target": {
+            "lat": 21.0745,
+            "lon": 105.8285
+          },
+          "params": {
+            "cargo": "cuc_400_bo",
+            "cargo_fragile": true,
+            "max_speed_kmh": 40,
+            "difficulty": 4,
+            "route_via": "landmarks:cau_nhat_tan",
+            "minimap": false,
+            "time_limit_s": 1200
+          },
+          "set_flags": [
+            "btl_minh_di_de"
+          ],
+          "next": "cho_quang_ba"
+        },
+        {
+          "id": "chay_duong_32",
+          "kind": "ride",
+          "objective": {
+            "vi": "Chạy đường 32 ra Cầu Giấy, vòng Lạc Long Quân lên Quảng Bá: có đèn, xa hơn, qua ba ngã tư camera",
+            "en": "Take Route 32 to Cầu Giấy, round Lạc Long Quân up to Quảng Bá: lit, longer, three camera junctions"
+          },
+          "target": {
+            "lat": 21.0745,
+            "lon": 105.8285
+          },
+          "params": {
+            "cargo": "cuc_400_bo",
+            "cargo_fragile": true,
+            "max_speed_kmh": 45,
+            "difficulty": 2,
+            "time_limit_s": 1800
+          },
+          "set_flags": [
+            "btl_minh_di_duong"
+          ],
+          "next": "cho_quang_ba"
+        },
+        {
+          "id": "cho_quang_ba",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chợ hoa Quảng Bá, người mua hoa cho chùa đứng chờ với giỏ",
+            "en": "Quảng Bá flower market, the pagoda buyers waiting with baskets"
+          },
+          "target": {
+            "lat": 21.0745,
+            "lon": 105.8285
+          },
+          "dialogue": "dialogues:dlg_q_btl_01_quang_ba"
+        }
+      ],
+      "reward": {
+        "money_vnd": 200000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_btl_03_ga_nhon_di_lam"
+      ]
+    },
+    {
+      "id": "q_btl_02_nuoc_len_dinh_chem",
+      "tags": [
+        "side",
+        "bac_tu_liem",
+        "photo",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Nước lên đình Chèm",
+        "en": "High water at Chèm"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:ong_tam_dinh_chem",
+      "summary": {
+        "vi": "Sông Hồng lên sau ba ngày mưa, nước vào tận bậc nhà tiền tế đình Chèm. Ông Tám thủ từ cho Khôi chụp đình trong nước với một điều kiện: không đăng vết nứt trên cột lim gian giữa.",
+        "en": "The Red River rises after three days of rain, water up to the front-hall steps of Chèm communal house. Tám the keeper lets Khôi photograph the hall in the flood on one condition: don't publish the crack in the central ironwood pillar."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_01_hoc_lai_xe_may",
+          "missions:c1_05_mua_ngap_pho"
+        ],
+        "hours": [
+          8,
+          10
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "ra_chem",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ra đình Chèm theo đê Thụy Phương, mặt đê ướt, nước sông sát chân đê",
+            "en": "Out to Chèm along the Thụy Phương dyke, the surface wet, the river against the foot of the dyke"
+          },
+          "target": "landmarks:dinh_chem",
+          "params": {
+            "max_speed_kmh": 40,
+            "force_event": "events:mua_ngap",
+            "force_weather": "rain"
+          },
+          "next": "gap_ong_tam"
+        },
+        {
+          "id": "gap_ong_tam",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông Tám đứng ở bậc tam quan, nước đến mắt cá",
+            "en": "Tám stands on the gate steps, water at his ankles"
+          },
+          "target": "landmarks:dinh_chem",
+          "dialogue": "dialogues:dlg_q_btl_02_gap",
+          "next": "chup"
+        },
+        {
+          "id": "chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp đình Chèm trong nước: tam quan soi bóng, cột lim gian giữa, ông Tám và cái thước đo nước",
+            "en": "Shoot Chèm in the flood: the gate reflected, the central ironwood pillar, Tám and his water gauge"
+          },
+          "target": "landmarks:dinh_chem",
+          "params": {
+            "targets": 4,
+            "require_consent": true,
+            "on_foot": true,
+            "difficulty": 3,
+            "duration_s": 150
+          },
+          "next": {
+            "dat": "vet_nut",
+            "chua_dat": "chup_lai",
+            "default": "vet_nut"
+          }
+        },
+        {
+          "id": "chup_lai",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Mưa hắt vào ống kính, ba tấm nhòe. Lau kính, chụp lại dưới mái tiền tế",
+            "en": "Rain on the lens, three frames smeared. Wipe it and reshoot from under the front-hall roof"
+          },
+          "target": "landmarks:dinh_chem",
+          "params": {
+            "targets": 2,
+            "require_consent": true,
+            "on_foot": true,
+            "difficulty": 2,
+            "duration_s": 120
+          },
+          "next": "vet_nut"
+        },
+        {
+          "id": "vet_nut",
+          "kind": "talk",
+          "objective": {
+            "vi": "Khôi xem lại ảnh, ông Tám nhìn qua vai",
+            "en": "Khôi reviews the frames, Tám looks over his shoulder"
+          },
+          "target": "landmarks:dinh_chem",
+          "dialogue": "dialogues:dlg_q_btl_02_vet_nut"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 3
+        }
+      }
+    },
+    {
+      "id": "q_btl_03_ga_nhon_di_lam",
+      "tags": [
+        "side",
+        "bac_tu_liem",
+        "interview",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Tàu Nhổn sáu giờ sáng",
+        "en": "The six o'clock Nhổn train"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:chi_loan_tay_tuu",
+      "summary": {
+        "vi": "Lan đi tàu Nhổn chuyến sáu giờ lên ga Nhổn gặp Nhi, con gái chị Loan, xin việc ở quán. Nhi cắm hoa đẹp, nói dối tuổi nghề, và không muốn nghe về ruộng.",
+        "en": "Lan rides the six o'clock Nhổn train out to Nhổn station to meet Nhi, Loan's daughter, who wants a job at the shop. Nhi arranges flowers beautifully, lies about her experience, and won't hear about the fields."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_btl_01_cuc_ram_thang_bay",
+          "missions:c1_07_mark_an_pho"
+        ],
+        "hours": [
+          5.75,
+          6.25
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "len_tau",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đi bộ ra ga Cầu Giấy, lên tàu Nhổn chuyến sáu giờ, xuống ga cuối",
+            "en": "Walk to Cầu Giấy station, take the six o'clock Nhổn train to the last stop"
+          },
+          "target": "landmarks:ga_nhon",
+          "params": {
+            "on_foot": true,
+            "vehicle": "vehicles:tau_dien_cat_linh",
+            "duration_s": 90
+          },
+          "next": "gap_nhi"
+        },
+        {
+          "id": "gap_nhi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nhi chờ ở chân cầu thang ga Nhổn, ôm một bó cúc cắm sẵn",
+            "en": "Nhi waits at the foot of the Nhổn station stairs holding a ready-arranged bunch of chrysanthemums"
+          },
+          "target": "landmarks:ga_nhon",
+          "dialogue": "dialogues:dlg_q_btl_03_gap",
+          "next": "thu_viec"
+        },
+        {
+          "id": "thu_viec",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Thử việc tại chỗ: Nhi cắm lại bó hoa cho bàn quán trong ba phút, Lan chấm",
+            "en": "On-the-spot trial: Nhi rearranges the bunch for a shop table in three minutes, Lan grades"
+          },
+          "target": "landmarks:ga_nhon",
+          "params": {
+            "test": "cam_hoa_ban_quan",
+            "grader": "characters:lan",
+            "difficulty": 1,
+            "pass_score": 6,
+            "duration_s": 90
+          },
+          "next": {
+            "dat": "quyet",
+            "chua_dat": "cam_lai",
+            "default": "quyet"
+          }
+        },
+        {
+          "id": "cam_lai",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bó hoa đổ. Nhi cắm lại, tay run",
+            "en": "The bunch topples. Nhi redoes it, hands shaking"
+          },
+          "target": "landmarks:ga_nhon",
+          "dialogue": "dialogues:dlg_q_btl_03_cam_lai",
+          "next": "quyet"
+        },
+        {
+          "id": "quyet",
+          "kind": "talk",
+          "objective": {
+            "vi": "Lan quyết",
+            "en": "Lan decides"
+          },
+          "target": "landmarks:ga_nhon",
+          "dialogue": "dialogues:dlg_q_btl_03_quyet"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_ban_hang_rong": 1
+        }
+      }
+    },
+    {
+      "id": "q_gl_01_sau_muoi_bat",
+      "tags": [
+        "stranger",
+        "gia_lam",
+        "delivery",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Sáu mươi cái bát",
+        "en": "Sixty bowls"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:ti_bat_trang",
+      "summary": {
+        "vi": "Tí đặt xe chở sáu mươi bát chiết yêu vẽ tay từ Bát Tràng về nhà hàng phố Bát Sứ trước giờ mở cửa. Qua cầu Chương Dương với thùng gốm sau lưng, Minh nghe thấy tiếng kêu lạ trong thùng: ba cái bát nứt được xếp dưới đáy.",
+        "en": "Tí books a ride for sixty hand-painted bowls from Bát Tràng to a restaurant on Bát Sứ street before opening time. Over Chương Dương bridge with the crate on his back, Minh hears a wrong note in the box: three cracked bowls packed at the bottom."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p1_cuoc_xe_luc_rang_dong"
+        ],
+        "hours": [
+          7,
+          8
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "sang_bat_trang",
+          "kind": "ride",
+          "objective": {
+            "vi": "Qua cầu Chương Dương sang Bát Tràng, đường đê Long Biên, sáng sớm xe tải gốm",
+            "en": "Over Chương Dương bridge to Bát Tràng along the Long Biên dyke, pottery trucks in the early morning"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "params": {
+            "max_speed_kmh": 50,
+            "route_via": "landmarks:cau_chuong_duong"
+          },
+          "next": "nhan_hang"
+        },
+        {
+          "id": "nhan_hang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tí dán thùng ở sân nhà ông Cả Dậu, ông đang ở lò",
+            "en": "Tí tapes up the crate in Cả Dậu's yard, the old man is at the kiln"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "dialogue": "dialogues:dlg_q_gl_01_nhan_hang",
+          "next": "cho_ve"
+        },
+        {
+          "id": "cho_ve",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Chở thùng sáu mươi bát về nhà hàng phố Bát Sứ trước chín giờ, qua cầu Chương Dương gió ngang",
+            "en": "Bring the crate of sixty bowls to the restaurant on Bát Sứ before nine, across Chương Dương in a crosswind"
+          },
+          "target": {
+            "lat": 21.0345,
+            "lon": 105.848
+          },
+          "params": {
+            "cargo": "bat_chiet_yeu_60",
+            "cargo_fragile": true,
+            "carry_weight": "nang",
+            "max_speed_kmh": 40,
+            "route_via": "landmarks:cau_chuong_duong",
+            "spill_sensitive": true,
+            "time_limit_s": 1500
+          },
+          "next": "giao"
+        },
+        {
+          "id": "giao",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chủ nhà hàng mở thùng đếm bát",
+            "en": "The restaurant owner opens the crate and counts"
+          },
+          "target": {
+            "lat": 21.0345,
+            "lon": 105.848
+          },
+          "dialogue": "dialogues:dlg_q_gl_01_giao"
+        }
+      ],
+      "reward": {
+        "money_vnd": 130000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_gl_02_ve_bat_pho_tho"
+      ]
+    },
+    {
+      "id": "q_gl_02_ve_bat_pho_tho",
+      "tags": [
+        "side",
+        "gia_lam",
+        "craft",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Vẽ bát Phở Thọ",
+        "en": "Painting the Phở Thọ bowl"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:ong_ca_dau_bat_trang",
+      "summary": {
+        "vi": "Lan sang Bát Tràng đặt ba mươi bát in tên quán. Ông Cả Dậu bắt Lan tự vẽ cái mẫu bằng bút lông men lam; Tí đưa mẫu khác: chữ to, màu nổi, 'lên hình đẹp'. Lan chọn cái bát khách sẽ ăn hay cái bát khách sẽ chụp.",
+        "en": "Lan goes to Bát Tràng to order thirty bowls with the shop's name. Cả Dậu makes her paint the sample herself with a blue-underglaze brush; Tí offers another design: big letters, loud colour, 'photographs well'. Lan picks the bowl customers will eat from or the bowl they will photograph."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_gl_01_sau_muoi_bat",
+          "missions:q_hm_01_rau_den_lu"
+        ],
+        "hours": [
+          8.5,
+          10
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "sang_lang",
+          "kind": "ride",
+          "objective": {
+            "vi": "Sang Bát Tràng buổi sáng, qua cầu Chương Dương, rẽ đê",
+            "en": "Over to Bát Tràng in the morning, across Chương Dương, onto the dyke"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "params": {
+            "max_speed_kmh": 50
+          },
+          "next": "gap_ong_ca"
+        },
+        {
+          "id": "gap_ong_ca",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông Cả Dậu ngồi vẽ men lam, Tí giơ điện thoại",
+            "en": "Cả Dậu sits painting blue underglaze, Tí holds up his phone"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "dialogue": "dialogues:dlg_q_gl_02_gap",
+          "next": "ve"
+        },
+        {
+          "id": "ve",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Vẽ chữ 'Phở Thọ' và một cành hành lên bát mộc bằng bút lông, men lam, không được dừng tay giữa nét",
+            "en": "Paint 'Phở Thọ' and a spring-onion stalk on a raw bowl with the brush, blue underglaze, no stopping mid-stroke"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "params": {
+            "test": "ve_men_lam",
+            "grader": "characters:ong_ca_dau_bat_trang",
+            "difficulty": 3,
+            "pass_score": 6,
+            "duration_s": 180
+          },
+          "next": {
+            "dat": "chon_mau",
+            "chua_dat": "ve_lai",
+            "default": "chon_mau"
+          }
+        },
+        {
+          "id": "ve_lai",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nét đứt. Ông Cả lấy bát khác, bảo vẽ lại từ đầu",
+            "en": "The stroke broke. Cả Dậu takes another bowl, says start again"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "dialogue": "dialogues:dlg_q_gl_02_ve_lai",
+          "next": "chon_mau"
+        },
+        {
+          "id": "chon_mau",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hai cái mẫu trên bàn: bát Lan vẽ và bát Tí thiết kế",
+            "en": "Two samples on the table: the bowl Lan painted and the one Tí designed"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "dialogue": "dialogues:dlg_q_gl_02_chon_mau"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_ban_hang_rong": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_gl_03_tuong_than_to_ong"
+      ]
+    },
+    {
+      "id": "q_gl_03_tuong_than_to_ong",
+      "tags": [
+        "side",
+        "gia_lam",
+        "photo",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Bức tường than tổ ong",
+        "en": "The coal-cake wall"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:ong_ca_dau_bat_trang",
+      "summary": {
+        "vi": "Bức tường dán than tổ ong cuối cùng ở Bát Tràng bị dỡ sáng thứ Bảy. Ông Cả Dậu muốn một tấm ảnh phim; Tí muốn quay clip 'ông nội và bức tường' kịp lên xu hướng trước khi búa vào. Khôi có một tiếng.",
+        "en": "The last coal-cake wall in Bát Tràng comes down on Saturday morning. Cả Dậu wants one film photograph; Tí wants a 'grandpa and the wall' clip to trend before the hammers start. Khôi has one hour."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_gl_02_ve_bat_pho_tho",
+          "missions:c1_01_hoc_lai_xe_may"
+        ],
+        "hours": [
+          6.5,
+          7.5
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "sang_lang",
+          "kind": "ride",
+          "objective": {
+            "vi": "Sang Bát Tràng trước bảy rưỡi, giờ thợ dỡ tường đến",
+            "en": "Over to Bát Tràng before half past seven, when the demolition crew arrives"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "params": {
+            "max_speed_kmh": 50,
+            "time_limit_s": 1500
+          },
+          "next": "truoc_tuong"
+        },
+        {
+          "id": "truoc_tuong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Sau nhà ông Cả: bức tường than tổ ong đen, ông ngồi ghế, Tí dựng gimbal",
+            "en": "Behind the house: the black coal-cake wall, the old man on a chair, Tí setting up a gimbal"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "dialogue": "dialogues:dlg_q_gl_03_truoc_tuong",
+          "next": "chup"
+        },
+        {
+          "id": "chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp phim: bức tường, bàn tay ông Cả đặt lên than, và cái lò gas sáng bóng phía sau",
+            "en": "Film frames: the wall, Cả Dậu's hand on the coal, and the gleaming gas kiln behind"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "params": {
+            "targets": 3,
+            "require_consent": true,
+            "on_foot": true,
+            "difficulty": 3,
+            "duration_s": 150,
+            "item": "items:may_anh_phim_khai"
+          },
+          "next": {
+            "dat": "bua",
+            "chua_dat": "chup_lai",
+            "default": "bua"
+          }
+        },
+        {
+          "id": "chup_lai",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Nắng chưa lên, than đen thành một mảng. Đợi nắng qua mái, chụp lại hai khung",
+            "en": "No sun yet, the coal is one black mass. Wait for the light over the roof, two more frames"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "params": {
+            "targets": 2,
+            "require_consent": true,
+            "on_foot": true,
+            "difficulty": 2,
+            "duration_s": 120
+          },
+          "next": "bua"
+        },
+        {
+          "id": "bua",
+          "kind": "talk",
+          "objective": {
+            "vi": "Thợ dỡ đến. Tí giơ điện thoại",
+            "en": "The crew arrives. Tí raises his phone"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "dialogue": "dialogues:dlg_q_gl_03_bua"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 3
+        }
+      }
+    },
+    {
+      "id": "q_tx_01_tang_tien_tro",
+      "tags": [
+        "side",
+        "thanh_xuan",
+        "economy",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Tăng năm trăm",
+        "en": "Up by five hundred"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:ba_chu_tro",
+      "summary": {
+        "vi": "Tối, bà chủ trọ gõ cửa phòng Minh: từ tháng sau tăng năm trăm nghìn, điện ba nghìn rưỡi một số. Minh trả thêm và nói 'ổn', hay mặc cả bằng việc anh làm được: sửa máy bơm và dây điện cả dãy trọ.",
+        "en": "Evening, the landlady knocks on Minh's door: from next month, five hundred thousand more, electricity at three and a half a unit. Minh pays up and says 'fine', or bargains with what he can do: fix the water pump and the wiring for the whole row of rooms."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_05_mua_ngap_pho"
+        ],
+        "hours": [
+          20,
+          21
+        ]
+      },
+      "start": {
+        "lat": 20.993,
+        "lon": 105.812
+      },
+      "steps": [
+        {
+          "id": "ve_tro",
+          "kind": "ride",
+          "objective": {
+            "vi": "Về ngõ Khương Đình, trời đã tối, bà chủ ngồi chờ ở sân",
+            "en": "Back to the Khương Đình alley after dark, the landlady waiting in the yard"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "params": {
+            "max_speed_kmh": 40
+          },
+          "next": "go_cua"
+        },
+        {
+          "id": "go_cua",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bà chủ trọ nói chuyện tiền phòng",
+            "en": "The landlady talks rent"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_q_tx_01_go_cua",
+          "next": "re"
+        },
+        {
+          "id": "re",
+          "kind": "choice",
+          "objective": {
+            "vi": "Rẽ theo điều Minh vừa nói",
+            "en": "Branch on what Minh just said"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "params": {
+            "branch_source": "flag"
+          },
+          "next": {
+            "tx_minh_mac_ca_sua": "sua_bom",
+            "default": "xong"
+          }
+        },
+        {
+          "id": "sua_bom",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Sửa máy bơm giếng và thay dây điện ba phòng, cầu dao nhảy hai lần",
+            "en": "Fix the well pump and rewire three rooms, the breaker trips twice"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "params": {
+            "activity": "activities:act_sua_xe_may",
+            "fault_pool": [
+              "may_bom_chay_tu",
+              "day_dien_hong",
+              "cau_dao_nhay"
+            ],
+            "max_faults": 2,
+            "difficulty": 3,
+            "duration_s": 240
+          },
+          "next": {
+            "dat": "xong",
+            "chua_dat": "goi_duc",
+            "default": "xong"
+          }
+        },
+        {
+          "id": "goi_duc",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cầu dao nhảy lần ba. Minh gọi anh Đức, mất một trăm tiền công",
+            "en": "Breaker trips a third time. Minh calls Đức, one hundred in labour"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_q_tx_01_goi_duc",
+          "next": "xong"
+        },
+        {
+          "id": "xong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bà chủ chốt tiền phòng",
+            "en": "The landlady settles the rent"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_q_tx_01_xong"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 1
+        }
+      }
+    },
+    {
+      "id": "q_tx_02_song_to_lich",
+      "tags": [
+        "side",
+        "thanh_xuan",
+        "photo",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Năm giờ sáng dưới lòng Tô Lịch",
+        "en": "Five in the morning on the Tô Lịch riverbed"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:chu_sau_thoat_nuoc",
+      "summary": {
+        "vi": "Tổ nạo vét sông Tô Lịch làm ca đêm cuối trước hạn tháng Chín. Chú Sáu cho Khôi xuống lòng sông chụp, với lời dặn của con gái: 'đừng để ai chụp mặt bố'. Khôi chọn ảnh có mặt người và tên, hay bóng người trong bùn.",
+        "en": "The Tô Lịch dredging crew works its last night shift before the September deadline. Sáu lets Khôi down onto the riverbed to shoot, with his daughter's words in mind: 'don't let anyone photograph your face'. Khôi chooses faces with names, or silhouettes in the mud."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_01_hoc_lai_xe_may",
+          "missions:q_tx_01_tang_tien_tro"
+        ],
+        "hours": [
+          4.75,
+          5.5
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "ra_song",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ra bờ sông Tô Lịch đoạn Khương Đình trước khi trời sáng, đèn máy xúc còn bật",
+            "en": "Get to the Tô Lịch bank at Khương Đình before daylight, the excavator lights still on"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "params": {
+            "max_speed_kmh": 45,
+            "time_limit_s": 1000
+          },
+          "next": "gap_sau"
+        },
+        {
+          "id": "gap_sau",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chú Sáu lên bờ hút thuốc, khẩu trang kéo xuống cằm",
+            "en": "Sáu climbs up for a smoke, mask pulled to his chin"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_q_tx_02_gap",
+          "next": "chup"
+        },
+        {
+          "id": "chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Xuống lòng sông, chụp tổ nạo vét: bùn đen, ủng, máy xúc, trời sáng dần trên mái Royal",
+            "en": "Down on the riverbed, shoot the crew: black mud, boots, the excavator, dawn over the Royal towers"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "params": {
+            "targets": 4,
+            "require_consent": true,
+            "on_foot": true,
+            "difficulty": 3,
+            "duration_s": 150
+          },
+          "next": {
+            "dat": "ten",
+            "chua_dat": "chup_lai",
+            "default": "ten"
+          }
+        },
+        {
+          "id": "chup_lai",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Ống kính dính bùn bắn, hai tấm hỏng. Lau, chụp lại từ trên cầu",
+            "en": "Mud spatter on the lens, two frames ruined. Wipe it, reshoot from the bridge"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "params": {
+            "targets": 2,
+            "require_consent": true,
+            "on_foot": true,
+            "difficulty": 2,
+            "duration_s": 120
+          },
+          "next": "ten"
+        },
+        {
+          "id": "ten",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chú Sáu hỏi Khôi định ghi tên ai dưới ảnh",
+            "en": "Sáu asks whose names Khôi plans to write under the pictures"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_q_tx_02_ten"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 2
+        }
+      }
+    },
+    {
+      "id": "q_tx_03_san_bang_royal",
+      "tags": [
+        "side",
+        "thanh_xuan",
+        "business",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Một ki-ốt dưới lòng đất",
+        "en": "A kiosk underground"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:ba_chu_tro",
+      "summary": {
+        "vi": "Bà chủ trọ dẫn Lan gặp cháu bà, quản lý khu ẩm thực dưới lòng đất Royal: một ki-ốt 'Phở Thọ' trong trung tâm thương mại, ba trăm bát một ngày, nước dùng nấu sẵn ở bếp trung tâm. Lan chọn quán phố cổ có khách Tây chụp bát, hay một thương hiệu dưới lòng đất.",
+        "en": "The landlady takes Lan to meet her nephew, who manages the underground food court at Royal: a 'Phở Thọ' kiosk in the mall, three hundred bowls a day, broth made in a central kitchen. Lan chooses the Old Quarter shop where foreigners photograph the bowls, or a brand underground."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_gl_02_ve_bat_pho_tho",
+          "missions:c1_08_pho_di_bo_toi_thu_bay"
+        ],
+        "hours": [
+          15,
+          16.5
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "toi_royal",
+          "kind": "ride",
+          "objective": {
+            "vi": "Tới Royal City, xuống tầng hầm B1, khu ẩm thực cạnh sân băng",
+            "en": "Get to Royal City, down to basement B1, the food court beside the ice rink"
+          },
+          "target": "landmarks:royal_city",
+          "params": {
+            "max_speed_kmh": 45
+          },
+          "next": "gap_quan_ly"
+        },
+        {
+          "id": "gap_quan_ly",
+          "kind": "talk",
+          "objective": {
+            "vi": "Quản lý khu ẩm thực mời Lan ngồi, bật màn hình doanh thu",
+            "en": "The food-court manager seats Lan and turns on the revenue screen"
+          },
+          "target": "landmarks:royal_city",
+          "dialogue": "dialogues:dlg_q_tx_03_gap",
+          "next": "nem_thu"
+        },
+        {
+          "id": "nem_thu",
+          "kind": "cook",
+          "objective": {
+            "vi": "Nếm thử nước dùng 'phở chuẩn' của bếp trung tâm, rồi nấu một bát theo cách của quán để so",
+            "en": "Taste the central kitchen's 'standard phở' broth, then cook one bowl the shop's way to compare"
+          },
+          "target": "landmarks:royal_city",
+          "params": {
+            "activity": "activities:act_nau_pho",
+            "recipe": "pho_bo_tai",
+            "servings": 1,
+            "grader": "characters:lan",
+            "difficulty": 2,
+            "duration_s": 180
+          },
+          "next": {
+            "dat": "quyet",
+            "chua_dat": "nem_lai",
+            "default": "quyet"
+          }
+        },
+        {
+          "id": "nem_lai",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bếp trung tâm không có nồi nước dùng ninh mười hai tiếng. Bát của Lan nhạt. Cô nếm lại và nói thật",
+            "en": "The central kitchen has no twelve-hour stock pot. Lan's bowl is thin. She tastes again and says so"
+          },
+          "target": "landmarks:royal_city",
+          "dialogue": "dialogues:dlg_q_tx_03_nem_lai",
+          "next": "quyet"
+        },
+        {
+          "id": "quyet",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hợp đồng để trên bàn",
+            "en": "The contract on the table"
+          },
+          "target": "landmarks:royal_city",
+          "dialogue": "dialogues:dlg_q_tx_03_quyet"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_ban_hang_rong": 1
+        }
+      }
+    },
+    {
+      "id": "q_md_01_ben_xe_5_gio_sang",
+      "tags": [
+        "stranger",
+        "my_dinh",
+        "ride",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Xe Lào Cai xuống lúc năm giờ",
+        "en": "The Lào Cai coach, five in the morning"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:chu_hoa_xe_om_my_dinh",
+      "summary": {
+        "vi": "Năm giờ sáng bến Mỹ Đình, xe đêm Lào Cai vào bến. Dũng xuống xe với tờ giấy địa chỉ, bị cò vây. Chú Hòa áo vàng quát cò; app của Minh nổ cuốc đúng Dũng. Chú Hòa hỏi Minh một câu: 'Mày là thằng nhường cuốc ở Yên Nghĩa?'",
+        "en": "Five in the morning at Mỹ Đình, the overnight Lào Cai coach pulls in. Dũng gets off with a slip of paper and the touts close in. Hòa in the yellow vest shouts them off; Minh's app pings a fare, Dũng. Hòa asks Minh one question: 'Are you the one who gave up a fare at Yên Nghĩa?'"
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_hd_04_so_khach_quen"
+        ],
+        "hours": [
+          4.5,
+          5
+        ]
+      },
+      "start": {
+        "lat": 20.993,
+        "lon": 105.812
+      },
+      "steps": [
+        {
+          "id": "ra_ben",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ra bến xe Mỹ Đình trước năm giờ, Phạm Hùng vắng, đèn vàng",
+            "en": "Get to Mỹ Đình coach station before five, Phạm Hùng empty under yellow lights"
+          },
+          "target": "landmarks:ben_xe_my_dinh",
+          "params": {
+            "max_speed_kmh": 50,
+            "time_limit_s": 900
+          },
+          "next": "co_vay"
+        },
+        {
+          "id": "co_vay",
+          "kind": "talk",
+          "objective": {
+            "vi": "Xe Lào Cai vào bến. Dũng bị ba cò vây ở cửa xe",
+            "en": "The Lào Cai coach pulls in. Three touts circle Dũng at the door"
+          },
+          "target": "landmarks:ben_xe_my_dinh",
+          "dialogue": "dialogues:dlg_q_md_01_co_vay",
+          "next": "chon"
+        },
+        {
+          "id": "chon",
+          "kind": "choice",
+          "objective": {
+            "vi": "Rẽ theo người chở Dũng",
+            "en": "Branch on who takes Dũng"
+          },
+          "target": "landmarks:ben_xe_my_dinh",
+          "params": {
+            "branch_source": "flag"
+          },
+          "next": {
+            "md_minh_cho_dung": "cho_dung",
+            "default": "xem_hoa_cho"
+          }
+        },
+        {
+          "id": "cho_dung",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở Dũng tới công trường ở Mỹ Đình theo tờ giấy, hai cây số, giá app",
+            "en": "Take Dũng to the building site in Mỹ Đình on the slip, two kilometres, app fare"
+          },
+          "target": {
+            "lat": 21.02,
+            "lon": 105.77
+          },
+          "params": {
+            "passenger": "characters:dung_lao_cai",
+            "helmet_for_passenger": true,
+            "max_speed_kmh": 35
+          },
+          "next": "cong_truong"
+        },
+        {
+          "id": "xem_hoa_cho",
+          "kind": "follow",
+          "objective": {
+            "vi": "Chạy theo xe chú Hòa chở Dũng tới công trường, để thằng bé nhớ hai cái mặt",
+            "en": "Follow Hòa's bike with Dũng to the site, so the kid remembers two faces"
+          },
+          "target": {
+            "lat": 21.02,
+            "lon": 105.77
+          },
+          "params": {
+            "follow": "characters:chu_hoa_xe_om_my_dinh",
+            "max_gap_m": 60,
+            "max_speed_kmh": 35
+          },
+          "next": "cong_truong"
+        },
+        {
+          "id": "cong_truong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cổng công trường, bảo vệ chưa mở",
+            "en": "The site gate, the guard not yet up"
+          },
+          "target": {
+            "lat": 21.02,
+            "lon": 105.77
+          },
+          "dialogue": "dialogues:dlg_q_md_01_cong_truong"
+        }
+      ],
+      "reward": {
+        "money_vnd": 20000,
+        "reputation": {
+          "hoi_xe_om_o_quan_chuong": 2
+        }
+      },
+      "unlocks": [
+        "missions:q_md_02_dem_doi_tuyen"
+      ]
+    },
+    {
+      "id": "q_md_02_dem_doi_tuyen",
+      "tags": [
+        "side",
+        "my_dinh",
+        "event",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Đêm đội tuyển",
+        "en": "National team night"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:dung_lao_cai",
+      "summary": {
+        "vi": "Việt Nam đá ở Mỹ Đình. Dũng đứng trong sân lần đầu. Sau trận, bốn vạn người đổ ra Lê Đức Thọ, ai cũng 'đi bão'. Dũng muốn đi, không mũ, cờ quấn người. Minh quyết định đêm nay chạy xe thế nào.",
+        "en": "Vietnam play at Mỹ Đình. Dũng stands inside the stadium for the first time. After the match forty thousand people pour onto Lê Đức Thọ, everyone 'riding the storm'. Dũng wants to go, no helmet, a flag wrapped round him. Minh decides how he rides tonight."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_md_01_ben_xe_5_gio_sang"
+        ],
+        "hours": [
+          18.5,
+          19.25
+        ]
+      },
+      "start": {
+        "lat": 20.993,
+        "lon": 105.812
+      },
+      "steps": [
+        {
+          "id": "don_dung",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Đón Dũng ở công trường, chở ra cổng sân Mỹ Đình trước giờ bóng lăn",
+            "en": "Pick Dũng up at the site, get to the Mỹ Đình stadium gate before kick-off"
+          },
+          "target": "landmarks:svd_my_dinh",
+          "params": {
+            "passenger": "characters:dung_lao_cai",
+            "helmet_for_passenger": true,
+            "max_speed_kmh": 35,
+            "time_limit_s": 600
+          },
+          "next": "tran_dau"
+        },
+        {
+          "id": "tran_dau",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Khán đài B, hai tiếng. Việt Nam thắng phút tám chín",
+            "en": "Stand B, two hours. Vietnam score the winner in the eighty-ninth minute"
+          },
+          "target": "landmarks:svd_my_dinh",
+          "params": {
+            "duration_s": 90,
+            "time_compression": 12
+          },
+          "next": "sau_tran"
+        },
+        {
+          "id": "sau_tran",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cổng sân, 10 giờ đêm, còi xe, cờ, Dũng khản tiếng",
+            "en": "The stadium gate, ten at night, horns, flags, Dũng hoarse"
+          },
+          "target": "landmarks:svd_my_dinh",
+          "dialogue": "dialogues:dlg_q_md_02_sau_tran",
+          "next": "re"
+        },
+        {
+          "id": "re",
+          "kind": "choice",
+          "objective": {
+            "vi": "Đi bão hay về",
+            "en": "Ride the storm or go home"
+          },
+          "target": "landmarks:svd_my_dinh",
+          "params": {
+            "branch_source": "flag"
+          },
+          "next": {
+            "md_minh_di_bao": "di_bao",
+            "default": "ve_som"
+          }
+        },
+        {
+          "id": "di_bao",
+          "kind": "ride",
+          "objective": {
+            "vi": "Đi bão theo dòng xe Lê Đức Thọ ra Hồ Gươm: hai người một xe, mũ đủ, cờ không che mắt, không vượt đèn, không bấm còi quá 11 giờ",
+            "en": "Ride the storm with the crowd down Lê Đức Thọ to Hoàn Kiếm: two on the bike, helmets on, flag out of the eyes, no red lights, no horn after eleven"
+          },
+          "target": "landmarks:ho_hoan_kiem",
+          "params": {
+            "passenger": "characters:dung_lao_cai",
+            "helmet_for_passenger": true,
+            "max_speed_kmh": 25,
+            "rule": "traffic_rules:bam_coi_ban_dem",
+            "safe_zone_only": true,
+            "difficulty": 3
+          },
+          "fail_if": [
+            "flag:minh_nghe_dien_thoai_khi_lai"
+          ],
+          "next": "ket"
+        },
+        {
+          "id": "ve_som",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở Dũng về công trường bằng đường Mễ Trì vắng, tránh dòng xe",
+            "en": "Take Dũng back to the site by the empty Mễ Trì road, away from the crowd"
+          },
+          "target": {
+            "lat": 21.02,
+            "lon": 105.77
+          },
+          "params": {
+            "passenger": "characters:dung_lao_cai",
+            "helmet_for_passenger": true,
+            "max_speed_kmh": 40
+          },
+          "next": "ket"
+        },
+        {
+          "id": "ket",
+          "kind": "talk",
+          "objective": {
+            "vi": "Dũng xuống xe",
+            "en": "Dũng gets off"
+          },
+          "target": {
+            "lat": 21.02,
+            "lon": 105.77
+          },
+          "dialogue": "dialogues:dlg_q_md_02_ket"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "cong_dong_tai_xe_vo": 2
+        }
+      }
+    },
+    {
+      "id": "q_md_03_bao_tang_ha_noi",
+      "tags": [
+        "side",
+        "my_dinh",
+        "photo",
+        "district_arc"
+      ],
+      "name": {
+        "vi": "Mười bốn quận trong kim tự tháp ngược",
+        "en": "Fourteen districts in the inverted pyramid"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:chi_quynh_bao_tang",
+      "summary": {
+        "vi": "Chị Quỳnh mời Khôi làm triển lãm 'Hà Nội mười bốn quận' ở Bảo tàng Hà Nội bằng chính những tấm anh đã chụp ở từng quận, và hỏi về từng tấm: ai cầm bản gốc, ai được ghi tên, tấm nào anh đã không đăng. Rồi chị hỏi tên triển lãm.",
+        "en": "Quỳnh invites Khôi to mount 'Hanoi in fourteen districts' at the Hanoi Museum from the very frames he shot in each district, and asks about each one: who holds the original, who gets named, which one he chose not to publish. Then she asks what the show is called."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_cg_02_anh_nha_rong",
+          "missions:q_hbt_03_dem_hoa_sua",
+          "missions:q_hm_03_dieu_yen_so",
+          "missions:q_hd_03_anh_cho_shop_lua",
+          "missions:q_btl_02_nuoc_len_dinh_chem",
+          "missions:q_gl_03_tuong_than_to_ong",
+          "missions:q_tx_02_song_to_lich"
+        ],
+        "hours": [
+          9,
+          10.5
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "toi_bao_tang",
+          "kind": "ride",
+          "objective": {
+            "vi": "Tới Bảo tàng Hà Nội, kim tự tháp ngược cạnh Trung tâm Hội nghị Quốc gia",
+            "en": "Get to the Hanoi Museum, the inverted pyramid beside the National Convention Centre"
+          },
+          "target": "landmarks:bao_tang_ha_noi",
+          "params": {
+            "max_speed_kmh": 45
+          },
+          "next": "phong_trung_bay"
+        },
+        {
+          "id": "phong_trung_bay",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tầng ba, phòng trưng bày trống, chị Quỳnh với tập chú thích",
+            "en": "Third floor, an empty gallery, Quỳnh with her sheaf of captions"
+          },
+          "target": "landmarks:bao_tang_ha_noi",
+          "dialogue": "dialogues:dlg_q_md_03_phong",
+          "next": "chon_anh"
+        },
+        {
+          "id": "chon_anh",
+          "kind": "collect",
+          "objective": {
+            "vi": "Chọn mười bốn tấm, mỗi quận một, từ kho ảnh trên máy; mỗi tấm phải có người được phép",
+            "en": "Choose fourteen frames, one per district, from the archive on the camera; every frame needs someone's consent"
+          },
+          "target": "landmarks:bao_tang_ha_noi",
+          "params": {
+            "qty": 14,
+            "collectible_set": "activities:act_chup_anh_pho",
+            "on_foot": true,
+            "duration_s": 180
+          },
+          "next": "ten_trien_lam"
+        },
+        {
+          "id": "ten_trien_lam",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chị Quỳnh hỏi tên triển lãm",
+            "en": "Quỳnh asks for the show's title"
+          },
+          "target": "landmarks:bao_tang_ha_noi",
+          "dialogue": "dialogues:dlg_q_md_03_ten"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 5
+        }
+      },
+      "unlocks": [
+        "missions:q_md_04_khai_mac"
+      ]
+    },
+    {
+      "id": "q_md_04_khai_mac",
+      "tags": [
+        "side",
+        "my_dinh",
+        "event",
+        "district_arc",
+        "set_piece"
+      ],
+      "name": {
+        "vi": "Khai mạc: mười bốn người",
+        "en": "Opening night: fourteen people"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi",
+        "characters:minh",
+        "characters:lan"
+      ],
+      "giver": "characters:chi_quynh_bao_tang",
+      "summary": {
+        "vi": "Tối thứ Sáu, Bảo tàng Hà Nội. Mười bốn người trong ảnh đến từ mười bốn quận: ông Phúc, bà Nhung, chú Bình, cô Thắm, ông Tám, ông Cả Dậu, chú Sáu, chú Hòa... Minh và Lan đứng cạnh Khôi. Mỗi người nhớ một việc ba người đã làm, hoặc đã không làm.",
+        "en": "Friday evening, the Hanoi Museum. The fourteen people in the pictures arrive from fourteen districts: Phúc, Nhung, Bình, Thắm, Tám, Cả Dậu, Sáu, Hòa... Minh and Lan stand beside Khôi. Each of them remembers one thing the three did, or did not do."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:q_md_03_bao_tang_ha_noi",
+          "missions:q_md_02_dem_doi_tuyen",
+          "missions:q_tx_03_san_bang_royal",
+          "missions:q_hd_04_so_khach_quen",
+          "missions:q_btl_03_ga_nhon_di_lam",
+          "missions:q_tx_01_tang_tien_tro"
+        ],
+        "hours": [
+          18,
+          18.75
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "toi_bao_tang",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ba người đi hai xe tới Bảo tàng Hà Nội, Lan ngồi sau Minh, Khôi chở bản in cuối",
+            "en": "Three people on two bikes to the Hanoi Museum, Lan behind Minh, Khôi carrying the last print"
+          },
+          "target": "landmarks:bao_tang_ha_noi",
+          "params": {
+            "max_speed_kmh": 45,
+            "passenger": "characters:lan",
+            "helmet_for_passenger": true,
+            "time_limit_s": 1500
+          },
+          "next": "sanh"
+        },
+        {
+          "id": "sanh",
+          "kind": "talk",
+          "objective": {
+            "vi": "Sảnh kim tự tháp ngược, mười bốn người, mười bốn tấm",
+            "en": "The inverted pyramid's lobby, fourteen people, fourteen frames"
+          },
+          "target": "landmarks:bao_tang_ha_noi",
+          "dialogue": "dialogues:dlg_q_md_04_sanh",
+          "next": "di_mot_vong"
+        },
+        {
+          "id": "di_mot_vong",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đi một vòng phòng trưng bày tầng ba theo thứ tự quận",
+            "en": "Walk the third-floor gallery in district order"
+          },
+          "target": "landmarks:bao_tang_ha_noi",
+          "params": {
+            "on_foot": true,
+            "duration_s": 120
+          },
+          "next": "tam_cuoi"
+        },
+        {
+          "id": "tam_cuoi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tấm cuối, giữa phòng: số 49 Hàng Chiếu",
+            "en": "The last frame, centre of the room: 49 Hàng Chiếu"
+          },
+          "target": "landmarks:bao_tang_ha_noi",
+          "dialogue": "dialogues:dlg_q_md_04_tam_cuoi"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 5,
+          "to_dan_pho_hang_chieu": 3,
+          "cong_dong_tai_xe_vo": 3
+        }
+      }
+    }
+  ]
+}
