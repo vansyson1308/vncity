@@ -1121,6 +1121,10 @@ struct HANOICITYRUNTIME_API FHanoiLandmarkModelling
 	/** [json: notes] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FString Notes;
+
+	/** Trademarked real-world name of the place (reference only; never shown in game). `name` holds the parody name used on in-game signage, maps and dialogue, like GTA's Lifeinvader for Facebook. [json: real_name] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString RealName;
 };
 
 /** Row of collection 'landmarks' (DataTable row name = id). Hero locations modelled by hand (or photogrammetry) instead of procedurally. Must be instantly recognisable. */

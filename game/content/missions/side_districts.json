@@ -2201,8 +2201,8 @@
           "id": "toi_royal",
           "kind": "ride",
           "objective": {
-            "vi": "Tới Royal City, xuống tầng hầm B1, khu ẩm thực cạnh sân băng",
-            "en": "Get to Royal City, down to basement B1, the food court beside the ice rink"
+            "vi": "Tới Hoàng Gia City, xuống tầng hầm B1, khu ẩm thực cạnh sân băng",
+            "en": "Get to Hoàng Gia City, down to basement B1, the food court beside the ice rink"
           },
           "target": "landmarks:royal_city",
           "params": {
