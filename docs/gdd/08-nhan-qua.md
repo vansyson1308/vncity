@@ -62,13 +62,21 @@ Cờ chương 0-1 và nơi chương 2 đọc chúng:
 | `minh_lai_xe_khong_do_la` / `minh_nhan_viec_kim_long` / `minh_suy_nghi` (1.3) | `c2_03` Thảo giao danh sách thứ hai: ba lối vào khác nhau |
 | `lan_biet_danh_sach` / `minh_giu_kin_danh_sach` (1.3) | `c2_03` Lan biết hay không khi Minh gặp rắc rối; `c2_07` ai gọi ai lúc 23:30 |
 | `lan_lo_thong_tin_mat` (1.6) | `c2_02` ngân hàng cũ gọi: điều tra thay vì mời về |
-| `lan_de_xuat_tu_quan` (1.6) | `c2_07` lựa chọn "Phương án tự quản" mở với Vĩnh |
+| `lan_de_xuat_tu_quan` (1.6) | `c2_02` ngân hàng gọi lên *trình bày xin vay* (minigame 6 câu dòng tiền) thay vì mời về; `c2_07` lựa chọn "Phương án tự quản" mở với Vĩnh |
 | `khoi_xin_thoi_gian` / `khoi_giu_phan` (1.6) | `c2_01` ông Thắng, `c2_07` Vĩnh nói với ai trước |
 | `lan_pho_co_dien` / `lan_pho_chieu_tro`, `video_mark_viral` (1.7) | `c2_05` khách Tết đông hay vắng, Mark quay lại hay không |
 | `khoi_tang_anh_thao` / `khoi_giu_ban_goc`, `linh_dang_anh_thao` (1.8) | `c2_06` Thảo ở Hà Đông: có mở cửa cho Khôi không |
 | `lan_tu_choi_vinh` / `lan_xin_thoi_gian` / `lan_moi_vinh_dau_tu_tu_quan` (1.9) | `c2_07` Vĩnh nhắc lại đúng câu Lan đã nói |
 | `khoi_nghieng_o_lai` / `khoi_nghieng_ban` / `khoi_chua_quyet` (1.2) | `c2_01` ông Thắng nhắc; `c2_08` cụ Thọ chọn ai xông đất |
 | `duoc_do_o_quan_chuong` (S4), `quen_ong_thang` (1.2), `tang_tem_phieu_bao_tang` (S8) | `c2_04` hội xe ôm giúp Minh hay không; `c2_01`; `c2_05` |
+| `tho_cuu_giay` / `tho_cuu_con` (P0 mở màn 1972, PR #8) | `c2_01` sau băng 12, Lan nhận ra vết bỏng tay phải của ông là vì tờ giấy |
+| `minh_giu_viec_kim_long` / `minh_bo_viec_kim_long` (1.5, PR #8) | `c2_03` tin nhắn của Thảo và lời Tuấn gọi đúng tên lựa chọn ("mày bảo giữ việc để trả nợ") |
+| `minh_ban_tin_ong_tu` / `minh_khong_ban_tin` (S13 "Tin đầu tiên", PR #8) | `c2_03` ông Tư: cái tin về số 7 Hàng Bạc là của Minh hay của Hùng |
+
+Lựa chọn trong buổi trình bày `c2_02` (gộp từ bản nháp chương 2 của luồng quận, PR #8) và nơi đọc:
+`lan_bao_lanh_co_hanh` (chỉ mở nếu `lan_tinh_no_cho_co`) / `lan_loai_co_hanh` / `lan_xin_hai_tuan` /
+`lan_rut_phuong_an` (thua minigame) → cụ Thọ ngay trưa đó (`dlg_c2_02_cu_tho`), cô Hạnh trước bàn thờ
+Táo quân (`c2_05`), Vĩnh đêm giao thừa (`c2_07`: "Tôi mua phần của người bị bỏ lại").
 
 ## 3. Điểm nhấn từng chương
 

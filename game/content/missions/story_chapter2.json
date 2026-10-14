@@ -221,8 +221,8 @@
       ],
       "giver": "characters:quan_truong_phong",
       "summary": {
-        "vi": "Sếp cũ gọi Lan lên tầng 31. Nếu Lan đã lộ hồ sơ vay ở tổ dân phố thì đó là một cuộc điều tra; nếu không, đó là một lời mời về làm việc.",
-        "en": "Lan's old boss calls her to floor 31: an internal investigation if she leaked the loan file at the ward meeting, a job offer if she did not."
+        "vi": "Sếp cũ gọi Lan lên tầng 31. Ba buổi khác nhau tùy điều Lan đã nói ở tổ dân phố: một cuộc điều tra nếu cô lộ hồ sơ vay, một buổi trình bày xin vay cho phương án tự quản nếu cô đã đề xuất nó, hoặc một lời mời về làm việc.",
+        "en": "Lan's old boss calls her to floor 31. Three different meetings depending on what she said at the ward meeting: an internal investigation if she leaked the loan file, a loan pitch for the self-managed plan if she proposed it, or a job offer."
       },
       "requires": {
         "missions_completed": [
@@ -261,10 +261,71 @@
             "vehicle": "vehicles:hongdat_tam_nhin",
             "time_limit_s": 480
           },
-          "next": "gap_sep",
+          "next": "re_nhanh",
           "fail_if": [
             "event:vi_pham_giao_thong_2_lan"
           ]
+        },
+        {
+          "id": "re_nhanh",
+          "kind": "choice",
+          "objective": {
+            "vi": "Tầng 31. Anh Quân gọi lên vì việc gì?",
+            "en": "Floor 31. Why did Quân call you in?"
+          },
+          "target": "landmarks:landmark_72",
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "lan_lo_thong_tin_mat": "gap_sep",
+            "lan_de_xuat_tu_quan": "thuyet_trinh",
+            "default": "gap_sep"
+          }
+        },
+        {
+          "id": "thuyet_trinh",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Trình bày phương án tự quản phố cổ trước phòng tín dụng: trả lời 6 câu hỏi về dòng tiền của 20 hộ",
+            "en": "Pitch the Old Quarter self-managed plan to the credit department: answer 6 cash-flow questions for 20 households"
+          },
+          "target": "landmarks:landmark_72",
+          "params": {
+            "pass_score": 70,
+            "difficulty": 2,
+            "grader": "characters:quan_truong_phong",
+            "time_of_day": 11.0,
+            "time_limit_s": 180
+          },
+          "next": {
+            "dat": "hoi_dap",
+            "chua_dat": "hoi_dap_truot",
+            "default": "hoi_dap_truot"
+          }
+        },
+        {
+          "id": "hoi_dap",
+          "kind": "talk",
+          "objective": {
+            "vi": "Câu hỏi cuối của anh Quân: hộ nợ xấu trong nhóm",
+            "en": "Quân's last question: the bad-debt household in the group"
+          },
+          "target": "landmarks:landmark_72",
+          "dialogue": "dialogues:dlg_c2_02_thuyet_trinh",
+          "next": "ve_quan"
+        },
+        {
+          "id": "hoi_dap_truot",
+          "kind": "talk",
+          "objective": {
+            "vi": "Số không đứng. Anh Quân nói thẳng",
+            "en": "The numbers do not hold. Quân says so"
+          },
+          "target": "landmarks:landmark_72",
+          "dialogue": "dialogues:dlg_c2_02_thuyet_trinh_truot",
+          "next": "ve_quan"
         },
         {
           "id": "gap_sep",
