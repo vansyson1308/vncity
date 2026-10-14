@@ -133,6 +133,31 @@ tháng Giêng, Giỗ Tổ, Trung thu, Vu Lan, Quốc khánh, Giải phóng Thủ
 (buổi tối thứ Sáu đến Chủ nhật, và ban ngày thứ Bảy, Chủ nhật: hai mục), mùa hoa sữa, mùa loa kèn,
 nồm, mưa ngập, nắng nóng, rét đậm, bụi mịn, bão (20 mục).
 
+### 7.1 Sự kiện ngẫu nhiên trên phố (`random_events.json`)
+
+Giữa hai nhiệm vụ, phố không được trống. Collection `random_events` (45 mục, schema
+`random_events.schema.json`) là phần tương đương "random events" và "Strangers and Freaks" không
+người giao của GTA5: xe chết máy giữa làn ô tô, cụ bà không sang được đường, khách để quên điện
+thoại trên yên, cây đổ sau bão, rạp cưới chắn ngõ, đám tang, chốt CSGT đột xuất, khách Tây say ở Tạ
+Hiện, bà xôi trả thừa tiền, rước đèn Hàng Mã, ông đồ Văn Miếu, bông hồng cài áo lễ Vu Lan...
+
+- **Cách nổ**: mỗi giờ game, runtime (`UHanoiRandomEventSubsystem`, chưa viết) duyệt các sự kiện có
+  `spawn` khớp quận, địa danh (trong 150 m), loại đường (`ngo`, `pho`, `duong_lon`, `de`, `cau`,
+  `via_he`, `cho`, `ben_xe`), giờ, thời tiết, sự kiện lịch đang bật, nhân vật đang điều khiển, đang
+  đi xe hay đi bộ; rồi tung `chance_per_game_hour`. `cooldown_days` và `max_per_playthrough` chặn lặp.
+- **Mỗi sự kiện là một người**: trường `motive` (Khổ, Tập) nói vì sao NPC làm thế, theo cùng khung
+  Tứ diệu đế của nhân vật truyện (08 §1). Cô bán hoa ế không "ngẫu nhiên" đứng đó: hoa lấy ở Tây Tựu 3
+  giờ sáng, không bán hết thành rác, phải về trước 6 giờ nấu cơm cho mẹ chồng.
+- **Mỗi sự kiện là một ngã rẽ thật**: ít nhất 2 lựa chọn, không hai lựa chọn nào cùng hậu quả, có cả
+  lựa chọn đi qua (`ignore_effect`). Hậu quả là tức thì và đo được: tiền (có thể âm), uy tín với phe,
+  Chú ý CSGT, mức phạt theo `traffic_rules`, vật phẩm, kỹ năng được luyện, phút game. Lựa chọn có
+  `minigame` chơi một hoạt động để quyết định `effect` hay `fail_effect`.
+- **Hậu quả dài** ghi ở `note` cho runtime và người viết: khách để quên điện thoại mà đem bán thì app
+  bị khoá hai ngày; tranh khách ở ga Hà Nội thì bến ấy không cho Minh đứng nữa; trả lại đồng hồ cho
+  bà tập dưỡng sinh thì mở hoạt động tập ở công viên đó miễn phí.
+- **Chuẩn**: ≥ 40 sự kiện, đủ 6 loại (`giup_nguoi`, `giao_thong`, `hiem_hoa`, `co_hoi`, `van_hoa`,
+  `kinh_te`), mỗi quận có ≥ 15 sự kiện có thể nổ, xác suất ≤ 0,5/giờ (tests/test_random_events.py).
+
 ## 8. Quy ước cho dữ liệu nhiệm vụ
 
 Mọi khóa trong `steps[].params` đều được khai báo có kiểu trong `missions.schema.json`

@@ -203,6 +203,32 @@ enum class EHanoiRadioStationMusicLicensing : uint8
 };
 
 UENUM(BlueprintType)
+enum class EHanoiRandomEventsKind : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	GiupNguoi UMETA(DisplayName = "giup_nguoi"),
+	GiaoThong UMETA(DisplayName = "giao_thong"),
+	HiemHoa UMETA(DisplayName = "hiem_hoa"),
+	CoHoi UMETA(DisplayName = "co_hoi"),
+	VanHoa UMETA(DisplayName = "van_hoa"),
+	KinhTe UMETA(DisplayName = "kinh_te"),
+};
+
+UENUM(BlueprintType)
+enum class EHanoiRandomEventsSpawnRoadTypes : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	Ngo UMETA(DisplayName = "ngo"),
+	Pho UMETA(DisplayName = "pho"),
+	DuongLon UMETA(DisplayName = "duong_lon"),
+	De UMETA(DisplayName = "de"),
+	Cau UMETA(DisplayName = "cau"),
+	ViaHe UMETA(DisplayName = "via_he"),
+	Cho UMETA(DisplayName = "cho"),
+	BenXe UMETA(DisplayName = "ben_xe"),
+};
+
+UENUM(BlueprintType)
 enum class EHanoiVehicleClass : uint8
 {
 	Unset = 0 UMETA(DisplayName = "(unset)"),
@@ -1292,6 +1318,273 @@ struct HANOICITYRUNTIME_API FHanoiRadioStationRow : public FTableRowBase
 	EHanoiRadioStationMusicLicensing MusicLicensing = EHanoiRadioStationMusicLicensing::Unset;
 };
 
+/** Why the NPC does what they do (Khổ: what hurts; Tập: what they cling to). One line each, Vietnamese. */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiRandomEventsMotive
+{
+	GENERATED_BODY()
+
+	/** [json: kho (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Kho;
+
+	/** [json: tap (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Tap;
+};
+
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiRandomEventsSpawn
+{
+	GENERATED_BODY()
+
+	/** districts:<id> where it can happen; empty = anywhere. [json: districts] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> Districts;
+
+	/** Within ~150 m of one of these landmarks. [json: landmarks] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> Landmarks;
+
+	/** [json: road_types] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<EHanoiRandomEventsSpawnRoadTypes> RoadTypes;
+
+	/** Hours of day [from, to), 0-24; to < from wraps past midnight. [json: hours] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiHourRange Hours;
+
+	/** [json: weather] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<EHanoiWeather> Weather;
+
+	/** [json: events_active] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> EventsActive;
+
+	/** [json: protagonist] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> Protagonist;
+
+	/** true = only while riding; false = only on foot; absent = either. [json: on_vehicle] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	bool bOnVehicle = false;
+
+	/** [json: chance_per_game_hour (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float ChancePerGameHour = 0.f;
+
+	/** Game days before the same event can roll again. [json: cooldown_days] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 CooldownDays = 0;
+
+	/** [json: max_per_playthrough] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 MaxPerPlaythrough = 0;
+};
+
+/** Applied when the player rides past or lets duration_s run out. Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids. */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiRandomEventsIgnoreEffect
+{
+	GENERATED_BODY()
+
+	/** [json: money_vnd] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 MoneyVnd = 0;
+
+	/** [json: reputation] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TMap<FName, int32> Reputation;
+
+	/** [json: heat] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float Heat = 0.f;
+
+	/** Reference to another record as '<collection>:<id>', checked by tools/validate.py. [json: fine] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Fine;
+
+	/** [json: items] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> Items;
+
+	/** Skills trained by this choice (characters/*.json skill ids). [json: skills] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FString> Skills;
+
+	/** Game minutes the choice costs. [json: time_min] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 TimeMin = 0;
+
+	/** Designer note on the longer consequence (e.g. the NPC remembers you). [json: note] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Note;
+};
+
+/** Applied when the choice is taken (or the minigame is passed). Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids. */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiRandomEventsChoiceEffect
+{
+	GENERATED_BODY()
+
+	/** [json: money_vnd] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 MoneyVnd = 0;
+
+	/** [json: reputation] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TMap<FName, int32> Reputation;
+
+	/** [json: heat] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float Heat = 0.f;
+
+	/** Reference to another record as '<collection>:<id>', checked by tools/validate.py. [json: fine] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Fine;
+
+	/** [json: items] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> Items;
+
+	/** Skills trained by this choice (characters/*.json skill ids). [json: skills] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FString> Skills;
+
+	/** Game minutes the choice costs. [json: time_min] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 TimeMin = 0;
+
+	/** Designer note on the longer consequence (e.g. the NPC remembers you). [json: note] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Note;
+};
+
+/** Applied instead of effect when the minigame ends chua_dat. Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids. */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiRandomEventsChoiceFailEffect
+{
+	GENERATED_BODY()
+
+	/** [json: money_vnd] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 MoneyVnd = 0;
+
+	/** [json: reputation] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TMap<FName, int32> Reputation;
+
+	/** [json: heat] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float Heat = 0.f;
+
+	/** Reference to another record as '<collection>:<id>', checked by tools/validate.py. [json: fine] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Fine;
+
+	/** [json: items] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> Items;
+
+	/** Skills trained by this choice (characters/*.json skill ids). [json: skills] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FString> Skills;
+
+	/** Game minutes the choice costs. [json: time_min] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 TimeMin = 0;
+
+	/** Designer note on the longer consequence (e.g. the NPC remembers you). [json: note] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Note;
+};
+
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiRandomEventsChoice
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** Localised text. Vietnamese is the source language. [json: text (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Text;
+
+	/** What the player sees after choosing. [json: outcome] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Outcome;
+
+	/** activities:<id> played to resolve this choice; chua_dat applies fail_effect. [json: minigame] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Minigame;
+
+	/** Applied when the choice is taken (or the minigame is passed). Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids. [json: effect (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRandomEventsChoiceEffect Effect;
+
+	/** Applied instead of effect when the minigame ends chua_dat. Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids. [json: fail_effect] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRandomEventsChoiceFailEffect FailEffect;
+};
+
+/** Row of collection 'random_events' (DataTable row name = id). Unscripted things that happen on the street between missions (GTA V's random events, Strangers and Freaks without a giver): a stalled bike, an old lady who cannot cross, a wedding blocking the lane. The runtime rolls `spawn.chance_per_game_hour` for events whose spawn filters match the player's district, road, hour, weather and active calendar events, respecting `cooldown_days`; the player may ignore the event (ignore_effect) or pick one of `choices`. Every NPC in an event acts from a motive (`motive`, Khổ-Tập of docs/gdd/08-nhan-qua.md §1) so the event is a person, not a prop. */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiRandomEventsRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** [json: tags] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FName> Tags;
+
+	/** Localised text. Vietnamese is the source language. [json: name (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText DisplayName;
+
+	/** What the player sees before deciding. [json: description] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Description;
+
+	/** giup_nguoi = someone needs a hand; giao_thong = the road itself; hiem_hoa = danger to the player; co_hoi = money or a contact; van_hoa = a slice of Hanoi life to watch or join; kinh_te = a trade on the spot. [json: kind (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiRandomEventsKind Kind = EHanoiRandomEventsKind::Unset;
+
+	/** characters:<ambient archetype or story character> at the centre of the event. [json: npc] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Npc;
+
+	/** Why the NPC does what they do (Khổ: what hurts; Tập: what they cling to). One line each, Vietnamese. [json: motive (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRandomEventsMotive Motive;
+
+	/** [json: spawn (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRandomEventsSpawn Spawn;
+
+	/** Player state needed (flags, reputation, missions). [json: requires] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiCondition Requires;
+
+	/** Real seconds the event stays available before it resolves on its own. [json: duration_s] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float DurationS = 0.f;
+
+	/** Applied when the player rides past or lets duration_s run out. Immediate consequences. money_vnd may be negative (the player pays). heat feeds UHanoiHeatSubsystem; fine applies a traffic rule's fine; reputation keys are faction ids. [json: ignore_effect] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRandomEventsIgnoreEffect IgnoreEffect;
+
+	/** [json: choices (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRandomEventsChoice> Choices;
+};
+
 USTRUCT(BlueprintType)
 struct HANOICITYRUNTIME_API FHanoiTrafficRuleDetection
 {
@@ -1475,6 +1768,7 @@ namespace HanoiGenerated
 		Fn(FName(TEXT("landmarks")), FHanoiLandmarkRow::StaticStruct());
 		Fn(FName(TEXT("missions")), FHanoiMissionRow::StaticStruct());
 		Fn(FName(TEXT("radio")), FHanoiRadioStationRow::StaticStruct());
+		Fn(FName(TEXT("random_events")), FHanoiRandomEventsRow::StaticStruct());
 		Fn(FName(TEXT("traffic_rules")), FHanoiTrafficRuleRow::StaticStruct());
 		Fn(FName(TEXT("vehicles")), FHanoiVehicleRow::StaticStruct());
 	}
