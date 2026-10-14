@@ -272,3 +272,29 @@ người chơi mới chưa với tới.
 | `ngoai_ngu` Ngoại ngữ | **40** Đủ hiểu: Dẫn khách phố cổ (cùng giao tiếp 40). | **60** Nói chuyện: Xích lô du lịch quanh hồ Gươm. | **85** Phiên dịch: Khách Tây say ở Tạ Hiện và khách lạc đường trả gấp đôi. |
 | `the_luc` Thể lực | **40** Dẻo dai: Đua xe đạp Hồ Tây; lựa chọn khiêng gas lên tầng cao trong thoại. | **50** Khỏe: Chở hàng ba gác chợ Long Biên (cùng thuộc đường 40). | **70** Trâu bò: Thức đêm không giảm hồi phục; đá cầu với đội công viên Thống Nhất. |
 | `co_tuong` Cờ tướng | **30** Biết thủ: Cụ Bảo thách đấu ăn tiền trên phố (sự kiện ngẫu nhiên). | **60** Biết công: Giải CLB cờ tướng bờ Hồ, cược 200 nghìn. | **90** Kỳ thủ: Thắng cụ Bảo: cụ kể nốt chuyện năm 1972. |
+
+## 11. Sưu tầm: bản đồ thứ hai của game
+
+`collectibles.json` liệt kê từng món của ba bộ sưu tầm, mỗi món một tọa độ thật: 120 ảnh xưa của ông
+Khải (1975-2010, `act_chup_lai_anh_xua`), 40 tem phiếu thời bao cấp (1976-1989, `act_suu_tam_tem_phieu`),
+60 biển hiệu cũ (`act_suu_tam_bien_hieu_cu`). Tọa độ lấy từ `landmarks.json` (112 món) hoặc trọng tâm
+của phố cùng tên trong đồ thị đường Overture/OSM `data/noi_thanh/graph.parquet` (108 món,
+`coords_source: street_centroid`, trường `street` ghi tên phố đã dùng). Cả 14 quận đều có ảnh để tìm
+(phố cổ 19, Hoàn Kiếm 15, Ba Đình 12... Bắc Từ Liêm 4), nên sưu tầm là lý do thật để đi khắp bản đồ.
+
+- **Ảnh xưa**: mỗi tấm có `archive_frame` (id `khai_<năm>_<số>_<slug>` mà bước nhiệm vụ `archive_frame`
+  gọi; 7 khung trong nhiệm vụ hiện có đều nằm trong bộ), `hours` là khung giờ ánh sáng khớp tấm cũ, và
+  `year`. Chụp khớp trên 85% thì album mở tấm cũ chồng lên tấm mới và lời bố ở mặt sau.
+- **Băng cát-sét**: 21 tấm mang `unlocks_tape` (băng 1-21), mỗi băng gắn với một tấm, không tấm nào
+  gắn hai băng. Băng 22-24 không nằm trên ảnh: băng 22 mở khi đủ 60 ảnh, băng 23 khi đủ 90, và băng
+  24 (lời giải 49 Hàng Chiếu) mở theo **hai đường**: đủ 30 ảnh ở chương 3 *hoặc* ông Thắng kể ở chương
+  4 với giá đắt hơn về cảm xúc (Khôi phải trả ông tấm ảnh 1989 và nghe ông nói thẳng vì sao bố bỏ đi;
+  cờ `khoi_nghe_thang_ke_het`). Người bỏ qua sưu tầm không bị khóa kết (07 mục 9).
+- **Tem phiếu**: `hidden_in` nói runtime giấu ở đâu quanh tọa độ (nhà cũ, sạp đồng nát, hàng sách cũ
+  Đinh Lễ, kho chợ, khu tập thể); `rarity` cực hiếm cho sổ gạo nhà 49 Hàng Chiếu, phiếu gạo cuối
+  cùng 1989, phiếu Tam Đảo 1976, tập phiếu vải Bách hóa Tràng Tiền.
+- **Biển hiệu**: `sign_kind` (mậu dịch, hiệu cũ, rạp, cơ quan, biển số nhà men xanh, kẻ tay); chữ
+  trên biển do font UE kẻ, không do AI vẽ (08-nguon-tai-san-3d.md). Biển mậu dịch, rạp, men xanh là hiếm.
+- Chuẩn ghim trong tests/test_collectibles.py: đúng 120/40/60, mọi quận ≥ 4 ảnh, mọi tọa độ trong
+  25 km quanh hồ Gươm, khung ảnh trong nhiệm vụ phải có trong bộ, không băng nào gắn hai tấm.
+

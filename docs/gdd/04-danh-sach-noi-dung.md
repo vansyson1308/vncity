@@ -28,6 +28,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | radio | `radio.json` | 7 | Nhạc gốc hoặc chờ cấp phép |
 | factions | `factions.json` | 10 | |
 | traffic_rules | `traffic_rules.json` | 15 | Nghị định 168/2024/NĐ-CP; 11 mục gắn `fine_unverified` |
+| collectibles | `collectibles.json` | 220 | 120 ảnh xưa, 40 tem phiếu, 60 biển hiệu, mỗi món một tọa độ thật (02 §11) |
 | skills | `skills.json` | 12 | 12 kỹ năng, 3 mốc mỗi kỹ năng, 36 thứ mở khóa; cổng `min_skills` ở 10 hoạt động, 3 cơ sở, 3 xe, 8 lựa chọn thoại, 1 sự kiện (02 §10) |
 | random_events | `random_events.json` | 46 | Sự kiện ngẫu nhiên trên phố, 6 loại, 122 lựa chọn, mỗi NPC có Khổ-Tập (02 §7.1) |
 
@@ -45,7 +46,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | Cửa hàng / dịch vụ | quần áo, súng, cắt tóc, xăm... | 0 (ngoài businesses) | Cây xăng, quán quần áo Hàng Đào, tiệm cắt tóc, tiệm điện thoại, cửa hàng tiện lợi, nhà thuốc, rửa xe |
 | Bất động sản mua được | ~20 | 11 | Nhà ở cho nhân vật (Minh thuê chung cư, Khôi sửa gác) |
 | Nội thất vào được | hàng trăm | chưa liệt kê | Cần collection `interiors` (xem đề xuất schema) |
-| Sưu tầm | ~5 bộ, hàng trăm món | 3 bộ (ảnh xưa 120, tem phiếu 40, biển hiệu 60) | Nội dung chi tiết từng món chưa có (`archive_frame` mới đặt tên mẫu) |
+| Sưu tầm | ~5 bộ, hàng trăm món | 3 bộ, 220 món có tọa độ (`collectibles.json`) | Hai bộ nữa nếu cần: nhãn bia/diêm cũ, bản đồ phường; runtime `collectible_spawn` / `rephoto_target` chưa viết |
 | Cảnh cắt | hàng giờ | chỉ có thoại | Kịch bản quay, phân cảnh |
 
 ## Việc kiểm chứng còn treo
@@ -89,8 +90,8 @@ Trạng thái: 3, 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem t
 7. **condition** thêm `max_heat`, `event_active`, `weekday`, `items_owned` (nhiều nhiệm vụ cần).
 8. **reward.cost_vnd**: lựa chọn thoại hiện chỉ cộng tiền (`money_vnd` ≥ 0); 11 lựa chọn mua bán ở
    `side_districts.json` (lụa, rau, bát, tiền trọ, hủy cuốc) cần trừ tiền người chơi (`12-ho-so-quan.md` §12).
-8. **collection mới**: `interiors`, ~~`random_events`~~ (đã có), `collectibles` (từng món: ảnh xưa với
-   `archive_frame`, vị trí, giờ, mùa), `shops`, `phone_contacts`.
+8. **collection mới**: `interiors`, ~~`random_events`~~ (đã có), ~~`collectibles`~~ (đã có: từng món với
+   `archive_frame`, tọa độ, giờ), `shops`, `phone_contacts`.
 9. **activities.pay** thêm `commission_rate` (app ăn chiết khấu) và `currency_note`.
 10. **characters.voice** thêm `dialect_region` chi tiết hơn (`thai_binh`, `nam_dinh`, `phu_tho`,
     `hung_yen`) thay vì gộp `northern_rural`.

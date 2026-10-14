@@ -106,6 +106,56 @@ enum class EHanoiCharacterVoiceAccent : uint8
 };
 
 UENUM(BlueprintType)
+enum class EHanoiCollectiblesCoordsSource : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	Landmark UMETA(DisplayName = "landmark"),
+	StreetCentroid UMETA(DisplayName = "street_centroid"),
+	Mission UMETA(DisplayName = "mission"),
+};
+
+UENUM(BlueprintType)
+enum class EHanoiCollectiblesHiddenIn : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	NhaCu UMETA(DisplayName = "nha_cu"),
+	DongNat UMETA(DisplayName = "dong_nat"),
+	HangSachCu UMETA(DisplayName = "hang_sach_cu"),
+	KhoCho UMETA(DisplayName = "kho_cho"),
+	TapThe UMETA(DisplayName = "tap_the"),
+};
+
+UENUM(BlueprintType)
+enum class EHanoiCollectiblesRarity : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	Thuong UMETA(DisplayName = "thuong"),
+	Hiem UMETA(DisplayName = "hiem"),
+	CucHiem UMETA(DisplayName = "cuc_hiem"),
+};
+
+UENUM(BlueprintType)
+enum class EHanoiCollectiblesSet : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	AnhXua UMETA(DisplayName = "anh_xua"),
+	TemPhieu UMETA(DisplayName = "tem_phieu"),
+	BienHieu UMETA(DisplayName = "bien_hieu"),
+};
+
+UENUM(BlueprintType)
+enum class EHanoiCollectiblesSignKind : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	MauDich UMETA(DisplayName = "mau_dich"),
+	Hieu UMETA(DisplayName = "hieu"),
+	Rap UMETA(DisplayName = "rap"),
+	CoQuan UMETA(DisplayName = "co_quan"),
+	MenXanh UMETA(DisplayName = "men_xanh"),
+	KeTay UMETA(DisplayName = "ke_tay"),
+};
+
+UENUM(BlueprintType)
 enum class EHanoiDistrictDensity : uint8
 {
 	Unset = 0 UMETA(DisplayName = "(unset)"),
@@ -820,6 +870,85 @@ struct HANOICITYRUNTIME_API FHanoiCharacterRow : public FTableRowBase
 	/** [json: relationships] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TArray<FHanoiCharacterRelationship> Relationships;
+};
+
+/** Row of collection 'collectibles' (DataTable row name = id). Every single collectible with a real coordinate: the three sets of docs/gdd/01 (120 archive photos of Khải to re-shoot, 40 subsidy-era ration coupons to find, 60 old signs to photograph). This is the game's second map: the reason to ride every district. Coordinates come from landmarks.json or the centroid of the named street in the Overture/OSM road graph (coords_source). */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiCollectiblesRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** [json: tags] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FName> Tags;
+
+	/** [json: set (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiCollectiblesSet Set = EHanoiCollectiblesSet::Unset;
+
+	/** Localised text. Vietnamese is the source language. [json: name (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText DisplayName;
+
+	/** What the player sees in the album once found; for photos, what is in the old frame. [json: description (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Description;
+
+	/** Year the photo was taken / coupon issued / sign painted. [json: year] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 Year = 0;
+
+	/** WGS84 point. Converted to engine coordinates through the city manifest's georeference. [json: location (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiGeo Location;
+
+	/** Reference to another record as '<collection>:<id>', checked by tools/validate.py. [json: district (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef District;
+
+	/** landmarks:<id> the item sits at (within ~50 m). [json: landmark] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Landmark;
+
+	/** Overture/OSM street name the coordinate was taken from. [json: street] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Street;
+
+	/** Photos: hours of day in which the light matches the old frame. [json: hours] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiHourRange Hours;
+
+	/** Photos: id used by missions' steps[].archive_frame (khai_<year>_<nnn>_<slug>). [json: archive_frame] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString ArchiveFrame;
+
+	/** Photos: cassette number (1-24) that plays once this frame is matched. Tape 24 also opens by story (docs/gdd/02 §11). [json: unlocks_tape] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 UnlocksTape = 0;
+
+	/** Coupons: where the runtime hides it near the coordinate. [json: hidden_in] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiCollectiblesHiddenIn HiddenIn = EHanoiCollectiblesHiddenIn::Unset;
+
+	/** [json: sign_kind] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiCollectiblesSignKind SignKind = EHanoiCollectiblesSignKind::Unset;
+
+	/** activities:<id> whose loop collects this set. [json: activity (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Activity;
+
+	/** [json: rarity (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiCollectiblesRarity Rarity = EHanoiCollectiblesRarity::Unset;
+
+	/** [json: coords_source (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiCollectiblesCoordsSource CoordsSource = EHanoiCollectiblesCoordsSource::Unset;
 };
 
 USTRUCT(BlueprintType)
@@ -1825,6 +1954,7 @@ namespace HanoiGenerated
 		Fn(FName(TEXT("building_archetypes")), FHanoiBuildingArchetypeRow::StaticStruct());
 		Fn(FName(TEXT("businesses")), FHanoiBusinessRow::StaticStruct());
 		Fn(FName(TEXT("characters")), FHanoiCharacterRow::StaticStruct());
+		Fn(FName(TEXT("collectibles")), FHanoiCollectiblesRow::StaticStruct());
 		Fn(FName(TEXT("dialogues")), FHanoiDialogueRow::StaticStruct());
 		Fn(FName(TEXT("districts")), FHanoiDistrictRow::StaticStruct());
 		Fn(FName(TEXT("events")), FHanoiEventRow::StaticStruct());

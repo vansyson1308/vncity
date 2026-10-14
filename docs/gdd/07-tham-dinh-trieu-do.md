@@ -92,8 +92,9 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 - Hệ kỹ năng 0-100 và uy tín phe phái có, nhưng lúc thẩm định chưa có thứ gì *mở khóa* bằng kỹ năng.
   **Đã sửa:** `skills.json` khai 3 mốc cho 12 kỹ năng (36 thứ mở khóa: xe, hoạt động, cơ sở, lựa chọn
   thoại kiểu speech check, sự kiện ngẫu nhiên), cổng `min_skills` trong nội dung đặt đúng mức mốc (02 §10).
-- Sưu tầm (120 ảnh xưa, 40 tem phiếu, 60 biển hiệu) là lý do tốt để đi khắp 12 quận; chỉ mới đặt
-  tên, chưa có từng món. Đây là việc nội dung rẻ, hiệu quả cao.
+- Sưu tầm (120 ảnh xưa, 40 tem phiếu, 60 biển hiệu) là lý do tốt để đi khắp 12 quận; lúc thẩm định
+  chỉ mới đặt tên. **Đã sửa:** 220 món có tọa độ thật trong `collectibles.json`, cả 14 quận có ảnh,
+  7 khung ảnh của nhiệm vụ nằm trong bộ, băng 24 có hai đường mở (02 §11).
 - Ngày 48 phút trên bản đồ 1:1 là vấn đề cốt lõi của *cảm giác*: GTA5 có bản đồ 1:4 nên 48 phút khớp.
   Ở Hà Nội 1:1, một ca xe ôm 8 cuốc là hơn một ngày game. Hoặc chấp nhận "ngày dài" (đồng hồ 8x: ngày
   = 3 giờ thật, chơi tự do vẫn thấy sáng-trưa-tối), hoặc co bản đồ (trái với mục tiêu "y hệt").
@@ -162,8 +163,12 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 7. ~~40 sự kiện ngẫu nhiên thành collection `random_events` (schema mới).~~ **Đã làm:** 45 sự kiện,
    6 loại, 122 lựa chọn không trùng hậu quả, 43 NPC có Khổ-Tập, 9 lựa chọn qua minigame, 5 lựa chọn
    dẫn tới phạt theo Nghị định 168; chuẩn ghim trong tests/test_random_events.py (02 §7.1).
-8. Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).
-9. Đường thứ hai tới nội dung băng 24 không qua sưu tầm.
+8. ~~Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).~~
+    **Đã làm:** `collectibles.json` 220 món (120 ảnh, 40 tem phiếu, 60 biển hiệu), tọa độ từ landmarks hoặc
+    trọng tâm phố trong đồ thị đường Overture/OSM, 14/14 quận có ảnh; tests/test_collectibles.py (02 §11).
+9. ~~Đường thứ hai tới nội dung băng 24 không qua sưu tầm.~~ **Đã thiết kế** (02 §11): băng 24 mở khi đủ
+    30 ảnh ở chương 3 *hoặc* ông Thắng kể ở chương 4 với giá cảm xúc (cờ `khoi_nghe_thang_ke_het`); viết
+    thành nhiệm vụ khi làm chương 3-4.
 10. ~~Kỹ năng mở khóa thứ nhìn thấy được (3 mốc mỗi kỹ năng).~~ **Đã làm:** `skills.json` 12 kỹ năng x 3 mốc,
     `min_skills` trong điều kiện chung (C++ `EvaluateCondition`, playtest, validator), 25 cổng trong nội
     dung, chuẩn ghim trong tests/test_skill_unlocks.py (02 §10).

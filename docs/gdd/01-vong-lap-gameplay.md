@@ -118,7 +118,7 @@ sách trên app Sổ Tay → tối ca hai. Rủi ro: nguyên liệu đắt, đá
 
 **Khôi**: chọn một tấm ảnh trong kho của bố → tìm địa điểm, giờ, mùa đúng → chụp lại (chồng ảnh) →
 nghe băng cát-sét mở ra → bán ảnh, triển lãm. Đây là vòng sưu tầm chính của game (120 khung ảnh,
-24 băng), dẫn người chơi đi khắp bản đồ.
+24 băng), dẫn người chơi đi khắp bản đồ. Từng món và tọa độ: `collectibles.json` (02 §11).
 
 ## Nhịp chơi một ngày điển hình
 
