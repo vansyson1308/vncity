@@ -2,6 +2,189 @@
   "collection": "missions",
   "items": [
     {
+      "id": "p0_ganh_pho_1957",
+      "tags": [
+        "prologue",
+        "cold_open",
+        "flashback",
+        "tho"
+      ],
+      "name": {
+        "vi": "Gánh phở năm 1957",
+        "en": "The pho yoke, 1957"
+      },
+      "type": "story",
+      "chapter": 0,
+      "protagonists": [
+        "characters:tho_1957"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "Màn mở đầu ba phút, đen trắng: một gánh phở ở đầu ngõ Hàng Chiếu mùa đông 1957, một tờ giấy hai chữ ký, và đêm 26/12/1972 tờ giấy ấy cháy mất một góc. Người chơi cầm lái từ giây thứ hai mươi và quyết định điều mà cụ Thọ sẽ nhắc lại năm mươi tư năm sau.",
+        "en": "A three-minute black-and-white cold open: a pho yoke at the mouth of the Hàng Chiếu alley in the winter of 1957, a paper with two signatures, and the night of 26 December 1972 when that paper lost a corner to fire. The player holds the controls from second twenty and decides something old Thọ will bring up fifty-four years later."
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "ngo_1957",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Tháng Chạp 1957, 4 giờ 10 sáng. Gánh phở ra đầu ngõ Hàng Chiếu.",
+            "en": "December 1957, 4:10 a.m. Carry the pho yoke to the alley mouth."
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p0_tieng_rao",
+          "params": {
+            "time_of_day": 4.2,
+            "force_weather": "drizzle",
+            "minimap": false,
+            "stage": "1957_den_trang",
+            "duration_s": 25
+          },
+          "next": "ganh_pho"
+        },
+        {
+          "id": "ganh_pho",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Gánh phở vào hiên nhà 49: giữ đòn gánh thăng bằng, không sánh nước dùng",
+            "en": "Carry the yoke to No. 49's porch: keep the pole level, don't spill the broth"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "on_foot": true,
+            "carry_weight": "don_ganh_40kg",
+            "spill_sensitive": true,
+            "tutorial": [
+              "di_bo",
+              "thang_bang_don_ganh"
+            ],
+            "difficulty": 1,
+            "minimap": false,
+            "distance_m": 60,
+            "duration_s": 60
+          },
+          "next": "bat_dau_tien",
+          "fail_if": [
+            "event:do_nuoc_dung"
+          ]
+        },
+        {
+          "id": "bat_dau_tien",
+          "kind": "talk",
+          "objective": {
+            "vi": "Múc bát đầu tiên cho ông Khiêm",
+            "en": "Ladle the first bowl for Mr Khiêm"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p0_bat_dau_tien",
+          "params": {
+            "minimap": false,
+            "duration_s": 70
+          },
+          "next": "ky_giay"
+        },
+        {
+          "id": "ky_giay",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Hai chữ ký trên một tờ giấy kẻ ô. Tháng Chạp 1957.",
+            "en": "Two signatures on a sheet of squared paper. December 1957."
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "stage": "1957_ky_giay",
+            "minimap": false,
+            "duration_s": 15
+          },
+          "next": "dem_1972"
+        },
+        {
+          "id": "dem_1972",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "26 tháng 12 năm 1972, 22 giờ 40. Còi báo động phòng không.",
+            "en": "26 December 1972, 10:40 p.m. The air-raid siren."
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p0_dem_1972",
+          "params": {
+            "time_of_day": 22.7,
+            "stage": "1972_dem",
+            "minimap": false,
+            "duration_s": 60
+          },
+          "next": "xuong_ham"
+        },
+        {
+          "id": "xuong_ham",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Chạy ra hầm trú ẩn công cộng đầu ngõ, cúi thấp, đèn tắt hết",
+            "en": "Run to the public shelter at the alley mouth, keep low, every light is out"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8508
+          },
+          "params": {
+            "on_foot": true,
+            "minimap": false,
+            "radius_m": 4,
+            "stage": "1972_chay_ra_ham",
+            "difficulty": 1,
+            "duration_s": 30
+          },
+          "next": "ket"
+        },
+        {
+          "id": "ket",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Còi tắt. Màn hình đen. Một giọng nói già đi năm mươi tư năm. HÀ NỘI, 2026.",
+            "en": "The siren fades. Black. A voice fifty-four years older. HANOI, 2026."
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_p0_ket",
+          "params": {
+            "stage": "title_card_2026",
+            "minimap": false,
+            "duration_s": 15
+          },
+          "next": "end"
+        }
+      ],
+      "reward": {
+        "set_flags": [
+          "thay_giay_chay"
+        ]
+      },
+      "unlocks": [
+        "missions:p1_cuoc_xe_luc_rang_dong"
+      ]
+    },
+    {
       "id": "p1_cuoc_xe_luc_rang_dong",
       "tags": [
         "prologue",
@@ -177,7 +360,12 @@
         "activities:act_xe_om_cong_nghe",
         "activities:act_giao_do_an",
         "missions:p2_noi_nuoc_dung_4_gio"
-      ]
+      ],
+      "requires": {
+        "missions_completed": [
+          "missions:p0_ganh_pho_1957"
+        ]
+      }
     },
     {
       "id": "p2_noi_nuoc_dung_4_gio",

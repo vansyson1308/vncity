@@ -264,6 +264,10 @@ struct HANOICITYRUNTIME_API FHanoiCondition
 	/** [json: flags] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TArray<FString> Flags;
+
+	/** Holds only while none of these flags is set (a consequence of NOT having chosen something). [json: flags_not] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FString> FlagsNot;
 };
 
 USTRUCT(BlueprintType)
@@ -761,6 +765,10 @@ struct HANOICITYRUNTIME_API FHanoiDialogueLineChoice
 	/** [json: effect] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiReward Effect;
+
+	/** The choice is offered only while this holds (flags from earlier choices). Hidden choices are not shown at all. [json: condition] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiCondition Condition;
 };
 
 USTRUCT(BlueprintType)
@@ -791,6 +799,10 @@ struct HANOICITYRUNTIME_API FHanoiDialogueLine
 	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: goto] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FName Goto;
+
+	/** The line is shown only while this holds. A skipped line falls through to the next line in the array (its goto is not followed), so variant lines for earlier choices are written back to back. [json: condition] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiCondition Condition;
 };
 
 /** Row of collection 'dialogues' (DataTable row name = id). Dialogue trees and barks. Lines carry speaker refs so voice casting can be generated. */

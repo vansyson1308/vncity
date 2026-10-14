@@ -76,6 +76,7 @@ về một quán phở.
 
 | # | Nhiệm vụ | Nhân vật | Nhịp |
 | --- | --- | --- | --- |
+| P0 | Gánh phở 1957 (cold open) | Cụ Thọ năm 1957 | Gánh phở qua ngõ Hàng Chiếu, ông Khiêm mời góp vốn mua chung nhà (lựa chọn: tin ngay / hỏi vợ), ký tờ giấy; đêm 1972 dưới bom (lựa chọn: cứu giấy / cứu con), tờ giấy cháy đúng chỗ tên. Cắt sang 2026 |
 | P1 | Cuốc xe lúc rạng đông | Minh | Hướng dẫn lái xe, app Vồ, đèn đỏ đầu tiên (lựa chọn), gặp Khôi và Lan |
 | P2 | Nồi nước dùng lúc bốn giờ | Lan | Hướng dẫn nấu phở, cụ Thọ chấm điểm (rẽ nhánh), tin bán nhà |
 | P3 | Chiếc tủ sắt trên gác | Khôi | Mở kho ảnh, băng số 1, chụp lại Tháp Rùa 1989 |
@@ -94,15 +95,31 @@ nói "Không nhà nào bán phần mình khi nhà kia còn người ở". Dòng 
 Khiêm "đi B" và không trở về, bị cháy mất đúng chỗ ghi tên người được nhận phần nhà. Ông Khải biết nội
 dung. Câu trả lời nằm trong một cuộn băng cát-sét.
 
-Các cờ (`set_flags`) từ lựa chọn chương 1 được đọc ở các chương sau: `lan_lo_thong_tin_mat`,
-`minh_nhan_viec_kim_long`, `khoi_giu_phan`, `khoi_tang_anh_thao`, `linh_dang_anh_thao`,
-`lan_mua_gia_vi_re`, `lan_de_xuat_tu_quan`...
+Mọi cờ do lựa chọn đặt (57 cờ ở chương 0-2) đều được đọc lại ít nhất một lần, phần lớn ngay trong
+chương (nhân vật nhắc đúng tên việc đã làm, lựa chọn mới mở ra, bước đổi biến thể) và một lần ở chương
+sau. Bảng đủ: `08-mo-man-va-he-qua.md`. Quy tắc viết tiếp: mỗi cờ mới phải có chỗ đọc, CI kiểm.
+
+## Phần đã viết: Chương 2 "Mùa nồm"
+
+Tháng Chạp tới mùng Một Tết. Dữ liệu ở `missions/story_chapter2.json`, thoại ở `dialogues/chapter2.json`.
+
+| # | Nhiệm vụ | Nhân vật | Nhịp |
+| --- | --- | --- | --- |
+| 2.1 | Cái đe của ông Tư | Minh | Cụ Thọ gọi: ông Tư Hàng Bạc bị ép bán, hành động đầu tiên thấy được của Kim Long. Minh chở đồ nghề bạc cho ông Tư; nếu Minh đã bán tin về ông Tư (s13) thì phải chọn thú nhận hay im lặng |
+| 2.2 | Ba tấm ảnh, một cuộn băng | Khôi | Ga Hà Nội, chợ Đồng Xuân trước vụ cháy 1994, tập thể Kim Liên; bà Tám đổi ảnh lấy băng số 12: phần nhà ông Khiêm "để cho người đã gánh phở nuôi con tôi" |
+| 2.3 | Phòng thẩm định | Lan | Ngân hàng cũ gọi Lan lên. Rẽ ba theo họp tổ dân phố: lộ thông tin mật → kỷ luật (sửa sai công khai hay cãi); đã đề xuất tự quản → thuyết trình phương án; còn lại → lời mời quay lại làm (nhận hay ở lại quán) |
+| 2.4 | Nhóm anh em vỡ | Minh | Hội tài xế Alô Chat tra ai bán tin về ông Tư; Hùng Hàng Đậu đứng ra nhận; Minh nói thật hay im |
+| 2.5 | Ông Công ông Táo | Lan + Khôi | Thả cá ở Bờ Hồ; cô Hạnh nói chuyện nợ: Lan bảo lãnh, loại cô ra, hay xin hai tuần; cô Hạnh nghe hay không nghe phương án tự quản tùy cách Lan đối xử từ họp tổ |
+| 2.6 | Chúc Tết | cả ba | Minh về quê gặp mẹ ("con ổn" hay nói thật); Hải; ông Thắng (chào theo lựa chọn 1.2); Khôi nói hay giữ chuyện băng 12; chợ hoa |
+| 2.7 | Giao thừa Hồ Gươm | cả ba | Hạn chót của Vĩnh đúng giao thừa; Thảo trong xe đưa hồ sơ; sân thượng; cô Hạnh hoãn ký (nếu đã nghe phương án) hay đã ký. Cụ Thọ trao tờ giấy 1957. Kết chương 2 |
+| s13 | Tin đầu tiên (phụ) | Minh | Chỉ mở nếu Minh nhận việc Kim Long: Thảo nhờ hỏi về ông Tư Hàng Bạc, Minh bán tin lấy 5 triệu hay từ chối |
+| s14 | Sáng mùng Một (phụ) | cả ba | Bánh chưng, xông đất; thế giới sau giao thừa khác nhau theo cô Hạnh hoãn ký / đã ký |
 
 ## Dàn ý 5 hồi (sau chương 1)
 
 **Hồi 1 (chương 1, đã viết)**: Gặp gỡ, đề nghị, tờ giấy cháy.
 
-**Hồi 2 "Mùa nồm" (chương 2)**: Tháng Hai, trước Tết.
+**Hồi 2 "Mùa nồm" (chương 2, đã viết thành dữ liệu, xem bảng trên)**: Tháng Chạp, trước Tết.
 - Khôi săn các cuộn băng cát-sét khắp thành phố (ảnh xưa ở ga Hà Nội, chợ Đồng Xuân trước vụ cháy
   1994, khu tập thể Kim Liên thời bao cấp). Băng số 12 tiết lộ một phần: phần nhà ông Khiêm "để cho
   người đã gánh phở nuôi con tôi những năm tôi đi vắng".

@@ -169,6 +169,17 @@ Mọi khóa trong `steps[].params` đều được khai báo có kiểu trong `m
   `switch_protagonist_on_line` (`{dòng thoại: characters:<id>}`; UI thoại gọi
   `NotifyDialogueLine(dòng)`); cả hai phát `OnProtagonistSwitched`; `minimap: false` ẩn bản đồ
   nhỏ trong bước (`OnMinimapVisibilityChanged`, tự bật lại khi sang bước khác/hết nhiệm vụ).
+- **Thoại có điều kiện** (`dialogues.lines[].condition`, `lines[].choices[].condition`, kiểu
+  `common.schema.json#/$defs/condition`, chỉ dùng `flags`, `flags_not`, `min_reputation`,
+  `protagonist`; validator chặn khóa khác): UI thoại gọi `ResolveDialogueLine(row, id)` để lấy dòng
+  đầu tiên từ `id` có điều kiện đúng; dòng bị bỏ qua **rơi xuống dòng kế tiếp trong mảng** (không theo
+  `goto` của nó), nên các biến thể cho lựa chọn trước được viết liền nhau rồi kết bằng một dòng không
+  điều kiện. `NextDialogueLine(row, id)` đi theo `goto` hoặc dòng kế (đã lọc điều kiện);
+  `GetVisibleDialogueChoices(row, id)` trả chỉ số các lựa chọn được phép hiện. `flags_not` giữ khi
+  **không** cờ nào trong danh sách bật, dùng cho hệ quả của việc *không* chọn. `tools/playtest.py`
+  đi thoại theo đúng ba hàm này và đếm hệ quả đã kích hoạt (`docs/gdd/06`).
+- **Cờ engine đọc**: `giam_chu_y_vinh_vien_1` (phần thưởng `s12`) do `UHanoiHeatSubsystem` đọc để
+  hạ trần Chú ý một sao vĩnh viễn; nội dung không cần đọc lại.
 - **Nhân vật của nhiệm vụ**: `StartMission` đổi sang mục đầu của `protagonists` nếu nhân vật đang
   điều khiển không nằm trong danh sách (phát `OnProtagonistSwitched`), nên "Nồi nước dùng lúc bốn
   giờ" luôn chơi bằng Lan dù người chơi đang là Minh. Nhiệm vụ nhiều nhân vật đổi tiếp bằng

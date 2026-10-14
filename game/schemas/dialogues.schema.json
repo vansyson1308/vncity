@@ -70,6 +70,10 @@
                       },
                       "effect": {
                         "$ref": "common.schema.json#/$defs/reward"
+                      },
+                      "condition": {
+                        "description": "The choice is offered only while this holds (flags from earlier choices). Hidden choices are not shown at all.",
+                        "$ref": "common.schema.json#/$defs/condition"
                       }
                     },
                     "additionalProperties": false
@@ -77,6 +81,10 @@
                 },
                 "goto": {
                   "$ref": "common.schema.json#/$defs/id"
+                },
+                "condition": {
+                  "description": "The line is shown only while this holds. A skipped line falls through to the next line in the array (its goto is not followed), so variant lines for earlier choices are written back to back.",
+                  "$ref": "common.schema.json#/$defs/condition"
                 }
               },
               "additionalProperties": false

@@ -27,6 +27,9 @@
       "requires": {
         "missions_completed": [
           "missions:p3_tu_sat_tren_gac"
+        ],
+        "flags": [
+          "gap_khoi"
         ]
       },
       "start": {
@@ -1022,7 +1025,27 @@
             "lon": 105.8512
           },
           "dialogue": "dialogues:dlg_c1_07_mark_nem",
-          "next": "viral"
+          "next": "ket_qua"
+        },
+        {
+          "id": "ket_qua",
+          "kind": "choice",
+          "objective": {
+            "vi": "Video lên mạng. Nước dùng hôm đó nấu bằng gia vị nào?",
+            "en": "The video goes up. Which spices went into that day's broth?"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "lan_mua_gia_vi_re": "viral_vua",
+            "default": "viral"
+          }
         },
         {
           "id": "viral",
@@ -1038,22 +1061,46 @@
           "params": {
             "business_effect": {
               "pho_tho_hang_chieu": {
-                "income_bonus": 0.3,
-                "days": 21
+                "income_bonus": 0.4,
+                "days": 30
               }
-            },
-            "phone_feed": "top_top_binh_luan"
-          }
+            }
+          },
+          "set_flags": [
+            "video_mark_viral"
+          ],
+          "next": "end"
+        },
+        {
+          "id": "viral_vua",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "48 giờ sau: video lên, bình luận nhiều nhất là 'phở ổn'. Không có hàng người.",
+            "en": "48 hours later: the video is up, the top comment is 'a fine pho'. No queue."
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "business_effect": {
+              "pho_tho_hang_chieu": {
+                "income_bonus": 0.1,
+                "days": 7
+              }
+            }
+          },
+          "set_flags": [
+            "video_mark_binh_thuong"
+          ],
+          "next": "end"
         }
       ],
       "reward": {
         "money_vnd": 0,
         "reputation": {
           "to_dan_pho_hang_chieu": 5
-        },
-        "set_flags": [
-          "video_mark_viral"
-        ]
+        }
       },
       "unlocks": [
         "missions:s03_mark_qua_duong",
@@ -1086,6 +1133,9 @@
       "requires": {
         "missions_completed": [
           "missions:c1_06_hop_to_dan_pho"
+        ],
+        "flags": [
+          "da_hop_to_dan_pho"
         ]
       },
       "start": {
@@ -1126,7 +1176,10 @@
             "protagonist": "characters:minh",
             "cargo": "khung_anh_20",
             "trips": 2,
-            "rule_check": "traffic_rules:di_vao_pho_di_bo_duong_cam"
+            "rule_check": "traffic_rules:di_vao_pho_di_bo_duong_cam",
+            "variant_from_flags": {
+              "duoc_do_o_quan_chuong": "gui_xe_o_quan_chuong"
+            }
           },
           "next": "minh_be_bo"
         },

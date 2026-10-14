@@ -47,7 +47,8 @@
         "hours": {"$ref": "#/$defs/hour_range"},
         "weather": {"type": "array", "items": {"enum": ["clear", "cloudy", "rain", "storm", "fog", "drizzle", "hot", "cold"]}},
         "protagonist": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
-        "flags": {"type": "array", "items": {"type": "string"}}
+        "flags": {"type": "array", "items": {"type": "string"}},
+        "flags_not": {"type": "array", "items": {"type": "string"}, "description": "Holds only while none of these flags is set (a consequence of NOT having chosen something)."}
       },
       "additionalProperties": false
     },

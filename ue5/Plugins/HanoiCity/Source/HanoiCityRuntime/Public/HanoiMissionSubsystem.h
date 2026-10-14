@@ -90,6 +90,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Missions")
 	void NotifyDialogueLine(FName LineId);
 
+	/** Dialogue UI: the first line, starting at LineId (or the row's first line when None), whose `condition`
+	 *  holds. A line whose condition fails is skipped to the next line of the array (its goto is not followed),
+	 *  so variant lines for earlier choices are written back to back. Returns None when the dialogue ends. */
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Missions")
+	FName ResolveDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId) const;
+
+	/** Dialogue UI: the line that follows LineId when it has no choices: its goto if any, else the next line of
+	 *  the array; conditions resolved as in ResolveDialogueLine. None when the dialogue ends. */
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Missions")
+	FName NextDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId) const;
+
+	/** Dialogue UI: the choices of LineId whose `condition` holds (indices into Line.Choices, in order). */
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Missions")
+	TArray<int32> GetVisibleDialogueChoices(const FHanoiDialogueRow& Dialogue, FName LineId) const;
+
 	/** World event (collection "events") started/ended; gates params.requires_event. */
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Missions")
 	void SetWorldEventActive(FName EventId, bool bIsActive);

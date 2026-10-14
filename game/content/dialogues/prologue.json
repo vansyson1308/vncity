@@ -2,6 +2,263 @@
   "collection": "dialogues",
   "items": [
     {
+      "id": "dlg_p0_tieng_rao",
+      "tags": [
+        "cold_open",
+        "flashback_1957"
+      ],
+      "context": "Màn mở đầu, đen trắng. Ngõ Hàng Chiếu, 4 giờ 10 sáng, tháng Chạp 1957, mưa phùn. Thọ 17 tuổi gánh phở đến đầu ngõ. Người chơi cầm lái sau 20 giây.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "(rao khẽ, vì phố còn ngủ) Phở ơ... Phở bò ơ...",
+            "en": "(calling softly, the street still asleep) Pho-o... beef pho-o..."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:ong_khiem",
+          "text": {
+            "vi": "Chú Thọ! Lại đặt gánh đầu ngõ à? Mưa phùn thế này, vào hiên nhà tôi.",
+            "en": "Thọ! Setting down at the alley mouth again? In this drizzle, come under my porch."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "Dạ, cháu ngồi đầu ngõ ba năm quen rồi, ông Khiêm. Vào hiên nhà ông, bà con lại bảo cháu chiếm.",
+            "en": "I've sat at the alley mouth three years, Mr Khiêm. Under your porch, the neighbours will say I'm squatting."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:ong_khiem",
+          "text": {
+            "vi": "Không ai bảo đâu. Gánh vào đi, nước dùng nguội bây giờ. Hôm nay tôi ăn bát đầu.",
+            "en": "Nobody will. Bring it in, the broth is cooling. Today I take the first bowl."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_p0_bat_dau_tien",
+      "tags": [
+        "cold_open",
+        "flashback_1957",
+        "choice"
+      ],
+      "context": "Hiên nhà 49 Hàng Chiếu, 1957. Ông Khiêm ăn bát phở đầu ngày và đề nghị mua chung căn nhà. Lựa chọn của Thọ được cụ Thọ nhắc lại ở cuối chương 1.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_khiem",
+          "text": {
+            "vi": "(húp) ...Ba năm tôi ăn phở chú, hôm nay mới hỏi: chú tính ngồi đầu ngõ đến bao giờ?",
+            "en": "(sips) ...Three years I've eaten your pho, and only today I ask: how long do you mean to sit at the alley mouth?"
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "Đến khi có chỗ, ông ạ. Cháu gửi tiền về Vân Cù cho thầy u, còn lại cất ống bơ. Được hai cây rưỡi rồi.",
+            "en": "Until I have a place, sir. I send money home to Vân Cù, the rest goes in a tin. Two and a half taels so far."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_khiem",
+          "text": {
+            "vi": "Căn này chủ cũ vào Nam, sắp bán. Tôi có sáu cây, thiếu hai. Tôi tính thế này: nhà này của hai nhà. Tầng dưới chú bán phở, gác trên tôi mở hiệu ảnh. Không nhà nào bán phần mình khi nhà kia còn người ở.",
+            "en": "The owner went south, this house is for sale. I have six taels, two short. Here is my thought: this house belongs to two families. Downstairs you sell pho, upstairs I open a photo shop. Neither sells its share while the other still lives here."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "(Chọn)",
+            "en": "(Choose)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "'Ông viết đi, cháu ký. Cháu tin ông.'",
+                "en": "'Write it, I'll sign. I trust you.'"
+              },
+              "goto": "l05",
+              "effect": {
+                "set_flags": [
+                  "tho_tin_ngay"
+                ]
+              }
+            },
+            {
+              "text": {
+                "vi": "'Viết thêm cho cháu một dòng: nếu một nhà không còn ai thì sao?'",
+                "en": "'Add one line for me: what if one family has no one left?'"
+              },
+              "goto": "l06",
+              "effect": {
+                "set_flags": [
+                  "tho_hoi_truoc"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:ong_khiem",
+          "text": {
+            "vi": "Tin thì tốt. Nhưng giấy trắng mực đen vẫn hơn. Lấy bút.",
+            "en": "Trust is good. Ink on paper is better. Fetch a pen."
+          },
+          "goto": "l07"
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:ong_khiem",
+          "text": {
+            "vi": "(cười) Chú hỏi khó. Để sau. Người còn thì nhà còn, chú Thọ ạ.",
+            "en": "(laughs) A hard question. Later. While there are people, there is a house, Thọ."
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "(viết theo) 'Nhà này của hai nhà...' Ông ký trước đi, chữ cháu xấu.",
+            "en": "(writing) 'This house belongs to two families...' You sign first, sir, my hand is poor."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_p0_dem_1972",
+      "tags": [
+        "cold_open",
+        "flashback_1972",
+        "choice"
+      ],
+      "context": "Đêm 26/12/1972, 22 giờ 40, trong nhà 49 Hàng Chiếu. Còi báo động phòng không. Thọ 32 tuổi, vợ bế bé Hạnh đang sốt. Ông Khiêm đã đi B từ đầu năm; dòng ông viết thêm nằm trong hộp giấy tờ trên bàn. Lựa chọn ở đây quyết định tờ giấy cháy ít hay nhiều, và cụ Thọ có vết bỏng ở tay hay không.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:amb_loa_phuong",
+          "text": {
+            "vi": "Đồng bào chú ý! Đồng bào chú ý! Máy bay địch cách Hà Nội bốn mươi cây số. Các lực lượng vũ trang sẵn sàng chiến đấu. Đồng bào cần bình tĩnh vào hầm trú ẩn.",
+            "en": "Attention, compatriots! Enemy aircraft forty kilometres from Hanoi. Armed forces, stand ready. Citizens, calmly take shelter."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:ba_tho",
+          "text": {
+            "vi": "Mình ơi! Cái Hạnh đang sốt, em bế không nổi cả nó cả cái làn. Bà Khiêm với thằng Khải đâu?",
+            "en": "Dear! Hạnh has a fever, I can't carry her and the basket. Where are Mrs Khiêm and Khải?"
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "Thằng Khải đưa mẹ nó ra hầm công cộng đầu ngõ rồi. Mình bế con, tôi tắt đèn.",
+            "en": "Khải took his mother to the public shelter at the alley mouth. You carry the baby, I'll put out the lamp."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "(Tiếng nổ rất xa về phía Khâm Thiên. Cửa kính rung. Đèn dầu trên bàn đổ, lửa bén vào hộp giấy tờ: tờ giấy của hai nhà, dòng ông Khiêm viết thêm trước khi đi.)",
+            "en": "(A blast far off towards Khâm Thiên. Windows rattle. The oil lamp tips over; flame catches the box of papers: the two families' paper, the line Khiêm added before he left.)"
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "(Chọn)",
+            "en": "(Choose)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Dập lửa bằng tay. Tờ giấy của ông Khiêm!",
+                "en": "Beat out the flame with your hand. Khiêm's paper!"
+              },
+              "goto": "l06",
+              "effect": {
+                "set_flags": [
+                  "tho_cuu_giay"
+                ]
+              }
+            },
+            {
+              "text": {
+                "vi": "Kệ giấy. Bế con, xuống hầm!",
+                "en": "Leave the paper. Take the baby, get to the shelter!"
+              },
+              "goto": "l07",
+              "effect": {
+                "set_flags": [
+                  "tho_cuu_con"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:ba_tho",
+          "text": {
+            "vi": "Tay mình! Mình cháy tay rồi!... (Thọ cầm tờ giấy, cháy mất một góc, bàn tay phải phồng rộp) Còn. Còn gần hết. Đi!",
+            "en": "Your hand! You've burnt your hand!... (Thọ holds the paper, one corner gone, his right palm blistered) It's here. Most of it. Go!"
+          },
+          "goto": "l08"
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:tho_1957",
+          "text": {
+            "vi": "(bế Hạnh, nhìn lại đúng một giây: tờ giấy cuộn trong lửa, chỉ kịp hất cái nắp hộp sắt đậy lên) Hạnh ngoan. Bố bế.",
+            "en": "(takes Hạnh, looks back for exactly one second: the paper curling in the flame, just time to flip the tin lid over it) Good girl, Hạnh. Daddy's got you."
+          }
+        },
+        {
+          "id": "l08",
+          "speaker": "characters:amb_loa_phuong",
+          "text": {
+            "vi": "Đồng bào chú ý! Máy bay địch đã đến Hà Nội!",
+            "en": "Attention! Enemy aircraft over Hanoi!"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_p0_ket",
+      "tags": [
+        "cold_open",
+        "title_card"
+      ],
+      "context": "Màn hình đen. Tiếng còi tắt dần. Một giọng nói già đi năm mươi tư năm, rồi hiện chữ 'HÀ NỘI, 2026'.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Ông giữ tờ giấy ấy năm mươi tư năm. Không ai đọc. Cho đến khi thằng Khải mất.",
+            "en": "I kept that paper fifty-four years. Nobody read it. Until Khải died."
+          },
+          "emotion": "tram"
+        }
+      ]
+    },
+    {
       "id": "dlg_p1_phong_tro",
       "context": "Phòng trọ ngõ Khương Đình, 5:00 sáng. Minh bị Tuấn gọi dậy.",
       "lines": [
@@ -434,6 +691,32 @@
           }
         },
         {
+          "id": "l04a",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Tay ông lại đau à? Vết bỏng cũ ấy. Để con làm, ông chỉ thôi.",
+            "en": "Is your hand hurting again? That old burn. Let me do it, you just tell me."
+          },
+          "condition": {
+            "flags": [
+              "tho_cuu_giay"
+            ]
+          }
+        },
+        {
+          "id": "l04b",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Năm bảy hai. Chuyện cũ. Gừng.",
+            "en": "Seventy-two. Old story. Ginger."
+          },
+          "condition": {
+            "flags": [
+              "tho_cuu_giay"
+            ]
+          }
+        },
+        {
           "id": "l05",
           "speaker": "characters:cu_tho",
           "text": {
@@ -716,6 +999,32 @@
           "text": {
             "vi": "Cái tủ sắt kia bác khóa số. Ông em bảo bác dặn: 'Thằng Khôi biết mã'.",
             "en": "That iron cabinet has a combination lock. Grandpa says your dad told him: 'Khôi knows the code'."
+          }
+        },
+        {
+          "id": "l07a",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "Còn một việc anh cần biết trước khi mở cái gì. Cô Hạnh đã ký thỏa thuận ghi nhớ bán nhà. Bên mua đợi chữ ký của anh.",
+            "en": "One more thing you should know before you open anything. Aunt Hạnh has signed a memorandum to sell the house. The buyer is waiting for your signature."
+          },
+          "condition": {
+            "flags": [
+              "biet_chuyen_ban_nha"
+            ]
+          }
+        },
+        {
+          "id": "l07b",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(nhìn cái tủ) Thì ra ai cũng chờ anh mở cái gì đó.",
+            "en": "(looking at the safe) So everyone is waiting for me to open something."
+          },
+          "condition": {
+            "flags": [
+              "biet_chuyen_ban_nha"
+            ]
           }
         },
         {

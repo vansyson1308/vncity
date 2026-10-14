@@ -339,6 +339,12 @@
                       "x-consumer": "gameplay",
                       "type": "number"
                     },
+                    "duration_s": {
+                      "description": "Designed length of a cutscene/talk/minigame step in real seconds (pacing contract; tools/playtest.py uses it instead of its per-kind defaults).",
+                      "x-consumer": "gameplay",
+                      "type": "number",
+                      "minimum": 0
+                    },
                     "driver": {
                       "description": "characters:<id> driving.",
                       "x-consumer": "gameplay",

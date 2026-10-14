@@ -78,7 +78,71 @@ bool UHanoiMissionSubsystem::EvaluateCondition(const FHanoiCondition& C) const
 	{
 		if (!State.Flags.Contains(FName(*Flag))) { return false; }
 	}
+	for (const FString& Flag : C.FlagsNot)
+	{
+		if (State.Flags.Contains(FName(*Flag))) { return false; }
+	}
 	return true;
+}
+
+// ------------------------------------------------------------------ conditional dialogue
+
+namespace
+{
+	int32 DialogueLineIndex(const FHanoiDialogueRow& Dialogue, FName LineId)
+	{
+		if (LineId.IsNone())
+		{
+			return Dialogue.Lines.Num() > 0 ? 0 : INDEX_NONE;
+		}
+		return Dialogue.Lines.IndexOfByPredicate([LineId](const FHanoiDialogueLine& L) { return L.Id == LineId; });
+	}
+}
+
+FName UHanoiMissionSubsystem::ResolveDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId) const
+{
+	// A skipped line falls through to the next line of the array, never to its goto (docs/gdd/02-he-thong.md §8).
+	for (int32 i = DialogueLineIndex(Dialogue, LineId); Dialogue.Lines.IsValidIndex(i); ++i)
+	{
+		if (EvaluateCondition(Dialogue.Lines[i].Condition))
+		{
+			return Dialogue.Lines[i].Id;
+		}
+	}
+	return NAME_None;
+}
+
+FName UHanoiMissionSubsystem::NextDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId) const
+{
+	const int32 i = DialogueLineIndex(Dialogue, LineId);
+	if (!Dialogue.Lines.IsValidIndex(i))
+	{
+		return NAME_None;
+	}
+	const FHanoiDialogueLine& Line = Dialogue.Lines[i];
+	if (!Line.Goto.IsNone())
+	{
+		return ResolveDialogueLine(Dialogue, Line.Goto);
+	}
+	return Dialogue.Lines.IsValidIndex(i + 1) ? ResolveDialogueLine(Dialogue, Dialogue.Lines[i + 1].Id) : NAME_None;
+}
+
+TArray<int32> UHanoiMissionSubsystem::GetVisibleDialogueChoices(const FHanoiDialogueRow& Dialogue, FName LineId) const
+{
+	TArray<int32> Visible;
+	const int32 i = DialogueLineIndex(Dialogue, LineId);
+	if (Dialogue.Lines.IsValidIndex(i))
+	{
+		const TArray<FHanoiDialogueLineChoice>& Choices = Dialogue.Lines[i].Choices;
+		for (int32 c = 0; c < Choices.Num(); ++c)
+		{
+			if (EvaluateCondition(Choices[c].Condition))
+			{
+				Visible.Add(c);
+			}
+		}
+	}
+	return Visible;
 }
 
 void UHanoiMissionSubsystem::ApplyReward(const FHanoiReward& Reward)

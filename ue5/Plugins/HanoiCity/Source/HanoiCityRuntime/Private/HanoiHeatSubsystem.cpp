@@ -5,6 +5,8 @@
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 
+const FName UHanoiHeatSubsystem::PermanentHeatCapFlag(TEXT("giam_chu_y_vinh_vien_1"));
+
 TStatId UHanoiHeatSubsystem::GetStatId() const
 {
 	RETURN_QUICK_DECLARE_CYCLE_STAT(UHanoiHeatSubsystem, STATGROUP_Tickables);
@@ -34,7 +36,17 @@ void UHanoiHeatSubsystem::SetHeat(float NewHeat)
 {
 	const int32 OldStars = GetStars();
 	const float Old = Heat;
-	Heat = FMath::Clamp(NewHeat, 0.f, UHanoiCitySettings::Get()->MaxHeat);
+	float MaxHeat = UHanoiCitySettings::Get()->MaxHeat;
+	// Content flag giam_chu_y_vinh_vien_1 (reward of s12): the cap is one star lower for good (docs/gdd/02-he-thong.md §8).
+	const UGameInstance* GI = GetWorld() ? GetWorld()->GetGameInstance() : nullptr;
+	if (const UHanoiMissionSubsystem* Missions = GI ? GI->GetSubsystem<UHanoiMissionSubsystem>() : nullptr)
+	{
+		if (Missions->GetPlayerStateRef().Flags.Contains(PermanentHeatCapFlag))
+		{
+			MaxHeat = FMath::Max(0.f, MaxHeat - 1.f);
+		}
+	}
+	Heat = FMath::Clamp(NewHeat, 0.f, MaxHeat);
 	if (GetStars() != OldStars || (Old > 0.f && Heat <= 0.f))
 	{
 		OnHeatChanged.Broadcast(Heat, GetStars());

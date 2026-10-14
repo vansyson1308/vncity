@@ -524,6 +524,9 @@
           "clear",
           "cloudy",
           "cold"
+        ],
+        "flags": [
+          "quen_ong_thang"
         ]
       },
       "start": {
@@ -804,6 +807,9 @@
       "requires": {
         "missions_completed": [
           "missions:c1_06_hop_to_dan_pho"
+        ],
+        "flags": [
+          "da_hop_to_dan_pho"
         ]
       },
       "start": {
@@ -1187,6 +1193,108 @@
           "giay_khen_an_toan_giao_thong",
           "giam_chu_y_vinh_vien_1"
         ]
+      }
+    },
+    {
+      "id": "s13_tin_dau_tien",
+      "tags": [
+        "side",
+        "minh",
+        "kim_long",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Tin đầu tiên",
+        "en": "The first tip"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:thao",
+      "summary": {
+        "vi": "Chỉ mở nếu Minh đã nhận cả hai việc của Thảo và chưa bỏ: tin đầu tiên cô ấy cần là một ông cụ ở Hàng Bạc. Năm triệu, hoặc một tin giả.",
+        "en": "Only if Minh took both of Thảo's jobs and has not quit: the first tip she needs is an old man on Hàng Bạc. Five million, or a false tip."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_05_mua_ngap_pho"
+        ],
+        "flags": [
+          "minh_nhan_viec_kim_long"
+        ],
+        "flags_not": [
+          "minh_bo_viec_kim_long"
+        ]
+      },
+      "start": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "steps": [
+        {
+          "id": "tin_nhan",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "7 giờ sáng, phòng trọ. Tin nhắn của chị Thảo.",
+            "en": "7 a.m., the rented room. A message from Thảo."
+          },
+          "target": {
+            "lat": 20.9905,
+            "lon": 105.815
+          },
+          "dialogue": "dialogues:dlg_s13_tin_nhan",
+          "params": {
+            "time_of_day": 7.0
+          },
+          "next": "hoi_xe_om"
+        },
+        {
+          "id": "hoi_xe_om",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Ra góc Ô Quan Chưởng hỏi cánh xe ôm về Hàng Bạc",
+            "en": "Go to the Ô Quan Chưởng corner and ask the riders about Hàng Bạc"
+          },
+          "target": "landmarks:o_quan_chuong",
+          "next": "gap_ong_tu"
+        },
+        {
+          "id": "gap_ong_tu",
+          "kind": "talk",
+          "objective": {
+            "vi": "Giả vờ hỏi đường ở Hàng Bạc số 7",
+            "en": "Pretend to ask the way at Hàng Bạc no. 7"
+          },
+          "target": {
+            "lat": 21.0337,
+            "lon": 105.8521
+          },
+          "dialogue": "dialogues:dlg_s13_ong_tu",
+          "next": "gui_tin"
+        },
+        {
+          "id": "gui_tin",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tối, soạn tin cho chị Thảo",
+            "en": "Evening: write to Thảo"
+          },
+          "target": {
+            "lat": 20.9905,
+            "lon": 105.815
+          },
+          "dialogue": "dialogues:dlg_s13_gui_tin",
+          "params": {
+            "time_of_day": 21.0
+          },
+          "next": "end"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "cong_dong_tai_xe_vo": -5
+        }
       }
     }
   ]

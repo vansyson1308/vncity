@@ -13,15 +13,16 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | building_archetypes | `world/building_archetypes.json` | 13 | Đúng 13 id pipeline dùng |
 | landmarks | `world/landmarks.json` | 84 | 36 mục `coords_verified_overture` (khớp Overture trong 300 m), 48 mục còn `coords_unverified` (phần lớn là hồ, cầu, phố, công viên: giữ mốc tay) |
 | characters | `characters/protagonists.json` | 3 | Minh, Lan, Khôi |
-| characters | `characters/story.json` | 24 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio |
-| characters | `characters/ambient.json` | 20 | Kiểu dân cư có lịch sinh hoạt |
+| characters | `characters/story.json` | 30 | Nhân vật truyện, liên lạc, người bán, 3 người dẫn radio; cụ Thọ 1957 (điều khiển được trong cold open), ông Khiêm, bà Thọ, ông Tư Hàng Bạc, Hùng Hàng Đậu, anh Phúc ngân hàng |
+| characters | `characters/ambient.json` | 21 | Kiểu dân cư có lịch sinh hoạt; loa phường |
 | vehicles | `vehicles.json` | 26 | Tên parody, model thật chỉ ở `inspired_by` |
 | activities | `activities.json` | 24 | Việc làm, minigame, giải trí, sưu tầm, đua hợp pháp, kinh doanh |
-| missions | `missions/story_prologue.json` | 3 | Mở đầu (chương 0) |
+| missions | `missions/story_prologue.json` | 4 | Cold open 1957/1972 + mở đầu (chương 0) |
 | missions | `missions/story_chapter1.json` | 9 | Chương 1 |
-| missions | `missions/side_stranger.json` | 12 | Phụ và người lạ |
-| dialogues | `dialogues/prologue.json`, `chapter1.json`, `side.json` | 57 | Có bản `en` cho mọi dòng |
-| items | `items.json` | 52 | Đồ ăn, đồ dùng, 12 app điện thoại, giấy tờ, sưu tầm, vật phẩm nhiệm vụ (`la_dong`, `dieu_cua_be`) |
+| missions | `missions/story_chapter2.json` | 8 | Chương 2 "Mùa nồm": 7 truyện + 1 phụ sau giao thừa |
+| missions | `missions/side_stranger.json` | 13 | Phụ và người lạ |
+| dialogues | `dialogues/prologue.json`, `chapter1.json`, `chapter2.json`, `side.json` | 91 (626 dòng) | Có bản `en` cho mọi dòng; 186 dòng có điều kiện (`lines[].condition`), xem `08-mo-man-va-he-qua.md` |
+| items | `items.json` | 55 | Đồ ăn, đồ dùng, 12 app điện thoại, giấy tờ, sưu tầm, vật phẩm nhiệm vụ (`la_dong`, `dieu_cua_be`, `giay_1957`, `bang_cassette_12_khai`) |
 | businesses | `businesses.json` | 11 | Đủ 10 loại hình |
 | events | `events.json` | 20 | Lịch âm, lịch dương, tuần, dữ liệu sống |
 | radio | `radio.json` | 7 | Nhạc gốc hoặc chờ cấp phép |
@@ -61,7 +62,7 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 
 ## Đề xuất thay đổi schema
 
-Trạng thái: 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem từng mục); các mục khác chưa sửa
+Trạng thái: 3, 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem từng mục); các mục khác chưa sửa
 `game/schemas/`.
 
 1. **missions.steps[].next dạng bảng**: thêm `branch_on` để nói rõ khóa nhánh lấy từ đâu, ví dụ
@@ -72,8 +73,11 @@ Trạng thái: 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem từ
 2. **missions.steps[].switch_to**: trường chuẩn để đổi nhân vật điều khiển (hiện dùng
    `params.protagonist` và `params.switch_protagonist_on_line`). *Một phần:* hai khóa này nay có
    kiểu trong schema và runtime đổi nhân vật (`OnProtagonistSwitched`).
-3. **dialogues.lines[].condition**: dòng thoại chỉ hiện khi đủ điều kiện (cờ, uy tín) để các chương
-   sau phản ứng với lựa chọn trước mà không cần nhân đôi đoạn thoại.
+3. ~~**dialogues.lines[].condition**: dòng thoại chỉ hiện khi đủ điều kiện (cờ, uy tín) để các chương
+   sau phản ứng với lựa chọn trước mà không cần nhân đôi đoạn thoại.~~ **Đã làm:** `lines[].condition`
+   và `choices[].condition` (điều kiện chung + `flags_not`); dòng bị bỏ rơi xuống dòng kế trong mảng,
+   lựa chọn bị ẩn; runtime `ResolveDialogueLine` / `NextDialogueLine` / `GetVisibleDialogueChoices`
+   (`02-he-thong.md` §8).
 4. **dialogues.lines[].speaker** cho phép giá trị đặc biệt `player` (nhân vật đang điều khiển), để
    một đoạn thoại dùng được cho nhiều nhân vật chính.
 5. **traffic_rules.fine_vnd** thêm `min`/`max` theo khung phạt thật, `points_vehicle` riêng xe máy
