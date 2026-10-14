@@ -1,11 +1,85 @@
 {
-  "_comment": "PCG point Set/Kind -> static mesh. Empty mesh = skipped (DataTable still imported). Fill when assets exist. Keys are '<Set>/<Kind>' or '<Set>/*'. scale multiplies the CSV Scale; yaw_offset_deg fixes mesh forward axis (UE meshes face +X).",
-  "street_trees/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 400},
-  "power_poles/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 300},
-  "street_lights/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 300},
-  "shop_signs/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 150},
-  "parked_motorbikes/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 120},
-  "street_vendors/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 120},
-  "cable_spans/*": {"mesh": "", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 200},
-  "_example/tree_sau": {"mesh": "/Game/Hanoi/Props/Trees/SM_Sau_01.SM_Sau_01", "scale": 1.0, "yaw_offset_deg": 0.0, "cull_distance_m": 400}
+  "_comment": "PCG point Set/Kind -> static mesh. Empty mesh = skipped (DataTable still imported). Fill when assets exist (names and sizes: game/assets/asset_specs.json). Keys are '<Set>/<Kind>' or '<Set>/*'. 'meshes' (list) picks a mesh per row by Variant; 'mesh' is the single-mesh form. scale multiplies the CSV Scale on the axes in scale_axes (default xyz). yaw_offset_deg fixes mesh forward axis (UE meshes face +X).",
+  "street_trees/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 400
+  },
+  "power_poles/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 300
+  },
+  "cable_spans/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 200,
+    "scale_axes": "x"
+  },
+  "street_lights/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 300
+  },
+  "shop_signs/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 150,
+    "scale_axes": "y"
+  },
+  "awnings/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 150,
+    "scale_axes": "y"
+  },
+  "parked_motorbikes/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 120
+  },
+  "pavement_seating/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 100
+  },
+  "street_vendors/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 120
+  },
+  "infrastructure/*": {
+    "mesh": "",
+    "meshes": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 150
+  },
+  "_example/tree_sau": {
+    "meshes": [
+      "/Game/Hanoi/Props/Trees/SM_tree_sau_v0.SM_tree_sau_v0",
+      "/Game/Hanoi/Props/Trees/SM_tree_sau_v1.SM_tree_sau_v1"
+    ],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 400
+  }
 }

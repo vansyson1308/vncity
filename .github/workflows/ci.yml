@@ -20,3 +20,5 @@ jobs:
           git diff --exit-code -- ue5/
       - name: Unit tests
         run: python -m pytest -q
+      - name: Asset prompt pack matches the asset contract
+        run: python tools/asset_prompts.py --check

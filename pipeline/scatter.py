@@ -6,7 +6,7 @@ then varied with a stable per-row seed, so a rebuild gives identical output.
 
 Sets:
   shop_signs        one sign per shopfront edge, family taken from the real shop behind it
-                    (vertical signs on narrow Old Quarter fronts); Scale = sign width / 4 m
+                    (blade signs on narrow Old Quarter fronts, Scale 1); flat signs: Scale = width / 4 m
   awnings           canvas awnings over shopfronts
   parked_motorbikes nose-in rows on the pavement in front of shops
   pavement_seating  plastic stools + low tables in front of real eateries, cafés, bia hơi
@@ -147,9 +147,12 @@ def shopfronts(fp, places, w, blockers):
         mid = (a + b) / 2
         width = min(main["length_m"] * 0.9, 8.0)
         vertical = bld["archetype"] == "nha_ong_pho_co" and main["length_m"] < 5.5
+        # Flat signs span the frontage (Scale = width / 4 m, applied along the facade only); blade
+        # signs stick out of the wall at a fixed size, so their Scale stays 1.
         x, y = mid + n * 0.25
         w.add("shop_signs", f"{family}_vertical" if vertical else family, x, y,
-              3.4 if not vertical else 4.5, main["facing_deg"], width / 4.0, rng.integers(0, 8), ref, bld["id"])
+              3.4 if not vertical else 4.5, main["facing_deg"], 1.0 if vertical else width / 4.0,
+              rng.integers(0, 8), ref, bld["id"])
         if rng.random() < 0.6:
             x, y = mid + n * 0.9
             w.add("awnings", "canvas", x, y, 2.6, main["facing_deg"], width / 4.0, rng.integers(0, 6), bld["id"],

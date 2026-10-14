@@ -67,6 +67,10 @@ Name,X,Y,Z,Yaw,Scale,Set,Kind,Variant,Seed,Tile,Ref
 * `Tile` is `ix_iy` of the build tile, so World Partition / streaming can bucket rows.
 * `Ref` optional id (building id, place id, road id) the instance belongs to.
 * `Name` is a unique row name so the CSV imports directly into a UE DataTable.
+* `Scale` is uniform except where a set says otherwise: flat `shop_signs` and `awnings` carry
+  frontage width / 4 m (scale the facade axis only), `cable_spans` carry the span length in metres
+  (scale the span axis only). Mesh sizes, pivots and axes per Set/Kind are in
+  `game/assets/asset_specs.json`.
 
 ### `traffic/graph.json`
 

@@ -32,7 +32,7 @@ kiểm tra tự động. Những gì cần UE5 để chạy thử được đán
 2. **Tinh chỉnh phân loại kiểu nhà** bằng ảnh khảo sát: vẽ lại vùng phố cổ / phố Pháp chính xác,
    thêm luật nhận biệt khu tập thể (Kim Liên, Thành Công, Giảng Võ).
 3. **Chạy toàn thành phố** (`pipeline.run --region VN-HN --tile 1000`), đo thời gian và dung lượng.
-4. **Bộ kit mặt tiền trong Blender** (glTF, PBR, CC0 texture): 13 kiểu × 3-5 biến thể, mỗi kit chia
+4. **Bộ kit mặt tiền trong Blender** (quy trình: `10-quy-trinh-tao-tai-san.md`; nguồn: `08-nguon-tai-san-3d.md`): 13 kiểu × 3 biến thể, mỗi kit chia
    module tầng trệt / tầng giữa / mái để PCG lắp. Bắt đầu từ `nha_ong_pho_co`.
 5. **Đạo cụ** theo `Kind` trong `out/*/pcg/*.csv` (khoảng 40 mesh): xe máy (tên nhại), ghế nhựa,
    gánh hàng, xe đạp hoa, cột điện chữ H, bó dây, biển hiệu theo 12 nhóm ngành.
