@@ -13,8 +13,8 @@
         "en": "Bike dead in the middle of the road"
       },
       "description": {
-        "vi": "Một tài xế áo xanh dắt xe Wave chết máy giữa làn ô tô, còi bấm sau lưng từng hồi, app vẫn đếm giờ cuốc.",
-        "en": "A ride-hailing driver pushes a dead Wave across the car lane while horns pile up behind him; his app is still counting the trip."
+        "vi": "Một tài xế áo xanh dắt chiếc Hồng Đạt Sóng Alpha chết máy giữa làn ô tô, còi bấm sau lưng từng hồi, app vẫn đếm giờ cuốc.",
+        "en": "A ride-hailing driver pushes a dead Hồng Đạt Sóng Alpha across the car lane while horns pile up behind him; his app is still counting the trip."
       },
       "kind": "giup_nguoi",
       "npc": "characters:amb_xe_om_cong_nghe",
@@ -44,8 +44,8 @@
             "en": "Pull over and open your toolkit"
           },
           "outcome": {
-            "vi": "Bugi ướt. Lau khô, đạp ba cái nổ. Anh ta xin số Zalo để 'lần sau mời cốc bia'.",
-            "en": "Wet spark plug. Dry it, three kicks, it fires. He asks for your Zalo 'for a beer next time'."
+            "vi": "Bugi ướt. Lau khô, đạp ba cái nổ. Anh ta xin số Alô Chat để 'lần sau mời cốc bia'.",
+            "en": "Wet spark plug. Dry it, three kicks, it fires. He asks for your Alô Chat 'for a beer next time'."
           },
           "effect": {
             "reputation": {
@@ -179,8 +179,8 @@
         "en": "Student pushing a bike that ran dry"
       },
       "description": {
-        "vi": "Cậu sinh viên dắt chiếc Sirius dưới nắng, kim xăng về E từ sáng, ví còn 12 nghìn.",
-        "en": "A student pushes a Sirius in the heat; the fuel needle has been on E since morning and his wallet holds twelve thousand."
+        "vi": "Cậu sinh viên dắt chiếc Giamaha Thiên Lang dưới nắng, kim xăng về E từ sáng, ví còn 12 nghìn.",
+        "en": "A student pushes a Giamaha Thiên Lang in the heat; the fuel needle has been on E since morning and his wallet holds twelve thousand."
       },
       "kind": "giup_nguoi",
       "npc": "characters:amb_sinh_vien",
@@ -746,7 +746,7 @@
         {
           "id": "chup_anh_dang",
           "text": {
-            "vi": "Chụp ảnh, đăng Mặt Búc 'Ngã Tư Sở sáng nay'",
+            "vi": "Chụp ảnh, đăng MặtBook 'Ngã Tư Sở sáng nay'",
             "en": "Photograph it, post 'Ngã Tư Sở this morning'"
           },
           "outcome": {
@@ -1857,8 +1857,8 @@
         "en": "Phone snatched on the street"
       },
       "description": {
-        "vi": "Hai thanh niên xe Exciter không biển áp sát một cô gái đang cầm điện thoại chỉ đường, giật, phóng vào ngõ Hàng Buồm.",
-        "en": "Two youths on a plateless Exciter pull alongside a girl reading her phone for directions, snatch it, and bolt into Hàng Buồm alley."
+        "vi": "Hai thanh niên xe Giamaha Phấn Khích không biển áp sát một cô gái đang cầm điện thoại chỉ đường, giật, phóng vào ngõ Hàng Buồm.",
+        "en": "Two youths on a plateless Giamaha Phấn Khích pull alongside a girl reading her phone for directions, snatch it, and bolt into Hàng Buồm alley."
       },
       "kind": "hiem_hoa",
       "npc": "characters:amb_khach_du_lich_noi_dia",
@@ -2135,8 +2135,8 @@
       "kind": "co_hoi",
       "npc": "characters:amb_khach_tay_ba_lo",
       "motive": {
-        "kho": "Mạng 4G hết, Google chỉ sai vì phố một chiều.",
-        "tap": "Muốn ảnh phố đường tàu như trên Instagram trước 15 giờ tàu chạy."
+        "kho": "Mạng 4G hết, Bản Đồ Ơi chỉ sai vì phố một chiều.",
+        "tap": "Muốn ảnh phố đường tàu như trên Tóp Tóp trước 15 giờ tàu chạy."
       },
       "spawn": {
         "districts": [
@@ -2225,8 +2225,8 @@
         "en": "Watch dropped by the bench"
       },
       "description": {
-        "vi": "Chiếc đồng hồ Seiko cũ nằm dưới ghế đá, tốp các bà tập dưỡng sinh vừa tan, loa kéo còn nhạc.",
-        "en": "An old Seiko lies under a stone bench; the morning exercise group has just dispersed, the speaker still playing."
+        "vi": "Chiếc đồng hồ Liên Xô cũ nằm dưới ghế đá, tốp các bà tập dưỡng sinh vừa tan, loa kéo còn nhạc.",
+        "en": "An old Soviet watch lies under a stone bench; the morning exercise group has just dispersed, the speaker still playing."
       },
       "kind": "co_hoi",
       "npc": "characters:amb_ba_tap_the_duc",
@@ -2292,8 +2292,8 @@
             "en": "Pocket it"
           },
           "outcome": {
-            "vi": "Seiko 5 bán được 300 nghìn ở chợ Giời.",
-            "en": "A Seiko 5 fetches 300k at Giời market."
+            "vi": "Đồng hồ Liên Xô cũ bán được 300 nghìn ở chợ Giời.",
+            "en": "An old Soviet watch fetches 300k at Giời market."
           },
           "effect": {
             "money_vnd": 300000,
@@ -2317,8 +2317,8 @@
         "en": "Fare in a hurry"
       },
       "description": {
-        "vi": "Chị công sở vẫy tay giữa đường Duy Tân: '8 giờ 15 họp, Lotte, 100 nghìn, đi được không?'",
-        "en": "A woman in office wear flags you down on Duy Tân: 'Meeting at 8:15, Lotte, 100k, can you?'"
+        "vi": "Chị công sở vẫy tay giữa đường Duy Tân: '8 giờ 15 họp, Lốt Tê, 100 nghìn, đi được không?'",
+        "en": "A woman in office wear flags you down on Duy Tân: 'Meeting at 8:15, Lốt Tê, 100k, can you?'"
       },
       "kind": "co_hoi",
       "npc": "characters:amb_dan_van_phong",
@@ -2465,7 +2465,7 @@
           "fail_effect": {
             "money_vnd": 50000,
             "time_min": 60,
-            "note": "Kể sai chuyện Tháp Rùa, bị cậu con tra Google bắt lỗi."
+            "note": "Kể sai chuyện Tháp Rùa, bị cậu con tra Bản Đồ Ơi bắt lỗi."
           }
         },
         {
@@ -2505,7 +2505,7 @@
       "npc": "characters:amb_co_dau_chu_re",
       "motive": {
         "kho": "Thuê áo dài theo giờ, 3 triệu một buổi, không chụp hôm nay là mất.",
-        "tap": "Ảnh phải 'đẹp như trên Mặt Búc' để nhà chồng khỏi so bì."
+        "tap": "Ảnh phải 'đẹp như trên MặtBook' để nhà chồng khỏi so bì."
       },
       "spawn": {
         "landmarks": [
@@ -2536,8 +2536,8 @@
             "en": "Get the camera out and shoot the session"
           },
           "outcome": {
-            "vi": "Bốn mươi phút, 200 kiểu, một kiểu ở khe sáng cửa nhà thờ mà cô dâu khóc thật. Họ trả 1 triệu và xin Zalo.",
-            "en": "Forty minutes, 200 frames, one in the slit of light at the church door where the bride cries for real. They pay 1 million and ask for your Zalo."
+            "vi": "Bốn mươi phút, 200 kiểu, một kiểu ở khe sáng cửa nhà thờ mà cô dâu khóc thật. Họ trả 1 triệu và xin Alô Chat.",
+            "en": "Forty minutes, 200 frames, one in the slit of light at the church door where the bride cries for real. They pay 1 million and ask for your Alô Chat."
           },
           "effect": {
             "money_vnd": 1000000,
