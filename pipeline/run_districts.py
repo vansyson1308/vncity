@@ -7,7 +7,7 @@
 For each entry in pipeline/districts.json this cuts data/<district> out of the cache
 (pipeline.subset) and runs the rest of pipeline.run with the shared origin, then writes
 out/districts.json: one row per district with the manifest summaries, so the UE5 importer and
-docs/11-cac-quan.md have one index of what was built.
+docs/12-cac-quan.md have one index of what was built.
 """
 
 import argparse

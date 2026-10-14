@@ -3,6 +3,9 @@
 Ngày 14/10/2026, sau khi chạy `tools/playtest.py` (giả lập bốn kiểu người chơi đi hết mở đầu + chương 1
 + 12 nhiệm vụ phụ trên bản đồ 1:1, kết quả ở `06-gia-lap-choi-thu.md`) và đọc lại toàn bộ 57 đoạn
 thoại, 24 nhiệm vụ, dàn ý 5 hồi. Đây là ý kiến thẩm định, không phải số liệu đo được, trừ chỗ ghi rõ.
+Bản chơi thử bằng tay cùng ngày, đi sâu vào lời thoại, dòng thời gian nhân vật và runtime (và đã sửa
+3 lỗi runtime ở PR #5) nằm ở `../11-tham-dinh-choi-thu.md`; tài liệu này không lặp lại phần đó mà
+nhìn ở tầng hệ thống: đồng hồ, bản đồ, kinh tế, độ phủ quận, và đường tới một bản bán được.
 
 ## Kết luận ngắn
 
@@ -18,7 +21,7 @@ tiền đề, nhân vật, sự cụ thể; điểm thấp ở mở màn, hệ q
 | --- | --- | --- |
 | Lỗi chặn chơi (bước cụt, cờ không ai đặt, thoại trỏ sai) | **0** | Logic dữ liệu sạch; chơi hết được 24/24 nhiệm vụ |
 | Mâu thuẫn giờ giấc | 3 (đồng hồ 30x) / 2 (đồng hồ 1x) | Ngày 48 phút trên bản đồ 1:1: đi bộ 800 m từ Hàng Chiếu ra Bờ Hồ mất 5 giờ game, bước "chụp lúc 5h30-7h" trượt |
-| Lựa chọn có hệ quả về sau | **0/32 cờ được đọc lại** | Toàn bộ lựa chọn chương 1 chưa trả gì, vì chương 2-5 chưa viết. Người chơi bản v0 sẽ thấy "chọn gì cũng thế" |
+| Lựa chọn có hệ quả về sau | **2/34 cờ được đọc lại** (chỉ cặp gia vị chuẩn/rẻ) | Gần như toàn bộ lựa chọn chương 1 chưa trả gì, vì chương 2-5 chưa viết. Người chơi bản v0 sẽ thấy "chọn gì cũng thế" |
 | Tiền của Minh sau 90 ngày game | **âm** (dư -0,7 tr/tháng theo bảng giá GDD) | Mục tiêu đời của Minh (tiệm 120 tr) không thể đạt bằng vòng lặp tự do; gửi quê 6 tr/tháng nuốt hết |
 | Nhiệm vụ phụ "Mũ bảo hiểm cho bé" | cần 90 ngày sạch = **72 giờ chơi thật** | Một nhiệm vụ nhỏ bị khóa sau một điều kiện của game 100 giờ |
 | Quận cốt truyện chạm tới | 8/14 | Cầu Giấy, Hai Bà Trưng, Hoàng Mai, Hà Đông, Bắc Từ Liêm, Gia Lâm chưa có lý do để tới |
@@ -67,7 +70,7 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 - **Phản diện mềm quá mềm.** Kim Long chỉ "trả lương gấp đôi" và "gom 14 nhà". Cần một hành động
   gây tổn thất thấy được sớm: nhà ông Tư Hàng Bạc bị ép bán ở hồi 2 nên kéo lên chương 1, hoặc khách
   sạn mẫu khoét ruột làm nứt tường 49 Hàng Chiếu.
-- **Lựa chọn chưa có giá.** 32 cờ, 0 cờ được đọc. Dàn ý hồi 2-5 có kế hoạch trả, nhưng chừng nào
+- **Lựa chọn chưa có giá.** 34 cờ được đặt, 2 cờ được đọc. Dàn ý hồi 2-5 có kế hoạch trả, nhưng chừng nào
   chưa viết, bản demo không chứng minh được "lựa chọn quan trọng". Cần ít nhất 3 hệ quả *trong chương
   1* (ví dụ: `minh_nhan_viec_kim_long` → Thảo gọi Minh đi cuốc xe lúc 1.5 thay vì Tuấn; `lan_mua_gia_vi_re`
   → Mark chê ở 1.7).
@@ -112,7 +115,7 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 | Tiền đề | 5 | 5 | Căn nhà ba chủ, tờ giấy cháy, 24 cuộn băng |
 | Nhân vật | 4 | 5 | Ba cung rõ; Khôi cần nói ít hơn và nhìn nhiều hơn |
 | Mở màn | 2 | 4 | Hiện là hướng dẫn lái xe |
-| Hệ quả lựa chọn | 1 | 4 | 0/32 cờ được đọc |
+| Hệ quả lựa chọn | 1 | 4 | 2/34 cờ được đọc |
 | Logic dữ liệu | 5 | 5 | 0 lỗi chặn chơi |
 | Nhịp chơi | 3 | 4 | 45% thoại, nhiệm vụ 4 phút |
 | Kinh tế | 2 | 4 | Minh lỗ hàng tháng |

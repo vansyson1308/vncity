@@ -673,7 +673,8 @@
       "unlocks": [
         "activities:act_mac_ca_cho_dau_moi",
         "missions:c1_07_mark_an_pho",
-        "missions:s08_tem_phieu_bao_cap"
+        "missions:s08_tem_phieu_bao_cap",
+        "missions:c1_06_hop_to_dan_pho"
       ]
     },
     {
@@ -834,7 +835,8 @@
       },
       "unlocks": [
         "activities:act_sua_xe_may",
-        "missions:s07_xe_chet_may_sau_mua"
+        "missions:s07_xe_chet_may_sau_mua",
+        "missions:c1_09_bua_toi_tang_72"
       ]
     },
     {
@@ -1054,7 +1056,8 @@
         ]
       },
       "unlocks": [
-        "missions:s03_mark_qua_duong"
+        "missions:s03_mark_qua_duong",
+        "missions:c1_09_bua_toi_tang_72"
       ]
     },
     {

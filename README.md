@@ -14,7 +14,7 @@ pipeline dựng thành phố, dữ liệu thiết kế game, và harness để n
 | `tools/` | Kiểm tra nội dung, giả lập chơi thử cốt truyện (`playtest.py`), sinh USTRUCT từ schema, xuất bản xem trước web |
 | `docs/` | Nghiên cứu, kiến trúc, giấy phép dữ liệu, hướng dẫn tích hợp UE5, lộ trình, tài liệu thiết kế game |
 
-Đọc trước: [docs/02-kien-truc.md](docs/02-kien-truc.md), rồi [docs/06-lo-trinh.md](docs/06-lo-trinh.md). Ngày cắm UE5: [docs/05-tich-hop-ue5.md](docs/05-tich-hop-ue5.md); kết quả QC cuối: [docs/07-qc-checklist.md](docs/07-qc-checklist.md).
+Đọc trước: [docs/02-kien-truc.md](docs/02-kien-truc.md), rồi [docs/06-lo-trinh.md](docs/06-lo-trinh.md). Ngày cắm UE5: [docs/05-tich-hop-ue5.md](docs/05-tich-hop-ue5.md); kết quả QC cuối: [docs/07-qc-checklist.md](docs/07-qc-checklist.md); chơi thử và thẩm định cốt truyện chương 1: [docs/11-tham-dinh-choi-thu.md](docs/11-tham-dinh-choi-thu.md).
 
 ## Chạy nhanh
 
@@ -30,7 +30,7 @@ python -m venv venv && ./venv/bin/pip install -r requirements.txt -r requirement
 ```
 
 ```bash
-# 12 quận nội thành từ một lần tải (xem docs/11-cac-quan.md): ~5 phút tải, ~2-4 phút dựng mỗi quận
+# 12 quận nội thành từ một lần tải (xem docs/12-cac-quan.md): ~5 phút tải, ~2-4 phút dựng mỗi quận
 ./venv/bin/python fetch.py --name noi_thanh --bbox 105.72,20.93,105.95,21.12
 ./venv/bin/python -m pipeline.fetch_context --name noi_thanh
 ./venv/bin/python -m pipeline.run_districts            # pipeline/districts.json: khung từng quận, gốc chung ở hồ Gươm

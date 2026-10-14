@@ -1,4 +1,4 @@
-"""Write docs/11-cac-quan.md and docs/img/districts_preview.png from out/districts.json.
+"""Write docs/12-cac-quan.md and docs/img/districts_preview.png from out/districts.json.
 
 Run after `python -m pipeline.run_districts`. The index out/districts.json is not committed (out/ is
 build output); this turns it into the committed record of what was built, so the docs say what the
@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 INDEX = ROOT / "out" / "districts.json"
-DOC = ROOT / "docs" / "11-cac-quan.md"
+DOC = ROOT / "docs" / "12-cac-quan.md"
 IMG = ROOT / "docs" / "img" / "districts_preview.png"
 CONFIG = ROOT / "pipeline" / "districts.json"
 
