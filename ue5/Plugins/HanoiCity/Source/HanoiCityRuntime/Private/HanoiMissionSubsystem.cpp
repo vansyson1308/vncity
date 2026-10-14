@@ -61,6 +61,11 @@ bool UHanoiMissionSubsystem::EvaluateCondition(const FHanoiCondition& C) const
 		const int32* Rep = State.Reputation.Find(Pair.Key);
 		if ((Rep ? *Rep : 0) < Pair.Value) { return false; }
 	}
+	for (const TPair<FName, int32>& Pair : C.MinSkills)
+	{
+		const int32* Skill = State.Skills.Find(Pair.Key);
+		if ((Skill ? *Skill : 0) < Pair.Value) { return false; }
+	}
 	const UHanoiTimeWeatherSubsystem* Time = GetGameInstance()->GetSubsystem<UHanoiTimeWeatherSubsystem>();
 	if (Time && !C.Hours.Contains(Time->GetHourOfDay()))
 	{

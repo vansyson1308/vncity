@@ -86,7 +86,10 @@
         "hours": [
           6,
           24
-        ]
+        ],
+        "min_skills": {
+          "lai_xe": 30
+        }
       },
       "vehicle_classes": [
         "motorbike_manual",
@@ -254,7 +257,10 @@
         ],
         "flags": [
           "mo_kho_anh"
-        ]
+        ],
+        "min_skills": {
+          "chup_anh": 50
+        }
       },
       "loop": {
         "generator": "rephoto_target",
@@ -309,7 +315,11 @@
         "hours": [
           8,
           21
-        ]
+        ],
+        "min_skills": {
+          "giao_tiep": 40,
+          "ngoai_ngu": 40
+        }
       },
       "loop": {
         "generator": "tour_route",
@@ -397,7 +407,12 @@
         "the_luc",
         "giao_tiep",
         "ngoai_ngu"
-      ]
+      ],
+      "available": {
+        "min_skills": {
+          "ngoai_ngu": 60
+        }
+      }
     },
     {
       "id": "act_nau_pho",
@@ -500,7 +515,12 @@
       },
       "skills_trained": [
         "nau_an"
-      ]
+      ],
+      "available": {
+        "min_skills": {
+          "nau_an": 30
+        }
+      }
     },
     {
       "id": "act_co_tuong",
@@ -908,7 +928,10 @@
         "hours": [
           5,
           6.5
-        ]
+        ],
+        "min_skills": {
+          "the_luc": 40
+        }
       },
       "vehicle_classes": [
         "bicycle"
@@ -1052,7 +1075,10 @@
       "unlock": {
         "missions_completed": [
           "missions:s09_bien_hieu_hang_thiec"
-        ]
+        ],
+        "min_skills": {
+          "chup_anh": 30
+        }
       },
       "loop": {
         "generator": "collectible_spawn",
@@ -1117,7 +1143,12 @@
       "skills_trained": [
         "mac_ca",
         "kinh_doanh"
-      ]
+      ],
+      "available": {
+        "min_skills": {
+          "mac_ca": 30
+        }
+      }
     },
     {
       "id": "act_cho_hang_ba_gac",
@@ -1139,7 +1170,11 @@
         "hours": [
           0,
           9
-        ]
+        ],
+        "min_skills": {
+          "thuoc_duong": 40,
+          "the_luc": 50
+        }
       },
       "vehicle_classes": [
         "tricycle_cargo"
@@ -1194,7 +1229,10 @@
       "unlock": {
         "missions_completed": [
           "missions:c1_09_bua_toi_tang_72"
-        ]
+        ],
+        "min_skills": {
+          "kinh_doanh": 40
+        }
       },
       "loop": {
         "generator": "business_tick",

@@ -57,6 +57,7 @@
       "class": "motorbike_manual",
       "seats": 2,
       "price_vnd": 48000000,
+      "unlock": {"min_skills": {"lai_xe": 60}},
       "handling": {"top_speed_kmh": 130, "accel_0_50_s": 3.9, "mass_kg": 121, "lean": 0.85, "brake": 0.7},
       "spawn": {"weight": 0.3, "hours": [17, 2]},
       "liveries": ["xanh_GP", "do_den", "den_nham"]
@@ -107,6 +108,7 @@
       "class": "motorbike_scooter",
       "seats": 2,
       "price_vnd": 98000000,
+      "unlock": {"min_skills": {"lai_xe": 85}},
       "handling": {"top_speed_kmh": 120, "accel_0_50_s": 4.4, "mass_kg": 133, "lean": 0.7, "brake": 0.8},
       "spawn": {"weight": 0.25, "districts": ["districts:hoan_kiem", "districts:ba_dinh", "districts:tay_ho", "districts:my_dinh"]},
       "liveries": ["trang_ngoc_trai", "den_nham", "do_ruou_vang"]
@@ -119,6 +121,7 @@
       "class": "motorbike_scooter",
       "seats": 2,
       "price_vnd": 79000000,
+      "unlock": {"min_skills": {"lai_xe": 85}},
       "handling": {"top_speed_kmh": 95, "accel_0_50_s": 6.3, "mass_kg": 120, "lean": 0.6, "brake": 0.6},
       "spawn": {"weight": 0.15, "districts": ["districts:tay_ho", "districts:hoan_kiem"]},
       "liveries": ["xanh_mint", "vang_bo", "trang_kem"]

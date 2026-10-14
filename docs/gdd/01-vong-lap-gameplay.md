@@ -30,7 +30,8 @@ xương, đang ngủ trưa, đang tráng phim).
 
 Kỹ năng tăng theo cách chơi (thang 0-100 trong `characters/*.json`, mỗi hoạt động khai báo
 `skills_trained`). Khôi bắt đầu gần như không biết lái xe máy ở Hà Nội: tiến trình lái xe của anh là
-một vòng học thật (nhiệm vụ "Thầy Minh", thi sát hạch A1).
+một vòng học thật (nhiệm vụ "Thầy Minh", thi sát hạch A1). Mỗi kỹ năng có ba mốc mở khóa thứ nhìn thấy
+được (xe, hoạt động, cơ sở, lựa chọn thoại): `skills.json`, 02 §10.
 
 ## Kinh tế và cân bằng VND
 

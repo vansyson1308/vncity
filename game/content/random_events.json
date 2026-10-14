@@ -3914,6 +3914,101 @@
           }
         }
       ]
+    },
+    {
+      "id": "re_cu_bao_thach_dau",
+      "tags": [
+        "co_tuong",
+        "ho_guom",
+        "van_hoa"
+      ],
+      "name": {
+        "vi": "Cụ Bảo thách đấu",
+        "en": "Bảo throws down a challenge"
+      },
+      "description": {
+        "vi": "Cụ Bảo cờ tướng ngồi sẵn ở bàn đá gần cầu Thê Húc, thấy bạn là vẫy: 'Nghe nói cháu biết thủ rồi. Năm mươi nghìn một ván, dám không?'",
+        "en": "Bảo the chess player is already at the stone table near Thê Húc bridge and waves you over: 'I hear you can defend now. Fifty thousand a game, dare you?'"
+      },
+      "kind": "van_hoa",
+      "npc": "characters:ong_bao_co_tuong",
+      "motive": {
+        "kho": "Cả CLB bờ Hồ không ai còn muốn đấu với cụ, thắng mãi cũng là một kiểu cô đơn.",
+        "tap": "Cần một người thua cụ nhiều lần rồi một ngày thắng cụ, như cụ với ông Khải năm xưa."
+      },
+      "spawn": {
+        "landmarks": [
+          "landmarks:ho_hoan_kiem",
+          "landmarks:cau_the_huc"
+        ],
+        "hours": [
+          6,
+          18
+        ],
+        "on_vehicle": false,
+        "chance_per_game_hour": 0.3,
+        "cooldown_days": 2
+      },
+      "requires": {
+        "min_skills": {
+          "co_tuong": 30
+        }
+      },
+      "duration_s": 90,
+      "ignore_effect": {
+        "reputation": {
+          "clb_co_tuong_bo_ho": -1
+        }
+      },
+      "choices": [
+        {
+          "id": "dau",
+          "text": {
+            "vi": "Ngồi xuống, đặt 50 nghìn",
+            "en": "Sit down and put 50k on the table"
+          },
+          "outcome": {
+            "vi": "Thắng: cụ trả 50 nghìn và kể một nước cờ của ông Khải. Thua: mất 50 nghìn, cụ bảo 'mai lại ra'.",
+            "en": "Win: he pays 50k and tells you one of Khải's moves. Lose: 50k gone, 'come again tomorrow'."
+          },
+          "minigame": "activities:act_co_tuong",
+          "effect": {
+            "money_vnd": 50000,
+            "reputation": {
+              "clb_co_tuong_bo_ho": 3
+            },
+            "skills": [
+              "co_tuong"
+            ],
+            "time_min": 30,
+            "note": "Thắng 3 ván tích luỹ mở mốc 60: giải CLB bờ Hồ."
+          },
+          "fail_effect": {
+            "money_vnd": -50000,
+            "reputation": {
+              "clb_co_tuong_bo_ho": 1
+            },
+            "skills": [
+              "co_tuong"
+            ],
+            "time_min": 30
+          }
+        },
+        {
+          "id": "tu_choi",
+          "text": {
+            "vi": "'Cháu đang vội, hôm khác ạ'",
+            "en": "'In a hurry, another day'"
+          },
+          "outcome": {
+            "vi": "'Hôm khác' với cụ là ngày mai, cùng giờ.",
+            "en": "'Another day' to him means tomorrow, same hour."
+          },
+          "effect": {
+            "time_min": 1
+          }
+        }
+      ]
     }
   ]
 }

@@ -28,7 +28,8 @@ Kiểm tra: `./venv/bin/python tools/validate.py` (schema + tham chiếu) và `.
 | radio | `radio.json` | 7 | Nhạc gốc hoặc chờ cấp phép |
 | factions | `factions.json` | 10 | |
 | traffic_rules | `traffic_rules.json` | 15 | Nghị định 168/2024/NĐ-CP; 11 mục gắn `fine_unverified` |
-| random_events | `random_events.json` | 45 | Sự kiện ngẫu nhiên trên phố, 6 loại, 122 lựa chọn, mỗi NPC có Khổ-Tập (02 §7.1) |
+| skills | `skills.json` | 12 | 12 kỹ năng, 3 mốc mỗi kỹ năng, 36 thứ mở khóa; cổng `min_skills` ở 10 hoạt động, 3 cơ sở, 3 xe, 8 lựa chọn thoại, 1 sự kiện (02 §10) |
+| random_events | `random_events.json` | 46 | Sự kiện ngẫu nhiên trên phố, 6 loại, 122 lựa chọn, mỗi NPC có Khổ-Tập (02 §7.1) |
 
 ## So với quy mô GTA5
 

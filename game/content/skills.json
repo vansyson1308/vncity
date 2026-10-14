@@ -1,0 +1,757 @@
+{
+  "collection": "skills",
+  "items": [
+    {
+      "id": "lai_xe",
+      "tags": [
+        "minh",
+        "khoi"
+      ],
+      "name": {
+        "vi": "Lái xe",
+        "en": "Riding"
+      },
+      "description": {
+        "vi": "Tay ga, phanh, lách làn, giữ xe trong mưa. Minh 70, Lan 40, Khôi 15 lúc bắt đầu.",
+        "en": "Throttle, brakes, lane-splitting, keeping upright in the rain. Minh 70, Lan 40, Khôi 15 at the start."
+      },
+      "trained_by": {
+        "vi": "Chạy cuốc, giao đồ ăn, đua xe đạp Hồ Tây, đuổi theo kẻ giật đồ.",
+        "en": "Fares, food delivery, the Hồ Tây bicycle race, chasing a snatcher."
+      },
+      "tiers": [
+        {
+          "level": 30,
+          "name": {
+            "vi": "Quen tay",
+            "en": "Steady hands"
+          },
+          "unlocks": {
+            "vi": "Nhận đơn giao đồ ăn trên App Đói.",
+            "en": "Food-delivery jobs on App Đói."
+          },
+          "refs": [
+            "activities:act_giao_do_an"
+          ]
+        },
+        {
+          "level": 60,
+          "name": {
+            "vi": "Lách ngõ",
+            "en": "Alley splitter"
+          },
+          "unlocks": {
+            "vi": "Được mua Giamaha Phấn Khích 155 ở cửa hàng xe.",
+            "en": "The Giamaha Phấn Khích 155 goes on sale."
+          },
+          "refs": [
+            "vehicles:giamaha_phan_khich"
+          ]
+        },
+        {
+          "level": 85,
+          "name": {
+            "vi": "Tay lái phố cổ",
+            "en": "Old Quarter rider"
+          },
+          "unlocks": {
+            "vi": "Được mua Ve Sầu Primavera và Hồng Đạt Sang Hơn 160i; cuốc liên quận trả gấp rưỡi.",
+            "en": "Ve Sầu Primavera and Hồng Đạt Sang Hơn 160i go on sale; cross-district fares pay 1.5x."
+          },
+          "refs": [
+            "vehicles:ve_sau_co_dien",
+            "vehicles:hongdat_sang_hon"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thuoc_duong",
+      "tags": [
+        "minh"
+      ],
+      "name": {
+        "vi": "Thuộc đường",
+        "en": "Street knowledge"
+      },
+      "description": {
+        "vi": "Biết ngõ nào xuyên, phố nào một chiều, giờ nào cấm. Năng lực đặc biệt của Minh dựa trên kỹ năng này.",
+        "en": "Which alley goes through, which street is one-way, which hour is banned. Minh's special ability rests on it."
+      },
+      "trained_by": {
+        "vi": "Chạy cuốc, giao hàng, chở hàng ba gác, dẫn khách, chụp lại ảnh xưa.",
+        "en": "Fares, deliveries, cargo runs, guiding tourists, re-shooting old photos."
+      },
+      "tiers": [
+        {
+          "level": 40,
+          "name": {
+            "vi": "Biết ngõ",
+            "en": "Knows the alleys"
+          },
+          "unlocks": {
+            "vi": "Nhận việc chở hàng ba gác chợ Long Biên.",
+            "en": "Cargo runs with the Long Biên market three-wheeler."
+          },
+          "refs": [
+            "activities:act_cho_hang_ba_gac"
+          ]
+        },
+        {
+          "level": 60,
+          "name": {
+            "vi": "Tắt bản đồ",
+            "en": "Map off"
+          },
+          "unlocks": {
+            "vi": "Năng lực 'Thuộc đường' (tô sáng đường tắt 30 giây); chỉ đường tắt cho xe ôm khác trong thoại.",
+            "en": "The 'Street knowledge' ability (shortcuts highlighted for 30 s); shortcut lines in dialogue."
+          },
+          "refs": [
+            "dialogues:dlg_q_hd_01_cuoc_ve"
+          ]
+        },
+        {
+          "level": 90,
+          "name": {
+            "vi": "Bản đồ sống",
+            "en": "Living map"
+          },
+          "unlocks": {
+            "vi": "Bản Đồ Ơi tự tắt; khách đặt cuốc đích danh qua App Vồ (+20% cuốc).",
+            "en": "Bản Đồ Ơi switches itself off; customers request you by name on App Vồ (+20% fares)."
+          },
+          "refs": [
+            "activities:act_xe_om_cong_nghe"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sua_xe",
+      "tags": [
+        "minh"
+      ],
+      "name": {
+        "vi": "Sửa xe",
+        "en": "Mechanics"
+      },
+      "description": {
+        "vi": "Bugi, xích, phanh, nước vào máy. Minh học ở tiệm Đức Còi.",
+        "en": "Spark plugs, chains, brakes, water in the engine. Minh learned it at Đức Còi's shop."
+      },
+      "trained_by": {
+        "vi": "Minigame sửa xe, sửa giúp xe chết máy trên phố.",
+        "en": "The repair minigame, fixing stalled bikes on the street."
+      },
+      "tiers": [
+        {
+          "level": 40,
+          "name": {
+            "vi": "Thợ phụ",
+            "en": "Apprentice"
+          },
+          "unlocks": {
+            "vi": "Mặc cả tiền trọ bằng tay nghề; được góp vốn tiệm Đức Còi.",
+            "en": "Bargain the rent with your trade; eligible to buy into Đức Còi's shop."
+          },
+          "refs": [
+            "dialogues:dlg_q_tx_01_go_cua",
+            "businesses:tiem_sua_xe_duc_coi_gop_von"
+          ]
+        },
+        {
+          "level": 60,
+          "name": {
+            "vi": "Thợ chính",
+            "en": "Mechanic"
+          },
+          "unlocks": {
+            "vi": "Sửa xe chết máy trên phố lấy tiền (sự kiện ngẫu nhiên trả 100 nghìn thay vì cảm ơn).",
+            "en": "Street repairs pay (random events pay 100k instead of thanks)."
+          },
+          "refs": [
+            "activities:act_sua_xe_may"
+          ]
+        },
+        {
+          "level": 85,
+          "name": {
+            "vi": "Thợ cả",
+            "en": "Master"
+          },
+          "unlocks": {
+            "vi": "Được mua đứt tiệm Đức Còi khi ông nghỉ.",
+            "en": "May buy Đức Còi's shop outright when he retires."
+          },
+          "refs": [
+            "businesses:tiem_sua_xe_duc_coi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "an_noi",
+      "tags": [
+        "minh"
+      ],
+      "name": {
+        "vi": "Ăn nói",
+        "en": "Talk"
+      },
+      "description": {
+        "vi": "Nói khéo với khách, với chủ trọ, với CSGT. Minh mạnh, Khôi yếu.",
+        "en": "Talking your way with customers, landlords and traffic police. Minh's strength, Khôi's weakness."
+      },
+      "trained_by": {
+        "vi": "Sự kiện ngẫu nhiên có đối thoại, trà đá hóng chuyện, làm chứng ở ngã tư.",
+        "en": "Random events with talk, tea-stall gossip, witnessing at junctions."
+      },
+      "tiers": [
+        {
+          "level": 50,
+          "name": {
+            "vi": "Dẻo miệng",
+            "en": "Smooth talker"
+          },
+          "unlocks": {
+            "vi": "Lựa chọn 'nói khéo' trong thoại: nhận lỗi mà không mất khách.",
+            "en": "'Talk it round' choices in dialogue: own the fault without losing the customer."
+          },
+          "refs": [
+            "dialogues:dlg_q_gl_01_giao"
+          ]
+        },
+        {
+          "level": 75,
+          "name": {
+            "vi": "Có duyên",
+            "en": "Charming"
+          },
+          "unlocks": {
+            "vi": "Khách bo thêm 10% mỗi cuốc; bán hàng rong đắt khách hơn.",
+            "en": "Customers tip 10% more; street selling draws a crowd."
+          },
+          "refs": [
+            "activities:act_ban_hang_rong"
+          ]
+        },
+        {
+          "level": 90,
+          "name": {
+            "vi": "Người kể chuyện",
+            "en": "Storyteller"
+          },
+          "unlocks": {
+            "vi": "Dẫn tour phố cổ như Khôi.",
+            "en": "Guide Old Quarter tours like Khôi does."
+          },
+          "refs": [
+            "activities:act_huong_dan_vien"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "giao_tiep",
+      "tags": [
+        "lan",
+        "khoi"
+      ],
+      "name": {
+        "vi": "Giao tiếp",
+        "en": "People"
+      },
+      "description": {
+        "vi": "Đọc người đối diện, giữ mối, nói chuyện với cả phố. Lan 60, Khôi 40.",
+        "en": "Reading the person opposite, keeping ties, talking to the whole street. Lan 60, Khôi 40."
+      },
+      "trained_by": {
+        "vi": "Karaoke, bia hơi, dưỡng sinh, chạy cuốc, dẫn khách.",
+        "en": "Karaoke, bia hơi, morning exercise, fares, guiding."
+      },
+      "tiers": [
+        {
+          "level": 40,
+          "name": {
+            "vi": "Biết chào",
+            "en": "Greets well"
+          },
+          "unlocks": {
+            "vi": "Dẫn khách phố cổ (cùng ngoại ngữ 40).",
+            "en": "Guide tourists (with language 40)."
+          },
+          "refs": [
+            "activities:act_huong_dan_vien"
+          ]
+        },
+        {
+          "level": 60,
+          "name": {
+            "vi": "Giữ mối",
+            "en": "Keeps ties"
+          },
+          "unlocks": {
+            "vi": "Lựa chọn 'nói chuyện ba người' trong thoại: gọi cả người thứ ba vào bàn.",
+            "en": "'Three-way talk' choices in dialogue: bring the third person to the table."
+          },
+          "refs": [
+            "dialogues:dlg_q_btl_03_quyet"
+          ]
+        },
+        {
+          "level": 85,
+          "name": {
+            "vi": "Cả phố quen",
+            "en": "Known by all"
+          },
+          "unlocks": {
+            "vi": "Được mời ngồi bàn các cụ ở bia hơi Tạ Hiện: nghe tin phố trước một ngày.",
+            "en": "A seat at the elders' table at Tạ Hiện bia hơi: street news a day early."
+          },
+          "refs": [
+            "activities:act_bia_hoi_ta_hien"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mac_ca",
+      "tags": [
+        "lan"
+      ],
+      "name": {
+        "vi": "Mặc cả",
+        "en": "Haggling"
+      },
+      "description": {
+        "vi": "Giá chợ sáng, giá chợ đầu mối, giá tem phiếu cũ. Lan 55.",
+        "en": "Morning-market price, wholesale price, old-coupon price. Lan 55."
+      },
+      "trained_by": {
+        "vi": "Mặc cả chợ đầu mối, bán hàng rong, mua hoa ế.",
+        "en": "Wholesale haggling, street selling, buying leftover flowers."
+      },
+      "tiers": [
+        {
+          "level": 30,
+          "name": {
+            "vi": "Biết trả giá",
+            "en": "Can bargain"
+          },
+          "unlocks": {
+            "vi": "Minigame mặc cả chợ đầu mối Đền Lừ.",
+            "en": "The Đền Lừ wholesale haggling minigame."
+          },
+          "refs": [
+            "activities:act_mac_ca_cho_dau_moi"
+          ]
+        },
+        {
+          "level": 50,
+          "name": {
+            "vi": "Giá gốc",
+            "en": "Base price"
+          },
+          "unlocks": {
+            "vi": "Lựa chọn mặc cả rau sạch trong thoại: bà Cúc bớt mà không mất lòng.",
+            "en": "Haggle choices in dialogue: bà Cúc drops her price and stays a friend."
+          },
+          "refs": [
+            "dialogues:dlg_q_hm_01_chon_rau"
+          ]
+        },
+        {
+          "level": 75,
+          "name": {
+            "vi": "Dân chợ",
+            "en": "Market veteran"
+          },
+          "unlocks": {
+            "vi": "Tem phiếu cũ mua được dưới giá niêm yết 30%.",
+            "en": "Old ration coupons 30% under the asking price."
+          },
+          "refs": [
+            "activities:act_suu_tam_tem_phieu"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kinh_doanh",
+      "tags": [
+        "lan"
+      ],
+      "name": {
+        "vi": "Kinh doanh",
+        "en": "Business"
+      },
+      "description": {
+        "vi": "Sổ sách, giá vốn, thuê người, biết khi nào nói không. Lan 75.",
+        "en": "Books, cost price, hiring, knowing when to say no. Lan 75."
+      },
+      "trained_by": {
+        "vi": "Quản lý quán, nấu phở, mặc cả, sửa xe lấy tiền.",
+        "en": "Running the shop, cooking phở, haggling, paid repairs."
+      },
+      "tiers": [
+        {
+          "level": 40,
+          "name": {
+            "vi": "Sổ sách",
+            "en": "Bookkeeper"
+          },
+          "unlocks": {
+            "vi": "App Sổ Tay Bán Hàng: quản lý từ xa cơ sở đã mua.",
+            "en": "The Sổ Tay Bán Hàng app: manage owned businesses remotely."
+          },
+          "refs": [
+            "activities:act_quan_ly_kinh_doanh"
+          ]
+        },
+        {
+          "level": 60,
+          "name": {
+            "vi": "Chủ sạp",
+            "en": "Stallholder"
+          },
+          "unlocks": {
+            "vi": "Được mua sạp gia vị chợ Đồng Xuân.",
+            "en": "May buy the Đồng Xuân spice stall."
+          },
+          "refs": [
+            "businesses:sap_cho_dong_xuan"
+          ]
+        },
+        {
+          "level": 70,
+          "name": {
+            "vi": "Biết nói không",
+            "en": "Knows when to say no"
+          },
+          "unlocks": {
+            "vi": "Lựa chọn đề nghị ngược trong thoại với trung tâm thương mại.",
+            "en": "Counter-offer choices in dialogue with the mall."
+          },
+          "refs": [
+            "dialogues:dlg_q_tx_03_quyet"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nau_an",
+      "tags": [
+        "lan"
+      ],
+      "name": {
+        "vi": "Nấu ăn",
+        "en": "Cooking"
+      },
+      "description": {
+        "vi": "Nồi nước dùng bốn giờ, cà phê trứng, bánh mì. Lan 45, chưa bằng ông.",
+        "en": "The four-hour broth, egg coffee, bánh mì. Lan 45, not yet her grandfather."
+      },
+      "trained_by": {
+        "vi": "Minigame nấu phở, pha cà phê trứng.",
+        "en": "The phở and egg-coffee minigames."
+      },
+      "tiers": [
+        {
+          "level": 30,
+          "name": {
+            "vi": "Bếp phụ",
+            "en": "Kitchen hand"
+          },
+          "unlocks": {
+            "vi": "Pha cà phê trứng ở quán Hàng Gai.",
+            "en": "Make egg coffee at the Hàng Gai café."
+          },
+          "refs": [
+            "activities:act_pha_ca_phe_trung"
+          ]
+        },
+        {
+          "level": 50,
+          "name": {
+            "vi": "Đứng bếp",
+            "en": "Runs the stove"
+          },
+          "unlocks": {
+            "vi": "Được mở chi nhánh Phở Thọ Linh Đàm.",
+            "en": "May open the Phở Thọ Linh Đàm branch."
+          },
+          "refs": [
+            "businesses:pho_tho_linh_dam"
+          ]
+        },
+        {
+          "level": 80,
+          "name": {
+            "vi": "Tay ông",
+            "en": "Grandfather's hand"
+          },
+          "unlocks": {
+            "vi": "Thêm phở gà vào thực đơn (+15% doanh thu quán).",
+            "en": "Chicken phở joins the menu (+15% shop income)."
+          },
+          "refs": [
+            "items:pho_ga"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chup_anh",
+      "tags": [
+        "khoi"
+      ],
+      "name": {
+        "vi": "Chụp ảnh",
+        "en": "Photography"
+      },
+      "description": {
+        "vi": "Ánh sáng, khoảnh khắc, góc của ông Khải năm 1989. Khôi 85.",
+        "en": "Light, the moment, Khải's angles from 1989. Khôi 85."
+      },
+      "trained_by": {
+        "vi": "Chụp ảnh phố, chụp lại ảnh xưa, sự kiện ảnh cưới, cây đổ.",
+        "en": "Street photos, re-shooting old photos, the wedding and fallen-tree events."
+      },
+      "tiers": [
+        {
+          "level": 30,
+          "name": {
+            "vi": "Biết bấm",
+            "en": "Can shoot"
+          },
+          "unlocks": {
+            "vi": "Sưu tầm biển hiệu cũ bằng máy ảnh.",
+            "en": "Collect old shop signs with the camera."
+          },
+          "refs": [
+            "activities:act_suu_tam_bien_hieu_cu"
+          ]
+        },
+        {
+          "level": 50,
+          "name": {
+            "vi": "Mắt nhà nghề",
+            "en": "Trained eye"
+          },
+          "unlocks": {
+            "vi": "Chụp chồng ảnh xưa (năng lực đặc biệt của Khôi).",
+            "en": "Overlay-shoot old photos (Khôi's special ability)."
+          },
+          "refs": [
+            "activities:act_chup_lai_anh_xua"
+          ]
+        },
+        {
+          "level": 80,
+          "name": {
+            "vi": "Tay máy",
+            "en": "Photographer"
+          },
+          "unlocks": {
+            "vi": "Lựa chọn chụp lại tại chỗ trong thoại; ảnh cưới trả gấp đôi.",
+            "en": "Re-shoot-on-the-spot choices in dialogue; wedding shoots pay double."
+          },
+          "refs": [
+            "dialogues:dlg_q_cg_02_ong_phuc"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ngoai_ngu",
+      "tags": [
+        "khoi"
+      ],
+      "name": {
+        "vi": "Ngoại ngữ",
+        "en": "Languages"
+      },
+      "description": {
+        "vi": "Tiếng Anh với khách Tây, tiếng Việt 1998 của Khôi với người Hà Nội. Khôi 80.",
+        "en": "English with backpackers, Khôi's 1998 Vietnamese with Hanoians. Khôi 80."
+      },
+      "trained_by": {
+        "vi": "Dẫn khách, xích lô du lịch, chỉ đường cho khách Tây.",
+        "en": "Guiding, cyclo tours, directions for backpackers."
+      },
+      "tiers": [
+        {
+          "level": 40,
+          "name": {
+            "vi": "Đủ hiểu",
+            "en": "Gets by"
+          },
+          "unlocks": {
+            "vi": "Dẫn khách phố cổ (cùng giao tiếp 40).",
+            "en": "Guide tourists (with people 40)."
+          },
+          "refs": [
+            "activities:act_huong_dan_vien"
+          ]
+        },
+        {
+          "level": 60,
+          "name": {
+            "vi": "Nói chuyện",
+            "en": "Conversational"
+          },
+          "unlocks": {
+            "vi": "Xích lô du lịch quanh hồ Gươm.",
+            "en": "Cyclo tours round Hoàn Kiếm lake."
+          },
+          "refs": [
+            "activities:act_xich_lo_du_lich"
+          ]
+        },
+        {
+          "level": 85,
+          "name": {
+            "vi": "Phiên dịch",
+            "en": "Interpreter"
+          },
+          "unlocks": {
+            "vi": "Khách Tây say ở Tạ Hiện và khách lạc đường trả gấp đôi.",
+            "en": "Drunk and lost backpackers pay double."
+          },
+          "refs": [
+            "random_events:re_khach_say_ta_hien",
+            "random_events:re_khach_tay_lac_duong"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "the_luc",
+      "tags": [
+        "minh",
+        "lan",
+        "khoi"
+      ],
+      "name": {
+        "vi": "Thể lực",
+        "en": "Stamina"
+      },
+      "description": {
+        "vi": "Khiêng, đẩy, chạy, thức đêm. Minh 55, Lan 40, Khôi 60.",
+        "en": "Carrying, pushing, running, staying up. Minh 55, Lan 40, Khôi 60."
+      },
+      "trained_by": {
+        "vi": "Chạy bộ hồ Gươm, đá cầu, dưỡng sinh, khiêng hàng, đẩy xe ngập.",
+        "en": "Running the lake, đá cầu, morning exercise, carrying loads, pushing flooded bikes."
+      },
+      "tiers": [
+        {
+          "level": 40,
+          "name": {
+            "vi": "Dẻo dai",
+            "en": "Fit"
+          },
+          "unlocks": {
+            "vi": "Đua xe đạp Hồ Tây; lựa chọn khiêng gas lên tầng cao trong thoại.",
+            "en": "The Hồ Tây bicycle race; carry-the-gas choices in dialogue."
+          },
+          "refs": [
+            "activities:act_dua_xe_dap_ho_tay",
+            "dialogues:dlg_q_hm_02_sanh"
+          ]
+        },
+        {
+          "level": 50,
+          "name": {
+            "vi": "Khỏe",
+            "en": "Strong"
+          },
+          "unlocks": {
+            "vi": "Chở hàng ba gác chợ Long Biên (cùng thuộc đường 40).",
+            "en": "Long Biên cargo runs (with street knowledge 40)."
+          },
+          "refs": [
+            "activities:act_cho_hang_ba_gac"
+          ]
+        },
+        {
+          "level": 70,
+          "name": {
+            "vi": "Trâu bò",
+            "en": "Ox"
+          },
+          "unlocks": {
+            "vi": "Thức đêm không giảm hồi phục; đá cầu với đội công viên Thống Nhất.",
+            "en": "Night shifts stop costing recovery; đá cầu with the Thống Nhất park team."
+          },
+          "refs": [
+            "activities:act_da_cau"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co_tuong",
+      "tags": [
+        "hoan_kiem"
+      ],
+      "name": {
+        "vi": "Cờ tướng",
+        "en": "Xiangqi"
+      },
+      "description": {
+        "vi": "Bàn cờ đá bờ Hồ. Không ai trong ba nhân vật biết chơi lúc bắt đầu.",
+        "en": "The stone boards by the lake. None of the three can play at the start."
+      },
+      "trained_by": {
+        "vi": "Chơi với các cụ bờ Hồ, nhiệm vụ cụ Bảo.",
+        "en": "Games with the old men by the lake, Bảo's mission."
+      },
+      "tiers": [
+        {
+          "level": 30,
+          "name": {
+            "vi": "Biết thủ",
+            "en": "Can defend"
+          },
+          "unlocks": {
+            "vi": "Cụ Bảo thách đấu ăn tiền trên phố (sự kiện ngẫu nhiên).",
+            "en": "Bảo challenges you for money on the street (random event)."
+          },
+          "refs": [
+            "random_events:re_cu_bao_thach_dau"
+          ]
+        },
+        {
+          "level": 60,
+          "name": {
+            "vi": "Biết công",
+            "en": "Can attack"
+          },
+          "unlocks": {
+            "vi": "Giải CLB cờ tướng bờ Hồ, cược 200 nghìn.",
+            "en": "The lakeside club tournament, 200k stakes."
+          },
+          "refs": [
+            "activities:act_co_tuong"
+          ]
+        },
+        {
+          "level": 90,
+          "name": {
+            "vi": "Kỳ thủ",
+            "en": "Master"
+          },
+          "unlocks": {
+            "vi": "Thắng cụ Bảo: cụ kể nốt chuyện năm 1972.",
+            "en": "Beat Bảo: he finishes the 1972 story."
+          },
+          "refs": [
+            "characters:ong_bao_co_tuong"
+          ]
+        }
+      ]
+    }
+  ]
+}

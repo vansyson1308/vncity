@@ -20,6 +20,10 @@ struct HANOICITYRUNTIME_API FHanoiPlayerState
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
 	TMap<FName, int32> Reputation;
 
+	/** Skill id (characters skills / skills.json) -> level 0-100. Seeded from the protagonist's starting skills, trained by activities (skills_trained) and random event choices; read by conditions (min_skills) and tier unlocks (skills.json). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
+	TMap<FName, int32> Skills;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Hanoi")
 	int64 MoneyVnd = 0;
 

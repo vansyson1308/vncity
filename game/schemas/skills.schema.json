@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "skills.schema.json",
+  "title": "Skills and what they unlock",
+  "description": "The 0-100 skills of characters/*.json made visible: three tiers per skill, each naming what the player gets at that level. The runtime adds every ref of a reached tier to the player's Unlocked set, and content gates (condition.min_skills on activities, businesses, vehicles, dialogue choices, random events) use the same levels so progress is always something the player can see coming (docs/gdd/02-he-thong.md §10).",
+  "x-collection": "skills",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "collection": {
+      "const": "skills"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "trained_by",
+          "tiers"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "trained_by": {
+            "$ref": "common.schema.json#/$defs/text",
+            "description": "How the level goes up, in the player's words."
+          },
+          "tiers": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "required": [
+                "level",
+                "name",
+                "unlocks"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "level": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100
+                },
+                "name": {
+                  "$ref": "common.schema.json#/$defs/text",
+                  "description": "Rank shown on the phone, e.g. 'Lách ngõ'."
+                },
+                "unlocks": {
+                  "$ref": "common.schema.json#/$defs/text",
+                  "description": "What the player sees unlocked at this level."
+                },
+                "refs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "common.schema.json#/$defs/ref"
+                  },
+                  "description": "Content unlocked at this level (added to State.Unlocked); gates in content use min_skills at this same level."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

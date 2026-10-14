@@ -231,7 +231,7 @@ def test_conditional_lines_only_use_runtime_condition_fields():
     the content uses must be one the C++ reads."""
     cpp = (ROOT / "ue5/Plugins/HanoiCity/Source/HanoiCityRuntime/Private/HanoiMissionSubsystem.cpp").read_text(encoding="utf-8")
     body = cpp.split("::EvaluateCondition(", 1)[1].split("\n}\n", 1)[0]
-    for field in ("MissionsCompleted", "MinReputation", "Hours", "Weather", "Protagonist", "Flags", "NotFlags", "EventsActive"):
+    for field in ("MissionsCompleted", "MinReputation", "MinSkills", "Hours", "Weather", "Protagonist", "Flags", "NotFlags", "EventsActive"):
         assert f"C.{field}" in body, f"EvaluateCondition does not read {field}"
     assert "ResolveDialogueLine" in cpp and "GetAvailableChoices" in cpp
 

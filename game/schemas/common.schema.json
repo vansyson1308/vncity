@@ -49,7 +49,8 @@
         "protagonist": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
         "flags": {"type": "array", "items": {"type": "string"}},
         "not_flags": {"description": "None of these flags may be set.", "type": "array", "items": {"type": "string"}},
-        "events_active": {"description": "World events (collection events) that must currently be active.", "type": "array", "items": {"$ref": "#/$defs/ref"}}
+        "events_active": {"description": "World events (collection events) that must currently be active.", "type": "array", "items": {"$ref": "#/$defs/ref"}},
+        "min_skills": {"description": "Skill id (characters/*.json skills, skills.json) -> minimum level 0-100 the current protagonist must have. Levels used as gates must be a tier level in skills.json so the unlock is visible (tests/test_skill_unlocks.py).", "type": "object", "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 100}}
       },
       "additionalProperties": false
     },
