@@ -21,6 +21,8 @@ namespace HanoiMission
 	const FName Default(TEXT("default"));
 }
 
+const FName UHanoiMissionSubsystem::CleanRecordFlag(TEXT("ho_so_sach_90_ngay"));
+
 void UHanoiMissionSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Collection.InitializeDependency(UHanoiContentSubsystem::StaticClass());
@@ -124,6 +126,39 @@ void UHanoiMissionSubsystem::SetFlag(FName Flag, bool bSet)
 	NotifyStateChanged();
 }
 
+void UHanoiMissionSubsystem::RecordFine()
+{
+	if (const UHanoiTimeWeatherSubsystem* Time = GetGameInstance()->GetSubsystem<UHanoiTimeWeatherSubsystem>())
+	{
+		State.LastFineGameTime = Time->GetHanoiTime();
+	}
+	State.Flags.Remove(CleanRecordFlag);
+	NotifyStateChanged();
+}
+
+void UHanoiMissionSubsystem::UpdateCleanRecord()
+{
+	if (State.Flags.Contains(CleanRecordFlag))
+	{
+		return;
+	}
+	const UHanoiTimeWeatherSubsystem* Time = GetGameInstance() ? GetGameInstance()->GetSubsystem<UHanoiTimeWeatherSubsystem>() : nullptr;
+	if (!Time)
+	{
+		return;
+	}
+	const FDateTime Now = Time->GetHanoiTime();
+	if (State.LastFineGameTime.GetTicks() == 0)
+	{
+		State.LastFineGameTime = Now;  // a new game counts from its first day
+		return;
+	}
+	if ((Now - State.LastFineGameTime).GetTotalDays() >= double(UHanoiCitySettings::Get()->CleanRecordDays))
+	{
+		SetFlag(CleanRecordFlag, true);
+	}
+}
+
 bool UHanoiMissionSubsystem::SaveProgress()
 {
 	UHanoiSaveGame* Save = Cast<UHanoiSaveGame>(UGameplayStatics::CreateSaveGameObject(UHanoiSaveGame::StaticClass()));
@@ -172,8 +207,36 @@ bool UHanoiMissionSubsystem::CanStartMission(FName MissionId, FString& OutReason
 	if (bActive) { OutReason = TEXT("another mission is active"); return false; }
 	if (State.CompletedMissions.Contains(MissionId) && Row->Type == EHanoiMissionType::Story) { OutReason = TEXT("already completed"); return false; }
 	if (Row->Steps.Num() == 0) { OutReason = TEXT("mission has no steps"); return false; }
-	if (!EvaluateCondition(Row->Requires)) { OutReason = TEXT("requirements not met"); return false; }
+	return CanStartNow(*Row, OutReason);
+}
+
+bool UHanoiMissionSubsystem::CanStartNow(const FHanoiMissionRow& Row, FString& OutReason) const
+{
+	if (!EvaluateCondition(Row.Requires)) { OutReason = TEXT("requirements not met"); return false; }
+	const FName Event = FirstStepRequiredEvent(Row);
+	if (!Event.IsNone() && !ActiveWorldEvents.Contains(Event))
+	{
+		OutReason = FString::Printf(TEXT("waits for event %s"), *Event.ToString());
+		return false;
+	}
 	return true;
+}
+
+FName UHanoiMissionSubsystem::FirstStepRequiredEvent(const FHanoiMissionRow& Row)
+{
+	if (Row.Steps.Num() == 0 || Row.Steps[0].Params.IsEmpty())
+	{
+		return NAME_None;
+	}
+	TSharedPtr<FJsonObject> Params;
+	FString Event;
+	if (!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(Row.Steps[0].Params), Params) || !Params.IsValid()
+		|| !Params->TryGetStringField(TEXT("requires_event"), Event) || Event.IsEmpty())
+	{
+		return NAME_None;
+	}
+	const FHanoiRef Ref = FHanoiRef::Parse(Event);
+	return Ref.IsValid() ? Ref.Id : FName(*Event);
 }
 
 TArray<FName> UHanoiMissionSubsystem::GetAvailableMissions() const
@@ -185,7 +248,8 @@ TArray<FName> UHanoiMissionSubsystem::GetAvailableMissions() const
 		for (const TPair<FName, uint8*>& Pair : Table->GetRowMap())
 		{
 			const FHanoiMissionRow* Row = reinterpret_cast<const FHanoiMissionRow*>(Pair.Value);
-			if (!State.CompletedMissions.Contains(Pair.Key) && EvaluateCondition(Row->Requires))
+			FString Reason;
+			if (!State.CompletedMissions.Contains(Pair.Key) && CanStartNow(*Row, Reason))
 			{
 				Out.Add(Pair.Key);
 			}
@@ -204,6 +268,13 @@ bool UHanoiMissionSubsystem::StartMission(FName MissionId)
 	}
 	ActiveMission = *GetGameInstance()->GetSubsystem<UHanoiContentSubsystem>()->Find<FHanoiMissionRow>(TEXT("missions"), MissionId);
 	bActive = true;
+	// The mission belongs to its protagonists: possess the first one unless the player already is one.
+	const bool bIsProtagonist = ActiveMission.Protagonists.ContainsByPredicate(
+		[this](const FHanoiRef& R) { return R.Id == State.Protagonist; });
+	if (ActiveMission.Protagonists.Num() > 0 && !bIsProtagonist)
+	{
+		SwitchProtagonist(ActiveMission.Protagonists[0], NAME_None);
+	}
 	EnterStep(0);
 	return true;
 }
@@ -374,8 +445,8 @@ void UHanoiMissionSubsystem::ApplyFine(FName RuleId)
 	const int64 Fine = Rule->FineVnd.Motorbike;
 	State.UnpaidFinesVnd += Fine;
 	State.LicencePoints = FMath::Max(0, State.LicencePoints - Rule->LicencePoints);
+	RecordFine();
 	OnFineApplied.Broadcast(RuleId, Fine, Rule->LicencePoints);
-	NotifyStateChanged();
 }
 
 void UHanoiMissionSubsystem::NotifyDialogueLine(FName LineId)
@@ -712,6 +783,7 @@ bool UHanoiMissionSubsystem::ShouldFail(FName& OutReason) const
 
 void UHanoiMissionSubsystem::Tick(float DeltaTime)
 {
+	UpdateCleanRecord();
 	if (!bActive || !ActiveMission.Steps.IsValidIndex(StepIndex))
 	{
 		return;

@@ -381,7 +381,12 @@ từng khóa của `game/schemas/missions.schema.json`. Tóm tắt phía UE:
   khi heat về 0 (`params.heat` cộng heat lúc bắt đầu bước, mặc định 2).
 * Các bước khác (`talk`, `choice`, `minigame`, `cook`, `cutscene`, `photograph`, `collect`) do
   gameplay/UI gọi `CompleteCurrentStep(<outcome>)`. Bước có `params.requires_event` chỉ hoàn thành
-  khi `SetWorldEventActive(<event>, true)` đã được gọi.
+  khi `SetWorldEventActive(<event>, true)` đã được gọi; nếu đó là bước đầu tiên thì nhiệm vụ cũng
+  chưa bắt đầu được (`CanStartMission` trả "waits for event").
+* `StartMission` tự đổi sang `protagonists[0]` khi nhân vật đang điều khiển không thuộc nhiệm vụ.
+* Cờ `ho_so_sach_90_ngay` do runtime đặt sau `Settings.CleanRecordDays` ngày game không bị phạt
+  (`State.LastFineGameTime`; gameplay phạt ngoài nhiệm vụ phải đi qua `UHanoiHeatSubsystem` hoặc
+  gọi `RecordFine()`).
 * `next`: chuỗi = bước kế; object = nhánh theo outcome, thiếu thì dùng khoá `default`; không có
   `next` = bước tiếp theo trong mảng. Id đặc biệt: `end`/`success` (hoàn thành), `fail`.
   `choice` với `branch_source: "flag"` tự rẽ theo cờ; còn lại phát `OnChoiceRequested`.

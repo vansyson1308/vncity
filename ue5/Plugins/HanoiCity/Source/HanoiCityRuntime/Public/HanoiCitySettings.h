@@ -81,6 +81,10 @@ public:
 	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Heat")
 	float HeatDecayPerSecond = 0.05f;
 
+	/** Game days without a fine before the flag ho_so_sach_90_ngay is set (missions.requires.flags). */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Heat", meta = (ClampMin = "1"))
+	int32 CleanRecordDays = 90;
+
 	/** Default arrival radius for go_to-like mission steps (params.radius_m overrides). */
 	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Missions")
 	float MissionArriveRadiusM = 15.f;

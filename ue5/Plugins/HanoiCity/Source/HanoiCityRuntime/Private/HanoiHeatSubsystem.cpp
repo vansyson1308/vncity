@@ -64,7 +64,7 @@ void UHanoiHeatSubsystem::AddFine(int64 FineVnd, int32 LicencePoints)
 		FHanoiPlayerState& State = Missions->MutableState();
 		State.UnpaidFinesVnd += FineVnd;
 		State.LicencePoints = FMath::Max(0, State.LicencePoints - LicencePoints);
-		Missions->NotifyStateChanged();
+		Missions->RecordFine();  // also notifies
 	}
 }
 
