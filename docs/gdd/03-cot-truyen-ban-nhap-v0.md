@@ -111,7 +111,7 @@ bố đi xuất khẩu lao động Hàn Quốc năm 2010 và nhường phần nh
 
 **Hồi 1 (chương 1, đã viết)**: Gặp gỡ, đề nghị, tờ giấy cháy.
 
-**Hồi 2 "Mùa nồm" (chương 2, đang viết ở PR #9)**: Tháng Chạp, trước Tết.
+**Hồi 2 "Mùa nồm" (chương 2)**: Tháng Chạp, trước Tết. *Đã viết thành dữ liệu 14/10/2026* (`game/content/missions/story_chapter2.json`, `dialogues/chapter2.json`; nguyên tắc trong `08-nhan-qua.md`).
 - Khôi săn các cuộn băng cát-sét khắp thành phố (ảnh xưa ở ga Hà Nội, chợ Đồng Xuân trước vụ cháy
   1994, khu tập thể Kim Liên thời bao cấp). Băng số 12 tiết lộ một phần: phần nhà ông Khiêm "để cho
   người đã gánh phở nuôi con tôi những năm tôi đi vắng".

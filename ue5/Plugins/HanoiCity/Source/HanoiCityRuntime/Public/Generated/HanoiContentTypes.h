@@ -664,6 +664,33 @@ struct HANOICITYRUNTIME_API FHanoiCharacterScheduleEntry
 	FHanoiGeo Location;
 };
 
+/** Motive block (Tứ diệu đế): kho = what hurts now, tap = what they cling to / the cause, diet = the end state they believe ends the hurt (their purpose), dao = what they actually do about it in the game (behaviour), tell = how it shows in dialogue or action. Every line and action of the character must trace to it (docs/gdd/08-nhan-qua.md). */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiCharacterDrive
+{
+	GENERATED_BODY()
+
+	/** Localised text. Vietnamese is the source language. [json: kho (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Kho;
+
+	/** Localised text. Vietnamese is the source language. [json: tap (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Tap;
+
+	/** Localised text. Vietnamese is the source language. [json: diet (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Diet;
+
+	/** Localised text. Vietnamese is the source language. [json: dao (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Dao;
+
+	/** [json: tell] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Tell;
+};
+
 USTRUCT(BlueprintType)
 struct HANOICITYRUNTIME_API FHanoiCharacterRelationship
 {
@@ -747,6 +774,10 @@ struct HANOICITYRUNTIME_API FHanoiCharacterRow : public FTableRowBase
 	/** [json: skills] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TMap<FName, int32> Skills;
+
+	/** Motive block (Tứ diệu đế): kho = what hurts now, tap = what they cling to / the cause, diet = the end state they believe ends the hurt (their purpose), dao = what they actually do about it in the game (behaviour), tell = how it shows in dialogue or action. Every line and action of the character must trace to it (docs/gdd/08-nhan-qua.md). [json: drive] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiCharacterDrive Drive;
 
 	/** [json: relationships] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")

@@ -6,6 +6,13 @@
       "tags": ["protagonist", "switchable", "driver", "migrant"],
       "name": {"vi": "Nguyễn Văn Minh", "en": "Nguyễn Văn Minh"},
       "role": "protagonist",
+      "drive": {
+        "kho": {"vi": "Nợ 180 triệu viện phí của bố, một mình ở Hà Nội, mỗi tối 21 giờ nói dối mẹ 'con ổn'."},
+        "tap": {"vi": "Tin rằng đàn ông phải tự gánh, mở miệng xin giúp là thua; sợ mẹ có thêm một nỗi lo."},
+        "diet": {"vi": "Trả hết nợ, mở tiệm sửa xe của riêng mình, để câu 'con ổn' nói với mẹ là thật."},
+        "dao": {"vi": "Chạy cuốc nhiều hơn, nhận việc nhanh tiền kể cả việc đáng ngờ, học sửa xe với anh Đức, vượt đèn vàng vì mỗi phút là tiền."},
+        "tell": "Khi căng thẳng nói nhỏ lại chứ không quát; tắt video với mẹ trước khi ăn mì gói."
+      },
       "age": 23,
       "gender": "male",
       "bio": {
@@ -44,6 +51,13 @@
       "tags": ["protagonist", "switchable", "cook", "heir"],
       "name": {"vi": "Trần Ngọc Lan", "en": "Trần Ngọc Lan"},
       "role": "protagonist",
+      "drive": {
+        "kho": {"vi": "Ông ngã quỵ, quán hụt khách, cô ruột bán nhà sau lưng; cô bỏ lương 35 triệu mà nồi nước dùng vẫn chưa 'tới'."},
+        "tap": {"vi": "Tin con số thắng được tình cảm; sợ thành đứa không giữ nổi thứ ông để lại; tự ái không nhờ ai."},
+        "diet": {"vi": "Giữ Phở Thọ ở số 49 Hàng Chiếu bằng một phương án đứng được cả trên giấy lẫn trong nồi."},
+        "dao": {"vi": "Thẩm định mọi thứ bằng bảng tính, nói thẳng, mặc cả, học từng thìa gừng nướng; bị cám dỗ dùng thông tin mật của ngân hàng cũ."},
+        "tell": "Khi bực nói chậm và rõ từng chữ; chuyển sang thuật ngữ ngân hàng khi muốn né cảm xúc."
+      },
       "age": 29,
       "gender": "female",
       "bio": {
@@ -81,6 +95,13 @@
       "tags": ["protagonist", "switchable", "photographer", "returnee", "viet_kieu"],
       "name": {"vi": "Nguyễn Khải Khôi", "en": "Nguyễn Khải Khôi (Daniel)"},
       "role": "protagonist",
+      "drive": {
+        "kho": {"vi": "Bố mất khi hai bố con chưa kịp nói chuyện; mặc cảm 'về muộn'; không biết đi xe máy, tiếng Việt dừng ở 1998, phố cũ không nhận ra anh."},
+        "tap": {"vi": "Tin bố đã chọn phố thay vì con; giữ khoảng cách với mọi người bằng ống kính và câu đùa khô."},
+        "diet": {"vi": "Nghe hết 24 cuộn băng để biết bố thực sự muốn gì, rồi mới quyết bán hay ở."},
+        "dao": {"vi": "Chụp lại từng tấm ảnh cũ, tìm người trong ảnh, học xe, học trà đá; mỗi cuộn băng chỉ mở sau một tấm ảnh chụp đúng chỗ."},
+        "tell": "Dùng từ cũ ('ti vi đen trắng', 'tem phiếu'), không hiểu tiếng lóng mới, chêm tiếng Đức khi bực; xưng 'tôi' rồi dần 'anh/em'."
+      },
       "age": 38,
       "gender": "male",
       "bio": {

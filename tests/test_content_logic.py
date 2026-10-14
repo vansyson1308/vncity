@@ -17,7 +17,8 @@ TERMINAL = {"end", "success", "fail"}
 RUNTIME_FLAGS = {"ho_so_sach_90_ngay", "minh_nghe_dien_thoai_khi_lai"}  # set by C++ / gameplay (docs/gdd/02, docs/gdd/10 M2)
 # Chapter 0-1 flags whose read site is chapter 2 (PR #9, docs/gdd/10-sua-chuong-1.md, flag table at the end).
 # Delete entries as chapter 2 lands on main; a flag here is still a consequence, just one chapter later.
-READ_IN_CHAPTER_2 = {"khoi_hoc_tu_keo_ly", "biet_giay_1957", "ket_thuc_chuong_1"}
+# Progress flags whose reader is the next chapter (chapter 3 reads how the year was opened).
+READ_IN_NEXT_CHAPTER = {"da_xong_dat"}
 # Flags content sets for the engine to read (docs/gdd/02-he-thong.md §1); nothing in content needs to read them.
 RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1"}
 
@@ -93,8 +94,57 @@ def test_every_flag_set_is_read_somewhere():
     """A choice with no consequence is a bug in this project (docs/gdd/07 scores it): every flag content
     sets is read by a mission gate, a step branch/variant, a dialogue condition, or the engine."""
     flags_set, flags_read = _flag_graph()
-    unread = sorted(f for f in flags_set - RUNTIME_FLAGS - RUNTIME_READ_FLAGS - READ_IN_CHAPTER_2 if f not in flags_read)
+    unread = sorted(f for f in flags_set - RUNTIME_FLAGS - RUNTIME_READ_FLAGS - READ_IN_NEXT_CHAPTER if f not in flags_read)
     assert not unread, f"flags set but never read: {unread}"
+
+
+def test_every_choice_flag_from_chapter_2_on_is_read():
+    """Owner rule (docs/gdd/08-nhan-qua.md §2): a choice without a consequence is meaningless. Every
+    flag a chapter>=2 dialogue choice sets must be read somewhere (a later line's condition, a flag
+    branch, requires, fail_if). Chapter 0-1 flags are wired by the chapter-1 owner thread."""
+    reads = _flag_graph()[1]
+    ch2_dialogues = {d["id"] for d in DIALOGUES.values() if "chapter_2" in d.get("tags", [])}
+    unread = {}
+    for did in ch2_dialogues:
+        for line in DIALOGUES[did]["lines"]:
+            for c in line.get("choices", []):
+                for f in (c.get("effect") or {}).get("set_flags", []):
+                    if f not in reads:
+                        unread[f] = f"{did}/{line['id']}"
+    assert not unread, f"choice flags nothing reads: {unread}"
+
+
+def test_every_character_has_a_drive():
+    """docs/gdd/08-nhan-qua.md §1: every character, ambient archetypes included, has Khổ-Tập-Diệt-Đạo."""
+    chars = [c for f in (ROOT / "game/content/characters").glob("*.json") for c in json.loads(f.read_text(encoding="utf-8"))["items"]]
+    missing = [c["id"] for c in chars if not (c.get("drive") or {}).get("dao")]
+    assert not missing, f"characters without a drive block: {missing}"
+
+
+def test_every_chapter_from_2_on_has_a_set_piece():
+    chapters = {m.get("chapter") for m in MISSIONS.values() if m.get("type") == "story" and (m.get("chapter") or 0) >= 2}
+    for ch in chapters:
+        pieces = [m["id"] for m in MISSIONS.values() if m.get("chapter") == ch and "set_piece" in m.get("tags", [])]
+        assert pieces, f"chapter {ch} has no mission tagged set_piece"
+        piece = MISSIONS[pieces[0]]
+        assert len(piece.get("protagonists", [])) == 3, f"{pieces[0]}: the set piece brings all three protagonists"
+
+
+def test_minigames_from_chapter_2_on_have_a_fail_branch():
+    """docs/gdd/08-nhan-qua.md §4: minigame/cook/photograph steps branch on chua_dat (with a default)
+    and the losing branch never ends in `fail`; the player always gets through, at a price."""
+    bad = []
+    for m in MISSIONS.values():
+        if (m.get("chapter") or 0) < 2:
+            continue
+        for s in m["steps"]:
+            if s["kind"] in ("minigame", "cook", "photograph"):
+                nxt = s.get("next")
+                if not isinstance(nxt, dict) or "chua_dat" not in nxt or nxt.get("default") != nxt["chua_dat"] or nxt["chua_dat"] == "fail":
+                    # a retry step (reached from chua_dat) may continue linearly
+                    if not any(isinstance(o.get("next"), dict) and o["next"].get("chua_dat") == s["id"] for o in m["steps"]):
+                        bad.append(f"{m['id']}.{s['id']}")
+    assert not bad, f"minigame steps without a proper chua_dat branch: {bad}"
 
 
 def test_runtime_sets_the_clean_record_flag_and_resets_it_on_fines():

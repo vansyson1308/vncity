@@ -18,7 +18,7 @@ kiểm tra tự động. Những gì cần UE5 để chạy thử được đán
 | Kiểm tra tọa độ công trình biểu tượng | Xong | 36/84 khớp dữ liệu thật trong 300 m (chạy offline trên cache); còn lại là hồ, cầu, phố giữ mốc tay |
 | Schema dữ liệu game (14 bộ) | Xong | `game/schemas` |
 | Nội dung game | Bản đầu, đã QC | 404 mục: 14 quận, 84 công trình, 47 nhân vật, 26 xe, 24 việc làm, 24 nhiệm vụ, 57 hội thoại… |
-| Cốt truyện | Bản nháp v0, đã giả lập chơi thử | Mở đầu + chương 1 chơi được dạng dữ liệu, 0 lỗi chặn chơi (`gdd/06-gia-lap-choi-thu.md`); thẩm định chi tiết lời thoại và logic: `11-tham-dinh-choi-thu.md`; hệ thống, kinh tế, đồng hồ và 12 việc cần làm: `gdd/07-tham-dinh-trieu-do.md`. Chờ chủ dự án định hướng |
+| Cốt truyện | Bản nháp v0, đã giả lập chơi thử | Mở đầu + chương 1 chơi được dạng dữ liệu, 0 lỗi chặn chơi (`gdd/06-gia-lap-choi-thu.md`); thẩm định chi tiết lời thoại và logic: `11-tham-dinh-choi-thu.md`; hệ thống, kinh tế, đồng hồ và 12 việc cần làm: `gdd/07-tham-dinh-trieu-do.md`. Từ 14/10: nguyên tắc nhân quả và hệ quả `gdd/08-nhan-qua.md`, giọng thoại `gdd/09-giong-thoai.md`, bản sửa chương 0-1 `gdd/10-sua-chuong-1.md`; chương 2 "Mùa nồm" chơi được dạng dữ liệu (8 nhiệm vụ truyện + 1 người lạ, Giao thừa Hồ Gươm là điểm nhấn) |
 | Harness UE 5.8 | Viết xong, đã soát kỹ, **chưa biên dịch** | Plugin C++, sinh USTRUCT từ schema, script import, runtime đọc đủ tham số nhiệm vụ; danh sách API cần kiểm ở `05-tich-hop-ue5.md` mục 7 |
 | Xem trước 3D trên web | Xong | `viewer/city.html` |
 

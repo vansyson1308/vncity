@@ -1,0 +1,1550 @@
+{
+  "collection": "missions",
+  "items": [
+    {
+      "id": "c2_01_bang_so_12",
+      "tags": [
+        "chapter_2",
+        "khoi",
+        "cassette",
+        "hai_ba_trung",
+        "dong_da"
+      ],
+      "name": {
+        "vi": "Băng số mười hai",
+        "en": "Tape Twelve"
+      },
+      "type": "story",
+      "chapter": 2,
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:ong_thang",
+      "summary": {
+        "vi": "Ông Thắng chỉ ba chỗ bố từng chụp ông Khiêm. Chụp đúng ba tấm, băng số 12 mở và nói ra điều ông Khiêm viết thêm năm 1972.",
+        "en": "Ông Thắng names three places where Khải photographed Khiêm. Match all three and tape 12 reveals what Khiêm added in 1972."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_09_bua_toi_tang_72"
+        ],
+        "flags": [
+          "biet_giay_1957",
+          "ket_thuc_chuong_1"
+        ]
+      },
+      "start": {
+        "lat": 21.0373,
+        "lon": 105.8522
+      },
+      "steps": [
+        {
+          "id": "gap_ong_thang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tìm ông Thắng ở Ô Quan Chưởng, sáng nồm"
+          },
+          "target": "landmarks:o_quan_chuong",
+          "dialogue": "dialogues:dlg_c2_01_ong_thang",
+          "params": {
+            "time_of_day": 8.0,
+            "force_event": "events:mua_nom"
+          },
+          "next": "chup_ga"
+        },
+        {
+          "id": "chup_ga",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Ga Hàng Cỏ, nắng sớm: chụp lại tấm 'Xếp hàng mua vé Thống Nhất, 1992' khớp trên 80%"
+          },
+          "target": "landmarks:ga_ha_noi",
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "archive_frame": "khai_1992_041_ga_hang_co",
+            "match_threshold": 0.8,
+            "hours": [
+              6.5,
+              8.5
+            ],
+            "difficulty": 2,
+            "time_of_day": 7.0
+          },
+          "next": {
+            "dat": "chup_cho_hom",
+            "chua_dat": "ga_sai_nang",
+            "default": "ga_sai_nang"
+          }
+        },
+        {
+          "id": "ga_sai_nang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nắng sai. Mai ra lại lúc sáu rưỡi"
+          },
+          "target": "landmarks:ga_ha_noi",
+          "dialogue": "dialogues:dlg_c2_01_chup_lai",
+          "next": "cho_sang_ga"
+        },
+        {
+          "id": "cho_sang_ga",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Chờ sáng hôm sau, 6:30"
+          },
+          "target": "landmarks:ga_ha_noi",
+          "params": {
+            "until_hour": 6.5,
+            "hour": 6.5,
+            "skip_allowed": true
+          },
+          "next": "chup_ga"
+        },
+        {
+          "id": "chup_cho_hom",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chợ Hôm trước trưa: chụp lại mặt tiền có biển 'Mậu dịch quốc doanh', 1992"
+          },
+          "target": "landmarks:cho_hom",
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "archive_frame": "khai_1992_052_cho_hom_mau_dich",
+            "match_threshold": 0.8,
+            "hours": [
+              7,
+              11.5
+            ],
+            "difficulty": 2,
+            "time_of_day": 9.0
+          },
+          "next": {
+            "dat": "chup_kim_lien",
+            "chua_dat": "cho_hom_mai",
+            "default": "cho_hom_mai"
+          }
+        },
+        {
+          "id": "cho_hom_mai",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Bạt đã che mặt tiền. Mai ra lại trước trưa"
+          },
+          "target": "landmarks:cho_hom",
+          "params": {
+            "until_hour": 7.0,
+            "hour": 7.0,
+            "skip_allowed": true
+          },
+          "next": "chup_cho_hom"
+        },
+        {
+          "id": "chup_kim_lien",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Cầu thang nhà B4 Kim Liên lúc nắng xiên bốn giờ chiều"
+          },
+          "target": "landmarks:khu_tap_the_kim_lien",
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "archive_frame": "khai_1996_118_cau_thang_b4_kim_lien",
+            "match_threshold": 0.8,
+            "hours": [
+              15.5,
+              17
+            ],
+            "difficulty": 2,
+            "time_of_day": 16.0
+          },
+          "next": {
+            "dat": "nghe_bang",
+            "chua_dat": "kim_lien_mai",
+            "default": "kim_lien_mai"
+          }
+        },
+        {
+          "id": "kim_lien_mai",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Nắng tắt. Mai chụp lại lúc 15:30"
+          },
+          "target": "landmarks:khu_tap_the_kim_lien",
+          "params": {
+            "until_hour": 15.5,
+            "hour": 15.5,
+            "skip_allowed": true
+          },
+          "next": "chup_kim_lien"
+        },
+        {
+          "id": "nghe_bang",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Băng số 12 mở. Ngồi xuống bậc thang và nghe"
+          },
+          "target": "landmarks:khu_tap_the_kim_lien",
+          "dialogue": "dialogues:dlg_c2_01_bang_12",
+          "params": {
+            "minimap": false
+          }
+        }
+      ],
+      "reward": {
+        "items": [
+          "items:bang_cassette_12"
+        ],
+        "set_flags": [
+          "nghe_bang_12"
+        ],
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 5
+        }
+      },
+      "unlocks": [
+        "missions:c2_02_ngan_hang_cu_goi",
+        "missions:c2_03_danh_sach_thu_hai",
+        "missions:c2_06_cho_hoa_hang_luoc"
+      ]
+    },
+    {
+      "id": "c2_02_ngan_hang_cu_goi",
+      "tags": [
+        "chapter_2",
+        "lan",
+        "my_dinh",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Ngân hàng cũ gọi",
+        "en": "The Old Bank Calls"
+      },
+      "type": "story",
+      "chapter": 2,
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:quan_truong_phong",
+      "summary": {
+        "vi": "Sếp cũ gọi Lan lên tầng 31. Ba buổi khác nhau tùy điều Lan đã nói ở tổ dân phố: một cuộc điều tra nếu cô lộ hồ sơ vay, một buổi trình bày xin vay cho phương án tự quản nếu cô đã đề xuất nó, hoặc một lời mời về làm việc.",
+        "en": "Lan's old boss calls her to floor 31. Three different meetings depending on what she said at the ward meeting: an internal investigation if she leaked the loan file, a loan pitch for the self-managed plan if she proposed it, or a job offer."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c2_01_bang_so_12"
+        ],
+        "flags": [
+          "nghe_bang_12"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "cuoc_goi",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Điện thoại: 'Anh Quân - TPTD'"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_02_goi",
+          "params": {
+            "time_of_day": 9.0
+          },
+          "next": "len_thap"
+        },
+        {
+          "id": "len_thap",
+          "kind": "ride",
+          "objective": {
+            "vi": "Lên tòa tháp Phạm Hùng trước giờ hẹn"
+          },
+          "target": "landmarks:landmark_72",
+          "params": {
+            "vehicle": "vehicles:hongdat_tam_nhin",
+            "time_limit_s": 480
+          },
+          "next": "re_nhanh",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "re_nhanh",
+          "kind": "choice",
+          "objective": {
+            "vi": "Tầng 31. Anh Quân gọi lên vì việc gì?",
+            "en": "Floor 31. Why did Quân call you in?"
+          },
+          "target": "landmarks:landmark_72",
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "lan_lo_thong_tin_mat": "gap_sep",
+            "lan_de_xuat_tu_quan": "thuyet_trinh",
+            "default": "gap_sep"
+          }
+        },
+        {
+          "id": "thuyet_trinh",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Trình bày phương án tự quản phố cổ trước phòng tín dụng: trả lời 6 câu hỏi về dòng tiền của 20 hộ",
+            "en": "Pitch the Old Quarter self-managed plan to the credit department: answer 6 cash-flow questions for 20 households"
+          },
+          "target": "landmarks:landmark_72",
+          "params": {
+            "pass_score": 70,
+            "difficulty": 2,
+            "grader": "characters:quan_truong_phong",
+            "time_of_day": 11.0,
+            "time_limit_s": 180
+          },
+          "next": {
+            "dat": "hoi_dap",
+            "chua_dat": "hoi_dap_truot",
+            "default": "hoi_dap_truot"
+          }
+        },
+        {
+          "id": "hoi_dap",
+          "kind": "talk",
+          "objective": {
+            "vi": "Câu hỏi cuối của anh Quân: hộ nợ xấu trong nhóm",
+            "en": "Quân's last question: the bad-debt household in the group"
+          },
+          "target": "landmarks:landmark_72",
+          "dialogue": "dialogues:dlg_c2_02_thuyet_trinh",
+          "next": "ve_quan"
+        },
+        {
+          "id": "hoi_dap_truot",
+          "kind": "talk",
+          "objective": {
+            "vi": "Số không đứng. Anh Quân nói thẳng",
+            "en": "The numbers do not hold. Quân says so"
+          },
+          "target": "landmarks:landmark_72",
+          "dialogue": "dialogues:dlg_c2_02_thuyet_trinh_truot",
+          "next": "ve_quan"
+        },
+        {
+          "id": "gap_sep",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tầng 31. Nghe anh Quân nói ngắn"
+          },
+          "target": "landmarks:landmark_72",
+          "dialogue": "dialogues:dlg_c2_02_sep",
+          "params": {
+            "time_of_day": 11.0
+          },
+          "next": "ve_quan"
+        },
+        {
+          "id": "ve_quan",
+          "kind": "ride",
+          "objective": {
+            "vi": "Về quán trước giờ trưa, Phạm Hùng đang tắc"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "time_limit_s": 420
+          },
+          "next": "ong_nem"
+        },
+        {
+          "id": "ong_nem",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông hỏi. Và ông thử"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_02_cu_tho",
+          "params": {
+            "time_of_day": 12.5
+          }
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "to_dan_pho_hang_chieu": 5
+        }
+      },
+      "unlocks": [
+        "missions:c2_05_ong_cong_ong_tao"
+      ]
+    },
+    {
+      "id": "c2_03_danh_sach_thu_hai",
+      "tags": [
+        "chapter_2",
+        "minh",
+        "pho_co",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Danh sách thứ hai",
+        "en": "The Second List"
+      },
+      "type": "story",
+      "chapter": 2,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:thao",
+      "summary": {
+        "vi": "Thảo nhắn lúc sáu giờ sáng. Tùy Minh đã nhận việc gì ở chương 1, cô giao danh sách thứ hai hoặc nhờ anh theo dõi Hùng Hàng Đậu, kẻ đang bán tin về nhà ông Tư Hàng Bạc.",
+        "en": "Thảo texts at six. Depending on what Minh accepted in chapter 1, she hands him a second list or asks him to tail Hùng of Hàng Đậu, who is selling information about old Mr Tư's house."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c2_01_bang_so_12"
+        ],
+        "flags": [
+          "nghe_bang_12"
+        ]
+      },
+      "start": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "steps": [
+        {
+          "id": "tin_nhan",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Sáu giờ sáng, tường trọ đổ mồ hôi, tin nhắn của Thảo"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_c2_03_thao_nhan",
+          "params": {
+            "time_of_day": 6.0,
+            "force_event": "events:mua_nom"
+          },
+          "next": "don_thao"
+        },
+        {
+          "id": "don_thao",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đón Thảo ở sảnh tòa 72"
+          },
+          "target": "landmarks:landmark_72",
+          "params": {
+            "time_limit_s": 480
+          },
+          "next": "tren_xe",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "tren_xe",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở Thảo về Hàng Bạc. Nghe kỹ, chị ấy sẽ lộ giọng"
+          },
+          "target": {
+            "lat": 21.0338,
+            "lon": 105.8525
+          },
+          "dialogue": "dialogues:dlg_c2_03_tren_xe",
+          "params": {
+            "passenger": "characters:thao",
+            "helmet_for_passenger": true,
+            "time_limit_s": 600
+          },
+          "next": "theo_hung",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "theo_hung",
+          "kind": "follow",
+          "objective": {
+            "vi": "Theo Hùng Hàng Đậu từ cột đồng hồ về Hàng Bạc, giữ khoảng cách, đừng để nó thấy quá hai lần"
+          },
+          "target": {
+            "lat": 21.0338,
+            "lon": 105.8525
+          },
+          "params": {
+            "follow": "characters:hung_hang_dau",
+            "max_gap_m": 60,
+            "time_limit_s": 420,
+            "difficulty": 2
+          },
+          "next": "gac_ong_tu",
+          "fail_if": [
+            "event:bi_phat_hien_3_lan"
+          ]
+        },
+        {
+          "id": "gac_ong_tu",
+          "kind": "talk",
+          "objective": {
+            "vi": "Lên gác hai số 7 Hàng Bạc sau khi hai người kia đi"
+          },
+          "target": {
+            "lat": 21.0338,
+            "lon": 105.8525
+          },
+          "dialogue": "dialogues:dlg_c2_03_ong_tu",
+          "next": "do_xe_sai"
+        },
+        {
+          "id": "do_xe_sai",
+          "kind": "talk",
+          "objective": {
+            "vi": "Xe đỗ chắn lối đi bộ. Thượng úy Hải đứng cạnh"
+          },
+          "target": {
+            "lat": 21.0338,
+            "lon": 105.8525
+          },
+          "dialogue": "dialogues:dlg_c2_03_hai"
+        }
+      ],
+      "reward": {
+        "money_vnd": 400000,
+        "reputation": {
+          "kim_long_land": 5
+        }
+      },
+      "unlocks": [
+        "missions:c2_04_giay_uy_quyen"
+      ]
+    },
+    {
+      "id": "c2_04_giay_uy_quyen",
+      "tags": [
+        "chapter_2",
+        "minh",
+        "lan",
+        "pho_co",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Giấy ủy quyền",
+        "en": "Power of Attorney"
+      },
+      "type": "story",
+      "chapter": 2,
+      "protagonists": [
+        "characters:minh",
+        "characters:lan"
+      ],
+      "giver": "characters:ong_tu_hang_bac",
+      "summary": {
+        "vi": "Hăm hai tháng Chạp, người mặc vest mang công chứng viên đến nhà ông Tư. Ai gọi Minh sáng nay tùy vào điều anh đã chọn: ông Tư, chú Cường, hay Thảo. Lan đọc tờ giấy. Thảo nhìn thấy bà ngoại mình.",
+        "en": "On the 22nd of the last lunar month the men in suits bring a notary to Mr Tư's. Who calls Minh depends on what he chose: Mr Tư, Cường, or Thảo. Lan reads the paper. Thảo sees her grandmother."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c2_03_danh_sach_thu_hai"
+        ]
+      },
+      "start": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "steps": [
+        {
+          "id": "ai_goi",
+          "kind": "choice",
+          "objective": {
+            "vi": "Hăm hai tháng Chạp, tám giờ sáng. Điện thoại reo"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "params": {
+            "branch_source": "flag",
+            "time_of_day": 8.0
+          },
+          "next": {
+            "minh_canh_bao_ong_tu": "goi_ong_tu",
+            "minh_goi_hoi_xe_om": "goi_cuong",
+            "default": "goi_thao"
+          }
+        },
+        {
+          "id": "goi_ong_tu",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Ông Tư gọi: họ đến rồi, ông đang pha trà thật chậm"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_c2_04_goi_ong_tu",
+          "next": "den_hang_bac"
+        },
+        {
+          "id": "goi_cuong",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Chú Cường gọi: hội xe ôm đã chặn ngõ bằng bốn cái xe"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_c2_04_goi_cuong",
+          "next": "den_hang_bac"
+        },
+        {
+          "id": "goi_thao",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Thảo gọi: chị cần ra Hàng Bạc, không đi xe công ty"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_c2_04_goi_thao",
+          "next": "den_hang_bac"
+        },
+        {
+          "id": "den_hang_bac",
+          "kind": "ride",
+          "objective": {
+            "vi": "Đến số 7 Hàng Bạc trước khi ông Tư hết trà"
+          },
+          "target": {
+            "lat": 21.0338,
+            "lon": 105.8525
+          },
+          "params": {
+            "time_limit_s": 420
+          },
+          "next": "truoc_cua",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "truoc_cua",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hùng và hai người mặc vest trước cửa"
+          },
+          "target": {
+            "lat": 21.0338,
+            "lon": 105.8525
+          },
+          "dialogue": "dialogues:dlg_c2_04_truoc_cua",
+          "next": "cho_ong_tu"
+        },
+        {
+          "id": "cho_ong_tu",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở ông Tư (81 tuổi) đến nhà văn hóa tổ dân phố số 5: chậm, không phanh gấp, mũ cài quai"
+          },
+          "target": {
+            "lat": 21.0378,
+            "lon": 105.8515
+          },
+          "params": {
+            "passenger": "characters:ong_tu_hang_bac",
+            "helmet_for_passenger": true,
+            "max_speed_kmh": 25,
+            "comfort_weight": 1.0
+          },
+          "next": "lan_doc",
+          "fail_if": [
+            "event:phanh_gap_3_lan"
+          ]
+        },
+        {
+          "id": "lan_doc",
+          "kind": "talk",
+          "objective": {
+            "vi": "Lan đọc tờ giấy ủy quyền cho ông Tư"
+          },
+          "target": {
+            "lat": 21.0378,
+            "lon": 105.8515
+          },
+          "dialogue": "dialogues:dlg_c2_04_lan_doc",
+          "params": {
+            "protagonist": "characters:lan"
+          },
+          "next": "thao_dau_pho",
+          "set_flags": [
+            "ong_tu_khong_ky"
+          ]
+        },
+        {
+          "id": "thao_dau_pho",
+          "kind": "talk",
+          "objective": {
+            "vi": "Thảo đứng đầu phố dưới mưa phùn"
+          },
+          "target": {
+            "lat": 21.0345,
+            "lon": 105.8528
+          },
+          "dialogue": "dialogues:dlg_c2_04_thao",
+          "params": {
+            "protagonist": "characters:minh"
+          },
+          "set_flags": [
+            "thao_thay_ba_ngoai"
+          ]
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 15,
+          "to_dan_pho_hang_chieu": 10
+        }
+      },
+      "unlocks": [
+        "missions:c2_06_cho_hoa_hang_luoc"
+      ]
+    },
+    {
+      "id": "c2_05_ong_cong_ong_tao",
+      "tags": [
+        "chapter_2",
+        "lan",
+        "tet",
+        "hoang_mai",
+        "gia_lam",
+        "pho_co",
+        "long_bien"
+      ],
+      "name": {
+        "vi": "Hăm ba tháng Chạp",
+        "en": "The Twenty-Third"
+      },
+      "type": "story",
+      "chapter": 2,
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "Chợ Tết Đền Lừ lúc ba giờ sáng, bà Lụa nhớ hay quên tùy lần trước Lan mua gì, bộ bát mới từ Bát Tràng qua cầu Chương Dương, mâm cúng ông Táo và cô Hạnh với túi cá chép to bất thường. Thả cá trước mười hai giờ, ở sông, không ở Hồ Gươm.",
+        "en": "Đền Lừ market at three, Mrs Lụa remembers what Lan bought last time, new bowls from Bát Tràng over Chương Dương bridge, the Kitchen Gods' offering and aunt Hạnh with an oddly large carp. Release the fish before noon, in the river, not at the lake."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c2_02_ngan_hang_cu_goi"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "den_lu",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Ba giờ sáng 21 tháng Chạp, chợ đầu mối Đền Lừ"
+          },
+          "target": "landmarks:cho_dau_moi_den_lu",
+          "params": {
+            "time_of_day": 3.0,
+            "vehicle": "vehicles:hongdat_tam_nhin"
+          },
+          "next": "mac_ca_tet"
+        },
+        {
+          "id": "mac_ca_tet",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Mặc cả xương, hành, gừng giá Tết với cánh buôn không nhân nhượng"
+          },
+          "target": "activities:act_mac_ca_cho_dau_moi",
+          "params": {
+            "shopping_list": [
+              "xuong_ong_40kg",
+              "hanh_kho_8kg",
+              "gung_15kg"
+            ],
+            "budget_vnd": 2600000,
+            "pass_score": 75,
+            "difficulty": 2
+          },
+          "next": {
+            "dat": "dong_xuan",
+            "chua_dat": "tra_them",
+            "default": "tra_them"
+          }
+        },
+        {
+          "id": "tra_them",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hụt giá. Trả thêm hai trăm, nghe một câu cay"
+          },
+          "target": "landmarks:cho_dau_moi_den_lu",
+          "dialogue": "dialogues:dlg_c2_05_mac_ca_lai",
+          "params": {
+            "cost_vnd": 200000
+          },
+          "next": "dong_xuan"
+        },
+        {
+          "id": "dong_xuan",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Sáu giờ, sạp bà Lụa, chợ Tết đông gấp ba"
+          },
+          "target": "landmarks:cho_dong_xuan",
+          "params": {
+            "time_of_day": 6.0
+          },
+          "next": "ba_lua"
+        },
+        {
+          "id": "ba_lua",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mua quế hồi cho mẻ Tết. Bà Lụa nhớ"
+          },
+          "target": "landmarks:cho_dong_xuan",
+          "dialogue": "dialogues:dlg_c2_05_ba_lua",
+          "next": "bat_trang"
+        },
+        {
+          "id": "bat_trang",
+          "kind": "ride",
+          "objective": {
+            "vi": "Sang Bát Tràng lấy bộ bát chiết yêu ông đặt"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "params": {
+            "vehicle": "vehicles:hongdat_tam_nhin"
+          },
+          "next": "lo_gom"
+        },
+        {
+          "id": "lo_gom",
+          "kind": "talk",
+          "objective": {
+            "vi": "Lò gốm nhỏ, bát men lam đang nguội"
+          },
+          "target": "landmarks:lang_gom_bat_trang",
+          "dialogue": "dialogues:dlg_c2_05_bat_trang",
+          "next": "cho_bat"
+        },
+        {
+          "id": "cho_bat",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Chở hai mươi bát về Hàng Chiếu qua cầu Chương Dương, vỡ quá ba cái là mất bộ"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "cargo": "bo_bat_chiet_yeu",
+            "cargo_fragile": true,
+            "max_speed_kmh": 40,
+            "time_limit_s": 600
+          },
+          "next": "sang_23",
+          "fail_if": [
+            "event:vo_qua_3_bat"
+          ]
+        },
+        {
+          "id": "sang_23",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Sáng 23 tháng Chạp, bày mâm cúng ông Táo trước mười giờ"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "until_hour": 9.5,
+            "hour": 9.5,
+            "skip_allowed": true
+          },
+          "next": "cung"
+        },
+        {
+          "id": "cung",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Cúng ông Táo. Cô Hạnh đến với túi cá chép to bất thường"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_05_cung",
+          "params": {
+            "time_of_day": 10.0,
+            "force_event": "events:ong_cong_ong_tao"
+          },
+          "next": "tha_ca"
+        },
+        {
+          "id": "tha_ca",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Mang cá ra bờ sông Hồng ở chân cầu Chương Dương thả trước mười hai giờ trưa. Hồ Gươm cấm thả. Thả cá, không thả túi"
+          },
+          "target": "landmarks:con_duong_gom_su",
+          "dialogue": "dialogues:dlg_c2_05_tha_ca",
+          "params": {
+            "cargo": "ca_chep_ong_tao",
+            "deadline_hour": 12.0,
+            "item": "items:ca_chep_ong_tao",
+            "time_of_day": 10.75
+          },
+          "fail_if": [
+            "event:tha_tui_nilon"
+          ]
+        }
+      ],
+      "reward": {
+        "items": [
+          "items:bo_bat_chiet_yeu_bat_trang"
+        ],
+        "set_flags": [
+          "da_cung_ong_tao"
+        ],
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 10,
+          "ban_quan_ly_cho_dong_xuan": 5
+        }
+      },
+      "unlocks": [
+        "missions:c2_07_giao_thua_ho_guom"
+      ]
+    },
+    {
+      "id": "c2_06_cho_hoa_hang_luoc",
+      "tags": [
+        "chapter_2",
+        "khoi",
+        "minh",
+        "tet",
+        "cau_giay",
+        "pho_co",
+        "tay_ho",
+        "ha_dong"
+      ],
+      "name": {
+        "vi": "Chợ hoa Hàng Lược",
+        "en": "Hàng Lược Flower Market"
+      },
+      "type": "story",
+      "chapter": 2,
+      "protagonists": [
+        "characters:khoi",
+        "characters:minh"
+      ],
+      "giver": "characters:phong_bien_tap",
+      "summary": {
+        "vi": "Phong mua ảnh cho số Tết nhưng Kim Long mua bốn trang quảng cáo. Khôi chụp lại chợ hoa 1990, Minh chở cây quất qua cầu Long Biên như ông Thắng năm 1989, rồi Khôi mang ảnh bà ngoại Thảo về tận hàng nước chè ở Hà Đông.",
+        "en": "Phong buys photos for the Tết issue while Kim Long buys four ad pages. Khôi rephotographs the 1990 flower market, Minh hauls a kumquat tree over Long Biên like Thắng in 1989, and Khôi brings the photos of Thảo's grandmother to a tea stall in Hà Đông."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c2_01_bang_so_12",
+          "missions:c2_04_giay_uy_quyen"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "duy_tan",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ra Duy Tân, Cầu Giấy gặp Phong. Khôi tự lái, có bằng rồi"
+          },
+          "target": {
+            "lat": 21.03,
+            "lon": 105.783
+          },
+          "params": {
+            "vehicle": "vehicles:hongdat_cup_82",
+            "time_of_day": 9.0
+          },
+          "next": "phong",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "phong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Phong lật tập ảnh và hỏi 'góc nào viral hơn'"
+          },
+          "target": {
+            "lat": 21.03,
+            "lon": 105.783
+          },
+          "dialogue": "dialogues:dlg_c2_06_phong",
+          "next": "hang_luoc"
+        },
+        {
+          "id": "hang_luoc",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chợ hoa Hàng Lược, 25 tháng Chạp: chụp lại tấm 1990 của bố, chợ chỉ họp đến ba mươi"
+          },
+          "target": {
+            "lat": 21.0375,
+            "lon": 105.8485
+          },
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "archive_frame": "khai_1990_033_cho_hoa_hang_luoc",
+            "match_threshold": 0.8,
+            "hours": [
+              8,
+              11
+            ],
+            "difficulty": 2,
+            "time_of_day": 9.0
+          },
+          "next": {
+            "dat": "lay_quat",
+            "chua_dat": "hang_luoc_mai",
+            "default": "hang_luoc_mai"
+          }
+        },
+        {
+          "id": "hang_luoc_mai",
+          "kind": "wait_until",
+          "objective": {
+            "vi": "Chưa khớp. Mai chụp lại, còn năm ngày chợ"
+          },
+          "target": {
+            "lat": 21.0375,
+            "lon": 105.8485
+          },
+          "params": {
+            "until_hour": 8.0,
+            "hour": 8.0,
+            "skip_allowed": true
+          },
+          "next": "hang_luoc"
+        },
+        {
+          "id": "lay_quat",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Minh: lấy cây quất cụ Thọ đặt ở vườn quất Tứ Liên bằng xe ba gác"
+          },
+          "target": {
+            "lat": 21.0745,
+            "lon": 105.83
+          },
+          "params": {
+            "protagonist": "characters:minh",
+            "vehicle": "vehicles:xe_ba_gac"
+          },
+          "next": "cho_quat"
+        },
+        {
+          "id": "cho_quat",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Chở cây quất về Hàng Lược, không đổ, không làm rụng quả"
+          },
+          "target": {
+            "lat": 21.0375,
+            "lon": 105.8485
+          },
+          "params": {
+            "cargo": "cay_quat_tu_lien",
+            "cargo_fragile": true,
+            "time_limit_s": 480,
+            "max_speed_kmh": 30
+          },
+          "next": "gap_khoi",
+          "fail_if": [
+            "event:do_quat"
+          ]
+        },
+        {
+          "id": "gap_khoi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Khôi đợi ở chợ hoa với máy ảnh"
+          },
+          "target": {
+            "lat": 21.0375,
+            "lon": 105.8485
+          },
+          "dialogue": "dialogues:dlg_c2_06_cho_hoa",
+          "next": "chup_minh"
+        },
+        {
+          "id": "chup_minh",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Khôi: chụp Minh chở quất qua cầu Long Biên, đúng khung ông Thắng 1989"
+          },
+          "target": "landmarks:cau_long_bien",
+          "params": {
+            "protagonist": "characters:khoi",
+            "activity": "activities:act_chup_lai_anh_xua",
+            "archive_frame": "khai_1989_002_xich_lo_quat_long_bien",
+            "subject": "characters:minh",
+            "match_threshold": 0.75,
+            "hours": [
+              9,
+              11.5
+            ],
+            "time_of_day": 10.0
+          },
+          "next": {
+            "dat": "ha_dong",
+            "chua_dat": "chup_minh_lai",
+            "default": "chup_minh_lai"
+          }
+        },
+        {
+          "id": "chup_minh_lai",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Minh quay xe, chụp lại một lần nữa, nắng đang lên"
+          },
+          "target": "landmarks:cau_long_bien",
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "archive_frame": "khai_1989_002_xich_lo_quat_long_bien",
+            "subject": "characters:minh",
+            "match_threshold": 0.6,
+            "hours": [
+              9,
+              12
+            ],
+            "time_of_day": 10.5
+          },
+          "next": "ha_dong"
+        },
+        {
+          "id": "ha_dong",
+          "kind": "ride",
+          "objective": {
+            "vi": "Về Hà Đông, hàng nước chè ven hồ Văn Quán, mang theo ba tấm ảnh bà"
+          },
+          "target": "landmarks:ho_van_quan",
+          "params": {
+            "vehicle": "vehicles:hongdat_cup_82",
+            "time_of_day": 15.0
+          },
+          "next": "me_thao",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "me_thao",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mẹ Thảo pha ấm mới, hoặc không"
+          },
+          "target": "landmarks:ho_van_quan",
+          "dialogue": "dialogues:dlg_c2_06_me_thao"
+        }
+      ],
+      "reward": {
+        "items": [
+          "items:anh_cho_hoa_hang_luoc_1990",
+          "items:cay_quat_tu_lien"
+        ],
+        "set_flags": [
+          "khoi_gap_me_thao"
+        ],
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 10
+        }
+      },
+      "unlocks": [
+        "missions:c2_07_giao_thua_ho_guom"
+      ]
+    },
+    {
+      "id": "c2_07_giao_thua_ho_guom",
+      "tags": [
+        "chapter_2",
+        "set_piece",
+        "tet",
+        "hoan_kiem",
+        "pho_co",
+        "minh",
+        "lan",
+        "khoi"
+      ],
+      "name": {
+        "vi": "Giao thừa Hồ Gươm",
+        "en": "New Year's Eve at Hoàn Kiếm"
+      },
+      "type": "story",
+      "chapter": 2,
+      "protagonists": [
+        "characters:minh",
+        "characters:lan",
+        "characters:khoi"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "23 giờ đêm ba mươi: Minh chở khách cuối năm, Lan bày mâm cúng ngoài trời, Khôi chọn khung hình từ cửa sổ của bố. 23:30 Vĩnh gọi: hạn chót. Câu trả lời của Lan chỉ có những lựa chọn mà hai chương vừa qua đã mở. 0:00 ba người gặp nhau ở Tháp Rùa dưới pháo hoa.",
+        "en": "11 p.m. on the last night: Minh's final fare, Lan's outdoor offering, Khôi at his father's window. At 11:30 Vĩnh calls with his deadline; Lan's answer has only the options the last two chapters unlocked. At midnight the three meet at Turtle Tower under the fireworks."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c2_05_ong_cong_ong_tao",
+          "missions:c2_06_cho_hoa_hang_luoc"
+        ],
+        "flags": [
+          "da_cung_ong_tao",
+          "khoi_gap_me_thao"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "ba_noi",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "23:00 đêm ba mươi. Ba nơi, một radio"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_07_23_gio",
+          "params": {
+            "time_of_day": 23.0,
+            "force_event": "events:giao_thua",
+            "radio_forced": "radio:song_pho_36"
+          },
+          "next": "ga_long_bien"
+        },
+        {
+          "id": "ga_long_bien",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Minh: đón khách cuối năm ở ga Long Biên"
+          },
+          "target": "landmarks:ga_long_bien",
+          "params": {
+            "protagonist": "characters:minh",
+            "time_limit_s": 120
+          },
+          "next": "cuoc_cuoi"
+        },
+        {
+          "id": "cuoc_cuoi",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Bảy trăm mét về Hàng Chiếu qua phố kín người, khách phải kịp cúng giao thừa"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "passenger": "characters:amb_dan_van_phong",
+            "helmet_for_passenger": true,
+            "time_limit_s": 150,
+            "max_speed_kmh": 30
+          },
+          "next": "mam_cung",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "mam_cung",
+          "kind": "cook",
+          "objective": {
+            "vi": "Lan: bày mâm cúng ngoài trời đúng lệ, gà quay đầu ra, muối gạo bên phải, trong bốn phút"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "protagonist": "characters:lan",
+            "recipe": "mam_cung_giao_thua",
+            "pass_score": 75,
+            "time_limit_s": 240
+          },
+          "next": {
+            "dat": "vinh_goi",
+            "chua_dat": "sua_mam",
+            "default": "sua_mam"
+          }
+        },
+        {
+          "id": "sua_mam",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông nhìn từ cửa và bắt làm lại"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_07_lan_sua",
+          "next": "vinh_goi"
+        },
+        {
+          "id": "vinh_goi",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "23:30. 'Đỗ Quang Vĩnh' gọi. Ông gật đầu: nghe đi"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_07_vinh_goi",
+          "params": {
+            "time_of_day": 23.5,
+            "minimap": false
+          },
+          "next": "khoi_chup"
+        },
+        {
+          "id": "khoi_chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Khôi: pháo hoa qua Tháp Rùa, hai người ở dưới, khung hình bố chưa từng có"
+          },
+          "target": "landmarks:thap_rua",
+          "params": {
+            "protagonist": "characters:khoi",
+            "activity": "activities:act_chup_anh_pho",
+            "subject": "landmarks:thap_rua",
+            "match_threshold": 0.7,
+            "hours": [
+              23.5,
+              24
+            ],
+            "time_of_day": 23.75
+          },
+          "next": {
+            "dat": "gap_nhau",
+            "chua_dat": "chup_lai_phao",
+            "default": "chup_lai_phao"
+          }
+        },
+        {
+          "id": "chup_lai_phao",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Loạt pháo thứ hai, bấm lại"
+          },
+          "target": "landmarks:thap_rua",
+          "params": {
+            "activity": "activities:act_chup_anh_pho",
+            "subject": "landmarks:thap_rua",
+            "match_threshold": 0.5,
+            "hours": [
+              23.5,
+              24
+            ],
+            "time_of_day": 23.8
+          },
+          "next": "gap_nhau"
+        },
+        {
+          "id": "gap_nhau",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Minh: đi bộ qua biển người tới chân Tháp Rùa trước 0:00"
+          },
+          "target": "landmarks:thap_rua",
+          "params": {
+            "protagonist": "characters:minh",
+            "on_foot": true,
+            "radius_m": 25,
+            "time_limit_s": 120,
+            "time_of_day": 23.9
+          },
+          "next": "khong_gio"
+        },
+        {
+          "id": "khong_gio",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "0:00. Pháo hoa. Ba người"
+          },
+          "target": "landmarks:thap_rua",
+          "dialogue": "dialogues:dlg_c2_07_khong_gio",
+          "params": {
+            "time_of_day": 0.0,
+            "minimap": false,
+            "chapter_end": 2
+          }
+        }
+      ],
+      "reward": {
+        "set_flags": [
+          "ket_thuc_chuong_2"
+        ],
+        "reputation": {
+          "to_dan_pho_hang_chieu": 10,
+          "hoi_nguoi_cao_tuoi_phuong": 10
+        }
+      },
+      "unlocks": [
+        "missions:c2_08_xong_dat"
+      ]
+    },
+    {
+      "id": "c2_08_xong_dat",
+      "tags": [
+        "chapter_2",
+        "tet",
+        "pho_co",
+        "thanh_xuan",
+        "minh",
+        "khoi"
+      ],
+      "name": {
+        "vi": "Xông đất",
+        "en": "First Footing"
+      },
+      "type": "story",
+      "chapter": 2,
+      "protagonists": [
+        "characters:minh",
+        "characters:khoi"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "Mùng một. Cụ Thọ chọn người xông đất: Khôi nếu anh đã nói sẽ ở lại, Minh nếu không. Lì xì, voucher trà sữa, cô Hạnh đến hay không tùy câu trả lời đêm qua. 21 giờ Minh gọi mẹ và lần đầu có thể không nói 'con ổn'.",
+        "en": "New Year's Day. Old Thọ picks who steps in first: Khôi if he said he would stay, Minh otherwise. Lucky money, bubble-tea vouchers, aunt Hạnh showing up or not depending on last night's answer. At nine Minh calls his mother and, for once, may not say 'I'm fine'."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c2_07_giao_thua_ho_guom"
+        ],
+        "flags": [
+          "ket_thuc_chuong_2"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "truoc_cua",
+          "kind": "choice",
+          "objective": {
+            "vi": "Mùng một, 6:50. Cửa quán chưa mở. Ai bước vào trước?"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "branch_source": "flag",
+            "time_of_day": 6.8,
+            "force_event": "events:tet_nguyen_dan"
+          },
+          "next": {
+            "khoi_nghieng_o_lai": "khoi_xong",
+            "default": "minh_xong"
+          }
+        },
+        {
+          "id": "khoi_xong",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Khôi: bước chân phải qua ngưỡng cửa"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_08_cu_tho_chon",
+          "params": {
+            "protagonist": "characters:khoi",
+            "on_foot": true,
+            "radius_m": 3
+          },
+          "next": "li_xi"
+        },
+        {
+          "id": "minh_xong",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Minh: bước chân phải qua ngưỡng cửa"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_08_cu_tho_chon",
+          "params": {
+            "protagonist": "characters:minh",
+            "on_foot": true,
+            "radius_m": 3
+          },
+          "next": "li_xi"
+        },
+        {
+          "id": "li_xi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Lì xì hai nghìn lấy may, voucher trà sữa, bát mới"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c2_08_li_xi",
+          "next": "goi_me"
+        },
+        {
+          "id": "goi_me",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "21 giờ. Minh gọi về Thái Bình"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_c2_08_goi_me",
+          "params": {
+            "protagonist": "characters:minh",
+            "time_of_day": 21.0,
+            "minimap": false
+          }
+        }
+      ],
+      "reward": {
+        "set_flags": [
+          "da_xong_dat"
+        ],
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 10,
+          "to_dan_pho_hang_chieu": 5
+        }
+      },
+      "unlocks": []
+    }
+  ]
+}

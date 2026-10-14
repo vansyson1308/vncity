@@ -1,0 +1,232 @@
+{
+  "collection": "missions",
+  "items": [
+    {
+      "id": "s14_tin_dau_tien",
+      "tags": [
+        "chapter_1",
+        "minh",
+        "kim_long",
+        "pho_co",
+        "side"
+      ],
+      "name": {
+        "vi": "Tin đầu tiên",
+        "en": "The First Tip"
+      },
+      "type": "side",
+      "chapter": 1,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:thao",
+      "summary": {
+        "vi": "Chỉ mở nếu Minh nhận việc của Kim Long và chưa bỏ. Thảo nhắn việc đầu tiên: Hàng Bạc có nhà nào con cái ở xa, bố mẹ già, đang khó? Năm triệu một tin đúng. Minh đi hỏi đường đến Hàng Bạc trong khi đang đứng ở Hàng Bạc, gặp ông Tư, rồi tối về gõ rồi xóa. Cái tin đó mở hành động đầu tiên của Kim Long ở chương 2.",
+        "en": "Only if Minh took Kim Long's job and has not quit. Thảo's first errand: which Hàng Bạc house has children far away, old parents, money trouble? Five million per verified tip. Minh meets old Tư, then types and deletes all evening. That tip opens Kim Long's first move in chapter 2."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_03_khach_vip_ca_ngay"
+        ],
+        "flags": [
+          "minh_nhan_viec_kim_long"
+        ],
+        "not_flags": [
+          "minh_bo_viec_kim_long"
+        ]
+      },
+      "start": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "steps": [
+        {
+          "id": "tin_nhan",
+          "kind": "talk",
+          "objective": {
+            "vi": "6:30, phòng trọ. Tin nhắn của chị Thảo",
+            "en": "6:30, the rented room. A text from Thảo"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_s14_tin_nhan",
+          "params": {
+            "time_of_day": 6.5
+          },
+          "next": "ra_hang_bac"
+        },
+        {
+          "id": "ra_hang_bac",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Ra Hàng Bạc. Hỏi như người hỏi đường",
+            "en": "To Hàng Bạc. Ask like someone asking the way"
+          },
+          "target": {
+            "lat": 21.0337,
+            "lon": 105.8521
+          },
+          "params": {
+            "vehicle": "vehicles:hongdat_song_alpha"
+          },
+          "next": "hoi_ong_tu"
+        },
+        {
+          "id": "hoi_ong_tu",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông thợ bạc ngồi chạm ở số 7",
+            "en": "The silversmith at work at number 7"
+          },
+          "target": {
+            "lat": 21.0337,
+            "lon": 105.8521
+          },
+          "dialogue": "dialogues:dlg_s14_ong_tu",
+          "next": "gui_tin"
+        },
+        {
+          "id": "gui_tin",
+          "kind": "talk",
+          "objective": {
+            "vi": "22 giờ, phòng trọ. Gõ rồi xóa",
+            "en": "10 p.m., the rented room. Type, delete"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_s14_gui_tin",
+          "params": {
+            "time_of_day": 22.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "s13_hoa_tet_tay_tuu",
+      "tags": [
+        "chapter_2",
+        "minh",
+        "tet",
+        "bac_tu_liem",
+        "pho_co"
+      ],
+      "name": {
+        "vi": "Hai trăm bó violet",
+        "en": "Two Hundred Bunches of Violets"
+      },
+      "type": "stranger",
+      "chapter": 2,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:amb_ban_hoa_xe_dap",
+      "summary": {
+        "vi": "Hai giờ sáng 27 tháng Chạp, xe chở hoa của chị bán hoa chết máy ở Nhổn. Minh phóng ba gác ra làng hoa Tây Tựu, mười tám cây số đường đê, về trước năm giờ, không dập quá hai mươi bó.",
+        "en": "Two in the morning, the flower seller's van has died at Nhổn. Minh takes the cargo trike to Tây Tựu flower village, eighteen kilometres of dyke road, back before five with at most twenty bunches crushed."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c2_01_bang_so_12"
+        ],
+        "hours": [
+          1.5,
+          3
+        ]
+      },
+      "start": {
+        "lat": 21.0375,
+        "lon": 105.8485
+      },
+      "steps": [
+        {
+          "id": "gap_chi_hoa",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chị bán hoa đứng cạnh xe đạp trống ở đầu Hàng Lược"
+          },
+          "target": {
+            "lat": 21.0375,
+            "lon": 105.8485
+          },
+          "dialogue": "dialogues:dlg_s13_hoa_tay_tuu",
+          "params": {
+            "time_of_day": 2.0
+          },
+          "next": "ra_tay_tuu"
+        },
+        {
+          "id": "ra_tay_tuu",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ba gác ra làng hoa Tây Tựu theo đường đê, trời tối, sương"
+          },
+          "target": "landmarks:lang_hoa_tay_tuu",
+          "params": {
+            "vehicle": "vehicles:xe_ba_gac",
+            "time_limit_s": 540
+          },
+          "next": "xep_hoa",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "xep_hoa",
+          "kind": "collect",
+          "objective": {
+            "vi": "Xếp hai trăm bó violet và cúc lên ba gác, bó nào cũng phải đứng"
+          },
+          "target": "landmarks:lang_hoa_tay_tuu",
+          "params": {
+            "qty": 200
+          },
+          "next": "ve_hang_luoc"
+        },
+        {
+          "id": "ve_hang_luoc",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Về Hàng Lược trước năm giờ, dập quá hai mươi bó là mất công"
+          },
+          "target": {
+            "lat": 21.0375,
+            "lon": 105.8485
+          },
+          "params": {
+            "cargo": "hoa_violet_200_bo",
+            "cargo_fragile": true,
+            "time_limit_s": 540,
+            "max_speed_kmh": 35,
+            "max_faults": 20
+          },
+          "next": "tra_hoa",
+          "fail_if": [
+            "event:dap_qua_20_bo"
+          ]
+        },
+        {
+          "id": "tra_hoa",
+          "kind": "talk",
+          "objective": {
+            "vi": "Xếp hoa lên xe đạp của chị, đếm bó dập"
+          },
+          "target": {
+            "lat": 21.0375,
+            "lon": 105.8485
+          },
+          "dialogue": "dialogues:dlg_s13_xong",
+          "params": {
+            "time_of_day": 4.8
+          }
+        }
+      ],
+      "reward": {
+        "money_vnd": 500000,
+        "reputation": {
+          "hoi_ban_hang_rong": 15
+        },
+        "items": [
+          "items:canh_dao_nhat_tan"
+        ]
+      }
+    }
+  ]
+}

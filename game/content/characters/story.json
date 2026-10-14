@@ -6,6 +6,13 @@
       "tags": ["family_lan", "pho_master"],
       "name": {"vi": "Cụ Trần Văn Thọ", "en": "Old Mr Trần Văn Thọ"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Nửa người yếu, không đứng được bếp; con gái muốn bán nhà, cháu gái chưa nấu tới; giữ một tờ giấy 1957 đã cháy mà chỉ ông còn nhớ nội dung."},
+        "tap": {"vi": "Lời hứa với ông Khiêm năm 1957; sợ nói ra sớm sẽ chia rẽ con cháu; tự trọng của người thợ không muốn ai thương hại."},
+        "diet": {"vi": "Căn nhà vẫn là quán phở và hiệu ảnh, lời hứa được giữ mà không ai trong nhà phải mang tiếng tham."},
+        "dao": {"vi": "Nếm, phán ngắn, giữ bí mật, nhả từng giọt (băng, giấy, tên người) khi thấy ba đứa trẻ đã đủ sức chịu."},
+        "tell": "Câu ngắn như phán; gọi Lan là 'con bé'; nói nhiều nhất khi trời mưa."
+      },
       "age": 86,
       "gender": "male",
       "bio": {
@@ -36,6 +43,13 @@
       "tags": ["family_lan", "antagonist_soft"],
       "name": {"vi": "Trần Thị Hạnh", "en": "Trần Thị Hạnh"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Nợ nóng từ đất Hòa Lạc 2021 lãi đẻ lãi, livestream mỗi tối mà đơn ít dần; sợ bố biết mình nợ."},
+        "tap": {"vi": "Tin bán nhà là lối thoát duy nhất; tin Thảo nói thật về giá; hay so với 'nhà người ta'."},
+        "diet": {"vi": "Trả hết nợ, cả nhà không ai khổ, bố không bao giờ phải biết con gái nợ."},
+        "dao": {"vi": "Thương lượng với Kim Long, khóc với Lan, giấu con số nợ thật, chốt đơn từng tối."},
+        "tell": "Giọng livestream chuyển thành giọng khóc rất nhanh; không bao giờ nói con số nợ tròn."
+      },
       "age": 55,
       "gender": "female",
       "bio": {
@@ -59,6 +73,13 @@
       "tags": ["deceased", "photographer", "archive_voice"],
       "name": {"vi": "Ông Nguyễn Văn Khải", "en": "Mr Nguyễn Văn Khải"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "(Lúc sống) Vợ con sang Đức, ở lại một mình với một con phố đang biến mất từng mặt tiền."},
+        "tap": {"vi": "Tin ở lại là giữ cho con thứ con sẽ cần; không dám gửi băng vì sợ con nghe thành lời trách."},
+        "diet": {"vi": "Con về, tự hiểu, tự chọn; không ai bị ép."},
+        "dao": {"vi": "Chụp phố 35 năm, ghi 24 cuộn băng, cất ảnh và giấy tờ vào tủ sắt với mật mã chỉ con đoán được."},
+        "tell": "Dừng lâu giữa câu; mỗi cuộn băng kết bằng tiếng xe máy ngoài cửa sổ."
+      },
       "age": 71,
       "gender": "male",
       "bio": {
@@ -79,6 +100,13 @@
       "tags": ["cyclo", "veteran", "mentor", "storyteller"],
       "name": {"vi": "Ông Lê Văn Thắng", "en": "Mr Lê Văn Thắng"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Bạn thân vừa mất; chiến tranh ông không nói; xích lô đang bị cấm dần từng phố."},
+        "tap": {"vi": "Bám vào kỷ niệm và tự trọng; sợ con trai Khải bán nhà rồi đi như mẹ nó."},
+        "diet": {"vi": "Thằng bé nhà Khải ở lại đủ lâu để phố còn người nhớ chuyện cũ."},
+        "dao": {"vi": "Chở Khôi đi khắp phố, kể chuyện, chơi cờ, dạy 'im lặng mà nghe'; giấu việc mình cũng đang bị ép bán xích lô."},
+        "tell": "Không nói chiến tranh trừ khi trời mưa; gọi Khôi là 'cậu', xưng 'tớ'."
+      },
       "age": 68,
       "gender": "male",
       "bio": {
@@ -111,6 +139,13 @@
       "tags": ["kim_long_land", "conflicted", "romance_option_none"],
       "name": {"vi": "Phạm Thu Thảo", "en": "Phạm Thu Thảo"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Bà ngoại bị giải tỏa khỏi chính ngõ Hàng Chiếu năm 2003; cô đang làm cho người giải tỏa ngõ; KPI và deadline của Vĩnh."},
+        "tap": {"vi": "Tin 'làm từ bên trong' sẽ tử tế hơn để kẻ khác làm; tham vọng được thừa nhận là người giỏi."},
+        "diet": {"vi": "Dự án thành, đẹp, không ai bị đuổi như bà ngoại; và cô được thăng chức."},
+        "dao": {"vi": "Mua bằng giá hợp lý, dùng Minh dò la, đồng thời âm thầm giữ hồ sơ sai phạm thi công của chính công ty."},
+        "tell": "Lộ giọng Hà Đông khi mất bình tĩnh; đứng lâu hơn cần ở hàng nước chè đầu ngõ."
+      },
       "age": 31,
       "gender": "female",
       "bio": {
@@ -134,6 +169,13 @@
       "tags": ["kim_long_land", "antagonist"],
       "name": {"vi": "Đỗ Quang Vĩnh", "en": "Đỗ Quang Vĩnh"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Đi lên từ môi giới đất Mỹ Đình, chưa bao giờ được phố cổ coi là 'người phố'."},
+        "tap": {"vi": "Tin thật lòng rằng phố sắp chết và chỉ tiền mới ướp được nó; không thấy mình sai."},
+        "diet": {"vi": "Heritage Residence hoàn thành đúng hạn; tên ông gắn với phố cổ như một ân nhân."},
+        "dao": {"vi": "Mua phần cô Hạnh trước, ép phần còn lại bằng hạn chót Tết, trà Thái Nguyên và tục ngữ; không bao giờ cao giọng."},
+        "tell": "Mỗi câu như đang ký hợp đồng; rót trà cho người đối diện trước khi ra giá."
+      },
       "age": 49,
       "gender": "male",
       "bio": {
@@ -152,10 +194,101 @@
       ]
     },
     {
+      "id": "quan_truong_phong",
+      "tags": ["bank", "lan_past", "chapter_2"],
+      "name": {"vi": "Anh Quân (trưởng phòng tín dụng)", "en": "Quân, head of credit"},
+      "role": "contact",
+      "drive": {
+        "kho": {"vi": "Phòng thiếu người thẩm định giỏi; Kim Long gửi công văn kiện nhân viên cũ; sếp hỏi 'con bé Lan có về không'."},
+        "tap": {"vi": "Tin người giỏi thì mua lại được bằng lương; sợ hồ sơ khó làm mất điểm phòng."},
+        "diet": {"vi": "Lan về phòng, việc Kim Long khép lại êm, quý một đủ chỉ tiêu."},
+        "dao": {"vi": "Gọi trước khi hội sở gọi, đưa hai đường, ứng tiền Tết, ký gói vay khó nếu có người làm hồ sơ."},
+        "tell": "Nói 'anh nói ngắn' rồi nói rất dài; nhìn đồng hồ khi nói tiền."
+      },
+      "age": 41,
+      "gender": "male",
+      "bio": {"vi": "Trưởng phòng tín dụng chi nhánh ở tòa tháp Phạm Hùng, sếp cũ của Lan. Nói chuyện như duyệt hồ sơ: điều kiện, thời hạn, chữ ký. Tốt với nhân viên theo cách của một người sắp hết chỉ tiêu."},
+      "occupation": {"vi": "Trưởng phòng tín dụng"},
+      "personality": ["thuc_dung", "soi_noi", "giu_loi"],
+      "voice": {"accent": "hanoi", "notes": "Nhanh, nhiều số, 'em ạ' cuối câu khi muốn thuyết phục."},
+      "relationships": [{"with": "characters:lan", "kind": "sep_cu"}]
+    },
+    {
+      "id": "ong_tu_hang_bac",
+      "tags": ["elderly", "pressured_seller", "chapter_2"],
+      "name": {"vi": "Ông Tư (số 7 Hàng Bạc)", "en": "Old Mr Tư of 7 Hàng Bạc"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Tám mốt tuổi, ở một mình sau khi bà mất; con trai ở Sài Gòn đã ký 'ghi nhớ' bán thay bố; mỗi ngày ba đoàn đến hỏi mua nhà; chữ bé không đọc được."},
+        "tap": {"vi": "Cần người nói chuyện hơn cần tiền; tin ai ngồi uống trà với mình là người tốt."},
+        "diet": {"vi": "Ăn Tết trong nhà mình, có người ngồi uống trà, không phải ký gì."},
+        "dao": {"vi": "Pha trà thật chậm để hoãn, nhớ tên người tử tế, gập tờ giấy lại khi hiểu."},
+        "tell": "'Tôi nhớ lâu lắm, tôi chỉ quên mỗi hôm qua.'"
+      },
+      "age": 81,
+      "gender": "male",
+      "bio": {"vi": "Thợ bạc đời thứ tư, số 7 Hàng Bạc (nhà số 7 trong danh sách 14 nhà của Kim Long), nhà ống ba tầng đứng tên hai vợ chồng, bà mất năm 2024 chưa chia thừa kế nên con trai ở Sài Gòn chỉ ký được 'ghi nhớ', chưa bán được. Bạn cờ bốn mươi năm của cụ Thọ. Trở thành 'mục tiêu dễ' trong danh sách của một nhà thầu phụ vì ở một mình. Gương để Thảo nhìn thấy bà ngoại mình."},
+      "occupation": {"vi": "Thợ bạc về hưu"},
+      "home": {"lat": 21.0337, "lon": 105.8521},
+      "district": "districts:pho_co",
+      "appearance": {"outfit": "Áo len cổ lọ, kính lúp đeo trán, tay đen vì bạc.", "metahuman_preset": "MH_VN_Male_80s"},
+      "schedule": [{"hours": [7, 11], "activity": "ngoi_ban_cham_bac", "location": {"lat": 21.0337, "lon": 105.8521}}, {"hours": [14, 18], "activity": "ngoi_ban_cham_bac", "location": {"lat": 21.0337, "lon": 105.8521}}],
+      "personality": ["hien", "cham", "nho_dai"],
+      "voice": {"accent": "hanoi", "notes": "Giọng Hàng Bạc cũ, xưng 'tôi' với người trẻ, hay lặp một ý hai lần."},
+      "relationships": [{"with": "characters:cu_tho", "kind": "ban_co_lau_nam"}, {"with": "characters:minh", "kind": "nguoi_cuu"}, {"with": "characters:thao", "kind": "guong_soi"}]
+    },
+    {
+      "id": "me_thao",
+      "tags": ["family_thao", "ha_dong", "chapter_2"],
+      "name": {"vi": "Bà Phạm Thị Hòa (mẹ Thảo)", "en": "Mrs Hòa, Thảo's mother"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Mẹ bị phạt vì 'chiếm vỉa hè' rồi bị giải tỏa năm 2003; con gái làm cho công ty đang mua chính cái ngõ ấy; vẫn bán nước chè ở Hà Đông."},
+        "tap": {"vi": "Tin 'bán nước chè thì không phải người phố' là câu phải xóa bằng mọi giá; sợ con lặp lại nỗi nhục của mẹ dưới dạng khác."},
+        "diet": {"vi": "Con gái không phải về cái ngõ ấy nữa, mà vẫn ngẩng đầu."},
+        "dao": {"vi": "Nói hộ con điều con không nói được, pha trà cho người mang ảnh, bảo con đừng về ngõ."},
+        "tell": "Tay run khi cầm ảnh mẹ; 'không ai đuổi' là lời mời."
+      },
+      "age": 58,
+      "gender": "female",
+      "bio": {"vi": "Con gái bà cụ bán nước chè ngõ Hàng Chiếu. Sau giải tỏa 2003 về Hà Đông bán nước chè ven hồ Văn Quán, nuôi Thảo học đến thạc sĩ Singapore. Người duy nhất Thảo không dùng giọng công sở."},
+      "occupation": {"vi": "Bán nước chè"},
+      "personality": ["thang", "chiu_dung", "thuong_con"],
+      "voice": {"accent": "hanoi", "notes": "Giọng Hà Đông, 'ơ hay', 'đằng ấy'; nói chậm, không bao giờ hạ giọng."},
+      "relationships": [{"with": "characters:thao", "kind": "me"}]
+    },
+    {
+      "id": "hung_hang_dau",
+      "tags": ["driver", "app", "informant", "chapter_2"],
+      "name": {"vi": "Hùng Hàng Đậu", "en": "Hùng of Hàng Đậu"},
+      "role": "contact",
+      "drive": {
+        "kho": {"vi": "Nợ xe trả góp, bố ở Hải Dương vừa bán nhà hớ; cuốc app ngày càng rẻ."},
+        "tap": {"vi": "Tin 'tin' là hàng hóa như cuốc xe; ai trả thì bán, không hỏi để làm gì."},
+        "diet": {"vi": "Trả xong xe trước Tết."},
+        "dao": {"vi": "Bán cùng một tin cho hai bên, dẫn đường cho người mặc vest, bỏ cuộc khi bị chạm đúng chỗ đau."},
+        "tell": "Gọi người khác bằng biển số xe; 'cuốc này của tao'."
+      },
+      "age": 26,
+      "gender": "male",
+      "bio": {"vi": "Tài xế xe ôm app, đỗ ở cột đồng hồ Hàng Đậu, thành viên nhóm Alô Chat của tài xế. Người đầu tiên nhận năm triệu một tin đúng 'nhà nào sắp bán' từ Kim Long và cũng là người đầu tiên nhận ra mình đang làm gì."},
+      "occupation": {"vi": "Tài xế xe ôm công nghệ"},
+      "personality": ["nhanh", "thuc_dung", "de_chanh_long"],
+      "voice": {"accent": "northern_rural", "notes": "Giọng Hải Dương, nói to, tiếng lóng tài xế ('cuốc', 'nổ', 'bom')."},
+      "relationships": [{"with": "characters:minh", "kind": "doi_thu_cung_nhom"}, {"with": "characters:thao", "kind": "nguoi_ban_tin"}]
+    },
+    {
       "id": "tuan_beo",
       "tags": ["comic_relief", "shipper", "roommate"],
       "name": {"vi": "Đặng Văn Tuấn (Tuấn Béo)", "en": "Đặng Văn Tuấn ('Chubby' Tuấn)"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "312 người theo dõi, nợ tiền nhà bà Nga, bị bom hàng; sợ bị coi là thằng béo vô dụng."},
+        "tap": {"vi": "Tin một video viral là lối thoát; trung thành vô điều kiện với Minh."},
+        "diet": {"vi": "Một video nổ, trả hết nợ bà Nga, Minh bớt khổ."},
+        "dao": {"vi": "Đề xuất mọi ý tưởng tồi trước, quay mọi thứ, chở 20 cốc trà sữa không đổ."},
+        "tell": "'Ối giời ơi', 'căng đét', 'chấn động'; mở điện thoại quay trước khi hỏi."
+      },
       "age": 24,
       "gender": "male",
       "bio": {
@@ -179,6 +312,13 @@
       "tags": ["family_minh", "phone_only"],
       "name": {"vi": "Phạm Thị Hiền (mẹ Minh)", "en": "Phạm Thị Hiền (Minh's mother)"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Chồng liệt nửa người, con ở xa; tiền con gửi về đều mà con gầy đi qua từng cuộc video."},
+        "tap": {"vi": "Không dám hỏi vì sợ con lo thêm; tin câu 'ăn cơm chưa' là đủ."},
+        "diet": {"vi": "Con về quê một lần mà không phải nói dối."},
+        "dao": {"vi": "Gọi 21 giờ mỗi tối, gửi bánh cáy, giấu bệnh của bố nặng thêm."},
+        "tell": "Hỏi 'ăn cơm chưa con' trước mọi câu; cắt máy khi sắp khóc."
+      },
       "age": 50,
       "gender": "female",
       "bio": {"vi": "Làm ruộng và bán bánh cáy ở chợ huyện, chăm chồng liệt nửa người. Chỉ xuất hiện qua cuộc gọi video lúc 21 giờ, luôn hỏi 'ăn cơm chưa con'.", "en": "Farms rice and sells bánh cáy at the district market while caring for her half-paralysed husband. Appears only on the 9 p.m. video call, always asking 'have you eaten, son?'"},
@@ -191,6 +331,13 @@
       "tags": ["landlady"],
       "name": {"vi": "Bà Nga chủ trọ", "en": "Landlady Nga"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "14 phòng đứa nào cũng nợ, con cái ở xa; ngõ có đứa ốm không ai biết."},
+        "tap": {"vi": "Tin phải khó mặt mới thu được tiền; thương thì phải giấu."},
+        "diet": {"vi": "Dãy trọ không ai bỏ đi, tụi nhỏ nên người."},
+        "dao": {"vi": "Khóa cổng 23 giờ, thu điện 4 nghìn, nấu cháo khi đứa nào ốm."},
+        "tell": "Mắng trước, để bát cháo ở cửa sau."
+      },
       "age": 63,
       "gender": "female",
       "bio": {"vi": "Chủ dãy trọ 14 phòng ở ngõ Khương Đình. Thu tiền điện 4.000 đồng/số, khóa cổng lúc 23 giờ, nuôi một con chó tên Đô La. Ngoài mặt khó, trong lòng nấu cháo cho đứa nào ốm.", "en": "Owns a row of 14 rental rooms in a Khương Đình alley. Charges 4,000 VND per kWh, locks the gate at 11 p.m., keeps a dog called Dollar. Stern outside, makes rice porridge for any tenant who falls ill."},
@@ -205,6 +352,13 @@
       "tags": ["mechanic", "mentor", "business_seller"],
       "name": {"vi": "Lương Văn Đức (Đức Còi)", "en": "Lương Văn Đức ('Skinny' Đức)"},
       "role": "vendor",
+      "drive": {
+        "kho": {"vi": "Hai mươi năm tiệm không ai nối, muốn về Hưng Yên trồng nhãn mà không nỡ đóng cửa."},
+        "tap": {"vi": "Tin nghề phải trao đúng tay; sợ sang cho người làm ẩu mang tiếng mình."},
+        "diet": {"vi": "Về quê, tiệm vẫn mở với tên cũ và tiếng máy đúng."},
+        "dao": {"vi": "Dạy Minh từng tiếng máy, thử lòng bằng việc khó, chưa nói giá."},
+        "tell": "'Xe này còn đi được, người mới hỏng.'"
+      },
       "age": 45,
       "gender": "male",
       "bio": {"vi": "Thợ sửa xe máy đầu ngõ Khương Đình 20 năm, nghe tiếng máy là biết bệnh. Muốn về quê Hưng Yên trồng nhãn, đang tìm người sang lại tiệm.", "en": "Has run the motorbike repair stall at the mouth of the Khương Đình alley for 20 years and can diagnose an engine by ear. Wants to retire to Hưng Yên to grow longans and is looking for someone to take over the shop."},
@@ -222,6 +376,13 @@
       "tags": ["xe_om_truyen_thong", "faction_leader"],
       "name": {"vi": "Nguyễn Mạnh Cường (chú Cường)", "en": "Uncle Cường"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "App cướp khách, xe ôm già không ai gọi; hội của chú thưa dần."},
+        "tap": {"vi": "Tin đường phố thuộc về người thuộc đường; sợ bị quên."},
+        "diet": {"vi": "Hội xe ôm còn chỗ đứng ở Ô Quan Chưởng, bọn trẻ hiểu giá của người già."},
+        "dao": {"vi": "Chặn đường thử thách người mới, chở cụ già lạc miễn phí, giữ góc phố như giữ nhà."},
+        "tell": "'Này này' mở câu; đọc vanh vách số nhà."
+      },
       "age": 54,
       "gender": "male",
       "bio": {"vi": "Trùm hội xe ôm truyền thống Ô Quan Chưởng. Hai mươi năm đứng một góc phố, thuộc từng số nhà, ghét app Vồ vì 'bọn nó cướp miếng cơm'. Nhưng nếu có cụ già lạc đường, chú chở miễn phí.", "en": "Boss of the traditional xe ôm crew at Ô Quan Chưởng. Twenty years on one corner, knows every house number, hates the Vồ app for 'stealing our rice bowl'. But he gives lost old folks free rides."},
@@ -239,6 +400,13 @@
       "tags": ["csgt", "recurring", "fair_cop"],
       "name": {"vi": "Thượng úy Vũ Đức Hải", "en": "Senior Lieutenant Vũ Đức Hải"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "Ai cũng nghĩ CSGT nhận tiền; mỗi tuần một đứa trẻ vào viện vì không mũ bảo hiểm."},
+        "tap": {"vi": "Tin luật chỉ công bằng khi người thi hành công bằng."},
+        "diet": {"vi": "Một quận không có trẻ em chết vì mũ bảo hiểm."},
+        "dao": {"vi": "Phạt đúng, đùa khô, giao việc cho ai giữ hồ sơ sạch 90 ngày."},
+        "tell": "'Đề nghị anh xuất trình giấy tờ'; không bao giờ quát."
+      },
       "age": 34,
       "gender": "male",
       "bio": {"vi": "Cảnh sát giao thông đội Hoàn Kiếm. Nghiêm túc, không nhận 'bồi dưỡng', thích đùa khô. Đầu mối của hệ thống 'Chú ý CSGT': nếu người chơi giữ hồ sơ sạch, anh giao nhiệm vụ phụ an toàn giao thông.", "en": "Traffic police officer on the Hoàn Kiếm team. Serious, refuses any 'tea money', fond of dry jokes. Face of the CSGT Attention system: keep a clean record and he offers road-safety side jobs."},
@@ -254,6 +422,13 @@
       "tags": ["activist", "student", "heritage"],
       "name": {"vi": "Hoàng Diệu Linh", "en": "Hoàng Diệu Linh"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Mỗi tuần mất một mặt tiền nhà cổ; ngân sách bằng không; bị gọi là 'con bé ảo tưởng'."},
+        "tap": {"vi": "Tin mạng xã hội thắng được máy xúc; nóng vội, muốn thắng ngay."},
+        "diet": {"vi": "Giữ ít nhất một dãy phố nguyên vẹn, có tên trong hồ sơ di sản."},
+        "dao": {"vi": "Vẽ, đăng, huy động, đối đầu Thảo trên mạng; có lúc đăng trước khi hỏi."},
+        "tell": "'Xỉu', 'keo lỳ' đổi sang thuật ngữ kiến trúc chính xác khi nói chuyện nghề."
+      },
       "age": 22,
       "gender": "female",
       "bio": {"vi": "Sinh viên năm cuối Đại học Kiến trúc, lập trang 'Phố Cũ Còn Đây' trên MặtBook với 80 nghìn người theo dõi, chuyên vẽ lại mặt tiền nhà cổ trước khi bị đập. Năng lượng vô hạn, ngân sách bằng không.", "en": "Final-year architecture student who runs the 'Old Street Still Here' page on MặtBook with 80,000 followers, sketching old façades before they're demolished. Infinite energy, zero budget."},
@@ -269,6 +444,13 @@
       "tags": ["foreigner", "vlogger", "comic_relief"],
       "name": {"vi": "Mark O'Connell", "en": "Mark O'Connell"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "Xa nhà, kênh sống nhờ thuật toán; ba câu tiếng Việt không đủ để hiểu ai."},
+        "tap": {"vi": "Tin phở là chìa khóa hiểu Hà Nội; thích phóng đại cho vui."},
+        "diet": {"vi": "Một video triệu view và một quán coi anh là người nhà."},
+        "dao": {"vi": "Quay mọi thứ, ăn mọi thứ, không dám sang đường."},
+        "tell": "'Ngôn quá!'; nói to bằng tiếng Anh khi sợ."
+      },
       "age": 27,
       "gender": "male",
       "bio": {"vi": "Vlogger ẩm thực người Úc, kênh 'Mark Ăn Hà Nội', nói được đúng ba câu tiếng Việt: 'Ngon quá!', 'Bao nhiêu tiền?' và 'Một bia hơi'. Một video của anh có thể làm quán phở đông gấp đôi hoặc bị cả mạng mắng.", "en": "Australian food vlogger behind 'Mark Eats Hanoi', who speaks exactly three Vietnamese phrases: 'Delicious!', 'How much?' and 'One draught beer'. A single video can double a shop's customers or get it roasted online."},
@@ -283,6 +465,13 @@
       "tags": ["to_dan_pho", "neighbourhood"],
       "name": {"vi": "Ông Bùi Văn Khang (tổ trưởng)", "en": "Mr Bùi Văn Khang (block leader)"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "Tổ dân phố chia rẽ vì dự án; quỹ khuyến học thiếu; nhà nào cũng nhìn ông chờ phán."},
+        "tap": {"vi": "Tin quy trình và thơ giữ được trật tự; sợ biên bản có tên mình bên phe sai."},
+        "diet": {"vi": "Tổ dân phố quyết một tiếng, không ai bị ép, không ai bị bỏ lại."},
+        "dao": {"vi": "Họp, loa cầm tay, biên bản, hòa giải, trích Kiều để kết."},
+        "tell": "Kết luận mọi cuộc họp bằng một câu ca dao."
+      },
       "age": 72,
       "gender": "male",
       "bio": {"vi": "Tổ trưởng tổ dân phố số 5 Hàng Chiếu, giáo viên văn về hưu. Điều hành mọi cuộc họp tổ dân phố bằng loa cầm tay và một cuốn sổ ghi nợ quỹ khuyến học.", "en": "Leader of residential group 5 on Hàng Chiếu, a retired literature teacher. Runs every neighbourhood meeting with a handheld megaphone and a ledger of unpaid scholarship-fund dues."},
@@ -298,6 +487,13 @@
       "tags": ["co_tuong", "minigame_master"],
       "name": {"vi": "Cụ Bảo (kỳ thủ bờ hồ)", "en": "Old Bảo (lakeside chess master)"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "Bạn cờ chết dần; sợ ngày ghế đá Lê Thái Tổ không còn ai ngồi."},
+        "tap": {"vi": "Tin cờ dạy được cách sống; ham thắng, ham giảng."},
+        "diet": {"vi": "Một người trẻ ngồi lại ghế đá ấy sau ông."},
+        "dao": {"vi": "Chấp xe người lạ, châm chọc mỗi nước, mời trà khi thua, giảng 15 phút khi thắng."},
+        "tell": "'Nước này ăn hay nhịn đây? Nhịn thì đói, ăn thì chết.'"
+      },
       "age": 79,
       "gender": "male",
       "bio": {"vi": "Ngồi ghế đá Lê Thái Tổ mỗi chiều từ năm 1995. Đánh cờ chấp xe với người lạ, nói một câu châm chọc sau mỗi nước. Thua thì mời trà, thắng thì giảng giải 15 phút.", "en": "Has occupied a stone bench on Lê Thái Tổ every afternoon since 1995. Gives strangers a chariot handicap and a jibe after every move. Loses, he buys tea; wins, he lectures for 15 minutes."},
@@ -313,6 +509,13 @@
       "tags": ["cafe", "business_seller"],
       "name": {"vi": "Nguyễn Tuyết Mai", "en": "Nguyễn Tuyết Mai"},
       "role": "vendor",
+      "drive": {
+        "kho": {"vi": "Sắp theo chồng vào Đà Nẵng; quán là cả tuổi trẻ, bán cho người lạ thì như bán đi."},
+        "tap": {"vi": "Tin quán chỉ sống khi chủ biết đánh trứng bằng tay."},
+        "diet": {"vi": "Sang quán cho đúng người, giá hợp lý, tên quán giữ nguyên."},
+        "dao": {"vi": "Thử tay người mua, kể chuyện quán, kéo dài thời gian bán."},
+        "tell": "Nhìn tay người ta trước khi nhìn mặt."
+      },
       "age": 29,
       "gender": "female",
       "bio": {"vi": "Chủ một quán cà phê trứng trong ngõ nhỏ phố Hàng Gai, gác xép nhìn ra hồ. Sắp theo chồng vào Đà Nẵng, muốn sang lại quán cho người 'biết đánh trứng bằng tay'.", "en": "Runs an egg-coffee café in a tiny Hàng Gai alley with a loft view of the lake. Moving to Đà Nẵng with her husband, she'll only hand the café to someone who 'whips eggs by hand'."},
@@ -327,6 +530,13 @@
       "tags": ["street_vendor", "gossip_hub"],
       "name": {"vi": "Bà Tâm bán xôi", "en": "Granny Tâm the sticky-rice seller"},
       "role": "vendor",
+      "drive": {
+        "kho": {"vi": "Tuổi già, đầu ngõ sắp thành sảnh khách sạn; con cháu ở xa."},
+        "tap": {"vi": "Tin biết chuyện là có giá trị; thích được cần đến."},
+        "diet": {"vi": "Ngõ vẫn có chỗ cho thúng xôi và người vẫn hỏi bà."},
+        "dao": {"vi": "Mách chuyện, đổi tin lấy lá dong, thử lòng người mới vào ngõ."},
+        "tell": "Gọi ai cũng là 'cháu'; mách sau khi bán xong gói xôi."
+      },
       "age": 68,
       "gender": "female",
       "bio": {"vi": "Ngồi đầu ngõ Hàng Chiếu với thúng xôi xéo, xôi lạc từ năm 1990. Biết nhà nào sắp bán, nhà nào sắp cưới, nhà nào cãi nhau trước khi chính họ biết.", "en": "Has sat at the mouth of the Hàng Chiếu alley with her basket of xôi xéo and peanut sticky rice since 1990. Knows which house is selling, marrying or fighting before they do."},
@@ -342,6 +552,13 @@
       "tags": ["market_vendor", "spices"],
       "name": {"vi": "Bà Lụa (sạp gia vị chợ Đồng Xuân)", "en": "Mrs Lụa (Đồng Xuân spice stall)"},
       "role": "vendor",
+      "drive": {
+        "kho": {"vi": "Hàng trôi nổi lấn hàng chuẩn; vụ cháy chợ 1994 còn ám trong giấc ngủ."},
+        "tap": {"vi": "Tin uy tín 30 năm là tài sản lớn nhất; thích mặc cả như một môn thể thao."},
+        "diet": {"vi": "Khách ruột còn, sạp truyền được cho con gái."},
+        "dao": {"vi": "Nói giá thật, thử khách bằng hàng rẻ, bớt tiền cho người giữ nết."},
+        "tell": "'Bà không lừa ai bao giờ.'"
+      },
       "age": 60,
       "gender": "female",
       "bio": {"vi": "Sạp quế, hồi, thảo quả, nấm hương tầng một chợ Đồng Xuân. Mặc cả với bà là một môn thể thao.", "en": "Runs a cinnamon, star anise, black cardamom and shiitake stall on the ground floor of Đồng Xuân market. Haggling with her is a sport."},
@@ -356,6 +573,13 @@
       "tags": ["journalist", "editor"],
       "name": {"vi": "Trịnh Phong", "en": "Trịnh Phong"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "Báo chạy theo view, sếp ép bài quảng cáo của chính Kim Long."},
+        "tap": {"vi": "Tin bạn cũ sẽ hiểu cho mình; thực dụng để sống sót trong tòa soạn."},
+        "diet": {"vi": "Một loạt bài tử tế mà vẫn viral, không mất việc."},
+        "dao": {"vi": "Mua ảnh rẻ, hỏi góc viral, lờ áp lực đến khi không lờ được nữa."},
+        "tell": "'Có góc nào viral hơn không?'"
+      },
       "age": 45,
       "gender": "male",
       "bio": {"vi": "Biên tập viên mảng đô thị của báo điện tử 'Thủ Đô Nhanh'. Từng du học Đức, bạn cũ của Khôi. Mua ảnh của Khôi với giá 'tình cảm' và luôn hỏi 'có góc nào viral hơn không'.", "en": "Urban-affairs editor at the online paper 'Capital Fast'. Studied in Germany, an old friend of Khôi. Buys Khôi's photos at 'friendship rates' and always asks for 'a more viral angle'."},
@@ -369,6 +593,13 @@
       "tags": ["homestay", "business_seller", "tay_ho"],
       "name": {"vi": "Đỗ Hải Vân", "en": "Đỗ Hải Vân"},
       "role": "vendor",
+      "drive": {
+        "kho": {"vi": "Hợp đồng thuê nhà sắp hết, thiếu vốn; khách Tây giảm sau mùa mưa."},
+        "tap": {"vi": "Tin khách Tây yêu Hà Nội cũ hơn người Hà Nội; muốn tự chủ, không về làm thuê."},
+        "diet": {"vi": "Giữ homestay, có đối tác tin được, không phải bán giấc mơ."},
+        "dao": {"vi": "Mời góp vốn, kể chuyện bằng tiếng Pháp, giấu con số lỗ."},
+        "tell": "Nói giá thuê nhà trước khi nói về khách."
+      },
       "age": 36,
       "gender": "female",
       "bio": {"vi": "Chủ homestay năm phòng ở ngõ Tô Ngọc Vân, Tây Hồ. Từng làm hướng dẫn viên, nói tiếng Pháp. Cần người góp vốn để giữ hợp đồng thuê nhà.", "en": "Runs a five-room homestay off Tô Ngọc Vân in Tây Hồ. Former tour guide, speaks French. Needs a partner to keep her lease."},
@@ -382,6 +613,13 @@
       "tags": ["radio_host"],
       "name": {"vi": "MC Thu Hương", "en": "Host Thu Hương"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "Đọc tin tắc đường 15 năm, thành phố không bớt tắc."},
+        "tap": {"vi": "Tin giọng đọc làm người ta bớt bực; sợ ngày bị thay bằng giọng máy."},
+        "diet": {"vi": "Một bản tin 'đường thông' thật sự."},
+        "dao": {"vi": "Đọc tin như đọc thơ, thở dài thật khi đọc Nguyễn Trãi."},
+        "tell": "Thở dài giữa bản tin."
+      },
       "age": 38,
       "gender": "female",
       "bio": {"vi": "Giọng đọc bản tin giao thông trên sóng 'Kênh Đường Thông', người cả thành phố nghe khi kẹt xe trên Nguyễn Trãi. Đọc tin ùn tắc bằng giọng như đọc thơ.", "en": "Voice of the traffic bulletins on 'Clear Road FM', the person the whole city listens to while stuck on Nguyễn Trãi. Reads jam reports like poetry."},
@@ -393,6 +631,13 @@
       "tags": ["radio_host"],
       "name": {"vi": "DJ Toàn Bass", "en": "DJ Toàn Bass"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "Ca đêm, nghe shipper tâm sự mà không giúp được ai."},
+        "tap": {"vi": "Tin nhạc giữ người thức tỉnh táo trên đường."},
+        "diet": {"vi": "Shipper về nhà an toàn mỗi đêm."},
+        "dao": {"vi": "Phát nhạc, đọc tin nhắn, nhắc đội mũ, cho ai cần một bài."},
+        "tell": "Cười khục khặc; nhắc 'đội mũ vào' trước khi phát nhạc."
+      },
       "age": 26,
       "gender": "male",
       "bio": {"vi": "DJ đêm khuya của 'Sóng Phố 36', phát nhạc indie, rap Hà Nội và lời tâm sự của shipper trực ca đêm.", "en": "Late-night DJ on 'Wave 36' spinning indie, Hanoi rap and confessions from night-shift couriers."},
@@ -404,6 +649,13 @@
       "tags": ["radio_host", "traditional_music"],
       "name": {"vi": "Nghệ sĩ Ánh Nguyệt", "en": "Artist Ánh Nguyệt"},
       "role": "contact",
+      "drive": {
+        "kho": {"vi": "Chèo không còn khán giả trẻ; nghệ nhân bạn bà mất dần."},
+        "tap": {"vi": "Tin một câu hát đúng lúc giữ được người; sợ im lặng."},
+        "diet": {"vi": "Một người trẻ hát lại một câu chèo không vì bài tập."},
+        "dao": {"vi": "Hát dạo, kể chuyện phố cũ, mời nghệ nhân lên sóng."},
+        "tell": "Hát một câu trước khi vào chuyện."
+      },
       "age": 61,
       "gender": "female",
       "bio": {"vi": "Nghệ sĩ chèo về hưu dẫn chương trình 'Sân Đình' sáng chủ nhật: chèo, ca trù, xẩm chợ và chuyện phố cũ.", "en": "Retired chèo opera artist hosting Sunday morning's 'Village Courtyard': chèo, ca trù, xẩm busking songs and tales of old streets."},
@@ -415,6 +667,13 @@
       "tags": ["playable_flashback", "family_lan", "pho_master"],
       "name": {"vi": "Thọ (1957-1972)", "en": "Thọ (1957-1972)"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Mười bảy tuổi, ngồi đầu ngõ ba năm không có chỗ, gửi tiền về Vân Cù cho thầy u; năm 1972 vợ con dưới bom, tờ giấy của hai nhà bén lửa."},
+        "tap": {"vi": "Tin người đã ăn phở mình ba năm; học được rằng giấy trắng mực đen hơn lời nói kể từ khi xa thầy u."},
+        "diet": {"vi": "Một chỗ bán phở không ai bảo là chiếm; giữ được lời hứa với ông Khiêm khi ông đi vắng."},
+        "dao": {"vi": "Ký ngay hay xin thêm một dòng; dập lửa bằng tay hay bế con xuống hầm: mỗi lựa chọn là vết sẹo ông mang năm mươi tư năm."},
+        "tell": "Nói 'ông ạ' cuối câu; nhìn gánh phở trước khi nhìn người."
+      },
       "age": 17,
       "gender": "male",
       "bio": {"vi": "Cụ Thọ thời trẻ, nhân vật người chơi điều khiển trong màn mở đầu: 17 tuổi gánh phở đầu ngõ Hàng Chiếu mùa đông 1957, và 32 tuổi đêm 26/12/1972 khi tờ giấy của hai nhà cháy mất một góc. Hai cảnh đen trắng, cùng một diễn viên lồng tiếng với cụ Thọ nhưng giọng trẻ.", "en": "Young Thọ, the player's character in the cold open: 17 and carrying his pho yoke at the mouth of the Hàng Chiếu alley in the winter of 1957, then 32 on the night of 26 December 1972 when the two families' paper lost a corner to fire. Both scenes in black and white; same voice actor as old Thọ, younger voice."},
@@ -432,6 +691,13 @@
       "tags": ["family_khoi", "deceased", "flashback_only"],
       "name": {"vi": "Ông Nguyễn Văn Khiêm", "en": "Mr Nguyễn Văn Khiêm"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Căn nhà chủ cũ vào Nam sắp bán mà thiếu hai cây; đầu năm 1972 phải đi B, để lại vợ ốm và con trai mười bảy tuổi."},
+        "tap": {"vi": "Tin 'người còn thì nhà còn'; tin một dòng chữ giữ được người ở lại tử tế với nhau khi mình không về."},
+        "diet": {"vi": "Hai nhà cùng ở: hiệu ảnh trên gác, phở dưới nhà; vợ con có người che chở nếu mình không về."},
+        "dao": {"vi": "Viết tờ giấy 'nhà này của hai nhà', ăn bát đầu mỗi sáng, viết thêm một dòng trước khi đi."},
+        "tell": "Gọi Thọ là 'chú' dù hơn mười tuổi; húp nước dùng trước khi nói chuyện quan trọng."
+      },
       "age": 27,
       "gender": "male",
       "bio": {"vi": "Ông nội Khôi, bố ông Khải. Năm 1957 là cán bộ kỹ thuật nhà in, 27 tuổi, mua chung căn 49 Hàng Chiếu với Thọ và viết tờ giấy 'Nhà này của hai nhà'. Đầu năm 1972 viết thêm một dòng rồi đi B, không trở về. Chỉ xuất hiện trong màn mở đầu và qua lời kể.", "en": "Khôi's grandfather, Khải's father. In 1957 a 27-year-old print-works technician who bought No. 49 Hàng Chiếu together with Thọ and wrote the paper 'This house belongs to two families'. Early in 1972 he added one more line, went south to the war and never returned. Appears only in the cold open and in others' accounts."},
@@ -448,6 +714,13 @@
       "tags": ["family_lan", "deceased", "flashback_only"],
       "name": {"vi": "Bà Nguyễn Thị Nhàn (vợ cụ Thọ)", "en": "Mrs Nguyễn Thị Nhàn (Thọ's wife)"},
       "role": "story",
+      "drive": {
+        "kho": {"vi": "Đêm bom con sốt, chồng phải chọn cứu giấy hay cứu con; sau đó giữ tờ giấy cháy trong hộp bánh quy năm mươi tư năm không nói với ai."},
+        "tap": {"vi": "Tin giấy tờ là chuyện đàn ông; sợ nói ra sẽ mang tiếng tham phần nhà hàng xóm đi B không về."},
+        "diet": {"vi": "Con gái khỏe, chồng lành tay, cái hộp kim chỉ không ai phải mở."},
+        "dao": {"vi": "Bế con, gọi chồng, cất giấy vào hộp kim chỉ, im lặng đến khi mất năm 2009."},
+        "tell": "Gọi chồng là 'mình'; hộp bánh quy luôn ở trong tầm tay."
+      },
       "age": 26,
       "gender": "female",
       "bio": {"vi": "Vợ cụ Thọ, mất năm 2009. Trong màn mở đầu là người mẹ 26 tuổi đêm 26/12/1972, bế bé Hạnh đang sốt. Cái hộp bánh quy đựng kim chỉ của bà là nơi tờ giấy 1957 nằm suốt năm mươi tư năm.", "en": "Thọ's wife, died 2009. In the cold open she is a 26-year-old mother on the night of 26 December 1972, holding feverish baby Hạnh. Her biscuit tin of needles and thread is where the 1957 paper lay for fifty-four years."},
@@ -456,23 +729,6 @@
       "occupation": {"vi": "Công nhân dệt", "en": "Textile worker"},
       "voice": {"accent": "hanoi", "notes": "Nói nhanh, gọi chồng là 'mình'."},
       "relationships": [{"with": "characters:tho_1957", "kind": "chong"}, {"with": "characters:co_hanh", "kind": "con_gai"}]
-    },
-    {
-      "id": "ong_tu_hang_bac",
-      "tags": ["pho_co_resident", "victim_of_pressure", "chapter_2"],
-      "name": {"vi": "Ông Tư (thợ bạc Hàng Bạc)", "en": "Mr Tư (Hàng Bạc silversmith)"},
-      "role": "story",
-      "age": 81,
-      "gender": "male",
-      "bio": {"vi": "Thợ bạc đời thứ tư ở Hàng Bạc, nhà số 7 trong danh sách mười bốn nhà của Kim Long. Con trai ở Sài Gòn đã ký thỏa thuận thay bố. Ông là người đầu tiên trong phố bị ép bán: hành động đầu tiên của Kim Long mà người chơi nhìn thấy bằng mắt.", "en": "Fourth-generation silversmith on Hàng Bạc, house number 7 on Kim Long's list of fourteen. His son in Saigon signed the memorandum in his place. The first person on the street pushed into selling: the first act of Kim Long the player sees with their own eyes."},
-      "home": {"lat": 21.0337, "lon": 105.8521},
-      "district": "districts:pho_co",
-      "occupation": {"vi": "Thợ bạc", "en": "Silversmith"},
-      "personality": ["kieu_hanh", "cham_chap", "tin_nguoi"],
-      "voice": {"accent": "hanoi", "notes": "Giọng Hà Nội gốc, dùng 'tôi/ông' với người trẻ, hay nói về cái búa và cái đe."},
-      "appearance": {"outfit": "Áo len cổ lọ, kính lúp đeo trán, tay đen vì bạc.", "metahuman_preset": "MH_VN_Male_80s"},
-      "schedule": [{"hours": [7, 11], "activity": "ngoi_ban_cham_bac", "location": {"lat": 21.0337, "lon": 105.8521}}, {"hours": [14, 18], "activity": "ngoi_ban_cham_bac", "location": {"lat": 21.0337, "lon": 105.8521}}],
-      "relationships": [{"with": "characters:cu_tho", "kind": "ban_co_lau_nam"}]
     }
   ]
 }
