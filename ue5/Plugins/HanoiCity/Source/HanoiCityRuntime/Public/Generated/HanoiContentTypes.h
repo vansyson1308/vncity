@@ -166,6 +166,22 @@ enum class EHanoiDistrictDensity : uint8
 };
 
 UENUM(BlueprintType)
+enum class EHanoiFloodLayerZoneCause : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	Song UMETA(DisplayName = "song"),
+	Mua UMETA(DisplayName = "mua"),
+};
+
+UENUM(BlueprintType)
+enum class EHanoiFloodLayerZoneCoordsSource : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	Landmark UMETA(DisplayName = "landmark"),
+	UocLuong UMETA(DisplayName = "uoc_luong"),
+};
+
+UENUM(BlueprintType)
 enum class EHanoiItemCategory : uint8
 {
 	Unset = 0 UMETA(DisplayName = "(unset)"),
@@ -210,6 +226,14 @@ enum class EHanoiLandmarkModellingMethod : uint8
 	Photogrammetry UMETA(DisplayName = "photogrammetry"),
 	GaussianSplatReference UMETA(DisplayName = "gaussian_splat_reference"),
 	ProceduralPlusKit UMETA(DisplayName = "procedural_plus_kit"),
+};
+
+UENUM(BlueprintType)
+enum class EHanoiMinigameModeMechanic : uint8
+{
+	Unset = 0 UMETA(DisplayName = "(unset)"),
+	PhanLoai UMETA(DisplayName = "phan_loai"),
+	SapXep UMETA(DisplayName = "sap_xep"),
 };
 
 UENUM(BlueprintType)
@@ -1199,6 +1223,238 @@ struct HANOICITYRUNTIME_API FHanoiFactionRow : public FTableRowBase
 	TArray<FHanoiRef> RivalOf;
 };
 
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiFloodLayerGauge
+{
+	GENERATED_BODY()
+
+	/** Hydrological station the river level is read at. [json: name (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString DisplayName;
+
+	/** Báo động 1, 2, 3 in metres at that station. [json: alarm_m (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<float> AlarmM;
+};
+
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiFloodLayerDrainage
+{
+	GENERATED_BODY()
+
+	/** River level from which the city drains can no longer flow out by gravity. [json: gravity_block_river_m (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float GravityBlockRiverM = 0.f;
+
+	/** Share of drain_mm_h that pumps keep up while gravity is blocked. [json: pump_share (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float PumpShare = 0.f;
+};
+
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiFloodLayerTimelineEntry
+{
+	GENERATED_BODY()
+
+	/** [json: t_h (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float TH = 0.f;
+
+	/** [json: river_m (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float RiverM = 0.f;
+
+	/** [json: rain_mm_h (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float RainMmH = 0.f;
+};
+
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiFloodLayerZone
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** [json: name (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString DisplayName;
+
+	/** WGS84 point. Converted to engine coordinates through the city manifest's georeference. [json: location (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiGeo Location;
+
+	/** [json: radius_m (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float RadiusM = 0.f;
+
+	/** Reference to another record as '<collection>:<id>', checked by tools/validate.py. [json: landmark] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Landmark;
+
+	/** Reference to another record as '<collection>:<id>', checked by tools/validate.py. [json: district] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef District;
+
+	/** song = under the river (floor_m); mua = rain that the drains cannot take. [json: cause (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiFloodLayerZoneCause Cause = EHanoiFloodLayerZoneCause::Unset;
+
+	/** song: ground level on the gauge's datum, metres. [json: floor_m] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float FloorM = 0.f;
+
+	/** mua: how many times the rain falling on the zone runs into it from around (a low spot collects its street). [json: catchment] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float Catchment = 0.f;
+
+	/** mua: what the drains take away, in millimetres of depth per hour, with gravity outfalls open. [json: drain_mm_h] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float DrainMmH = 0.f;
+
+	/** mua: water spills elsewhere beyond this depth. [json: max_depth_m] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float MaxDepthM = 0.f;
+
+	/** landmark = landmarks.json coordinate; uoc_luong = placed by hand on the street, to check against the map. [json: coords_source (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiFloodLayerZoneCoordsSource CoordsSource = EHanoiFloodLayerZoneCoordsSource::Unset;
+
+	/** [json: note] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Note;
+};
+
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiFloodLayerClosure
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** Reference to another record as '<collection>:<id>', checked by tools/validate.py. [json: landmark (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Landmark;
+
+	/** Road graph edges whose midpoint is this close to the landmark are closed. [json: radius_m (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float RadiusM = 0.f;
+
+	/** The order takes effect at this t. [json: from_h (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float FromH = 0.f;
+
+	/** The order stands while the river is at or above this level. [json: river_m_at_least (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float RiverMAtLeast = 0.f;
+
+	/** traffic_rules:<id> broken by riding through the closure. [json: traffic_rule] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef TrafficRule;
+
+	/** [json: note] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Note;
+};
+
+/** Depth from which a vehicle class cannot go through (motorbike: water at the exhaust and air intake). */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiFloodLayerPassableDepthM
+{
+	GENERATED_BODY()
+
+	/** [json: xe_may (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float XeMay = 0.f;
+
+	/** [json: o_to (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float OTo = 0.f;
+
+	/** [json: xe_dap (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float XeDap = 0.f;
+
+	/** [json: di_bo (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float DiBo = 0.f;
+};
+
+/** Row of collection 'flood_layers' (DataTable row name = id). A night of rising water as cause and effect, switched on by a mission step's params.flood_layer (value 'live' keeps the live-weather path: events:mua_ngap). Time t is game hours since the step started. The river gauge (river_m) and the rain (rain_mm_h) come from `timeline`. A zone of cause 'song' is under the river: depth = river_m - floor_m. A zone of cause 'mua' fills with rain and empties through the drains: d(depth)/dt = (rain_mm_h x catchment - drain) / 1000 metres per hour, where drain = drain_mm_h, or drain_mm_h x pump_share while the river stands at or above gravity_block_river_m (the outfalls cannot run into a high river, only the pumps work). Depth is clamped to [0, max_depth_m] and integrated in steps of step_h. A road inside a zone is closed to a vehicle class when the depth reaches passable_depth_m of that class and slowed by slow_speed_factor from slow_depth_m; a motorbike ridden into impassable water stalls (gameplay event xe_chet_may). `closures` are orders (a bridge closed from an hour while the river is high). While any rain zone is deeper than slow_depth_m the layer keeps `world_events` on, so the economy and random events feel the flood. Runtime: UHanoiFloodSubsystem (UE), FloodSystem (Unity core); reference model and golden table: tools/runtime_rules.py. */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiFloodLayerRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** [json: tags] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FName> Tags;
+
+	/** Localised text. Vietnamese is the source language. [json: name (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText DisplayName;
+
+	/** Localised text. Vietnamese is the source language. [json: description (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Description;
+
+	/** Game hours the layer lasts after it starts. [json: duration_h (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float DurationH = 0.f;
+
+	/** Integration step in game hours (both engines precompute the depth table with it). [json: step_h (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float StepH = 0.f;
+
+	/** [json: gauge (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiFloodLayerGauge Gauge;
+
+	/** [json: drainage (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiFloodLayerDrainage Drainage;
+
+	/** Keyframes in t order. river_m is interpolated linearly between keyframes; rain_mm_h holds from its keyframe to the next one. The first keyframe is at t = 0. [json: timeline (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiFloodLayerTimelineEntry> Timeline;
+
+	/** [json: zones (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiFloodLayerZone> Zones;
+
+	/** [json: closures] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiFloodLayerClosure> Closures;
+
+	/** Depth from which a vehicle class cannot go through (motorbike: water at the exhaust and air intake). [json: passable_depth_m (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiFloodLayerPassableDepthM PassableDepthM;
+
+	/** [json: slow_depth_m (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float SlowDepthM = 0.f;
+
+	/** [json: slow_speed_factor (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float SlowSpeedFactor = 0.f;
+
+	/** events:<id> kept on while a rain zone is deeper than slow_depth_m. [json: world_events] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiRef> WorldEvents;
+
+	/** [json: sources] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FString> Sources;
+};
+
 /** Row of collection 'items' (DataTable row name = id). Inventory items, gear and consumables. */
 USTRUCT(BlueprintType)
 struct HANOICITYRUNTIME_API FHanoiItemRow : public FTableRowBase
@@ -1313,6 +1569,164 @@ struct HANOICITYRUNTIME_API FHanoiLandmarkRow : public FTableRowBase
 	/** [json: activities] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	TArray<FHanoiRef> Activities;
+};
+
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiMinigameModeLabel
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** Localised text. Vietnamese is the source language. [json: text (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Text;
+};
+
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiMinigameModeTask
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** Localised text. Vietnamese is the source language. [json: text (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Text;
+
+	/** phan_loai: the right label id. [json: answer] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Answer;
+
+	/** sap_xep: position in the procedure; tasks sharing an order may be done in any order between themselves. [json: order] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 Order = 0;
+
+	/** sap_xep: an action that must never be done (it scores nothing and is a fault). [json: forbidden] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	bool bForbidden = false;
+
+	/** Weight in the score (forbidden tasks: 0). [json: points (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 Points = 0;
+
+	/** Faults counted when this task goes wrong (default 1). [json: fault_weight] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 FaultWeight = 0;
+
+	/** Getting this task wrong ends the minigame chua_dat at once, whatever the score (a dossier the bank will reject, a step that ruins the film). [json: critical] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	bool bCritical = false;
+
+	/** In play only when the step's params.difficulty is at least this (default 0). [json: min_difficulty] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int32 MinDifficulty = 0;
+
+	/** Money on this ledger line (ledger modes). [json: amount_vnd] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int64 AmountVnd = 0;
+
+	/** Month of this ledger line, YYYY-MM. [json: date] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Date;
+
+	/** Vietnamese explanation shown after the answer (the cause the player should learn). [json: why] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Why;
+};
+
+/** Ledger modes: how the runtime turns the sorted lines into the amount owed under the law (Bộ luật Dân sự 2015 Điều 468: interest above the legal cap has no effect; what was paid above the legal interest counts against the principal). */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiMinigameModeLedger
+{
+	GENERATED_BODY()
+
+	/** Label whose amounts are the real principal. [json: principal_label (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName PrincipalLabel;
+
+	/** Label whose amounts are interest rolled into the principal on paper. [json: capitalized_label] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName CapitalizedLabel;
+
+	/** Label whose amounts were paid to the lender. [json: paid_label (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName PaidLabel;
+
+	/** Month the loan started. [json: start (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Start;
+
+	/** Month the ledger is closed. [json: as_of (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString AsOf;
+
+	/** [json: legal_rate_per_year (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	float LegalRatePerYear = 0.f;
+
+	/** What the story says (dialogue); the runtime's number must round to it (tests). [json: expected_owed_vnd (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int64 ExpectedOwedVnd = 0;
+
+	/** Rounding the story allows ('khoảng bốn trăm sáu mươi triệu'). [json: tolerance_vnd] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	int64 ToleranceVnd = 0;
+};
+
+/** Row of collection 'minigame_modes' (DataTable row name = id). Rules of a minigame named by a mission step's params.mode (steps[].kind = minigame). The step gives the bar (pass_score, max_faults, time_limit_s, difficulty); the mode gives what is played: tasks the player answers (mechanic phan_loai: sort each task into one of `labels`) or performs (mechanic sap_xep: do the steps in `order`; `forbidden` tasks must never be done). Score = 100 x points of tasks done right / points of the tasks in play. A step passes (outcome dat) when every task is done, the score reaches pass_score, faults stay within max_faults, no critical task went wrong and time_limit_s did not run out; otherwise the step ends chua_dat and the mission's branch carries the consequence. Tasks with min_difficulty above the step's difficulty stay out of play, so the same mode is harder in a later chapter. Runtime: UHanoiMinigameSubsystem (UE), MinigameSystem (Unity core); reference model and golden plays: tools/runtime_rules.py. */
+USTRUCT(BlueprintType)
+struct HANOICITYRUNTIME_API FHanoiMinigameModeRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	/** Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name. [json: id (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FName Id;
+
+	/** [json: tags] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FName> Tags;
+
+	/** Localised text. Vietnamese is the source language. [json: name (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText DisplayName;
+
+	/** What the player is doing and why it is hard, shown before the minigame. [json: description (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiText Description;
+
+	/** characters:<id> who plays it (the mission step's protagonist). [json: protagonist (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiRef Protagonist;
+
+	/** phan_loai = sort every task into one label (a wrong label is a fault); sap_xep = perform tasks one at a time, a task is right only when every task of a lower order is already done, a forbidden task done is a fault. [json: mechanic (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	EHanoiMinigameModeMechanic Mechanic = EHanoiMinigameModeMechanic::Unset;
+
+	/** Cause and effect of losing, in Vietnamese (Tứ diệu đế: what the loss costs and why). [json: stakes (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FString Stakes;
+
+	/** phan_loai: the bins a task can be sorted into. [json: labels] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiMinigameModeLabel> Labels;
+
+	/** [json: tasks (required)] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FHanoiMinigameModeTask> Tasks;
+
+	/** Ledger modes: how the runtime turns the sorted lines into the amount owed under the law (Bộ luật Dân sự 2015 Điều 468: interest above the legal cap has no effect; what was paid above the legal interest counts against the principal). [json: ledger] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	FHanoiMinigameModeLedger Ledger;
+
+	/** Where the procedure or the numbers come from. [json: sources] */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
+	TArray<FString> Sources;
 };
 
 USTRUCT(BlueprintType)
@@ -1505,7 +1919,7 @@ struct HANOICITYRUNTIME_API FHanoiRandomEventsSpawn
 
 	/** true = only while riding; false = only on foot; absent = either. [json: on_vehicle] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
-	bool bOnVehicle = false;
+	EHanoiOptionalBool OnVehicle = EHanoiOptionalBool::Unset;
 
 	/** [json: chance_per_game_hour (required)] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
@@ -1959,8 +2373,10 @@ namespace HanoiGenerated
 		Fn(FName(TEXT("districts")), FHanoiDistrictRow::StaticStruct());
 		Fn(FName(TEXT("events")), FHanoiEventRow::StaticStruct());
 		Fn(FName(TEXT("factions")), FHanoiFactionRow::StaticStruct());
+		Fn(FName(TEXT("flood_layers")), FHanoiFloodLayerRow::StaticStruct());
 		Fn(FName(TEXT("items")), FHanoiItemRow::StaticStruct());
 		Fn(FName(TEXT("landmarks")), FHanoiLandmarkRow::StaticStruct());
+		Fn(FName(TEXT("minigame_modes")), FHanoiMinigameModeRow::StaticStruct());
 		Fn(FName(TEXT("missions")), FHanoiMissionRow::StaticStruct());
 		Fn(FName(TEXT("radio")), FHanoiRadioStationRow::StaticStruct());
 		Fn(FName(TEXT("random_events")), FHanoiRandomEventsRow::StaticStruct());

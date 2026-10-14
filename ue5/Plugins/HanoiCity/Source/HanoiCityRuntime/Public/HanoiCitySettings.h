@@ -95,6 +95,55 @@ public:
 	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Missions")
 	int64 StartingMoneyVnd = 500000;
 
+	/** Levels a skill gains each time a job, minigame or random-event choice trains it (tuning; Unity HanoiRules.SkillGainPerTraining). */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Skills", meta = (ClampMin = "0", ClampMax = "100"))
+	int32 SkillGainPerTraining = 2;
+
+	/** spawn.landmarks: the player must be this close to one of the landmarks. */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Random events")
+	float RandomEventLandmarkRadiusM = 150.f;
+
+	/** Real seconds an event waits for the player when it has no duration_s (tuning). */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Random events")
+	float RandomEventDefaultDurationS = 90.f;
+
+	/** GTA-style: nothing random spawns while a mission runs. */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Random events")
+	bool bRandomEventsDuringMissions = false;
+
+	/** Distance at which a collectible can be taken / photographed. */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Collectibles")
+	float CollectRadiusM = 30.f;
+
+	/** "Chụp khớp trên 85%": an old photo counts from this match score (0-1). */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Collectibles", meta = (ClampMin = "0", ClampMax = "1"))
+	float PhotoMatchThreshold = 0.85f;
+
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Collectibles")
+	int32 Tape22Photos = 60;
+
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Collectibles")
+	int32 Tape23Photos = 90;
+
+	/** Tape 24 (the 49 Hàng Chiếu answer): this many photos once chapter Tape24Chapter is reached... */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Collectibles")
+	int32 Tape24Photos = 30;
+
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Collectibles")
+	int32 Tape24Chapter = 3;
+
+	/** ...or by story: ông Thắng tells it in chapter 4 (docs/gdd/02 §11). */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Collectibles")
+	FName Tape24Flag = TEXT("khoi_nghe_thang_ke_het");
+
+	/** Coupons are hidden at most this far from their coordinate (a house on the street). */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Collectibles")
+	float CouponHideRadiusM = 20.f;
+
+	/** Flood layers (UHanoiFloodSubsystem): game minutes between updates of traffic, world events and the player. */
+	UPROPERTY(config, EditAnywhere, BlueprintReadOnly, Category = "Flood")
+	float FloodUpdateGameMinutes = 5.f;
+
 	virtual FName GetCategoryName() const override { return TEXT("Game"); }
 
 	static const UHanoiCitySettings* Get() { return GetDefault<UHanoiCitySettings>(); }

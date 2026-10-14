@@ -23,6 +23,8 @@ Mapping rules (also documented in docs/05-tich-hop-ue5.md):
   enum -> UENUM with an "Unset" zero value, identifiers PascalCased, UMETA(DisplayName = original);
   object with properties -> nested USTRUCT; object with only additionalProperties -> TMap<FName, V>;
   free-form object, or any node marked "x-ue": "json" -> FString holding compact JSON; array -> TArray;
+  a boolean marked "x-ue": "optional_bool" -> EHanoiOptionalBool {Unset, False, True} (absent is not
+  false: random_events spawn.on_vehicle absent = either);
   oneOf geo|ref -> FHanoiTarget{Kind, Geo, Ref}; oneOf id|{key: id} -> FHanoiNext{Step, Branches};
   any other oneOf -> FString holding compact JSON.
   Nested containers (array of array/map, map of array/map) are not UPROPERTY-legal in UHT, so
@@ -58,6 +60,7 @@ SINGULAR = {
     "characters": "Character", "dialogues": "Dialogue", "districts": "District", "events": "Event",
     "factions": "Faction", "items": "Item", "landmarks": "Landmark", "missions": "Mission",
     "radio": "RadioStation", "traffic_rules": "TrafficRule", "vehicles": "Vehicle",
+    "minigame_modes": "MinigameMode", "flood_layers": "FloodLayer",
     # nested array properties
     "steps": "Step", "upgrades": "Upgrade", "lines": "Line", "choices": "Choice",
     "schedule": "ScheduleEntry", "relationships": "Relationship",
@@ -230,6 +233,8 @@ class Model:
         """
         if node.get("x-ue") == "json":  # typed for validation, kept as compact JSON text in UE
             return {"k": "json"}
+        if node.get("x-ue") == "optional_bool":  # absent must stay distinguishable from false
+            return {"k": "enum", "name": "EHanoiOptionalBool", "core": "optional_bool"}
         ref = node.get("$ref", "")
         if ref.startswith("#/$defs/"):  # local ref inside common.schema.json
             ref = COMMON + ref[len("#/$defs/"):]
@@ -390,6 +395,8 @@ def convert_value(model, spec, v):
     if k == "json":
         return "" if v is None else json.dumps(v, ensure_ascii=False, sort_keys=True,
                                                separators=(",", ":"))
+    if k == "enum" and spec.get("core") == "optional_bool":
+        return "Unset" if v is None else ("True" if v else "False")
     if k == "enum":
         if v is None:
             return "Unset"

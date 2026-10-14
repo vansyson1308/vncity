@@ -14,6 +14,8 @@ import json
 import pathlib
 import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
 from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 
@@ -140,6 +142,111 @@ def check_dialogues(docs):
     return errors
 
 
+def _step_protagonists(m):
+    """Characters a mission step can be played as: the mission's protagonists plus every params.protagonist."""
+    out = set(m.get("protagonists", []))
+    for s in m.get("steps", []):
+        if (s.get("params") or {}).get("protagonist"):
+            out.add(s["params"]["protagonist"])
+    return out
+
+
+def check_minigame_modes(docs, items):
+    """minigame_modes rows are playable as written (tools/runtime_rules.py states the rules): phan_loai
+    tasks answer with one of the mode's labels, sap_xep tasks have an order unless forbidden, forbidden
+    tasks score nothing, the ledger names labels of the mode. Every mission minigame step whose
+    params.mode is a minigame_modes id branches on dat and chua_dat, carries pass_score and max_faults,
+    is played by the mode's protagonist, and can be won: a perfect play at the step's difficulty
+    reaches pass_score. params.mode values that name no row are modes coded in gameplay (day_xe_loi_nuoc)."""
+    import runtime_rules as rr
+    errors = []
+    modes = {k.split(":", 1)[1]: v for k, v in items.items() if k.startswith("minigame_modes:")}
+    for mid, m in modes.items():
+        where = f"minigame_modes:{mid}"
+        labels = {lb["id"] for lb in m.get("labels", [])}
+        ids = [t["id"] for t in m["tasks"]]
+        if len(set(ids)) != len(ids):
+            errors.append(f"{where}: duplicate task ids")
+        for t in m["tasks"]:
+            tw = f"{where}.{t['id']}"
+            if m["mechanic"] == "phan_loai":
+                if t.get("answer") not in labels:
+                    errors.append(f"{tw}: answer {t.get('answer')!r} is not a label of the mode")
+                if "order" in t or t.get("forbidden"):
+                    errors.append(f"{tw}: order/forbidden belong to sap_xep modes")
+            else:
+                if "answer" in t:
+                    errors.append(f"{tw}: answer belongs to phan_loai modes")
+                if not t.get("forbidden") and "order" not in t:
+                    errors.append(f"{tw}: a sap_xep task needs an order (or forbidden: true)")
+                if t.get("forbidden") and t["points"] != 0:
+                    errors.append(f"{tw}: a forbidden task scores nothing (points 0)")
+        if m["mechanic"] == "phan_loai" and len(labels) < 2:
+            errors.append(f"{where}: phan_loai needs at least two labels")
+        lg = m.get("ledger")
+        if lg:
+            for key in ("principal_label", "capitalized_label", "paid_label"):
+                if key in lg and lg[key] not in labels:
+                    errors.append(f"{where}: ledger.{key} {lg[key]!r} is not a label")
+            owed = rr.ledger_owed(m)
+            if abs(owed - lg["expected_owed_vnd"]) > lg.get("tolerance_vnd", 0):
+                errors.append(f"{where}: the ledger gives {owed:,} VND owed, the story says {lg['expected_owed_vnd']:,}")
+    for p, name, doc in docs:
+        if name != "missions":
+            continue
+        for mis in doc.get("items", []):
+            for s in mis.get("steps", []):
+                pr = s.get("params") or {}
+                if s.get("kind") != "minigame" or pr.get("mode") not in modes:
+                    continue
+                m = modes[pr["mode"]]
+                where = f"{p}: missions:{mis['id']}.{s['id']} (mode {pr['mode']})"
+                nxt = s.get("next")
+                if not isinstance(nxt, dict) or not {"dat", "chua_dat"} <= set(nxt):
+                    errors.append(f"{where}: a minigame mode step branches on dat and chua_dat")
+                for key in ("pass_score", "max_faults", "difficulty"):
+                    if key not in pr:
+                        errors.append(f"{where}: params.{key} is required with a minigame mode")
+                if m["protagonist"] not in _step_protagonists(mis):
+                    errors.append(f"{where}: the mode is played by {m['protagonist']}, not a protagonist of this mission")
+                if "pass_score" in pr and rr.perfect_play(m, pr).score < pr["pass_score"]:
+                    errors.append(f"{where}: a perfect play cannot reach pass_score {pr['pass_score']}")
+    return errors
+
+
+def check_flood_layers(docs, items):
+    """flood_layers rows: the timeline starts at t 0 and runs forward, duration_h is a whole number of
+    step_h, rain-zone fields are present on rain zones and floor_m on river zones; every mission
+    params.flood_layer is 'live' or a flood_layers id."""
+    errors = []
+    layers = {k.split(":", 1)[1]: v for k, v in items.items() if k.startswith("flood_layers:")}
+    for lid, layer in layers.items():
+        where = f"flood_layers:{lid}"
+        ts = [k["t_h"] for k in layer["timeline"]]
+        if ts[0] != 0 or any(b <= a for a, b in zip(ts, ts[1:])):
+            errors.append(f"{where}: timeline t_h must start at 0 and increase")
+        n = layer["duration_h"] / layer["step_h"]
+        if abs(n - round(n)) > 1e-9:
+            errors.append(f"{where}: duration_h is not a whole number of step_h")
+        zids = [z["id"] for z in layer["zones"]]
+        if len(set(zids)) != len(zids):
+            errors.append(f"{where}: duplicate zone ids")
+        for z in layer["zones"]:
+            need = ("floor_m",) if z["cause"] == "song" else ("catchment", "drain_mm_h", "max_depth_m")
+            for key in need:
+                if key not in z:
+                    errors.append(f"{where}.{z['id']}: a {z['cause']} zone needs {key}")
+    for p, name, doc in docs:
+        if name != "missions":
+            continue
+        for mis in doc.get("items", []):
+            for s in mis.get("steps", []):
+                fl = (s.get("params") or {}).get("flood_layer")
+                if fl is not None and fl != "live" and fl not in layers:
+                    errors.append(f"{p}: missions:{mis['id']}.{s['id']}: flood_layer {fl!r} is not 'live' or a flood_layers id")
+    return errors
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default="game")
@@ -179,6 +286,8 @@ def main():
 
     errors += check_missions(docs, items)
     errors += check_dialogues(docs)
+    errors += check_minigame_modes(docs, items)
+    errors += check_flood_layers(docs, items)
 
     counts = {}
     for _, name, doc in docs:

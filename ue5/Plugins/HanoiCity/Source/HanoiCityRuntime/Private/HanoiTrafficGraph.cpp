@@ -45,6 +45,7 @@ bool AHanoiTrafficGraph::LoadGraph()
 	Adjacency.Reset();
 	Grid.Reset();
 	MaxSpeedMps = 1.f;
+	ClearEdgeOverrides();  // edge indices change with the file
 
 	TMap<int64, int32> IndexOfId;
 	const TArray<TSharedPtr<FJsonValue>>* Nodes = nullptr;
@@ -194,12 +195,13 @@ bool AHanoiTrafficGraph::FindPath(const FVector& Start, const FVector& End, bool
 		for (const FLink& L : Adjacency[Top.Node])
 		{
 			const FHanoiTrafficEdge& E = Edges[L.Edge];
-			if ((bIsCar && E.bMotorbikeOnly) || (L.bReverse && E.bOneway && !bIgnoreOneway))
+			if ((bIsCar && E.bMotorbikeOnly) || (L.bReverse && E.bOneway && !bIgnoreOneway) || BlockedEdges.Contains(L.Edge))
 			{
 				continue;
 			}
 			const int32 Next = L.bReverse ? E.From : E.To;
-			const double NewCost = Cost[Top.Node] + E.LengthM / (E.SpeedKmh / 3.6);
+			const float* Factor = EdgeSpeedFactors.Find(L.Edge);
+			const double NewCost = Cost[Top.Node] + E.LengthM / (E.SpeedKmh * (Factor ? *Factor : 1.f) / 3.6);
 			if (NewCost < Cost[Next])
 			{
 				Cost[Next] = NewCost;
@@ -258,4 +260,57 @@ void AHanoiTrafficGraph::DrawDebugGraph() const
 			DrawDebugSphere(World, NodeLocations[I] + FVector(0, 0, 100), 150.f, 8, FColor::Red, false, 30.f);
 		}
 	}
+}
+
+void AHanoiTrafficGraph::SetEdgeBlocked(int32 EdgeIndex, bool bBlocked)
+{
+	if (!Edges.IsValidIndex(EdgeIndex))
+	{
+		return;
+	}
+	if (bBlocked)
+	{
+		BlockedEdges.Add(EdgeIndex);
+	}
+	else
+	{
+		BlockedEdges.Remove(EdgeIndex);
+	}
+}
+
+void AHanoiTrafficGraph::SetEdgeSpeedFactor(int32 EdgeIndex, float Factor)
+{
+	if (!Edges.IsValidIndex(EdgeIndex))
+	{
+		return;
+	}
+	if (FMath::IsNearlyEqual(Factor, 1.f))
+	{
+		EdgeSpeedFactors.Remove(EdgeIndex);
+	}
+	else
+	{
+		// Never zero: a blocked edge is SetEdgeBlocked, a slow one still routes.
+		EdgeSpeedFactors.Add(EdgeIndex, FMath::Clamp(Factor, 0.05f, 1.f));
+	}
+}
+
+void AHanoiTrafficGraph::ClearEdgeOverrides()
+{
+	BlockedEdges.Reset();
+	EdgeSpeedFactors.Reset();
+}
+
+FVector AHanoiTrafficGraph::GetEdgeMidpoint(int32 EdgeIndex) const
+{
+	if (!Edges.IsValidIndex(EdgeIndex))
+	{
+		return FVector::ZeroVector;
+	}
+	const FHanoiTrafficEdge& E = Edges[EdgeIndex];
+	if (E.Polyline.Num() > 0)
+	{
+		return E.Polyline[E.Polyline.Num() / 2];
+	}
+	return (NodeLocations[E.From] + NodeLocations[E.To]) * 0.5f;
 }

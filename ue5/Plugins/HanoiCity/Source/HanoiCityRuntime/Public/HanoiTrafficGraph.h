@@ -69,6 +69,28 @@ public:
 	UFUNCTION(BlueprintCallable, CallInEditor, Category = "Hanoi|Traffic")
 	void DrawDebugGraph() const;
 
+	/** Closes (or reopens) an edge for routing: a flooded street, a bridge closed by order. */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Traffic")
+	void SetEdgeBlocked(int32 EdgeIndex, bool bBlocked);
+
+	/** Multiplies an edge's speed for routing (1 = normal; water at the wheels slows traffic). */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Traffic")
+	void SetEdgeSpeedFactor(int32 EdgeIndex, float Factor);
+
+	/** Reopens every edge and restores every speed (a flood layer ended). */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Traffic")
+	void ClearEdgeOverrides();
+
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Traffic")
+	bool IsEdgeBlocked(int32 EdgeIndex) const { return BlockedEdges.Contains(EdgeIndex); }
+
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Traffic")
+	int32 NumEdges() const { return Edges.Num(); }
+
+	/** Middle vertex of an edge's polyline (or the middle of its two nodes): what flood zones test. */
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Traffic")
+	FVector GetEdgeMidpoint(int32 EdgeIndex) const;
+
 	UFUNCTION(BlueprintPure, Category = "Hanoi|Traffic")
 	int32 NumNodes() const { return NodeLocations.Num(); }
 
@@ -90,6 +112,8 @@ private:
 	TArray<FHanoiTrafficEdge> Edges;
 	TArray<TArray<FLink>> Adjacency;
 	TMap<FIntPoint, TArray<int32>> Grid;
+	TSet<int32> BlockedEdges;
+	TMap<int32, float> EdgeSpeedFactors;
 	float MaxSpeedMps = 1.f;
 
 	static constexpr float GridCellCm = 10000.f;

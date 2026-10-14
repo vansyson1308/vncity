@@ -14,6 +14,8 @@ namespace HanoiCity.UnityLayer
         public bool onVehicle;
         [Tooltip("Driving a car: picks the car fine instead of the motorbike fine.")]
         public bool inCar;
+        [Tooltip("Riding a bicycle (flood passable depth xe_dap) rather than a motorbike.")]
+        public bool onBicycle;
         [Tooltip("ngo, pho, duong_lon, de, cau, via_he, cho, ben_xe, or empty.")]
         public string roadType = "";
 
@@ -30,6 +32,7 @@ namespace HanoiCity.UnityLayer
 
         public bool OnVehicle => onVehicle;
         public bool InCar => inCar;
+        public bool OnBicycle => onBicycle;
         public string RoadType => string.IsNullOrEmpty(roadType) ? null : roadType;
 
         /// <summary>Teleport to an ENU position (mission debug, loading a save).</summary>

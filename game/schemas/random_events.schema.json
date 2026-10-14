@@ -141,6 +141,7 @@
               },
               "on_vehicle": {
                 "type": "boolean",
+                "x-ue": "optional_bool",
                 "description": "true = only while riding; false = only on foot; absent = either."
               },
               "chance_per_game_hour": {

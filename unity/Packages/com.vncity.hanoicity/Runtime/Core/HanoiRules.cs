@@ -63,6 +63,10 @@ namespace HanoiCity
         /// <summary>Coupons are hidden this far (at most) from their coordinate, in a spot named by hidden_in.</summary>
         public double CouponHideRadiusM = 20.0;
 
+        // ---- flood layers (FloodSystem; UE FloodUpdateGameMinutes)
+        /// <summary>Game minutes between updates of traffic edges and world events while a layer runs.</summary>
+        public double FloodUpdateGameMinutes = 5.0;
+
         // ---- economy (docs/gdd/02 §6, docs/gdd/01 §kinh tế)
         /// <summary>"Lỗ 3 tháng liền thì phải sang nhượng lại."</summary>
         public int BusinessLossDaysBeforeSale = 90;

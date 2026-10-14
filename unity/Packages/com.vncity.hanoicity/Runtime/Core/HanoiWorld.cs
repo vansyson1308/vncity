@@ -20,14 +20,16 @@ namespace HanoiCity
         bool OnVehicle { get; }
         /// <summary>Driving a car (picks the car fine) rather than a motorbike/bicycle.</summary>
         bool InCar { get; }
+        /// <summary>Riding a bicycle (flood passable depth xe_dap) rather than a motorbike.</summary>
+        bool OnBicycle { get; }
         /// <summary>random_events road type under the pawn (ngo, pho, duong_lon, de, cau, via_he, cho, ben_xe) or null.</summary>
         string RoadType { get; }
     }
 
     /// <summary>
     /// The game state and its systems, engine-free: the Unity twin of the UE GameInstance subsystems
-    /// (content, time/weather, missions, heat) plus the systems UE does not have yet (random street
-    /// events, collectibles, skills, economy, calendar). The Unity layer (HanoiGame) owns one, calls
+    /// (content, time/weather, missions, heat, random street events, collectibles, chapter 3-5 minigame
+    /// modes, flood layers) plus skills, economy and calendar. The Unity layer (HanoiGame) owns one, calls
     /// Tick every frame and forwards input; tests drive it directly.
     /// </summary>
     public sealed class HanoiWorld
@@ -49,6 +51,10 @@ namespace HanoiCity
         public RandomEventSystem RandomEvents { get; }
         public CollectibleSystem Collectibles { get; }
         public EconomySystem Economy { get; }
+        public MinigameSystem Minigames { get; }
+        public FloodSystem Floods { get; }
+        /// <summary>Road graphs the flood layer blocks and slows (the Unity layer registers HanoiTrafficGraphView's).</summary>
+        public List<City.HanoiTrafficGraph> TrafficGraphs { get; } = new List<City.HanoiTrafficGraph>();
 
         IHanoiWeatherProvider weatherProvider;
         double secondsSincePoll;
@@ -80,6 +86,8 @@ namespace HanoiCity
             RandomEvents = new RandomEventSystem(this);
             Collectibles = new CollectibleSystem(this);
             Economy = new EconomySystem(this);
+            Minigames = new MinigameSystem(this);
+            Floods = new FloodSystem(this);
 
             Missions.MissionEnded += (id, ok, reason) => Collectibles.CheckTapes();
             Clock.HourChanged += OnHourChanged;
@@ -104,6 +112,8 @@ namespace HanoiCity
             Heat.Tick(realSeconds);
             Missions.Tick(realSeconds);
             RandomEvents.Tick(realSeconds);
+            Minigames.Tick(realSeconds);
+            Floods.Tick();
             UpdateCleanRecord();
         }
 
@@ -296,6 +306,8 @@ namespace HanoiCity
             var data = JsonConvert.DeserializeObject<HanoiSaveData>(json, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
             Missions.AbandonSilently();
             RandomEvents.Clear();
+            Minigames.Cancel();
+            Floods.Clear();
             State = data.State ?? new HanoiPlayerState();
             if (State.GameTime.Ticks > 0) Clock.Restore(State.GameTime);
             manualEvents.Clear();
@@ -303,6 +315,7 @@ namespace HanoiCity
             RefreshWeather();
             RefreshCalendar();
             NotifyStateChanged();
+            Floods.Resume();
             if (!string.IsNullOrEmpty(data.ActiveMission)) Missions.StartMission(data.ActiveMission);
         }
     }

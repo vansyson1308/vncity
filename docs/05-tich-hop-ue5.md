@@ -27,7 +27,11 @@ Runtime (`HanoiCityRuntime`):
 | `UHanoiTimeWeatherSubsystem` (GameInstance) | đồng hồ giờ Hà Nội (UTC+7) có hệ số thời gian, đồng bộ giờ thật, thời tiết qua `IHanoiWeatherProvider`, quay mặt trời theo thuật toán NOAA |
 | `UHanoiMissionSubsystem` (GameInstance) | chạy đồ thị bước nhiệm vụ từ dữ liệu, rẽ nhánh `next`, delegate cho UI, lưu tiến độ (nhiệm vụ, cờ, danh tiếng, tiền, phạt) |
 | `UHanoiHeatSubsystem` (World) | "mức chú ý" của CSGT thay cho wanted level: vi phạm → heat 0-5 + tiền phạt, giảm dần khi khuất tầm nhìn |
-| `AHanoiTrafficGraph` | đọc `traffic/graph.json`, tìm đường A* cho xe/NPC |
+| `UHanoiRandomEventSubsystem` (GameInstance) | 46 sự kiện đường phố ngẫu nhiên (`random_events`): mỗi giờ game tung xúc xắc theo bộ lọc giờ, thời tiết, quận, địa danh, loại đường, đang đi xe hay không; người chơi bỏ qua hoặc chọn, lựa chọn có minigame chờ `CompleteMinigame` |
+| `UHanoiCollectibleSubsystem` (GameInstance) | 220 vật sưu tầm (`collectibles`): ảnh xưa chỉ tính khi khớp khung và đúng giờ sáng, tem phiếu giấu quanh toạ độ (băm FNV-1a giống Unity), mở băng cát-xét 22/23/24 |
+| `UHanoiMinigameSubsystem` (GameInstance) | 4 chế độ minigame chương 3-5 (`minigame_modes`): bước `minigame` có `params.mode` là id chế độ thì tự mở phiên, chấm điểm, kết thúc bước `dat`/`chua_dat`; sổ nợ tính số tiền theo luật |
+| `UHanoiFloodSubsystem` (GameInstance) | lớp lũ (`flood_layers`, đêm bão `bao_so_3_2027` của c3_07): mực sông, độ sâu từng vùng theo giờ, chặn/làm chậm cạnh giao thông, cấm cầu, xe chết máy, bật sự kiện `mua_ngap` |
+| `AHanoiTrafficGraph` | đọc `traffic/graph.json`, tìm đường A* cho xe/NPC; cạnh có thể bị chặn hoặc làm chậm (lũ) |
 | `AHanoiPointSetActor` | HISM cho một `Set/Kind` trong một ô (từ CSV điểm PCG) |
 | `Generated/HanoiContentTypes.h` | struct dòng DataTable sinh tự động từ `game/schemas` (không sửa tay) |
 
@@ -238,6 +242,8 @@ dùng `"Name"` cho tên dòng), `class` → `ClassKind`, bool có tiền tố `b
 - [ ] `USceneComponent::Mobility` truy cập trực tiếp (public) và `SetMobility` lúc chạy — `HanoiTimeWeatherSubsystem.cpp` (`FindSun`)
 - [ ] `FRegexPattern`/`FRegexMatcher` (kiểm `fail_if`), delegate động 4 tham số có `const TArray<FName>&` (`OnChoiceRequested`), `TryGetObjectField` — `HanoiMissionSubsystem.cpp/.h`
 - [ ] UFUNCTION trả struct theo giá trị (`GetWeather`, `GetPlayerState`); nút `Reload Graph` (CallInEditor, không tham số, không giá trị trả về) hiện trong Details của `AHanoiTrafficGraph`
+- [ ] Bốn subsystem mới (sự kiện ngẫu nhiên, sưu tầm, minigame, lũ): `AddDynamic` lên delegate của `UHanoiMissionSubsystem` từ một GameInstanceSubsystem khác (handler là `UFUNCTION()` private), `TActorIterator<AHanoiTrafficGraph>` từ GameInstanceSubsystem, `FMath::RoundHalfToEven(double)`, `TGuardValue<bool>`, `FRandomStream`, USTRUCT `FHanoiMinigameSession` chứa `TArray<FHanoiMinigameModeTask>` làm tham số delegate động — `HanoiRandomEventSubsystem.cpp`, `HanoiCollectibleSubsystem.cpp`, `HanoiMinigameSubsystem.cpp`, `HanoiFloodSubsystem.cpp`
+- [ ] `UENUM EHanoiOptionalBool` (Unset/False/True) cho trường bool tùy chọn (`random_events.spawn.on_vehicle`; schema đánh dấu `x-ue: optional_bool`) — `HanoiCoreTypes.h`, header sinh tự động
 - [ ] Không có cảnh báo C4244/C4458 (double→float, che biến thành viên): `BuildSettingsVersion.Latest` có thể biến chúng thành lỗi
 - [ ] Đóng gói: `DefaultGame.ini` có `+DirectoriesToAlwaysCook=(Path="/Game/Hanoi/Data")` (DataTable nạp bằng đường dẫn) và `+DirectoriesToAlwaysStageAsUFS=(Path="Data/City")` (graph.json đọc bằng `FFileHelper`)
 
@@ -279,6 +285,10 @@ m/cm × có/không giữ offset node) theo **tổng** IoU trên mọi ô, rồi 
 - [ ] Nhiệm vụ: gọi `StartMission` trên một nhiệm vụ có bước `go_to`, đi tới đích → `OnStepCompleted`; nhiệm vụ xong → `OnMissionEnded` và có file lưu `Saved/SaveGames/HanoiSave.sav`.
 - [ ] Tham số bước: nhiệm vụ `c1_03` phát `OnChoiceRequested` ở bước `co_hoi_khong`; `p1` bước `bi_thoi` phát `OnFineApplied` (vuot_den_do); `s04` bước `nam_dia_chi` phát `OnMinimapVisibilityChanged(false)`; `s11` bước `gap_ba` chờ `SetWorldEventActive("trung_thu", true)`.
 - [ ] Heat: `ReportViolation(<id traffic_rules>, false, true, false)` → `OnHeatChanged`; đứng khuất tầm nhìn 20 s heat giảm dần; `PulledOver` trừ tiền phạt.
+- [ ] Sự kiện ngẫu nhiên: gameplay gọi `SetPlayerContext` (đang đi xe, ô tô, xe đạp, loại đường); `UHanoiRandomEventSubsystem::Spawn("<id>")` → `OnEventStarted`; `Choose` một lựa chọn có minigame → `OnMinigameRequested`, `CompleteMinigame(true)` → `OnEventResolved` và hiệu ứng (tiền, danh tiếng, kỹ năng).
+- [ ] Sưu tầm: đứng cạnh một ảnh xưa đúng giờ sáng, `Collect(id, 0.9)` → `OnCollected`; đủ 60 ảnh → `OnTapeUnlocked(22)`.
+- [ ] Minigame chương 3-5: `StartMission("c3_02_so_no_cua_co")`, tới bước `dung_dong_tien` → `UHanoiMinigameSubsystem::OnMinigameStarted`; trả lời đúng hết → nhiệm vụ sang `ket_qua`; để quá `time_limit_s` → sang `sai_so` (thua có giá, không phải game over). `GetLedgerOwed("dung_lai_dong_tien")` = 460.000.000.
+- [ ] Lũ: `StartMission("c3_07_dem_nuoc_len")` lúc 18:00 → `UHanoiFloodSubsystem::IsActive`; tua giờ tới 20:00, xe máy đứng ở bãi giữa → `OnVehicleStalled`; cạnh giao thông quanh ngõ Hàng Chiếu bị chặn lúc nửa đêm; sau 18 giờ game lớp lũ tự tắt.
 
 ### 7.5 Feed thời tiết trực tiếp
 
@@ -318,6 +328,12 @@ hỏi theo giây thật). Mất kết nối thì rơi về khí hậu trung bìn
   file header; mọi CSV điểm PCG khớp `FHanoiPcgPointRow` (Seed vượt int32 → `int64`, khoá ô âm
   như `-1_-2`); `traffic/graph.json` thoả các giả định của `AHanoiTrafficGraph::LoadGraph`;
   footprint trong `semantics/` khớp phép chiếu tới vài mm.
+* Luật minigame và lũ: `tools/runtime_rules.py` là bản thứ ba (Python, đọc được) của cùng luật mà
+  C++ và C# viết; nó sinh `tests/golden/runtime_rules.json` (32 lượt chơi kịch bản, sổ nợ, độ sâu
+  nước từng nửa giờ) và test C# chơi lại từng lượt, khớp tới 1e-8 m. `tests/test_runtime_rules.py`
+  kiểm các nhịp truyện ra đúng từ dữ liệu (bãi giữa xe máy không qua được từ 20:00, ngõ Hàng Chiếu
+  sâu nhất lúc nửa đêm và rút trước 6 giờ sáng, sổ nợ 460 triệu, thua minigame chương 4 mất một lựa
+  chọn kết) và so các biểu thức then chốt của hai engine bằng regex.
 
 ## 8. Kết nối Claude Code qua MCP
 
@@ -401,6 +417,16 @@ từng khóa của `game/schemas/missions.schema.json`. Tóm tắt phía UE:
   game chót.
 * Delegate cho UI/gameplay trên `UHanoiMissionSubsystem`: `OnStepStarted`, `OnStepCompleted`,
   `OnMissionEnded`, `OnStateChanged`, `OnChoiceRequested`, `OnFineApplied`,
-  `OnProtagonistSwitched`, `OnMinimapVisibilityChanged`, `OnStepWaitingForEvent`. Gọi vào:
+  `OnProtagonistSwitched`, `OnMinimapVisibilityChanged`, `OnStepWaitingForEvent`, `OnSkillTierReached`. Gọi vào:
   `CompleteCurrentStep`, `ReportEvent`, `NotifyDialogueLine`, `SetWorldEventActive`,
   `GetActiveStepParamNumber/String/Bool`, `GetActiveStepParamsJson`, `IsMinimapAllowed`.
+* Bước có `params.time_limit_s` mà `next` có nhánh `chua_dat`: hết giờ thì bước kết thúc `chua_dat`
+  (nhiệm vụ đi nhánh thua, có giá trong truyện); bước không có nhánh đó vẫn làm nhiệm vụ thất bại
+  (`time_limit`). Hai engine giữ cùng luật (`tests/test_runtime_rules.py`).
+* Bước `minigame` có `params.mode` là id trong `minigame_modes`: `UHanoiMinigameSubsystem` tự chạy
+  (`difficulty`, `pass_score`, `max_faults`, `time_limit_s` lấy từ `params`); UI chỉ hiển thị
+  `GetSession().Tasks` và gọi `Answer(task, label)` (phân loại) hoặc `Perform(task)` (làm theo trình
+  tự). Chế độ khác (minigame của activity) vẫn do gameplay gọi `CompleteCurrentStep("dat"/"chua_dat")`.
+* Bước có `params.flood_layer` là id trong `flood_layers` (không phải `live`): lớp lũ bắt đầu từ giờ
+  game của bước, lưu trong file save, tự tắt sau `duration_h`. Gameplay đọc `GetDepthAt`,
+  `GetSpeedFactorAt(vị trí, "xe_may"/"o_to"/"xe_dap"/"di_bo")` để làm xe chậm, nước bắn, xe chết máy.

@@ -2193,7 +2193,7 @@
               "lan_phu_nhan"
             ]
           },
-          "goto": "l05"
+          "goto": "l04a"
         },
         {
           "id": "l02",
@@ -2238,13 +2238,43 @@
           "text": {
             "vi": "(gỡ kính lau, lâu) \"Biết sai mà sửa là người khôn.\" Tôi ghi nhận."
           },
-          "goto": "l05"
+          "goto": "l04a"
         },
         {
           "id": "l03b",
           "speaker": "characters:ong_khang",
           "text": {
             "vi": "Được. Kết quả thì tôi đọc đúng."
+          },
+          "goto": "l04a"
+        },
+        {
+          "id": "l04a",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Hộ số 33 ký đủ rồi. Hôm ấy cháu đứng gõ cửa với tôi, cả tổ thấy cả."
+          },
+          "condition": {
+            "flags": [
+              "lan_bo_sot_ho_33",
+              "lan_di_go_cua_33"
+            ]
+          },
+          "goto": "l05"
+        },
+        {
+          "id": "l04b",
+          "speaker": "characters:ong_khang",
+          "text": {
+            "vi": "Hộ số 33 vẫn thiếu một chữ ký bên Úc, người ta hỏi tôi suốt. Tối nay ai hỏi thì cháu tự trả lời."
+          },
+          "condition": {
+            "flags": [
+              "lan_bo_sot_ho_33"
+            ],
+            "not_flags": [
+              "lan_di_go_cua_33"
+            ]
           },
           "goto": "l05"
         },

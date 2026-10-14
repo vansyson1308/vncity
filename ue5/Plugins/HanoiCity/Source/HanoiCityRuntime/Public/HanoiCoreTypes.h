@@ -96,6 +96,16 @@ struct HANOICITYRUNTIME_API FHanoiHourRange
 	}
 };
 
+/** A content boolean whose absence means something (schema "x-ue": "optional_bool"), e.g. random_events
+ *  spawn.on_vehicle: absent = riding or on foot. */
+UENUM(BlueprintType)
+enum class EHanoiOptionalBool : uint8
+{
+	Unset,
+	False,
+	True
+};
+
 UENUM(BlueprintType)
 enum class EHanoiTargetKind : uint8
 {

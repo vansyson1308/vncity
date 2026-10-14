@@ -25,7 +25,7 @@ Chọn engine nào cho máy của bạn: xem `14-chon-engine.md` và chạy `too
 | `hanoi_setup.json` | Đường dẫn cho Run Full Setup (bản dựng thành phố, `game/content`, `pipeline/districts.json`, đích) |
 | `hanoi_asset_map.json` | `Set/Kind` của điểm PCG → prefab (cùng khoá với `ue5/Config/asset_map.json`, có test kiểm) |
 | `Packages/com.vncity.hanoicity/Runtime/Core/` | Lõi C# thuần (assembly `HanoiCity.Core`, `noEngineReferences`): nội dung, toạ độ, đồng hồ, thời tiết, mọi hệ thống game |
-| `Packages/com.vncity.hanoicity/Runtime/Core/Generated/HanoiContentTypes.cs` | 49 lớp và 24 enum sinh từ `game/schemas` bằng `tools/codegen_unity.py` (không sửa tay) |
+| `Packages/com.vncity.hanoicity/Runtime/Core/Generated/HanoiContentTypes.cs` | 60 lớp và 27 enum sinh từ `game/schemas` bằng `tools/codegen_unity.py` (không sửa tay) |
 | `Packages/com.vncity.hanoicity/Runtime/Unity/` | Lớp Unity (assembly `HanoiCity.Unity`): bootstrap, người chơi, gốc toạ độ trôi, mặt trời, thời tiết HTTP, đồ thị giao thông, vẽ đạo cụ instanced |
 | `Packages/com.vncity.hanoicity/Editor/` | Menu **Tools > Hanoi City** (assembly `HanoiCity.Editor`): chép dữ liệu, kiểm nội dung, nhập ô glb, hiệu chỉnh trục, điểm PCG, mốc kiểm |
 | `Packages/com.vncity.hanoicity/Tests/Core/` | Test NUnit của lõi (chạy được cả trong Unity Test Runner lẫn `dotnet test`) |
@@ -44,8 +44,10 @@ Lõi (`HanoiCity.Core`), tương ứng với subsystem của UE:
 | `DialogueRunner` | `ResolveLine`, `NextLine`, `AvailableChoices`, `ApplyChoice` theo `condition` | `ResolveDialogueLine`… |
 | `HeatSystem` | mức chú ý CSGT 0-5, phạt, bị tuýt còi, giảm khi khuất | `UHanoiHeatSubsystem` |
 | `SkillSystem` | 12 kỹ năng × 3 bậc, mở khoá hoạt động/xe/lựa chọn | chỉ có `min_skills` |
-| `RandomEventSystem` | 46 sự kiện ngoài phố: tung xác suất mỗi giờ game, điều kiện quận/giờ/thời tiết/xe/đường, lựa chọn, minigame, hậu quả | chưa có |
-| `CollectibleSystem` | 220 đồ sưu tầm theo toạ độ thật, ảnh so khớp ≥ 0,85, tem phiếu giấu trong 20 m, băng 22/23/24 | chưa có |
+| `RandomEventSystem` | 46 sự kiện ngoài phố: tung xác suất mỗi giờ game, điều kiện quận/giờ/thời tiết/xe/đường, lựa chọn, minigame, hậu quả | `UHanoiRandomEventSubsystem` |
+| `CollectibleSystem` | 220 đồ sưu tầm theo toạ độ thật, ảnh so khớp ≥ 0,85, tem phiếu giấu trong 20 m, băng 22/23/24 | `UHanoiCollectibleSubsystem` |
+| `MinigameSystem`, `MinigameSession` | 4 chế độ minigame chương 3-5 (`minigame_modes`): bước `minigame` có `params.mode` là id chế độ thì tự mở phiên, chấm điểm, kết thúc bước `dat`/`chua_dat`; sổ nợ theo luật | `UHanoiMinigameSubsystem` |
+| `FloodSystem`, `FloodModel` | lớp lũ (`flood_layers`, đêm bão `bao_so_3_2027`): mực sông, độ sâu từng vùng, chặn/làm chậm cạnh giao thông trong `World.TrafficGraphs`, cấm cầu, xe chết máy, bật `mua_ngap` | `UHanoiFloodSubsystem` |
 | `EconomySystem` | mua quán, nâng cấp, lãi theo ngày (Tết đóng cửa, phở trời lạnh, lụt, Trung thu, viral), cuốc xe, thưởng tuần, hoá đơn tháng của Minh | chưa có |
 | `HanoiTrafficGraph`, `HanoiPcgCsv`, `HanoiCityManifest`, `HanoiTilePlacement` | đọc dữ liệu thành phố, A* có một chiều và đường chỉ xe máy, hiệu chỉnh trục ô | `AHanoiTrafficGraph`, `import_city.py` |
 | `HanoiWorld` | mặt tiền gom mọi thứ: `Tick`, `EvaluateCondition`, `ApplyReward`, cờ, tiền, lưu/nạp JSON | GameInstance |
@@ -56,11 +58,11 @@ Lớp Unity (`HanoiCity.Unity`):
 | --- | --- |
 | `HanoiGame` | Một cái mỗi scene. Nạp nội dung từ `StreamingAssets/Hanoi/Content`, tạo `HanoiWorld`, gọi `Tick` mỗi frame, tự lưu khi xong nhiệm vụ (`Application.persistentDataPath/hanoi_save.json`) |
 | `HanoiSettings` | ScriptableObject (Assets > Create > Hanoi City > Settings, đặt trong `Resources/HanoiSettings`): đường dẫn, hệ số giờ, feed thời tiết, ngưỡng gốc trôi |
-| `HanoiPlayerAdapter` | Gắn lên nhân vật: báo vị trí ENU, đang đi xe, đi ô tô, loại đường cho lõi |
+| `HanoiPlayerAdapter` | Gắn lên nhân vật: báo vị trí ENU, đang đi xe, đi ô tô, đi xe đạp, loại đường cho lõi |
 | `HanoiFloatingOrigin`, `HanoiGeoAnchor` | Gốc toạ độ trôi (mục 6.3) |
 | `HanoiSunDriver` | Xoay directional light theo mặt trời thật của Hà Nội, mờ theo mây |
 | `HanoiWebWeatherProvider` | Feed thời tiết qua `UnityWebRequest`, lỗi thì về khí hậu trung bình |
-| `HanoiTrafficGraphView` | Nạp `traffic/graph.json`, vẽ gizmo (một chiều xanh, chỉ xe máy cam, đèn đỏ) |
+| `HanoiTrafficGraphView` | Nạp `traffic/graph.json`, vẽ gizmo (một chiều xanh, chỉ xe máy cam, đèn đỏ), đăng ký đồ thị vào `World.TrafficGraphs` để lớp lũ chặn đường |
 | `HanoiPointSetRenderer` | Cây, cột điện, dây, biển hiệu, mái hiên, xe máy đỗ, ghế nhựa: `Graphics.RenderMeshInstanced` theo lô 1023, cắt theo khoảng cách |
 
 ## 2. Phần cứng và ổ đĩa
@@ -273,6 +275,11 @@ animation rung từ ~10 km. Cách làm:
 - [ ] Sự kiện ngẫu nhiên: đứng ở phố cổ, tua giờ (`World.Clock.Advance(TimeSpan.FromHours(1))`) →
   `RandomEvents.Started` thỉnh thoảng bắn (test chạy một tuần game ở phố cổ thấy 5 đến 168 lần).
 - [ ] Lịch: đặt giờ tối thứ Sáu → `World.IsWorldEventActive("pho_di_bo_cuoi_tuan")` là true.
+- [ ] Minigame chương 3-5: `StartMission("c3_02_so_no_cua_co")`, tới bước `dung_dong_tien` →
+  `World.Minigames.Started`; UI hiện `Current.Tasks`, gọi `Answer`/`Perform`; đúng hết → nhánh
+  `ket_qua`, quá giờ → nhánh `sai_so`.
+- [ ] Lũ: `StartMission("c3_07_dem_nuoc_len")` lúc 18:00 → `World.Floods.IsActive`; tua tới 20:00,
+  xe máy ở bãi giữa → `World.Floods.VehicleStalled`; AI và GPS đi vòng ngõ Hàng Chiếu lúc nửa đêm.
 
 ### 6.6 Feed thời tiết trực tiếp
 
@@ -292,7 +299,7 @@ Cùng feed với UE: `python -m live.weather --serve 8765` phục vụ
 
 ## 7. Độ chính xác đã kiểm bằng test (không cần Unity)
 
-`dotnet test unity/dotnet` (CI job `unity-core`), 108 test:
+`dotnet test unity/dotnet` (CI job `unity-core`), 137 test:
 
 * Nội dung: mọi file `game/content` nạp chặt vào lớp sinh tự động, số dòng khớp JSON gốc; khoá lạ
   và enum sai bị từ chối; danh sách khoá `params` runtime khớp `x-consumer: runtime` của schema.
@@ -306,6 +313,11 @@ Cùng feed với UE: `python -m live.weather --serve 8765` phục vụ
 * Sự kiện ngẫu nhiên: mọi lựa chọn của cả 46 sự kiện đều kết thúc; mọi quận có ≥ 15 sự kiện có thể
   xảy ra; tâm mỗi quận được nhận đúng quận.
 * Sưu tầm, kỹ năng, quán, cuốc xe, hoá đơn, Tết đóng cửa, đặt ô theo mọi giả định trục, A*.
+* Minigame và lũ (`RuntimeRulesTests.cs`): chơi lại 32 lượt kịch bản và mực nước từng nửa giờ của
+  `tests/golden/runtime_rules.json` (do `tools/runtime_rules.py` sinh, cùng luật với C++), khớp tới
+  1e-8 m; thắng sang nhánh `dat`, sai bước nguy hiểm hoặc quá giờ sang `chua_dat` mà nhiệm vụ không
+  thất bại; đêm bão: 19:00 xe máy còn qua bãi giữa, 20:00 chết máy và cầu Long Biên cấm, đi vào
+  cầu bị phạt, ở sẵn trong bãi giữa thì không; A* đi vòng ngõ ngập; lớp lũ qua được lưu/nạp.
 
 ## 8. Khác biệt so với bản UE (cố ý)
 
@@ -319,7 +331,8 @@ Cùng feed với UE: `python -m live.weather --serve 8765` phục vụ
   Test `test_deadline_at_its_own_hour_means_tomorrow_in_both_engines` giữ hai bên cùng luật.
 * Lịch sự kiện (`WorldEventCalendar`) tự bật `events` theo ngày; `SetWorldEventActive` vẫn ghi đè
   bằng tay. UE chỉ có bật tay.
-* Hệ thống mới chỉ có ở đây: sự kiện ngẫu nhiên, sưu tầm và băng, kinh tế, hoá đơn tháng.
+* Hệ thống chỉ có ở đây: kinh tế, hoá đơn tháng. Sự kiện ngẫu nhiên, sưu tầm và băng, minigame
+  chương 3-5 và lớp lũ nay có cả bên UE (C++ chưa biên dịch), cùng luật.
   Các con số chỉnh được nằm ở `HanoiRules.cs`, mỗi số ghi nguồn (GDD hoặc playtest).
 * Thời tiết `air.*` (bụi mịn) chưa có feed, chỉ bật tay.
 
@@ -348,4 +361,5 @@ menu/script trong `Editor/` (lặp lại được), không thao tác tay trong s
    massing glb.
 3. **Giao thông**: ECS (Entities) hoặc job system đọc `HanoiTrafficGraph`, tỉ lệ xe máy theo quận.
 4. **UI**: nối `Missions.StepStarted`, `ChoiceRequested`, `RandomEvents.Started`, `Collectibles.TapeUnlocked`,
+   `Minigames.Started`/`TaskResolved`/`Ended`, `Floods.VehicleStalled`,
    `Economy.BillCharged` vào UI Toolkit.

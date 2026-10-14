@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "flood_layers.schema.json",
+  "title": "Flood layers",
+  "description": "A night of rising water as cause and effect, switched on by a mission step's params.flood_layer (value 'live' keeps the live-weather path: events:mua_ngap). Time t is game hours since the step started. The river gauge (river_m) and the rain (rain_mm_h) come from `timeline`. A zone of cause 'song' is under the river: depth = river_m - floor_m. A zone of cause 'mua' fills with rain and empties through the drains: d(depth)/dt = (rain_mm_h x catchment - drain) / 1000 metres per hour, where drain = drain_mm_h, or drain_mm_h x pump_share while the river stands at or above gravity_block_river_m (the outfalls cannot run into a high river, only the pumps work). Depth is clamped to [0, max_depth_m] and integrated in steps of step_h. A road inside a zone is closed to a vehicle class when the depth reaches passable_depth_m of that class and slowed by slow_speed_factor from slow_depth_m; a motorbike ridden into impassable water stalls (gameplay event xe_chet_may). `closures` are orders (a bridge closed from an hour while the river is high). While any rain zone is deeper than slow_depth_m the layer keeps `world_events` on, so the economy and random events feel the flood. Runtime: UHanoiFloodSubsystem (UE), FloodSystem (Unity core); reference model and golden table: tools/runtime_rules.py.",
+  "x-collection": "flood_layers",
+  "type": "object",
+  "required": ["collection", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "collection": {"const": "flood_layers"},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description", "duration_h", "step_h", "gauge", "drainage", "timeline", "zones", "passable_depth_m", "slow_depth_m", "slow_speed_factor"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"$ref": "common.schema.json#/$defs/id"},
+          "tags": {"$ref": "common.schema.json#/$defs/tags"},
+          "name": {"$ref": "common.schema.json#/$defs/text"},
+          "description": {"$ref": "common.schema.json#/$defs/text"},
+          "duration_h": {"type": "number", "exclusiveMinimum": 0, "maximum": 72, "description": "Game hours the layer lasts after it starts."},
+          "step_h": {"type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "Integration step in game hours (both engines precompute the depth table with it)."},
+          "gauge": {
+            "type": "object",
+            "required": ["name", "alarm_m"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string", "description": "Hydrological station the river level is read at."},
+              "alarm_m": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3, "description": "Báo động 1, 2, 3 in metres at that station."}
+            }
+          },
+          "drainage": {
+            "type": "object",
+            "required": ["gravity_block_river_m", "pump_share"],
+            "additionalProperties": false,
+            "properties": {
+              "gravity_block_river_m": {"type": "number", "description": "River level from which the city drains can no longer flow out by gravity."},
+              "pump_share": {"type": "number", "minimum": 0, "maximum": 1, "description": "Share of drain_mm_h that pumps keep up while gravity is blocked."}
+            }
+          },
+          "timeline": {
+            "description": "Keyframes in t order. river_m is interpolated linearly between keyframes; rain_mm_h holds from its keyframe to the next one. The first keyframe is at t = 0.",
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["t_h", "river_m", "rain_mm_h"],
+              "additionalProperties": false,
+              "properties": {
+                "t_h": {"type": "number", "minimum": 0},
+                "river_m": {"type": "number"},
+                "rain_mm_h": {"type": "number", "minimum": 0}
+              }
+            }
+          },
+          "zones": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "name", "location", "radius_m", "cause", "coords_source"],
+              "additionalProperties": false,
+              "properties": {
+                "id": {"$ref": "common.schema.json#/$defs/id"},
+                "name": {"type": "string"},
+                "location": {"$ref": "common.schema.json#/$defs/geo"},
+                "radius_m": {"type": "number", "exclusiveMinimum": 0},
+                "landmark": {"$ref": "common.schema.json#/$defs/ref"},
+                "district": {"$ref": "common.schema.json#/$defs/ref"},
+                "cause": {"enum": ["song", "mua"], "description": "song = under the river (floor_m); mua = rain that the drains cannot take."},
+                "floor_m": {"type": "number", "description": "song: ground level on the gauge's datum, metres."},
+                "catchment": {"type": "number", "minimum": 0, "description": "mua: how many times the rain falling on the zone runs into it from around (a low spot collects its street)."},
+                "drain_mm_h": {"type": "number", "minimum": 0, "description": "mua: what the drains take away, in millimetres of depth per hour, with gravity outfalls open."},
+                "max_depth_m": {"type": "number", "exclusiveMinimum": 0, "description": "mua: water spills elsewhere beyond this depth."},
+                "coords_source": {"enum": ["landmark", "uoc_luong"], "description": "landmark = landmarks.json coordinate; uoc_luong = placed by hand on the street, to check against the map."},
+                "note": {"type": "string"}
+              }
+            }
+          },
+          "closures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "landmark", "radius_m", "from_h", "river_m_at_least"],
+              "additionalProperties": false,
+              "properties": {
+                "id": {"$ref": "common.schema.json#/$defs/id"},
+                "landmark": {"$ref": "common.schema.json#/$defs/ref"},
+                "radius_m": {"type": "number", "exclusiveMinimum": 0, "description": "Road graph edges whose midpoint is this close to the landmark are closed."},
+                "from_h": {"type": "number", "minimum": 0, "description": "The order takes effect at this t."},
+                "river_m_at_least": {"type": "number", "description": "The order stands while the river is at or above this level."},
+                "traffic_rule": {"$ref": "common.schema.json#/$defs/ref", "description": "traffic_rules:<id> broken by riding through the closure."},
+                "note": {"type": "string"}
+              }
+            }
+          },
+          "passable_depth_m": {
+            "description": "Depth from which a vehicle class cannot go through (motorbike: water at the exhaust and air intake).",
+            "type": "object",
+            "required": ["xe_may", "o_to", "xe_dap", "di_bo"],
+            "additionalProperties": false,
+            "properties": {
+              "xe_may": {"type": "number", "exclusiveMinimum": 0},
+              "o_to": {"type": "number", "exclusiveMinimum": 0},
+              "xe_dap": {"type": "number", "exclusiveMinimum": 0},
+              "di_bo": {"type": "number", "exclusiveMinimum": 0}
+            }
+          },
+          "slow_depth_m": {"type": "number", "minimum": 0},
+          "slow_speed_factor": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+          "world_events": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/ref"}, "description": "events:<id> kept on while a rain zone is deeper than slow_depth_m."},
+          "sources": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

@@ -67,6 +67,8 @@ def member_name(field):
 
 def cs_type(spec, required=True):
     k = spec["k"]
+    if spec.get("core") == "optional_bool":
+        return "bool?"  # UE's EHanoiOptionalBool; C# has nullable bool
     if k in SCALARS:
         t = SCALARS[k]
         return t + "?" if (k in VALUE_SCALARS and not required) else t
@@ -81,6 +83,8 @@ def cs_type(spec, required=True):
 
 def cs_default(spec):
     k = spec["k"]
+    if spec.get("core") == "optional_bool":
+        return ""
     if k in ("array", "map"):
         return f" = new {cs_type(spec)}();"
     if k == "struct" and "core" not in spec:

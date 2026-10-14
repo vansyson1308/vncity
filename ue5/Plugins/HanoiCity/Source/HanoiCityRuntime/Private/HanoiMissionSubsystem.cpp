@@ -22,6 +22,8 @@ namespace HanoiMission
 }
 
 const FName UHanoiMissionSubsystem::CleanRecordFlag(TEXT("ho_so_sach_90_ngay"));
+const FName UHanoiMissionSubsystem::OutcomePassed(TEXT("dat"));
+const FName UHanoiMissionSubsystem::OutcomeFailed(TEXT("chua_dat"));
 
 void UHanoiMissionSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -189,6 +191,73 @@ void UHanoiMissionSubsystem::SetFlag(FName Flag, bool bSet)
 {
 	if (bSet) { State.Flags.Add(Flag); } else { State.Flags.Remove(Flag); }
 	NotifyStateChanged();
+}
+
+int32 UHanoiMissionSubsystem::TrainSkill(FName SkillId, int32 Levels)
+{
+	if (SkillId.IsNone())
+	{
+		return 0;
+	}
+	if (Levels < 0)
+	{
+		Levels = UHanoiCitySettings::Get()->SkillGainPerTraining;
+	}
+	const int32 Old = State.Skills.FindRef(SkillId);
+	const int32 Now = FMath::Clamp(Old + Levels, 0, 100);
+	if (Now == Old)
+	{
+		return Now;
+	}
+	State.Skills.Add(SkillId, Now);
+	const UHanoiContentSubsystem* Content = GetGameInstance()->GetSubsystem<UHanoiContentSubsystem>();
+	if (const FHanoiSkillsRow* Row = Content ? Content->Find<FHanoiSkillsRow>(TEXT("skills"), SkillId) : nullptr)
+	{
+		for (const FHanoiSkillsTier& Tier : Row->Tiers)
+		{
+			if (Tier.Level <= Old || Tier.Level > Now)
+			{
+				continue;
+			}
+			for (const FHanoiRef& Ref : Tier.Refs)
+			{
+				State.Unlocked.Add(FName(*Ref.ToString()));
+			}
+			OnSkillTierReached.Broadcast(SkillId, Tier.Level, Tier);
+		}
+	}
+	NotifyStateChanged();
+	return Now;
+}
+
+void UHanoiMissionSubsystem::TrainFromActivity(const FHanoiRef& Activity)
+{
+	const UHanoiContentSubsystem* Content = GetGameInstance()->GetSubsystem<UHanoiContentSubsystem>();
+	if (const FHanoiActivityRow* Row = Content && Activity.IsValid() ? Content->Find<FHanoiActivityRow>(TEXT("activities"), Activity.Id) : nullptr)
+	{
+		for (const FString& Skill : Row->SkillsTrained)
+		{
+			TrainSkill(FName(*Skill));
+		}
+	}
+}
+
+bool UHanoiMissionSubsystem::HasReachedChapter(int32 Chapter) const
+{
+	if (bActive && ActiveMission.Type == EHanoiMissionType::Story && ActiveMission.Chapter >= Chapter)
+	{
+		return true;
+	}
+	const UHanoiContentSubsystem* Content = GetGameInstance()->GetSubsystem<UHanoiContentSubsystem>();
+	for (const FName& Id : State.CompletedMissions)
+	{
+		const FHanoiMissionRow* Row = Content ? Content->Find<FHanoiMissionRow>(TEXT("missions"), Id) : nullptr;
+		if (Row && Row->Type == EHanoiMissionType::Story && Row->Chapter >= Chapter)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void UHanoiMissionSubsystem::RecordFine()
@@ -806,10 +875,15 @@ bool UHanoiMissionSubsystem::IsAutoComplete() const
 	}
 }
 
+bool UHanoiMissionSubsystem::StepBranchesOnFailure() const
+{
+	return ActiveMission.Steps.IsValidIndex(StepIndex) && ActiveMission.Steps[StepIndex].Next.Branches.Contains(OutcomeFailed);
+}
+
 bool UHanoiMissionSubsystem::ShouldFail(FName& OutReason) const
 {
 	const float TimeLimit = GetParamNumber(TEXT("time_limit_s"), 0.f);
-	if (TimeLimit > 0.f && StepElapsed > TimeLimit)
+	if (TimeLimit > 0.f && StepElapsed > TimeLimit && !StepBranchesOnFailure())
 	{
 		OutReason = TEXT("time_limit");
 		return true;
@@ -860,6 +934,13 @@ void UHanoiMissionSubsystem::Tick(float DeltaTime)
 		return;
 	}
 	StepElapsed += DeltaTime;
+	const float TimeLimit = GetParamNumber(TEXT("time_limit_s"), 0.f);
+	if (TimeLimit > 0.f && StepElapsed > TimeLimit && StepBranchesOnFailure() && IsStepGateOpen())
+	{
+		// The loss has a price, not a game over: the mission's chua_dat branch carries it.
+		Advance(OutcomeFailed);
+		return;
+	}
 	FName Reason;
 	if (ShouldFail(Reason))
 	{

@@ -24,6 +24,8 @@ jobs:
           git diff --exit-code -- unity/
       - name: Unit tests
         run: python -m pytest -q
+      - name: Runtime rules golden file (minigames, flood) is up to date
+        run: python tools/runtime_rules.py --check
       - name: Story dry run reaches every mission (no dead ends)
         run: python tools/playtest.py > /dev/null
       - name: Asset prompt pack matches the asset contract
