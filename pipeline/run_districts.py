@@ -57,7 +57,7 @@ def main():
     names = a.only.split(",") if a.only else list(cfg["districts"])
     cache = cfg["cache"]["name"]
     index_path = pathlib.Path(a.out) / "districts.json"
-    index = json.loads(index_path.read_text()) if index_path.exists() else {}
+    index = json.loads(index_path.read_text()).get("districts", {}) if index_path.exists() else {}
     for name in names:
         print(f"\n#### {name}", flush=True)
         index[name] = run_district(name, cfg["districts"][name], cfg["origin"], cache, a.tile, a.data, a.out)
