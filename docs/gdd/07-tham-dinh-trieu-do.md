@@ -7,6 +7,11 @@ Bản chơi thử bằng tay cùng ngày, đi sâu vào lời thoại, dòng th�
 3 lỗi runtime ở PR #5) nằm ở `../11-tham-dinh-choi-thu.md`; tài liệu này không lặp lại phần đó mà
 nhìn ở tầng hệ thống: đồng hồ, bản đồ, kinh tế, độ phủ quận, và đường tới một bản bán được.
 
+**Cập nhật cùng ngày (sau khi sửa):** hai điểm thấp nhất, *Mở màn* và *Hệ quả lựa chọn*, đã được nâng
+lên 5/5 bằng cold open 1957/1972, thoại có điều kiện, 38 hệ quả trong chương 1; chương 2 "Mùa nồm"
+viết thành dữ liệu; chuẩn 5/5 đo được, số đo trước/sau và bảng 57 cờ ở `11-mo-man-va-he-qua.md`.
+Các số "hiện tại" dưới đây giữ nguyên là số lúc thẩm định; chỗ nào đã đổi có ghi chú **[đã sửa]**.
+
 ## Kết luận ngắn
 
 **Cốt truyện đủ tốt để làm nền cho một game triệu đô. Bản nháp v0 chưa phải là sản phẩm triệu đô.**
@@ -19,9 +24,9 @@ tiền đề, nhân vật, sự cụ thể; điểm thấp ở mở màn, hệ q
 
 | Phép đo | Kết quả | Ý nghĩa |
 | --- | --- | --- |
-| Lỗi chặn chơi (bước cụt, cờ không ai đặt, thoại trỏ sai) | **0** | Logic dữ liệu sạch; chơi hết được 24/24 nhiệm vụ |
-| Mâu thuẫn giờ giấc | 3 (đồng hồ 30x) / 2 (đồng hồ 1x) | Ngày 48 phút trên bản đồ 1:1: đi bộ 800 m từ Hàng Chiếu ra Bờ Hồ mất 5 giờ game, bước "chụp lúc 5h30-7h" trượt |
-| Lựa chọn có hệ quả về sau | **2/34 cờ được đọc lại** (chỉ cặp gia vị chuẩn/rẻ) | Gần như toàn bộ lựa chọn chương 1 chưa trả gì, vì chương 2-5 chưa viết. Người chơi bản v0 sẽ thấy "chọn gì cũng thế" |
+| Lỗi chặn chơi (bước cụt, cờ không ai đặt, thoại trỏ sai) | **0** | Logic dữ liệu sạch; chơi hết được 24/24 nhiệm vụ **[đã sửa: 25/25 sau khi thêm P0, nhánh thua và bước chờ]** |
+| Mâu thuẫn giờ giấc | 3 (đồng hồ 30x) / 2 (đồng hồ 1x) **[đã sửa: 0 với đồng hồ 30x, bước chờ đặt sau khi tới nơi]** | Ngày 48 phút trên bản đồ 1:1: đi bộ 800 m từ Hàng Chiếu ra Bờ Hồ mất 5 giờ game, bước "chụp lúc 5h30-7h" trượt |
+| Lựa chọn có hệ quả về sau | **2/34 cờ được đọc lại** (chỉ cặp gia vị chuẩn/rẻ) **[đã sửa: 34/34 cờ lựa chọn chương 0-1 được đọc ở 48 chỗ, 38 hệ quả ngay trong chương 1; xem 11]** | Gần như toàn bộ lựa chọn chương 1 chưa trả gì, vì chương 2-5 chưa viết. Người chơi bản v0 sẽ thấy "chọn gì cũng thế" |
 | Tiền của Minh sau 90 ngày game | **âm** (dư -0,7 tr/tháng theo bảng giá GDD) | Mục tiêu đời của Minh (tiệm 120 tr) không thể đạt bằng vòng lặp tự do; gửi quê 6 tr/tháng nuốt hết |
 | Nhiệm vụ phụ "Mũ bảo hiểm cho bé" | cần 90 ngày sạch = **72 giờ chơi thật** | Một nhiệm vụ nhỏ bị khóa sau một điều kiện của game 100 giờ |
 | Quận cốt truyện chạm tới | 8/14 | Cầu Giấy, Hai Bà Trưng, Hoàng Mai, Hà Đông, Bắc Từ Liêm, Gia Lâm chưa có lý do để tới |
@@ -63,14 +68,14 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
   "game mô phỏng cuộc sống hiền lành".
 
 **Yếu:**
-- **Mở màn chậm.** P1 là một cuốc xe hướng dẫn. Câu hỏi lớn (bán hay giữ) đến ở P2, tờ giấy cháy ở
+- **Mở màn chậm.** **[đã sửa: cold open `p0_ganh_pho_1957`, cầm điều khiển ở phút 0,4, lựa chọn đầu phút 2,6, câu hỏi lớn phút 2,6; xem 08]** P1 là một cuốc xe hướng dẫn. Câu hỏi lớn (bán hay giữ) đến ở P2, tờ giấy cháy ở
   cuối chương 1 (nhiệm vụ 1.9, sau khoảng 6-7 giờ chơi). GTA5 mở bằng vụ cướp ngân hàng; Yakuza 0 mở
   bằng một cái xác. Game này nên mở bằng **băng số 1** hoặc **cảnh cháy tờ giấy** (flash-forward), rồi
   mới quay về cuốc xe rạng đông.
 - **Phản diện mềm quá mềm.** Kim Long chỉ "trả lương gấp đôi" và "gom 14 nhà". Cần một hành động
   gây tổn thất thấy được sớm: nhà ông Tư Hàng Bạc bị ép bán ở hồi 2 nên kéo lên chương 1, hoặc khách
   sạn mẫu khoét ruột làm nứt tường 49 Hàng Chiếu.
-- **Lựa chọn chưa có giá.** 34 cờ được đặt, 2 cờ được đọc. Dàn ý hồi 2-5 có kế hoạch trả, nhưng chừng nào
+- **Lựa chọn chưa có giá.** **[đã sửa: xem 08 §5-7]** 34 cờ được đặt, 2 cờ được đọc. Dàn ý hồi 2-5 có kế hoạch trả, nhưng chừng nào
   chưa viết, bản demo không chứng minh được "lựa chọn quan trọng". Cần ít nhất 3 hệ quả *trong chương
   1* (ví dụ: `minh_nhan_viec_kim_long` → Thảo gọi Minh đi cuốc xe lúc 1.5 thay vì Tuấn; `lan_mua_gia_vi_re`
   → Mark chê ở 1.7).
@@ -114,8 +119,8 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 | --- | --- | --- | --- |
 | Tiền đề | 5 | 5 | Căn nhà ba chủ, tờ giấy cháy, 24 cuộn băng |
 | Nhân vật | 4 | 5 | Ba cung rõ; Khôi cần nói ít hơn và nhìn nhiều hơn |
-| Mở màn | 2 | 4 | Hiện là hướng dẫn lái xe |
-| Hệ quả lựa chọn | 1 | 4 | 2/34 cờ được đọc |
+| Mở màn | 2 → **5** | 5 | Lúc thẩm định: hướng dẫn lái xe. Sau khi sửa: cold open 1957/1972, bốn số đo mở màn đều đạt chuẩn (11 §3) |
+| Hệ quả lựa chọn | 1 → **5** | 5 | Lúc thẩm định: 2/34 cờ được đọc. Sau khi sửa: 34/34, 48 chỗ đọc, 38 hệ quả trong chương (11 §7) |
 | Logic dữ liệu | 5 | 5 | 0 lỗi chặn chơi |
 | Nhịp chơi | 3 | 4 | 45% thoại, nhiệm vụ 4 phút |
 | Kinh tế | 2 | 4 | Minh lỗ hàng tháng |
@@ -125,14 +130,22 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 
 ## 12 việc để biến bản nháp thành bản bán được (theo thứ tự)
 
-1. Quy tắc đồng hồ: 8x ngoài phố, 1x trong nhiệm vụ; kiểm tra `hours` lúc bắt đầu bước; thêm
-   `wait_until` trước ba bước chụp bị lệch. Chạy lại `tools/playtest.py` tới 0 cảnh báo.
+1. ~~Quy tắc đồng hồ: 8x ngoài phố, 1x trong nhiệm vụ; kiểm tra `hours` lúc bắt đầu bước; thêm
+   `wait_until` trước ba bước chụp bị lệch. Chạy lại `tools/playtest.py` tới 0 cảnh báo.~~ **Đã làm, theo
+   quyết định của chủ dự án: giữ 30x như GTA5 (ngày 48 phút thật), không có chế độ 8x.** Bước có khung giờ
+   đặt sau bước đi tới nơi, kèm `wait_until` có `skip_allowed` tại chỗ (p3, c1_02, c1_04 theo
+   `10-sua-chuong-1.md` M1). Giả lập: 0 cảnh báo.
 2. Kinh tế Minh: gửi quê 3 tr, ca đêm giao đồ ăn 20.000 đ/đơn, thưởng tuần của app; mục tiêu
    "dư 2-3 tr/tháng nếu chăm" để tiệm 120 tr thành 3-4 năm game, tức là *phải* nhờ truyện (và nói rõ).
-3. Mở màn mới: cold open 2 phút (băng số 1 hoặc cảnh tờ giấy cháy), rồi về P1.
-4. Ba hệ quả trong chương 1 đọc lại cờ của chính chương 1 (ví dụ ở trên).
+3. ~~Mở màn mới: cold open 2 phút (băng số 1 hoặc cảnh tờ giấy cháy), rồi về P1.~~ **Đã làm:**
+   `p0_ganh_pho_1957`, 4,6 phút, người chơi điều khiển cụ Thọ 1957 rồi 1972, tờ giấy cháy trước mắt
+   người chơi; rồi về P1 (11 §3).
+4. ~~Ba hệ quả trong chương 1 đọc lại cờ của chính chương 1 (ví dụ ở trên).~~ **Đã làm:** 35 cặp
+   (nhiệm vụ, cờ) trả trong chương 1, gồm cả hai ví dụ trên và bản sửa `10-sua-chuong-1.md` (11 §5).
 5. Viết chương 2 "Mùa nồm" thành dữ liệu: 9-10 nhiệm vụ, trả ít nhất 10 cờ; đưa vụ ông Tư Hàng
-   Bạc lên sớm làm hành động đầu tiên của Kim Long.
+   Bạc lên sớm làm hành động đầu tiên của Kim Long. **Đang làm ở PR #9 (luồng "Chơi thử và thẩm định
+   cốt truyện"): 8 nhiệm vụ, phủ cả 6 quận trống, điểm nhấn Giao thừa Hồ Gươm; bản nháp chương 2 của
+   luồng này đã bàn giao (11 §6).**
 6. Mỗi quận trống một nhiệm vụ truyện hoặc người lạ: Cầu Giấy (Khôi bán ảnh cho báo ở Duy Tân), Hai
    Bà Trưng (Lan mua vải chợ Hôm, Bách Khoa), Hoàng Mai (chợ Đền Lừ 2h sáng, HH Linh Đàm), Hà Đông
    (Vạn Phúc, ga Yên Nghĩa), Bắc Từ Liêm (Tây Tựu hoa đêm, đình Chèm), Long Biên (Aeon, đê Ngọc Thụy).

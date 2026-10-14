@@ -935,6 +935,50 @@
           }
         }
       ]
+    },
+    {
+      "id": "dlg_s02_thua",
+      "context": "Cụ Bảo thắng. Mời trà.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_bao_co_tuong",
+          "text": {
+            "vi": "Nước này cậu ăn hay nhịn? Cậu nhịn, nên cậu đói. Mai ra, tôi chấp xe.",
+            "en": "That move, did you take it or hold back? You held back, so you went hungry. Come tomorrow, I'll spot you a chariot."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "Mai cháu ra.",
+            "en": "I'll be here tomorrow."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s10_ve_bet",
+      "context": "Về đích ngoài top 3 vòng Hồ Tây.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Ông cụ Hàn Quốc bảy mươi tuổi vẫn qua mày. Thôi, có clip mày thở là tao đủ content.",
+            "en": "The seventy-year-old Korean still beat you. Fine, a clip of you gasping is content enough for me."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Mai tao đạp lại. Năm giờ.",
+            "en": "Tomorrow I ride again. Five o'clock."
+          }
+        }
+      ]
     }
   ]
 }

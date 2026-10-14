@@ -21,6 +21,10 @@ class HANOICITYRUNTIME_API UHanoiHeatSubsystem : public UTickableWorldSubsystem
 	GENERATED_BODY()
 
 public:
+	/** Player-state flag (set by content) that lowers the heat cap by one star permanently. */
+	static const FName PermanentHeatCapFlag;
+
+public:
 	virtual void Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override;
 

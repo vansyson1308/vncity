@@ -245,6 +245,14 @@
       "occupation": {"vi": "Thợ xây", "en": "Builder"},
       "voice": {"accent": "northern_rural"},
       "schedule": [{"hours": [7, 11.5], "activity": "lam_cong_trinh"}, {"hours": [11.5, 13.5], "activity": "nghi_trua"}, {"hours": [13.5, 17.5], "activity": "lam_cong_trinh"}]
+    },
+    {
+      "id": "amb_loa_phuong",
+      "tags": ["voice_only", "flashback", "public_address"],
+      "name": {"vi": "Loa phường (1972)", "en": "Ward loudspeaker (1972)"},
+      "role": "ambient_archetype",
+      "bio": {"vi": "Giọng phát thanh viên báo động phòng không đêm 26/12/1972, chỉ nghe không thấy. Dùng lại cho loa phường 2026 với giọng khác.", "en": "The air-raid announcer's voice on the night of 26 December 1972, heard but never seen. Reused for the 2026 ward loudspeaker with a different voice."},
+      "voice": {"accent": "hanoi", "notes": "Giọng nữ, dõng dạc, qua loa sắt rè."}
     }
   ]
 }
