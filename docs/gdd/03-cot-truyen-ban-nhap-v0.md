@@ -121,6 +121,12 @@ bố đi xuất khẩu lao động Hàn Quốc năm 2010 và nhường phần nh
   về nhà ông Tư Hàng Bạc, ông cụ bị ép bán. Hội tài xế chia rẽ.
 - Tết: nhiệm vụ đi chúc Tết từng nhân vật, đêm giao thừa ở Hồ Gươm. Hạn chót của Vĩnh.
 
+**Chương 3-5 đã viết thành dữ liệu (14/10/2026)**, theo `13-chuong-3-5.md`: 19 nhiệm vụ, 88 đoạn
+thoại, ba kết ngang hàng. Một số chi tiết đã đổi so với dàn ý dưới đây, và `13` là bản đúng: không có
+khoản "mua lại phần cô Hạnh 3 tỷ", thay vào đó là tờ giấy nợ 1 tỷ 8 mà gốc thật chỉ 600 triệu (đúng luật
+còn khoảng 460); băng 24 không mở bằng 30 ảnh mà bằng lựa chọn đêm nước lên (cứu băng) hoặc lời ông Thắng;
+khách sạn mẫu của Kim Long là số 51 sát vách, thấm sang số 49 qua bức tường chung.
+
 **Hồi 3 "Nước lên" (chương 3)**: Mùa mưa.
 - Mưa lịch sử (dùng dữ liệu thật nếu có, kịch bản nếu không): phố cổ ngập, khách sạn mẫu của Kim
   Long thấm nước vì làm ẩu phần ruột nhà. Lan dùng sổ sách để chứng minh phương án tự quản rẻ hơn.

@@ -85,9 +85,9 @@ Táo quân (`c2_05`), Vĩnh đêm giao thừa (`c2_07`: "Tôi mua phần của n
 | 0 Mở đầu | (luồng "Dựng đủ các quận" viết cold open) | lái xe trong 60 giây đầu |
 | 1 Phố cũ, người mới | Tối thứ Bảy phố đi bộ (1.8): ba nhân vật ba việc trong một sự kiện thành phố | đổi nhân vật giữa nhiệm vụ |
 | 2 Mùa nồm / Tết | **Giao thừa Hồ Gươm** (`c2_07`): ba nhân vật ở ba nơi 23:00, hạn chót của Vĩnh 23:30, gặp nhau ở Tháp Rùa đúng 0:00 pháo hoa; câu trả lời phụ thuộc toàn bộ chương 1-2 | lựa chọn bị khóa/mở bằng điều kiện, đếm ngược theo đồng hồ game |
-| 3 Nước lên | Đêm ngập lịch sử: cứu kho ảnh trên gác, phố cổ không điện, thuyền trong ngõ | thời tiết thật đổi luật chơi |
-| 4 Ngày 10/10 | Triển lãm ảnh ông Khải và bỏ phiếu tổ dân phố; băng số 24 | kết quả tính từ uy tín và cờ cả game |
-| 5 Phố mất người hay không | Bát phở cuối cùng: ba kết, thế giới mở tiếp tục | không có game over |
+| 3 Nước lên | **Đêm nước lên** (`c3_07`): Minh đưa ông Bảy ra khỏi bãi giữa khi cầu Long Biên cấm, Lan nấu hay đóng bếp giữa nước, Khôi cứu băng hay cứu phim như cụ Thọ năm 1972 | thời tiết và lớp nước ngập đổi luật chơi |
+| 4 Ngày 10/10 | **Mười tháng Mười** (`c4_07`): triển lãm ở Đoan Môn 15 giờ, Vĩnh thấy mình năm 1994 trong khung 30, bỏ phiếu tổ dân phố 19 giờ 30 | kết quả tính từ chuỗi cờ của cả game (`13` §4) |
+| 5 Bát phở cuối cùng | **Bát phở cuối cùng** (`c5_04`): nồi đầu mùa lạnh cụ Thọ không nếm thay; ba kết ngang hàng | không có game over |
 
 ## 4. Độ khó: vòng sau khó hơn vòng trước, vẫn qua được
 
@@ -96,14 +96,14 @@ Táo quân (`c2_05`), Vĩnh đêm giao thừa (`c2_07`: "Tôi mua phần của n
 `deadline_hour` và `hours` là giờ **game**. Khi viết bước có giờ phải tính cả hai: 10 phút thật =
 5 giờ game, nên "chở hàng về trước giờ ninh" 600 giây là cả một buổi sáng trong game, quá rộng.
 
-| Thước đo | Ch. 0 | Ch. 1 | Ch. 2 | Ch. 3 | Ch. 4 |
-| --- | --- | --- | --- | --- | --- |
-| `pass_score` minigame | 70 | 70 | 75 | 80 | 85 |
-| `time_limit_s` chở/giao (thật) | không | 600-2400 | 240-900 | 180-600 | 120-480 |
-| Lỗi được phép (`max_faults`, "x lần") | 5 | 3-5 | 2-3 | 2 | 1-2 |
-| Bước thua có nhánh `chua_dat` | không | không | tất cả | tất cả | tất cả |
-| Giá của thua | không | làm lại | mất tiền/một ngày game | mất uy tín phe | mất một lựa chọn ở kết |
-| Lựa chọn bị khóa bởi quá khứ | 0 | 0 | 4 | 6 | 10 |
+| Thước đo | Ch. 0 | Ch. 1 | Ch. 2 | Ch. 3 | Ch. 4 | Ch. 5 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `pass_score` minigame | 70 | 70 | 75 | 80 | 85 | 90 |
+| `time_limit_s` chở/giao (thật) | không | 600-2400 | 240-900 | 180-600 | 120-480 | 240 |
+| Lỗi được phép (`max_faults`, "x lần") | 5 | 3-5 | 2-3 | 2 | 1-2 | 1 |
+| Bước thua có nhánh `chua_dat` | không | không | tất cả | tất cả | tất cả | tất cả |
+| Giá của thua | không | làm lại | mất tiền/một ngày game | mất uy tín phe | mất một lựa chọn ở kết | làm lại hôm sau |
+| Lựa chọn bị khóa bởi quá khứ | 0 | 0 | 4 | 7 | 10 | 7 |
 
 Quy ước nhánh thua (bắt buộc từ chương 2): minigame/cook/photograph có `next` dạng bảng
 `{"dat": ..., "chua_dat": ..., "default": "<chua_dat>"}`; nhánh `chua_dat` **không** kết thúc
@@ -114,6 +114,8 @@ và nghe một câu khiến họ cay (bà Lụa: "Lần sau mang tiền đủ r�
 Hồi hộp đến từ **đếm ngược có nhìn thấy**: `deadline_hour` hiển thị trên HUD như đồng hồ, không
 phải thanh thời gian ẩn; và từ **không biết trước câu trả lời**: lựa chọn của đêm giao thừa chỉ hiện
 khi điều kiện đủ, người chơi thấy số lựa chọn ít hơn mong đợi và hiểu vì sao.
+
+Chương 3-5 đã viết theo bảng này; số đếm và ví dụ thua có giá ở `13-chuong-3-5.md` §6.
 
 ## 5. Nguồn tham khảo cho phần luật trong truyện
 

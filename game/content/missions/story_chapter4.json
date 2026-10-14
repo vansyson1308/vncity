@@ -1,0 +1,1365 @@
+{
+  "collection": "missions",
+  "items": [
+    {
+      "id": "c4_01_gio_dau",
+      "tags": [
+        "chapter_4",
+        "khoi",
+        "pho_co",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Giỗ đầu"
+      },
+      "type": "story",
+      "chapter": 4,
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "Giỗ đầu ông Khải, ba tuần sau bão. Thứ Khôi cứu đêm nước lên còn nguyên, thứ kia thì nước đã chạm. Ai đến thắp hương tùy những gì Khôi đã làm suốt một năm. Chị Quỳnh mang đến lời mời triển lãm ba mươi khung ảnh của ông Khải ở Hoàng thành đúng chiều 10/10, và cả phố chờ nghe con trai ông Khải nói một câu về căn nhà."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c3_08_nuoc_rut"
+        ],
+        "flags": [
+          "ket_thuc_chuong_3"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "kiem_ke",
+          "kind": "talk",
+          "objective": {
+            "vi": "Sáng giỗ. Mở nóc tủ sắt, kiểm lại thứ đã để lại đêm bão"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_01_kiem_ke",
+          "params": {
+            "time_of_day": 7.0
+          }
+        },
+        {
+          "id": "re_nhanh",
+          "kind": "choice",
+          "objective": {
+            "vi": "Thứ gì bị nước chạm?"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "khoi_cuu_bang": "rua_phim",
+            "default": "say_bang"
+          }
+        },
+        {
+          "id": "rua_phim",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Cứu phim ướt: giữ âm bản trong nước sạch, rửa lại và phơi từng dải trong bốn mươi tám giờ trước khi nấm ăn vào nhũ"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "mode": "cuu_phim_uot",
+            "pass_score": 85,
+            "difficulty": 4,
+            "time_limit_s": 300,
+            "max_faults": 2
+          },
+          "next": {
+            "dat": "cung_gio",
+            "chua_dat": "phim_hong",
+            "default": "phim_hong"
+          }
+        },
+        {
+          "id": "phim_hong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Một dải phim dính vào nhau. Ba khung hình mất hẳn"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_01_phim_hong",
+          "set_flags": [
+            "trien_lam_khung_trong"
+          ],
+          "next": "cung_gio"
+        },
+        {
+          "id": "say_bang",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Cứu băng ướt: tháo vỏ từng cuộn, lau đầu từ, phơi băng trong bóng râm, không dùng máy sấy"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "mode": "cuu_bang_uot",
+            "pass_score": 85,
+            "difficulty": 4,
+            "time_limit_s": 300,
+            "max_faults": 2
+          },
+          "next": {
+            "dat": "bang_kho",
+            "chua_dat": "bang_dut",
+            "default": "bang_dut"
+          }
+        },
+        {
+          "id": "bang_kho",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mười một cuộn khô. Cuộn ở đáy hộp bết lại, nhãn ghi số 24"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_01_bang_kho",
+          "next": "cung_gio"
+        },
+        {
+          "id": "bang_dut",
+          "kind": "talk",
+          "objective": {
+            "vi": "Băng đứt khi tháo, cuộn này đến cuộn khác. Cuộn ở đáy hộp nhãn ghi số 24"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_01_bang_dut",
+          "set_flags": [
+            "trien_lam_mat_tieng"
+          ],
+          "next": "cung_gio"
+        },
+        {
+          "id": "cung_gio",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mười một giờ. Mâm cỗ trên gác, người đến thắp hương"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_01_cung_gio",
+          "params": {
+            "time_of_day": 11.0
+          },
+          "next": "loi_moi"
+        },
+        {
+          "id": "loi_moi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chị Quỳnh đặt một phong bì lên bàn thờ trước khi đặt nó vào tay Khôi"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_01_loi_moi"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "to_dan_pho_hang_chieu": 5,
+          "hoi_bao_ton_pho_cu": 5
+        }
+      },
+      "unlocks": [
+        "missions:c4_03_bao_khong_dang"
+      ]
+    },
+    {
+      "id": "c4_02_tuan_bach_mai",
+      "tags": [
+        "chapter_4",
+        "minh",
+        "dong_da",
+        "hai_ba_trung",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Tuấn ở Bạch Mai"
+      },
+      "type": "story",
+      "chapter": 4,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:tuan_beo",
+      "summary": {
+        "vi": "Cuối tháng Chín, mưa lớn lần hai. Tuấn ngã xe trên đường Giải Phóng ngập, gãy xương đùi. Cấp cứu Bạch Mai cần mười hai triệu tạm ứng trước khi mổ. Mẹ Tuấn bắt xe khách từ Phú Thọ xuống, và Tuấn xin Minh một điều Minh từng xin chính mình."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c3_08_nuoc_rut"
+        ]
+      },
+      "start": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "steps": [
+        {
+          "id": "cuoc_goi",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "22:10, điện thoại: số lạ. 'Anh là người nhà Nguyễn Văn Tuấn à?'"
+          },
+          "target": "landmarks:ngo_khuong_dinh",
+          "dialogue": "dialogues:dlg_c4_02_cuoc_goi",
+          "params": {
+            "time_of_day": 22.1,
+            "force_weather": "storm"
+          },
+          "next": "den_vien"
+        },
+        {
+          "id": "den_vien",
+          "kind": "ride",
+          "objective": {
+            "vi": "Đến cấp cứu Bạch Mai, Giải Phóng ngập nửa bánh, đừng ngã như Tuấn"
+          },
+          "target": {
+            "lat": 21.001,
+            "lon": 105.8411
+          },
+          "params": {
+            "time_limit_s": 300,
+            "max_faults": 1,
+            "force_weather": "storm"
+          },
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ],
+          "next": "cap_cuu"
+        },
+        {
+          "id": "cap_cuu",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hành lang cấp cứu. Bác sĩ Hòa cầm phim X-quang"
+          },
+          "target": {
+            "lat": 21.001,
+            "lon": 105.8411
+          },
+          "dialogue": "dialogues:dlg_c4_02_cap_cuu",
+          "next": "tien_tam_ung"
+        },
+        {
+          "id": "tien_tam_ung",
+          "kind": "choice",
+          "objective": {
+            "vi": "Mười hai triệu trước bảy giờ sáng"
+          },
+          "target": {
+            "lat": 21.001,
+            "lon": 105.8411
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "minh_goi_hoi_tai_xe": "hoi_den",
+            "default": "dong_tien"
+          }
+        },
+        {
+          "id": "hoi_den",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Hai giờ sáng, mười bảy tài xế áo xanh đứng ở cổng viện, mỗi người chuyển khoản một ít"
+          },
+          "target": {
+            "lat": 21.001,
+            "lon": 105.8411
+          },
+          "dialogue": "dialogues:dlg_c4_02_hoi_den",
+          "params": {
+            "time_of_day": 2.0
+          },
+          "next": "me_tuan_den"
+        },
+        {
+          "id": "dong_tien",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Xuống quầy viện phí, đóng mười hai triệu tạm ứng"
+          },
+          "target": {
+            "lat": 21.0008,
+            "lon": 105.8409
+          },
+          "params": {
+            "on_foot": true,
+            "cost_vnd": 12000000,
+            "time_of_day": 2.0
+          },
+          "next": "me_tuan_den"
+        },
+        {
+          "id": "me_tuan_den",
+          "kind": "ride",
+          "objective": {
+            "vi": "Sáng. Ra bến Giáp Bát đón mẹ Tuấn xuống xe khách Phú Thọ"
+          },
+          "target": {
+            "lat": 20.9806,
+            "lon": 105.8413
+          },
+          "params": {
+            "time_of_day": 6.0,
+            "time_limit_s": 300
+          },
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ],
+          "next": "tuan_xin"
+        },
+        {
+          "id": "tuan_xin",
+          "kind": "talk",
+          "objective": {
+            "vi": "Phòng hậu phẫu. Mẹ Tuấn đi rửa cặp lồng, Tuấn nắm tay Minh"
+          },
+          "target": {
+            "lat": 21.001,
+            "lon": 105.8411
+          },
+          "dialogue": "dialogues:dlg_c4_02_tuan_xin",
+          "params": {
+            "time_of_day": 10.0
+          },
+          "next": "me_tuan_hoi"
+        },
+        {
+          "id": "me_tuan_hoi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ghế đá sân bệnh viện. Mẹ Tuấn hỏi Minh về thằng Béo"
+          },
+          "target": {
+            "lat": 21.0012,
+            "lon": 105.8415
+          },
+          "dialogue": "dialogues:dlg_c4_02_me_tuan"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "cong_dong_tai_xe_vo": 5
+        }
+      },
+      "unlocks": [
+        "missions:c4_04_thao_va_thanh_tra"
+      ]
+    },
+    {
+      "id": "c4_03_bao_khong_dang",
+      "tags": [
+        "chapter_4",
+        "khoi",
+        "cau_giay",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Bài không đăng"
+      },
+      "type": "story",
+      "chapter": 4,
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:phong_bien_tap",
+      "summary": {
+        "vi": "Khôi mang hai tờ biên bản, ảnh rãnh cắt và vệt nước lên tòa soạn Thủ Đô Nhanh ở Duy Tân. Phong, bạn từ thời Leipzig, đọc hết và nói không. Khôi phải chọn ai sẽ đưa câu chuyện số 51 ra ánh sáng trước 10/10, hay để nó nằm im trong triển lãm."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c4_01_gio_dau"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "len_toa_soan",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Lên tòa soạn Thủ Đô Nhanh, tầng mười hai một tòa nhà kính ở Duy Tân"
+          },
+          "target": {
+            "lat": 21.0309,
+            "lon": 105.7837
+          },
+          "params": {
+            "time_of_day": 9.0
+          },
+          "next": "phong"
+        },
+        {
+          "id": "phong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Phòng họp kính, Phong đọc hai tờ biên bản rất chậm"
+          },
+          "target": {
+            "lat": 21.0309,
+            "lon": 105.7837
+          },
+          "dialogue": "dialogues:dlg_c4_03_phong",
+          "next": "chon_nguoi"
+        },
+        {
+          "id": "chon_nguoi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ngồi ở bậc thang thoát hiểm, ba cái tên trong danh bạ"
+          },
+          "target": {
+            "lat": 21.0309,
+            "lon": 105.7837
+          },
+          "dialogue": "dialogues:dlg_c4_03_chon_nguoi"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 5
+        }
+      },
+      "unlocks": [
+        "missions:c4_04_thao_va_thanh_tra",
+        "missions:c4_05_bang_24"
+      ]
+    },
+    {
+      "id": "c4_04_thao_va_thanh_tra",
+      "tags": [
+        "chapter_4",
+        "minh",
+        "ha_dong",
+        "hai_ba_trung",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Thảo và Sở Xây dựng"
+      },
+      "type": "story",
+      "chapter": 4,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:thao",
+      "summary": {
+        "vi": "Đầu tháng Mười, Thảo đặt xe Minh từ Văn Quán lên Sở Xây dựng ở Lê Đại Hành. Trong túi cô là một tập hồ sơ về số 51, hoặc không có gì. Bốn mươi phút trên xe, cô hỏi Minh đúng một câu về ông Tư Hàng Bạc. Thảo nộp hồ sơ cho thanh tra hay quay về tòa 72 tùy thứ cô đã có trong tay và thứ Minh dám nói."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c4_02_tuan_bach_mai",
+          "missions:c4_03_bao_khong_dang"
+        ]
+      },
+      "start": {
+        "lat": 20.977,
+        "lon": 105.79
+      },
+      "steps": [
+        {
+          "id": "don_thao",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đón Thảo ở hồ Văn Quán, chỗ mẹ cô bán nước chè"
+          },
+          "target": {
+            "lat": 20.977,
+            "lon": 105.79
+          },
+          "params": {
+            "time_of_day": 7.0
+          },
+          "next": "tren_xe"
+        },
+        {
+          "id": "tren_xe",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở Thảo lên Lê Đại Hành trước tám giờ, cô không muốn đến muộn lần đầu tiên trong đời"
+          },
+          "target": {
+            "lat": 21.0124,
+            "lon": 105.8476
+          },
+          "params": {
+            "passenger": "characters:thao",
+            "helmet_for_passenger": true,
+            "comfort_weight": 0.5,
+            "time_limit_s": 420,
+            "max_faults": 1
+          },
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ],
+          "next": "cau_hoi"
+        },
+        {
+          "id": "cau_hoi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Đèn đỏ Nguyễn Trãi, Thảo hỏi qua gương chiếu hậu"
+          },
+          "target": {
+            "lat": 21.0124,
+            "lon": 105.8476
+          },
+          "dialogue": "dialogues:dlg_c4_04_cau_hoi",
+          "next": "b1"
+        },
+        {
+          "id": "b1",
+          "kind": "choice",
+          "objective": {
+            "vi": "Thảo có gì trong tay?"
+          },
+          "target": {
+            "lat": 21.0124,
+            "lon": 105.8476
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "khoi_gui_thao_51": "b2",
+            "khoi_dua_thao": "b2",
+            "default": "o_lai"
+          }
+        },
+        {
+          "id": "b2",
+          "kind": "choice",
+          "objective": {
+            "vi": "Có ai làm chứng không?"
+          },
+          "target": {
+            "lat": 21.0124,
+            "lon": 105.8476
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "minh_thu_nhan_ban_tin": "nop",
+            "minh_ke_ong_tu_cho_thao": "nop",
+            "khoi_tang_anh_thao": "nop",
+            "default": "o_lai"
+          }
+        },
+        {
+          "id": "nop",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Thảo bước lên bậc thềm Sở Xây dựng"
+          },
+          "target": {
+            "lat": 21.0124,
+            "lon": 105.8476
+          },
+          "dialogue": "dialogues:dlg_c4_04_nop",
+          "set_flags": [
+            "thao_nop_thanh_tra"
+          ],
+          "next": "end"
+        },
+        {
+          "id": "o_lai",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Thảo đứng ở bậc thềm, rồi bảo Minh quay xe về Phạm Hùng"
+          },
+          "target": {
+            "lat": 21.0124,
+            "lon": 105.8476
+          },
+          "dialogue": "dialogues:dlg_c4_04_o_lai",
+          "set_flags": [
+            "thao_o_lai_kim_long"
+          ]
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 5
+        }
+      },
+      "unlocks": [
+        "missions:c4_07_muoi_thang_muoi"
+      ]
+    },
+    {
+      "id": "c4_05_bang_24",
+      "tags": [
+        "chapter_4",
+        "khoi",
+        "ba_dinh",
+        "hoan_kiem",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Băng số 24"
+      },
+      "type": "story",
+      "chapter": 4,
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:ong_thang",
+      "summary": {
+        "vi": "Thứ Bảy 9/10, 15 giờ. Khung ảnh thứ ba mươi của triển lãm là ảnh ông Khải chụp ở sân Cột cờ chiều 10/10/1994, Khôi phải chụp lại cùng góc, cùng giờ. Rồi đến băng số 24, nếu đêm bão Khôi đã cứu băng. Nếu không, chỉ còn một người biết ông Khải đã nói gì trong cuộn băng ấy."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c4_03_bao_khong_dang"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "khung_30",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Khung 30: sân Cột cờ, 15 giờ, đúng góc ông Khải đứng năm 1994, lá cờ và bậc thang và người bán cờ giấy trong một khung"
+          },
+          "target": "landmarks:cot_co_ha_noi",
+          "params": {
+            "activity": "activities:act_chup_lai_anh_xua",
+            "match_threshold": 0.85,
+            "difficulty": 4,
+            "hours": [
+              14.5,
+              16
+            ],
+            "time_of_day": 15.0
+          },
+          "next": {
+            "dat": "re_nhanh",
+            "chua_dat": "khung_trong",
+            "default": "khung_trong"
+          }
+        },
+        {
+          "id": "khung_trong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mây kéo đến. Ánh sáng 15 giờ đã qua"
+          },
+          "target": "landmarks:cot_co_ha_noi",
+          "dialogue": "dialogues:dlg_c4_05_khung_trong",
+          "set_flags": [
+            "trien_lam_khung_trong"
+          ],
+          "next": "re_nhanh"
+        },
+        {
+          "id": "re_nhanh",
+          "kind": "choice",
+          "objective": {
+            "vi": "Băng số 24 còn nghe được không?"
+          },
+          "target": "landmarks:cot_co_ha_noi",
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "khoi_cuu_bang": "nghe_bang_24",
+            "default": "tim_ong_thang"
+          }
+        },
+        {
+          "id": "nghe_bang_24",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tối, gác ảnh, máy cát-sét còn mùi bùn. Băng số 24"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_05_bang_24",
+          "params": {
+            "time_of_day": 20.0
+          },
+          "set_flags": [
+            "khoi_nghe_bang_24",
+            "biet_ten_chay"
+          ],
+          "next": "end"
+        },
+        {
+          "id": "tim_ong_thang",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Băng số 24 đã đứt. Tìm ông Thắng ở góc Ô Quan Chưởng trước khi ông về"
+          },
+          "target": "landmarks:o_quan_chuong",
+          "params": {
+            "time_of_day": 16.0,
+            "deadline_hour": 19.0
+          },
+          "next": "ong_thang_ke"
+        },
+        {
+          "id": "ong_thang_ke",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông Thắng lau yên xích lô. Trời không mưa, nhưng ông vẫn kể"
+          },
+          "target": "landmarks:o_quan_chuong",
+          "dialogue": "dialogues:dlg_c4_05_ong_thang",
+          "set_flags": [
+            "khoi_nghe_thang_ke_het",
+            "biet_ten_chay"
+          ]
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 5
+        }
+      },
+      "unlocks": [
+        "missions:c4_06_phan_cua_be_hanh"
+      ]
+    },
+    {
+      "id": "c4_06_phan_cua_be_hanh",
+      "tags": [
+        "chapter_4",
+        "lan",
+        "pho_co",
+        "consequence"
+      ],
+      "name": {
+        "vi": "Phần của bé Hạnh"
+      },
+      "type": "story",
+      "chapter": 4,
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:khoi",
+      "summary": {
+        "vi": "Tối 9/10, Khôi gõ cửa quán phở với cái tên đã cháy trên tờ giấy năm 1957. Cô Hạnh ngồi nghe điều không ai trong nhà từng nói với cô. Rồi tờ giấy nợ của cô quay lại bàn, ở đúng chỗ mà tháng Tám Lan đã để nó."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c4_05_bang_24"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "ten_chay",
+          "kind": "talk",
+          "objective": {
+            "vi": "21 giờ. Khôi, cô Hạnh, cụ Thọ và Lan quanh một cái bàn"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_06_ten_chay",
+          "params": {
+            "time_of_day": 21.0
+          },
+          "next": "n1"
+        },
+        {
+          "id": "n1",
+          "kind": "choice",
+          "objective": {
+            "vi": "Tờ giấy nợ đang ở đâu?"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "lan_to_cao_tung": "dong_bang",
+            "lan_thuong_luong_tung": "n2",
+            "lan_cho_vinh_mua_no": "n_vinh",
+            "default": "n_treo"
+          }
+        },
+        {
+          "id": "n2",
+          "kind": "choice",
+          "objective": {
+            "vi": "Có tiền trả bốn trăm sáu không?"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "ho_so_co_hanh_trong_goi": "n_giai",
+            "lan_goi_von_cong_dong": "n_giai",
+            "default": "n_treo"
+          }
+        },
+        {
+          "id": "dong_bang",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Tin nhắn của công an phường: vụ việc đã chuyển cơ quan điều tra, giao dịch tờ giấy nợ bị tạm dừng"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_06_dong_bang",
+          "set_flags": [
+            "no_co_hanh_dong_bang",
+            "no_co_hanh_an_toan"
+          ],
+          "next": "quyet"
+        },
+        {
+          "id": "n_giai",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Mang bốn trăm sáu mươi triệu và bảng tính đến quán cà phê ở Mỹ Đình, lấy lại sáu tờ giấy"
+          },
+          "target": {
+            "lat": 21.0285,
+            "lon": 105.7795
+          },
+          "params": {
+            "time_limit_s": 360,
+            "max_faults": 1,
+            "protagonist": "characters:lan"
+          },
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ],
+          "next": "giai_xong"
+        },
+        {
+          "id": "giai_xong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Anh Tùng đặt sáu tờ giấy lên bàn và tràng hạt lên trên"
+          },
+          "target": {
+            "lat": 21.0285,
+            "lon": 105.7795
+          },
+          "dialogue": "dialogues:dlg_c4_06_giai_xong",
+          "set_flags": [
+            "no_co_hanh_da_giai",
+            "no_co_hanh_an_toan"
+          ],
+          "next": "quyet"
+        },
+        {
+          "id": "n_vinh",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Vĩnh nhắn tin cho cô Hạnh, không nhắn cho Lan"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_06_vinh_cam_giay",
+          "set_flags": [
+            "no_co_hanh_cua_vinh"
+          ],
+          "next": "quyet"
+        },
+        {
+          "id": "n_treo",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Anh Tùng nhắn: 'Mai 10/10. Hết hạn.'"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_06_treo",
+          "set_flags": [
+            "no_co_hanh_treo"
+          ],
+          "next": "quyet"
+        },
+        {
+          "id": "quyet",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nửa đêm. Cô Hạnh cầm bút"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_06_quyet"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "to_dan_pho_hang_chieu": 5
+        }
+      },
+      "unlocks": [
+        "missions:c4_07_muoi_thang_muoi"
+      ]
+    },
+    {
+      "id": "c4_07_muoi_thang_muoi",
+      "tags": [
+        "chapter_4",
+        "set_piece",
+        "ba_dinh",
+        "hoan_kiem",
+        "pho_co",
+        "minh",
+        "lan",
+        "khoi"
+      ],
+      "name": {
+        "vi": "Mười tháng Mười"
+      },
+      "type": "story",
+      "chapter": 4,
+      "protagonists": [
+        "characters:khoi",
+        "characters:minh",
+        "characters:lan"
+      ],
+      "giver": "characters:ong_khang",
+      "summary": {
+        "vi": "Chủ nhật 10/10/2027, bảy mươi ba năm ngày tiếp quản Thủ đô. 15 giờ, triển lãm ba mươi khung ảnh của ông Khải mở ở Đoan Môn, nơi lá cờ đầu tiên được kéo lên chiều 10/10/1954. 19 giờ 30, tổ dân phố số 5 bỏ phiếu chọn tự quản, chia nhà, hay bán cho Kim Long. Mọi lựa chọn của ba chương trước được đếm trong một buổi tối."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c4_04_thao_va_thanh_tra",
+          "missions:c4_06_phan_cua_be_hanh"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "sang",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Khôi: 6 giờ sáng. Phố treo cờ. Ba mươi khung ảnh xếp trong xe ba gác"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_07_sang",
+          "params": {
+            "time_of_day": 6.0,
+            "force_event": "events:giai_phong_thu_do"
+          },
+          "next": "treo_anh"
+        },
+        {
+          "id": "treo_anh",
+          "kind": "collect",
+          "objective": {
+            "vi": "Treo ba mươi khung ảnh trên vách tạm trước Đoan Môn trước khi cổng mở, gió thu lật khung"
+          },
+          "target": "landmarks:hoang_thanh_thang_long",
+          "params": {
+            "qty": 30,
+            "time_limit_s": 300,
+            "max_faults": 1,
+            "protagonist": "characters:khoi",
+            "time_of_day": 8.0
+          },
+          "next": "don_thang"
+        },
+        {
+          "id": "don_thang",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Minh: đón ông Thắng ở Ô Quan Chưởng, đưa đến Đoan Môn trước 15 giờ. Phố Phan Đình Phùng cấm xe cho đoàn diễu hành"
+          },
+          "target": "landmarks:hoang_thanh_thang_long",
+          "params": {
+            "passenger": "characters:ong_thang",
+            "helmet_for_passenger": true,
+            "protagonist": "characters:minh",
+            "route_via": "landmarks:o_quan_chuong",
+            "time_limit_s": 300,
+            "max_faults": 1,
+            "deadline_hour": 15.0,
+            "time_of_day": 11.0
+          },
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ],
+          "next": "trien_lam"
+        },
+        {
+          "id": "trien_lam",
+          "kind": "talk",
+          "objective": {
+            "vi": "15 giờ. Một người đàn ông đứng rất lâu trước khung ảnh số 30"
+          },
+          "target": "landmarks:hoang_thanh_thang_long",
+          "dialogue": "dialogues:dlg_c4_07_trien_lam",
+          "params": {
+            "protagonist": "characters:khoi",
+            "time_of_day": 15.0
+          },
+          "next": "vd1"
+        },
+        {
+          "id": "vd1",
+          "kind": "choice",
+          "objective": {
+            "vi": "Vĩnh có lý do để đổi hướng không?"
+          },
+          "target": "landmarks:hoang_thanh_thang_long",
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "thao_nop_thanh_tra": "vd2",
+            "khoi_dua_linh": "vd2",
+            "khoi_dua_huong": "vd2",
+            "default": "vinh_giu"
+          }
+        },
+        {
+          "id": "vd2",
+          "kind": "choice",
+          "objective": {
+            "vi": "Vĩnh có lối nào để đổi hướng mà không mất mặt?"
+          },
+          "target": "landmarks:hoang_thanh_thang_long",
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "khoi_tang_anh_vinh": "vinh_doi",
+            "lan_moi_vinh_dau_tu_tu_quan": "vinh_doi",
+            "lan_cho_vinh_mua_no": "vinh_doi",
+            "default": "vinh_giu"
+          }
+        },
+        {
+          "id": "vinh_doi",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Vĩnh gọi một cuộc điện thoại ngay trước Đoan Môn"
+          },
+          "target": "landmarks:hoang_thanh_thang_long",
+          "dialogue": "dialogues:dlg_c4_07_vinh_doi",
+          "set_flags": [
+            "vinh_doi_huong"
+          ],
+          "next": "khang"
+        },
+        {
+          "id": "vinh_giu",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Vĩnh cài lại cúc áo, đi ra cổng"
+          },
+          "target": "landmarks:hoang_thanh_thang_long",
+          "dialogue": "dialogues:dlg_c4_07_vinh_giu",
+          "next": "khang"
+        },
+        {
+          "id": "khang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Lan: 17 giờ, nhà văn hóa tổ 5. Ông Khang kê ghế, đếm phiếu trắng"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c4_07_khang",
+          "params": {
+            "protagonist": "characters:lan",
+            "time_of_day": 17.0
+          },
+          "next": "goi_vay"
+        },
+        {
+          "id": "goi_vay",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Chị Ngân gọi video từ hội sở: năm điều kiện cuối của gói vay, trả lời đúng cả năm trước khi họp tổ"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "params": {
+            "pass_score": 85,
+            "difficulty": 4,
+            "grader": "characters:quan_truong_phong",
+            "time_limit_s": 150,
+            "max_faults": 1,
+            "time_of_day": 18.0
+          },
+          "next": {
+            "dat": "vay_duyet",
+            "chua_dat": "vay_treo",
+            "default": "vay_treo"
+          }
+        },
+        {
+          "id": "vay_duyet",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tin nhắn: 'Hồ sơ tổ dân phố số 5 Hàng Chiếu: phê duyệt có điều kiện'"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c4_07_vay_duyet",
+          "set_flags": [
+            "goi_vay_duyet"
+          ],
+          "next": "p1"
+        },
+        {
+          "id": "vay_treo",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chị Ngân tắt máy trước khi Lan trả lời xong câu thứ năm"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c4_07_vay_treo",
+          "next": "p1"
+        },
+        {
+          "id": "p1",
+          "kind": "choice",
+          "objective": {
+            "vi": "19:30. Phố có tin nhà số 49 không?"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false,
+            "time_of_day": 19.5
+          },
+          "next": {
+            "lan_dinh_chinh_cong_khai": "p2",
+            "khoi_gui_to_dan_pho_51": "p2",
+            "lan_chot_tu_quan": "p2",
+            "lan_xin_loi_khang": "p2",
+            "khoi_nghe_thang_ke_het": "p2",
+            "default": "p_thua"
+          }
+        },
+        {
+          "id": "p2",
+          "kind": "choice",
+          "objective": {
+            "vi": "Có tiền để tự quản không?"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "goi_vay_duyet": "p3",
+            "default": "chia"
+          }
+        },
+        {
+          "id": "p3",
+          "kind": "choice",
+          "objective": {
+            "vi": "Phần của cô Hạnh có an toàn không?"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "co_hanh_ky_cam_ket": "thang",
+            "no_co_hanh_dong_bang": "thang",
+            "default": "chia"
+          }
+        },
+        {
+          "id": "p_thua",
+          "kind": "choice",
+          "objective": {
+            "vi": "Còn gì níu được phố không?"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "params": {
+            "branch_source": "flag",
+            "minimap": false
+          },
+          "next": {
+            "goi_vay_duyet": "chia",
+            "default": "ban"
+          }
+        },
+        {
+          "id": "thang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông Khang đọc kết quả"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c4_07_tu_quan",
+          "set_flags": [
+            "bo_phieu_tu_quan"
+          ],
+          "next": "dem"
+        },
+        {
+          "id": "chia",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông Khang đọc kết quả"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c4_07_chia",
+          "set_flags": [
+            "bo_phieu_chia"
+          ],
+          "next": "dem"
+        },
+        {
+          "id": "ban",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông Khang đọc kết quả"
+          },
+          "target": {
+            "lat": 21.0376,
+            "lon": 105.8509
+          },
+          "dialogue": "dialogues:dlg_c4_07_ban",
+          "set_flags": [
+            "bo_phieu_ban"
+          ],
+          "next": "dem"
+        },
+        {
+          "id": "dem",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Khuya. Ba người ngồi ở bậc cửa số 49, cờ còn treo"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c4_07_dem",
+          "params": {
+            "time_of_day": 22.5,
+            "minimap": false,
+            "chapter_end": 4
+          }
+        }
+      ],
+      "reward": {
+        "set_flags": [
+          "ket_thuc_chuong_4"
+        ],
+        "reputation": {
+          "to_dan_pho_hang_chieu": 10,
+          "hoi_nguoi_cao_tuoi_phuong": 5
+        }
+      },
+      "unlocks": [
+        "missions:c5_01_quyet_dinh_cua_khoi",
+        "missions:c5_02_tiem_cua_minh"
+      ]
+    }
+  ]
+}
