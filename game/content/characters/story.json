@@ -216,10 +216,10 @@
     {
       "id": "ong_tu_hang_bac",
       "tags": ["elderly", "pressured_seller", "chapter_2"],
-      "name": {"vi": "Ông Tư (số 12 Hàng Bạc)", "en": "Old Mr Tư of 12 Hàng Bạc"},
+      "name": {"vi": "Ông Tư (số 7 Hàng Bạc)", "en": "Old Mr Tư of 7 Hàng Bạc"},
       "role": "story",
       "drive": {
-        "kho": {"vi": "Tám mốt tuổi, ở một mình sau khi bà mất; cháu ở Sài Gòn; mỗi ngày ba đoàn đến hỏi mua nhà; chữ bé không đọc được."},
+        "kho": {"vi": "Tám mốt tuổi, ở một mình sau khi bà mất; con trai ở Sài Gòn đã ký 'ghi nhớ' bán thay bố; mỗi ngày ba đoàn đến hỏi mua nhà; chữ bé không đọc được."},
         "tap": {"vi": "Cần người nói chuyện hơn cần tiền; tin ai ngồi uống trà với mình là người tốt."},
         "diet": {"vi": "Ăn Tết trong nhà mình, có người ngồi uống trà, không phải ký gì."},
         "dao": {"vi": "Pha trà thật chậm để hoãn, nhớ tên người tử tế, gập tờ giấy lại khi hiểu."},
@@ -227,11 +227,11 @@
       },
       "age": 81,
       "gender": "male",
-      "bio": {"vi": "Thợ bạc về hưu, số 12 Hàng Bạc, nhà ống ba tầng đứng tên hai vợ chồng, bà mất năm 2024 chưa chia thừa kế. Trở thành 'mục tiêu dễ' trong danh sách của một nhà thầu phụ vì ở một mình. Gương để Thảo nhìn thấy bà ngoại mình."},
+      "bio": {"vi": "Thợ bạc đời thứ tư, số 7 Hàng Bạc (nhà số 7 trong danh sách 14 nhà của Kim Long), nhà ống ba tầng đứng tên hai vợ chồng, bà mất năm 2024 chưa chia thừa kế nên con trai ở Sài Gòn chỉ ký được 'ghi nhớ', chưa bán được. Bạn cờ bốn mươi năm của cụ Thọ. Trở thành 'mục tiêu dễ' trong danh sách của một nhà thầu phụ vì ở một mình. Gương để Thảo nhìn thấy bà ngoại mình."},
       "occupation": {"vi": "Thợ bạc về hưu"},
       "personality": ["hien", "cham", "nho_dai"],
       "voice": {"accent": "hanoi", "notes": "Giọng Hàng Bạc cũ, xưng 'tôi' với người trẻ, hay lặp một ý hai lần."},
-      "relationships": [{"with": "characters:minh", "kind": "nguoi_cuu"}, {"with": "characters:thao", "kind": "guong_soi"}]
+      "relationships": [{"with": "characters:cu_tho", "kind": "ban_co_lau_nam"}, {"with": "characters:minh", "kind": "nguoi_cuu"}, {"with": "characters:thao", "kind": "guong_soi"}]
     },
     {
       "id": "me_thao",
@@ -267,7 +267,7 @@
       },
       "age": 26,
       "gender": "male",
-      "bio": {"vi": "Tài xế xe ôm app, đỗ ở cột đồng hồ Hàng Đậu, thành viên nhóm Alô Chat của tài xế. Người đầu tiên nhận 500 nghìn một tin 'nhà nào sắp bán' và cũng là người đầu tiên nhận ra mình đang làm gì."},
+      "bio": {"vi": "Tài xế xe ôm app, đỗ ở cột đồng hồ Hàng Đậu, thành viên nhóm Alô Chat của tài xế. Người đầu tiên nhận năm triệu một tin đúng 'nhà nào sắp bán' từ Kim Long và cũng là người đầu tiên nhận ra mình đang làm gì."},
       "occupation": {"vi": "Tài xế xe ôm công nghệ"},
       "personality": ["nhanh", "thuc_dung", "de_chanh_long"],
       "voice": {"accent": "northern_rural", "notes": "Giọng Hải Dương, nói to, tiếng lóng tài xế ('cuốc', 'nổ', 'bom')."},

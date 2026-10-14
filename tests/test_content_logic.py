@@ -17,7 +17,10 @@ TERMINAL = {"end", "success", "fail"}
 RUNTIME_FLAGS = {"ho_so_sach_90_ngay", "minh_nghe_dien_thoai_khi_lai"}  # set by C++ / gameplay, see docs/gdd/02 and 10
 # Chapter-1 edits specified in docs/gdd/10-sua-chuong-1.md but applied by the chapter-1 owner
 # thread; chapter 2 already reads them. Delete entries here as those edits land.
-PENDING_CHAPTER1_FLAGS = {"lan_cong_khai_danh_sach", "khoi_hoc_tu_keo_ly"}
+PENDING_CHAPTER1_FLAGS = {"lan_cong_khai_danh_sach", "khoi_hoc_tu_keo_ly",
+                          # set by PR #8 (cold open p0, c1_05 Tuấn, side s13 "Tin đầu tiên"); chapter 2 reads them
+                          "tho_cuu_giay", "minh_bo_viec_kim_long", "minh_giu_viec_kim_long",
+                          "minh_ban_tin_ong_tu", "minh_khong_ban_tin"}
 
 
 def _load(sub):

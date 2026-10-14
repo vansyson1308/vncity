@@ -130,28 +130,28 @@
           "id": "l01",
           "speaker": "characters:bo_khai",
           "text": {
-            "vi": "Băng mười hai. Khôi, nếu con nghe được cái này thì con đã đứng ở cầu thang nhà bác Khiêm. Bác ở đây từ năm bảy lăm đến khi mất, phòng 302."
+            "vi": "Băng mười hai. Khôi, nếu con nghe được cái này thì con đã đứng ở cầu thang nhà bà nội. Bà ở đây từ năm bảy lăm đến khi mất, phòng 302, chờ ông nội con về cho đến ngày cuối. Ông đi B đầu năm bảy hai, không về."
           }
         },
         {
           "id": "l02",
           "speaker": "characters:bo_khai",
           "text": {
-            "vi": "Năm bố đi học ảnh ở Hải Phòng, ba năm, ông nội con ở Hàng Chiếu một mình. Ông Thọ gánh phở nuôi ông, không lấy một đồng. Bác Khiêm biết."
+            "vi": "Ba năm bố đi học ảnh ở Hải Phòng, bà nội ở Hàng Chiếu một mình, ốm. Ông Thọ gánh phở nuôi bà, không lấy một đồng. Ông nội con đoán trước được điều đó."
           }
         },
         {
           "id": "l03",
           "speaker": "characters:bo_khai",
           "text": {
-            "vi": "Trước khi đi B, bác viết thêm vào tờ giấy năm bảy. Bố đọc rồi, bố nhớ từng chữ: 'phần của tôi xin để cho người đã gánh phở nuôi con tôi những năm tôi đi vắng'."
+            "vi": "Trước khi đi B, ông viết thêm vào tờ giấy năm bảy. Bố đọc năm bố mười bảy tuổi, trước đêm bom, bố nhớ từng chữ: 'Nếu tôi không về, phần của tôi xin để cho người ở lại nuôi vợ con tôi'."
           }
         },
         {
           "id": "l04",
           "speaker": "characters:bo_khai",
           "text": {
-            "vi": "Nghĩa là phần nhà của bác Khiêm, theo ý bác, là của ông Thọ. Không phải của bố, không phải của con. Bố giữ nó bốn mươi năm vì ông Thọ không chịu nhận. 'Giấy cháy rồi, Khải ạ, coi như không có.'"
+            "vi": "Nghĩa là phần nhà của bác Khiêm, theo ý ông, là của ông Thọ. Không phải của bố, không phải của con. Bố giữ nó bốn mươi năm vì ông Thọ không chịu nhận. 'Giấy cháy rồi, Khải ạ, coi như không có.'"
           }
         },
         {
@@ -206,7 +206,20 @@
           "id": "l08",
           "speaker": "characters:lan",
           "text": {
-            "vi": "[Cuộc gọi] Anh nói lại đi. 'Người đã gánh phở'... Ông em biết chuyện này. Ông biết mà ông để cô Hạnh ký. Anh về đi, tối nay em không hỏi ông, em chưa đủ bình tĩnh."
+            "vi": "[Cuộc gọi] Anh nói lại đi. 'Người ở lại nuôi vợ con tôi'... Vết bỏng tay phải của ông em. Ông chỉ nói 'năm bảy hai, chuyện cũ'. Là vì tờ giấy này, phải không? Ông biết mà ông để cô Hạnh ký. Anh về đi, tối nay em không hỏi ông, em chưa đủ bình tĩnh."
+          },
+          "goto": "l10",
+          "condition": {
+            "flags": [
+              "tho_cuu_giay"
+            ]
+          }
+        },
+        {
+          "id": "l08b",
+          "speaker": "characters:lan",
+          "text": {
+            "vi": "[Cuộc gọi] Anh nói lại đi. 'Người ở lại nuôi vợ con tôi'... Ông em biết chuyện này. Ông biết mà ông để cô Hạnh ký. Anh về đi, tối nay em không hỏi ông, em chưa đủ bình tĩnh."
           },
           "goto": "l10"
         },
@@ -595,6 +608,19 @@
       "context": "Phòng trọ ngõ Khương Đình, 6 giờ sáng, nồm, tường đổ mồ hôi. Tin nhắn từ Thảo.",
       "lines": [
         {
+          "id": "l00",
+          "speaker": "characters:thao",
+          "condition": {
+            "flags": [
+              "minh_bo_viec_kim_long"
+            ]
+          },
+          "text": {
+            "vi": "[Tin nhắn] Minh, chị biết em bỏ. Hôm nay chị không thuê em dò gì cả. 7:30 đón chị ở tòa 72, chị trả cuốc xe như mọi khách, và chị cho em xem một thứ em nên xem trước khi em tự hào vì đã bỏ."
+          },
+          "goto": "l04"
+        },
+        {
           "id": "l01",
           "speaker": "characters:thao",
           "condition": {
@@ -639,6 +665,19 @@
           "text": {
             "vi": "[Tin nhắn] Minh, em 'suy nghĩ' xong chưa? 7:30 đón chị ở tòa 72. Hôm nay chị cho em xem một thứ, rồi em quyết."
           }
+        },
+        {
+          "id": "l04a",
+          "speaker": "characters:tuan_beo",
+          "condition": {
+            "flags": [
+              "minh_giu_viec_kim_long"
+            ]
+          },
+          "text": {
+            "vi": "(từ giường bên) Chị Thảo nhắn sáu giờ sáng. Hôm mưa tao bảo mày bỏ, mày bảo 'giữ việc để trả nợ'. Nợ chưa trả mà hệ thống nó gọi tên mày rồi đấy."
+          },
+          "goto": "l05"
         },
         {
           "id": "l04",
@@ -727,7 +766,7 @@
         "chapter_2",
         "minh"
       ],
-      "context": "Số 12 Hàng Bạc, gác hai, sau khi Hùng và một người mặc vest đi khỏi. Ông Tư ngồi với tờ giấy chưa ký.",
+      "context": "Số 7 Hàng Bạc, gác hai, sau khi Hùng và một người mặc vest đi khỏi. Ông Tư ngồi với tờ giấy chưa ký.",
       "lines": [
         {
           "id": "l01",
@@ -747,7 +786,43 @@
           "id": "l03",
           "speaker": "characters:ong_tu_hang_bac",
           "text": {
-            "vi": "Chưa. Họ bảo giấy ủy quyền cho cháu tôi bán thay, cháu tôi ở Sài Gòn. Mà tôi có bảo nó bán đâu. Họ bảo hăm hai tháng Chạp quay lại, có công chứng viên đi cùng, ký xong là Tết này tôi có tiền."
+            "vi": "Chưa. Họ bảo giấy ủy quyền cho con tôi bán thay, con tôi ở Sài Gòn. Nó ký cái gì 'ghi nhớ' với họ rồi, mà nhà là của tôi với bà tôi, bà mất chưa chia. Họ bảo hăm hai tháng Chạp quay lại, có công chứng viên đi cùng, ký là xong."
+          }
+        },
+        {
+          "id": "l03b",
+          "speaker": "characters:minh",
+          "condition": {
+            "flags": [
+              "minh_ban_tin_ong_tu"
+            ]
+          },
+          "text": {
+            "vi": "(Số 7 Hàng Bạc. Cái tin mình nhắn cho chị Thảo lấy năm triệu. 'Ông cụ 81 tuổi, con trai ở Sài Gòn muốn bán'. Là nhà này. Ba đoàn một ngày là từ cái tin đó.)"
+          }
+        },
+        {
+          "id": "l03c",
+          "speaker": "characters:ong_tu_hang_bac",
+          "condition": {
+            "flags": [
+              "minh_khong_ban_tin"
+            ]
+          },
+          "text": {
+            "vi": "Có thằng xe ôm dẫn họ đến, đỗ ngoài cột đồng hồ Hàng Đậu. Nó gọi tôi là 'cụ số 7'. Cậu có biết nó không?"
+          }
+        },
+        {
+          "id": "l03d",
+          "speaker": "characters:minh",
+          "condition": {
+            "flags": [
+              "minh_khong_ban_tin"
+            ]
+          },
+          "text": {
+            "vi": "(Hùng. Mình không bán cái tin ấy thì nó bán. Tin không mất đi, chỉ đổi người cầm.) Cháu... cháu biết ạ."
           }
         },
         {
@@ -840,7 +915,7 @@
           "id": "l07c",
           "speaker": "characters:chu_cuong",
           "text": {
-            "vi": "[Cuộc gọi] Này này, nhà ông Tư số 12 à? Biết. Từ mai anh em chú thay nhau đỗ trước cửa, đứa nào mặc vest vào là chú hỏi giấy tờ. Cháu được đấy."
+            "vi": "[Cuộc gọi] Này này, nhà ông Tư số 7 à? Biết. Từ mai anh em chú thay nhau đỗ trước cửa, đứa nào mặc vest vào là chú hỏi giấy tờ. Cháu được đấy."
           }
         },
         {
@@ -994,7 +1069,7 @@
         "chapter_2",
         "minh"
       ],
-      "context": "Trước số 12 Hàng Bạc. Hùng Hàng Đậu và hai người mặc vest, một người cầm cặp da.",
+      "context": "Trước số 7 Hàng Bạc. Hùng Hàng Đậu và hai người mặc vest, một người cầm cặp da.",
       "lines": [
         {
           "id": "l01",
@@ -1014,7 +1089,7 @@
           "id": "l03",
           "speaker": "characters:hung_hang_dau",
           "text": {
-            "vi": "Khám cái gì, ông ấy đang ký giấy. Mày đừng có phá, tao được năm trăm một tin, cuốc này tao được hai triệu."
+            "vi": "Khám cái gì, ông ấy đang ký giấy. Mày đừng có phá, chị Thảo trả năm triệu một tin đúng, cuốc dẫn đường này tao được hai triệu nữa."
           }
         },
         {
@@ -1048,7 +1123,7 @@
           "id": "l07",
           "speaker": "characters:ong_tu_hang_bac",
           "text": {
-            "vi": "(từ cầu thang) Minh đấy à! Trà pha xong rồi, hai chú đây uống đi, tôi đi khám với cháu tôi."
+            "vi": "(từ cầu thang) Minh đấy à! Trà pha xong rồi, hai chú đây uống đi, tôi đi khám với cậu xe ôm này. Giấy để đấy, tôi về đọc."
           }
         }
       ]
@@ -1093,14 +1168,14 @@
           "id": "l03",
           "speaker": "characters:ong_tu_hang_bac",
           "text": {
-            "vi": "Để trống? Họ bảo là cháu tôi."
+            "vi": "Để trống? Họ bảo điền tên con tôi. Mà nó ở Sài Gòn, nó ký cái 'ghi nhớ' gì đó rồi."
           }
         },
         {
           "id": "l04",
           "speaker": "characters:lan",
           "text": {
-            "vi": "Ông ơi, nhà ông là ông và bà đứng tên chung, bà mất chưa chia thừa kế, đúng không? Thế thì theo luật dân sự, bán phải có chữ ký của tất cả người thừa kế của bà. Không ai bán được một mình. Kể cả ông ký, giấy này cũng không bán nổi, họ chỉ dùng nó để ép những người còn lại."
+            "vi": "Ông ơi, nhà ông là ông và bà đứng tên chung, bà mất chưa chia thừa kế, đúng không? Thế thì theo luật dân sự, bán phải có chữ ký của tất cả người thừa kế của bà. Không ai bán được một mình. Kể cả ông ký, giấy này cũng không bán nổi, họ chỉ dùng nó để ép những người còn lại. Cái 'ghi nhớ' con ông ký chỉ là lời hứa bán, không bán được phần của bà."
           }
         },
         {
@@ -1114,7 +1189,7 @@
           "id": "l06",
           "speaker": "characters:ong_khang",
           "text": {
-            "vi": "Ghi biên bản: hộ số 12 Hàng Bạc không ký. 'Còn da lông mọc, còn chồi nảy cây'."
+            "vi": "Ghi biên bản: hộ số 7 Hàng Bạc không ký. 'Còn da lông mọc, còn chồi nảy cây'."
           }
         },
         {

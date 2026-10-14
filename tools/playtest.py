@@ -57,7 +57,12 @@ GOALS_VND = {"tiem_sua_xe_duc_coi": 120_000_000, "ca_phe_trung_hang_gai": 450_00
 RUNTIME_FLAGS = {"ho_so_sach_90_ngay": "90 game days without a traffic violation (docs/gdd/02-he-thong.md)",
                  "minh_nghe_dien_thoai_khi_lai": "gameplay: answered the phone while riding in c1_05 (docs/gdd/10-sua-chuong-1.md M2)"}
 PENDING_FLAGS = {"lan_cong_khai_danh_sach": "docs/gdd/10-sua-chuong-1.md (chapter-1 edit pending)",
-                 "khoi_hoc_tu_keo_ly": "docs/gdd/10-sua-chuong-1.md (chapter-1 edit pending)"}
+                 "khoi_hoc_tu_keo_ly": "docs/gdd/10-sua-chuong-1.md (chapter-1 edit pending)",
+                 "tho_cuu_giay": "PR #8 cold open p0 (pending merge)",
+                 "minh_bo_viec_kim_long": "PR #8 c1_05 (pending merge)",
+                 "minh_giu_viec_kim_long": "PR #8 c1_05 (pending merge)",
+                 "minh_ban_tin_ong_tu": "PR #8 side s13 Tin đầu tiên (pending merge)",
+                 "minh_khong_ban_tin": "PR #8 side s13 Tin đầu tiên (pending merge)"}
 
 
 def load(collection, sub=None):

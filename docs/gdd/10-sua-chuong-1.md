@@ -133,23 +133,23 @@ mất bằng, anh. Im."
 
 ## M6. Bố mẹ Lan: một gia đình đủ nhân quả
 
-Đề xuất (chủ dự án duyệt một trong hai hướng; dòng thoại viết theo hướng A):
+**Chủ dự án đã chọn hướng A** (thẻ quyết định, 14/10/2026). Năm mẹ Lan mất đổi từ 2009 sang 2011 vì màn mở đầu (PR #8) đã cho bà Thọ, bà nội Lan, mất năm 2009; hai cái tang cùng năm làm rối nhân quả.
 
-- **A (đề xuất):** Mẹ Lan mất năm 2009 (Lan 12 tuổi). Bố Lan, con trai duy nhất của cụ Thọ, đi
-  xuất khẩu lao động Hàn Quốc năm 2010, lập gia đình mới ở Busan, gửi tiền về đều đến 2019 rồi
-  thưa dần. Phần nhà của bố Lan đã sang tên cho cô Hạnh năm 2010 "để em ở nhà chăm bố". Nhân quả:
+- **A (đã chọn):** Mẹ Lan mất năm 2011 (Lan 13 tuổi, hai năm sau bà nội). Bố Lan, con trai duy nhất của cụ Thọ, đi
+  xuất khẩu lao động Hàn Quốc năm 2012, lập gia đình mới ở Busan, gửi tiền về đều đến 2019 rồi
+  thưa dần. Phần nhà của bố Lan đã sang tên cho cô Hạnh năm 2012 "để em ở nhà chăm bố". Nhân quả:
   Lan lớn lên bằng tiền gửi từ xa đúng ngày mỗi tháng → tin con số là thứ tình cảm đếm được
   (`drive.tap`); cô Hạnh ôm phần nhà của anh kèm nghĩa vụ chăm bố → bán nhà là phản bội cả hai, vì
   thế cô khóc nhanh (`drive.tell`); cụ Thọ mất con trai theo cách không ai chết → giữ căn nhà
   như giữ đứa con.
-- **B:** Bố mẹ Lan ly hôn, cả hai ở Sài Gòn; Lan về ở với ông từ 2015. Ít nhân quả hơn, không dùng.
+- **B (không chọn):** Bố mẹ Lan ly hôn, cả hai ở Sài Gòn; Lan về ở với ông từ 2015. Ít nhân quả hơn.
 
 Áp theo A, `dlg_p2_co_hanh`:
 
 1. `l04` (Lan): "...Nhà này ba người đứng tên. Ông, cô, và bác Khải." → **"Nhà này ba người
    đứng tên. Ông, cô, và bác Khải. Phần của cô là phần của bố cháu, cô nhớ chứ. Bác Khải mới mất
    được ba tuần."**
-2. `l05` (cô Hạnh) thêm đầu câu: "Bố cháu ở Busan mười lăm năm có về nhìn ông lần nào không mà
+2. `l05` (cô Hạnh) thêm đầu câu: "Bố cháu ở Busan mười bốn năm có về nhìn ông lần nào không mà
    cháu nhắc? ..." (giữ phần sau).
 3. Thêm `l11b` (Lan, một mình, sau `l11`): "(nhìn điện thoại, mục 'Bố') Hai câu một năm. Mùng
    một và sinh nhật ông."

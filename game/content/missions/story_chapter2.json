@@ -426,7 +426,7 @@
           "id": "gac_ong_tu",
           "kind": "talk",
           "objective": {
-            "vi": "Lên gác hai số 12 Hàng Bạc sau khi hai người kia đi"
+            "vi": "Lên gác hai số 7 Hàng Bạc sau khi hai người kia đi"
           },
           "target": {
             "lat": 21.0338,
@@ -543,7 +543,7 @@
           "id": "den_hang_bac",
           "kind": "ride",
           "objective": {
-            "vi": "Đến số 12 Hàng Bạc trước khi ông Tư hết trà"
+            "vi": "Đến số 7 Hàng Bạc trước khi ông Tư hết trà"
           },
           "target": {
             "lat": 21.0338,
