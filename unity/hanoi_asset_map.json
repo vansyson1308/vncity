@@ -1,0 +1,209 @@
+{
+  "_comment": "PCG point Set/Kind -> prefab (Unity twin of ue5/Config/asset_map.json, same keys, test-enforced). Empty prefab = skipped. 'prefabs' (list) picks one per row by Variant. scale multiplies the CSV Scale on the axes in scale_axes. yaw_offset_deg turns the prefab so its forward matches the point yaw: the runtime assumes the model faces +X; a glTF model imported by glTFast that faces glTF +X ends up facing Unity -X, so such a prefab needs 180 (check on the first import, docs/13-tich-hop-unity.md §6).",
+  "street_trees/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 400
+  },
+  "power_poles/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 300
+  },
+  "cable_spans/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 200,
+    "scale_axes": "x"
+  },
+  "street_lights/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 300
+  },
+  "shop_signs/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 150,
+    "scale_axes": "y"
+  },
+  "awnings/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 150,
+    "scale_axes": "y"
+  },
+  "parked_motorbikes/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 120
+  },
+  "pavement_seating/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 100
+  },
+  "street_vendors/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 120
+  },
+  "infrastructure/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 150
+  },
+  "metro_rail/viaduct_span": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 1500,
+    "scale_axes": "x"
+  },
+  "metro_rail/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 1500
+  },
+  "national_rail/track": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 300,
+    "scale_axes": "x"
+  },
+  "national_rail/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 300
+  },
+  "river_dike/dike_wall": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 500,
+    "scale_axes": "x"
+  },
+  "river_dike/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 500
+  },
+  "lakeside/railing": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 250,
+    "scale_axes": "x"
+  },
+  "lakeside/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 250
+  },
+  "rooftop_clutter/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 250
+  },
+  "kdt_moi/hoarding_panel": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 800,
+    "scale_axes": "x"
+  },
+  "kdt_moi/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 800
+  },
+  "road_structures/median_fence": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 800,
+    "scale_axes": "x"
+  },
+  "road_structures/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 800
+  },
+  "ktt_addons/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 250
+  },
+  "lang_trong_pho/ao_lang_fence": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 400,
+    "scale_axes": "x"
+  },
+  "lang_trong_pho/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 400
+  },
+  "cho_coc/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 120
+  },
+  "pavement_clutter/*": {
+    "prefab": "",
+    "prefabs": [],
+    "scale": 1.0,
+    "yaw_offset_deg": 0.0,
+    "cull_distance_m": 120
+  }
+}

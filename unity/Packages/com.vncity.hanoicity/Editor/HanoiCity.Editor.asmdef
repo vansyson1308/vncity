@@ -1,0 +1,14 @@
+{
+  "name": "HanoiCity.Editor",
+  "rootNamespace": "HanoiCity.EditorTools",
+  "references": ["HanoiCity.Core", "HanoiCity.Unity", "glTFast", "glTFast.Editor"],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": ["Newtonsoft.Json.dll"],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

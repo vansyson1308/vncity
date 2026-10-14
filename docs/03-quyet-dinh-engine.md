@@ -32,3 +32,11 @@ cứng). Cần chọn engine đích và cách làm để mọi việc trước n
 | Google Photorealistic 3D Tiles qua Cesium | Điều khoản cấm lưu, dùng offline, dựng lại 3D |
 | Gaussian Splatting cho cả thành phố | Ánh sáng xấp xỉ, không va chạm, chưa chạy ở quy mô thành phố; chỉ dùng cho cảnh điện ảnh |
 | CityEngine (vitruvio) | Cần giấy phép thương mại; không hiểu kiến trúc Hà Nội tốt hơn luật tự viết |
+
+## Bổ sung 14/10/2026: phương án Unity cho máy cá nhân
+
+Chủ dự án yêu cầu chuẩn bị sẵn phương án build bằng Unity trên máy cá nhân. UE 5.8 vẫn là đích về
+chất lượng; `unity/` là khung Unity 6 HDRP dùng cùng dữ liệu và cùng luật game (`13-tich-hop-unity.md`).
+Engine cho từng máy chọn theo `14-chon-engine.md`, bằng script `tools/check_machine.ps1` / `.sh`.
+Dòng "Unity 6 HDRP" trong bảng trên nghĩa là không chọn Unity làm **đích chất lượng**, không phải
+không dùng được.

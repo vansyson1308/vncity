@@ -458,6 +458,12 @@ void UHanoiMissionSubsystem::ApplyStepParamsOnEnter(const FHanoiMissionStep& Ste
 	{
 		StepStartGameTime = Time->GetHanoiTime();
 		DeadlineGameHours = FMath::Fmod(Deadline - double(Time->GetHourOfDay()) + 24.0, 24.0);
+		// Starting at the deadline hour itself means the same hour tomorrow, not zero hours left
+		// (same rule as the Unity MissionRunner; tests/test_unity_harness.py checks both).
+		if (DeadlineGameHours < 1.0 / 60.0)
+		{
+			DeadlineGameHours = 24.0;
+		}
 	}
 
 	const FString Event = GetParamString(TEXT("requires_event"));

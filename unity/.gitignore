@@ -1,0 +1,25 @@
+# Unity
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+*.csproj
+*.sln
+!/dotnet/**/*.csproj
+!/dotnet/*.sln
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+.vs/
+.idea/
+# Copied by Tools > Hanoi City > Run Full Setup (the source of truth is game/ and data/)
+/Assets/StreamingAssets/Hanoi/
+/Assets/HanoiCity/Tiles/
+# dotnet test of the engine-free core
+/dotnet/**/bin/
+/dotnet/**/obj/
+/dotnet/TestResults/

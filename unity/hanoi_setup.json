@@ -1,0 +1,12 @@
+{
+  "_comment": "Paths relative to the unity/ folder (the Unity project root). Read by Tools > Hanoi City > Run Full Setup (Editor/HanoiSetupConfig.cs). Same meaning as ue5/Config/hanoi_setup.json.",
+  "city_build": "../out/hoankiem",
+  "game_content": "../game/content",
+  "pipeline_districts": "../pipeline/districts.json",
+  "asset_map": "hanoi_asset_map.json",
+  "scene": "Assets/Scenes/Hanoi.unity",
+  "tiles_dest": "Assets/HanoiCity/Tiles",
+  "streaming_dest": "Assets/StreamingAssets/Hanoi",
+  "import_roads": true,
+  "max_tiles": 64
+}
