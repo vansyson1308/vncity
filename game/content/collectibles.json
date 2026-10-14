@@ -1,0 +1,6666 @@
+{
+  "collection": "collectibles",
+  "items": [
+    {
+      "id": "anh_001_hang_chieu_49_sang",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Số 49 Hàng Chiếu, sáng",
+        "en": "No. 49 Hàng Chiếu, morning"
+      },
+      "description": {
+        "vi": "Cửa gỗ mở hé, gánh phở của cụ Thọ ở bậc cửa, bảng 'Phở' kẻ phấn. Tấm đầu tiên trong kho.",
+        "en": "The wooden door ajar, Thọ's phở yoke on the step, 'Phở' chalked on a board. The first frame in the archive."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.03706,
+        "lon": 105.85051
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Chiếu",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1989_001_hang_chieu_49_sang",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 1,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_002_xich_lo_quat_long_bien",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Xích lô chở quất qua cầu Long Biên",
+        "en": "Cyclo of kumquats on Long Biên bridge"
+      },
+      "description": {
+        "vi": "Ông Thắng đạp xích lô chở ba cây quất Tết, sương sông chưa tan, nhịp cầu gãy phía sau.",
+        "en": "Thắng pedals three kumquat trees across; river mist not yet lifted, the broken span behind."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.0429,
+        "lon": 105.8596
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:cau_long_bien",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1989_002_xich_lo_quat_long_bien",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_003_hang_ma_den_ong_sao",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Đèn ông sao Hàng Mã",
+        "en": "Star lanterns on Hàng Mã"
+      },
+      "description": {
+        "vi": "Trung thu 1987, đèn ông sao giấy bóng kính treo kín hai bên, trẻ con chen nhau.",
+        "en": "Mid-autumn 1987, cellophane star lanterns on both sides, children elbowing through."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 21.03671,
+        "lon": 105.84804
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Mã",
+      "hours": [
+        17,
+        20
+      ],
+      "archive_frame": "khai_1987_003_hang_ma_den_ong_sao",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_004_ta_hien_bia_hoi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bia hơi Tạ Hiện",
+        "en": "Bia hơi on Tạ Hiện"
+      },
+      "description": {
+        "vi": "Ghế gỗ thấp, cốc vại, một ông Tây ba lô đầu tiên ngồi lẫn với thợ.",
+        "en": "Low wooden stools, dimpled mugs, the first backpacker sitting among workmen."
+      },
+      "year": 1991,
+      "location": {
+        "lat": 21.0351,
+        "lon": 105.8519
+      },
+      "district": "districts:pho_co",
+      "landmark": "landmarks:pho_ta_hien",
+      "hours": [
+        17,
+        19
+      ],
+      "archive_frame": "khai_1991_004_ta_hien_bia_hoi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_005_hang_thiec_tho_go",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Thợ gò Hàng Thiếc",
+        "en": "Tinsmith on Hàng Thiếc"
+      },
+      "description": {
+        "vi": "Ông thợ gò thùng tôn trước cửa, tiếng búa bố ghi ở mặt sau: 'nghe bằng mắt'.",
+        "en": "A tinsmith beating a bucket at his door; Father wrote on the back: 'hear it with your eyes'."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.03296,
+        "lon": 105.84778
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Thiếc",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1985_005_hang_thiec_tho_go",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_006_cho_dong_xuan_sau_chay",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Chợ Đồng Xuân sau vụ cháy",
+        "en": "Đồng Xuân market after the fire"
+      },
+      "description": {
+        "vi": "Tháng 7/1994, mặt tiền ám khói, tiểu thương bày hàng trên vỉa hè phía trước.",
+        "en": "July 1994, the facade blackened, traders laying goods out on the pavement in front."
+      },
+      "year": 1994,
+      "location": {
+        "lat": 21.038084,
+        "lon": 105.849418
+      },
+      "district": "districts:pho_co",
+      "landmark": "landmarks:cho_dong_xuan",
+      "hours": [
+        7,
+        10
+      ],
+      "archive_frame": "khai_1994_006_cho_dong_xuan_sau_chay",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 2,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_007_o_quan_chuong_xe_bo",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Xe bò qua Ô Quan Chưởng",
+        "en": "Ox cart through Ô Quan Chưởng"
+      },
+      "description": {
+        "vi": "Xe bò chở rơm chui qua cổng ô, bóng cổng đổ dài, không một xe máy.",
+        "en": "An ox cart of straw under the gate, the gate's shadow long, not one motorbike."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.037332,
+        "lon": 105.8522
+      },
+      "district": "districts:pho_co",
+      "landmark": "landmarks:o_quan_chuong",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_1983_007_o_quan_chuong_xe_bo",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_008_hang_bac_tho_kim_hoan",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Thợ kim hoàn Hàng Bạc",
+        "en": "Goldsmith on Hàng Bạc"
+      },
+      "description": {
+        "vi": "Ông thợ già cúi trên bàn kẹp, kính lúp, cân tiểu ly; biển 'Vàng bạc' kẻ tay.",
+        "en": "The old goldsmith bent over his bench, loupe and tiny scales; a hand-painted 'Gold & Silver' sign."
+      },
+      "year": 1996,
+      "location": {
+        "lat": 21.03395,
+        "lon": 105.85204
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Bạc",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1996_008_hang_bac_tho_kim_hoan",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_009_hang_dao_mau_dich_vai",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Cửa hàng vải mậu dịch Hàng Đào",
+        "en": "State cloth shop on Hàng Đào"
+      },
+      "description": {
+        "vi": "Hàng người cầm phiếu vải, cô mậu dịch viên đo bằng thước gỗ.",
+        "en": "A queue with cloth coupons; the shop girl measures with a wooden rule."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 21.03295,
+        "lon": 105.85113
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Đào",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1979_009_hang_dao_mau_dich_vai",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_010_ma_may_nha_co_87",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Nhà cổ 87 Mã Mây",
+        "en": "The old house at 87 Mã Mây"
+      },
+      "description": {
+        "vi": "Sân trong nhà ống, giàn hoa giấy, lúc vừa trùng tu xong.",
+        "en": "The inner courtyard of a tube house, a bougainvillea trellis, just restored."
+      },
+      "year": 2001,
+      "location": {
+        "lat": 21.03556,
+        "lon": 105.85325
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Mã Mây",
+      "hours": [
+        14,
+        16
+      ],
+      "archive_frame": "khai_2001_010_ma_may_nha_co_87",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_011_hang_bo_bam_duong_tau",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Tàu qua phố Phùng Hưng",
+        "en": "Train through Phùng Hưng"
+      },
+      "description": {
+        "vi": "Tàu Thống Nhất sát cửa nhà, trẻ con đứng trên bậc, không có quán cà phê nào.",
+        "en": "The Reunification train brushing the doorsteps, children on the steps, not one café."
+      },
+      "year": 1988,
+      "location": {
+        "lat": 21.0303,
+        "lon": 105.845
+      },
+      "district": "districts:pho_co",
+      "landmark": "landmarks:pho_duong_tau",
+      "hours": [
+        15,
+        16
+      ],
+      "archive_frame": "khai_1988_011_hang_bo_bam_duong_tau",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_012_hang_buom_cho_tet",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Hàng Buồm 28 Tết",
+        "en": "Hàng Buồm two days before Tết"
+      },
+      "description": {
+        "vi": "Mứt, lạp xưởng treo, chữ Hán đỏ, ông chủ người Hoa cuối cùng của phố.",
+        "en": "Candied fruit, hanging sausages, red Chinese characters, the street's last Chinese shopkeeper."
+      },
+      "year": 1992,
+      "location": {
+        "lat": 21.03581,
+        "lon": 105.85164
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Buồm",
+      "hours": [
+        8,
+        11
+      ],
+      "archive_frame": "khai_1992_012_hang_buom_cho_tet",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_013_hang_chieu_chieu_coi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Chiếu cói Hàng Chiếu",
+        "en": "Sedge mats on Hàng Chiếu"
+      },
+      "description": {
+        "vi": "Chiếu cuộn dựng đứng như ống khói, một bà cụ ngồi giữa.",
+        "en": "Rolled mats stood up like chimneys, an old woman seated among them."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.03706,
+        "lon": 105.85051
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Chiếu",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1986_013_hang_chieu_chieu_coi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 3,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_014_lan_ong_thuoc_bac",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Hiệu thuốc bắc Lãn Ông",
+        "en": "Herbalist on Lãn Ông"
+      },
+      "description": {
+        "vi": "Tủ gỗ trăm ô kéo, cân tay, mùi quế ghi ở mặt sau.",
+        "en": "A hundred-drawer cabinet, hand scales; 'cinnamon' written on the back."
+      },
+      "year": 1990,
+      "location": {
+        "lat": 21.03532,
+        "lon": 105.84947
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Lãn Ông",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1990_014_lan_ong_thuoc_bac",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_015_hang_gai_lua",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Lụa Hàng Gai",
+        "en": "Silk on Hàng Gai"
+      },
+      "description": {
+        "vi": "Cửa hàng lụa đầu tiên có biển tiếng Anh, khách Tây thử áo dài.",
+        "en": "The first silk shop with an English sign; a tourist tries on an áo dài."
+      },
+      "year": 1998,
+      "location": {
+        "lat": 21.03205,
+        "lon": 105.8504
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Gai",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1998_015_hang_gai_lua",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_016_hang_than_lo_than",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Than tổ ong Hàng Than",
+        "en": "Coal briquettes on Hàng Than"
+      },
+      "description": {
+        "vi": "Xe cải tiến chở than tổ ong, người kéo đen mặt, dốc Hàng Than.",
+        "en": "A hand cart of coal briquettes, the puller's face black, the Hàng Than slope."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 21.04203,
+        "lon": 105.84735
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Than",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1982_016_hang_than_lo_than",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_017_thap_rua_suong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Tháp Rùa trong sương",
+        "en": "Turtle Tower in mist"
+      },
+      "description": {
+        "vi": "Sương mù dày đến mức tháp chỉ còn là bóng; tấm ảnh bố in to nhất.",
+        "en": "Mist so thick the tower is only a shadow; the frame Father printed largest."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.027873,
+        "lon": 105.852293
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:thap_rua",
+      "hours": [
+        5,
+        7
+      ],
+      "archive_frame": "khai_1989_017_thap_rua_suong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 4,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_018_cau_dien_cho_dem",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "bac_tu_liem",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Chợ Cầu Diễn sáng sớm",
+        "en": "Cầu Diễn market at dawn"
+      },
+      "description": {
+        "vi": "Cầu Diễn cũ, hàng rau từ Tây Tựu, xe trâu, sương.",
+        "en": "The old Diễn bridge, greens from Tây Tựu, buffalo carts, mist."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.03845,
+        "lon": 105.77192
+      },
+      "district": "districts:bac_tu_liem",
+      "street": "Đường Hồ Tùng Mậu",
+      "hours": [
+        5,
+        7
+      ],
+      "archive_frame": "khai_1986_018_cau_dien_cho_dem",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_019_lo_ren_be_lo",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Lò rèn cuối cùng",
+        "en": "The last forge"
+      },
+      "description": {
+        "vi": "Bễ lò, tia lửa, ông thợ cởi trần; năm 2010 chỉ còn một lò.",
+        "en": "Bellows, sparks, a bare-chested smith; by 2010 only one forge remained."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 21.03622,
+        "lon": 105.84785
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Lò Rèn",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1987_019_lo_ren_be_lo",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_020_cong_vien_hoa_binh_khanh_thanh",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "bac_tu_liem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Khánh thành Công viên Hòa Bình",
+        "en": "Hòa Bình park opening"
+      },
+      "description": {
+        "vi": "Tượng đài Hòa Bình, cỏ mới, Đại lễ 1000 năm, bố chụp tấm gần cuối.",
+        "en": "The Peace monument, new grass, the 1000-year celebration; one of Father's last frames."
+      },
+      "year": 2010,
+      "location": {
+        "lat": 21.0695,
+        "lon": 105.783
+      },
+      "district": "districts:bac_tu_liem",
+      "landmark": "landmarks:cong_vien_hoa_binh",
+      "hours": [
+        8,
+        11
+      ],
+      "archive_frame": "khai_2010_020_cong_vien_hoa_binh_khanh_thanh",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_021_den_bach_ma_sua",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Đền Bạch Mã, cửa đóng",
+        "en": "Bạch Mã temple, doors shut"
+      },
+      "description": {
+        "vi": "Cửa đền đóng, biển 'Hợp tác xã' treo bên cạnh, một bà thắp hương ngoài bậc.",
+        "en": "The temple doors shut, a 'Cooperative' board beside them, a woman lighting incense on the step."
+      },
+      "year": 1977,
+      "location": {
+        "lat": 21.035915,
+        "lon": 105.850992
+      },
+      "district": "districts:pho_co",
+      "landmark": "landmarks:den_bach_ma",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1977_021_den_bach_ma_sua",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_022_trang_tien_bach_hoa",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Bách hóa Tổng hợp Tràng Tiền",
+        "en": "Tràng Tiền department store"
+      },
+      "description": {
+        "vi": "Biển chữ đúc, kính tủ, hàng người mua vải và phích Rạng Đông.",
+        "en": "Cast letters, glass counters, a queue for cloth and Rạng Đông thermos flasks."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.02481,
+        "lon": 105.85744
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Tràng Tiền",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1986_022_trang_tien_bach_hoa",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 5,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_023_kem_trang_tien_xep_hang",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Xếp hàng kem Tràng Tiền",
+        "en": "Queue for Tràng Tiền ice cream"
+      },
+      "description": {
+        "vi": "Người ăn kem đứng cả ra lòng đường, que kem đậu xanh 500 đồng.",
+        "en": "Ice-cream eaters spilling into the road; a mung-bean bar for 500 đồng."
+      },
+      "year": 1995,
+      "location": {
+        "lat": 21.02481,
+        "lon": 105.85744
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Tràng Tiền",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_1995_023_kem_trang_tien_xep_hang",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_024_buu_dien_bo_ho_dong_ho",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Đồng hồ Bưu điện Bờ Hồ",
+        "en": "The Bờ Hồ post-office clock"
+      },
+      "description": {
+        "vi": "Đồng hồ chỉ 7 giờ 5, người xếp hàng gọi điện liên tỉnh.",
+        "en": "The clock reads 7:05; a queue for long-distance calls."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 21.0263,
+        "lon": 105.854
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:buu_dien_bo_ho",
+      "hours": [
+        7,
+        9
+      ],
+      "archive_frame": "khai_1984_024_buu_dien_bo_ho_dong_ho",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_025_nha_hat_lon_bac_thang",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bậc thang Nhà hát Lớn",
+        "en": "The Opera House steps"
+      },
+      "description": {
+        "vi": "Hai cô gái áo dài trắng chụp ảnh cưới, chưa có hàng rào.",
+        "en": "Two girls in white áo dài at a wedding shoot, no railings yet."
+      },
+      "year": 1990,
+      "location": {
+        "lat": 21.024183,
+        "lon": 105.857824
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:nha_hat_lon",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1990_025_nha_hat_lon_bac_thang",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_026_nha_tho_lon_giang_sinh",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Đêm Giáng sinh Nhà thờ Lớn",
+        "en": "Christmas Eve at the Cathedral"
+      },
+      "description": {
+        "vi": "Đèn ít, người đông, hang đá tự làm.",
+        "en": "Few lights, a big crowd, a home-made nativity grotto."
+      },
+      "year": 1978,
+      "location": {
+        "lat": 21.028708,
+        "lon": 105.84888
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:nha_tho_lon",
+      "hours": [
+        19,
+        22
+      ],
+      "archive_frame": "khai_1978_026_nha_tho_lon_giang_sinh",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_027_dinh_le_sach_cu",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Sách cũ Đinh Lễ",
+        "en": "Second-hand books on Đinh Lễ"
+      },
+      "description": {
+        "vi": "Sách xếp trên vỉa hè, bà Mão ngồi giữa, trước khi dọn lên gác.",
+        "en": "Books on the pavement, bà Mão in the middle, before the move upstairs."
+      },
+      "year": 1999,
+      "location": {
+        "lat": 21.0256,
+        "lon": 105.8506
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:pho_sach_dinh_le",
+      "hours": [
+        9,
+        12
+      ],
+      "archive_frame": "khai_1999_027_dinh_le_sach_cu",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_028_cau_the_huc_son_lai",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Cầu Thê Húc đang sơn lại",
+        "en": "Thê Húc bridge being repainted"
+      },
+      "description": {
+        "vi": "Nửa cầu đỏ mới, nửa cầu bạc màu, thợ sơn đứng trên thang tre.",
+        "en": "Half the bridge fresh red, half faded, a painter on a bamboo ladder."
+      },
+      "year": 1981,
+      "location": {
+        "lat": 21.0305,
+        "lon": 105.8529
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:cau_the_huc",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1981_028_cau_the_huc_son_lai",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_029_ga_ha_noi_tau_thong_nhat",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Tàu Thống Nhất rời ga",
+        "en": "The Reunification train leaving"
+      },
+      "description": {
+        "vi": "Đầu máy hơi nước, người tiễn chạy theo sân ga.",
+        "en": "A steam engine, well-wishers running down the platform."
+      },
+      "year": 1992,
+      "location": {
+        "lat": 21.025112,
+        "lon": 105.840792
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:ga_ha_noi",
+      "hours": [
+        5,
+        7
+      ],
+      "archive_frame": "khai_1992_029_ga_ha_noi_tau_thong_nhat",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_030_hoa_lo_tuong_xam",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Tường Hỏa Lò còn nguyên",
+        "en": "Hỏa Lò walls still whole"
+      },
+      "description": {
+        "vi": "Bức tường mảnh chai, trước khi phá hai phần ba năm 1993.",
+        "en": "The glass-topped wall, before two-thirds came down in 1993."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 21.02534,
+        "lon": 105.846472
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:nha_tu_hoa_lo",
+      "hours": [
+        14,
+        16
+      ],
+      "archive_frame": "khai_1987_030_hoa_lo_tuong_xam",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 6,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_031_hang_khay_hieu_anh_quoc_te",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Hiệu ảnh Quốc Tế Hàng Khay",
+        "en": "Quốc Tế photo studio on Hàng Khay"
+      },
+      "description": {
+        "vi": "Tủ kính ảnh cưới đen trắng tô màu tay, nơi bố học nghề.",
+        "en": "Hand-tinted wedding portraits in the window; where Father learned the trade."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.02572,
+        "lon": 105.85242
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Hàng Khay",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1983_031_hang_khay_hieu_anh_quoc_te",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_032_ho_guom_mua_ngap_lich_su",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Hồ Gươm trận ngập tháng 11/2008",
+        "en": "Hoàn Kiếm lake in the November 2008 flood"
+      },
+      "description": {
+        "vi": "Nước hồ tràn lên Lê Thái Tổ, người lội ngang gối.",
+        "en": "Lake water over Lê Thái Tổ, people wading knee-deep."
+      },
+      "year": 2008,
+      "location": {
+        "lat": 21.0288,
+        "lon": 105.8524
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:ho_hoan_kiem",
+      "hours": [
+        8,
+        11
+      ],
+      "archive_frame": "khai_2008_032_ho_guom_mua_ngap_lich_su",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_033_cho_hoa_hang_luoc",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Chợ hoa Hàng Lược",
+        "en": "Hàng Lược flower market"
+      },
+      "description": {
+        "vi": "Đào Nhật Tân bó rơm, 25 tháng Chạp, cả phố thành chợ.",
+        "en": "Nhật Tân peach branches bound in straw, the 25th of the last month, the whole street a market."
+      },
+      "year": 1990,
+      "location": {
+        "lat": 21.0377,
+        "lon": 105.84796
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Lược",
+      "hours": [
+        8,
+        11
+      ],
+      "archive_frame": "khai_1990_033_cho_hoa_hang_luoc",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 7,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_034_pho_hue_cho_gioi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Chợ Giời phố Huế",
+        "en": "Giời market on Phố Huế"
+      },
+      "description": {
+        "vi": "Phụ tùng xe đạp bày trên bao tải, cân, đồng hồ Liên Xô.",
+        "en": "Bicycle parts on sacks, scales, Soviet watches."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.01434,
+        "lon": 105.85158
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Huế",
+      "hours": [
+        9,
+        12
+      ],
+      "archive_frame": "khai_1986_034_pho_hue_cho_gioi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_035_ly_thuong_kiet_xe_dap",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Giờ tan tầm Lý Thường Kiệt",
+        "en": "Rush hour on Lý Thường Kiệt"
+      },
+      "description": {
+        "vi": "Một biển xe đạp, hai hàng sấu, không ô tô.",
+        "en": "A sea of bicycles, two rows of sấu trees, no cars."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 21.01653,
+        "lon": 105.83959
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Lý Thường Kiệt",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1980_035_ly_thuong_kiet_xe_dap",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_036_bao_tang_lich_su_mai_ngoi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Mái Bảo tàng Lịch sử",
+        "en": "The History Museum roof"
+      },
+      "description": {
+        "vi": "Nắng chiều trên mái ngói vàng, ông bảo vệ ngủ gật trên ghế.",
+        "en": "Afternoon sun on yellow tiles, the guard dozing on a chair."
+      },
+      "year": 1997,
+      "location": {
+        "lat": 21.025264,
+        "lon": 105.858495
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:bao_tang_lich_su_quoc_gia",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_1997_036_bao_tang_lich_su_mai_ngoi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_037_cot_co_ha_noi_30_4",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Cột cờ ngày 30/4/1975",
+        "en": "The flag tower on 30 April 1975"
+      },
+      "description": {
+        "vi": "Người đứng kín chân cột, loa phát tin. Tấm ảnh sớm nhất.",
+        "en": "People packed round the base, a loudspeaker announcing. The earliest frame."
+      },
+      "year": 1975,
+      "location": {
+        "lat": 21.032591,
+        "lon": 105.839825
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:cot_co_ha_noi",
+      "hours": [
+        8,
+        11
+      ],
+      "archive_frame": "khai_1975_037_cot_co_ha_noi_30_4",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 8,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_038_lang_bac_doi_tieu_binh",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Đổi gác Lăng Bác",
+        "en": "Changing the guard at the Mausoleum"
+      },
+      "description": {
+        "vi": "Sáu giờ sáng, hàng tiêu binh, quảng trường trống.",
+        "en": "Six a.m., the honour guard, the square empty."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.036779,
+        "lon": 105.834695
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:lang_bac",
+      "hours": [
+        6,
+        7
+      ],
+      "archive_frame": "khai_1985_038_lang_bac_doi_tieu_binh",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_039_chua_mot_cot_sen",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Sen chùa Một Cột",
+        "en": "Lotus at the One Pillar Pagoda"
+      },
+      "description": {
+        "vi": "Sen nở đầy hồ, không có khách.",
+        "en": "The pond full of lotus, no visitors."
+      },
+      "year": 1991,
+      "location": {
+        "lat": 21.0358,
+        "lon": 105.8336
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:chua_mot_cot",
+      "hours": [
+        7,
+        9
+      ],
+      "archive_frame": "khai_1991_039_chua_mot_cot_sen",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_040_phan_dinh_phung_sau",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Hàng sấu Phan Đình Phùng",
+        "en": "The sấu trees on Phan Đình Phùng"
+      },
+      "description": {
+        "vi": "Ba hàng sấu, vỉa hè rộng, một cô gái đạp xe Phượng Hoàng.",
+        "en": "Three rows of sấu, a wide pavement, a girl on a Phoenix bicycle."
+      },
+      "year": 1988,
+      "location": {
+        "lat": 21.0405,
+        "lon": 105.844
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:pho_phan_dinh_phung",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_1988_040_phan_dinh_phung_sau",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_041_ga_hang_co",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoan_kiem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Xếp hàng mua vé Thống Nhất",
+        "en": "Queue for Reunification tickets"
+      },
+      "description": {
+        "vi": "Hàng người ôm chiếu ngủ qua đêm trước quầy vé ga Hàng Cỏ.",
+        "en": "A queue clutching sleeping mats after a night outside the Hàng Cỏ ticket window."
+      },
+      "year": 1992,
+      "location": {
+        "lat": 21.025112,
+        "lon": 105.840792
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:ga_ha_noi",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1992_041_ga_hang_co",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_042_quat_tet_cau_long_bien",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Thắng, 1989",
+        "en": "Thắng, 1989"
+      },
+      "description": {
+        "vi": "Ông Thắng tạo dáng với xích lô quất, hoàng hôn trên cầu Long Biên.",
+        "en": "Thắng posing with his cyclo of kumquats, sunset on Long Biên bridge."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.0429,
+        "lon": 105.8596
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:cau_long_bien",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1989_042_quat_tet_cau_long_bien",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_043_giang_vo_nha_a1",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Nhà A1 Giảng Võ",
+        "en": "Block A1, Giảng Võ"
+      },
+      "description": {
+        "vi": "Chuồng cọp chưa mọc, quần áo phơi ban công, trẻ con đá bóng sân.",
+        "en": "No 'tiger cages' yet, laundry on balconies, children playing football in the yard."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.028299,
+        "lon": 105.819943
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:khu_tap_the_giang_vo",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1983_043_giang_vo_nha_a1",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_044_truc_bach_pho_cuon",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Phở cuốn Ngũ Xã",
+        "en": "Phở cuốn in Ngũ Xã"
+      },
+      "description": {
+        "vi": "Quán phở cuốn đầu tiên, bàn nhựa bên hồ Trúc Bạch.",
+        "en": "The first phở cuốn shop, plastic tables by Trúc Bạch lake."
+      },
+      "year": 1996,
+      "location": {
+        "lat": 21.0445,
+        "lon": 105.8409
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:ho_truc_bach",
+      "hours": [
+        17,
+        19
+      ],
+      "archive_frame": "khai_1996_044_truc_bach_pho_cuon",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_045_hoang_thanh_khai_quat",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Khai quật 18 Hoàng Diệu",
+        "en": "The dig at 18 Hoàng Diệu"
+      },
+      "description": {
+        "vi": "Hố khai quật, nhà khảo cổ đội nón, lần đầu lộ nền điện.",
+        "en": "The excavation pit, archaeologists in conical hats, the palace floor first exposed."
+      },
+      "year": 2003,
+      "location": {
+        "lat": 21.03497,
+        "lon": 105.840196
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:hoang_thanh_thang_long",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_2003_045_hoang_thanh_khai_quat",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 9,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_046_cua_bac_vet_dai_bac",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Vết đại bác Cửa Bắc",
+        "en": "Cannon scars on the North Gate"
+      },
+      "description": {
+        "vi": "Hai vết đạn 1882 trên tường thành, một chú bé đứng đo bằng tay.",
+        "en": "The two 1882 shell marks on the wall, a boy measuring them with his hand."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.041439,
+        "lon": 105.840516
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:nha_tho_cua_bac",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1986_046_cua_bac_vet_dai_bac",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_047_thu_le_voi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Voi Thủ Lệ",
+        "en": "The Thủ Lệ elephant"
+      },
+      "description": {
+        "vi": "Con voi cũ, hàng rào gỗ, trẻ con cho ăn mía.",
+        "en": "The old elephant, a wooden fence, children feeding it sugarcane."
+      },
+      "year": 1994,
+      "location": {
+        "lat": 21.0336,
+        "lon": 105.8068
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:cong_vien_thu_le",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1994_047_thu_le_voi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_048_doi_can_hang_rong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Gánh hàng rong Đội Cấn",
+        "en": "Street vendors on Đội Cấn"
+      },
+      "description": {
+        "vi": "Dãy gánh xôi, bún, bánh cuốn trước cổng cơ quan.",
+        "en": "A row of xôi, bún and bánh cuốn yokes outside an office gate."
+      },
+      "year": 1981,
+      "location": {
+        "lat": 21.03587,
+        "lon": 105.81992
+      },
+      "district": "districts:ba_dinh",
+      "street": "Phố Đội Cấn",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1981_048_doi_can_hang_rong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_049_quan_thanh_dong_den",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Tượng Huyền Thiên Trấn Vũ",
+        "en": "The Trấn Vũ statue"
+      },
+      "description": {
+        "vi": "Tượng đồng đen bóng chỗ người xoa chân, bà cụ khấn.",
+        "en": "The black bronze shiny where hands rub the foot, an old woman praying."
+      },
+      "year": 2000,
+      "location": {
+        "lat": 21.043038,
+        "lon": 105.836338
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:den_quan_thanh",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_2000_049_quan_thanh_dong_den",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_050_lotte_dat_mong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ba_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Móng tháp Liễu Giai",
+        "en": "Foundations of the Liễu Giai tower"
+      },
+      "description": {
+        "vi": "Hố móng khổng lồ, nhà dân Đào Tấn bé xíu bên cạnh.",
+        "en": "A giant foundation pit, the Đào Tấn houses tiny beside it."
+      },
+      "year": 2009,
+      "location": {
+        "lat": 21.03188,
+        "lon": 105.81243
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:lotte_center",
+      "hours": [
+        10,
+        12
+      ],
+      "archive_frame": "khai_2009_050_lotte_dat_mong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_051_van_mieu_ong_do",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Ông đồ Văn Miếu 1984",
+        "en": "Calligraphers at Văn Miếu, 1984"
+      },
+      "description": {
+        "vi": "Ba ông đồ, chiếu rách, mực tàu, rất ít người xin chữ.",
+        "en": "Three calligraphers, torn mats, ink; very few asking for characters."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 21.029161,
+        "lon": 105.836084
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:van_mieu",
+      "hours": [
+        8,
+        11
+      ],
+      "archive_frame": "khai_1984_051_van_mieu_ong_do",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 10,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_052_cho_hom_mau_dich",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Chợ Hôm, biển 'Mậu dịch quốc doanh'",
+        "en": "Chợ Hôm, the 'State Trading' sign"
+      },
+      "description": {
+        "vi": "Mặt tiền chợ Hôm với biển mậu dịch cuối cùng, trước khi xây lại.",
+        "en": "The Chợ Hôm facade with the last state-trading sign, before the rebuild."
+      },
+      "year": 1992,
+      "location": {
+        "lat": 21.016,
+        "lon": 105.852
+      },
+      "district": "districts:hai_ba_trung",
+      "landmark": "landmarks:cho_hom",
+      "hours": [
+        9,
+        12
+      ],
+      "archive_frame": "khai_1992_052_cho_hom_mau_dich",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_053_kim_lien_b4_san",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Sân nhà B4 Kim Liên",
+        "en": "The B4 Kim Liên yard"
+      },
+      "description": {
+        "vi": "Vòi nước công cộng, xô chậu xếp hàng, bọn trẻ nhảy dây.",
+        "en": "The public tap, buckets queued, children skipping."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.0085,
+        "lon": 105.839
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:khu_tap_the_kim_lien",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1985_053_kim_lien_b4_san",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_054_go_dong_da_mong_5",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Hội gò Đống Đa mùng 5",
+        "en": "Đống Đa festival, the 5th of Tết"
+      },
+      "description": {
+        "vi": "Rước rồng lửa, khói pháo, gò còn thấp.",
+        "en": "The fire-dragon procession, firecracker smoke, the mound still low."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.0133,
+        "lon": 105.8225
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:go_dong_da",
+      "hours": [
+        7,
+        10
+      ],
+      "archive_frame": "khai_1989_054_go_dong_da_mong_5",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_055_nga_tu_so_tac",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Tắc đường Ngã Tư Sở",
+        "en": "Gridlock at Ngã Tư Sở"
+      },
+      "description": {
+        "vi": "Xe máy Dream lần đầu đông hơn xe đạp.",
+        "en": "Dream motorbikes outnumber bicycles for the first time."
+      },
+      "year": 1997,
+      "location": {
+        "lat": 20.9958,
+        "lon": 105.8205
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:nga_tu_so",
+      "hours": [
+        17,
+        19
+      ],
+      "archive_frame": "khai_1997_055_nga_tu_so_tac",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_056_chua_lang_hoi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Hội chùa Láng",
+        "en": "Chùa Láng festival"
+      },
+      "description": {
+        "vi": "Kiệu rước, cổng tam quan, làng Láng còn ruộng húng.",
+        "en": "The palanquin procession, the three-door gate, Láng village still growing herbs."
+      },
+      "year": 2001,
+      "location": {
+        "lat": 21.023395,
+        "lon": 105.802727
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:chua_lang",
+      "hours": [
+        8,
+        11
+      ],
+      "archive_frame": "khai_2001_056_chua_lang_hoi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_057_kham_thien_dai_tuong_niem",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Đài tưởng niệm Khâm Thiên",
+        "en": "The Khâm Thiên memorial"
+      },
+      "description": {
+        "vi": "Tượng người mẹ bế con, hoa cúc, phố còn nhà cấp bốn.",
+        "en": "The statue of the mother and child, chrysanthemums, the street still single-storey."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 21.01909,
+        "lon": 105.83544
+      },
+      "district": "districts:dong_da",
+      "street": "Phố Khâm Thiên",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1980_057_kham_thien_dai_tuong_niem",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 11,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_058_tay_son_dai_hoc_thuy_loi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Sinh viên Thủy Lợi tan học",
+        "en": "Water Resources students after class"
+      },
+      "description": {
+        "vi": "Xe đạp mini, áo trắng, cổng trường xanh.",
+        "en": "Mini bicycles, white shirts, the green college gate."
+      },
+      "year": 1993,
+      "location": {
+        "lat": 21.00625,
+        "lon": 105.82137
+      },
+      "district": "districts:dong_da",
+      "street": "Phố Tây Sơn",
+      "hours": [
+        11,
+        13
+      ],
+      "archive_frame": "khai_1993_058_tay_son_dai_hoc_thuy_loi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_059_cat_linh_truoc_ga",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Cát Linh trước khi có ga",
+        "en": "Cát Linh before the station"
+      },
+      "description": {
+        "vi": "Ngã tư Cát Linh - Giảng Võ, hàng xà cừ sắp chặt.",
+        "en": "The Cát Linh - Giảng Võ junction, the rain trees about to be felled."
+      },
+      "year": 2008,
+      "location": {
+        "lat": 21.028242,
+        "lon": 105.827284
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:ga_cat_linh",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_2008_059_cat_linh_truoc_ga",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_060_thien_quang_hoa_sua",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Đêm hoa sữa Nguyễn Du",
+        "en": "A milk-flower night on Nguyễn Du"
+      },
+      "description": {
+        "vi": "Đèn vàng, hai người ngồi ghế đá, mùi hoa không chụp được.",
+        "en": "Yellow lamps, two on a bench, the scent that cannot be photographed."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.0177,
+        "lon": 105.847
+      },
+      "district": "districts:hai_ba_trung",
+      "landmark": "landmarks:ho_thien_quang",
+      "hours": [
+        20,
+        22
+      ],
+      "archive_frame": "khai_1986_060_thien_quang_hoa_sua",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_061_det_8_3_tan_ca",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Tan ca Nhà máy dệt 8/3",
+        "en": "Shift change at the 8 March textile mill"
+      },
+      "description": {
+        "vi": "Nghìn công nhân nữ dắt xe đạp ra cổng.",
+        "en": "A thousand women workers wheeling bicycles out of the gate."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 20.99818,
+        "lon": 105.86304
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Minh Khai",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1982_061_det_8_3_tan_ca",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 12,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_062_bach_khoa_c1_giang_duong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Giảng đường C1 Bách Khoa",
+        "en": "Lecture hall C1, Bách Khoa"
+      },
+      "description": {
+        "vi": "Cửa sổ kính lớn, sinh viên ngồi kín bậc, một chiếc Babetta ngoài sân.",
+        "en": "Big windows, students on every step, a Babetta moped in the yard."
+      },
+      "year": 1990,
+      "location": {
+        "lat": 21.006388,
+        "lon": 105.842386
+      },
+      "district": "districts:hai_ba_trung",
+      "landmark": "landmarks:dai_hoc_bach_khoa",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1990_062_bach_khoa_c1_giang_duong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_063_thong_nhat_dap_vit",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Đạp vịt Bảy Mẫu",
+        "en": "Pedal boats on Bảy Mẫu lake"
+      },
+      "description": {
+        "vi": "Vịt sơn trắng, cầu trượt, loa nhạc 'Hà Nội mùa thu'.",
+        "en": "White pedal boats, a slide, 'Hà Nội mùa thu' on the loudspeaker."
+      },
+      "year": 1995,
+      "location": {
+        "lat": 21.0165,
+        "lon": 105.8438
+      },
+      "district": "districts:hai_ba_trung",
+      "landmark": "landmarks:cong_vien_thong_nhat",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_1995_063_thong_nhat_dap_vit",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_064_lo_duc_co_trang",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Cò trắng phố Lò Đúc",
+        "en": "White storks on Lò Đúc"
+      },
+      "description": {
+        "vi": "Hàng sao đen, cò đậu trắng ngọn, dân gọi 'phố cò ỉa'.",
+        "en": "The sao đen trees, storks white on the crowns; locals call it 'stork-droppings street'."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 21.01302,
+        "lon": 105.85829
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Lò Đúc",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1979_064_lo_duc_co_trang",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_065_times_city_truoc_khi_xay",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Dệt Minh Khai trước khi dỡ",
+        "en": "The Minh Khai mill before demolition"
+      },
+      "description": {
+        "vi": "Nhà xưởng mái răng cưa, cổng sắt, sắp thành khu đô thị.",
+        "en": "Sawtooth-roofed sheds, an iron gate, about to become an estate."
+      },
+      "year": 2005,
+      "location": {
+        "lat": 20.99491,
+        "lon": 105.867645
+      },
+      "district": "districts:hai_ba_trung",
+      "landmark": "landmarks:times_city",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_2005_065_times_city_truoc_khi_xay",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_066_trieu_viet_vuong_ca_phe",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Cà phê Triệu Việt Vương",
+        "en": "Coffee on Triệu Việt Vương"
+      },
+      "description": {
+        "vi": "Quán cà phê vỉa hè đầu tiên, phin nhôm, ghế gỗ xếp.",
+        "en": "The first pavement café, aluminium filters, folding wooden chairs."
+      },
+      "year": 1988,
+      "location": {
+        "lat": 21.01561,
+        "lon": 105.85042
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Triệu Việt Vương",
+      "hours": [
+        7,
+        9
+      ],
+      "archive_frame": "khai_1988_066_trieu_viet_vuong_ca_phe",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_067_lac_trung_xe_buyt",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Xe buýt Karosa Lạc Trung",
+        "en": "A Karosa bus on Lạc Trung"
+      },
+      "description": {
+        "vi": "Xe buýt Tiệp cũ, phụ xe đu cửa, bến chưa có mái.",
+        "en": "An old Czech bus, the conductor hanging in the door, the stop without a roof."
+      },
+      "year": 1998,
+      "location": {
+        "lat": 21.003,
+        "lon": 105.86582
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Lạc Trung",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1998_067_lac_trung_xe_buyt",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_068_bach_mai_benh_vien",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hai_ba_trung",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Cổng Bệnh viện Bạch Mai",
+        "en": "Bạch Mai hospital gate"
+      },
+      "description": {
+        "vi": "Người nhà trải chiếu vỉa hè, cặp lồng cơm, hàng nước chè.",
+        "en": "Families on mats on the pavement, tiffin boxes, a tea stall."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 21.00249,
+        "lon": 105.85078
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Bạch Mai",
+      "hours": [
+        14,
+        16
+      ],
+      "archive_frame": "khai_1984_068_bach_mai_benh_vien",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_069_tran_quoc_bo_de",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "tay_ho",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Cây bồ đề Trần Quốc",
+        "en": "The Trần Quốc bodhi tree"
+      },
+      "description": {
+        "vi": "Sư thầy quét sân, hồ phẳng như gương, đường Thanh Niên vắng.",
+        "en": "A monk sweeping, the lake like glass, Thanh Niên road empty."
+      },
+      "year": 1990,
+      "location": {
+        "lat": 21.04784,
+        "lon": 105.836752
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:chua_tran_quoc",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1990_069_tran_quoc_bo_de",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_070_nhat_tan_dao_ruong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "tay_ho",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Ruộng đào Nhật Tân",
+        "en": "The Nhật Tân peach fields"
+      },
+      "description": {
+        "vi": "Đào trồng đến tận đê, chưa có nhà nào.",
+        "en": "Peach trees to the dyke, not a single house."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 21.079,
+        "lon": 105.823
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:vuon_dao_nhat_tan",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1987_070_nhat_tan_dao_ruong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 13,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_071_ho_tay_bun_oc",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "tay_ho",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bún ốc Hồ Tây",
+        "en": "Snail noodles by West Lake"
+      },
+      "description": {
+        "vi": "Quán bún ốc phủ Tây Hồ, bàn gỗ, ốc để rổ.",
+        "en": "A snail-noodle stall at Tây Hồ palace, wooden tables, snails in baskets."
+      },
+      "year": 1996,
+      "location": {
+        "lat": 21.056,
+        "lon": 105.819
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:ho_tay",
+      "hours": [
+        10,
+        12
+      ],
+      "archive_frame": "khai_1996_071_ho_tay_bun_oc",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_072_bai_da_song_hong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "tay_ho",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bãi đá sông Hồng",
+        "en": "The Red River stone beach"
+      },
+      "description": {
+        "vi": "Bãi bồi hoang, trâu, người chụp ảnh cưới đầu tiên.",
+        "en": "The wild floodplain, buffalo, the first wedding photographers."
+      },
+      "year": 2002,
+      "location": {
+        "lat": 21.079,
+        "lon": 105.831
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:bai_da_song_hong",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_2002_072_bai_da_song_hong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_073_yen_phu_lang_ca",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "tay_ho",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Làng cá Yên Phụ",
+        "en": "Yên Phụ fish village"
+      },
+      "description": {
+        "vi": "Bể cá cảnh, ngõ hẹp, chợ cá giống sáng sớm.",
+        "en": "Ornamental fish tanks, a narrow alley, the early fish-fry market."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.05377,
+        "lon": 105.83688
+      },
+      "district": "districts:tay_ho",
+      "street": "Phố Yên Phụ",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1983_073_yen_phu_lang_ca",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_074_phu_tay_ho_ram",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "tay_ho",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Phủ Tây Hồ ngày rằm",
+        "en": "Tây Hồ palace on the full moon"
+      },
+      "description": {
+        "vi": "Hàng hương, bánh tôm, xe máy xếp kín lối.",
+        "en": "Incense sellers, prawn cakes, motorbikes packed along the lane."
+      },
+      "year": 1994,
+      "location": {
+        "lat": 21.05513,
+        "lon": 105.819753
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:phu_tay_ho",
+      "hours": [
+        9,
+        12
+      ],
+      "archive_frame": "khai_1994_074_phu_tay_ho_ram",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_075_cau_nhat_tan_moc_tru",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "tay_ho",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Trụ cầu Nhật Tân đầu tiên",
+        "en": "The first Nhật Tân bridge pier"
+      },
+      "description": {
+        "vi": "Trụ bê tông giữa sông, thuyền cát, làng Nhật Tân nhìn ra.",
+        "en": "A concrete pier mid-river, sand boats, Nhật Tân village looking on."
+      },
+      "year": 2007,
+      "location": {
+        "lat": 21.0875,
+        "lon": 105.8245
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:cau_nhat_tan",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_2007_075_cau_nhat_tan_moc_tru",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_076_trinh_cong_son_lang_sen",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "tay_ho",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Sen đầm Quảng Bá",
+        "en": "Lotus at the Quảng Bá marsh"
+      },
+      "description": {
+        "vi": "Đầm sen, thuyền nan hái sen, chưa có phố.",
+        "en": "The lotus marsh, a basket boat picking lotus, no street yet."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.064,
+        "lon": 105.825
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:pho_di_bo_trinh_cong_son",
+      "hours": [
+        7,
+        9
+      ],
+      "archive_frame": "khai_1989_076_trinh_cong_son_lang_sen",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_077_ga_gia_lam_dau_may",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Nhà máy xe lửa Gia Lâm",
+        "en": "Gia Lâm locomotive works"
+      },
+      "description": {
+        "vi": "Đầu máy hơi nước trong xưởng, thợ đứng trên nồi hơi.",
+        "en": "A steam locomotive in the shed, a fitter standing on the boiler."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.04696,
+        "lon": 105.87244
+      },
+      "district": "districts:long_bien",
+      "street": "Đường Ngọc Lâm",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1986_077_ga_gia_lam_dau_may",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 14,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_078_bai_giua_ngo",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Ngô bãi giữa",
+        "en": "Maize on the sandbank"
+      },
+      "description": {
+        "vi": "Ruộng ngô bãi giữa, nhịp cầu Long Biên phía xa.",
+        "en": "Maize fields on the mid-river bank, Long Biên bridge beyond."
+      },
+      "year": 1993,
+      "location": {
+        "lat": 21.045,
+        "lon": 105.862
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:bai_giua_song_hong",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_1993_078_bai_giua_ngo",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_079_cau_chuong_duong_khanh_thanh",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Khánh thành cầu Chương Dương",
+        "en": "Chương Dương bridge opening"
+      },
+      "description": {
+        "vi": "Cờ, xe tải đi thử, người đứng kín lan can.",
+        "en": "Flags, test trucks, people along the railings."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.0365,
+        "lon": 105.864
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:cau_chuong_duong",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1985_079_cau_chuong_duong_khanh_thanh",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_080_ngoc_thuy_de",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Đê Ngọc Thụy sáng",
+        "en": "Ngọc Thụy dyke, morning"
+      },
+      "description": {
+        "vi": "Trâu đi trên đê, bãi chuối, cột điện gỗ.",
+        "en": "Buffalo on the dyke, banana groves, wooden power poles."
+      },
+      "year": 1991,
+      "location": {
+        "lat": 21.062,
+        "lon": 105.878
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:de_song_hong_ngoc_thuy",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1991_080_ngoc_thuy_de",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_081_cau_long_bien_cho_dem",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "pho_co",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Chợ Long Biên 3 giờ sáng",
+        "en": "Long Biên market at 3 a.m."
+      },
+      "description": {
+        "vi": "Đèn dầu, xe thồ, sọt hoa quả, tiếng mặc cả.",
+        "en": "Oil lamps, pack bikes, fruit crates, haggling."
+      },
+      "year": 2000,
+      "location": {
+        "lat": 21.04119,
+        "lon": 105.850646
+      },
+      "district": "districts:pho_co",
+      "landmark": "landmarks:cho_long_bien",
+      "hours": [
+        2,
+        5
+      ],
+      "archive_frame": "khai_2000_081_cau_long_bien_cho_dem",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_082_cau_long_bien_xe_dap",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Xe đạp qua cầu 1979",
+        "en": "Bicycles on the bridge, 1979"
+      },
+      "description": {
+        "vi": "Hai làn xe đạp, nón lá, tàu chạy giữa.",
+        "en": "Two bicycle lanes, conical hats, the train in the middle."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 21.0429,
+        "lon": 105.8596
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:cau_long_bien",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1979_082_cau_long_bien_xe_dap",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_083_aeon_truoc_khi_xay_ruong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Ruộng Sài Đồng",
+        "en": "Sài Đồng paddy"
+      },
+      "description": {
+        "vi": "Ruộng lúa, cột điện cao thế, nơi sau này là Ê Ông Mall.",
+        "en": "Rice paddy, pylons, where Ê Ông Mall would stand."
+      },
+      "year": 2006,
+      "location": {
+        "lat": 21.0298,
+        "lon": 105.8975
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:aeon_long_bien",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_2006_083_aeon_truoc_khi_xay_ruong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_084_cau_vinh_tuy_pha",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "long_bien",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bến phà trước cầu Vĩnh Tuy",
+        "en": "The ferry before Vĩnh Tuy bridge"
+      },
+      "description": {
+        "vi": "Phà gỗ chở xe máy qua sông, không một cây cầu.",
+        "en": "A wooden ferry carrying motorbikes, no bridge in sight."
+      },
+      "year": 1997,
+      "location": {
+        "lat": 21.0085,
+        "lon": 105.8775
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:cau_vinh_tuy",
+      "hours": [
+        6,
+        8
+      ],
+      "archive_frame": "khai_1997_084_cau_vinh_tuy_pha",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_085_cau_giay_cau_da",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "cau_giay",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Cầu Giấy cũ",
+        "en": "The old Cầu Giấy bridge"
+      },
+      "description": {
+        "vi": "Cầu đá bắc qua sông Tô Lịch, làng giấy Yên Thái phía sau.",
+        "en": "The stone bridge over the Tô Lịch, Yên Thái paper village behind."
+      },
+      "year": 1988,
+      "location": {
+        "lat": 21.0327,
+        "lon": 105.79787
+      },
+      "district": "districts:cau_giay",
+      "street": "Đường Cầu Giấy",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1988_085_cau_giay_cau_da",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 15,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_086_dan_toc_hoc_nha_rong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "cau_giay",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Dựng nhà rông Bảo tàng Dân tộc học",
+        "en": "Raising the communal house at the Ethnology Museum"
+      },
+      "description": {
+        "vi": "Thợ Ba Na dựng mái, bảo tàng chưa khánh thành.",
+        "en": "Ba Na craftsmen raising the roof, the museum not yet open."
+      },
+      "year": 1995,
+      "location": {
+        "lat": 21.040393,
+        "lon": 105.798793
+      },
+      "district": "districts:cau_giay",
+      "landmark": "landmarks:bao_tang_dan_toc_hoc",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1995_086_dan_toc_hoc_nha_rong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_087_nghia_tan_tap_the",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "cau_giay",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Khu tập thể Nghĩa Tân",
+        "en": "The Nghĩa Tân housing blocks"
+      },
+      "description": {
+        "vi": "Dãy A, cửa sổ xanh, hàng cơm bụi tầng 1.",
+        "en": "Block A, green shutters, a rice canteen on the ground floor."
+      },
+      "year": 1999,
+      "location": {
+        "lat": 21.04418,
+        "lon": 105.79195
+      },
+      "district": "districts:cau_giay",
+      "street": "Phố Nghĩa Tân",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1999_087_nghia_tan_tap_the",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_088_dai_hoc_quoc_gia_cong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "cau_giay",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Cổng Đại học Quốc gia",
+        "en": "The National University gate"
+      },
+      "description": {
+        "vi": "Sinh viên tan học, xe Wave, quán photocopy.",
+        "en": "Students leaving, Wave bikes, a photocopy shop."
+      },
+      "year": 2004,
+      "location": {
+        "lat": 21.0375,
+        "lon": 105.7825
+      },
+      "district": "districts:cau_giay",
+      "landmark": "landmarks:dai_hoc_quoc_gia",
+      "hours": [
+        11,
+        13
+      ],
+      "archive_frame": "khai_2004_088_dai_hoc_quoc_gia_cong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_089_chua_ha_cau_duyen",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "cau_giay",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Chùa Hà cầu duyên",
+        "en": "Praying for love at Chùa Hà"
+      },
+      "description": {
+        "vi": "Các cô gái xếp hàng lễ, cổng chùa còn gạch trần.",
+        "en": "Girls queuing to pray, the gate still bare brick."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.032,
+        "lon": 105.799
+      },
+      "district": "districts:cau_giay",
+      "landmark": "landmarks:chua_ha",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1983_089_chua_ha_cau_duyen",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_090_cong_vien_cau_giay_moi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "cau_giay",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Công viên Cầu Giấy mới mở",
+        "en": "Cầu Giấy park newly opened"
+      },
+      "description": {
+        "vi": "Cỏ mới trồng, hồ chưa có cá, tòa nhà mọc quanh.",
+        "en": "New-laid grass, a lake without fish, towers rising around."
+      },
+      "year": 2010,
+      "location": {
+        "lat": 21.0305,
+        "lon": 105.7905
+      },
+      "district": "districts:cau_giay",
+      "landmark": "landmarks:cong_vien_cau_giay",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_2010_090_cong_vien_cau_giay_moi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_091_cao_xa_la_tan_ca",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "thanh_xuan",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Tan ca Cao Xà Lá",
+        "en": "Shift change at Cao-Xà-Lá"
+      },
+      "description": {
+        "vi": "Công nhân thuốc lá, xà phòng, cao su cùng ra cổng Thượng Đình.",
+        "en": "Tobacco, soap and rubber workers pouring out of the Thượng Đình gate."
+      },
+      "year": 1981,
+      "location": {
+        "lat": 20.99455,
+        "lon": 105.80779
+      },
+      "district": "districts:thanh_xuan",
+      "street": "Đường Nguyễn Trãi",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1981_091_cao_xa_la_tan_ca",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 16,
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_092_thanh_xuan_bac_tap_the",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "thanh_xuan",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Tập thể Thanh Xuân Bắc",
+        "en": "Thanh Xuân Bắc housing"
+      },
+      "description": {
+        "vi": "Nhà lắp ghép 5 tầng, chợ cóc chân cầu thang.",
+        "en": "Five-storey prefab blocks, a pop-up market at the stairwell."
+      },
+      "year": 1990,
+      "location": {
+        "lat": 20.99192,
+        "lon": 105.7994
+      },
+      "district": "districts:thanh_xuan",
+      "street": "Phố Nguyễn Quý Đức",
+      "hours": [
+        7,
+        9
+      ],
+      "archive_frame": "khai_1990_092_thanh_xuan_bac_tap_the",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_093_khuong_dinh_song_to_lich",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "thanh_xuan",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Sông Tô Lịch đoạn Khương Đình",
+        "en": "The Tô Lịch at Khương Đình"
+      },
+      "description": {
+        "vi": "Bờ sông chưa kè, cầu khỉ, nhà trọ sinh viên.",
+        "en": "Unlined banks, a monkey bridge, student lodgings."
+      },
+      "year": 2000,
+      "location": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "district": "districts:thanh_xuan",
+      "landmark": "landmarks:ngo_khuong_dinh",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_2000_093_khuong_dinh_song_to_lich",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_094_royal_city_co_khi_ha_noi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "thanh_xuan",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Nhà máy Cơ khí Hà Nội",
+        "en": "Hanoi Mechanical Works"
+      },
+      "description": {
+        "vi": "Cổng nhà máy Nguyễn Trãi, tượng công nhân, nơi sau này là Hoàng Gia City.",
+        "en": "The Nguyễn Trãi factory gate, a worker statue; later Hoàng Gia City."
+      },
+      "year": 1996,
+      "location": {
+        "lat": 21.002332,
+        "lon": 105.815403
+      },
+      "district": "districts:thanh_xuan",
+      "landmark": "landmarks:royal_city",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1996_094_royal_city_co_khi_ha_noi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_095_cong_vien_thanh_xuan_ho",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "thanh_xuan",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Hồ Nhân Chính",
+        "en": "Nhân Chính lake"
+      },
+      "description": {
+        "vi": "Hồ mới nạo, người câu, công viên chưa làm.",
+        "en": "The freshly dredged lake, anglers, no park yet."
+      },
+      "year": 2008,
+      "location": {
+        "lat": 20.996,
+        "lon": 105.808
+      },
+      "district": "districts:thanh_xuan",
+      "landmark": "landmarks:cong_vien_thanh_xuan",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_2008_095_cong_vien_thanh_xuan_ho",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_096_nga_tu_so_cho_xe_dap",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "thanh_xuan",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Chợ xe đạp Vương Thừa Vũ",
+        "en": "The Vương Thừa Vũ bicycle market"
+      },
+      "description": {
+        "vi": "Xe Thống Nhất, Phượng Hoàng, Mifa bày dãy dài.",
+        "en": "Thống Nhất, Phoenix and Mifa bicycles in a long row."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 20.99854,
+        "lon": 105.82207
+      },
+      "district": "districts:thanh_xuan",
+      "street": "Phố Vương Thừa Vũ",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_1986_096_nga_tu_so_cho_xe_dap",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_097_cho_den_lu_2_gio",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoang_mai",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Chợ Đền Lừ 2 giờ sáng",
+        "en": "Đền Lừ market at 2 a.m."
+      },
+      "description": {
+        "vi": "Xe ba gác rau, đèn bão, bùn.",
+        "en": "Three-wheelers of greens, storm lamps, mud."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 20.987,
+        "lon": 105.86
+      },
+      "district": "districts:hoang_mai",
+      "landmark": "landmarks:cho_dau_moi_den_lu",
+      "hours": [
+        2,
+        5
+      ],
+      "archive_frame": "khai_1989_097_cho_den_lu_2_gio",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 17,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_098_linh_dam_ban_dao",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoang_mai",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bán đảo Linh Đàm chưa có nhà",
+        "en": "Linh Đàm peninsula before the blocks"
+      },
+      "description": {
+        "vi": "Hồ, ruộng rau muống, một con đường đất.",
+        "en": "The lake, water-spinach paddies, one dirt road."
+      },
+      "year": 1998,
+      "location": {
+        "lat": 20.963,
+        "lon": 105.83
+      },
+      "district": "districts:hoang_mai",
+      "landmark": "landmarks:ho_linh_dam",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1998_098_linh_dam_ban_dao",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_099_hh_linh_dam_mong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoang_mai",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Móng HH Linh Đàm",
+        "en": "HH Linh Đàm foundations"
+      },
+      "description": {
+        "vi": "Cọc bê tông, biển quảng cáo 'căn hộ 15 triệu/m²'.",
+        "en": "Concrete piles, a billboard 'flats 15 million/m²'."
+      },
+      "year": 2010,
+      "location": {
+        "lat": 20.963986,
+        "lon": 105.826953
+      },
+      "district": "districts:hoang_mai",
+      "landmark": "landmarks:chung_cu_hh_linh_dam",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_2010_099_hh_linh_dam_mong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_100_giai_phong_ben_xe_phia_nam",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoang_mai",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Bến xe phía Nam",
+        "en": "The southern bus station"
+      },
+      "description": {
+        "vi": "Xe khách Hải Âu, người ngủ trên bao tải, trà nóng.",
+        "en": "Hải Âu coaches, people sleeping on sacks, hot tea."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 20.98919,
+        "lon": 105.8412
+      },
+      "district": "districts:hoang_mai",
+      "street": "Đường Giải Phóng",
+      "hours": [
+        5,
+        7
+      ],
+      "archive_frame": "khai_1984_100_giai_phong_ben_xe_phia_nam",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_101_yen_so_ho_dieu_hoa",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "hoang_mai",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Hồ Yên Sở",
+        "en": "Yên Sở lakes"
+      },
+      "description": {
+        "vi": "Hồ điều hòa đang đào, vịt, nhà máy nước thải chưa có.",
+        "en": "The regulating lakes being dug, ducks, no treatment plant yet."
+      },
+      "year": 2003,
+      "location": {
+        "lat": 20.958,
+        "lon": 105.868
+      },
+      "district": "districts:hoang_mai",
+      "landmark": "landmarks:cong_vien_yen_so",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_2003_101_yen_so_ho_dieu_hoa",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_102_van_phuc_khung_cui",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ha_dong",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Khung cửi Vạn Phúc",
+        "en": "A Vạn Phúc loom"
+      },
+      "description": {
+        "vi": "Bà cụ dệt lụa, khung gỗ, tiếng thoi.",
+        "en": "An old woman weaving silk, a wooden frame, the shuttle's clack."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 20.979812,
+        "lon": 105.774586
+      },
+      "district": "districts:ha_dong",
+      "landmark": "landmarks:lang_lua_van_phuc",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1987_102_van_phuc_khung_cui",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 18,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_103_cho_ha_dong_cong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ha_dong",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Cổng chợ Hà Đông",
+        "en": "Hà Đông market gate"
+      },
+      "description": {
+        "vi": "Cổng chợ cũ, xe lam, hàng bánh gai.",
+        "en": "The old gate, a Lambro three-wheeler, a bánh gai stall."
+      },
+      "year": 1993,
+      "location": {
+        "lat": 20.97043,
+        "lon": 105.780088
+      },
+      "district": "districts:ha_dong",
+      "landmark": "landmarks:cho_ha_dong",
+      "hours": [
+        7,
+        9
+      ],
+      "archive_frame": "khai_1993_103_cho_ha_dong_cong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_104_ha_dong_tau_dien",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ha_dong",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Bến tàu điện Hà Đông",
+        "en": "The Hà Đông tram terminus"
+      },
+      "description": {
+        "vi": "Toa tàu điện leng keng, bến cuối, ruộng hai bên.",
+        "en": "The clanging tram, the end of the line, paddy on both sides."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 20.95794,
+        "lon": 105.75883
+      },
+      "district": "districts:ha_dong",
+      "street": "Đường Quang Trung",
+      "hours": [
+        7,
+        9
+      ],
+      "archive_frame": "khai_1980_104_ha_dong_tau_dien",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_105_van_quan_ho_moi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ha_dong",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Hồ Văn Quán",
+        "en": "Văn Quán lake"
+      },
+      "description": {
+        "vi": "Hồ mới kè, nhà liền kề xây dở.",
+        "en": "The newly lined lake, terraced houses half built."
+      },
+      "year": 2005,
+      "location": {
+        "lat": 20.979,
+        "lon": 105.792
+      },
+      "district": "districts:ha_dong",
+      "landmark": "landmarks:ho_van_quan",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_2005_105_van_quan_ho_moi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_106_yen_nghia_ga_moi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ha_dong",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Công trường ga Yên Nghĩa",
+        "en": "The Yên Nghĩa station site"
+      },
+      "description": {
+        "vi": "Trụ bê tông tuyến 2A, bến xe cũ bên cạnh.",
+        "en": "Line 2A piers, the old bus station beside them."
+      },
+      "year": 2009,
+      "location": {
+        "lat": 20.9545,
+        "lon": 105.748
+      },
+      "district": "districts:ha_dong",
+      "landmark": "landmarks:ga_yen_nghia",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_2009_106_yen_nghia_ga_moi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_107_ha_dong_dai_phat_thanh",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "ha_dong",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Phố Lê Lợi Hà Đông",
+        "en": "Lê Lợi street, Hà Đông"
+      },
+      "description": {
+        "vi": "Thị xã Hà Đông, cột loa, hàng xén.",
+        "en": "Hà Đông town, a loudspeaker pole, a notions shop."
+      },
+      "year": 1996,
+      "location": {
+        "lat": 20.9689,
+        "lon": 105.77955
+      },
+      "district": "districts:ha_dong",
+      "street": "Phố Lê Lợi",
+      "hours": [
+        10,
+        12
+      ],
+      "archive_frame": "khai_1996_107_ha_dong_dai_phat_thanh",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_108_bat_trang_lo_bau",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "gia_lam",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Lò bầu Bát Tràng",
+        "en": "A Bát Tràng kiln"
+      },
+      "description": {
+        "vi": "Lò than đang nung, khói đen, thợ xếp bát.",
+        "en": "The coal kiln firing, black smoke, potters stacking bowls."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 20.97833,
+        "lon": 105.914479
+      },
+      "district": "districts:gia_lam",
+      "landmark": "landmarks:lang_gom_bat_trang",
+      "hours": [
+        7,
+        9
+      ],
+      "archive_frame": "khai_1985_108_bat_trang_lo_bau",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 19,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_109_bat_tr_song_ben",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "gia_lam",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bến sông Bát Tràng",
+        "en": "Bát Tràng river landing"
+      },
+      "description": {
+        "vi": "Thuyền chở gốm, bến đất, trẻ con tắm sông.",
+        "en": "Boats loaded with pottery, an earthen landing, children swimming."
+      },
+      "year": 1992,
+      "location": {
+        "lat": 20.97833,
+        "lon": 105.914479
+      },
+      "district": "districts:gia_lam",
+      "landmark": "landmarks:lang_gom_bat_trang",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_1992_109_bat_tr_song_ben",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_110_gia_lam_san_bay",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "gia_lam",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Đường 5 qua Gia Lâm",
+        "en": "Route 5 through Gia Lâm"
+      },
+      "description": {
+        "vi": "Xe tải, khu công nghiệp Sài Đồng, cánh đồng còn lại.",
+        "en": "Trucks, the Sài Đồng industrial zone, the last fields."
+      },
+      "year": 2001,
+      "location": {
+        "lat": 21.03848,
+        "lon": 105.90406
+      },
+      "district": "districts:gia_lam",
+      "street": "Đường Nguyễn Văn Linh",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_2001_110_gia_lam_san_bay",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_111_da_ton_cay_da",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "gia_lam",
+        "street_centroid"
+      ],
+      "name": {
+        "vi": "Cây đa Đa Tốn",
+        "en": "The Đa Tốn banyan"
+      },
+      "description": {
+        "vi": "Cây đa cổng làng, quán nước, xe đạp thồ.",
+        "en": "The village banyan, a tea stall, a pack bicycle."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 20.9847,
+        "lon": 105.92764
+      },
+      "district": "districts:gia_lam",
+      "street": "Đường Đa Tốn",
+      "hours": [
+        16,
+        18
+      ],
+      "archive_frame": "khai_1983_111_da_ton_cay_da",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "anh_112_bat_trang_cho_gom",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "gia_lam",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Chợ gốm Bát Tràng",
+        "en": "Bát Tràng pottery market"
+      },
+      "description": {
+        "vi": "Chợ gốm mới, khách Hà Nội đi xe máy sang, nặn gốm thuê.",
+        "en": "The new pottery market, Hanoians on motorbikes, pottery-making for hire."
+      },
+      "year": 2007,
+      "location": {
+        "lat": 20.97833,
+        "lon": 105.914479
+      },
+      "district": "districts:gia_lam",
+      "landmark": "landmarks:lang_gom_bat_trang",
+      "hours": [
+        9,
+        12
+      ],
+      "archive_frame": "khai_2007_112_bat_trang_cho_gom",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_113_my_dinh_sea_games",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "my_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "SEA Games 22",
+        "en": "SEA Games 22"
+      },
+      "description": {
+        "vi": "Sân Mỹ Đình đêm khai mạc, pháo hoa, lần đầu Việt Nam đăng cai.",
+        "en": "Mỹ Đình stadium on opening night, fireworks, Vietnam's first time hosting."
+      },
+      "year": 2003,
+      "location": {
+        "lat": 21.020486,
+        "lon": 105.763914
+      },
+      "district": "districts:my_dinh",
+      "landmark": "landmarks:svd_my_dinh",
+      "hours": [
+        17,
+        20
+      ],
+      "archive_frame": "khai_2003_113_my_dinh_sea_games",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 20,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_114_my_dinh_ruong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "my_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Đồng Mỹ Đình",
+        "en": "The Mỹ Đình fields"
+      },
+      "description": {
+        "vi": "Ruộng lúa đến chân trời, làng Mỹ Đình, cò.",
+        "en": "Paddy to the horizon, Mỹ Đình village, egrets."
+      },
+      "year": 1995,
+      "location": {
+        "lat": 21.0045,
+        "lon": 105.785
+      },
+      "district": "districts:my_dinh",
+      "landmark": "landmarks:trung_tam_hoi_nghi_quoc_gia",
+      "hours": [
+        8,
+        10
+      ],
+      "archive_frame": "khai_1995_114_my_dinh_ruong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_115_landmark_72_cong_truong",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "my_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Công trường Tháp Bảy Hai",
+        "en": "The Bảy Hai tower site"
+      },
+      "description": {
+        "vi": "Cần cẩu, lõi bê tông tầng 20, đường Phạm Hùng bụi.",
+        "en": "Cranes, the core at floor 20, Phạm Hùng dusty."
+      },
+      "year": 2008,
+      "location": {
+        "lat": 21.017,
+        "lon": 105.7838
+      },
+      "district": "districts:my_dinh",
+      "landmark": "landmarks:landmark_72",
+      "hours": [
+        9,
+        11
+      ],
+      "archive_frame": "khai_2008_115_landmark_72_cong_truong",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_116_ben_xe_my_dinh_moi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "my_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bến xe Mỹ Đình ngày mở",
+        "en": "Mỹ Đình bus station opening day"
+      },
+      "description": {
+        "vi": "Xe khách xếp hàng, biển 'Hà Nội - Lào Cai', dân bán nước.",
+        "en": "Coaches lined up, a 'Hà Nội - Lào Cai' board, water sellers."
+      },
+      "year": 2001,
+      "location": {
+        "lat": 21.028463,
+        "lon": 105.778005
+      },
+      "district": "districts:my_dinh",
+      "landmark": "landmarks:ben_xe_my_dinh",
+      "hours": [
+        5,
+        7
+      ],
+      "archive_frame": "khai_2001_116_ben_xe_my_dinh_moi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_117_bao_tang_ha_noi_kim_tu_thap",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "my_dinh",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Bảo tàng Hà Nội trước khai mạc",
+        "en": "Hanoi Museum before opening"
+      },
+      "description": {
+        "vi": "Kim tự tháp ngược, thợ lau kính, Đại lễ 1000 năm.",
+        "en": "The inverted pyramid, window cleaners, the 1000-year celebration."
+      },
+      "year": 2010,
+      "location": {
+        "lat": 21.0052,
+        "lon": 105.787
+      },
+      "district": "districts:my_dinh",
+      "landmark": "landmarks:bao_tang_ha_noi",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_2010_117_bao_tang_ha_noi_kim_tu_thap",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_118_cau_thang_b4_kim_lien",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "dong_da",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Cầu thang nhà B4 Kim Liên",
+        "en": "The B4 Kim Liên stairwell"
+      },
+      "description": {
+        "vi": "Nắng xiên bốn giờ chiều qua ô gió, cô bé ngồi bậc đọc truyện.",
+        "en": "Four p.m. light through the vent blocks, a girl reading on the step."
+      },
+      "year": 1996,
+      "location": {
+        "lat": 21.0085,
+        "lon": 105.839
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:khu_tap_the_kim_lien",
+      "hours": [
+        15,
+        17
+      ],
+      "archive_frame": "khai_1996_118_cau_thang_b4_kim_lien",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_119_dinh_chem_hoi",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "bac_tu_liem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Hội đình Chèm",
+        "en": "Chèm communal house festival"
+      },
+      "description": {
+        "vi": "Rước nước sông Hồng, thuyền rồng, đình cổ nhất.",
+        "en": "Bringing water from the Red River, dragon boats, the oldest communal house."
+      },
+      "year": 1990,
+      "location": {
+        "lat": 21.096,
+        "lon": 105.778
+      },
+      "district": "districts:bac_tu_liem",
+      "landmark": "landmarks:dinh_chem",
+      "hours": [
+        8,
+        11
+      ],
+      "archive_frame": "khai_1990_119_dinh_chem_hoi",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "unlocks_tape": 21,
+      "coords_source": "landmark"
+    },
+    {
+      "id": "anh_120_tay_tuu_hoa_dem",
+      "set": "anh_xua",
+      "tags": [
+        "anh_xua",
+        "bac_tu_liem",
+        "landmark"
+      ],
+      "name": {
+        "vi": "Cắt hoa Tây Tựu lúc 4 giờ",
+        "en": "Cutting Tây Tựu flowers at four"
+      },
+      "description": {
+        "vi": "Đèn pin, ruộng cúc, xe thồ hoa về Quảng Bá.",
+        "en": "Torches, chrysanthemum fields, pack bikes to Quảng Bá."
+      },
+      "year": 1998,
+      "location": {
+        "lat": 21.0905,
+        "lon": 105.755
+      },
+      "district": "districts:bac_tu_liem",
+      "landmark": "landmarks:lang_hoa_tay_tuu",
+      "hours": [
+        3,
+        6
+      ],
+      "archive_frame": "khai_1998_120_tay_tuu_hoa_dem",
+      "activity": "activities:act_chup_lai_anh_xua",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_01_gao_1978",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "dong_da",
+        "gao"
+      ],
+      "name": {
+        "vi": "Phiếu gạo 13 kg, Kim Liên",
+        "en": "13 kg rice coupon, Kim Liên"
+      },
+      "description": {
+        "vi": "Tem phiếu gạo năm 1978, giấu ở khu tập thể.",
+        "en": "1978 gao coupon, hidden in a housing block."
+      },
+      "year": 1978,
+      "location": {
+        "lat": 21.0085,
+        "lon": 105.839
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:khu_tap_the_kim_lien",
+      "hidden_in": "tap_the",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_02_thit_1980",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "ba_dinh",
+        "thit"
+      ],
+      "name": {
+        "vi": "Phiếu thịt 0,5 kg, cán bộ",
+        "en": "0.5 kg meat coupon, cadre grade"
+      },
+      "description": {
+        "vi": "Tem phiếu thịt năm 1980, giấu ở khu tập thể.",
+        "en": "1980 thit coupon, hidden in a housing block."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 21.028299,
+        "lon": 105.819943
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:khu_tap_the_giang_vo",
+      "hidden_in": "tap_the",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_03_vai_1982",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "pho_co",
+        "vai"
+      ],
+      "name": {
+        "vi": "Phiếu vải 5 m, Hàng Đào",
+        "en": "5 m cloth coupon, Hàng Đào"
+      },
+      "description": {
+        "vi": "Tem phiếu vải năm 1982, giấu trong nhà cũ.",
+        "en": "1982 vai coupon, hidden in an old house."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 21.03295,
+        "lon": 105.85113
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Đào",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_04_dau_hoa_1979",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "pho_co",
+        "dau_hoa"
+      ],
+      "name": {
+        "vi": "Phiếu dầu hỏa 2 lít",
+        "en": "2-litre kerosene coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu dầu hỏa năm 1979, giấu ở sạp đồng nát.",
+        "en": "1979 dau hoa coupon, hidden on a scrap cart."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 21.04203,
+        "lon": 105.84735
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Than",
+      "hidden_in": "dong_nat",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_05_chat_dot_1984",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hai_ba_trung",
+        "chat_dot"
+      ],
+      "name": {
+        "vi": "Phiếu than tổ ong",
+        "en": "Coal-briquette coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu chất đốt năm 1984, giấu trong nhà cũ.",
+        "en": "1984 chat dot coupon, hidden in an old house."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 21.01302,
+        "lon": 105.85829
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Lò Đúc",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_06_duong_1976",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hoan_kiem",
+        "duong"
+      ],
+      "name": {
+        "vi": "Phiếu đường 0,5 kg 1976",
+        "en": "0.5 kg sugar coupon, 1976"
+      },
+      "description": {
+        "vi": "Tem phiếu đường năm 1976, giấu ở hàng sách cũ.",
+        "en": "1976 duong coupon, hidden at a second-hand bookstall."
+      },
+      "year": 1976,
+      "location": {
+        "lat": 21.0256,
+        "lon": 105.8506
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:pho_sach_dinh_le",
+      "hidden_in": "hang_sach_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_07_sua_1985",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hoan_kiem",
+        "sua"
+      ],
+      "name": {
+        "vi": "Phiếu sữa trẻ em",
+        "en": "Infant milk coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu sữa năm 1985, giấu trong nhà cũ.",
+        "en": "1985 sua coupon, hidden in an old house."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.02243,
+        "lon": 105.85254
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Hàng Bài",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_08_xa_phong_1983",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "thanh_xuan",
+        "xa_phong"
+      ],
+      "name": {
+        "vi": "Phiếu xà phòng 72%",
+        "en": "72% laundry soap coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu xà phòng năm 1983, giấu ở khu tập thể.",
+        "en": "1983 xa phong coupon, hidden in a housing block."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 20.99455,
+        "lon": 105.80779
+      },
+      "district": "districts:thanh_xuan",
+      "street": "Đường Nguyễn Trãi",
+      "hidden_in": "tap_the",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_09_thuoc_la_1981",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "pho_co",
+        "thuoc_la"
+      ],
+      "name": {
+        "vi": "Phiếu thuốc lá Điện Biên",
+        "en": "Điện Biên cigarette coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu thuốc lá năm 1981, giấu ở sạp đồng nát.",
+        "en": "1981 thuoc la coupon, hidden on a scrap cart."
+      },
+      "year": 1981,
+      "location": {
+        "lat": 21.03581,
+        "lon": 105.85164
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Buồm",
+      "hidden_in": "dong_nat",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_10_phu_tung_xe_dap_1987",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hai_ba_trung",
+        "phu_tung_xe_dap"
+      ],
+      "name": {
+        "vi": "Phiếu săm lốp xe đạp",
+        "en": "Bicycle tyre and tube coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu phụ tùng xe đạp năm 1987, giấu trong kho chợ.",
+        "en": "1987 phu tung xe dap coupon, hidden in a market storeroom."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 21.01434,
+        "lon": 105.85158
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Huế",
+      "hidden_in": "kho_cho",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_11_bia_1980",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hoan_kiem",
+        "bia"
+      ],
+      "name": {
+        "vi": "Tích kê bia hơi Hà Nội",
+        "en": "Hanoi draught-beer token"
+      },
+      "description": {
+        "vi": "Tem phiếu bia năm 1980, giấu trong nhà cũ.",
+        "en": "1980 bia coupon, hidden in an old house."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 21.02481,
+        "lon": 105.85744
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Tràng Tiền",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_12_nuoc_mam_1982",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "pho_co",
+        "nuoc_mam"
+      ],
+      "name": {
+        "vi": "Phiếu nước mắm 1 lít",
+        "en": "1-litre fish-sauce coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu nước mắm năm 1982, giấu trong kho chợ.",
+        "en": "1982 nuoc mam coupon, hidden in a market storeroom."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 21.038084,
+        "lon": 105.849418
+      },
+      "district": "districts:pho_co",
+      "landmark": "landmarks:cho_dong_xuan",
+      "hidden_in": "kho_cho",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_13_mi_chinh_1978",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "dong_da",
+        "mi_chinh"
+      ],
+      "name": {
+        "vi": "Phiếu mì chính 50 g",
+        "en": "50 g MSG coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu mì chính năm 1978, giấu trong nhà cũ.",
+        "en": "1978 mi chinh coupon, hidden in an old house."
+      },
+      "year": 1978,
+      "location": {
+        "lat": 21.01909,
+        "lon": 105.83544
+      },
+      "district": "districts:dong_da",
+      "street": "Phố Khâm Thiên",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_14_gao_1986",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "cau_giay",
+        "gao"
+      ],
+      "name": {
+        "vi": "Sổ gạo Nghĩa Tân",
+        "en": "Nghĩa Tân rice book"
+      },
+      "description": {
+        "vi": "Tem phiếu gạo năm 1986, giấu ở khu tập thể.",
+        "en": "1986 gao coupon, hidden in a housing block."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.04418,
+        "lon": 105.79195
+      },
+      "district": "districts:cau_giay",
+      "street": "Phố Nghĩa Tân",
+      "hidden_in": "tap_the",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_15_thit_1979",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hai_ba_trung",
+        "thit"
+      ],
+      "name": {
+        "vi": "Phiếu thịt chợ Hôm",
+        "en": "Chợ Hôm meat coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu thịt năm 1979, giấu trong kho chợ.",
+        "en": "1979 thit coupon, hidden in a market storeroom."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 21.016,
+        "lon": 105.852
+      },
+      "district": "districts:hai_ba_trung",
+      "landmark": "landmarks:cho_hom",
+      "hidden_in": "kho_cho",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_16_vai_1988",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "ha_dong",
+        "vai"
+      ],
+      "name": {
+        "vi": "Phiếu vải cấp cho thợ dệt",
+        "en": "Cloth coupon issued to weavers"
+      },
+      "description": {
+        "vi": "Tem phiếu vải năm 1988, giấu trong nhà cũ.",
+        "en": "1988 vai coupon, hidden in an old house."
+      },
+      "year": 1988,
+      "location": {
+        "lat": 20.979812,
+        "lon": 105.774586
+      },
+      "district": "districts:ha_dong",
+      "landmark": "landmarks:lang_lua_van_phuc",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_17_dau_hoa_1977",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "long_bien",
+        "dau_hoa"
+      ],
+      "name": {
+        "vi": "Phiếu dầu Xe lửa Gia Lâm",
+        "en": "Gia Lâm works kerosene coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu dầu hỏa năm 1977, giấu ở khu tập thể.",
+        "en": "1977 dau hoa coupon, hidden in a housing block."
+      },
+      "year": 1977,
+      "location": {
+        "lat": 21.04696,
+        "lon": 105.87244
+      },
+      "district": "districts:long_bien",
+      "street": "Đường Ngọc Lâm",
+      "hidden_in": "tap_the",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_18_chat_dot_1983",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hoang_mai",
+        "chat_dot"
+      ],
+      "name": {
+        "vi": "Phiếu củi 20 kg",
+        "en": "20 kg firewood coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu chất đốt năm 1983, giấu ở sạp đồng nát.",
+        "en": "1983 chat dot coupon, hidden on a scrap cart."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 20.98919,
+        "lon": 105.8412
+      },
+      "district": "districts:hoang_mai",
+      "street": "Đường Giải Phóng",
+      "hidden_in": "dong_nat",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_19_duong_1985",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "ba_dinh",
+        "duong"
+      ],
+      "name": {
+        "vi": "Phiếu đường Tết 1985",
+        "en": "Tết 1985 sugar coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu đường năm 1985, giấu trong nhà cũ.",
+        "en": "1985 duong coupon, hidden in an old house."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.03587,
+        "lon": 105.81992
+      },
+      "district": "districts:ba_dinh",
+      "street": "Phố Đội Cấn",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_20_sua_1981",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "ba_dinh",
+        "sua"
+      ],
+      "name": {
+        "vi": "Phiếu sữa Ông Thọ",
+        "en": "Ông Thọ condensed-milk coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu sữa năm 1981, giấu trong nhà cũ.",
+        "en": "1981 sua coupon, hidden in an old house."
+      },
+      "year": 1981,
+      "location": {
+        "lat": 21.04179,
+        "lon": 105.84288
+      },
+      "district": "districts:ba_dinh",
+      "street": "Phố Quán Thánh",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_21_gao_1989",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "tay_ho",
+        "gao"
+      ],
+      "name": {
+        "vi": "Phiếu gạo cuối cùng, 1989",
+        "en": "The last rice coupon, 1989"
+      },
+      "description": {
+        "vi": "Tem phiếu gạo năm 1989, giấu ở khu tập thể.",
+        "en": "1989 gao coupon, hidden in a housing block."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.05377,
+        "lon": 105.83688
+      },
+      "district": "districts:tay_ho",
+      "street": "Phố Yên Phụ",
+      "hidden_in": "tap_the",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "cuc_hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_22_xa_phong_1980",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "gia_lam",
+        "xa_phong"
+      ],
+      "name": {
+        "vi": "Phiếu xà phòng Bát Tràng",
+        "en": "Bát Tràng soap coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu xà phòng năm 1980, giấu trong nhà cũ.",
+        "en": "1980 xa phong coupon, hidden in an old house."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 20.97833,
+        "lon": 105.914479
+      },
+      "district": "districts:gia_lam",
+      "landmark": "landmarks:lang_gom_bat_trang",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_23_thuoc_la_1984",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hoan_kiem",
+        "thuoc_la"
+      ],
+      "name": {
+        "vi": "Phiếu thuốc lá Thăng Long",
+        "en": "Thăng Long cigarette coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu thuốc lá năm 1984, giấu ở sạp đồng nát.",
+        "en": "1984 thuoc la coupon, hidden on a scrap cart."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 21.01653,
+        "lon": 105.83959
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Lý Thường Kiệt",
+      "hidden_in": "dong_nat",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_24_phu_tung_xe_dap_1986",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "thanh_xuan",
+        "phu_tung_xe_dap"
+      ],
+      "name": {
+        "vi": "Phiếu xích líp Thống Nhất",
+        "en": "Thống Nhất chain-and-sprocket coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu phụ tùng xe đạp năm 1986, giấu trong kho chợ.",
+        "en": "1986 phu tung xe dap coupon, hidden in a market storeroom."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 20.99854,
+        "lon": 105.82207
+      },
+      "district": "districts:thanh_xuan",
+      "street": "Phố Vương Thừa Vũ",
+      "hidden_in": "kho_cho",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_25_bia_1982",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "pho_co",
+        "bia"
+      ],
+      "name": {
+        "vi": "Tích kê bia Tạ Hiện",
+        "en": "Tạ Hiện beer token"
+      },
+      "description": {
+        "vi": "Tem phiếu bia năm 1982, giấu trong nhà cũ.",
+        "en": "1982 bia coupon, hidden in an old house."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 21.0351,
+        "lon": 105.8519
+      },
+      "district": "districts:pho_co",
+      "landmark": "landmarks:pho_ta_hien",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_26_nuoc_mam_1978",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hoang_mai",
+        "nuoc_mam"
+      ],
+      "name": {
+        "vi": "Phiếu nước mắm Cát Hải",
+        "en": "Cát Hải fish-sauce coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu nước mắm năm 1978, giấu trong kho chợ.",
+        "en": "1978 nuoc mam coupon, hidden in a market storeroom."
+      },
+      "year": 1978,
+      "location": {
+        "lat": 20.987,
+        "lon": 105.86
+      },
+      "district": "districts:hoang_mai",
+      "landmark": "landmarks:cho_dau_moi_den_lu",
+      "hidden_in": "kho_cho",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_27_mi_chinh_1987",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "my_dinh",
+        "mi_chinh"
+      ],
+      "name": {
+        "vi": "Phiếu mì chính Ajino cũ",
+        "en": "Old MSG coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu mì chính năm 1987, giấu ở sạp đồng nát.",
+        "en": "1987 mi chinh coupon, hidden on a scrap cart."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 21.028463,
+        "lon": 105.778005
+      },
+      "district": "districts:my_dinh",
+      "landmark": "landmarks:ben_xe_my_dinh",
+      "hidden_in": "dong_nat",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_28_vai_1979",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "bac_tu_liem",
+        "vai"
+      ],
+      "name": {
+        "vi": "Phiếu vải Chèm",
+        "en": "Chèm cloth coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu vải năm 1979, giấu trong nhà cũ.",
+        "en": "1979 vai coupon, hidden in an old house."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 21.096,
+        "lon": 105.778
+      },
+      "district": "districts:bac_tu_liem",
+      "landmark": "landmarks:dinh_chem",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_29_gao_1983",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "ha_dong",
+        "gao"
+      ],
+      "name": {
+        "vi": "Sổ gạo thị xã Hà Đông",
+        "en": "Hà Đông town rice book"
+      },
+      "description": {
+        "vi": "Tem phiếu gạo năm 1983, giấu trong kho chợ.",
+        "en": "1983 gao coupon, hidden in a market storeroom."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 20.97043,
+        "lon": 105.780088
+      },
+      "district": "districts:ha_dong",
+      "landmark": "landmarks:cho_ha_dong",
+      "hidden_in": "kho_cho",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_30_thit_1981",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "gia_lam",
+        "thit"
+      ],
+      "name": {
+        "vi": "Phiếu thịt hợp tác xã Đa Tốn",
+        "en": "Đa Tốn cooperative meat coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu thịt năm 1981, giấu trong nhà cũ.",
+        "en": "1981 thit coupon, hidden in an old house."
+      },
+      "year": 1981,
+      "location": {
+        "lat": 20.9847,
+        "lon": 105.92764
+      },
+      "district": "districts:gia_lam",
+      "street": "Đường Đa Tốn",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_31_chat_dot_1985",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "long_bien",
+        "chat_dot"
+      ],
+      "name": {
+        "vi": "Phiếu than Ngọc Thụy",
+        "en": "Ngọc Thụy coal coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu chất đốt năm 1985, giấu trong nhà cũ.",
+        "en": "1985 chat dot coupon, hidden in an old house."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.062,
+        "lon": 105.878
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:de_song_hong_ngoc_thuy",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_32_thuoc_la_1976",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hoan_kiem",
+        "thuoc_la"
+      ],
+      "name": {
+        "vi": "Phiếu thuốc lá Tam Đảo 1976",
+        "en": "Tam Đảo cigarette coupon, 1976"
+      },
+      "description": {
+        "vi": "Tem phiếu thuốc lá năm 1976, giấu ở sạp đồng nát.",
+        "en": "1976 thuoc la coupon, hidden on a scrap cart."
+      },
+      "year": 1976,
+      "location": {
+        "lat": 21.025112,
+        "lon": 105.840792
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:ga_ha_noi",
+      "hidden_in": "dong_nat",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "cuc_hiem",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_33_bia_1988",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "tay_ho",
+        "bia"
+      ],
+      "name": {
+        "vi": "Tích kê bia Trúc Bạch",
+        "en": "Trúc Bạch beer token"
+      },
+      "description": {
+        "vi": "Tem phiếu bia năm 1988, giấu trong nhà cũ.",
+        "en": "1988 bia coupon, hidden in an old house."
+      },
+      "year": 1988,
+      "location": {
+        "lat": 21.0445,
+        "lon": 105.8409
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:ho_truc_bach",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_34_dau_hoa_1980",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "cau_giay",
+        "dau_hoa"
+      ],
+      "name": {
+        "vi": "Phiếu dầu hỏa Cầu Giấy",
+        "en": "Cầu Giấy kerosene coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu dầu hỏa năm 1980, giấu ở sạp đồng nát.",
+        "en": "1980 dau hoa coupon, hidden on a scrap cart."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 21.0327,
+        "lon": 105.79787
+      },
+      "district": "districts:cau_giay",
+      "street": "Đường Cầu Giấy",
+      "hidden_in": "dong_nat",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_35_sua_1984",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "my_dinh",
+        "sua"
+      ],
+      "name": {
+        "vi": "Phiếu sữa bột Liên Xô",
+        "en": "Soviet milk-powder coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu sữa năm 1984, giấu trong nhà cũ.",
+        "en": "1984 sua coupon, hidden in an old house."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 21.0052,
+        "lon": 105.787
+      },
+      "district": "districts:my_dinh",
+      "landmark": "landmarks:bao_tang_ha_noi",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_36_duong_1982",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "bac_tu_liem",
+        "duong"
+      ],
+      "name": {
+        "vi": "Phiếu đường Tây Tựu",
+        "en": "Tây Tựu sugar coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu đường năm 1982, giấu trong nhà cũ.",
+        "en": "1982 duong coupon, hidden in an old house."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 21.0905,
+        "lon": 105.755
+      },
+      "district": "districts:bac_tu_liem",
+      "landmark": "landmarks:lang_hoa_tay_tuu",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "tem_37_gao_1977",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "pho_co",
+        "gao"
+      ],
+      "name": {
+        "vi": "Sổ gạo nhà số 49 Hàng Chiếu",
+        "en": "Rice book of 49 Hàng Chiếu"
+      },
+      "description": {
+        "vi": "Tem phiếu gạo năm 1977, giấu trong nhà cũ.",
+        "en": "1977 gao coupon, hidden in an old house."
+      },
+      "year": 1977,
+      "location": {
+        "lat": 21.03706,
+        "lon": 105.85051
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Chiếu",
+      "hidden_in": "nha_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "cuc_hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_38_xa_phong_1986",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hai_ba_trung",
+        "xa_phong"
+      ],
+      "name": {
+        "vi": "Phiếu xà phòng Dệt 8/3",
+        "en": "8 March mill soap coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu xà phòng năm 1986, giấu ở khu tập thể.",
+        "en": "1986 xa phong coupon, hidden in a housing block."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 20.99818,
+        "lon": 105.86304
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Minh Khai",
+      "hidden_in": "tap_the",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_39_phu_tung_xe_dap_1989",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "dong_da",
+        "phu_tung_xe_dap"
+      ],
+      "name": {
+        "vi": "Phiếu phụ tùng Thủy Lợi",
+        "en": "Thủy Lợi spare-parts coupon"
+      },
+      "description": {
+        "vi": "Tem phiếu phụ tùng xe đạp năm 1989, giấu trong kho chợ.",
+        "en": "1989 phu tung xe dap coupon, hidden in a market storeroom."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.00625,
+        "lon": 105.82137
+      },
+      "district": "districts:dong_da",
+      "street": "Phố Tây Sơn",
+      "hidden_in": "kho_cho",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "tem_40_vai_1983",
+      "set": "tem_phieu",
+      "tags": [
+        "tem_phieu",
+        "hoan_kiem",
+        "vai"
+      ],
+      "name": {
+        "vi": "Phiếu vải Bách hóa Tràng Tiền, còn nguyên tập",
+        "en": "Tràng Tiền store cloth coupons, full book"
+      },
+      "description": {
+        "vi": "Tem phiếu vải năm 1983, giấu ở hàng sách cũ.",
+        "en": "1983 vai coupon, hidden at a second-hand bookstall."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.02481,
+        "lon": 105.85744
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Tràng Tiền",
+      "hidden_in": "hang_sach_cu",
+      "activity": "activities:act_suu_tam_tem_phieu",
+      "rarity": "cuc_hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_01_bach_hoa_tong_hop",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "mau_dich"
+      ],
+      "name": {
+        "vi": "Biển 'Bách hóa Tổng hợp'",
+        "en": "Sign 'Department Store'"
+      },
+      "description": {
+        "vi": "Biển mậu dịch, khoảng 1960.",
+        "en": "State-shop sign, c. 1960."
+      },
+      "year": 1960,
+      "location": {
+        "lat": 21.02481,
+        "lon": 105.85744
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Tràng Tiền",
+      "sign_kind": "mau_dich",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_02_mau_dich_quoc_doanh",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hai_ba_trung",
+        "mau_dich"
+      ],
+      "name": {
+        "vi": "Biển 'Mậu dịch quốc doanh'",
+        "en": "Sign 'State Trading Store'"
+      },
+      "description": {
+        "vi": "Biển mậu dịch, khoảng 1958.",
+        "en": "State-shop sign, c. 1958."
+      },
+      "year": 1958,
+      "location": {
+        "lat": 21.016,
+        "lon": 105.852
+      },
+      "district": "districts:hai_ba_trung",
+      "landmark": "landmarks:cho_hom",
+      "sign_kind": "mau_dich",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_03_hieu_anh_quoc_te",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "hieu"
+      ],
+      "name": {
+        "vi": "Biển 'Hiệu ảnh Quốc Tế'",
+        "en": "Sign 'Quốc Tế Photo Studio'"
+      },
+      "description": {
+        "vi": "Biển hiệu cũ, khoảng 1955.",
+        "en": "Old shop sign, c. 1955."
+      },
+      "year": 1955,
+      "location": {
+        "lat": 21.02572,
+        "lon": 105.85242
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Hàng Khay",
+      "sign_kind": "hieu",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_04_kem_trang_tien",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "mau_dich"
+      ],
+      "name": {
+        "vi": "Biển 'Kem Tràng Tiền'",
+        "en": "Sign 'Tràng Tiền Ice Cream'"
+      },
+      "description": {
+        "vi": "Biển mậu dịch, khoảng 1958.",
+        "en": "State-shop sign, c. 1958."
+      },
+      "year": 1958,
+      "location": {
+        "lat": 21.02481,
+        "lon": 105.85744
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Tràng Tiền",
+      "sign_kind": "mau_dich",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_05_hieu_sach_nhan_dan",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "hieu"
+      ],
+      "name": {
+        "vi": "Biển 'Hiệu sách Nhân Dân'",
+        "en": "Sign 'People's Bookshop'"
+      },
+      "description": {
+        "vi": "Biển hiệu cũ, khoảng 1954.",
+        "en": "Old shop sign, c. 1954."
+      },
+      "year": 1954,
+      "location": {
+        "lat": 21.02481,
+        "lon": 105.85744
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Tràng Tiền",
+      "sign_kind": "hieu",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_06_rap_thang_tam",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "rap"
+      ],
+      "name": {
+        "vi": "Biển 'Rạp Tháng Tám'",
+        "en": "Sign 'August Cinema'"
+      },
+      "description": {
+        "vi": "Biển rạp, khoảng 1950.",
+        "en": "Cinema sign, c. 1950."
+      },
+      "year": 1950,
+      "location": {
+        "lat": 21.02243,
+        "lon": 105.85254
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Hàng Bài",
+      "sign_kind": "rap",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_07_rap_cong_nhan",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "rap"
+      ],
+      "name": {
+        "vi": "Biển 'Rạp Công Nhân'",
+        "en": "Sign 'Workers' Theatre'"
+      },
+      "description": {
+        "vi": "Biển rạp, khoảng 1948.",
+        "en": "Cinema sign, c. 1948."
+      },
+      "year": 1948,
+      "location": {
+        "lat": 21.02481,
+        "lon": 105.85744
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Tràng Tiền",
+      "sign_kind": "rap",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_08_rap_kim_dong",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "rap"
+      ],
+      "name": {
+        "vi": "Biển 'Rạp Kim Đồng'",
+        "en": "Sign 'Kim Đồng Cinema'"
+      },
+      "description": {
+        "vi": "Biển rạp, khoảng 1956.",
+        "en": "Cinema sign, c. 1956."
+      },
+      "year": 1956,
+      "location": {
+        "lat": 21.02243,
+        "lon": 105.85254
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Hàng Bài",
+      "sign_kind": "rap",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_09_hieu_thuoc_so_1",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "hieu"
+      ],
+      "name": {
+        "vi": "Biển 'Hiệu thuốc số 1'",
+        "en": "Sign 'Pharmacy No. 1'"
+      },
+      "description": {
+        "vi": "Biển hiệu cũ, khoảng 1962.",
+        "en": "Old shop sign, c. 1962."
+      },
+      "year": 1962,
+      "location": {
+        "lat": 21.02243,
+        "lon": 105.85254
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Hàng Bài",
+      "sign_kind": "hieu",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_10_buu_dien_ha_noi",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "co_quan"
+      ],
+      "name": {
+        "vi": "Biển 'Bưu điện Hà Nội'",
+        "en": "Sign 'Hanoi Post Office'"
+      },
+      "description": {
+        "vi": "Biển cơ quan, khoảng 1930.",
+        "en": "Institution sign, c. 1930."
+      },
+      "year": 1930,
+      "location": {
+        "lat": 21.0263,
+        "lon": 105.854
+      },
+      "district": "districts:hoan_kiem",
+      "landmark": "landmarks:buu_dien_bo_ho",
+      "sign_kind": "co_quan",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_11_nha_may_xe_lua_gia_lam",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "long_bien",
+        "co_quan"
+      ],
+      "name": {
+        "vi": "Biển 'Nhà máy Xe lửa Gia Lâm'",
+        "en": "Sign 'Gia Lâm Locomotive Works'"
+      },
+      "description": {
+        "vi": "Biển cơ quan, khoảng 1905.",
+        "en": "Institution sign, c. 1905."
+      },
+      "year": 1905,
+      "location": {
+        "lat": 21.04696,
+        "lon": 105.87244
+      },
+      "district": "districts:long_bien",
+      "street": "Đường Ngọc Lâm",
+      "sign_kind": "co_quan",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_12_nha_may_det_83",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hai_ba_trung",
+        "co_quan"
+      ],
+      "name": {
+        "vi": "Biển 'Nhà máy Dệt 8/3'",
+        "en": "Sign '8 March Textile Mill'"
+      },
+      "description": {
+        "vi": "Biển cơ quan, khoảng 1965.",
+        "en": "Institution sign, c. 1965."
+      },
+      "year": 1965,
+      "location": {
+        "lat": 20.99818,
+        "lon": 105.86304
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Minh Khai",
+      "sign_kind": "co_quan",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_13_nha_may_thuoc_la_thang_long",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "thanh_xuan",
+        "co_quan"
+      ],
+      "name": {
+        "vi": "Biển 'Nhà máy Thuốc lá Thăng Long'",
+        "en": "Sign 'Thăng Long Tobacco Factory'"
+      },
+      "description": {
+        "vi": "Biển cơ quan, khoảng 1960.",
+        "en": "Institution sign, c. 1960."
+      },
+      "year": 1960,
+      "location": {
+        "lat": 20.99455,
+        "lon": 105.80779
+      },
+      "district": "districts:thanh_xuan",
+      "street": "Đường Nguyễn Trãi",
+      "sign_kind": "co_quan",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_14_nha_may_co_khi_ha_noi",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "thanh_xuan",
+        "co_quan"
+      ],
+      "name": {
+        "vi": "Biển 'Nhà máy Cơ khí Hà Nội'",
+        "en": "Sign 'Hanoi Mechanical Works'"
+      },
+      "description": {
+        "vi": "Biển cơ quan, khoảng 1958.",
+        "en": "Institution sign, c. 1958."
+      },
+      "year": 1958,
+      "location": {
+        "lat": 20.99455,
+        "lon": 105.80779
+      },
+      "district": "districts:thanh_xuan",
+      "street": "Đường Nguyễn Trãi",
+      "sign_kind": "co_quan",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_15_nha_may_bia_ha_noi",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "ba_dinh",
+        "co_quan"
+      ],
+      "name": {
+        "vi": "Biển 'Nhà máy Bia Hà Nội'",
+        "en": "Sign 'Hanoi Brewery'"
+      },
+      "description": {
+        "vi": "Biển cơ quan, khoảng 1890.",
+        "en": "Institution sign, c. 1890."
+      },
+      "year": 1890,
+      "location": {
+        "lat": 20.97131,
+        "lon": 105.77705
+      },
+      "district": "districts:ba_dinh",
+      "street": "Phố Hoàng Hoa Thám",
+      "sign_kind": "co_quan",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_16_bien_so_27_hang_bac_men_xanh",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "men_xanh"
+      ],
+      "name": {
+        "vi": "Biển 'Biển số 27 Hàng Bạc, men xanh'",
+        "en": "Sign 'Blue enamel No. 27 Hàng Bạc'"
+      },
+      "description": {
+        "vi": "Biển số nhà men xanh, khoảng 1920.",
+        "en": "Blue enamel house number, c. 1920."
+      },
+      "year": 1920,
+      "location": {
+        "lat": 21.03395,
+        "lon": 105.85204
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Bạc",
+      "sign_kind": "men_xanh",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_17_bien_so_49_hang_chieu_men_xanh",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "men_xanh"
+      ],
+      "name": {
+        "vi": "Biển 'Biển số 49 Hàng Chiếu, men xanh'",
+        "en": "Sign 'Blue enamel No. 49 Hàng Chiếu'"
+      },
+      "description": {
+        "vi": "Biển số nhà men xanh, khoảng 1925.",
+        "en": "Blue enamel house number, c. 1925."
+      },
+      "year": 1925,
+      "location": {
+        "lat": 21.03706,
+        "lon": 105.85051
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Chiếu",
+      "sign_kind": "men_xanh",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_18_bien_so_87_ma_may",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "men_xanh"
+      ],
+      "name": {
+        "vi": "Biển 'Biển số 87 Mã Mây'",
+        "en": "Sign 'Blue enamel No. 87 Mã Mây'"
+      },
+      "description": {
+        "vi": "Biển số nhà men xanh, khoảng 1930.",
+        "en": "Blue enamel house number, c. 1930."
+      },
+      "year": 1930,
+      "location": {
+        "lat": 21.03556,
+        "lon": 105.85325
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Mã Mây",
+      "sign_kind": "men_xanh",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_19_bien_so_12_ly_quoc_su",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "men_xanh"
+      ],
+      "name": {
+        "vi": "Biển 'Biển số 12 Lý Quốc Sư'",
+        "en": "Sign 'Blue enamel No. 12 Lý Quốc Sư'"
+      },
+      "description": {
+        "vi": "Biển số nhà men xanh, khoảng 1928.",
+        "en": "Blue enamel house number, c. 1928."
+      },
+      "year": 1928,
+      "location": {
+        "lat": 21.02978,
+        "lon": 105.84919
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Lý Quốc Sư",
+      "sign_kind": "men_xanh",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_20_bien_so_6_phan_dinh_phung",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "ba_dinh",
+        "men_xanh"
+      ],
+      "name": {
+        "vi": "Biển 'Biển số 6 Phan Đình Phùng'",
+        "en": "Sign 'Blue enamel No. 6 Phan Đình Phùng'"
+      },
+      "description": {
+        "vi": "Biển số nhà men xanh, khoảng 1935.",
+        "en": "Blue enamel house number, c. 1935."
+      },
+      "year": 1935,
+      "location": {
+        "lat": 21.0405,
+        "lon": 105.844
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:pho_phan_dinh_phung",
+      "sign_kind": "men_xanh",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "hiem",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_21_go_han_thung_ton",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Gò hàn thùng tôn'",
+        "en": "Sign 'Tin buckets made and mended'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1970.",
+        "en": "Hand-painted sign, c. 1970."
+      },
+      "year": 1970,
+      "location": {
+        "lat": 21.03296,
+        "lon": 105.84778
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Thiếc",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_22_ren_dao_keo_cuoc_xeng",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Rèn dao kéo cuốc xẻng'",
+        "en": "Sign 'Knives, hoes, spades forged'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1975.",
+        "en": "Hand-painted sign, c. 1975."
+      },
+      "year": 1975,
+      "location": {
+        "lat": 21.03622,
+        "lon": 105.84785
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Lò Rèn",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_23_do_dong_tho_cung",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Đồ đồng thờ cúng'",
+        "en": "Sign 'Bronze altar ware'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1972.",
+        "en": "Hand-painted sign, c. 1972."
+      },
+      "year": 1972,
+      "location": {
+        "lat": 21.03612,
+        "lon": 105.8477
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Đồng",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_24_thuoc_bac_gia_truyen",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Thuốc bắc gia truyền'",
+        "en": "Sign 'Traditional herbal medicine'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1980.",
+        "en": "Hand-painted sign, c. 1980."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 21.03532,
+        "lon": 105.84947
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Lãn Ông",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_25_vang_ma_den_long",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Vàng mã, đèn lồng'",
+        "en": "Sign 'Votive paper, lanterns'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1968.",
+        "en": "Hand-painted sign, c. 1968."
+      },
+      "year": 1968,
+      "location": {
+        "lat": 21.03671,
+        "lon": 105.84804
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Mã",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_26_theu_ren_xuat_khau",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Thêu ren xuất khẩu'",
+        "en": "Sign 'Embroidery for export'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1978.",
+        "en": "Hand-painted sign, c. 1978."
+      },
+      "year": 1978,
+      "location": {
+        "lat": 21.03205,
+        "lon": 105.8504
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Gai",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_27_khac_dau_con_dau_lay_ngay",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Khắc dấu, con dấu lấy ngay'",
+        "en": "Sign 'Seals carved while you wait'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1982.",
+        "en": "Hand-painted sign, c. 1982."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 21.03274,
+        "lon": 105.84941
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Quạt",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_28_non_la_mu_coi",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Nón lá, mũ cối'",
+        "en": "Sign 'Conical hats, pith helmets'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1976.",
+        "en": "Hand-painted sign, c. 1976."
+      },
+      "year": 1976,
+      "location": {
+        "lat": 21.03252,
+        "lon": 105.84754
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Nón",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_29_chan_bong_dem",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Chăn bông, đệm'",
+        "en": "Sign 'Cotton quilts, mattresses'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1984.",
+        "en": "Hand-painted sign, c. 1984."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 21.02931,
+        "lon": 105.84537
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Bông",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_30_sua_chua_dong_ho",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Sửa chữa đồng hồ'",
+        "en": "Sign 'Watch repair'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1979.",
+        "en": "Hand-painted sign, c. 1979."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 21.0352,
+        "lon": 105.84821
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Thuốc Bắc",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_31_giay_dep_cac_loai",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Giày dép các loại'",
+        "en": "Sign 'Shoes of all kinds'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1985.",
+        "en": "Hand-painted sign, c. 1985."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.03122,
+        "lon": 105.85389
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Hàng Dầu",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_32_hieu_may_tan_thoi",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Hiệu may Tân Thời'",
+        "en": "Sign 'Tân Thời Tailor'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1983.",
+        "en": "Hand-painted sign, c. 1983."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.03224,
+        "lon": 105.85265
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Cầu Gỗ",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_33_cat_toc_cao_mat",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "pho_co",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cắt tóc, cạo mặt'",
+        "en": "Sign 'Haircut and shave'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1977.",
+        "en": "Hand-painted sign, c. 1977."
+      },
+      "year": 1977,
+      "location": {
+        "lat": 21.03909,
+        "lon": 105.8482
+      },
+      "district": "districts:pho_co",
+      "street": "Phố Hàng Giấy",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_34_pho_gia_truyen",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoan_kiem",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Phở gia truyền'",
+        "en": "Sign 'Family-recipe phở'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1986.",
+        "en": "Hand-painted sign, c. 1986."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.02905,
+        "lon": 105.85012
+      },
+      "district": "districts:hoan_kiem",
+      "street": "Phố Nhà Thờ",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_35_cua_hang_an_uong_tong_hop",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "ba_dinh",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cửa hàng ăn uống Tổng hợp'",
+        "en": "Sign 'General Eating House'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1981.",
+        "en": "Hand-painted sign, c. 1981."
+      },
+      "year": 1981,
+      "location": {
+        "lat": 21.03587,
+        "lon": 105.81992
+      },
+      "district": "districts:ba_dinh",
+      "street": "Phố Đội Cấn",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_36_hieu_sach_quan_thanh",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "ba_dinh",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Hiệu sách Quán Thánh'",
+        "en": "Sign 'Quán Thánh Bookshop'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1974.",
+        "en": "Hand-painted sign, c. 1974."
+      },
+      "year": 1974,
+      "location": {
+        "lat": 21.04179,
+        "lon": 105.84288
+      },
+      "district": "districts:ba_dinh",
+      "street": "Phố Quán Thánh",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_37_to_phuc_vu_nha_a1",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "ba_dinh",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Tổ phục vụ nhà A1'",
+        "en": "Sign 'Block A1 service team'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1988.",
+        "en": "Hand-painted sign, c. 1988."
+      },
+      "year": 1988,
+      "location": {
+        "lat": 21.028299,
+        "lon": 105.819943
+      },
+      "district": "districts:ba_dinh",
+      "landmark": "landmarks:khu_tap_the_giang_vo",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_38_cua_hang_luong_thuc_kim_lien",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "dong_da",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cửa hàng lương thực Kim Liên'",
+        "en": "Sign 'Kim Liên Grain Store'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1983.",
+        "en": "Hand-painted sign, c. 1983."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.0085,
+        "lon": 105.839
+      },
+      "district": "districts:dong_da",
+      "landmark": "landmarks:khu_tap_the_kim_lien",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_39_hieu_anh_kham_thien",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "dong_da",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Hiệu ảnh Khâm Thiên'",
+        "en": "Sign 'Khâm Thiên Photo Studio'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1979.",
+        "en": "Hand-painted sign, c. 1979."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 21.01909,
+        "lon": 105.83544
+      },
+      "district": "districts:dong_da",
+      "street": "Phố Khâm Thiên",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_40_sua_xe_dap_bom_va",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "dong_da",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Sửa xe đạp, bơm vá'",
+        "en": "Sign 'Bicycle repair, puncture mending'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1986.",
+        "en": "Hand-painted sign, c. 1986."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.00625,
+        "lon": 105.82137
+      },
+      "district": "districts:dong_da",
+      "street": "Phố Tây Sơn",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_41_hieu_sach_cu",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "dong_da",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Hiệu sách cũ'",
+        "en": "Sign 'Second-hand books'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1975.",
+        "en": "Hand-painted sign, c. 1975."
+      },
+      "year": 1975,
+      "location": {
+        "lat": 20.98557,
+        "lon": 105.79939
+      },
+      "district": "districts:dong_da",
+      "street": "Phố Nguyễn Khuyến",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_42_mua_ban_phu_tung_xe_dap",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hai_ba_trung",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Mua bán phụ tùng xe đạp'",
+        "en": "Sign 'Bicycle parts bought and sold'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1984.",
+        "en": "Hand-painted sign, c. 1984."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 21.01434,
+        "lon": 105.85158
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Huế",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_43_cua_hang_chat_dot",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hai_ba_trung",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cửa hàng chất đốt'",
+        "en": "Sign 'Fuel store'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1980.",
+        "en": "Hand-painted sign, c. 1980."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 21.01302,
+        "lon": 105.85829
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Lò Đúc",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_44_chao_long_tiet_canh",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hai_ba_trung",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cháo lòng tiết canh'",
+        "en": "Sign 'Offal porridge, blood pudding'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1987.",
+        "en": "Hand-painted sign, c. 1987."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 21.00249,
+        "lon": 105.85078
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Bạch Mai",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_45_ca_phe_nhan",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hai_ba_trung",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cà phê Nhân'",
+        "en": "Sign 'Nhân Coffee'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1982.",
+        "en": "Hand-painted sign, c. 1982."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 21.01561,
+        "lon": 105.85042
+      },
+      "district": "districts:hai_ba_trung",
+      "street": "Phố Triệu Việt Vương",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_46_ca_canh_ca_giong",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "tay_ho",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cá cảnh, cá giống'",
+        "en": "Sign 'Ornamental fish, fish fry'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1978.",
+        "en": "Hand-painted sign, c. 1978."
+      },
+      "year": 1978,
+      "location": {
+        "lat": 21.05377,
+        "lon": 105.83688
+      },
+      "district": "districts:tay_ho",
+      "street": "Phố Yên Phụ",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_47_banh_tom_ho_tay",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "tay_ho",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Bánh tôm Hồ Tây'",
+        "en": "Sign 'West Lake prawn cakes'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1989.",
+        "en": "Hand-painted sign, c. 1989."
+      },
+      "year": 1989,
+      "location": {
+        "lat": 21.05513,
+        "lon": 105.819753
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:phu_tay_ho",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_48_hop_tac_xa_hoa_nhat_tan",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "tay_ho",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Hợp tác xã hoa Nhật Tân'",
+        "en": "Sign 'Nhật Tân Flower Cooperative'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1985.",
+        "en": "Hand-painted sign, c. 1985."
+      },
+      "year": 1985,
+      "location": {
+        "lat": 21.079,
+        "lon": 105.823
+      },
+      "district": "districts:tay_ho",
+      "landmark": "landmarks:vuon_dao_nhat_tan",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_49_tram_bom_ngoc_thuy",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "long_bien",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Trạm bơm Ngọc Thụy'",
+        "en": "Sign 'Ngọc Thụy Pumping Station'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1983.",
+        "en": "Hand-painted sign, c. 1983."
+      },
+      "year": 1983,
+      "location": {
+        "lat": 21.062,
+        "lon": 105.878
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:de_song_hong_ngoc_thuy",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_50_cam_xe_qua_5_tan",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "long_bien",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cấm xe quá 5 tấn'",
+        "en": "Sign 'No vehicles over 5 tonnes'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1976.",
+        "en": "Hand-painted sign, c. 1976."
+      },
+      "year": 1976,
+      "location": {
+        "lat": 21.0429,
+        "lon": 105.8596
+      },
+      "district": "districts:long_bien",
+      "landmark": "landmarks:cau_long_bien",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_51_giay_do_yen_thai",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "cau_giay",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Giấy dó Yên Thái'",
+        "en": "Sign 'Yên Thái dó paper'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1988.",
+        "en": "Hand-painted sign, c. 1988."
+      },
+      "year": 1988,
+      "location": {
+        "lat": 21.0327,
+        "lon": 105.79787
+      },
+      "district": "districts:cau_giay",
+      "street": "Đường Cầu Giấy",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_52_com_bui_sinh_vien_2000_dong",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "cau_giay",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Cơm bụi sinh viên 2000 đồng'",
+        "en": "Sign 'Student rice 2000 đồng'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1990.",
+        "en": "Hand-painted sign, c. 1990."
+      },
+      "year": 1990,
+      "location": {
+        "lat": 21.04418,
+        "lon": 105.79195
+      },
+      "district": "districts:cau_giay",
+      "street": "Phố Nghĩa Tân",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_53_hop_tac_xa_khuong_dinh",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "thanh_xuan",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Hợp tác xã Khương Đình'",
+        "en": "Sign 'Khương Đình Cooperative'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1981.",
+        "en": "Hand-painted sign, c. 1981."
+      },
+      "year": 1981,
+      "location": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "district": "districts:thanh_xuan",
+      "landmark": "landmarks:ngo_khuong_dinh",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_54_xe_dap_thong_nhat_bao_hanh",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "thanh_xuan",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Xe đạp Thống Nhất, bảo hành'",
+        "en": "Sign 'Thống Nhất bicycles, guaranteed'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1987.",
+        "en": "Hand-painted sign, c. 1987."
+      },
+      "year": 1987,
+      "location": {
+        "lat": 20.99854,
+        "lon": 105.82207
+      },
+      "district": "districts:thanh_xuan",
+      "street": "Phố Vương Thừa Vũ",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_55_ban_quan_ly_cho_den_lu",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoang_mai",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Ban quản lý chợ Đền Lừ'",
+        "en": "Sign 'Đền Lừ Market Board'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1984.",
+        "en": "Hand-painted sign, c. 1984."
+      },
+      "year": 1984,
+      "location": {
+        "lat": 20.987,
+        "lon": 105.86
+      },
+      "district": "districts:hoang_mai",
+      "landmark": "landmarks:cho_dau_moi_den_lu",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_56_ben_xe_khach_phia_nam",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "hoang_mai",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Bến xe khách phía Nam'",
+        "en": "Sign 'Southern Coach Station'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1979.",
+        "en": "Hand-painted sign, c. 1979."
+      },
+      "year": 1979,
+      "location": {
+        "lat": 20.98919,
+        "lon": 105.8412
+      },
+      "district": "districts:hoang_mai",
+      "street": "Đường Giải Phóng",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "street_centroid"
+    },
+    {
+      "id": "bien_57_hop_tac_xa_det_lua_van_phuc",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "ha_dong",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Hợp tác xã dệt lụa Vạn Phúc'",
+        "en": "Sign 'Vạn Phúc Silk Cooperative'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1982.",
+        "en": "Hand-painted sign, c. 1982."
+      },
+      "year": 1982,
+      "location": {
+        "lat": 20.979812,
+        "lon": 105.774586
+      },
+      "district": "districts:ha_dong",
+      "landmark": "landmarks:lang_lua_van_phuc",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_58_cho_ha_dong_1975",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "ha_dong",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Chợ Hà Đông, 1975'",
+        "en": "Sign 'Hà Đông Market, 1975'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1975.",
+        "en": "Hand-painted sign, c. 1975."
+      },
+      "year": 1975,
+      "location": {
+        "lat": 20.97043,
+        "lon": 105.780088
+      },
+      "district": "districts:ha_dong",
+      "landmark": "landmarks:cho_ha_dong",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_59_xi_nghiep_su_bat_trang",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "gia_lam",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Xí nghiệp sứ Bát Tràng'",
+        "en": "Sign 'Bát Tràng Porcelain Enterprise'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1980.",
+        "en": "Hand-painted sign, c. 1980."
+      },
+      "year": 1980,
+      "location": {
+        "lat": 20.97833,
+        "lon": 105.914479
+      },
+      "district": "districts:gia_lam",
+      "landmark": "landmarks:lang_gom_bat_trang",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    },
+    {
+      "id": "bien_60_hop_tac_xa_tay_tuu",
+      "set": "bien_hieu",
+      "tags": [
+        "bien_hieu",
+        "bac_tu_liem",
+        "ke_tay"
+      ],
+      "name": {
+        "vi": "Biển 'Hợp tác xã Tây Tựu'",
+        "en": "Sign 'Tây Tựu Cooperative'"
+      },
+      "description": {
+        "vi": "Biển kẻ tay, khoảng 1986.",
+        "en": "Hand-painted sign, c. 1986."
+      },
+      "year": 1986,
+      "location": {
+        "lat": 21.0905,
+        "lon": 105.755
+      },
+      "district": "districts:bac_tu_liem",
+      "landmark": "landmarks:lang_hoa_tay_tuu",
+      "sign_kind": "ke_tay",
+      "activity": "activities:act_suu_tam_bien_hieu_cu",
+      "rarity": "thuong",
+      "coords_source": "landmark"
+    }
+  ]
+}

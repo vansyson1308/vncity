@@ -92,8 +92,9 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 - Hệ kỹ năng 0-100 và uy tín phe phái có, nhưng lúc thẩm định chưa có thứ gì *mở khóa* bằng kỹ năng.
   **Đã sửa:** `skills.json` khai 3 mốc cho 12 kỹ năng (36 thứ mở khóa: xe, hoạt động, cơ sở, lựa chọn
   thoại kiểu speech check, sự kiện ngẫu nhiên), cổng `min_skills` trong nội dung đặt đúng mức mốc (02 §10).
-- Sưu tầm (120 ảnh xưa, 40 tem phiếu, 60 biển hiệu) là lý do tốt để đi khắp 12 quận; chỉ mới đặt
-  tên, chưa có từng món. Đây là việc nội dung rẻ, hiệu quả cao.
+- Sưu tầm (120 ảnh xưa, 40 tem phiếu, 60 biển hiệu) là lý do tốt để đi khắp 12 quận; lúc thẩm định
+  chỉ mới đặt tên. **Đã sửa:** 220 món có tọa độ thật trong `collectibles.json`, cả 14 quận có ảnh,
+  7 khung ảnh của nhiệm vụ nằm trong bộ, băng 24 có hai đường mở (02 §11).
 - Ngày 48 phút trên bản đồ 1:1 là vấn đề cốt lõi của *cảm giác*: GTA5 có bản đồ 1:4 nên 48 phút khớp.
   Ở Hà Nội 1:1, một ca xe ôm 8 cuốc là hơn một ngày game. Hoặc chấp nhận "ngày dài" (đồng hồ 8x: ngày
   = 3 giờ thật, chơi tự do vẫn thấy sáng-trưa-tối), hoặc co bản đồ (trái với mục tiêu "y hệt").
@@ -149,10 +150,10 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
    người chơi; rồi về P1 (11 §3).
 4. ~~Ba hệ quả trong chương 1 đọc lại cờ của chính chương 1 (ví dụ ở trên).~~ **Đã làm:** 35 cặp
    (nhiệm vụ, cờ) trả trong chương 1, gồm cả hai ví dụ trên và bản sửa `10-sua-chuong-1.md` (11 §5).
-5. Viết chương 2 "Mùa nồm" thành dữ liệu: 9-10 nhiệm vụ, trả ít nhất 10 cờ; đưa vụ ông Tư Hàng
-   Bạc lên sớm làm hành động đầu tiên của Kim Long. **Đang làm ở PR #9 (luồng "Chơi thử và thẩm định
-   cốt truyện"): 8 nhiệm vụ, phủ cả 6 quận trống, điểm nhấn Giao thừa Hồ Gươm; bản nháp chương 2 của
-   luồng này đã bàn giao (11 §6).**
+5. ~~Viết chương 2 "Mùa nồm" thành dữ liệu: 9-10 nhiệm vụ, trả ít nhất 10 cờ; đưa vụ ông Tư Hàng
+   Bạc lên sớm làm hành động đầu tiên của Kim Long.~~ **Đã làm, PR #9 đã merge** (luồng "Chơi thử và
+   thẩm định cốt truyện"): 9 nhiệm vụ `c2_01..c2_08` + `s13`, 32 thoại, phủ 14/14 quận, điểm nhấn Giao
+   thừa Hồ Gươm, minigame thua có giá; dàn ý chương 3-5 trong `08-nhan-qua.md`.
 6. ~~Mỗi quận trống một nhiệm vụ truyện hoặc người lạ: Cầu Giấy (Khôi bán ảnh cho báo ở Duy Tân), Hai
    Bà Trưng (Lan mua vải chợ Hôm, Bách Khoa), Hoàng Mai (chợ Đền Lừ 2h sáng, HH Linh Đàm), Hà Đông
    (Vạn Phúc, ga Yên Nghĩa), Bắc Từ Liêm (Tây Tựu hoa đêm, đình Chèm), Long Biên (Aeon, đê Ngọc Thụy).~~
@@ -162,8 +163,12 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 7. ~~40 sự kiện ngẫu nhiên thành collection `random_events` (schema mới).~~ **Đã làm:** 45 sự kiện,
    6 loại, 122 lựa chọn không trùng hậu quả, 43 NPC có Khổ-Tập, 9 lựa chọn qua minigame, 5 lựa chọn
    dẫn tới phạt theo Nghị định 168; chuẩn ghim trong tests/test_random_events.py (02 §7.1).
-8. Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).
-9. Đường thứ hai tới nội dung băng 24 không qua sưu tầm.
+8. ~~Sưu tầm thành từng món có tọa độ: 120 ảnh xưa trải đều 12 quận (đây là bản đồ thứ hai của game).~~
+    **Đã làm:** `collectibles.json` 220 món (120 ảnh, 40 tem phiếu, 60 biển hiệu), tọa độ từ landmarks hoặc
+    trọng tâm phố trong đồ thị đường Overture/OSM, 14/14 quận có ảnh; tests/test_collectibles.py (02 §11).
+9. ~~Đường thứ hai tới nội dung băng 24 không qua sưu tầm.~~ **Đã thiết kế** (02 §11): băng 24 mở khi đủ
+    30 ảnh ở chương 3 *hoặc* ông Thắng kể ở chương 4 với giá cảm xúc (cờ `khoi_nghe_thang_ke_het`); viết
+    thành nhiệm vụ khi làm chương 3-4.
 10. ~~Kỹ năng mở khóa thứ nhìn thấy được (3 mốc mỗi kỹ năng).~~ **Đã làm:** `skills.json` 12 kỹ năng x 3 mốc,
     `min_skills` trong điều kiện chung (C++ `EvaluateCondition`, playtest, validator), 25 cổng trong nội
     dung, chuẩn ghim trong tests/test_skill_unlocks.py (02 §10).

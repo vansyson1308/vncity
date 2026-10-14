@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "collectibles.schema.json",
+  "title": "Collectibles",
+  "description": "Every single collectible with a real coordinate: the three sets of docs/gdd/01 (120 archive photos of Khải to re-shoot, 40 subsidy-era ration coupons to find, 60 old signs to photograph). This is the game's second map: the reason to ride every district. Coordinates come from landmarks.json or the centroid of the named street in the Overture/OSM road graph (coords_source).",
+  "x-collection": "collectibles",
+  "type": "object",
+  "required": ["collection", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "collection": {"const": "collectibles"},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "set", "name", "description", "location", "district", "activity", "rarity", "coords_source"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"$ref": "common.schema.json#/$defs/id"},
+          "tags": {"$ref": "common.schema.json#/$defs/tags"},
+          "set": {"enum": ["anh_xua", "tem_phieu", "bien_hieu"]},
+          "name": {"$ref": "common.schema.json#/$defs/text"},
+          "description": {"$ref": "common.schema.json#/$defs/text", "description": "What the player sees in the album once found; for photos, what is in the old frame."},
+          "year": {"type": "integer", "minimum": 1880, "maximum": 2010, "description": "Year the photo was taken / coupon issued / sign painted."},
+          "location": {"$ref": "common.schema.json#/$defs/geo"},
+          "district": {"$ref": "common.schema.json#/$defs/ref"},
+          "landmark": {"$ref": "common.schema.json#/$defs/ref", "description": "landmarks:<id> the item sits at (within ~50 m)."},
+          "street": {"type": "string", "description": "Overture/OSM street name the coordinate was taken from."},
+          "hours": {"$ref": "common.schema.json#/$defs/hour_range", "description": "Photos: hours of day in which the light matches the old frame."},
+          "archive_frame": {"type": "string", "description": "Photos: id used by missions' steps[].archive_frame (khai_<year>_<nnn>_<slug>)."},
+          "unlocks_tape": {"type": "integer", "minimum": 1, "maximum": 24, "description": "Photos: cassette number (1-24) that plays once this frame is matched. Tape 24 also opens by story (docs/gdd/02 §11)."},
+          "hidden_in": {"enum": ["nha_cu", "dong_nat", "hang_sach_cu", "kho_cho", "tap_the"], "description": "Coupons: where the runtime hides it near the coordinate."},
+          "sign_kind": {"enum": ["mau_dich", "hieu", "rap", "co_quan", "men_xanh", "ke_tay"]},
+          "activity": {"$ref": "common.schema.json#/$defs/ref", "description": "activities:<id> whose loop collects this set."},
+          "rarity": {"enum": ["thuong", "hiem", "cuc_hiem"]},
+          "coords_source": {"enum": ["landmark", "street_centroid", "mission"]}
+        }
+      }
+    }
+  }
+}
