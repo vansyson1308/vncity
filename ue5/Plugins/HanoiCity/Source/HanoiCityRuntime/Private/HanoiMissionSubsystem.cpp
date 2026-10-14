@@ -78,7 +78,67 @@ bool UHanoiMissionSubsystem::EvaluateCondition(const FHanoiCondition& C) const
 	{
 		if (!State.Flags.Contains(FName(*Flag))) { return false; }
 	}
+	for (const FString& Flag : C.NotFlags)
+	{
+		if (State.Flags.Contains(FName(*Flag))) { return false; }
+	}
+	for (const FHanoiRef& Event : C.EventsActive)
+	{
+		if (!ActiveWorldEvents.Contains(Event.Id)) { return false; }
+	}
 	return true;
+}
+
+// ------------------------------------------------------------------ dialogue trees
+
+bool UHanoiMissionSubsystem::ResolveDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId, FHanoiDialogueLine& OutLine) const
+{
+	int32 Index = 0;
+	if (!LineId.IsNone())
+	{
+		Index = Dialogue.Lines.IndexOfByPredicate([LineId](const FHanoiDialogueLine& L) { return L.Id == LineId; });
+		if (Index == INDEX_NONE)
+		{
+			UE_LOG(LogHanoi, Warning, TEXT("Dialogue %s has no line %s"), *Dialogue.Id.ToString(), *LineId.ToString());
+			return false;
+		}
+	}
+	for (; Index < Dialogue.Lines.Num(); ++Index)
+	{
+		if (IsDialogueLineAvailable(Dialogue.Lines[Index]))
+		{
+			OutLine = Dialogue.Lines[Index];
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UHanoiMissionSubsystem::NextDialogueLine(const FHanoiDialogueRow& Dialogue, const FHanoiDialogueLine& Line, FHanoiDialogueLine& OutLine) const
+{
+	if (!Line.Goto.IsNone())
+	{
+		return ResolveDialogueLine(Dialogue, Line.Goto, OutLine);
+	}
+	const int32 Index = Dialogue.Lines.IndexOfByPredicate([&Line](const FHanoiDialogueLine& L) { return L.Id == Line.Id; });
+	if (Index == INDEX_NONE || Index + 1 >= Dialogue.Lines.Num())
+	{
+		return false;
+	}
+	return ResolveDialogueLine(Dialogue, Dialogue.Lines[Index + 1].Id, OutLine);
+}
+
+TArray<FHanoiDialogueLineChoice> UHanoiMissionSubsystem::GetAvailableChoices(const FHanoiDialogueLine& Line) const
+{
+	TArray<FHanoiDialogueLineChoice> Out;
+	for (const FHanoiDialogueLineChoice& Choice : Line.Choices)
+	{
+		if (IsChoiceAvailable(Choice))
+		{
+			Out.Add(Choice);
+		}
+	}
+	return Out;
 }
 
 void UHanoiMissionSubsystem::ApplyReward(const FHanoiReward& Reward)
