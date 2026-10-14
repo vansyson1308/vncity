@@ -18,9 +18,24 @@ jobs:
         run: |
           python tools/codegen_ue.py
           git diff --exit-code -- ue5/
+      - name: Generated Unity types are up to date
+        run: |
+          python tools/codegen_unity.py
+          git diff --exit-code -- unity/
       - name: Unit tests
         run: python -m pytest -q
       - name: Story dry run reaches every mission (no dead ends)
         run: python tools/playtest.py > /dev/null
       - name: Asset prompt pack matches the asset contract
         run: python tools/asset_prompts.py --check
+  unity-core:
+    # The engine-free C# core of the Unity harness (unity/Packages/com.vncity.hanoicity/Runtime/Core)
+    # compiled and tested with plain .NET against the real game/content: no Unity needed.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build and test the Unity core
+        run: dotnet test unity/dotnet --nologo
