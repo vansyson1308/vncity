@@ -1,0 +1,414 @@
+{
+  "collection": "characters",
+  "items": [
+    {
+      "id": "cu_tho",
+      "tags": ["family_lan", "pho_master"],
+      "name": {"vi": "Cụ Trần Văn Thọ", "en": "Old Mr Trần Văn Thọ"},
+      "role": "story",
+      "age": 86,
+      "gender": "male",
+      "bio": {
+        "vi": "Người Vân Cù, Nam Định, quê gốc của phở. Gánh phở lên Hà Nội năm 1954, ngồi đầu ngõ Hàng Chiếu ba năm, đến năm 1957 mới cùng ông Khiêm nhà bên góp tiền mua chung căn số 49. Bị tai biến nhẹ, nửa người trái yếu, không đứng được bếp nhưng chỉ cần nếm một thìa là biết hôm nay Lan cho thiếu gừng nướng hay ninh xương non tay.",
+        "en": "From Vân Cù, Nam Định, the cradle of pho. Carried his pho yoke to Hanoi in 1954, sat at the mouth of a Hàng Chiếu alley for three years until, in 1957, he and his neighbour Khiêm pooled their money to buy No. 49 together. A mild stroke weakened his left side; he can no longer stand at the stove, but one spoonful tells him if Lan skimped on charred ginger or rushed the bones."
+      },
+      "home": {"lat": 21.03745, "lon": 105.85120},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Chủ quán phở đã nghỉ", "en": "Retired pho master"},
+      "personality": ["kiem_loi", "nghiem", "hai_huoc_ngam", "nho_xua"],
+      "voice": {"accent": "northern_rural", "notes": "Giọng Nam Định pha Hà Nội 70 năm, nói chậm vì tai biến, câu ngắn như phán. Gọi Lan là 'con bé'."},
+      "appearance": {"outfit": "Áo may ô trắng, quần âu cũ, gậy chống tre, mũ cối cũ treo trên tường.", "metahuman_preset": "MH_VN_Male_80s"},
+      "schedule": [
+        {"hours": [5, 10], "activity": "ngoi_ghe_may_nem_nuoc_dung", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [10, 15], "activity": "nghe_radio_ngu_trua", "location": {"lat": 21.03745, "lon": 105.85120}},
+        {"hours": [15, 17], "activity": "tap_di_cung_lan_ven_ho", "location": {"lat": 21.02880, "lon": 105.85240}},
+        {"hours": [17, 5], "activity": "o_nha", "location": {"lat": 21.03745, "lon": 105.85120}}
+      ],
+      "skills": {"nau_an": 98, "giao_tiep": 50},
+      "relationships": [
+        {"with": "characters:lan", "kind": "chau_noi"},
+        {"with": "characters:co_hanh", "kind": "con_gai"},
+        {"with": "characters:bo_khai", "kind": "ban_hang_xom_40_nam", "notes": "Hai ông già chung một mái nhà, cãi nhau về bóng đá mỗi tối."}
+      ]
+    },
+    {
+      "id": "co_hanh",
+      "tags": ["family_lan", "antagonist_soft"],
+      "name": {"vi": "Trần Thị Hạnh", "en": "Trần Thị Hạnh"},
+      "role": "story",
+      "age": 55,
+      "gender": "female",
+      "bio": {
+        "vi": "Cô ruột của Lan. Bán mỹ phẩm online, livestream mỗi tối trên Tóp Tóp. Năm 2021 vay nóng 'lướt' đất nền ở Hòa Lạc, đến giờ vẫn ôm nợ. Không ác, chỉ mệt: cô tin bán nhà là cách duy nhất để cả nhà thoát.",
+        "en": "Lan's aunt. Sells cosmetics online and livestreams nightly on Tóp Tóp. In 2021 she borrowed at high interest to flip land plots near Hòa Lạc and is still in debt. Not cruel, just exhausted: she believes selling the house is the only way out."
+      },
+      "home": {"lat": 21.01000, "lon": 105.85200},
+      "district": "districts:hai_ba_trung",
+      "occupation": {"vi": "Bán hàng online", "en": "Online seller"},
+      "personality": ["noi_nhieu", "song_tinh_cam", "lo_au", "hay_so_sanh"],
+      "voice": {"accent": "hanoi", "notes": "Nói nhanh, giọng livestream ('chốt đơn đi các chị ơi'), chuyển sang giọng khóc rất nhanh."},
+      "appearance": {"outfit": "Váy hoa, kính râm cài đầu, điện thoại gắn gậy livestream."},
+      "relationships": [
+        {"with": "characters:cu_tho", "kind": "bo"},
+        {"with": "characters:lan", "kind": "chau"},
+        {"with": "characters:thao", "kind": "doi_tac_mua_ban"}
+      ]
+    },
+    {
+      "id": "bo_khai",
+      "tags": ["deceased", "photographer", "archive_voice"],
+      "name": {"vi": "Ông Nguyễn Văn Khải", "en": "Mr Nguyễn Văn Khải"},
+      "role": "story",
+      "age": 71,
+      "gender": "male",
+      "bio": {
+        "vi": "Thợ ảnh hiệu Ảnh Khải (1955-2026). Chụp ảnh thẻ, ảnh cưới, ảnh thờ cho nửa phố cổ, và lặng lẽ chụp chính con phố ấy suốt 35 năm: bao cấp, đổi mới, xe Cub, xe Dream, ngày cột điện mọc đầy dây. Để lại những cuộn băng cát-sét ghi âm lời dặn cho con trai mà ông chưa từng gửi.",
+        "en": "Photographer of the Ảnh Khải studio (1955-2026). Took ID photos, wedding portraits and memorial pictures for half the Old Quarter, and quietly photographed the street itself for 35 years: the subsidy era, Đổi Mới, the Cubs and Dreams, the day the poles sprouted cables. Left cassette tapes of messages to his son that he never sent."
+      },
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Thợ ảnh (đã mất)", "en": "Photographer (deceased)"},
+      "personality": ["kien_nhan", "lang_le", "tinh_te"],
+      "voice": {"accent": "hanoi", "notes": "Chỉ xuất hiện qua băng cát-sét: tiếng rè, tiếng xe máy ngoài cửa sổ năm 1996, giọng trầm ấm, hay dừng lâu."},
+      "relationships": [
+        {"with": "characters:khoi", "kind": "con_trai"},
+        {"with": "characters:ong_thang", "kind": "nguoi_mau_va_ban"}
+      ]
+    },
+    {
+      "id": "ong_thang",
+      "tags": ["cyclo", "veteran", "mentor", "storyteller"],
+      "name": {"vi": "Ông Lê Văn Thắng", "en": "Mr Lê Văn Thắng"},
+      "role": "story",
+      "age": 68,
+      "gender": "male",
+      "bio": {
+        "vi": "Cựu chiến binh mặt trận biên giới phía Bắc 1979, về phục viên đạp xích lô từ 1981. Ông là người trong bức ảnh nổi tiếng nhất của ông Khải: chàng trai xích lô cười toe chở cả một cây quất Tết qua cầu Long Biên năm 1989. Giờ chở khách Tây vòng phố cổ, kể chuyện bằng thứ tiếng Anh tự học rất tự tin, chơi cờ tướng mỗi chiều và không bao giờ nói về chiến tranh trừ khi trời mưa.",
+        "en": "Veteran of the 1979 northern border war; after demobilisation he has pedalled a cyclo since 1981. He is the man in Khải's most famous photograph: a grinning cyclo driver hauling a whole Tết kumquat tree across Long Biên bridge in 1989. Today he tours foreigners around the Old Quarter in fearless self-taught English, plays Chinese chess every afternoon, and never speaks of the war unless it rains."
+      },
+      "home": {"lat": 21.00820, "lon": 105.83770},
+      "district": "districts:dong_da",
+      "occupation": {"vi": "Đạp xích lô du lịch", "en": "Tourist cyclo driver"},
+      "personality": ["diem_dam", "hai_huoc", "tu_trong", "cuong_ky_niem"],
+      "voice": {"accent": "hanoi", "notes": "Giọng ông già Hà Nội ấm, xưng 'tớ' với Khôi như với bố Khôi. Tiếng Anh 'Hello my friend, you go where?' rất to."},
+      "appearance": {"outfit": "Mũ cối xanh, áo sơ mi bộ đội bạc màu, quần âu xắn gấu, dép cao su.", "metahuman_preset": "MH_VN_Male_60s_Wiry"},
+      "schedule": [
+        {"hours": [5, 7], "activity": "tap_the_duc_bo_ho", "location": {"lat": 21.02880, "lon": 105.85240}},
+        {"hours": [8, 12], "activity": "cho_khach_xich_lo", "location": {"lat": 21.03440, "lon": 105.85080}},
+        {"hours": [14, 17], "activity": "choi_co_tuong", "location": {"lat": 21.03050, "lon": 105.85130}},
+        {"hours": [17, 21], "activity": "cho_khach_xich_lo_dem", "location": {"lat": 21.03440, "lon": 105.85080}},
+        {"hours": [21.5, 5], "activity": "ngu", "location": {"lat": 21.00820, "lon": 105.83770}}
+      ],
+      "skills": {"the_luc": 70, "thuoc_duong": 95, "giao_tiep": 80, "co_tuong": 75},
+      "relationships": [
+        {"with": "characters:khoi", "kind": "nhu_chu_chau"},
+        {"with": "characters:bo_khai", "kind": "ban_than"},
+        {"with": "characters:ong_bao_co_tuong", "kind": "dich_thu_co_tuong", "notes": "Hai mươi năm, tỉ số chưa ai chịu nhận."},
+        {"with": "characters:chu_cuong", "kind": "dong_nghiep_dau_ngo"}
+      ]
+    },
+    {
+      "id": "thao",
+      "tags": ["kim_long_land", "conflicted", "romance_option_none"],
+      "name": {"vi": "Phạm Thu Thảo", "en": "Phạm Thu Thảo"},
+      "role": "story",
+      "age": 31,
+      "gender": "female",
+      "bio": {
+        "vi": "Giám đốc dự án 'Phố Cổ Heritage Residence' của Kim Long Land. Thạc sĩ ở Singapore, nói chuyện bằng slide, đi giày cao gót mà vẫn lách được ngõ 1 mét. Ít ai biết bà ngoại cô từng bán nước chè ở ngõ Hàng Chiếu và bị giải tỏa năm 2003.",
+        "en": "Project director of Kim Long Land's 'Old Quarter Heritage Residence'. Master's from Singapore, talks in slides, walks one-metre alleys in heels. Few know her grandmother sold tea in a Hàng Chiếu alley and was cleared out in 2003."
+      },
+      "home": {"lat": 20.97700, "lon": 105.79000},
+      "district": "districts:ha_dong",
+      "occupation": {"vi": "Giám đốc dự án bất động sản", "en": "Real-estate project director"},
+      "personality": ["tham_vong", "chuyen_nghiep", "giau_cam_xuc", "co_luong_tam"],
+      "voice": {"accent": "hanoi", "notes": "Chuẩn mực, lẫn tiếng Anh công sở ('align', 'deadline', 'touch base'). Khi mất bình tĩnh mới lộ giọng Hà Đông cũ."},
+      "appearance": {"outfit": "Vest kem, khẩu trang lụa, túi xách hàng hiệu parody 'Lui Vít Tông'.", "metahuman_preset": "MH_VN_Female_30s_Sharp"},
+      "relationships": [
+        {"with": "characters:vinh", "kind": "sep"},
+        {"with": "characters:minh", "kind": "tai_xe_rieng_tam_thoi"},
+        {"with": "characters:co_hanh", "kind": "doi_tac_mua_ban"}
+      ]
+    },
+    {
+      "id": "vinh",
+      "tags": ["kim_long_land", "antagonist"],
+      "name": {"vi": "Đỗ Quang Vĩnh", "en": "Đỗ Quang Vĩnh"},
+      "role": "story",
+      "age": 49,
+      "gender": "male",
+      "bio": {
+        "vi": "Chủ tịch Kim Long Land. Đi lên từ môi giới đất ở Mỹ Đình thời sốt nhà 2007. Không phản diện kiểu điện ảnh: ông tin thật lòng rằng 'phố cổ sắp chết, tôi chỉ ướp xác nó cho đẹp'. Thích uống trà Thái Nguyên, nói chuyện bằng tục ngữ, không bao giờ cao giọng.",
+        "en": "Chairman of Kim Long Land. Rose from land brokering in Mỹ Đình during the 2007 property fever. Not a movie villain: he sincerely believes 'the Old Quarter is dying; I'm just embalming it nicely'. Drinks Thái Nguyên tea, speaks in proverbs, never raises his voice."
+      },
+      "home": {"lat": 21.07400, "lon": 105.80700},
+      "district": "districts:tay_ho",
+      "occupation": {"vi": "Chủ tịch tập đoàn bất động sản", "en": "Property group chairman"},
+      "personality": ["diem_tinh", "thuc_dung", "loi_cuon", "khong_thay_minh_sai"],
+      "voice": {"accent": "hanoi", "notes": "Trầm, chậm, mỗi câu như đang ký hợp đồng."},
+      "appearance": {"outfit": "Áo polo tối màu, đồng hồ cơ, vòng gỗ trầm hương."},
+      "relationships": [
+        {"with": "characters:thao", "kind": "nhan_vien_tin_cay"},
+        {"with": "characters:lan", "kind": "doi_thu_ton_trong"}
+      ]
+    },
+    {
+      "id": "tuan_beo",
+      "tags": ["comic_relief", "shipper", "roommate"],
+      "name": {"vi": "Đặng Văn Tuấn (Tuấn Béo)", "en": "Đặng Văn Tuấn ('Chubby' Tuấn)"},
+      "role": "contact",
+      "age": 24,
+      "gender": "male",
+      "bio": {
+        "vi": "Bạn cùng phòng của Minh, quê Phú Thọ. Shipper đồ ăn cho app Đói, đồng thời là 'nhà sáng tạo nội dung' trên Tóp Tóp với 312 người theo dõi, chuyên review trà sữa. Nặng 92 kg, chở đơn trà sữa 20 cốc chưa đổ cốc nào. Là người đầu tiên đề xuất mọi ý tưởng tồi.",
+        "en": "Minh's roommate from Phú Thọ. Food courier for the Đói app and a 'content creator' with 312 followers reviewing bubble tea. Weighs 92 kg and has never spilled a 20-cup bubble-tea order. First to propose every bad idea."
+      },
+      "home": {"lat": 20.99050, "lon": 105.81500},
+      "district": "districts:thanh_xuan",
+      "occupation": {"vi": "Shipper đồ ăn", "en": "Food delivery courier"},
+      "personality": ["vo_tu", "an_khoe", "trung_thanh", "nhieu_chuyen"],
+      "voice": {"accent": "northern_rural", "notes": "Giọng Phú Thọ, hay nói 'ối giời ơi', 'căng đét', 'chấn động'."},
+      "appearance": {"outfit": "Áo khoác cam app Đói, thùng giữ nhiệt sau xe, mũ tai thỏ."},
+      "skills": {"lai_xe": 65, "thuoc_duong": 70},
+      "relationships": [
+        {"with": "characters:minh", "kind": "ban_cung_phong"},
+        {"with": "characters:ba_chu_tro", "kind": "no_tien_nha_kinh_nien"}
+      ]
+    },
+    {
+      "id": "me_minh",
+      "tags": ["family_minh", "phone_only"],
+      "name": {"vi": "Phạm Thị Hiền (mẹ Minh)", "en": "Phạm Thị Hiền (Minh's mother)"},
+      "role": "story",
+      "age": 50,
+      "gender": "female",
+      "bio": {"vi": "Làm ruộng và bán bánh cáy ở chợ huyện, chăm chồng liệt nửa người. Chỉ xuất hiện qua cuộc gọi video lúc 21 giờ, luôn hỏi 'ăn cơm chưa con'.", "en": "Farms rice and sells bánh cáy at the district market while caring for her half-paralysed husband. Appears only on the 9 p.m. video call, always asking 'have you eaten, son?'"},
+      "district": "districts:thanh_xuan",
+      "voice": {"accent": "northern_rural", "notes": "Giọng Thái Bình đặc, gọi Minh là 'thằng cu'."},
+      "relationships": [{"with": "characters:minh", "kind": "con_trai"}]
+    },
+    {
+      "id": "ba_chu_tro",
+      "tags": ["landlady"],
+      "name": {"vi": "Bà Nga chủ trọ", "en": "Landlady Nga"},
+      "role": "contact",
+      "age": 63,
+      "gender": "female",
+      "bio": {"vi": "Chủ dãy trọ 14 phòng ở ngõ Khương Đình. Thu tiền điện 4.000 đồng/số, khóa cổng lúc 23 giờ, nuôi một con chó tên Đô La. Ngoài mặt khó, trong lòng nấu cháo cho đứa nào ốm.", "en": "Owns a row of 14 rental rooms in a Khương Đình alley. Charges 4,000 VND per kWh, locks the gate at 11 p.m., keeps a dog called Dollar. Stern outside, makes rice porridge for any tenant who falls ill."},
+      "home": {"lat": 20.99060, "lon": 105.81520},
+      "district": "districts:thanh_xuan",
+      "occupation": {"vi": "Chủ nhà trọ", "en": "Landlady"},
+      "voice": {"accent": "hanoi"},
+      "relationships": [{"with": "characters:minh", "kind": "khach_thue"}, {"with": "characters:tuan_beo", "kind": "khach_thue_no_tien"}]
+    },
+    {
+      "id": "anh_duc_sua_xe",
+      "tags": ["mechanic", "mentor", "business_seller"],
+      "name": {"vi": "Lương Văn Đức (Đức Còi)", "en": "Lương Văn Đức ('Skinny' Đức)"},
+      "role": "vendor",
+      "age": 45,
+      "gender": "male",
+      "bio": {"vi": "Thợ sửa xe máy đầu ngõ Khương Đình 20 năm, nghe tiếng máy là biết bệnh. Muốn về quê Hưng Yên trồng nhãn, đang tìm người sang lại tiệm.", "en": "Has run the motorbike repair stall at the mouth of the Khương Đình alley for 20 years and can diagnose an engine by ear. Wants to retire to Hưng Yên to grow longans and is looking for someone to take over the shop."},
+      "home": {"lat": 20.99120, "lon": 105.81420},
+      "district": "districts:thanh_xuan",
+      "occupation": {"vi": "Thợ sửa xe máy", "en": "Motorbike mechanic"},
+      "personality": ["it_noi", "tan_tam", "dua_dai"],
+      "voice": {"accent": "northern_rural", "notes": "Giọng Hưng Yên, câu cửa miệng 'xe này còn đi được, người mới hỏng'."},
+      "schedule": [{"hours": [7, 21], "activity": "sua_xe", "location": {"lat": 20.99120, "lon": 105.81420}}],
+      "skills": {"sua_xe": 95},
+      "relationships": [{"with": "characters:minh", "kind": "hoc_tro"}]
+    },
+    {
+      "id": "chu_cuong",
+      "tags": ["xe_om_truyen_thong", "faction_leader"],
+      "name": {"vi": "Nguyễn Mạnh Cường (chú Cường)", "en": "Uncle Cường"},
+      "role": "contact",
+      "age": 54,
+      "gender": "male",
+      "bio": {"vi": "Trùm hội xe ôm truyền thống Ô Quan Chưởng. Hai mươi năm đứng một góc phố, thuộc từng số nhà, ghét app Vồ vì 'bọn nó cướp miếng cơm'. Nhưng nếu có cụ già lạc đường, chú chở miễn phí.", "en": "Boss of the traditional xe ôm crew at Ô Quan Chưởng. Twenty years on one corner, knows every house number, hates the Vồ app for 'stealing our rice bowl'. But he gives lost old folks free rides."},
+      "home": {"lat": 21.03780, "lon": 105.85230},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Xe ôm truyền thống", "en": "Traditional motorbike taxi"},
+      "personality": ["noi_nong", "nghia_khi", "bao_thu", "tu_hao_nghe"],
+      "voice": {"accent": "hanoi", "notes": "Giọng khàn thuốc lào, mở đầu câu bằng 'này này'."},
+      "appearance": {"outfit": "Áo khoác da giả sờn, mũ cối, xe Cúp 82 độ."},
+      "schedule": [{"hours": [6, 22], "activity": "ngoi_cho_khach_goc_pho", "location": {"lat": 21.03770, "lon": 105.85210}}],
+      "relationships": [{"with": "characters:minh", "kind": "doi_thu"}, {"with": "characters:ong_thang", "kind": "dong_nghiep_dau_ngo"}]
+    },
+    {
+      "id": "thuong_uy_hai",
+      "tags": ["csgt", "recurring", "fair_cop"],
+      "name": {"vi": "Thượng úy Vũ Đức Hải", "en": "Senior Lieutenant Vũ Đức Hải"},
+      "role": "contact",
+      "age": 34,
+      "gender": "male",
+      "bio": {"vi": "Cảnh sát giao thông đội Hoàn Kiếm. Nghiêm túc, không nhận 'bồi dưỡng', thích đùa khô. Đầu mối của hệ thống 'Chú ý CSGT': nếu người chơi giữ hồ sơ sạch, anh giao nhiệm vụ phụ an toàn giao thông.", "en": "Traffic police officer on the Hoàn Kiếm team. Serious, refuses any 'tea money', fond of dry jokes. Face of the CSGT Attention system: keep a clean record and he offers road-safety side jobs."},
+      "district": "districts:hoan_kiem",
+      "occupation": {"vi": "Cảnh sát giao thông", "en": "Traffic police officer"},
+      "personality": ["nguyen_tac", "cong_bang", "hai_huoc_kho"],
+      "voice": {"accent": "hanoi", "notes": "Câu mở đầu chuẩn: 'Đề nghị anh xuất trình giấy tờ.' Không bao giờ quát."},
+      "appearance": {"outfit": "Quân phục CSGT vàng, mũ kê-pi, gậy chỉ huy, bộ đàm."},
+      "relationships": [{"with": "characters:minh", "kind": "oan_gia"}]
+    },
+    {
+      "id": "linh_bao_ton",
+      "tags": ["activist", "student", "heritage"],
+      "name": {"vi": "Hoàng Diệu Linh", "en": "Hoàng Diệu Linh"},
+      "role": "story",
+      "age": 22,
+      "gender": "female",
+      "bio": {"vi": "Sinh viên năm cuối Đại học Kiến trúc, lập trang 'Phố Cũ Còn Đây' trên MặtBook với 80 nghìn người theo dõi, chuyên vẽ lại mặt tiền nhà cổ trước khi bị đập. Năng lượng vô hạn, ngân sách bằng không.", "en": "Final-year architecture student who runs the 'Old Street Still Here' page on MặtBook with 80,000 followers, sketching old façades before they're demolished. Infinite energy, zero budget."},
+      "home": {"lat": 21.03300, "lon": 105.79500},
+      "district": "districts:cau_giay",
+      "occupation": {"vi": "Sinh viên kiến trúc", "en": "Architecture student"},
+      "personality": ["nhiet_huyet", "lam_ly", "thang_than"],
+      "voice": {"accent": "hanoi", "notes": "Từ lóng Gen Z ('xỉu', 'keo lỳ', 'chill phết'), nói về kiến trúc thì chuyển sang thuật ngữ chính xác."},
+      "relationships": [{"with": "characters:khoi", "kind": "dong_minh"}, {"with": "characters:thao", "kind": "doi_thu_tren_mang"}]
+    },
+    {
+      "id": "mark",
+      "tags": ["foreigner", "vlogger", "comic_relief"],
+      "name": {"vi": "Mark O'Connell", "en": "Mark O'Connell"},
+      "role": "contact",
+      "age": 27,
+      "gender": "male",
+      "bio": {"vi": "Vlogger ẩm thực người Úc, kênh 'Mark Ăn Hà Nội', nói được đúng ba câu tiếng Việt: 'Ngon quá!', 'Bao nhiêu tiền?' và 'Một bia hơi'. Một video của anh có thể làm quán phở đông gấp đôi hoặc bị cả mạng mắng.", "en": "Australian food vlogger behind 'Mark Eats Hanoi', who speaks exactly three Vietnamese phrases: 'Delicious!', 'How much?' and 'One draught beer'. A single video can double a shop's customers or get it roasted online."},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Vlogger ẩm thực", "en": "Food vlogger"},
+      "personality": ["nhiet_tinh", "ngay_tho", "hay_phong_dai"],
+      "voice": {"accent": "foreign", "notes": "Tiếng Anh giọng Úc; tiếng Việt sai thanh điệu kiểu 'Ngôn quá!'."},
+      "relationships": [{"with": "characters:lan", "kind": "khach_hang_quan_trong"}, {"with": "characters:ong_thang", "kind": "khach_quen_xich_lo"}]
+    },
+    {
+      "id": "ong_khang",
+      "tags": ["to_dan_pho", "neighbourhood"],
+      "name": {"vi": "Ông Bùi Văn Khang (tổ trưởng)", "en": "Mr Bùi Văn Khang (block leader)"},
+      "role": "contact",
+      "age": 72,
+      "gender": "male",
+      "bio": {"vi": "Tổ trưởng tổ dân phố số 5 Hàng Chiếu, giáo viên văn về hưu. Điều hành mọi cuộc họp tổ dân phố bằng loa cầm tay và một cuốn sổ ghi nợ quỹ khuyến học.", "en": "Leader of residential group 5 on Hàng Chiếu, a retired literature teacher. Runs every neighbourhood meeting with a handheld megaphone and a ledger of unpaid scholarship-fund dues."},
+      "home": {"lat": 21.03760, "lon": 105.85090},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Tổ trưởng tổ dân phố", "en": "Residential group leader"},
+      "personality": ["cau_ne", "trach_nhiem", "thich_trich_tho"],
+      "voice": {"accent": "hanoi", "notes": "Hay trích Kiều và ca dao để kết luận cuộc họp."},
+      "relationships": [{"with": "characters:cu_tho", "kind": "ban_gia"}, {"with": "characters:lan", "kind": "hang_xom"}]
+    },
+    {
+      "id": "ong_bao_co_tuong",
+      "tags": ["co_tuong", "minigame_master"],
+      "name": {"vi": "Cụ Bảo (kỳ thủ bờ hồ)", "en": "Old Bảo (lakeside chess master)"},
+      "role": "contact",
+      "age": 79,
+      "gender": "male",
+      "bio": {"vi": "Ngồi ghế đá Lê Thái Tổ mỗi chiều từ năm 1995. Đánh cờ chấp xe với người lạ, nói một câu châm chọc sau mỗi nước. Thua thì mời trà, thắng thì giảng giải 15 phút.", "en": "Has occupied a stone bench on Lê Thái Tổ every afternoon since 1995. Gives strangers a chariot handicap and a jibe after every move. Loses, he buys tea; wins, he lectures for 15 minutes."},
+      "district": "districts:hoan_kiem",
+      "occupation": {"vi": "Kỳ thủ cờ tướng vỉa hè", "en": "Street chess master"},
+      "schedule": [{"hours": [14, 18], "activity": "choi_co_tuong", "location": {"lat": 21.03050, "lon": 105.85130}}],
+      "skills": {"co_tuong": 92},
+      "voice": {"accent": "hanoi", "notes": "'Nước này ăn hay nhịn đây? Nhịn thì đói, ăn thì chết, ha ha.'"},
+      "relationships": [{"with": "characters:ong_thang", "kind": "dich_thu_co_tuong"}]
+    },
+    {
+      "id": "chi_mai_ca_phe",
+      "tags": ["cafe", "business_seller"],
+      "name": {"vi": "Nguyễn Tuyết Mai", "en": "Nguyễn Tuyết Mai"},
+      "role": "vendor",
+      "age": 29,
+      "gender": "female",
+      "bio": {"vi": "Chủ một quán cà phê trứng trong ngõ nhỏ phố Hàng Gai, gác xép nhìn ra hồ. Sắp theo chồng vào Đà Nẵng, muốn sang lại quán cho người 'biết đánh trứng bằng tay'.", "en": "Runs an egg-coffee café in a tiny Hàng Gai alley with a loft view of the lake. Moving to Đà Nẵng with her husband, she'll only hand the café to someone who 'whips eggs by hand'."},
+      "home": {"lat": 21.03200, "lon": 105.85100},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Chủ quán cà phê", "en": "Café owner"},
+      "voice": {"accent": "hanoi"},
+      "relationships": [{"with": "characters:lan", "kind": "ban_cu_cap_ba"}]
+    },
+    {
+      "id": "ba_tam_xoi",
+      "tags": ["street_vendor", "gossip_hub"],
+      "name": {"vi": "Bà Tâm bán xôi", "en": "Granny Tâm the sticky-rice seller"},
+      "role": "vendor",
+      "age": 68,
+      "gender": "female",
+      "bio": {"vi": "Ngồi đầu ngõ Hàng Chiếu với thúng xôi xéo, xôi lạc từ năm 1990. Biết nhà nào sắp bán, nhà nào sắp cưới, nhà nào cãi nhau trước khi chính họ biết.", "en": "Has sat at the mouth of the Hàng Chiếu alley with her basket of xôi xéo and peanut sticky rice since 1990. Knows which house is selling, marrying or fighting before they do."},
+      "home": {"lat": 21.03740, "lon": 105.85140},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Bán xôi", "en": "Sticky-rice vendor"},
+      "schedule": [{"hours": [5.5, 10], "activity": "ban_xoi", "location": {"lat": 21.03740, "lon": 105.85140}}],
+      "voice": {"accent": "hanoi", "notes": "'Xôi đâyyy! Xôi xéo, xôi lạc đâyyy!' Gọi ai cũng là 'cháu'."},
+      "relationships": [{"with": "characters:lan", "kind": "hang_xom"}, {"with": "characters:cu_tho", "kind": "ban_gia"}]
+    },
+    {
+      "id": "ba_lua_dong_xuan",
+      "tags": ["market_vendor", "spices"],
+      "name": {"vi": "Bà Lụa (sạp gia vị chợ Đồng Xuân)", "en": "Mrs Lụa (Đồng Xuân spice stall)"},
+      "role": "vendor",
+      "age": 60,
+      "gender": "female",
+      "bio": {"vi": "Sạp quế, hồi, thảo quả, nấm hương tầng một chợ Đồng Xuân. Mặc cả với bà là một môn thể thao.", "en": "Runs a cinnamon, star anise, black cardamom and shiitake stall on the ground floor of Đồng Xuân market. Haggling with her is a sport."},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Tiểu thương", "en": "Market trader"},
+      "schedule": [{"hours": [6, 18], "activity": "ban_hang", "location": {"lat": 21.03830, "lon": 105.84980}}],
+      "voice": {"accent": "hanoi", "notes": "'Hàng này Lạng Sơn chính gốc, bà không lừa ai bao giờ.'"},
+      "relationships": [{"with": "characters:lan", "kind": "khach_quen"}]
+    },
+    {
+      "id": "phong_bien_tap",
+      "tags": ["journalist", "editor"],
+      "name": {"vi": "Trịnh Phong", "en": "Trịnh Phong"},
+      "role": "contact",
+      "age": 45,
+      "gender": "male",
+      "bio": {"vi": "Biên tập viên mảng đô thị của báo điện tử 'Thủ Đô Nhanh'. Từng du học Đức, bạn cũ của Khôi. Mua ảnh của Khôi với giá 'tình cảm' và luôn hỏi 'có góc nào viral hơn không'.", "en": "Urban-affairs editor at the online paper 'Capital Fast'. Studied in Germany, an old friend of Khôi. Buys Khôi's photos at 'friendship rates' and always asks for 'a more viral angle'."},
+      "district": "districts:ba_dinh",
+      "occupation": {"vi": "Biên tập viên báo điện tử", "en": "Online newspaper editor"},
+      "voice": {"accent": "hanoi"},
+      "relationships": [{"with": "characters:khoi", "kind": "ban_cu"}]
+    },
+    {
+      "id": "chi_van_homestay",
+      "tags": ["homestay", "business_seller", "tay_ho"],
+      "name": {"vi": "Đỗ Hải Vân", "en": "Đỗ Hải Vân"},
+      "role": "vendor",
+      "age": 36,
+      "gender": "female",
+      "bio": {"vi": "Chủ homestay năm phòng ở ngõ Tô Ngọc Vân, Tây Hồ. Từng làm hướng dẫn viên, nói tiếng Pháp. Cần người góp vốn để giữ hợp đồng thuê nhà.", "en": "Runs a five-room homestay off Tô Ngọc Vân in Tây Hồ. Former tour guide, speaks French. Needs a partner to keep her lease."},
+      "district": "districts:tay_ho",
+      "occupation": {"vi": "Chủ homestay", "en": "Homestay owner"},
+      "voice": {"accent": "hanoi"},
+      "relationships": [{"with": "characters:khoi", "kind": "doi_tac_tiem_nang"}]
+    },
+    {
+      "id": "mc_thu_huong",
+      "tags": ["radio_host"],
+      "name": {"vi": "MC Thu Hương", "en": "Host Thu Hương"},
+      "role": "contact",
+      "age": 38,
+      "gender": "female",
+      "bio": {"vi": "Giọng đọc bản tin giao thông trên sóng 'Kênh Đường Thông', người cả thành phố nghe khi kẹt xe trên Nguyễn Trãi. Đọc tin ùn tắc bằng giọng như đọc thơ.", "en": "Voice of the traffic bulletins on 'Clear Road FM', the person the whole city listens to while stuck on Nguyễn Trãi. Reads jam reports like poetry."},
+      "occupation": {"vi": "Phát thanh viên", "en": "Radio presenter"},
+      "voice": {"accent": "hanoi", "notes": "Chuẩn phát thanh, ngọt, thỉnh thoảng thở dài thật."}
+    },
+    {
+      "id": "dj_toan_bass",
+      "tags": ["radio_host"],
+      "name": {"vi": "DJ Toàn Bass", "en": "DJ Toàn Bass"},
+      "role": "contact",
+      "age": 26,
+      "gender": "male",
+      "bio": {"vi": "DJ đêm khuya của 'Sóng Phố 36', phát nhạc indie, rap Hà Nội và lời tâm sự của shipper trực ca đêm.", "en": "Late-night DJ on 'Wave 36' spinning indie, Hanoi rap and confessions from night-shift couriers."},
+      "occupation": {"vi": "DJ phát thanh", "en": "Radio DJ"},
+      "voice": {"accent": "hanoi", "notes": "Nói chậm, nhiều tiếng lóng, cười khục khặc."}
+    },
+    {
+      "id": "co_nguyet_cai_luong",
+      "tags": ["radio_host", "traditional_music"],
+      "name": {"vi": "Nghệ sĩ Ánh Nguyệt", "en": "Artist Ánh Nguyệt"},
+      "role": "contact",
+      "age": 61,
+      "gender": "female",
+      "bio": {"vi": "Nghệ sĩ chèo về hưu dẫn chương trình 'Sân Đình' sáng chủ nhật: chèo, ca trù, xẩm chợ và chuyện phố cũ.", "en": "Retired chèo opera artist hosting Sunday morning's 'Village Courtyard': chèo, ca trù, xẩm busking songs and tales of old streets."},
+      "occupation": {"vi": "Nghệ sĩ chèo, dẫn chương trình", "en": "Chèo artist and presenter"},
+      "voice": {"accent": "hanoi", "notes": "Giọng ngân, hay hát dạo một câu trước khi vào chuyện."}
+    }
+  ]
+}

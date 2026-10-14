@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.schema.json",
+  "title": "Shared definitions",
+  "$defs": {
+    "id": {
+      "description": "Stable snake_case identifier, unique within its collection. Becomes the UE DataTable row name.",
+      "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"
+    },
+    "step_id": {
+      "description": "A mission step id, or one of the terminal ids: end / success (mission completed), fail (mission failed). The runtime and tools/validate.py accept exactly these.",
+      "anyOf": [{"enum": ["end", "success", "fail"]}, {"$ref": "#/$defs/id"}]
+    },
+    "ref": {
+      "description": "Reference to another record as '<collection>:<id>', checked by tools/validate.py.",
+      "type": "string", "pattern": "^[a-z_]+:[a-z][a-z0-9_]{1,63}$"
+    },
+    "text": {
+      "description": "Localised text. Vietnamese is the source language.",
+      "type": "object", "required": ["vi"],
+      "properties": {"vi": {"type": "string", "minLength": 1}, "en": {"type": "string"}},
+      "additionalProperties": false
+    },
+    "geo": {
+      "description": "WGS84 point. Converted to engine coordinates through the city manifest's georeference.",
+      "type": "object", "required": ["lat", "lon"],
+      "properties": {
+        "lat": {"type": "number", "minimum": 20.5, "maximum": 21.5},
+        "lon": {"type": "number", "minimum": 105.2, "maximum": 106.1},
+        "alt_m": {"type": "number"}
+      },
+      "additionalProperties": false
+    },
+    "money_vnd": {"type": "integer", "minimum": 0},
+    "hour_range": {
+      "description": "Hours of day [from, to), 0-24; to < from wraps past midnight.",
+      "type": "array", "items": {"type": "number", "minimum": 0, "maximum": 24},
+      "minItems": 2, "maxItems": 2
+    },
+    "tags": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9_]+$"}, "uniqueItems": true},
+    "condition": {
+      "description": "Gate evaluated by the runtime. All listed fields must hold.",
+      "type": "object",
+      "properties": {
+        "missions_completed": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
+        "min_reputation": {"type": "object", "additionalProperties": {"type": "integer"}},
+        "hours": {"$ref": "#/$defs/hour_range"},
+        "weather": {"type": "array", "items": {"enum": ["clear", "cloudy", "rain", "storm", "fog", "drizzle", "hot", "cold"]}},
+        "protagonist": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
+        "flags": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "reward": {
+      "type": "object",
+      "properties": {
+        "money_vnd": {"$ref": "#/$defs/money_vnd"},
+        "reputation": {"type": "object", "additionalProperties": {"type": "integer"}},
+        "items": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
+        "unlocks": {"type": "array", "items": {"$ref": "#/$defs/ref"}},
+        "set_flags": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  }
+}

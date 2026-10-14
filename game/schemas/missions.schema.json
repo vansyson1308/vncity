@@ -1,0 +1,801 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "missions.schema.json",
+  "title": "Missions",
+  "description": "Story and side missions as data. Steps form a graph the UE mission runner executes.",
+  "x-collection": "missions",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "missions"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "giver",
+          "steps"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "type": {
+            "enum": [
+              "story",
+              "side",
+              "stranger",
+              "event",
+              "tutorial"
+            ]
+          },
+          "chapter": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "protagonists": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            },
+            "minItems": 1
+          },
+          "giver": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "summary": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "requires": {
+            "$ref": "common.schema.json#/$defs/condition"
+          },
+          "start": {
+            "$ref": "common.schema.json#/$defs/geo"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "kind",
+                "objective"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "kind": {
+                  "enum": [
+                    "go_to",
+                    "ride",
+                    "deliver",
+                    "talk",
+                    "photograph",
+                    "follow",
+                    "escape_traffic_police",
+                    "minigame",
+                    "cook",
+                    "wait_until",
+                    "cutscene",
+                    "choice",
+                    "collect",
+                    "drive_passenger"
+                  ]
+                },
+                "objective": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "$ref": "common.schema.json#/$defs/geo"
+                    },
+                    {
+                      "$ref": "common.schema.json#/$defs/ref"
+                    }
+                  ]
+                },
+                "dialogue": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                },
+                "params": {
+                  "description": "Typed step parameters. x-consumer: runtime = read by UHanoiMissionSubsystem; gameplay = read by minigame/UI/vehicle code via GetActiveStepParam* or OnStepStarted. Kept as compact JSON in UE (x-ue: json).",
+                  "type": "object",
+                  "x-ue": "json",
+                  "properties": {
+                    "radius_m": {
+                      "description": "Arrival radius in metres for go_to/ride/deliver/drive_passenger/follow (default Settings.MissionArriveRadiusM).",
+                      "x-consumer": "runtime",
+                      "type": "number"
+                    },
+                    "heat": {
+                      "description": "escape_traffic_police: heat added when the step starts (default 2).",
+                      "x-consumer": "runtime",
+                      "type": "number"
+                    },
+                    "hour": {
+                      "description": "wait_until: completes during the hour [hour, hour+1).",
+                      "x-consumer": "runtime",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24
+                    },
+                    "until_hour": {
+                      "description": "wait_until: same as hour (preferred spelling).",
+                      "x-consumer": "runtime",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24
+                    },
+                    "hours": {
+                      "description": "wait_until: completes while the game hour is in [from, to). Other kinds: gameplay time window.",
+                      "x-consumer": "runtime",
+                      "$ref": "common.schema.json#/$defs/hour_range"
+                    },
+                    "time_limit_s": {
+                      "description": "Fails the step after this many seconds in it (shorthand for fail_if time>N).",
+                      "x-consumer": "runtime",
+                      "type": "number"
+                    },
+                    "deadline_hour": {
+                      "description": "Fails the step when the game clock passes this hour (counted forward from step start).",
+                      "x-consumer": "runtime",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24
+                    },
+                    "requires_event": {
+                      "description": "events:<id> that must be active (SetWorldEventActive) before the step can complete; OnStepWaitingForEvent fires if it is not.",
+                      "x-consumer": "runtime",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "apply_fine": {
+                      "description": "traffic_rules:<id> fined when the step starts (motorbike fine + licence points into unpaid fines); OnFineApplied.",
+                      "x-consumer": "runtime",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "protagonist": {
+                      "description": "characters:<id> the player controls from this step on; OnProtagonistSwitched.",
+                      "x-consumer": "runtime",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "switch_protagonist_on_line": {
+                      "description": "Dialogue line id -> characters:<id>; the dialogue UI calls NotifyDialogueLine(line) and the protagonist switches; OnProtagonistSwitched.",
+                      "x-consumer": "runtime",
+                      "type": "object",
+                      "propertyNames": {
+                        "$ref": "common.schema.json#/$defs/id"
+                      },
+                      "additionalProperties": {
+                        "$ref": "common.schema.json#/$defs/ref"
+                      }
+                    },
+                    "branch_source": {
+                      "description": "choice: player_input = OnChoiceRequested asks the UI (options = next keys); flag = the first next key that is a set flag, else default.",
+                      "x-consumer": "runtime",
+                      "enum": [
+                        "player_input",
+                        "flag"
+                      ]
+                    },
+                    "player_input": {
+                      "description": "choice: prompt key passed to OnChoiceRequested (UI string table).",
+                      "x-consumer": "runtime",
+                      "type": "string"
+                    },
+                    "minimap": {
+                      "description": "false hides the minimap for this step (OnMinimapVisibilityChanged; restored after).",
+                      "x-consumer": "runtime",
+                      "type": "boolean"
+                    },
+                    "activity": {
+                      "description": "activities:<id> this step counts towards.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "addresses": {
+                      "description": "Address ids to find without GPS.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "alternative": {
+                      "description": "Alternative outcome the player may choose instead.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "archive_frame": {
+                      "description": "Archive photo id to match.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "auto_violation_if_answered_moving": {
+                      "description": "traffic_rules:<id> reported if the player answers the phone while moving.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "budget_vnd": {
+                      "description": "Money available for the minigame.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/money_vnd"
+                    },
+                    "business_effect": {
+                      "description": "Business id -> temporary income modifier.",
+                      "x-consumer": "gameplay",
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "income_bonus": {
+                            "type": "number"
+                          },
+                          "days": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "income_bonus",
+                          "days"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "cargo": {
+                      "description": "Cargo carried.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "cargo_fragile": {
+                      "description": "Cargo breaks on hard braking.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "carry_weight": {
+                      "description": "Carry weight class (slows walking).",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "chapter_end": {
+                      "description": "Marks the end of this chapter number.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "check": {
+                      "description": "Minigame check mode.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "client_rules": {
+                      "description": "Passenger rules the player must respect.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "clue_search": {
+                      "description": "Target is found by clues, not a marker.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "collectible_set": {
+                      "description": "activities:<id> collectible set.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "comfort_weight": {
+                      "description": "Weight of passenger comfort in the score.",
+                      "x-consumer": "gameplay",
+                      "type": "number"
+                    },
+                    "commentary_trigger": {
+                      "description": "When the NPC commentary plays.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "cost_vnd": {
+                      "description": "Price paid.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/money_vnd"
+                    },
+                    "crossings": {
+                      "description": "Number of road crossings.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "decay_rule": {
+                      "description": "Heat decay rule override.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "difficulty": {
+                      "description": "Minigame difficulty.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "distance_m": {
+                      "description": "Distance to cover.",
+                      "x-consumer": "gameplay",
+                      "type": "number"
+                    },
+                    "driver": {
+                      "description": "characters:<id> driving.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "escort": {
+                      "description": "characters:<id> riding along.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "fault_pool": {
+                      "description": "Possible faults for the repair minigame.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "flood_layer": {
+                      "description": "Flood data layer (live or baked).",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "follow": {
+                      "description": "characters:<id> to follow.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "force_event": {
+                      "description": "events:<id> forced on during the step.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "force_weather": {
+                      "description": "Weather forced during the step.",
+                      "x-consumer": "gameplay",
+                      "enum": [
+                        "clear",
+                        "cloudy",
+                        "rain",
+                        "storm",
+                        "fog",
+                        "drizzle",
+                        "hot",
+                        "cold"
+                      ]
+                    },
+                    "from_dialogue": {
+                      "description": "dialogues:<id> whose choices set the flags this step branches on.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "grader": {
+                      "description": "characters:<id> who grades the result.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "haggle": {
+                      "description": "Price can be haggled.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "handicap": {
+                      "description": "Handicap applied to the opponent.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "helmet_for_passenger": {
+                      "description": "Passenger must get a helmet.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "includes": {
+                      "description": "Characters taking part.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "$ref": "common.schema.json#/$defs/ref"
+                      }
+                    },
+                    "item": {
+                      "description": "items:<id> involved.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "kids": {
+                      "description": "Number of children.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "lesson": {
+                      "description": "Lesson id.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "match_threshold": {
+                      "description": "Photo match score needed (0-1).",
+                      "x-consumer": "gameplay",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "max_faults": {
+                      "description": "Faults allowed.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "max_gap_m": {
+                      "description": "Maximum distance from the followed character.",
+                      "x-consumer": "gameplay",
+                      "type": "number"
+                    },
+                    "max_player_rank": {
+                      "description": "Race: best finishing rank the player can reach (scripted_winner_npc wins).",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "max_speed_kmh": {
+                      "description": "Speed limit for comfort.",
+                      "x-consumer": "gameplay",
+                      "type": "number"
+                    },
+                    "mode": {
+                      "description": "Minigame / follow mode.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "on_foot": {
+                      "description": "Step is played on foot.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "opponent": {
+                      "description": "characters:<id> opponent.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "opponent_style": {
+                      "description": "Opponent AI style.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "orders": {
+                      "description": "Orders to serve.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "parking_fee_vnd": {
+                      "description": "Parking fee charged.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/money_vnd"
+                    },
+                    "pass_score": {
+                      "description": "Score needed to pass.",
+                      "x-consumer": "gameplay",
+                      "type": "number"
+                    },
+                    "passenger": {
+                      "description": "characters:<id> carried.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "passenger_of_minh": {
+                      "description": "characters:<id> riding with Minh.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "phone_feed": {
+                      "description": "Phone feed shown.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "phone_rings_scripted": {
+                      "description": "Scripted phone calls during the ride.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "private_ground": {
+                      "description": "Played on private ground (no traffic rules).",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "qty": {
+                      "description": "Quantity to collect.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "radio_forced": {
+                      "description": "radio:<id> forced on.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "reacts_to_flags": {
+                      "description": "Flags the scene reacts to.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "reason": {
+                      "description": "Why the step is constrained.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "recipe": {
+                      "description": "Recipe id.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "require_consent": {
+                      "description": "Subjects must agree to be photographed.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "rivals": {
+                      "description": "Number of rival racers.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "route_via": {
+                      "description": "landmarks:<id> the route must pass.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "rule": {
+                      "description": "traffic_rules:<id> the choice is about.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "rule_check": {
+                      "description": "traffic_rules:<id> checked during the step.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "safe_zone_only": {
+                      "description": "Only from a safe spot.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "score_threshold": {
+                      "description": "Score needed.",
+                      "x-consumer": "gameplay",
+                      "type": "number"
+                    },
+                    "scripted_signal": {
+                      "description": "Scripted traffic signal event.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "scripted_winner_npc": {
+                      "description": "Race: NPC who always wins (max_player_rank caps the player).",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "sections": {
+                      "description": "Test sections.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "servings": {
+                      "description": "Servings to make.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "shopping_list": {
+                      "description": "Items to buy.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "skip_allowed": {
+                      "description": "Player may skip the wait.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "description": "characters:<id> the item comes from.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "special_customer": {
+                      "description": "characters:<id> special customer.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "special_rule": {
+                      "description": "Special traffic rule id.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "spill_sensitive": {
+                      "description": "Cargo spills on bumps.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "stage": {
+                      "description": "Recipe stage.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "start_hour": {
+                      "description": "Hour the activity starts.",
+                      "x-consumer": "gameplay",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24
+                    },
+                    "subject": {
+                      "description": "Photo subject.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "subjects_min": {
+                      "description": "Minimum subjects.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "targets": {
+                      "description": "Number of targets.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "test": {
+                      "description": "Test id.",
+                      "x-consumer": "gameplay",
+                      "type": "string"
+                    },
+                    "tickets": {
+                      "description": "Repair tickets.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "time_compression": {
+                      "description": "Game-time speed-up during the step.",
+                      "x-consumer": "gameplay",
+                      "type": "number"
+                    },
+                    "time_of_day": {
+                      "description": "Hour the scene is set at (scheduling hint).",
+                      "x-consumer": "gameplay",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24
+                    },
+                    "train_hazard": {
+                      "description": "Trains pass (danger).",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "trips": {
+                      "description": "Number of trips.",
+                      "x-consumer": "gameplay",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "tutorial": {
+                      "description": "Tutorial ids shown.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "variant_from_flags": {
+                      "description": "Flag -> variant.",
+                      "x-consumer": "gameplay",
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    },
+                    "vehicle": {
+                      "description": "vehicles:<id> used.",
+                      "x-consumer": "gameplay",
+                      "$ref": "common.schema.json#/$defs/ref"
+                    },
+                    "wait_for_train_schedule": {
+                      "description": "Wait for the train timetable.",
+                      "x-consumer": "gameplay",
+                      "type": "boolean"
+                    },
+                    "waypoints": {
+                      "description": "Route waypoints.",
+                      "x-consumer": "gameplay",
+                      "type": "array",
+                      "items": {
+                        "$ref": "common.schema.json#/$defs/geo"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "next": {
+                  "oneOf": [
+                    {
+                      "$ref": "common.schema.json#/$defs/step_id"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "common.schema.json#/$defs/step_id"
+                      }
+                    }
+                  ]
+                },
+                "fail_if": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "event:<name> (ReportEvent), flag:<name> (player flag set), time<op>N (seconds in step) or heat<op>N; op one of >= <= == > <.",
+                    "pattern": "^(event|flag):[a-z0-9_]+$|^(time|heat)(>=|<=|==|>|<)\\d+(\\.\\d+)?$"
+                  }
+                },
+                "set_flags": {
+                  "description": "Player flags set when the step completes (before its next is resolved).",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*$"
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "reward": {
+            "$ref": "common.schema.json#/$defs/reward"
+          },
+          "unlocks": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

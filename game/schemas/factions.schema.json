@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "factions.schema.json",
+  "title": "Organisations",
+  "description": "Groups that track reputation (no gangs: guilds, communities, companies).",
+  "x-collection": "factions",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "factions"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "base": {
+            "$ref": "common.schema.json#/$defs/geo"
+          },
+          "rival_of": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

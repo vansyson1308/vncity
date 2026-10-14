@@ -1,0 +1,427 @@
+<title>Phố cổ Hà Nội 1:1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a full-height street scene with a narrow control rail; the rail drops under the scene on phones. */
+:root {
+  --bg: #eef0ea;          /* lime-washed wall */
+  --surface: #f9faf6;
+  --fg: #1c231f;
+  --muted: #59635c;
+  --line: #cfd6cd;
+  --ochre: #8a5a00;       /* text-safe "vàng Hà Nội" */
+  --shutter: #2f6b4f;     /* green shutters */
+  --scene-day: #cfd9d6;
+  --f-display: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --f-data: "Roboto Mono", ui-monospace, Menlo, monospace;
+  --s-1: 0.8125rem; --s0: 0.9375rem; --s1: 1.125rem; --s2: 1.5rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121612; --surface: #1a201b; --fg: #e4e8e1; --muted: #9aa59c; --line: #2e372f;
+    --ochre: #e8b960; --shutter: #74c39a; --scene-day: #1d2421; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121612; --surface: #1a201b; --fg: #e4e8e1; --muted: #9aa59c; --line: #2e372f;
+  --ochre: #e8b960; --shutter: #74c39a; --scene-day: #1d2421; color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-display); font-size: var(--s0); line-height: 1.5;
+       padding: 0 16px; padding-block: 16px; box-sizing: border-box; }
+.app { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; max-width: 1500px; margin: 0 auto; }
+.stage { position: relative; min-height: 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--scene-day); }
+#scene { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+#scene:active { cursor: grabbing; }
+.status { position: absolute; left: 10px; bottom: 10px; font: 500 var(--s-1)/1.3 var(--f-data); color: var(--muted);
+          background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; }
+.inspect { position: absolute; right: 10px; top: 10px; width: min(300px, calc(100% - 20px)); background: var(--surface);
+           border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; font-size: var(--s-1); display: grid; gap: 4px; }
+.inspect h3 { margin: 0; font-size: var(--s0); text-wrap: balance; }
+.inspect dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0; }
+.inspect dt { color: var(--muted); }
+.inspect dd { margin: 0; font-family: var(--f-data); min-width: 0; overflow-wrap: anywhere; }
+aside { min-height: 0; overflow-y: auto; display: grid; align-content: start; gap: 18px; padding-right: 2px; }
+.eyebrow { font: 500 var(--s-1)/1 var(--f-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ochre); }
+h1 { font-size: var(--s2); font-weight: 800; line-height: 1.1; margin: 6px 0 6px; letter-spacing: -0.01em; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); font-size: var(--s-1); }
+h2 { font-size: var(--s-1); font-weight: 700; margin: 0 0 8px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { font: 500 var(--s-1)/1 var(--f-display); padding: 9px 8px; border: 0; background: var(--surface); color: var(--fg); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.seg button:focus-visible, .toggles label:focus-within { outline: 2px solid var(--ochre); outline-offset: 2px; }
+.stack { display: grid; gap: 8px; }
+.toggles { display: grid; gap: 4px; }
+.toggles label { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; font-size: var(--s-1); cursor: pointer; padding: 3px 0; }
+.toggles .n { font-family: var(--f-data); color: var(--muted); font-variant-numeric: tabular-nums; }
+.legend { display: grid; gap: 3px; font-size: var(--s-1); }
+.legend div { display: grid; grid-template-columns: 12px 1fr auto; gap: 8px; align-items: center; }
+.legend i { width: 12px; height: 12px; border-radius: 2px; display: block; }
+.legend .n { font-family: var(--f-data); color: var(--muted); font-variant-numeric: tabular-nums; }
+.note { font-size: var(--s-1); color: var(--muted); margin: 0; border-top: 1px solid var(--line); padding-top: 12px; }
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { grid-template-columns: 1fr; height: auto; }
+  .stage { height: 62vh; min-height: 380px; }
+  aside { overflow: visible; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <div class="stage">
+    <canvas id="scene" aria-label="Mô hình 3D phố cổ Hà Nội và hồ Hoàn Kiếm"></canvas>
+    <div class="status" id="status">Đang tải dữ liệu thành phố…</div>
+    <div class="inspect" id="inspect" hidden>
+      <h3 id="i-title"></h3>
+      <dl>
+        <dt>Kiểu nhà</dt><dd id="i-arch"></dd>
+        <dt>Số tầng</dt><dd id="i-floors"></dd>
+        <dt>Chiều cao</dt><dd id="i-height"></dd>
+        <dt>Mặt tiền ra phố</dt><dd id="i-front"></dd>
+      </dl>
+    </div>
+  </div>
+  <aside>
+    <header>
+      <div class="eyebrow">Hanoi City · Hoàn Kiếm</div>
+      <h1>Phố cổ Hà Nội 1:1</h1>
+      <p class="lede">Khu 840 × 840 m quanh phố cổ và hồ Gươm, dựng hoàn toàn từ dữ liệu mở. Kéo để xoay, cuộn để zoom, bấm vào một ngôi nhà để xem nó được phân loại thế nào.</p>
+    </header>
+    <section class="stack">
+      <h2>Thời điểm</h2>
+      <div class="seg" role="group" aria-label="Ngày hoặc đêm">
+        <button id="t-day" aria-pressed="true">Ban ngày</button>
+        <button id="t-night" aria-pressed="false">Ban đêm</button>
+      </div>
+      <h2>Tô màu nhà</h2>
+      <div class="seg" role="group" aria-label="Cách tô màu nhà">
+        <button id="c-real" aria-pressed="true">Màu tường thật</button>
+        <button id="c-arch" aria-pressed="false">Theo kiểu nhà</button>
+      </div>
+    </section>
+    <section>
+      <h2>Lớp đường phố</h2>
+      <div class="toggles" id="toggles"></div>
+    </section>
+    <section>
+      <h2>13 kiểu nhà Hà Nội</h2>
+      <div class="legend" id="legend"></div>
+    </section>
+    <p class="note">Mỗi ngôi nhà nằm đúng vị trí và diện tích thật (Overture Maps, © OpenStreetMap contributors). Chiều cao và kiểu nhà do pipeline suy ra; biển hiệu đặt theo cửa hàng có thật phía sau. Khối hộp ở đây là bản xem trước: trong UE5 mỗi kiểu nhà được thay bằng bộ kit mặt tiền.</p>
+  </aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+"use strict";
+const ARCH_COLOR = {
+  nha_ong_pho_co: "#c9733a", nha_ong_hien_dai: "#e3b04b", biet_thu_phap: "#f2d16b", cong_trinh_phap_cong: "#d9a441",
+  khu_tap_the: "#8fa6a0", chung_cu_cao_tang: "#5b7f95", van_phong_cao_tang: "#3f5e7a", lien_ke_kdt: "#b9a48b",
+  dinh_chua: "#a8322d", cho: "#7a4f9a", cong_trinh_cong_cong: "#6c8e5a", nha_xuong: "#6e6e6e", nha_thap_tang: "#c8bfae"
+};
+const LAYERS = [
+  ["shop_signs", "Biển hiệu cửa hàng"], ["awnings", "Mái bạt"], ["parked_motorbikes", "Xe máy đỗ vỉa hè"],
+  ["pavement_seating", "Ghế nhựa, bàn quán"], ["street_vendors", "Hàng rong"], ["street_trees", "Cây đường phố"],
+  ["power_poles", "Cột điện"], ["cable_spans", "Bó dây điện"], ["street_lights", "Đèn đường"]
+];
+const SIGN_COLOR = { food: "#c62828", cafe: "#6d4c41", bar: "#f9a825", lodging: "#1565c0", fashion: "#ad1457",
+  beauty: "#8e24aa", travel: "#00838f", grocery: "#2e7d32", pharmacy: "#00897b", finance: "#283593",
+  crafts: "#ef6c00", hardware: "#455a64" };
+const TREE_COLOR = { xa_cu: "#3d6b35", sau: "#2f5a2b", bang: "#4f7d3a", hoa_sua: "#7f9f5e", sao_den: "#355e3b",
+  phuong_vi: "#6f8f3a", liu: "#8db35a", loc_vung: "#5c8a3c", so: "#4a7a40", bang_lang: "#6a7f50" };
+
+const $ = (id) => document.getElementById(id);
+const canvas = $("scene");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 1, 6000);
+camera.position.set(-260, 330, 420);
+const controls = new THREE.OrbitControls(camera, canvas);
+controls.target.set(40, 0, 40);
+controls.maxPolarAngle = Math.PI * 0.47;
+controls.minDistance = 20; controls.maxDistance = 1800;
+controls.enableDamping = true;
+
+const hemi = new THREE.HemisphereLight(0xf4f1e6, 0x5a5f55, 0.9);
+const sun = new THREE.DirectionalLight(0xfff1d6, 0.75);
+sun.position.set(-300, 500, 200);
+scene.add(hemi, sun);
+
+function resize() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false);
+  camera.aspect = r.width / Math.max(r.height, 1);
+  camera.updateProjectionMatrix();
+}
+window.addEventListener("resize", resize);
+
+// Data is in decimetres, x = east, y = north. three.js: x = east, y = up, z = -north.
+const P = (p) => [p[0] / 10, -p[1] / 10];
+const hash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
+
+function flat(polys, color, y) {
+  const geoms = [];
+  const mat = new THREE.MeshLambertMaterial({ color });
+  const group = new THREE.Group();
+  for (const ring of polys) {
+    if (ring.length < 3) continue;
+    const shape = new THREE.Shape(ring.map((p) => new THREE.Vector2(p[0] / 10, p[1] / 10)));
+    const g = new THREE.ShapeGeometry(shape);
+    g.rotateX(-Math.PI / 2);
+    const m = new THREE.Mesh(g, mat);
+    m.position.y = y;
+    group.add(m);
+  }
+  scene.add(group);
+  return group;
+}
+
+function roads(list) {
+  const pos = [], col = [];
+  const cMain = new THREE.Color("#5d5f63"), cAlley = new THREE.Color("#8d8e8c");
+  for (const r of list) {
+    const pts = r.p.map(P);
+    const hw = Math.max(r.w / 20, 1.0);
+    const c = r.m ? cAlley : cMain;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [x0, z0] = pts[i], [x1, z1] = pts[i + 1];
+      const dx = x1 - x0, dz = z1 - z0, L = Math.hypot(dx, dz) || 1;
+      const nx = -dz / L * hw, nz = dx / L * hw;
+      const q = [[x0 + nx, z0 + nz], [x0 - nx, z0 - nz], [x1 - nx, z1 - nz], [x1 + nx, z1 + nz]];
+      for (const k of [0, 1, 2, 0, 2, 3]) { pos.push(q[k][0], 0.05, q[k][1]); col.push(c.r, c.g, c.b); }
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
+  g.computeVertexNormals();
+  const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
+  scene.add(m);
+}
+
+let bMesh = null, bRanges = [], bData = [];
+const realColors = [], archColors = [];
+
+function buildings(list, archetypes) {
+  const pos = [], nor = [];
+  bData = list;
+  for (let bi = 0; bi < list.length; bi++) {
+    const b = list[bi];
+    const ring = b.o.map(P);
+    const h = b.h / 10;
+    const start = pos.length / 9;
+    const pal = (archetypes[b.a] && archetypes[b.a].palette) || ["#cccccc"];
+    const wallPal = pal.slice(0, Math.max(1, Math.min(3, pal.length)));
+    const wall = new THREE.Color(wallPal[Math.floor(hash(b.o[0].join(",")) * wallPal.length)]);
+    const shade = 0.88 + hash(b.o.length + ":" + b.h) * 0.2;
+    wall.multiplyScalar(shade);
+    const roofC = wall.clone().multiplyScalar(0.72);
+    const archC = new THREE.Color(ARCH_COLOR[b.a] || "#999999");
+    const pushTri = (a, bb, c, n, kind) => {
+      pos.push(...a, ...bb, ...c);
+      for (let k = 0; k < 3; k++) {
+        nor.push(...n);
+        const rc = kind === "roof" ? roofC : wall;
+        realColors.push(rc.r, rc.g, rc.b);
+        const ac = kind === "roof" ? archC.clone().multiplyScalar(0.85) : archC;
+        archColors.push(ac.r, ac.g, ac.b);
+      }
+    };
+    // Walls: ring is CCW in east/north; in three (x, -z) that is clockwise seen from above.
+    for (let i = 0; i < ring.length; i++) {
+      const [x0, z0] = ring[i], [x1, z1] = ring[(i + 1) % ring.length];
+      const dx = x1 - x0, dz = z1 - z0, L = Math.hypot(dx, dz) || 1;
+      const n = [-dz / L, 0, dx / L];
+      pushTri([x0, 0, z0], [x1, 0, z1], [x1, h, z1], n, "wall");
+      pushTri([x0, 0, z0], [x1, h, z1], [x0, h, z0], n, "wall");
+    }
+    const contour = b.o.map((p) => new THREE.Vector2(p[0] / 10, p[1] / 10));
+    const tris = THREE.ShapeUtils.triangulateShape(contour, []);
+    for (const t of tris) {
+      const v = t.map((k) => [contour[k].x, h, -contour[k].y]);
+      pushTri(v[0], v[2], v[1], [0, 1, 0], "roof");
+    }
+    bRanges.push([start, pos.length / 9]);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+  g.setAttribute("color", new THREE.Float32BufferAttribute(realColors.slice(), 3));
+  bMesh = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
+  scene.add(bMesh);
+}
+
+function setColorMode(mode) {
+  const attr = bMesh.geometry.getAttribute("color");
+  attr.array.set(mode === "arch" ? archColors : realColors);
+  attr.needsUpdate = true;
+  $("c-real").setAttribute("aria-pressed", String(mode === "real"));
+  $("c-arch").setAttribute("aria-pressed", String(mode === "arch"));
+}
+
+const layerObjs = {};
+const glowMats = [];
+const dummy = new THREE.Object3D();
+
+function instanced(name, geom, rows, colorOf, place, opts = {}) {
+  if (!rows.length) return;
+  const mat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+  const mesh = new THREE.InstancedMesh(geom, mat, rows.length);
+  if (opts.glow) glowMats.push({ mesh, lit: mat, unlit: new THREE.MeshBasicMaterial({ color: 0xffffff }) });
+  const c = new THREE.Color();
+  rows.forEach((r, i) => {
+    place(r, dummy);
+    dummy.updateMatrix();
+    mesh.setMatrixAt(i, dummy.matrix);
+    c.set(colorOf(r));
+    mesh.setColorAt(i, c);
+  });
+  mesh.instanceMatrix.needsUpdate = true;
+  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  (layerObjs[name] = layerObjs[name] || []).push(mesh);
+  scene.add(mesh);
+}
+
+function base(r, o, yOffset = 0) {
+  const [x, z] = P(r);
+  o.position.set(x, r[2] / 10 + yOffset, z);
+  o.rotation.set(0, r[3] * Math.PI / 180, 0);
+  o.scale.set(1, 1, 1);
+}
+
+function props(p) {
+  const signRows = p.shop_signs || [];
+  const flatSigns = signRows.filter((r) => !r[5].endsWith("_vertical"));
+  const vertSigns = signRows.filter((r) => r[5].endsWith("_vertical"));
+  const fam = (r) => SIGN_COLOR[r[5].replace("_vertical", "")] || "#b71c1c";
+  instanced("shop_signs", new THREE.BoxGeometry(0.15, 1, 1), flatSigns, fam, (r, o) => {
+    base(r, o); o.scale.set(1, 1.1, Math.max(1.5, r[4] * 4));
+  }, { glow: true });
+  instanced("shop_signs", new THREE.BoxGeometry(1, 2.6, 0.12), vertSigns, fam, (r, o) => {
+    base(r, o); o.position.x += Math.cos(r[3] * Math.PI / 180) * 0.5; o.position.z -= Math.sin(r[3] * Math.PI / 180) * 0.5;
+  }, { glow: true });
+  const awn = new THREE.BoxGeometry(1.6, 0.08, 1); awn.rotateZ(-0.35);
+  instanced("awnings", awn, p.awnings || [], (r) => ["#b23a2f", "#2f6b8f", "#3f7a46", "#c98b2a", "#8b8f94", "#a8463f"][r[6] % 6],
+    (r, o) => { base(r, o); o.scale.set(1, 1, Math.max(1.5, r[4] * 4)); });
+  const moto = new THREE.BoxGeometry(1.8, 0.9, 0.6); moto.translate(0, 0.45, 0);
+  instanced("parked_motorbikes", moto, p.parked_motorbikes || [],
+    (r) => ["#c62828", "#1f1f1f", "#e0e0e0", "#1565c0", "#9e9e9e", "#6d4c41", "#ad1457", "#f9a825", "#2e7d32", "#37474f", "#bdbdbd", "#4e342e"][r[6] % 12],
+    (r, o) => base(r, o));
+  const stool = new THREE.BoxGeometry(0.9, 0.45, 0.9); stool.translate(0, 0.22, 0);
+  instanced("pavement_seating", stool, p.pavement_seating || [],
+    (r) => r[5] === "tra_da" ? "#1e6fd9" : r[5] === "bia_hoi" ? "#d32f2f" : "#e53935", (r, o) => base(r, o));
+  const vend = new THREE.ConeGeometry(0.5, 0.45, 12); vend.translate(0, 1.75, 0);
+  const vendBody = new THREE.BoxGeometry(1.4, 0.8, 0.6); vendBody.translate(0, 0.4, 0);
+  instanced("street_vendors", vend, p.street_vendors || [], () => "#e8d9a8", (r, o) => base(r, o));
+  instanced("street_vendors", vendBody, p.street_vendors || [], (r) => r[5] === "xe_dap_hoa" ? "#e57399" : "#c9a55b", (r, o) => base(r, o));
+  const trunk = new THREE.CylinderGeometry(0.25, 0.35, 4, 6); trunk.translate(0, 2, 0);
+  const crown = new THREE.IcosahedronGeometry(3.6, 1); crown.scale(1, 0.8, 1); crown.translate(0, 6.5, 0);
+  const trees = p.street_trees || [];
+  instanced("street_trees", trunk, trees, () => "#6b5a45", (r, o) => { base(r, o); o.scale.setScalar(r[4]); });
+  instanced("street_trees", crown, trees, (r) => TREE_COLOR[r[5]] || "#4a7a40", (r, o) => { base(r, o); o.scale.setScalar(r[4]); });
+  const pole = new THREE.BoxGeometry(0.3, 8.5, 0.3); pole.translate(0, 4.25, 0);
+  instanced("power_poles", pole, p.power_poles || [], () => "#8a8a84", (r, o) => base(r, o));
+  const cable = new THREE.BoxGeometry(1, 0.12, 0.25);
+  instanced("cable_spans", cable, p.cable_spans || [], () => "#1a1a1a", (r, o) => {
+    base(r, o); o.scale.set(r[4], 1 + r[6], 1 + r[6] * 0.6);
+  });
+  const lamp = new THREE.BoxGeometry(0.2, 8, 0.2); lamp.translate(0, 4, 0);
+  const bulb = new THREE.BoxGeometry(0.8, 0.3, 0.5); bulb.translate(0, 8, 0);
+  instanced("street_lights", lamp, p.street_lights || [], () => "#50565c", (r, o) => base(r, o));
+  instanced("street_lights", bulb, p.street_lights || [], () => "#fff3c4", (r, o) => base(r, o), { glow: true });
+}
+
+function toggles(p) {
+  const box = $("toggles");
+  for (const [key, label] of LAYERS) {
+    const n = (p[key] || []).length;
+    if (!n) continue;
+    const id = "layer-" + key;
+    const row = document.createElement("label");
+    row.htmlFor = id;
+    row.innerHTML = `<input type="checkbox" id="${id}" checked><span>${label}</span><span class="n">${n.toLocaleString("vi-VN")}</span>`;
+    box.appendChild(row);
+    row.querySelector("input").addEventListener("change", (e) => {
+      for (const m of layerObjs[key] || []) m.visible = e.target.checked;
+    });
+  }
+}
+
+function legend(list, archetypes) {
+  const counts = {};
+  for (const b of list) counts[b.a] = (counts[b.a] || 0) + 1;
+  const box = $("legend");
+  for (const [id, col] of Object.entries(ARCH_COLOR)) {
+    const name = (archetypes[id] && archetypes[id].name) || id;
+    const row = document.createElement("div");
+    row.innerHTML = `<i style="background:${col}"></i><span>${name}</span><span class="n">${(counts[id] || 0).toLocaleString("vi-VN")}</span>`;
+    box.appendChild(row);
+  }
+}
+
+let archNames = {};
+function setTime(night) {
+  $("t-day").setAttribute("aria-pressed", String(!night));
+  $("t-night").setAttribute("aria-pressed", String(night));
+  const sky = night ? "#0f1622" : getComputedStyle(document.documentElement).getPropertyValue("--scene-day").trim() || "#cfd9d6";
+  scene.background = new THREE.Color(sky);
+  scene.fog = new THREE.Fog(sky, 700, 2200);
+  hemi.intensity = night ? 0.22 : 0.9;
+  sun.intensity = night ? 0.05 : 0.75;
+  for (const g of glowMats) g.mesh.material = night ? g.unlit : g.lit;  // signs and lamps light up at night
+}
+
+const ray = new THREE.Raycaster();
+let down = null;
+canvas.addEventListener("pointerdown", (e) => { down = [e.clientX, e.clientY]; });
+canvas.addEventListener("pointerup", (e) => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5 || !bMesh) return;
+  const r = canvas.getBoundingClientRect();
+  ray.setFromCamera({ x: (e.clientX - r.left) / r.width * 2 - 1, y: -(e.clientY - r.top) / r.height * 2 + 1 }, camera);
+  const hit = ray.intersectObject(bMesh)[0];
+  if (!hit) { $("inspect").hidden = true; return; }
+  let lo = 0, hi = bRanges.length - 1;
+  while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (bRanges[mid][0] <= hit.faceIndex) lo = mid; else hi = mid - 1; }
+  const b = bData[lo];
+  $("i-title").textContent = b.n || "Ngôi nhà không tên";
+  $("i-arch").textContent = archNames[b.a] || b.a;
+  $("i-floors").textContent = b.f;
+  $("i-height").textContent = (b.h / 10).toFixed(1) + " m";
+  $("i-front").textContent = b.fr.length ? b.fr.length + " cạnh" : "không (nhà trong ngõ)";
+  $("inspect").hidden = false;
+});
+
+$("t-day").addEventListener("click", () => setTime(false));
+$("t-night").addEventListener("click", () => setTime(true));
+$("c-real").addEventListener("click", () => setColorMode("real"));
+$("c-arch").addEventListener("click", () => setColorMode("arch"));
+
+fetch("city.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }).then((d) => {
+  archNames = Object.fromEntries(Object.entries(d.archetypes || {}).map(([k, v]) => [k, v.name]));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(4000, 4000), new THREE.MeshLambertMaterial({ color: "#aeb0a4" }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -0.05;
+  scene.add(ground);
+  flat(d.green, "#8fae6e", 0.02);
+  flat(d.water, "#5f8f8a", 0.08);
+  roads(d.roads);
+  buildings(d.buildings, d.archetypes || {});
+  props(d.props);
+  toggles(d.props);
+  legend(d.buildings, d.archetypes || {});
+  setTime(false);
+  const nProps = Object.values(d.props).reduce((a, v) => a + v.length, 0);
+  $("status").textContent = `${d.buildings.length.toLocaleString("vi-VN")} nhà · ${nProps.toLocaleString("vi-VN")} đạo cụ · ${d.roads.length} đoạn đường`;
+}).catch((err) => { $("status").textContent = "Không tải được dữ liệu thành phố (" + err.message + ")."; });
+
+resize();
+setTime(false);
+(function loop() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })();
+})();
+</script>

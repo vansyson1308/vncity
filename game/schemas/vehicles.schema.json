@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vehicles.schema.json",
+  "title": "Vehicles",
+  "description": "Drivable and ambient vehicles. Brand names are parodied, as GTA does, to avoid trademarks.",
+  "x-collection": "vehicles",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "vehicles"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "class",
+          "handling"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "inspired_by": {
+            "type": "string",
+            "description": "Real model it evokes; never shown in game."
+          },
+          "class": {
+            "enum": [
+              "motorbike_scooter",
+              "motorbike_manual",
+              "motorbike_electric",
+              "bicycle",
+              "cyclo",
+              "car",
+              "taxi",
+              "bus",
+              "truck",
+              "tricycle_cargo",
+              "train",
+              "boat",
+              "tram"
+            ]
+          },
+          "seats": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "price_vnd": {
+            "$ref": "common.schema.json#/$defs/money_vnd"
+          },
+          "handling": {
+            "type": "object",
+            "required": [
+              "top_speed_kmh",
+              "accel_0_50_s"
+            ],
+            "properties": {
+              "top_speed_kmh": {
+                "type": "number",
+                "minimum": 1
+              },
+              "accel_0_50_s": {
+                "type": "number",
+                "minimum": 0
+              },
+              "mass_kg": {
+                "type": "number",
+                "minimum": 1
+              },
+              "lean": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "brake": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "spawn": {
+            "type": "object",
+            "properties": {
+              "weight": {
+                "type": "number",
+                "minimum": 0
+              },
+              "districts": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              },
+              "hours": {
+                "$ref": "common.schema.json#/$defs/hour_range"
+              }
+            },
+            "additionalProperties": false
+          },
+          "cargo": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "liveries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

@@ -4,3 +4,5 @@ data/
 out/
 site/
 *.log
+landmarks_check.json
+assets_work/

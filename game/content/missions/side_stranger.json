@@ -1,0 +1,1193 @@
+{
+  "collection": "missions",
+  "items": [
+    {
+      "id": "s01_la_dong_cho_ba_tam",
+      "tags": [
+        "stranger",
+        "morning",
+        "vendor"
+      ],
+      "name": {
+        "vi": "Lá dong cho bà Tâm",
+        "en": "Leaves for Granny Tâm"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:ba_tam_xoi",
+      "summary": {
+        "vi": "Bà bán xôi đầu ngõ cần lá dong gấp trước giờ khách đi làm.",
+        "en": "The alley's sticky-rice seller urgently needs leaves before the commuter rush."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p2_noi_nuoc_dung_4_gio"
+        ],
+        "hours": [
+          4.5,
+          5.75
+        ]
+      },
+      "start": {
+        "lat": 21.0374,
+        "lon": 105.8514
+      },
+      "steps": [
+        {
+          "id": "nghe_ba_tam",
+          "kind": "talk",
+          "objective": {
+            "vi": "Bà Tâm hết lá dong",
+            "en": "Granny Tâm is out of dong leaves"
+          },
+          "target": {
+            "lat": 21.0374,
+            "lon": 105.8514
+          },
+          "dialogue": "dialogues:dlg_s01_la_dong",
+          "params": {
+            "time_of_day": 5.0
+          },
+          "next": "ra_cho"
+        },
+        {
+          "id": "ra_cho",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đến hàng lá ở chợ Long Biên",
+            "en": "Go to the leaf stall at Long Biên market"
+          },
+          "target": "landmarks:cho_long_bien",
+          "next": "lay_la"
+        },
+        {
+          "id": "lay_la",
+          "kind": "collect",
+          "objective": {
+            "vi": "Lấy hai bó lá dong",
+            "en": "Collect two bundles of dong leaves"
+          },
+          "target": "landmarks:cho_long_bien",
+          "params": {
+            "item": "items:la_dong",
+            "qty": 2,
+            "cost_vnd": 40000
+          },
+          "next": "ve"
+        },
+        {
+          "id": "ve",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Mang về cho bà Tâm trước 6 giờ",
+            "en": "Bring them back to Granny Tâm before 6"
+          },
+          "target": {
+            "lat": 21.0374,
+            "lon": 105.8514
+          },
+          "dialogue": "dialogues:dlg_s01_xong",
+          "params": {
+            "deadline_hour": 6.0
+          }
+        }
+      ],
+      "reward": {
+        "money_vnd": 70000,
+        "reputation": {
+          "hoi_ban_hang_rong": 10
+        },
+        "items": [
+          "items:xoi_xeo"
+        ]
+      }
+    },
+    {
+      "id": "s02_ky_thu_bo_ho",
+      "tags": [
+        "side",
+        "minigame",
+        "chess"
+      ],
+      "name": {
+        "vi": "Kỳ thủ bờ hồ",
+        "en": "The Lakeside Master"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:ong_bao_co_tuong",
+      "summary": {
+        "vi": "Thách đấu làng cờ bờ hồ, và nhận ra cụ Bảo từng là đối thủ của bố.",
+        "en": "Challenge the lakeside chess circle and discover Old Bảo was Father's rival."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_02_xich_lo_va_buc_anh_1989"
+        ]
+      },
+      "start": {
+        "lat": 21.0305,
+        "lon": 105.8513
+      },
+      "steps": [
+        {
+          "id": "ngoi_xuong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ngồi xuống ghế đá",
+            "en": "Sit down on the stone bench"
+          },
+          "target": {
+            "lat": 21.0305,
+            "lon": 105.8513
+          },
+          "dialogue": "dialogues:dlg_s02_co_tuong",
+          "params": {
+            "time_of_day": 15.0
+          },
+          "next": "van_1"
+        },
+        {
+          "id": "van_1",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Ván 1: thắng ông cụ mũ phớt",
+            "en": "Game 1: beat the man in the fedora"
+          },
+          "target": "activities:act_co_tuong",
+          "params": {
+            "opponent_style": "phong_thu",
+            "difficulty": 2
+          },
+          "next": "van_2"
+        },
+        {
+          "id": "van_2",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Ván 2: thắng ông cụ hút điếu cày",
+            "en": "Game 2: beat the man with the bamboo pipe"
+          },
+          "target": "activities:act_co_tuong",
+          "params": {
+            "opponent_style": "tan_cong_ma",
+            "difficulty": 3
+          },
+          "next": "van_3"
+        },
+        {
+          "id": "van_3",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Ván 3: cụ Bảo, được chấp một xe",
+            "en": "Game 3: Old Bảo, with a chariot handicap"
+          },
+          "target": "activities:act_co_tuong",
+          "params": {
+            "opponent": "characters:ong_bao_co_tuong",
+            "handicap": "chap_xe",
+            "difficulty": 5
+          },
+          "next": "thang"
+        },
+        {
+          "id": "thang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cụ Bảo hỏi ai dạy bạn",
+            "en": "Old Bảo asks who taught you"
+          },
+          "target": {
+            "lat": 21.0305,
+            "lon": 105.8513
+          },
+          "dialogue": "dialogues:dlg_s02_thang"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "clb_co_tuong_bo_ho": 20,
+          "hoi_nguoi_cao_tuoi_phuong": 5
+        },
+        "items": [
+          "items:tra_da"
+        ]
+      }
+    },
+    {
+      "id": "s03_mark_qua_duong",
+      "tags": [
+        "stranger",
+        "comedy",
+        "safety"
+      ],
+      "name": {
+        "vi": "Làm hòn đá giữa dòng sông",
+        "en": "Be a Rock in a River"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:mark",
+      "summary": {
+        "vi": "Vlogger Mark không dám sang đường. Khôi dạy anh 'nghệ thuật' qua đường kiểu Hà Nội, rồi dẫn đi xem tàu qua phố một cách an toàn.",
+        "en": "Mark can't cross the road. Khôi teaches him the Hanoi way, then shows him Train Street safely."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_07_mark_an_pho"
+        ]
+      },
+      "start": {
+        "lat": 21.0313,
+        "lon": 105.8529
+      },
+      "steps": [
+        {
+          "id": "goc_pho",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mark đứng ở góc phố hai mươi phút",
+            "en": "Mark has been stuck on a corner for twenty minutes"
+          },
+          "target": {
+            "lat": 21.0313,
+            "lon": 105.8529
+          },
+          "dialogue": "dialogues:dlg_s03_mark_qua_duong",
+          "next": "dan_qua_duong"
+        },
+        {
+          "id": "dan_qua_duong",
+          "kind": "follow",
+          "objective": {
+            "vi": "Dẫn Mark qua đường: đi chậm, đều, không dừng, không chạy",
+            "en": "Lead Mark across: slow, steady, no stopping, no running"
+          },
+          "target": {
+            "lat": 21.0313,
+            "lon": 105.8529
+          },
+          "params": {
+            "mode": "pedestrian_crossing_lesson",
+            "crossings": 3
+          },
+          "next": "den_duong_tau",
+          "fail_if": [
+            "event:mark_chay_ngang"
+          ]
+        },
+        {
+          "id": "den_duong_tau",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đưa Mark đến đầu ngõ phố đường tàu",
+            "en": "Take Mark to the end of Train Street"
+          },
+          "target": "landmarks:pho_duong_tau",
+          "next": "duong_tau"
+        },
+        {
+          "id": "duong_tau",
+          "kind": "talk",
+          "objective": {
+            "vi": "Giữ Mark ở khoảng cách an toàn",
+            "en": "Keep Mark at a safe distance"
+          },
+          "target": "landmarks:pho_duong_tau",
+          "dialogue": "dialogues:dlg_s03_duong_tau",
+          "next": "chup_tau"
+        },
+        {
+          "id": "chup_tau",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp tàu Thống Nhất đi qua từ sau vạch an toàn",
+            "en": "Photograph the express passing from behind the safety line"
+          },
+          "target": "landmarks:pho_duong_tau",
+          "params": {
+            "subject": "vehicles:tau_thong_nhat",
+            "safe_zone_only": true,
+            "wait_for_train_schedule": true
+          },
+          "fail_if": [
+            "event:dung_tren_ray"
+          ]
+        }
+      ],
+      "reward": {
+        "money_vnd": 300000,
+        "reputation": {
+          "hoi_ban_hang_rong": 5
+        }
+      }
+    },
+    {
+      "id": "s04_thach_dau_khong_gps",
+      "tags": [
+        "side",
+        "driving",
+        "rivalry"
+      ],
+      "name": {
+        "vi": "Không bản đồ",
+        "en": "No Map"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:chu_cuong",
+      "summary": {
+        "vi": "Hội xe ôm truyền thống thách Minh chạy không bản đồ. Thắng thì có chỗ đứng ở phố cổ.",
+        "en": "The traditional xe ôm crew dares Minh to ride without a map. Win and he earns a place in the Old Quarter."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_03_khach_vip_ca_ngay"
+        ]
+      },
+      "start": {
+        "lat": 21.0378,
+        "lon": 105.8523
+      },
+      "steps": [
+        {
+          "id": "bi_chan",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chú Cường chặn xe ở Ô Quan Chưởng",
+            "en": "Uncle Cường blocks your bike at Ô Quan Chưởng"
+          },
+          "target": "landmarks:o_quan_chuong",
+          "dialogue": "dialogues:dlg_s04_khong_gps",
+          "next": "nam_dia_chi"
+        },
+        {
+          "id": "nam_dia_chi",
+          "kind": "ride",
+          "objective": {
+            "vi": "Đến 5 địa chỉ trong 20 phút, tắt bản đồ",
+            "en": "Reach 5 addresses in 20 minutes with the map off"
+          },
+          "target": "landmarks:o_quan_chuong",
+          "params": {
+            "minimap": false,
+            "addresses": [
+              "ngo_tam_thuong",
+              "hang_thiec_so_12",
+              "ma_may_so_87",
+              "ngo_gach_so_5",
+              "hang_vai_so_30"
+            ],
+            "time_limit_s": 1200
+          },
+          "next": "ve_dich",
+          "fail_if": [
+            "event:mo_ban_do",
+            "event:het_gio"
+          ]
+        },
+        {
+          "id": "ve_dich",
+          "kind": "talk",
+          "objective": {
+            "vi": "Quay lại góc phố",
+            "en": "Return to the corner"
+          },
+          "target": "landmarks:o_quan_chuong",
+          "dialogue": "dialogues:dlg_s04_xong"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_xe_om_o_quan_chuong": 25
+        },
+        "set_flags": [
+          "duoc_do_o_quan_chuong"
+        ]
+      }
+    },
+    {
+      "id": "s05_anh_cuoi_cau_long_bien",
+      "tags": [
+        "side",
+        "photo"
+      ],
+      "name": {
+        "vi": "Ảnh cưới lúc mặt trời mọc",
+        "en": "Sunrise Wedding"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:amb_co_dau_chu_re",
+      "summary": {
+        "vi": "Một cặp đôi cần thợ ảnh gấp. Khôi lần đầu chụp ảnh cưới, giống như bố.",
+        "en": "A couple needs a photographer fast. Khôi shoots his first wedding, like his father."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_08_pho_di_bo_toi_thu_bay"
+        ]
+      },
+      "start": {
+        "lat": 21.0429,
+        "lon": 105.8596
+      },
+      "steps": [
+        {
+          "id": "gap_doi_tre",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cặp đôi mất thợ ảnh",
+            "en": "A couple without a photographer"
+          },
+          "target": "landmarks:cau_long_bien",
+          "dialogue": "dialogues:dlg_s05_anh_cuoi",
+          "params": {
+            "time_of_day": 5.0
+          },
+          "next": "chup_cuoi"
+        },
+        {
+          "id": "chup_cuoi",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp 6 khung ảnh cưới trên cầu Long Biên lúc bình minh, không ai đứng trên ray",
+            "en": "Shoot 6 wedding frames on Long Biên bridge at sunrise, nobody on the rails"
+          },
+          "target": "landmarks:cau_long_bien",
+          "params": {
+            "targets": 6,
+            "hours": [
+              5.25,
+              6.5
+            ],
+            "train_hazard": true
+          },
+          "next": "trao_anh",
+          "fail_if": [
+            "event:nguoi_dung_tren_ray"
+          ]
+        },
+        {
+          "id": "trao_anh",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cho cặp đôi xem ảnh",
+            "en": "Show the couple the photos"
+          },
+          "target": "landmarks:cau_long_bien",
+          "dialogue": "dialogues:dlg_s05_xong"
+        }
+      ],
+      "reward": {
+        "money_vnd": 2000000,
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 5
+        }
+      }
+    },
+    {
+      "id": "s06_dieu_sao_bai_giua",
+      "tags": [
+        "side",
+        "leisure",
+        "breather"
+      ],
+      "name": {
+        "vi": "Diều sáo bãi giữa",
+        "en": "Flute Kites on the Sandbank"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:ong_thang",
+      "summary": {
+        "vi": "Một buổi chiều không chạy cuốc: thả diều cùng ông Thắng ở bãi giữa.",
+        "en": "An afternoon off the clock: kite flying with Mr Thắng on the sandbank."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_02_xich_lo_va_buc_anh_1989"
+        ],
+        "weather": [
+          "clear",
+          "cloudy",
+          "cold"
+        ]
+      },
+      "start": {
+        "lat": 21.045,
+        "lon": 105.862
+      },
+      "steps": [
+        {
+          "id": "nhan_dieu",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông Thắng mang diều sáo ra bãi",
+            "en": "Mr Thắng brings his flute kite"
+          },
+          "target": "landmarks:bai_giua_song_hong",
+          "dialogue": "dialogues:dlg_s06_dieu",
+          "params": {
+            "time_of_day": 16.0
+          },
+          "next": "go_dieu"
+        },
+        {
+          "id": "go_dieu",
+          "kind": "collect",
+          "objective": {
+            "vi": "Gỡ diều của cậu bé mắc trên cây chuối",
+            "en": "Free the boy's kite from the banana tree"
+          },
+          "target": "landmarks:bai_giua_song_hong",
+          "params": {
+            "item": "items:dieu_cua_be"
+          },
+          "next": "tha_dieu"
+        },
+        {
+          "id": "tha_dieu",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Thả diều sáo giữ trên cao 3 phút (gió lấy theo dữ liệu thật)",
+            "en": "Keep the flute kite aloft 3 minutes (wind from live data)"
+          },
+          "target": "activities:act_tha_dieu",
+          "next": "nghe_sao"
+        },
+        {
+          "id": "nghe_sao",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nghe tiếng sáo diều",
+            "en": "Listen to the kite flutes"
+          },
+          "target": "landmarks:bai_giua_song_hong",
+          "dialogue": "dialogues:dlg_s06_xong"
+        }
+      ],
+      "reward": {
+        "items": [
+          "items:dieu_sao"
+        ],
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 5
+        }
+      }
+    },
+    {
+      "id": "s07_xe_chet_may_sau_mua",
+      "tags": [
+        "side",
+        "mechanic",
+        "minh_dream"
+      ],
+      "name": {
+        "vi": "Mười một chiếc xe chết máy",
+        "en": "Eleven Drowned Bikes"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:anh_duc_sua_xe",
+      "summary": {
+        "vi": "Sau mưa ngập, tiệm sửa xe quá tải. Minh phụ anh Đức và biết tiệm sắp được sang nhượng.",
+        "en": "After the flood the repair shop is swamped. Minh helps Đức and learns the shop is for sale."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_05_mua_ngap_pho"
+        ]
+      },
+      "start": {
+        "lat": 20.9912,
+        "lon": 105.8142
+      },
+      "steps": [
+        {
+          "id": "vao_tiem",
+          "kind": "talk",
+          "objective": {
+            "vi": "Anh Đức gọi phụ việc sau trận ngập",
+            "en": "Đức calls you in after the flood"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "dialogue": "dialogues:dlg_s07_xe_chet_may",
+          "next": "sua_xe"
+        },
+        {
+          "id": "sua_xe",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Sửa 11 xe: thay bugi, xả nước lọc gió, súc dầu máy",
+            "en": "Fix 11 bikes: plugs, drain air filters, flush oil"
+          },
+          "target": "activities:act_sua_xe_may",
+          "params": {
+            "tickets": 11,
+            "fault_pool": [
+              "bugi_uot",
+              "loc_gio_ngam_nuoc",
+              "nuoc_vao_may",
+              "binh_ac_quy_yeu"
+            ]
+          },
+          "next": "cuoi_ngay"
+        },
+        {
+          "id": "cuoi_ngay",
+          "kind": "talk",
+          "objective": {
+            "vi": "Anh Đức nói chuyện bán tiệm",
+            "en": "Đức talks about selling the shop"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "dialogue": "dialogues:dlg_s07_xong"
+        }
+      ],
+      "reward": {
+        "money_vnd": 330000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 5
+        }
+      },
+      "unlocks": [
+        "businesses:tiem_sua_xe_duc_coi"
+      ]
+    },
+    {
+      "id": "s08_tem_phieu_bao_cap",
+      "tags": [
+        "side",
+        "history",
+        "collectible_intro"
+      ],
+      "name": {
+        "vi": "Phở không người lái",
+        "en": "Pilotless Pho"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:cu_tho",
+      "summary": {
+        "vi": "Cụ Thọ kể chuyện thời bao cấp và nhờ Lan tìm lại những tờ tem phiếu đã mất.",
+        "en": "Grandpa recalls the subsidy era and asks Lan to find the missing ration coupons."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_04_cho_dong_xuan_luc_6_gio"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "so_tem_phieu",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông nhắc đến quyển sổ tem phiếu",
+            "en": "Grandpa mentions the ration book"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_s08_tem_phieu",
+          "next": "dong_nat"
+        },
+        {
+          "id": "dong_nat",
+          "kind": "collect",
+          "objective": {
+            "vi": "Tìm tem phiếu ở xe đồng nát quanh Đống Đa (2 tờ)",
+            "en": "Find coupons on scrap carts around Đống Đa (2)"
+          },
+          "target": {
+            "lat": 21.018,
+            "lon": 105.829
+          },
+          "params": {
+            "item": "items:tem_phieu_gao",
+            "qty": 2,
+            "source": "characters:amb_thu_mua_dong_nat"
+          },
+          "next": "dinh_le"
+        },
+        {
+          "id": "dinh_le",
+          "kind": "collect",
+          "objective": {
+            "vi": "Mặc cả ở hàng sách cũ Đinh Lễ (3 tờ)",
+            "en": "Haggle at the Đinh Lễ old-book stalls (3)"
+          },
+          "target": {
+            "lat": 21.026,
+            "lon": 105.8516
+          },
+          "params": {
+            "item": "items:tem_phieu_gao",
+            "qty": 3,
+            "haggle": true
+          },
+          "next": "ve_ong"
+        },
+        {
+          "id": "ve_ong",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mang tem phiếu về cho ông",
+            "en": "Bring the coupons to Grandpa"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_s08_xong"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 10
+        },
+        "set_flags": [
+          "tang_tem_phieu_bao_tang"
+        ]
+      },
+      "unlocks": [
+        "activities:act_suu_tam_tem_phieu"
+      ]
+    },
+    {
+      "id": "s09_bien_hieu_hang_thiec",
+      "tags": [
+        "side",
+        "photo",
+        "heritage"
+      ],
+      "name": {
+        "vi": "Sáu tấm biển Hàng Thiếc",
+        "en": "Six Signs on Hàng Thiếc"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:linh_bao_ton",
+      "summary": {
+        "vi": "Một dãy nhà Hàng Thiếc sắp thay mặt tiền. Khôi chụp lại những tấm biển kẻ tay trước khi chúng biến mất.",
+        "en": "Some Hàng Thiếc houses are getting new façades. Khôi photographs the hand-painted signs before they vanish."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_06_hop_to_dan_pho"
+        ]
+      },
+      "start": {
+        "lat": 21.034,
+        "lon": 105.8472
+      },
+      "steps": [
+        {
+          "id": "sos",
+          "kind": "talk",
+          "objective": {
+            "vi": "Linh gọi khẩn",
+            "en": "Linh's urgent call"
+          },
+          "target": {
+            "lat": 21.034,
+            "lon": 105.8472
+          },
+          "dialogue": "dialogues:dlg_s09_bien_hieu",
+          "next": "chup_bien"
+        },
+        {
+          "id": "chup_bien",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp 6 biển hiệu kẻ tay trước khi bị tháo (trước 7 giờ sáng mai)",
+            "en": "Photograph 6 hand-painted signs before they come down (by 7 a.m. tomorrow)"
+          },
+          "target": {
+            "lat": 21.034,
+            "lon": 105.8472
+          },
+          "params": {
+            "targets": 6,
+            "deadline_hour": 7.0,
+            "collectible_set": "activities:act_suu_tam_bien_hieu_cu"
+          },
+          "next": "chu_nha"
+        },
+        {
+          "id": "chu_nha",
+          "kind": "talk",
+          "objective": {
+            "vi": "Một chủ nhà ra xem",
+            "en": "An owner comes out to watch"
+          },
+          "target": {
+            "lat": 21.034,
+            "lon": 105.8472
+          },
+          "dialogue": "dialogues:dlg_s09_xong"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 15
+        }
+      },
+      "unlocks": [
+        "activities:act_suu_tam_bien_hieu_cu"
+      ]
+    },
+    {
+      "id": "s10_vong_ho_tay_luc_5_gio",
+      "tags": [
+        "side",
+        "race_legal",
+        "comedy"
+      ],
+      "name": {
+        "vi": "Vòng Hồ Tây lúc năm giờ",
+        "en": "West Lake at Five"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:tuan_beo",
+      "summary": {
+        "vi": "Giải đua xe đạp nghiệp dư hợp pháp quanh Hồ Tây lúc bình minh, có người phân luồng. Tuấn đạp để làm content.",
+        "en": "A legal amateur cycling race round West Lake at dawn with marshals. Tuấn rides for content."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_09_bua_toi_tang_72"
+        ]
+      },
+      "start": {
+        "lat": 20.9905,
+        "lon": 105.815
+      },
+      "steps": [
+        {
+          "id": "dang_ky",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tuấn đã đăng ký giải cho cả hai",
+            "en": "Tuấn has signed you both up"
+          },
+          "target": {
+            "lat": 20.9905,
+            "lon": 105.815
+          },
+          "dialogue": "dialogues:dlg_s10_ho_tay",
+          "next": "muon_xe"
+        },
+        {
+          "id": "muon_xe",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Mượn xe đạp đua ở homestay chị Vân",
+            "en": "Borrow road bikes at Vân's homestay"
+          },
+          "target": {
+            "lat": 21.0635,
+            "lon": 105.826
+          },
+          "next": "dua"
+        },
+        {
+          "id": "dua",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Đua vòng Hồ Tây 17 km đúng luật, về top 3",
+            "en": "Race the 17 km West Lake loop lawfully, finish top 3"
+          },
+          "target": "activities:act_dua_xe_dap_ho_tay",
+          "params": {
+            "vehicle": "vehicles:xe_dap_dua_ho_tay",
+            "rivals": 24,
+            "start_hour": 5.0,
+            "scripted_winner_npc": "ong_cu_han_quoc_70_tuoi",
+            "max_player_rank": 2
+          },
+          "next": "dich",
+          "fail_if": [
+            "event:vi_pham_luat_3_lan"
+          ]
+        },
+        {
+          "id": "dich",
+          "kind": "talk",
+          "objective": {
+            "vi": "Vạch đích đường Thanh Niên",
+            "en": "The finish line on Thanh Niên road"
+          },
+          "target": {
+            "lat": 21.0465,
+            "lon": 105.838
+          },
+          "dialogue": "dialogues:dlg_s10_xong"
+        }
+      ],
+      "reward": {
+        "money_vnd": 500000,
+        "reputation": {
+          "clb_phuot_ha_noi": 10
+        }
+      },
+      "unlocks": [
+        "activities:act_dua_xe_dap_ho_tay"
+      ]
+    },
+    {
+      "id": "s11_cu_ba_lac_duong",
+      "tags": [
+        "stranger",
+        "event",
+        "kindness"
+      ],
+      "name": {
+        "vi": "Đèn ông sao",
+        "en": "The Star Lantern"
+      },
+      "type": "stranger",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:amb_ba_tap_the_duc",
+      "summary": {
+        "vi": "Đêm Trung thu đông nghẹt, một cụ bà mất trí nhớ lạc đường. Minh lần theo vài manh mối để đưa bà về.",
+        "en": "On a packed Mid-Autumn night an elderly woman with memory loss is lost. Minh follows a few clues to bring her home."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p1_cuoc_xe_luc_rang_dong"
+        ],
+        "hours": [
+          18,
+          23
+        ]
+      },
+      "start": {
+        "lat": 21.0365,
+        "lon": 105.849
+      },
+      "steps": [
+        {
+          "id": "gap_ba",
+          "kind": "talk",
+          "objective": {
+            "vi": "Một cụ bà lạc giữa phố Hàng Mã đêm Trung thu",
+            "en": "A grandmother lost on Hàng Mã on Mid-Autumn night"
+          },
+          "target": {
+            "lat": 21.0365,
+            "lon": 105.849
+          },
+          "dialogue": "dialogues:dlg_s11_ba_lac",
+          "params": {
+            "requires_event": "events:trung_thu"
+          },
+          "next": "dua_ba_ve"
+        },
+        {
+          "id": "dua_ba_ve",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở bà về tập thể Kim Liên thật chậm và êm",
+            "en": "Take her home to Kim Liên housing, slow and gentle"
+          },
+          "target": {
+            "lat": 21.007,
+            "lon": 105.838
+          },
+          "params": {
+            "passenger": "characters:amb_ba_tap_the_duc",
+            "max_speed_kmh": 25,
+            "comfort_weight": 2.0,
+            "helmet_for_passenger": true
+          },
+          "next": "tim_nha",
+          "fail_if": [
+            "event:phanh_gap_3_lan"
+          ]
+        },
+        {
+          "id": "tim_nha",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Tìm nhà B có cây bàng to",
+            "en": "Find block B with the big almond tree"
+          },
+          "target": {
+            "lat": 21.007,
+            "lon": 105.838
+          },
+          "params": {
+            "clue_search": true
+          },
+          "next": "gap_con_trai"
+        },
+        {
+          "id": "gap_con_trai",
+          "kind": "talk",
+          "objective": {
+            "vi": "Gặp gia đình bà",
+            "en": "Meet her family"
+          },
+          "target": {
+            "lat": 21.007,
+            "lon": 105.838
+          },
+          "dialogue": "dialogues:dlg_s11_xong"
+        }
+      ],
+      "reward": {
+        "items": [
+          "items:den_ong_sao"
+        ],
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 5
+        }
+      }
+    },
+    {
+      "id": "s12_mu_bao_hiem_cho_be",
+      "tags": [
+        "side",
+        "heat_system",
+        "positive_police"
+      ],
+      "name": {
+        "vi": "Phải nghe 'tách'",
+        "en": "It Has to Click"
+      },
+      "type": "side",
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:thuong_uy_hai",
+      "summary": {
+        "vi": "Giữ hồ sơ sạch đủ lâu và CSGT tìm đến bạn vì việc tốt: phát mũ bảo hiểm cho học sinh tiểu học.",
+        "en": "Keep a clean record long enough and the traffic police come to you for something good: helmets for primary pupils."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_09_bua_toi_tang_72"
+        ],
+        "flags": [
+          "ho_so_sach_90_ngay"
+        ]
+      },
+      "start": {
+        "lat": 21.0256,
+        "lon": 105.8562
+      },
+      "steps": [
+        {
+          "id": "loi_moi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Thượng úy Hải có đề nghị",
+            "en": "Senior Lieutenant Hải has a proposal"
+          },
+          "target": {
+            "lat": 21.0256,
+            "lon": 105.8562
+          },
+          "dialogue": "dialogues:dlg_s12_mu_bao_hiem",
+          "next": "cho_mu"
+        },
+        {
+          "id": "cho_mu",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Chở 200 mũ bảo hiểm ra cổng trường trước giờ tan học (3 chuyến)",
+            "en": "Bring 200 helmets to the school gate before closing time (3 trips)"
+          },
+          "target": {
+            "lat": 21.027,
+            "lon": 105.8506
+          },
+          "params": {
+            "trips": 3,
+            "deadline_hour": 16.5,
+            "cargo": "mu_bao_hiem_tre_em"
+          },
+          "next": "huong_dan",
+          "fail_if": [
+            "event:vi_pham_giao_thong"
+          ]
+        },
+        {
+          "id": "huong_dan",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Hướng dẫn 20 học sinh đội mũ và cài quai đúng cách",
+            "en": "Show 20 pupils how to fit and buckle their helmets"
+          },
+          "target": {
+            "lat": 21.027,
+            "lon": 105.8506
+          },
+          "params": {
+            "kids": 20,
+            "check": "nghe_tach"
+          },
+          "next": "cam_on"
+        },
+        {
+          "id": "cam_on",
+          "kind": "talk",
+          "objective": {
+            "vi": "Các cháu nhận mũ",
+            "en": "The kids get their helmets"
+          },
+          "target": {
+            "lat": 21.027,
+            "lon": 105.8506
+          },
+          "dialogue": "dialogues:dlg_s12_xong"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "cong_dong_tai_xe_vo": 5,
+          "hoi_nguoi_cao_tuoi_phuong": 5
+        },
+        "set_flags": [
+          "giay_khen_an_toan_giao_thong",
+          "giam_chu_y_vinh_vien_1"
+        ]
+      }
+    }
+  ]
+}

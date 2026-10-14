@@ -1,0 +1,27 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.8",
+	"Category": "",
+	"Description": "Hanoi City: non-violent open-world game of Hanoi built from open city data.",
+	"Modules": [
+		{
+			"Name": "HanoiCity",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{ "Name": "HanoiCity", "Enabled": true },
+		{ "Name": "PCG", "Enabled": true },
+		{ "Name": "PythonScriptPlugin", "Enabled": true },
+		{ "Name": "EditorScriptingUtilities", "Enabled": true },
+		{ "Name": "Interchange", "Enabled": true, "Optional": true },
+		{ "Name": "InterchangeEditor", "Enabled": true, "Optional": true },
+		{ "Name": "MassGameplay", "Enabled": true, "Optional": true },
+		{ "Name": "MassAI", "Enabled": true, "Optional": true },
+		{ "Name": "ZoneGraph", "Enabled": true, "Optional": true },
+		{ "Name": "ModelContextProtocol", "Enabled": true, "Optional": true, "TargetAllowList": [ "Editor" ] },
+		{ "Name": "AllToolsets", "Enabled": true, "Optional": true, "TargetAllowList": [ "Editor" ] },
+		{ "Name": "CesiumForUnreal", "Enabled": false, "Optional": true }
+	]
+}

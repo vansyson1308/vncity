@@ -1,0 +1,422 @@
+{
+  "collection": "activities",
+  "items": [
+    {
+      "id": "act_xe_om_cong_nghe",
+      "tags": ["core_loop", "minh_signature", "repeatable"],
+      "name": {"vi": "Chạy xe ôm công nghệ (app Vồ)", "en": "Ride-hailing on the Vồ app"},
+      "kind": "job",
+      "description": {"vi": "Bật app Vồ, nhận cuốc, đón khách đúng điểm ghim, chở an toàn đến nơi. Khách đánh giá sao theo độ êm, đúng giờ và việc bạn có vượt đèn đỏ khi họ ngồi sau hay không. Giờ cao điểm và trời mưa có giá nhân.", "en": "Switch on Vồ, accept a ride, pick up at the pin and deliver the passenger safely. Ratings depend on smoothness, punctuality and whether you ran a red light with them on the back. Rush hour and rain apply surge."},
+      "available": {"hours": [5, 24]},
+      "vehicle_classes": ["motorbike_manual", "motorbike_scooter", "motorbike_electric"],
+      "loop": {
+        "generator": "ride_request",
+        "objective": {"vi": "Đón khách và chở đến điểm đến", "en": "Pick up the passenger and drop them at their destination"},
+        "time_limit_s": 1500,
+        "scoring": ["dung_gio", "do_em_khong_phanh_gap", "khong_vi_pham_giao_thong", "tro_chuyen_dung_luc", "mu_bao_hiem_cho_khach"],
+        "fail_conditions": ["khach_huy_do_doi_qua_10_phut", "nga_xe", "bi_csgt_tam_giu_xe"]
+      },
+      "pay": {"base_vnd": 13500, "per_km_vnd": 4300, "tip_max_vnd": 30000, "rating": true},
+      "locations": ["landmarks:ga_ha_noi", "landmarks:landmark_72", "landmarks:cho_dong_xuan"],
+      "skills_trained": ["lai_xe", "thuoc_duong", "giao_tiep"]
+    },
+    {
+      "id": "act_giao_do_an",
+      "tags": ["core_loop", "repeatable"],
+      "name": {"vi": "Giao đồ ăn (app Đói)", "en": "Food delivery (Đói app)"},
+      "kind": "job",
+      "description": {"vi": "Lấy món ở quán, giữ nóng, không đổ nước dùng, gọi khách xuống nhận. Đơn trà sữa 20 cốc là bài kiểm tra cân bằng thật sự. Khách 'bom hàng' thì bạn tự ăn.", "en": "Collect from the restaurant, keep it hot, don't spill the broth, call the customer down. A 20-cup bubble-tea order is the true balance test. Ghosted orders are yours to eat."},
+      "available": {"hours": [6, 24]},
+      "vehicle_classes": ["motorbike_manual", "motorbike_scooter", "motorbike_electric", "bicycle"],
+      "loop": {
+        "generator": "delivery_order",
+        "objective": {"vi": "Giao món còn nóng, còn nguyên", "en": "Deliver the food hot and intact"},
+        "time_limit_s": 1800,
+        "scoring": ["nhiet_do_mon", "do_nguyen_ven", "dung_gio", "tim_dung_ngo_ngach"],
+        "fail_conditions": ["do_vo_mon", "qua_45_phut", "khach_bom_hang"]
+      },
+      "pay": {"base_vnd": 15000, "per_km_vnd": 5000, "tip_max_vnd": 20000, "rating": true},
+      "skills_trained": ["lai_xe", "thuoc_duong"]
+    },
+    {
+      "id": "act_ban_hang_rong",
+      "tags": ["walking", "economy_low"],
+      "name": {"vi": "Bán hàng rong quang gánh", "en": "Shoulder-pole street selling"},
+      "kind": "job",
+      "description": {"vi": "Gánh hàng đi qua các phố, rao đúng nhịp, mặc cả, tránh đội trật tự đô thị ở phố cấm bán rong. Hàng theo mùa: bánh rán, sấu dầm, ổi, cốm làng Vòng tháng 9.", "en": "Carry your goods through the streets, call out on rhythm, haggle, and steer clear of the urban order team on no-vending streets. Seasonal stock: doughnuts, pickled dracontomelon, guava, Vòng village green rice flakes in September."},
+      "available": {"hours": [5, 21]},
+      "loop": {
+        "generator": "street_sale",
+        "objective": {"vi": "Bán hết gánh hàng trước khi trời tối", "en": "Sell out before dark"},
+        "time_limit_s": 2400,
+        "scoring": ["nhip_rao", "mac_ca_khong_lo", "so_khach_quen", "tranh_tuyen_cam"],
+        "fail_conditions": ["bi_thu_gom_hang", "hang_hong"]
+      },
+      "pay": {"base_vnd": 15000, "tip_max_vnd": 5000, "rating": false},
+      "locations": ["landmarks:cho_dong_xuan", "landmarks:ho_hoan_kiem"],
+      "skills_trained": ["mac_ca", "giao_tiep", "the_luc"]
+    },
+    {
+      "id": "act_chup_anh_pho",
+      "tags": ["khoi_signature", "photo_mode", "sellable"],
+      "name": {"vi": "Chụp ảnh phố", "en": "Street photography"},
+      "kind": "job",
+      "description": {"vi": "Báo Thủ Đô Nhanh đặt ảnh theo đề bài ('mưa trên phố Hàng Mã', 'cô bán hoa mùa loa kèn'). Chấm điểm bố cục, ánh sáng, khoảnh khắc và việc bạn có xin phép người trong ảnh. Không chụp ảnh khu vực cấm và nghi lễ trang nghiêm.", "en": "Capital Fast commissions themes ('rain on Hàng Mã', 'flower seller in lily season'). Scored on composition, light, moment and whether you asked the subject's permission. No photos in restricted areas or of solemn ceremonies."},
+      "loop": {
+        "generator": "photo_target",
+        "objective": {"vi": "Chụp được bức ảnh đúng đề bài", "en": "Capture a photo that fits the brief"},
+        "scoring": ["bo_cuc", "anh_sang", "khoanh_khac", "dung_de_bai", "xin_phep_nguoi_trong_anh"],
+        "fail_conditions": ["chup_trong_khu_cam", "nguoi_trong_anh_tu_choi"]
+      },
+      "pay": {"base_vnd": 300000, "tip_max_vnd": 700000, "rating": true},
+      "locations": ["landmarks:ho_hoan_kiem", "landmarks:cau_long_bien", "landmarks:nha_tho_lon", "landmarks:pho_duong_tau", "landmarks:ho_tay"],
+      "skills_trained": ["chup_anh", "giao_tiep"]
+    },
+    {
+      "id": "act_chup_lai_anh_xua",
+      "tags": ["khoi_signature", "collectible", "rephotography", "story_linked"],
+      "name": {"vi": "Chụp lại ảnh xưa của bố", "en": "Rephotographing Father's archive"},
+      "kind": "collectible",
+      "description": {"vi": "120 tấm ảnh trong kho phim của ông Khải (1975-2010). Tìm đúng góc máy, đúng giờ, đúng mùa để chồng ảnh cũ lên cảnh hôm nay. Mỗi tấm mở một đoạn băng ghi âm của bố và một mẩu chuyện của phố.", "en": "120 frames from Khải's archive (1975-2010). Find the exact angle, time and season so the old photo overlays today's scene. Each one unlocks a cassette message from Father and a story of the street."},
+      "unlock": {"missions_completed": ["missions:p3_tu_sat_tren_gac"]},
+      "loop": {
+        "generator": "rephoto_target",
+        "objective": {"vi": "Khớp ảnh cũ với cảnh hiện tại trên 85%", "en": "Match the old photo to the present scene above 85%"},
+        "scoring": ["do_khop_goc_may", "do_khop_gio_anh_sang", "mua_dung"],
+        "fail_conditions": []
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:thap_rua", "landmarks:cau_long_bien", "landmarks:o_quan_chuong", "landmarks:cho_dong_xuan", "landmarks:ga_ha_noi"],
+      "skills_trained": ["chup_anh", "thuoc_duong"]
+    },
+    {
+      "id": "act_huong_dan_vien",
+      "tags": ["tourism", "walking"],
+      "name": {"vi": "Dẫn tour đi bộ phố cổ", "en": "Old Quarter walking tours"},
+      "kind": "job",
+      "description": {"vi": "Dẫn nhóm khách đi bộ theo lộ trình, kể chuyện đúng sự thật tại từng điểm dừng (câu hỏi trắc nghiệm lịch sử), giữ đoàn không lạc, gọi món ăn vặt hợp khẩu vị.", "en": "Lead a group along a route, tell accurate stories at each stop (history quiz), keep everyone together and order snacks to their taste."},
+      "unlock": {"missions_completed": ["missions:c1_02_xich_lo_va_buc_anh_1989"]},
+      "available": {"hours": [8, 21]},
+      "loop": {
+        "generator": "tour_route",
+        "objective": {"vi": "Hoàn thành tour, khách hài lòng", "en": "Complete the tour with happy guests"},
+        "time_limit_s": 3600,
+        "scoring": ["kien_thuc_dung", "khach_khong_lac", "an_toan_qua_duong", "mon_an_hop_khau_vi"],
+        "fail_conditions": ["khach_bi_lac", "ke_sai_su_that_3_lan"]
+      },
+      "pay": {"base_vnd": 400000, "tip_max_vnd": 300000, "rating": true},
+      "locations": ["landmarks:hoang_thanh_thang_long", "landmarks:den_bach_ma", "landmarks:o_quan_chuong", "landmarks:van_mieu"],
+      "skills_trained": ["giao_tiep", "ngoai_ngu", "thuoc_duong"]
+    },
+    {
+      "id": "act_xich_lo_du_lich",
+      "tags": ["tourism", "cyclo", "pedal"],
+      "name": {"vi": "Đạp xích lô chở khách", "en": "Cyclo tours"},
+      "kind": "job",
+      "description": {"vi": "Mượn xích lô của ông Thắng, chở khách vòng phố cổ một giờ. Đạp nặng, lên dốc Hàng Đậu là đổ mồ hôi; giữ nhịp, giới thiệu cảnh, không 'chặt chém'.", "en": "Borrow Mr Thắng's cyclo for one-hour Old Quarter loops. Heavy pedalling, the Hàng Đậu slope is a sweat; keep a rhythm, narrate, never overcharge."},
+      "unlock": {"missions_completed": ["missions:c1_02_xich_lo_va_buc_anh_1989"]},
+      "vehicle_classes": ["cyclo"],
+      "loop": {
+        "generator": "cyclo_tour",
+        "objective": {"vi": "Hoàn thành vòng phố cổ 60 phút", "en": "Complete the 60-minute Old Quarter loop"},
+        "time_limit_s": 3600,
+        "scoring": ["the_luc_giu_nhip", "gioi_thieu_dung", "khach_vui", "gia_trung_thuc"],
+        "fail_conditions": ["het_the_luc", "va_cham"]
+      },
+      "pay": {"base_vnd": 150000, "tip_max_vnd": 100000, "rating": true},
+      "skills_trained": ["the_luc", "giao_tiep", "ngoai_ngu"]
+    },
+    {
+      "id": "act_nau_pho",
+      "tags": ["lan_signature", "minigame", "cooking", "core_loop"],
+      "name": {"vi": "Nấu phở (Phở Thọ)", "en": "Cooking pho (Phở Thọ)"},
+      "kind": "minigame",
+      "description": {"vi": "Ninh xương ống bò 8 tiếng, nướng gừng hành, rang quế hồi thảo quả, vớt bọt đúng lúc. Giờ bán: trần bánh, xếp thịt tái - chín - nạm - gầu theo order, chan nước dùng sôi. Cụ Thọ chấm điểm nước dùng mỗi sáng.", "en": "Simmer beef marrow bones for 8 hours, char ginger and onion, toast cinnamon, star anise and cardamom, skim at the right moments. Service: blanch noodles, lay rare, well-done, flank or brisket by order, ladle boiling broth. Grandpa Thọ grades the broth every morning."},
+      "unlock": {"missions_completed": ["missions:p2_noi_nuoc_dung_4_gio"]},
+      "available": {"hours": [3.5, 21]},
+      "loop": {
+        "generator": "pho_order",
+        "objective": {"vi": "Phục vụ bát phở đúng order, nước dùng đạt chuẩn cụ Thọ", "en": "Serve each bowl to order with broth up to Grandpa's standard"},
+        "time_limit_s": 90,
+        "scoring": ["do_trong_nuoc_dung", "vi_ngot_xuong", "huong_gia_vi", "dung_order", "toc_do_phuc_vu", "nhiet_do_bat"],
+        "fail_conditions": ["nuoc_dung_duc", "sai_order_3_lan", "khach_cho_qua_10_phut"]
+      },
+      "pay": {"base_vnd": 55000, "tip_max_vnd": 0, "rating": true},
+      "locations": ["businesses:pho_tho_hang_chieu"],
+      "skills_trained": ["nau_an", "kinh_doanh"]
+    },
+    {
+      "id": "act_pha_ca_phe_trung",
+      "tags": ["minigame", "cafe"],
+      "name": {"vi": "Pha cà phê trứng", "en": "Making egg coffee"},
+      "kind": "minigame",
+      "description": {"vi": "Đánh lòng đỏ với sữa đặc bằng tay đến khi bông mịn, phin cà phê đậm, đặt cốc trong bát nước nóng. Đánh thiếu thì tanh, đánh quá thì xẹp.", "en": "Whisk yolk with condensed milk by hand until silky, brew a strong phin, sit the cup in a bowl of hot water. Under-whisk and it smells eggy; over-whisk and it collapses."},
+      "loop": {
+        "generator": "coffee_order",
+        "objective": {"vi": "Pha cốc cà phê trứng đạt độ bông chuẩn", "en": "Make an egg coffee with perfect foam"},
+        "time_limit_s": 120,
+        "scoring": ["do_bong_kem", "nhiet_do", "trinh_bay"],
+        "fail_conditions": ["kem_xep", "tanh_trung"]
+      },
+      "pay": {"base_vnd": 35000, "tip_max_vnd": 10000, "rating": true},
+      "skills_trained": ["nau_an"]
+    },
+    {
+      "id": "act_co_tuong",
+      "tags": ["minigame", "board_game", "social", "no_gambling"],
+      "name": {"vi": "Cờ tướng bờ hồ", "en": "Lakeside Chinese chess"},
+      "kind": "minigame",
+      "description": {"vi": "Ngồi xuống ghế đá thách đấu các cụ. Luật cờ tướng đầy đủ, AI theo phong cách từng kỳ thủ. Người xem mách nước (có khi sai). Không cá cược: thắng được mời trà và được kể chuyện.", "en": "Sit on a stone bench and challenge the old men. Full xiangqi rules, AI with each player's style. Spectators offer advice (sometimes wrong). No betting: winners get tea and stories."},
+      "available": {"hours": [13, 19]},
+      "loop": {
+        "generator": "xiangqi_opponent",
+        "objective": {"vi": "Chiếu bí đối thủ", "en": "Checkmate your opponent"},
+        "scoring": ["thang", "so_nuoc", "khong_nghe_mach_nuoc_sai"],
+        "fail_conditions": ["bi_chieu_bi"]
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:ho_hoan_kiem"],
+      "skills_trained": ["co_tuong"]
+    },
+    {
+      "id": "act_da_cau",
+      "tags": ["minigame", "sport", "social"],
+      "name": {"vi": "Đá cầu", "en": "Shuttlecock kicking (đá cầu)"},
+      "kind": "minigame",
+      "description": {"vi": "Vòng tròn đá cầu ở công viên hoặc vỉa hè rộng. Nhịp chân theo nút, giữ cầu không chạm đất, chuyền đẹp cho người khác.", "en": "A circle of shuttlecock kickers in the park or on a wide pavement. Rhythm-based footwork, keep it off the ground, pass nicely to others."},
+      "available": {"hours": [5, 19]},
+      "loop": {
+        "generator": "shuttlecock_rally",
+        "objective": {"vi": "Giữ cầu qua 30 lượt chuyền", "en": "Keep the shuttle up for 30 passes"},
+        "scoring": ["so_luot_lien_tiep", "dong_tac_kho", "chuyen_dep"],
+        "fail_conditions": ["cau_cham_dat_3_lan"]
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:cong_vien_thong_nhat"],
+      "skills_trained": ["the_luc"]
+    },
+    {
+      "id": "act_karaoke",
+      "tags": ["leisure", "rhythm", "social"],
+      "name": {"vi": "Hát karaoke", "en": "Karaoke"},
+      "kind": "leisure",
+      "description": {"vi": "Phòng karaoke đèn nháy, đĩa hoa quả, micro rè. Nhạc gốc của game (nhạc vàng, V-pop, bolero parody). Điểm máy chấm chẳng liên quan gì đến giọng hát, đúng như ngoài đời.", "en": "Flashing lights, fruit platter, a crackly mic. Original in-game songs (golden oldies, V-pop and bolero parodies). The machine score has nothing to do with your singing, just like real life."},
+      "available": {"hours": [14, 24]},
+      "loop": {
+        "generator": "karaoke_song",
+        "objective": {"vi": "Hát hết bài và làm bạn bè vui", "en": "Finish the song and entertain your friends"},
+        "scoring": ["dung_nhip", "khong_khi_phong", "diem_may_ngau_nhien"],
+        "fail_conditions": []
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "skills_trained": ["giao_tiep"]
+    },
+    {
+      "id": "act_bia_hoi_ta_hien",
+      "tags": ["social", "nightlife", "no_drink_driving"],
+      "name": {"vi": "Ngồi bia hơi Tạ Hiện", "en": "Draught beer on Tạ Hiện"},
+      "kind": "social",
+      "description": {"vi": "Ghế nhựa, cốc bia hơi 15 nghìn, lạc rang, nem chua rán. 'Dô' đúng nhịp để tăng thiện cảm với bạn nhậu. Uống xong thì để xe lại, gọi Vồ về: lái xe sau khi uống là phạm luật và CSGT có chốt đo nồng độ cồn mỗi tối.", "en": "Plastic stools, 15k draught beer, roasted peanuts, fried nem chua. Toast 'dô' on beat to raise friendship. Afterwards leave the bike and hail a ride: riding after drinking is illegal and there are breath checkpoints every night."},
+      "available": {"hours": [16, 24]},
+      "loop": {
+        "generator": "bia_hoi_table",
+        "objective": {"vi": "Trò chuyện và kết thân", "en": "Chat and bond"},
+        "scoring": ["chuyen_hay", "dung_nhip_dzo", "biet_dung_lai"],
+        "fail_conditions": ["say_qua_muc"]
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:pho_ta_hien"],
+      "skills_trained": ["giao_tiep"]
+    },
+    {
+      "id": "act_chay_bo_ho_guom",
+      "tags": ["fitness", "morning"],
+      "name": {"vi": "Chạy bộ quanh Hồ Gươm", "en": "Running round Sword Lake"},
+      "kind": "leisure",
+      "description": {"vi": "Vòng hồ khoảng 1,7 km lúc bình minh, len giữa các cụ tập dưỡng sinh và khách chụp ảnh. Kỷ lục cá nhân và thể lực tăng dần.", "en": "A ~1.7 km dawn lap weaving between tai chi elders and photographers. Personal bests and stamina gains."},
+      "available": {"hours": [4.5, 8]},
+      "loop": {
+        "generator": "run_loop",
+        "objective": {"vi": "Chạy hết vòng hồ", "en": "Complete the lap"},
+        "scoring": ["thoi_gian", "khong_va_cham"],
+        "fail_conditions": ["het_the_luc"]
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:ho_hoan_kiem"],
+      "skills_trained": ["the_luc"]
+    },
+    {
+      "id": "act_tap_duong_sinh",
+      "tags": ["fitness", "elderly", "rhythm"],
+      "name": {"vi": "Tập dưỡng sinh, nhảy dân vũ cùng các cụ", "en": "Dawn tai chi and line dancing with the elders"},
+      "kind": "leisure",
+      "description": {"vi": "Đứng vào hàng cuối, bắt chước động tác theo nhạc loa kéo. Các cụ chấm điểm và kể chuyện xưa.", "en": "Join the back row and mirror the moves to the trolley speaker. The elders grade you and share old stories."},
+      "available": {"hours": [5, 7]},
+      "loop": {
+        "generator": "tai_chi_rhythm",
+        "objective": {"vi": "Theo kịp bài tập", "en": "Keep up with the routine"},
+        "scoring": ["dung_dong_tac", "dung_nhip"],
+        "fail_conditions": []
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:ho_hoan_kiem", "landmarks:cong_vien_thong_nhat"],
+      "skills_trained": ["the_luc", "giao_tiep"]
+    },
+    {
+      "id": "act_sua_xe_may",
+      "tags": ["minigame", "mechanic", "minh_signature"],
+      "name": {"vi": "Sửa xe máy ở tiệm Đức Còi", "en": "Fixing motorbikes at Skinny Đức's"},
+      "kind": "minigame",
+      "description": {"vi": "Vá săm, thay nhông xích, chỉnh chế hòa khí, cứu xe chết máy sau mưa ngập. Nghe tiếng máy để đoán bệnh, báo giá thật thà.", "en": "Patch tubes, replace chain sets, tune carburettors, revive flood-stalled bikes. Diagnose by ear, quote honestly."},
+      "available": {"hours": [7, 22]},
+      "loop": {
+        "generator": "repair_ticket",
+        "objective": {"vi": "Chẩn đoán đúng bệnh và sửa xong", "en": "Diagnose correctly and finish the repair"},
+        "time_limit_s": 600,
+        "scoring": ["chan_doan_dung", "toc_do", "bao_gia_trung_thuc", "khach_quay_lai"],
+        "fail_conditions": ["sua_sai_benh_2_lan"]
+      },
+      "pay": {"base_vnd": 30000, "tip_max_vnd": 50000, "rating": true},
+      "skills_trained": ["sua_xe", "kinh_doanh"]
+    },
+    {
+      "id": "act_tha_dieu",
+      "tags": ["leisure", "wind", "riverbank"],
+      "name": {"vi": "Thả diều bãi giữa sông Hồng", "en": "Kite flying on the Red River sandbank"},
+      "kind": "leisure",
+      "description": {"vi": "Diều cánh cò, diều sáo vi vu. Gió lấy từ dữ liệu thời tiết thật: hướng và cấp gió quyết định độ khó. Có hội thi diều tháng 10.", "en": "Stork-wing kites and humming flute kites. Wind comes from real weather data, so direction and strength set the difficulty. Kite contest in October."},
+      "available": {"hours": [15, 18.5], "weather": ["clear", "cloudy", "cold"]},
+      "loop": {
+        "generator": "kite_wind",
+        "objective": {"vi": "Giữ diều bay cao trong 3 phút", "en": "Keep the kite aloft for 3 minutes"},
+        "time_limit_s": 180,
+        "scoring": ["do_cao", "thoi_gian_giu", "tieng_sao"],
+        "fail_conditions": ["dieu_rot", "vuong_day_dien"]
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:bai_giua_song_hong"],
+      "skills_trained": ["the_luc"]
+    },
+    {
+      "id": "act_dua_xe_dap_ho_tay",
+      "tags": ["race", "bicycle", "legal", "morning"],
+      "name": {"vi": "Đua xe đạp quanh Hồ Tây (CLB, có tổ chức)", "en": "Organised West Lake cycling race"},
+      "kind": "race_legal",
+      "description": {"vi": "CLB xe đạp tổ chức chặng đua sáng sớm có đăng ký, làn đường có người phân luồng. Vượt xe đúng luật, không leo vỉa hè, về đích trước 6 giờ khi đường còn vắng.", "en": "A registered dawn race run by the cycling club with marshals at junctions. Overtake legally, no pavement riding, finish before 6 a.m. while the roads are empty."},
+      "available": {"hours": [5, 6.5]},
+      "vehicle_classes": ["bicycle"],
+      "loop": {
+        "generator": "bike_race_ho_tay",
+        "objective": {"vi": "Hoàn thành vòng hồ 17 km, vào top 3", "en": "Finish the 17 km loop in the top 3"},
+        "time_limit_s": 2700,
+        "scoring": ["thu_hang", "thoi_gian", "khong_vi_pham"],
+        "fail_conditions": ["vi_pham_luat_3_lan", "va_cham_nguoi_di_bo"]
+      },
+      "pay": {"base_vnd": 1000000, "rating": false},
+      "locations": ["landmarks:ho_tay"],
+      "skills_trained": ["the_luc", "lai_xe"]
+    },
+    {
+      "id": "act_dap_vit_ho_tay",
+      "tags": ["leisure", "date", "boat"],
+      "name": {"vi": "Đạp vịt Hồ Tây", "en": "Swan boats on West Lake"},
+      "kind": "leisure",
+      "description": {"vi": "Thuê thuyền thiên nga 30 phút, đạp ra giữa hồ ngắm hoàng hôn. Dùng cho các cảnh trò chuyện quan trọng giữa nhân vật.", "en": "Rent a swan boat for 30 minutes and pedal out for sunset. Used for important character conversations."},
+      "available": {"hours": [8, 19]},
+      "vehicle_classes": ["boat"],
+      "loop": {
+        "generator": "pedal_boat",
+        "objective": {"vi": "Ra giữa hồ trước hoàng hôn", "en": "Reach mid-lake before sunset"},
+        "scoring": ["dung_gio_hoang_hon"],
+        "fail_conditions": []
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:ho_tay"],
+      "skills_trained": ["the_luc"]
+    },
+    {
+      "id": "act_suu_tam_tem_phieu",
+      "tags": ["collectible", "subsidy_era", "history"],
+      "name": {"vi": "Sưu tầm tem phiếu thời bao cấp", "en": "Collecting subsidy-era ration coupons"},
+      "kind": "collectible",
+      "description": {"vi": "40 loại tem phiếu (gạo, thịt, vải, dầu hỏa, chất đốt) giấu trong nhà cũ, sạp đồng nát, hàng sách cũ Đinh Lễ. Bộ đủ có thể tặng bảo tàng hoặc bán cho nhà sưu tầm.", "en": "40 kinds of ration coupons (rice, meat, cloth, kerosene, fuel) hidden in old houses, scrap carts and the second-hand book stalls of Đinh Lễ. A full set can go to a museum or a collector."},
+      "unlock": {"missions_completed": ["missions:s08_tem_phieu_bao_cap"]},
+      "loop": {
+        "generator": "collectible_spawn",
+        "objective": {"vi": "Tìm đủ 40 loại tem phiếu", "en": "Find all 40 coupon types"},
+        "scoring": ["so_luong", "do_hiem"],
+        "fail_conditions": []
+      },
+      "pay": {"base_vnd": 200000, "rating": false},
+      "locations": ["landmarks:pho_sach_dinh_le"],
+      "skills_trained": ["mac_ca"]
+    },
+    {
+      "id": "act_suu_tam_bien_hieu_cu",
+      "tags": ["collectible", "signage", "photo"],
+      "name": {"vi": "Săn biển hiệu cũ", "en": "Hunting old signboards"},
+      "kind": "collectible",
+      "description": {"vi": "60 biển hiệu kẻ tay, biển số nhà men xanh thời Pháp, biển 'Mậu dịch quốc doanh', 'Hiệu ảnh', 'Sửa chữa đồng hồ'. Chụp lại để hoàn thành bộ sưu tập cho trang Phố Cũ Còn Đây của Linh.", "en": "60 hand-painted signs, French-era blue enamel house numbers, 'State Trading Store', 'Photo Studio', 'Watch Repair' boards. Photograph them to complete Linh's 'Old Street Still Here' collection."},
+      "unlock": {"missions_completed": ["missions:s09_bien_hieu_hang_thiec"]},
+      "loop": {
+        "generator": "collectible_spawn",
+        "objective": {"vi": "Chụp đủ 60 biển hiệu cũ", "en": "Photograph all 60 old signs"},
+        "scoring": ["so_luong", "chat_luong_anh"],
+        "fail_conditions": []
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "skills_trained": ["chup_anh", "thuoc_duong"]
+    },
+    {
+      "id": "act_mac_ca_cho_dau_moi",
+      "tags": ["minigame", "haggling", "economy"],
+      "name": {"vi": "Đi chợ đầu mối, mặc cả", "en": "Wholesale market haggling"},
+      "kind": "minigame",
+      "description": {"vi": "Mua nguyên liệu cho quán ở chợ Đồng Xuân, chợ Long Biên lúc nửa đêm. Đọc nét mặt người bán, chọn hàng tươi, trả giá đúng ngưỡng: ép quá thì mất mối quen.", "en": "Buy supplies for the shop at Đồng Xuân or the midnight Long Biên market. Read the seller, pick fresh stock, bid at the right threshold: push too hard and you lose a regular supplier."},
+      "loop": {
+        "generator": "haggle_session",
+        "objective": {"vi": "Mua đủ nguyên liệu với giá tốt mà vẫn giữ mối", "en": "Buy everything at a good price and keep the relationship"},
+        "scoring": ["gia_mua", "do_tuoi_hang", "quan_he_nguoi_ban"],
+        "fail_conditions": ["nguoi_ban_tu_choi_ban"]
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "locations": ["landmarks:cho_dong_xuan", "landmarks:cho_long_bien"],
+      "skills_trained": ["mac_ca", "kinh_doanh"]
+    },
+    {
+      "id": "act_cho_hang_ba_gac",
+      "tags": ["job", "cargo", "heavy"],
+      "name": {"vi": "Chở hàng, chuyển nhà bằng ba gác", "en": "Cargo runs and house moves by tricycle"},
+      "kind": "job",
+      "description": {"vi": "Chở tủ lạnh, giường, thùng hoa quả qua ngõ hẹp. Hàng buộc dây chun, xếp cao quá đầu; ôm cua là thử thách vật lý.", "en": "Haul fridges, beds and fruit crates through narrow alleys. Loads tied with rubber straps and stacked above head height; every corner is a physics test."},
+      "available": {"hours": [0, 9]},
+      "vehicle_classes": ["tricycle_cargo"],
+      "loop": {
+        "generator": "moving_job",
+        "objective": {"vi": "Giao hàng nguyên vẹn", "en": "Deliver the load intact"},
+        "time_limit_s": 2400,
+        "scoring": ["hang_nguyen_ven", "dung_gio", "khong_chan_duong"],
+        "fail_conditions": ["roi_hang", "va_cham"]
+      },
+      "pay": {"base_vnd": 250000, "per_km_vnd": 10000, "tip_max_vnd": 50000, "rating": true},
+      "locations": ["landmarks:cho_long_bien"],
+      "skills_trained": ["lai_xe", "the_luc"]
+    },
+    {
+      "id": "act_quan_ly_kinh_doanh",
+      "tags": ["business", "management", "lan_signature"],
+      "name": {"vi": "Quản lý cơ sở kinh doanh", "en": "Running your businesses"},
+      "kind": "business",
+      "description": {"vi": "Xem sổ sách hằng ngày trên app Sổ Tay, nhập hàng, xếp ca nhân viên, xử lý đánh giá trên mạng, đóng thuế khoán. Một số sự kiện (mưa ngập, Tết, video viral) đổi doanh thu.", "en": "Check daily books in the Sổ Tay app, restock, schedule staff, handle online reviews, pay flat-rate tax. Events (floods, Tết, viral videos) swing revenue."},
+      "unlock": {"missions_completed": ["missions:c1_09_bua_toi_tang_72"]},
+      "loop": {
+        "generator": "business_tick",
+        "objective": {"vi": "Giữ cơ sở có lãi và khách hài lòng", "en": "Keep the business profitable and customers happy"},
+        "scoring": ["loi_nhuan", "danh_gia_khach", "nhan_vien_hai_long"],
+        "fail_conditions": ["lo_3_thang_lien"]
+      },
+      "pay": {"base_vnd": 0, "rating": false},
+      "skills_trained": ["kinh_doanh"]
+    }
+  ]
+}

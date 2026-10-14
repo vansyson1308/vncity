@@ -1,0 +1,4 @@
+{
+ "_comment": "One entry per delivered asset file (mesh or texture): where it came from and under which licence. tools/check_assets.py refuses meshes without an entry. Allowed licences are listed in tools/check_assets.py (ALLOWED). CC-BY assets need their attribution line in the game credits.",
+ "assets": []
+}

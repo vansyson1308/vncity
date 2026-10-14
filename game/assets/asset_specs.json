@@ -1,0 +1,3965 @@
+{
+ "_comment": "Asset contract: every mesh the city data places, with size, pivot and axes. Keys match Set/Kind in out/<city>/pcg/*.csv and ue5/Config/asset_map.json. Sizes are metres at Scale 1. Generated prompts: tools/asset_prompts.py. Delivered files are checked by tools/check_assets.py.",
+ "conventions": {
+  "units": "metres in source files (glTF), centimetres after UE import",
+  "forward": "UE +X is the 'forward' named in each entry; yaw in the CSV turns +X to the given direction",
+  "naming": "SM_<set>_<kind>_v<n> for props, SM_<archetype>_<module>_v<n> for kits; textures T_<name>_{BaseColor,Normal,ORM}",
+  "materials": "PBR metal/rough, ORM packed (R occlusion, G roughness, B metallic)",
+  "texel_density": "~512 px/m for props near the player, 256 px/m for facades and large props",
+  "lods": "Nanite for opaque meshes marked nanite=true; others need LOD0-LOD2 (100/50/25%)",
+  "file_format": "glTF 2.0 binary (.glb), one asset per file, pivot as specified, applied transforms",
+  "licence": "every file needs an entry in game/assets/sources.json (source, author, licence, url)",
+  "axes": "Same frame as the city tiles. In Blender: +X = the entry's 'forward', +Z up (Blender +Y becomes UE -Y). In the .glb (exported '+Y up'): +X forward, +Y up, +Z = UE +Y. tools/check_assets.py reads the glb in this frame. If the first UE import shows props turned, fix it once with yaw_offset_deg in ue5/Config/asset_map.json.",
+  "route": "generate = imagegen ref sheet -> image-to-3D -> cleanup; hand = Blender/PCG/spline; hand_vegetation = UE Procedural Vegetation Editor or Blender with photographed bark/leaf; reuse_or_hand = CC0/CC-BY model if one fits (docs/08), else hand; hand_mesh_generated_print = simple frame mesh, generated background print, text rendered in UE. Kits are hand-modelled on the module grid."
+ },
+ "props": [
+  {
+   "id": "street_trees/xa_cu",
+   "set": "street_trees",
+   "kind": "xa_cu",
+   "name_vi": "Cây xà cừ",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_xa_cu_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 14,
+    "y": 14,
+    "z": 22
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Khaya senegalensis: very tall straight grey trunk with flaky bark, high dense dark-green crown, buttress roots cracking the pavement; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "Đường Phan Đình Phùng, Lê Duẩn",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/phuong_vi",
+   "set": "street_trees",
+   "kind": "phuong_vi",
+   "name_vi": "Cây phượng vĩ",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_phuong_vi_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 12,
+    "y": 12,
+    "z": 10
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Delonix regia (royal poinciana): wide umbrella crown of feathery leaves, flame-red flowers in early summer, bean pods; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "Hồ Gươm, đường Thanh Niên",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/bang_lang",
+   "set": "street_trees",
+   "kind": "bang_lang",
+   "name_vi": "Cây bằng lăng",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_bang_lang_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 7,
+    "y": 7,
+    "z": 9
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Lagerstroemia speciosa (queen's crape myrtle): smooth mottled grey-brown trunk, rounded crown, masses of purple-lilac flowers in early summer; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "Đường Hoàng Quốc Việt, Nguyễn Chí Thanh",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/bang",
+   "set": "street_trees",
+   "kind": "bang",
+   "name_vi": "Cây bàng",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_bang_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 11,
+    "y": 11,
+    "z": 12
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Terminalia catappa: tiered horizontal branches, big oval leaves that turn red in winter; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "ven hồ, sân trường",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/sau",
+   "set": "street_trees",
+   "kind": "sau",
+   "name_vi": "Cây sấu",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_sau_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 10,
+    "y": 10,
+    "z": 16
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Dracontomelon duperreanum: dense round evergreen crown, dark trunk, small green fruits; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "Phan Đình Phùng, Lý Thái Tổ",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/hoa_sua",
+   "set": "street_trees",
+   "kind": "hoa_sua",
+   "name_vi": "Cây hoa sữa",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_hoa_sua_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 8,
+    "y": 8,
+    "z": 15
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Alstonia scholaris: tiered whorled branches, clusters of creamy-white flowers in autumn; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "Nguyễn Du",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/sao_den",
+   "set": "street_trees",
+   "kind": "sao_den",
+   "name_vi": "Cây sao đen",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_sao_den_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 8,
+    "y": 8,
+    "z": 25
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Hopea odorata: very tall narrow columnar crown, straight dark trunk; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "Kim Mã, Lê Duẩn",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/liu",
+   "set": "street_trees",
+   "kind": "liu",
+   "name_vi": "Cây liễu",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_liu_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 8,
+    "y": 8,
+    "z": 8
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "weeping willow: long hanging thin branches touching the water; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "ven hồ Gươm",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/loc_vung",
+   "set": "street_trees",
+   "kind": "loc_vung",
+   "name_vi": "Cây lộc vừng",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_loc_vung_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 7,
+    "y": 7,
+    "z": 6
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Barringtonia acutangula: low leaning gnarled trunk over water, hanging red flower strings; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "ven hồ Gươm",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "street_trees/so",
+   "set": "street_trees",
+   "kind": "so",
+   "name_vi": "Cây sổ",
+   "category": "tree",
+   "variants": 5,
+   "ue_name": "SM_street_trees_so_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_trees",
+   "size_m": {
+    "x": 8,
+    "y": 8,
+    "z": 10
+   },
+   "pivot": "base_center: trunk base at origin",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 60000,
+   "nanite": true,
+   "material_slots": [
+    "bark",
+    "leaves"
+   ],
+   "texture_px": 2048,
+   "look_en": "Dillenia indica: large glossy ribbed leaves, round crown; tropical northern-Vietnam street tree, painted white band on the lower trunk (Hanoi street practice)",
+   "references_vi": "công viên",
+   "avoid": [],
+   "scale_range": [
+    0.8,
+    1.3
+   ],
+   "wind": "UE Pivot Painter or SpeedTree wind",
+   "note": "Kind is placed with Scale 0.8-1.3; author at the size given",
+   "route": "hand_vegetation"
+  },
+  {
+   "id": "power_poles/concrete_h",
+   "set": "power_poles",
+   "kind": "concrete_h",
+   "name_vi": "Cột điện bê tông chữ H",
+   "category": "pole",
+   "variants": 4,
+   "ue_name": "SM_power_poles_concrete_h_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/power_poles",
+   "size_m": {
+    "x": 0.4,
+    "y": 1.2,
+    "z": 8.5
+   },
+   "pivot": "base_center",
+   "forward": "+X along the cable line",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "metal",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "Vietnamese pre-stressed concrete H-frame utility pole: two tapered grey concrete legs joined by cross-braces, steel crossarms, ceramic insulators, a transformer box on some variants; variant n = clutter level 0-3 (more junction boxes, coiled cable, stickers 'khoan cắt bê tông', old signboards)",
+   "references_vi": "Phố Hàng Bạc, Tạ Hiện",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "power_poles/concrete_round",
+   "set": "power_poles",
+   "kind": "concrete_round",
+   "name_vi": "Cột điện bê tông tròn",
+   "category": "pole",
+   "variants": 4,
+   "ue_name": "SM_power_poles_concrete_round_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/power_poles",
+   "size_m": {
+    "x": 0.35,
+    "y": 0.35,
+    "z": 8.5
+   },
+   "pivot": "base_center",
+   "forward": "+X along the cable line",
+   "scale_axes": "xyz",
+   "tris_lod0": 5000,
+   "nanite": true,
+   "material_slots": [
+    "concrete",
+    "metal",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "round tapered spun-concrete utility pole with crossarm, insulators, a junction box and coils of telecom cable hanging; variant n = clutter level 0-3",
+   "references_vi": "ngõ phố cổ",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "cable_spans/bundle_0",
+   "set": "cable_spans",
+   "kind": "bundle_0",
+   "name_vi": "Bó dây điện (thưa)",
+   "category": "cable",
+   "variants": 1,
+   "ue_name": "SM_cable_spans_bundle_0_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/cable_spans",
+   "size_m": {
+    "x": 1.0,
+    "y": 0.6,
+    "z": 1.2
+   },
+   "pivot": "center of the span at the attach height; the two attach points are at x=-0.5 and x=+0.5, z=0; sag hangs below z=0",
+   "forward": "+X along the span; only X is scaled (Scale = span length in metres)",
+   "scale_axes": "x",
+   "tris_lod0": 4000,
+   "nanite": false,
+   "material_slots": [
+    "cable"
+   ],
+   "texture_px": 512,
+   "look_en": "overhead cable bundle between two utility poles: 2-4 power lines, light sag",
+   "references_vi": "Hàng Bạc, Hàng Buồm, Mã Mây",
+   "avoid": [],
+   "note": "author as a 1 m long piece whose ends meet seamlessly; sag depth is fixed per kind because only X is scaled",
+   "route": "hand"
+  },
+  {
+   "id": "cable_spans/bundle_1",
+   "set": "cable_spans",
+   "kind": "bundle_1",
+   "name_vi": "Bó dây điện (vừa)",
+   "category": "cable",
+   "variants": 1,
+   "ue_name": "SM_cable_spans_bundle_1_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/cable_spans",
+   "size_m": {
+    "x": 1.0,
+    "y": 0.6,
+    "z": 1.2
+   },
+   "pivot": "center of the span at the attach height; the two attach points are at x=-0.5 and x=+0.5, z=0; sag hangs below z=0",
+   "forward": "+X along the span; only X is scaled (Scale = span length in metres)",
+   "scale_axes": "x",
+   "tris_lod0": 4000,
+   "nanite": false,
+   "material_slots": [
+    "cable"
+   ],
+   "texture_px": 512,
+   "look_en": "overhead cable bundle between two utility poles: 8-12 power and telecom cables, a few loose loops",
+   "references_vi": "Hàng Bạc, Hàng Buồm, Mã Mây",
+   "avoid": [],
+   "note": "author as a 1 m long piece whose ends meet seamlessly; sag depth is fixed per kind because only X is scaled",
+   "route": "hand"
+  },
+  {
+   "id": "cable_spans/bundle_2",
+   "set": "cable_spans",
+   "kind": "bundle_2",
+   "name_vi": "Bó dây điện (dày)",
+   "category": "cable",
+   "variants": 1,
+   "ue_name": "SM_cable_spans_bundle_2_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/cable_spans",
+   "size_m": {
+    "x": 1.0,
+    "y": 0.6,
+    "z": 1.2
+   },
+   "pivot": "center of the span at the attach height; the two attach points are at x=-0.5 and x=+0.5, z=0; sag hangs below z=0",
+   "forward": "+X along the span; only X is scaled (Scale = span length in metres)",
+   "scale_axes": "x",
+   "tris_lod0": 15000,
+   "nanite": false,
+   "material_slots": [
+    "cable"
+   ],
+   "texture_px": 512,
+   "look_en": "overhead cable bundle between two utility poles: 20-30 cables, black bundles, coiled spare loops",
+   "references_vi": "Hàng Bạc, Hàng Buồm, Mã Mây",
+   "avoid": [],
+   "note": "author as a 1 m long piece whose ends meet seamlessly; sag depth is fixed per kind because only X is scaled",
+   "route": "hand"
+  },
+  {
+   "id": "cable_spans/bundle_3",
+   "set": "cable_spans",
+   "kind": "bundle_3",
+   "name_vi": "Bó dây điện (rối)",
+   "category": "cable",
+   "variants": 1,
+   "ue_name": "SM_cable_spans_bundle_3_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/cable_spans",
+   "size_m": {
+    "x": 1.0,
+    "y": 0.6,
+    "z": 1.2
+   },
+   "pivot": "center of the span at the attach height; the two attach points are at x=-0.5 and x=+0.5, z=0; sag hangs below z=0",
+   "forward": "+X along the span; only X is scaled (Scale = span length in metres)",
+   "scale_axes": "x",
+   "tris_lod0": 15000,
+   "nanite": false,
+   "material_slots": [
+    "cable"
+   ],
+   "texture_px": 512,
+   "look_en": "overhead cable bundle between two utility poles: 40+ tangled cables, thick sagging black mass with coils, typical Old Quarter 'cable spaghetti'",
+   "references_vi": "Hàng Bạc, Hàng Buồm, Mã Mây",
+   "avoid": [],
+   "note": "author as a 1 m long piece whose ends meet seamlessly; sag depth is fixed per kind because only X is scaled",
+   "route": "hand"
+  },
+  {
+   "id": "street_lights/boulevard",
+   "set": "street_lights",
+   "kind": "boulevard",
+   "name_vi": "Cột đèn đường đôi",
+   "category": "light",
+   "variants": 1,
+   "ue_name": "SM_street_lights_boulevard_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_lights",
+   "size_m": {
+    "x": 0.4,
+    "y": 3.0,
+    "z": 10.0
+   },
+   "pivot": "base_center",
+   "forward": "+X toward the road (arm side)",
+   "scale_axes": "xyz",
+   "tris_lod0": 6000,
+   "nanite": true,
+   "material_slots": [
+    "metal",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "Hanoi boulevard street lamp: tapered grey steel octagonal pole with two curved arms and LED heads, decorative base",
+   "references_vi": "Đinh Tiên Hoàng, Tràng Thi",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "street_lights/single",
+   "set": "street_lights",
+   "kind": "single",
+   "name_vi": "Cột đèn đường đơn",
+   "category": "light",
+   "variants": 1,
+   "ue_name": "SM_street_lights_single_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_lights",
+   "size_m": {
+    "x": 1.8,
+    "y": 0.4,
+    "z": 8.0
+   },
+   "pivot": "base_center",
+   "forward": "+X toward the road (arm side)",
+   "scale_axes": "xyz",
+   "tris_lod0": 4000,
+   "nanite": true,
+   "material_slots": [
+    "metal",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "single-arm steel street lamp with one LED head",
+   "references_vi": "phố nhỏ",
+   "avoid": [],
+   "route": "hand"
+  },
+  {
+   "id": "shop_signs/food",
+   "set": "shop_signs",
+   "kind": "food",
+   "name_vi": "Biển hiệu ngang (phở, bún chả, cơm)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_food_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a food shop (phở, bún chả, cơm): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/food_vertical",
+   "set": "shop_signs",
+   "kind": "food_vertical",
+   "name_vi": "Biển hiệu dọc (phở, bún chả, cơm)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_food_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a food shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/cafe",
+   "set": "shop_signs",
+   "kind": "cafe",
+   "name_vi": "Biển hiệu ngang (cà phê)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_cafe_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a cafe shop (cà phê): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/cafe_vertical",
+   "set": "shop_signs",
+   "kind": "cafe_vertical",
+   "name_vi": "Biển hiệu dọc (cà phê)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_cafe_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a cafe shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/bar",
+   "set": "shop_signs",
+   "kind": "bar",
+   "name_vi": "Biển hiệu ngang (bia hơi, quán nhậu)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_bar_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a bar shop (bia hơi, quán nhậu): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/bar_vertical",
+   "set": "shop_signs",
+   "kind": "bar_vertical",
+   "name_vi": "Biển hiệu dọc (bia hơi, quán nhậu)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_bar_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a bar shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/lodging",
+   "set": "shop_signs",
+   "kind": "lodging",
+   "name_vi": "Biển hiệu ngang (khách sạn, nhà nghỉ, hostel)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_lodging_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a lodging shop (khách sạn, nhà nghỉ, hostel): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/lodging_vertical",
+   "set": "shop_signs",
+   "kind": "lodging_vertical",
+   "name_vi": "Biển hiệu dọc (khách sạn, nhà nghỉ, hostel)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_lodging_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a lodging shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/fashion",
+   "set": "shop_signs",
+   "kind": "fashion",
+   "name_vi": "Biển hiệu ngang (quần áo, giày dép)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_fashion_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a fashion shop (quần áo, giày dép): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/fashion_vertical",
+   "set": "shop_signs",
+   "kind": "fashion_vertical",
+   "name_vi": "Biển hiệu dọc (quần áo, giày dép)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_fashion_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a fashion shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/beauty",
+   "set": "shop_signs",
+   "kind": "beauty",
+   "name_vi": "Biển hiệu ngang (cắt tóc, gội đầu, spa)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_beauty_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a beauty shop (cắt tóc, gội đầu, spa): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/beauty_vertical",
+   "set": "shop_signs",
+   "kind": "beauty_vertical",
+   "name_vi": "Biển hiệu dọc (cắt tóc, gội đầu, spa)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_beauty_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a beauty shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/travel",
+   "set": "shop_signs",
+   "kind": "travel",
+   "name_vi": "Biển hiệu ngang (tour, vé xe)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_travel_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a travel shop (tour, vé xe): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/travel_vertical",
+   "set": "shop_signs",
+   "kind": "travel_vertical",
+   "name_vi": "Biển hiệu dọc (tour, vé xe)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_travel_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a travel shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/grocery",
+   "set": "shop_signs",
+   "kind": "grocery",
+   "name_vi": "Biển hiệu ngang (tạp hoá)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_grocery_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a grocery shop (tạp hoá): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/grocery_vertical",
+   "set": "shop_signs",
+   "kind": "grocery_vertical",
+   "name_vi": "Biển hiệu dọc (tạp hoá)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_grocery_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a grocery shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/pharmacy",
+   "set": "shop_signs",
+   "kind": "pharmacy",
+   "name_vi": "Biển hiệu ngang (nhà thuốc)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_pharmacy_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a pharmacy shop (nhà thuốc): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/pharmacy_vertical",
+   "set": "shop_signs",
+   "kind": "pharmacy_vertical",
+   "name_vi": "Biển hiệu dọc (nhà thuốc)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_pharmacy_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a pharmacy shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/finance",
+   "set": "shop_signs",
+   "kind": "finance",
+   "name_vi": "Biển hiệu ngang (vàng bạc, đổi tiền)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_finance_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a finance shop (vàng bạc, đổi tiền): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/finance_vertical",
+   "set": "shop_signs",
+   "kind": "finance_vertical",
+   "name_vi": "Biển hiệu dọc (vàng bạc, đổi tiền)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_finance_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a finance shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/crafts",
+   "set": "shop_signs",
+   "kind": "crafts",
+   "name_vi": "Biển hiệu ngang (đồ thủ công, tranh, đồ lưu niệm)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_crafts_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a crafts shop (đồ thủ công, tranh, đồ lưu niệm): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/crafts_vertical",
+   "set": "shop_signs",
+   "kind": "crafts_vertical",
+   "name_vi": "Biển hiệu dọc (đồ thủ công, tranh, đồ lưu niệm)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_crafts_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a crafts shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/hardware",
+   "set": "shop_signs",
+   "kind": "hardware",
+   "name_vi": "Biển hiệu ngang (điện máy, sửa xe, kim khí)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_hardware_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.12,
+    "y": 4.0,
+    "z": 1.0
+   },
+   "pivot": "center of the back face, on the wall plane",
+   "forward": "+X out of the wall (sign face looks +X); Y along the facade; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print"
+   ],
+   "texture_px": 2048,
+   "look_en": "flat Vietnamese shop signboard for a hardware shop (điện máy, sửa xe, kim khí): bold Vietnamese text with diacritics, phone number, fictional shop name, printed vinyl or painted metal, slightly weathered",
+   "references_vi": "Phố Hàng Gai, Hàng Bông",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 3.4,
+   "texture_atlas": "print slot uses a 2:1 graphic per variant (see prompts)",
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "shop_signs/hardware_vertical",
+   "set": "shop_signs",
+   "kind": "hardware_vertical",
+   "name_vi": "Biển hiệu dọc (điện máy, sửa xe, kim khí)",
+   "category": "sign",
+   "variants": 8,
+   "ue_name": "SM_shop_signs_hardware_vertical_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/shop_signs",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.12,
+    "z": 3.0
+   },
+   "pivot": "top of the wall-side edge, on the wall plane",
+   "forward": "blade sign: the panel lies in the X-Z plane and sticks out along +X from the wall; Scale is always 1",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "frame",
+    "print",
+    "emissive"
+   ],
+   "texture_px": 2048,
+   "look_en": "vertical blade signboard for a hardware shop, Vietnamese text written top-to-bottom, lit by small bulbs, mounted on a steel bracket",
+   "references_vi": "Hàng Bạc, Tạ Hiện",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "mount_z_m": 4.5,
+   "route": "hand_mesh_generated_print"
+  },
+  {
+   "id": "awnings/canvas",
+   "set": "awnings",
+   "kind": "canvas",
+   "name_vi": "Mái bạt che nắng",
+   "category": "awning",
+   "variants": 6,
+   "ue_name": "SM_awnings_canvas_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/awnings",
+   "size_m": {
+    "x": 1.6,
+    "y": 4.0,
+    "z": 0.9
+   },
+   "pivot": "center of the top back edge, on the wall plane",
+   "forward": "+X out of the wall; only Y is scaled (Scale = frontage width / 4 m)",
+   "scale_axes": "y",
+   "tris_lod0": 2000,
+   "nanite": false,
+   "material_slots": [
+    "canvas",
+    "metal"
+   ],
+   "texture_px": 2048,
+   "look_en": "retractable striped or plain canvas shop awning (blue, red, green, orange), slightly sagging, faded",
+   "references_vi": "phố cổ",
+   "avoid": [],
+   "mount_z_m": 2.6,
+   "route": "hand"
+  },
+  {
+   "id": "parked_motorbikes/scooter",
+   "set": "parked_motorbikes",
+   "kind": "scooter",
+   "name_vi": "Xe tay ga",
+   "category": "vehicle_static",
+   "variants": 12,
+   "ue_name": "SM_parked_motorbikes_scooter_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/parked_motorbikes",
+   "size_m": {
+    "x": 1.9,
+    "y": 0.7,
+    "z": 1.1
+   },
+   "pivot": "ground under the midpoint of the wheels",
+   "forward": "+X = front wheel direction (bikes park nose-in toward the shop)",
+   "scale_axes": "xyz",
+   "tris_lod0": 30000,
+   "nanite": true,
+   "material_slots": [
+    "body",
+    "metal",
+    "rubber",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "generic 110-125cc step-through scooter in the style common in Vietnam (do NOT copy Honda Vision/Lead/SH shapes or badges), helmet on the seat or mirror on some variants; parked on its side stand, slightly leaning; 12 variants = colour and accessory changes (helmet, raincoat, basket, number plate with fictional 29/30-prefix Hanoi format)",
+   "references_vi": "vỉa hè phố cổ",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "real licence plate numbers"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "parked_motorbikes/manual",
+   "set": "parked_motorbikes",
+   "kind": "manual",
+   "name_vi": "Xe số",
+   "category": "vehicle_static",
+   "variants": 12,
+   "ue_name": "SM_parked_motorbikes_manual_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/parked_motorbikes",
+   "size_m": {
+    "x": 1.9,
+    "y": 0.7,
+    "z": 1.1
+   },
+   "pivot": "ground under the midpoint of the wheels",
+   "forward": "+X = front wheel direction (bikes park nose-in toward the shop)",
+   "scale_axes": "xyz",
+   "tris_lod0": 30000,
+   "nanite": true,
+   "material_slots": [
+    "body",
+    "metal",
+    "rubber",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "generic 100-110cc underbone moped like the ones that dominate Hanoi (do NOT copy Honda Wave/Super Cub badges or exact shapes), some with rear cargo rack, plastic bag hanging; parked on its side stand, slightly leaning; 12 variants = colour and accessory changes (helmet, raincoat, basket, number plate with fictional 29/30-prefix Hanoi format)",
+   "references_vi": "vỉa hè phố cổ",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "real licence plate numbers"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "parked_motorbikes/electric",
+   "set": "parked_motorbikes",
+   "kind": "electric",
+   "name_vi": "Xe điện",
+   "category": "vehicle_static",
+   "variants": 12,
+   "ue_name": "SM_parked_motorbikes_electric_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/parked_motorbikes",
+   "size_m": {
+    "x": 1.9,
+    "y": 0.7,
+    "z": 1.1
+   },
+   "pivot": "ground under the midpoint of the wheels",
+   "forward": "+X = front wheel direction (bikes park nose-in toward the shop)",
+   "scale_axes": "xyz",
+   "tris_lod0": 30000,
+   "nanite": true,
+   "material_slots": [
+    "body",
+    "metal",
+    "rubber",
+    "decals"
+   ],
+   "texture_px": 2048,
+   "look_en": "generic electric scooter/e-moped as used by students in Hanoi, no brand marks; parked on its side stand, slightly leaning; 12 variants = colour and accessory changes (helmet, raincoat, basket, number plate with fictional 29/30-prefix Hanoi format)",
+   "references_vi": "vỉa hè phố cổ",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks",
+    "real licence plate numbers"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "pavement_seating/pho_quan",
+   "set": "pavement_seating",
+   "kind": "pho_quan",
+   "name_vi": "Bàn ghế quán phở",
+   "category": "furniture",
+   "variants": 4,
+   "ue_name": "SM_pavement_seating_pho_quan_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/pavement_seating",
+   "size_m": {
+    "x": 1.6,
+    "y": 1.6,
+    "z": 0.6
+   },
+   "pivot": "base_center",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 12000,
+   "nanite": true,
+   "material_slots": [
+    "plastic",
+    "metal",
+    "props"
+   ],
+   "texture_px": 2048,
+   "look_en": "low red or blue plastic stools around a low stainless-steel or plastic table, chopstick holder, chili and fish-sauce bottles, napkin box; 4 variants = arrangement and colours",
+   "references_vi": "vỉa hè phố cổ",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "reuse_or_hand"
+  },
+  {
+   "id": "pavement_seating/tra_da",
+   "set": "pavement_seating",
+   "kind": "tra_da",
+   "name_vi": "Ghế trà đá",
+   "category": "furniture",
+   "variants": 4,
+   "ue_name": "SM_pavement_seating_tra_da_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/pavement_seating",
+   "size_m": {
+    "x": 1.6,
+    "y": 1.6,
+    "z": 0.6
+   },
+   "pivot": "base_center",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 12000,
+   "nanite": true,
+   "material_slots": [
+    "plastic",
+    "metal",
+    "props"
+   ],
+   "texture_px": 2048,
+   "look_en": "tiny plastic stools around a small wooden bench with a thermos, green tea glasses, sunflower seeds, cigarette tray; 4 variants = arrangement and colours",
+   "references_vi": "vỉa hè phố cổ",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "reuse_or_hand"
+  },
+  {
+   "id": "pavement_seating/bia_hoi",
+   "set": "pavement_seating",
+   "kind": "bia_hoi",
+   "name_vi": "Bàn bia hơi",
+   "category": "furniture",
+   "variants": 4,
+   "ue_name": "SM_pavement_seating_bia_hoi_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/pavement_seating",
+   "size_m": {
+    "x": 1.6,
+    "y": 1.6,
+    "z": 0.6
+   },
+   "pivot": "base_center",
+   "forward": "any (rotated randomly)",
+   "scale_axes": "xyz",
+   "tris_lod0": 12000,
+   "nanite": true,
+   "material_slots": [
+    "plastic",
+    "metal",
+    "props"
+   ],
+   "texture_px": 2048,
+   "look_en": "low plastic stools and table with draught-beer glasses, peanuts, a plastic bucket of ice; 4 variants = arrangement and colours",
+   "references_vi": "vỉa hè phố cổ",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "reuse_or_hand"
+  },
+  {
+   "id": "street_vendors/ganh_hang",
+   "set": "street_vendors",
+   "kind": "ganh_hang",
+   "name_vi": "Gánh hàng rong",
+   "category": "vendor",
+   "variants": 6,
+   "ue_name": "SM_street_vendors_ganh_hang_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_vendors",
+   "size_m": {
+    "x": 1.8,
+    "y": 0.6,
+    "z": 1.0
+   },
+   "pivot": "base_center",
+   "forward": "+X = front of the cart or bicycle",
+   "scale_axes": "xyz",
+   "tris_lod0": 20000,
+   "nanite": true,
+   "material_slots": [
+    "wood",
+    "metal",
+    "goods"
+   ],
+   "texture_px": 2048,
+   "look_en": "shoulder pole (đòn gánh) with two flat bamboo baskets of fruit or snacks, set down on the pavement, conical hat (nón lá) on top; 6 variants = goods and colours; the vendor person is a separate character, not part of the mesh",
+   "references_vi": "Hàng Đào, chợ Đồng Xuân",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "street_vendors/tra_da_via_he",
+   "set": "street_vendors",
+   "kind": "tra_da_via_he",
+   "name_vi": "Hàng trà đá vỉa hè",
+   "category": "vendor",
+   "variants": 6,
+   "ue_name": "SM_street_vendors_tra_da_via_he_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_vendors",
+   "size_m": {
+    "x": 1.2,
+    "y": 0.8,
+    "z": 0.9
+   },
+   "pivot": "base_center",
+   "forward": "+X = front of the cart or bicycle",
+   "scale_axes": "xyz",
+   "tris_lod0": 20000,
+   "nanite": true,
+   "material_slots": [
+    "wood",
+    "metal",
+    "goods"
+   ],
+   "texture_px": 2048,
+   "look_en": "pavement iced-tea stall: wooden box table, big plastic jug, glasses, low stools; 6 variants = goods and colours; the vendor person is a separate character, not part of the mesh",
+   "references_vi": "Hàng Đào, chợ Đồng Xuân",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "street_vendors/xe_day_hoa_qua",
+   "set": "street_vendors",
+   "kind": "xe_day_hoa_qua",
+   "name_vi": "Xe đẩy hoa quả",
+   "category": "vendor",
+   "variants": 6,
+   "ue_name": "SM_street_vendors_xe_day_hoa_qua_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_vendors",
+   "size_m": {
+    "x": 1.6,
+    "y": 0.8,
+    "z": 1.8
+   },
+   "pivot": "base_center",
+   "forward": "+X = front of the cart or bicycle",
+   "scale_axes": "xyz",
+   "tris_lod0": 20000,
+   "nanite": true,
+   "material_slots": [
+    "wood",
+    "metal",
+    "goods"
+   ],
+   "texture_px": 2048,
+   "look_en": "hand-pushed fruit cart with wooden tray, glass case, umbrella; 6 variants = goods and colours; the vendor person is a separate character, not part of the mesh",
+   "references_vi": "Hàng Đào, chợ Đồng Xuân",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "street_vendors/xe_day_banh_mi",
+   "set": "street_vendors",
+   "kind": "xe_day_banh_mi",
+   "name_vi": "Xe đẩy bánh mì",
+   "category": "vendor",
+   "variants": 6,
+   "ue_name": "SM_street_vendors_xe_day_banh_mi_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_vendors",
+   "size_m": {
+    "x": 1.4,
+    "y": 0.7,
+    "z": 1.7
+   },
+   "pivot": "base_center",
+   "forward": "+X = front of the cart or bicycle",
+   "scale_axes": "xyz",
+   "tris_lod0": 20000,
+   "nanite": true,
+   "material_slots": [
+    "wood",
+    "metal",
+    "goods"
+   ],
+   "texture_px": 2048,
+   "look_en": "bánh mì cart with glass display box, small gas stove, hanging bags; 6 variants = goods and colours; the vendor person is a separate character, not part of the mesh",
+   "references_vi": "Hàng Đào, chợ Đồng Xuân",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "street_vendors/xe_dap_hoa",
+   "set": "street_vendors",
+   "kind": "xe_dap_hoa",
+   "name_vi": "Xe đạp bán hoa",
+   "category": "vendor",
+   "variants": 6,
+   "ue_name": "SM_street_vendors_xe_dap_hoa_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/street_vendors",
+   "size_m": {
+    "x": 1.8,
+    "y": 0.9,
+    "z": 1.3
+   },
+   "pivot": "base_center",
+   "forward": "+X = front of the cart or bicycle",
+   "scale_axes": "xyz",
+   "tris_lod0": 20000,
+   "nanite": true,
+   "material_slots": [
+    "wood",
+    "metal",
+    "goods"
+   ],
+   "texture_px": 2048,
+   "look_en": "old black bicycle carrying two large baskets overflowing with seasonal flowers (lotus, chrysanthemum, peach blossom); 6 variants = goods and colours; the vendor person is a separate character, not part of the mesh",
+   "references_vi": "Hàng Đào, chợ Đồng Xuân",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "infrastructure/crossing",
+   "set": "infrastructure",
+   "kind": "crossing",
+   "name_vi": "Vạch sang đường",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_crossing_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 3.0,
+    "y": 4.0,
+    "z": 0.01
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "decal: zebra crossing stripes, worn paint",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "infrastructure/atm",
+   "set": "infrastructure",
+   "kind": "atm",
+   "name_vi": "Cây ATM",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_atm_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.8,
+    "y": 0.9,
+    "z": 1.9
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "free-standing ATM booth, generic bank colours, no logos",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "infrastructure/traffic_signals",
+   "set": "infrastructure",
+   "kind": "traffic_signals",
+   "name_vi": "Đèn giao thông",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_traffic_signals_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.6,
+    "y": 0.6,
+    "z": 4.5
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "Vietnamese traffic light pole with red-amber-green heads and a countdown timer",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "infrastructure/gate",
+   "set": "infrastructure",
+   "kind": "gate",
+   "name_vi": "Cổng ngõ",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_gate_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.5,
+    "y": 3.0,
+    "z": 3.5
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "alley gate arch with the alley name and number on a sign",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "infrastructure/bus_stop",
+   "set": "infrastructure",
+   "kind": "bus_stop",
+   "name_vi": "Nhà chờ xe buýt",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_bus_stop_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 1.6,
+    "y": 4.0,
+    "z": 2.6
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "Hanoi bus shelter with route board",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "infrastructure/toilets",
+   "set": "infrastructure",
+   "kind": "toilets",
+   "name_vi": "Nhà vệ sinh công cộng",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_toilets_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 2.0,
+    "y": 3.0,
+    "z": 2.8
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "small public toilet kiosk",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "infrastructure/bench",
+   "set": "infrastructure",
+   "kind": "bench",
+   "name_vi": "Ghế đá",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_bench_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.5,
+    "y": 1.6,
+    "z": 0.45
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "stone or concrete park bench",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "reuse_or_hand"
+  },
+  {
+   "id": "infrastructure/kerb",
+   "set": "infrastructure",
+   "kind": "kerb",
+   "name_vi": "Bó vỉa",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_kerb_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.2,
+    "y": 1.0,
+    "z": 0.2
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "granite kerb segment",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "hand"
+  },
+  {
+   "id": "infrastructure/vending_machine",
+   "set": "infrastructure",
+   "kind": "vending_machine",
+   "name_vi": "Máy bán nước",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_vending_machine_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.7,
+    "y": 0.9,
+    "z": 1.8
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "drinks vending machine, generic",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "infrastructure/information",
+   "set": "infrastructure",
+   "kind": "information",
+   "name_vi": "Bảng thông tin",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_information_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.2,
+    "y": 1.2,
+    "z": 2.0
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "tourist information board",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "infrastructure/bicycle_rental",
+   "set": "infrastructure",
+   "kind": "bicycle_rental",
+   "name_vi": "Trạm xe đạp công cộng",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_bicycle_rental_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.8,
+    "y": 3.0,
+    "z": 1.2
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "public bike rental dock with bikes",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "infrastructure/drinking_water",
+   "set": "infrastructure",
+   "kind": "drinking_water",
+   "name_vi": "Vòi nước",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_drinking_water_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.4,
+    "y": 0.4,
+    "z": 1.0
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "drinking water fountain",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "infrastructure/parking_entrance",
+   "set": "infrastructure",
+   "kind": "parking_entrance",
+   "name_vi": "Lối vào bãi xe",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_parking_entrance_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 0.3,
+    "y": 3.0,
+    "z": 2.5
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "parking entrance sign and barrier",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  },
+  {
+   "id": "infrastructure/artwork",
+   "set": "infrastructure",
+   "kind": "artwork",
+   "name_vi": "Tác phẩm công cộng",
+   "category": "street_furniture",
+   "variants": 1,
+   "ue_name": "SM_infrastructure_artwork_v{n}",
+   "ue_folder": "/Game/Hanoi/Props/infrastructure",
+   "size_m": {
+    "x": 2.0,
+    "y": 2.0,
+    "z": 2.5
+   },
+   "pivot": "base_center",
+   "forward": "+X faces the street",
+   "scale_axes": "xyz",
+   "tris_lod0": 8000,
+   "nanite": true,
+   "material_slots": [
+    "main"
+   ],
+   "texture_px": 2048,
+   "look_en": "generic public sculpture placeholder",
+   "references_vi": "đường phố Hà Nội",
+   "avoid": [
+    "real brand names or logos",
+    "readable trademarks"
+   ],
+   "route": "generate"
+  }
+ ],
+ "facade_kits": [
+  {
+   "archetype": "nha_ong_pho_co",
+   "name_vi": "Nhà ống phố cổ",
+   "ue_folder": "/Game/Hanoi/Kits/NhaOngPhoCo",
+   "ue_name": "SM_nha_ong_pho_co_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#C9A55B",
+    "#D8B86A",
+    "#8E7A5A",
+    "#6B4F3A",
+    "#A33A2A",
+    "#2F5D3A",
+    "#E5DCC8"
+   ],
+   "features": [
+    "mai_ngoi_am_duong_tang_tren",
+    "mat_tien_go_cua_long_khong",
+    "cua_xep_sat",
+    "ban_cong_hep_lan_can_sat",
+    "tuong_voi_bong_troc_reu",
+    "bien_hieu_chu_quoc_ngu_to",
+    "bien_hieu_dung_neon",
+    "cay_canh_ban_cong",
+    "phoi_quan_ao",
+    "bo_day_dien_vat_ngang",
+    "ghe_nhua_do_via_he",
+    "co_do_sao_vang_ngay_le",
+    "gac_xep",
+    "san_trong_gieng_troi",
+    "mai_toi_che_nang",
+    "xe_may_dau_via_he"
+   ],
+   "modules": [
+    {
+     "module": "ground_2p5m",
+     "size_m": {
+      "x": 1.0,
+      "y": 2.5,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_2p5m",
+     "size_m": {
+      "x": 1.2,
+      "y": 2.5,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_2p5m",
+     "size_m": {
+      "x": 1.5,
+      "y": 2.5,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (tiled_pitched)"
+    },
+    {
+     "module": "ground_3m",
+     "size_m": {
+      "x": 1.0,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_3m",
+     "size_m": {
+      "x": 1.2,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_3m",
+     "size_m": {
+      "x": 1.5,
+      "y": 3,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (tiled_pitched)"
+    },
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (tiled_pitched)"
+    },
+    {
+     "module": "ground_5m",
+     "size_m": {
+      "x": 1.0,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_5m",
+     "size_m": {
+      "x": 1.2,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_5m",
+     "size_m": {
+      "x": 1.5,
+      "y": 5,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (tiled_pitched)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "nha_ong_hien_dai",
+   "name_vi": "Nhà ống hiện đại (nhà phố)",
+   "ue_folder": "/Game/Hanoi/Kits/NhaOngHienDai",
+   "ue_name": "SM_nha_ong_hien_dai_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#F1E6C8",
+    "#E9D9A6",
+    "#F3F0E8",
+    "#D7E3E8",
+    "#F2C9C0",
+    "#B9CFA8",
+    "#7A7A7A"
+   ],
+   "features": [
+    "ban_cong_moi_tang",
+    "lan_can_inox",
+    "cua_kinh_khung_nhom",
+    "mai_ton_tang_thuong",
+    "lam_chan_nang_nhom",
+    "bon_nuoc_inox_tren_mai",
+    "dan_nong_dieu_hoa_mat_tien",
+    "bien_hieu_bat_hiflex",
+    "bien_led_chay_chu",
+    "cua_cuon_sat",
+    "bo_day_dien_vat_ngang",
+    "lan_can_trang_tri_kieu_chau_au",
+    "chuong_cop_tang_thuong",
+    "chuong_bao_ve_ban_cong",
+    "son_tuong_ben_hong_tron"
+   ],
+   "modules": [
+    {
+     "module": "ground_3m",
+     "size_m": {
+      "x": 1.0,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_3m",
+     "size_m": {
+      "x": 1.2,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_3m",
+     "size_m": {
+      "x": 1.5,
+      "y": 3,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "ground_5m",
+     "size_m": {
+      "x": 1.0,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_5m",
+     "size_m": {
+      "x": 1.2,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_5m",
+     "size_m": {
+      "x": 1.5,
+      "y": 5,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "biet_thu_phap",
+   "name_vi": "Biệt thự Pháp",
+   "ue_folder": "/Game/Hanoi/Kits/BietThuPhap",
+   "ue_name": "SM_biet_thu_phap_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#E4B94A",
+    "#D9A441",
+    "#F0D48A",
+    "#3E6B48",
+    "#2E5A3C",
+    "#FFFFFF",
+    "#8C3B2E"
+   ],
+   "features": [
+    "tuong_vang_phap",
+    "cua_chop_go_xanh_la",
+    "mai_ngoi_vay_ca_do",
+    "ong_khoi",
+    "cot_tru_gach_cong",
+    "hang_rao_sat_hoa_van",
+    "cua_vom",
+    "ban_cong_lan_can_sat_uon",
+    "san_vuon_cay_sau",
+    "bien_ten_co_quan_neu_bi_chiem_dung",
+    "phan_nha_coi_noi_sau_1954",
+    "rao_rau_leo_hoa_giay",
+    "o_tho_gach_men_hoa"
+   ],
+   "modules": [
+    {
+     "module": "ground_3m",
+     "size_m": {
+      "x": 1.0,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (residential_gate)"
+    },
+    {
+     "module": "mid_3m",
+     "size_m": {
+      "x": 1.2,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_3m",
+     "size_m": {
+      "x": 1.5,
+      "y": 3,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (tiled_pitched)"
+    },
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (residential_gate)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (tiled_pitched)"
+    },
+    {
+     "module": "ground_5m",
+     "size_m": {
+      "x": 1.0,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (residential_gate)"
+    },
+    {
+     "module": "mid_5m",
+     "size_m": {
+      "x": 1.2,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_5m",
+     "size_m": {
+      "x": 1.5,
+      "y": 5,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (tiled_pitched)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "cong_trinh_phap_cong",
+   "name_vi": "Công trình công thời Pháp",
+   "ue_folder": "/Game/Hanoi/Kits/CongTrinhPhapCong",
+   "ue_name": "SM_cong_trinh_phap_cong_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#E9C46A",
+    "#E0B24F",
+    "#F2E2B3",
+    "#3F6E4A",
+    "#FFFFFF",
+    "#6E6E6E"
+   ],
+   "features": [
+    "tuong_vang_phap",
+    "cua_chop_go_xanh_la",
+    "cua_so_vom_cao",
+    "phu_dieu_dau_cot",
+    "bac_tam_cap_da",
+    "mai_mansard_ngoi_den",
+    "dong_ho_mat_tien",
+    "co_do_tren_noc",
+    "cot_doi_kieu_tan_co_dien",
+    "song_sat_rua_hoa"
+   ],
+   "modules": [
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (mansard)"
+    },
+    {
+     "module": "ground_5m",
+     "size_m": {
+      "x": 1.0,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_5m",
+     "size_m": {
+      "x": 1.2,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_5m",
+     "size_m": {
+      "x": 1.5,
+      "y": 5,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (mansard)"
+    },
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (mansard)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "khu_tap_the",
+   "name_vi": "Khu tập thể (nhà lắp ghép)",
+   "ue_folder": "/Game/Hanoi/Kits/KhuTapThe",
+   "ue_name": "SM_khu_tap_the_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#D8C7A0",
+    "#C2B38F",
+    "#9C9A8E",
+    "#B9A06A",
+    "#6B6B5F",
+    "#4C5A4E"
+   ],
+   "features": [
+    "chuong_cop_coi_noi_lo_lung",
+    "tuong_ve_bong_tron_ra_mau_den",
+    "hanh_lang_chung",
+    "cau_thang_ngoai",
+    "bon_nuoc_tren_mai_chi_chit",
+    "day_dien_chang_nhu_mang_nhen",
+    "cay_mong_rong_moc_tren_tuong",
+    "quan_ao_phoi_ngoai_cua_so",
+    "tang_mot_coi_noi_lam_ki_ot",
+    "dieu_hoa_cu_vang_nuoc",
+    "bien_so_nha_son_tay_A1_B2",
+    "san_choi_giua_cac_khoi"
+   ],
+   "modules": [
+    {
+     "module": "ground_3m",
+     "size_m": {
+      "x": 1.0,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_3m",
+     "size_m": {
+      "x": 1.2,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_3m",
+     "size_m": {
+      "x": 1.5,
+      "y": 3,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_3p6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 3.6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_3p6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 3.6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_3p6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 3.6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (shopfront)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "chung_cu_cao_tang",
+   "name_vi": "Chung cư cao tầng",
+   "ue_folder": "/Game/Hanoi/Kits/ChungCuCaoTang",
+   "ue_name": "SM_chung_cu_cao_tang_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#EDEBE6",
+    "#C9C3B6",
+    "#8FA3AD",
+    "#3C4A57",
+    "#D5B79A"
+   ],
+   "features": [
+    "lo_gia_kinh",
+    "dan_nong_dieu_hoa_xep_hang",
+    "phoi_do_lo_gia",
+    "ten_toa_chu_lon_tren_dinh",
+    "tang_mot_shophouse",
+    "ham_xe_may_doc",
+    "luoi_an_toan_ban_cong",
+    "bang_ron_cu_dan_phan_doi_quan_ly"
+   ],
+   "modules": [
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_8m",
+     "size_m": {
+      "x": 1.0,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_8m",
+     "size_m": {
+      "x": 1.2,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_8m",
+     "size_m": {
+      "x": 1.5,
+      "y": 8,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "van_phong_cao_tang",
+   "name_vi": "Tòa văn phòng cao tầng",
+   "ue_folder": "/Game/Hanoi/Kits/VanPhongCaoTang",
+   "ue_name": "SM_van_phong_cao_tang_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#5F7C8A",
+    "#2B3A42",
+    "#9BB3C0",
+    "#D9DEE2",
+    "#1E2A30"
+   ],
+   "features": [
+    "tuong_kinh_rem",
+    "logo_ngan_hang_parody_tren_dinh",
+    "san_do_xe_ham",
+    "bao_ve_cong",
+    "den_led_vien_dem",
+    "quan_cafe_san_tang_mot",
+    "bai_xe_may_ngoai_troi_co_mai"
+   ],
+   "modules": [
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_8m",
+     "size_m": {
+      "x": 1.0,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_8m",
+     "size_m": {
+      "x": 1.2,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_8m",
+     "size_m": {
+      "x": 1.5,
+      "y": 8,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "lien_ke_kdt",
+   "name_vi": "Nhà liền kề khu đô thị",
+   "ue_folder": "/Game/Hanoi/Kits/LienKeKDT",
+   "ue_name": "SM_lien_ke_kdt_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#F2EEE6",
+    "#D9CDB8",
+    "#B8A88A",
+    "#4E4A44",
+    "#2F2F2F"
+   ],
+   "features": [
+    "mat_tien_dong_bo_chu_dau_tu",
+    "phao_chi_tan_co_dien",
+    "cua_cuon_gara",
+    "o_to_do_via_he",
+    "bien_cho_thue_van_phong",
+    "cay_xanh_ho_ga_dong_bo",
+    "nha_bo_hoang_chua_xay"
+   ],
+   "modules": [
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (garage)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_5m",
+     "size_m": {
+      "x": 1.0,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (garage)"
+    },
+    {
+     "module": "mid_5m",
+     "size_m": {
+      "x": 1.2,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_5m",
+     "size_m": {
+      "x": 1.5,
+      "y": 5,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (garage)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "dinh_chua",
+   "name_vi": "Đình, chùa, đền, miếu",
+   "ue_folder": "/Game/Hanoi/Kits/DinhChua",
+   "ue_name": "SM_dinh_chua_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#7A2E1F",
+    "#A33A2A",
+    "#C9A227",
+    "#5B4636",
+    "#9A8B74",
+    "#3B3B32"
+   ],
+   "features": [
+    "mai_cong_dao_dau_dao",
+    "ngoi_mui_hai",
+    "luong_cot_go_son_son_then",
+    "hoanh_phi_cau_doi_chu_han",
+    "cong_tam_quan",
+    "lu_huong_khoi_nhang",
+    "cay_da_co_thu",
+    "san_gach_bat",
+    "ho_ban_nguyet",
+    "rong_chau_mat_nguyet_tren_noc"
+   ],
+   "modules": [
+    {
+     "module": "ground_3m",
+     "size_m": {
+      "x": 1.0,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (temple_gate)"
+    },
+    {
+     "module": "mid_3m",
+     "size_m": {
+      "x": 1.2,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_3m",
+     "size_m": {
+      "x": 1.5,
+      "y": 3,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (curved_temple)"
+    },
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (temple_gate)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (curved_temple)"
+    },
+    {
+     "module": "ground_5m",
+     "size_m": {
+      "x": 1.0,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (temple_gate)"
+    },
+    {
+     "module": "mid_5m",
+     "size_m": {
+      "x": 1.2,
+      "y": 5,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_5m",
+     "size_m": {
+      "x": 1.5,
+      "y": 5,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (curved_temple)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "cho",
+   "name_vi": "Chợ",
+   "ue_folder": "/Game/Hanoi/Kits/Cho",
+   "ue_name": "SM_cho_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#BFB8A8",
+    "#E1D3A6",
+    "#7B8C7A",
+    "#A04532",
+    "#5F6B70"
+   ],
+   "features": [
+    "mai_ton_kho_lon",
+    "bat_che_mua_xanh_do",
+    "san_hang_tran_ra_via_he",
+    "loi_di_hep_giua_sap",
+    "xe_ba_gac_cho_hang",
+    "bien_ten_cho_chu_lon",
+    "quat_tran_cu",
+    "bong_den_tran_tre_lung"
+   ],
+   "modules": [
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (market_stalls)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (market_stalls)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "ground_8m",
+     "size_m": {
+      "x": 1.0,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (market_stalls)"
+    },
+    {
+     "module": "mid_8m",
+     "size_m": {
+      "x": 1.2,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_8m",
+     "size_m": {
+      "x": 1.5,
+      "y": 8,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "cong_trinh_cong_cong",
+   "name_vi": "Công trình công cộng (trường, viện, UBND, bệnh viện)",
+   "ue_folder": "/Game/Hanoi/Kits/CongTrinhCongCong",
+   "ue_name": "SM_cong_trinh_cong_cong_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#F0D98C",
+    "#E6C76A",
+    "#FFFFFF",
+    "#C43B2F",
+    "#7D8A80"
+   ],
+   "features": [
+    "son_vang_kem_cong_so",
+    "khau_hieu_bang_ron_do",
+    "cong_sat_co_bot_bao_ve",
+    "quoc_huy_tren_mat_tien",
+    "san_co_cot_co",
+    "nha_de_xe_mai_ton",
+    "hanh_lang_dai_cua_so_doi"
+   ],
+   "modules": [
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "ground_8m",
+     "size_m": {
+      "x": 1.0,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (lobby)"
+    },
+    {
+     "module": "mid_8m",
+     "size_m": {
+      "x": 1.2,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_8m",
+     "size_m": {
+      "x": 1.5,
+      "y": 8,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (flat_terrace)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "nha_xuong",
+   "name_vi": "Nhà xưởng, kho bãi",
+   "ue_folder": "/Game/Hanoi/Kits/NhaXuong",
+   "ue_name": "SM_nha_xuong_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#9AA3A6",
+    "#5E8CA8",
+    "#C5C7C4",
+    "#8A5A3C",
+    "#3F4B52"
+   ],
+   "features": [
+    "mai_ton_xanh_duong",
+    "tuong_ton_gon_song",
+    "cua_cuon_lon",
+    "xe_tai_nho_do",
+    "bien_cong_ty_tnhh",
+    "bai_vat_lieu_xay_dung",
+    "hang_rao_tuong_gach_tho"
+   ],
+   "modules": [
+    {
+     "module": "ground_6m",
+     "size_m": {
+      "x": 1.0,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (garage)"
+    },
+    {
+     "module": "mid_6m",
+     "size_m": {
+      "x": 1.2,
+      "y": 6,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_6m",
+     "size_m": {
+      "x": 1.5,
+      "y": 6,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "ground_8m",
+     "size_m": {
+      "x": 1.0,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (garage)"
+    },
+    {
+     "module": "mid_8m",
+     "size_m": {
+      "x": 1.2,
+      "y": 8,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_8m",
+     "size_m": {
+      "x": 1.5,
+      "y": 8,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  },
+  {
+   "archetype": "nha_thap_tang",
+   "name_vi": "Nhà thấp tầng ven đô, làng xóm",
+   "ue_folder": "/Game/Hanoi/Kits/NhaThapTang",
+   "ue_name": "SM_nha_thap_tang_{module}_v{n}",
+   "variants": 3,
+   "palette": [
+    "#E8DFC7",
+    "#CFC2A0",
+    "#B4876A",
+    "#7E8B6A",
+    "#A9B7BE"
+   ],
+   "features": [
+    "mai_ton_hoac_ngoi_do",
+    "cong_sat_son_xanh",
+    "san_gach_phoi_thoc",
+    "gieng_cu_hoac_bon_nuoc",
+    "chuong_ga",
+    "cay_cau_cay_mit",
+    "tuong_rao_gach_mo_ga"
+   ],
+   "modules": [
+    {
+     "module": "ground_2p5m",
+     "size_m": {
+      "x": 1.0,
+      "y": 2.5,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (residential_gate)"
+    },
+    {
+     "module": "mid_2p5m",
+     "size_m": {
+      "x": 1.2,
+      "y": 2.5,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_2p5m",
+     "size_m": {
+      "x": 1.5,
+      "y": 2.5,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "ground_3m",
+     "size_m": {
+      "x": 1.0,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (residential_gate)"
+    },
+    {
+     "module": "mid_3m",
+     "size_m": {
+      "x": 1.2,
+      "y": 3,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_3m",
+     "size_m": {
+      "x": 1.5,
+      "y": 3,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "ground_4m",
+     "size_m": {
+      "x": 1.0,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "ground floor on a street-facing edge (residential_gate)"
+    },
+    {
+     "module": "mid_4m",
+     "size_m": {
+      "x": 1.2,
+      "y": 4,
+      "z": 3.3
+     },
+     "role": "one upper storey; repeated floors-1 times"
+    },
+    {
+     "module": "roof_4m",
+     "size_m": {
+      "x": 1.5,
+      "y": 4,
+      "z": 2.5
+     },
+     "role": "roof or parapet cap (corrugated)"
+    },
+    {
+     "module": "corner",
+     "size_m": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "outside corner, repeated per storey"
+    },
+    {
+     "module": "party_wall_1m",
+     "size_m": {
+      "x": 0.3,
+      "y": 1.0,
+      "z": 3.3
+     },
+     "role": "blank side/back wall, tiled along non-street edges"
+    }
+   ],
+   "route": "hand_kit"
+  }
+ ],
+ "kit_rules": {
+  "module_axes": "front face on the X=0 plane facing +X; module runs from Y=0 to Y=width; base at Z=0. Balconies and signs may stick out up to +1.2 m in X, walls go back to -0.3 m",
+  "storey_m": 3.3,
+  "widths": "the PCG kit picks the widest module set that fits each frontage edge from semantics/footprints_*.json, then fills the rest with smaller ones",
+  "ground_floor": "shopfront edges get ground_* modules; other street edges get mid_* modules at ground level"
+ },
+ "landmarks_priority_1": [
+  "thap_rua",
+  "cau_the_huc",
+  "den_ngoc_son",
+  "nha_hat_lon",
+  "nha_tho_lon",
+  "cau_long_bien",
+  "cho_dong_xuan",
+  "o_quan_chuong"
+ ]
+}

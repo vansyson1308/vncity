@@ -1,0 +1,1351 @@
+{
+  "collection": "missions",
+  "items": [
+    {
+      "id": "c1_01_hoc_lai_xe_may",
+      "tags": [
+        "chapter_1",
+        "khoi",
+        "minh",
+        "driving"
+      ],
+      "name": {
+        "vi": "Thầy Minh",
+        "en": "Master Minh"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:khoi",
+        "characters:minh"
+      ],
+      "giver": "characters:minh",
+      "summary": {
+        "vi": "Khôi muốn tự đi khắp phố tìm ảnh xưa, nên phải học đi xe máy và thi bằng A1. Minh nhận dạy, lấy học phí.",
+        "en": "Khôi needs to ride to hunt down his father's frames, so he must learn the motorbike and pass the A1 test. Minh teaches, for a fee."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p3_tu_sat_tren_gac"
+        ]
+      },
+      "start": {
+        "lat": 21.045,
+        "lon": 105.862
+      },
+      "steps": [
+        {
+          "id": "hen_gap",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Gặp Minh ở bãi giữa sông Hồng lúc 6 giờ sáng",
+            "en": "Meet Minh on the Red River sandbank at 6 a.m."
+          },
+          "target": "landmarks:bai_giua_song_hong",
+          "params": {
+            "time_of_day": 6.0
+          },
+          "next": "bai_hoc"
+        },
+        {
+          "id": "bai_hoc",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nghe Minh giảng 'triết lý đàn cá'",
+            "en": "Hear Minh's 'school of fish' philosophy"
+          },
+          "target": "landmarks:bai_giua_song_hong",
+          "dialogue": "dialogues:dlg_c1_01_bai_hoc",
+          "next": "tap_so"
+        },
+        {
+          "id": "tap_so",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Tập lên số, giữ thăng bằng, phanh hai tay trên đường đất",
+            "en": "Practise gears, balance and two-hand braking on the dirt track"
+          },
+          "target": "landmarks:bai_giua_song_hong",
+          "params": {
+            "lesson": "xe_so_co_ban",
+            "vehicle": "vehicles:hongdat_song_alpha",
+            "private_ground": true
+          },
+          "next": "thi_sat_hach",
+          "fail_if": [
+            "event:nga_xe_5_lan"
+          ]
+        },
+        {
+          "id": "thi_sat_hach",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Thi sát hạch A1: vòng số 8, đường thẳng hẹp, quanh co, gồ ghề",
+            "en": "A1 licence test: figure eight, narrow straight, slalom, rough track"
+          },
+          "target": {
+            "lat": 21.004,
+            "lon": 105.798
+          },
+          "params": {
+            "test": "sat_hach_a1",
+            "sections": [
+              "vong_so_8",
+              "duong_thang_hep",
+              "quanh_co",
+              "go_ghe"
+            ],
+            "max_faults": 2
+          },
+          "next": "ra_pho"
+        },
+        {
+          "id": "ra_pho",
+          "kind": "ride",
+          "objective": {
+            "vi": "Lần đầu tự lái: qua cầu Long Biên (đi bên trái!) về Hàng Chiếu",
+            "en": "First solo ride: cross Long Biên bridge (keep left!) to Hàng Chiếu"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "protagonist": "characters:khoi",
+            "escort": "characters:minh",
+            "route_via": "landmarks:cau_long_bien",
+            "special_rule": "cau_long_bien_di_ben_trai"
+          },
+          "next": "ve_dich",
+          "fail_if": [
+            "event:vi_pham_giao_thong_2_lan"
+          ]
+        },
+        {
+          "id": "ve_dich",
+          "kind": "talk",
+          "objective": {
+            "vi": "Trả học phí cho thầy Minh",
+            "en": "Pay Master Minh"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c1_01_ve_dich"
+        }
+      ],
+      "reward": {
+        "money_vnd": 800000,
+        "items": [
+          "items:giay_phep_lai_xe_a1"
+        ],
+        "set_flags": [
+          "khoi_co_bang_a1"
+        ]
+      },
+      "unlocks": [
+        "missions:c1_03_khach_vip_ca_ngay"
+      ]
+    },
+    {
+      "id": "c1_02_xich_lo_va_buc_anh_1989",
+      "tags": [
+        "chapter_1",
+        "khoi",
+        "photo",
+        "history"
+      ],
+      "name": {
+        "vi": "Người vui nhất Hà Nội",
+        "en": "The Happiest Man in Hanoi"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:khoi"
+      ],
+      "giver": "characters:ong_thang",
+      "summary": {
+        "vi": "Khôi tìm ra người đàn ông trong bức ảnh nổi tiếng nhất của bố: ông Thắng, cựu binh đạp xích lô.",
+        "en": "Khôi finds the man in his father's most famous photograph: Mr Thắng, veteran cyclo driver."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:p3_tu_sat_tren_gac"
+        ]
+      },
+      "start": {
+        "lat": 21.0378,
+        "lon": 105.8523
+      },
+      "steps": [
+        {
+          "id": "tim_ong_thang",
+          "kind": "talk",
+          "objective": {
+            "vi": "Tìm người đạp xích lô trong bức ảnh 1989",
+            "en": "Find the cyclo driver from the 1989 photo"
+          },
+          "target": "landmarks:o_quan_chuong",
+          "dialogue": "dialogues:dlg_c1_02_gap_ong_thang",
+          "next": "ngoi_xich_lo"
+        },
+        {
+          "id": "ngoi_xich_lo",
+          "kind": "ride",
+          "objective": {
+            "vi": "Ngồi xích lô ông Thắng qua Hàng Mã, Hàng Đường, Hàng Chiếu ra cầu Long Biên",
+            "en": "Ride Mr Thắng's cyclo through Hàng Mã, Hàng Đường and Hàng Chiếu to Long Biên bridge"
+          },
+          "target": "landmarks:cau_long_bien",
+          "dialogue": "dialogues:dlg_c1_02_tren_xich_lo",
+          "params": {
+            "vehicle": "vehicles:xich_lo",
+            "driver": "characters:ong_thang",
+            "commentary_trigger": "theo_vi_tri"
+          },
+          "next": "chup"
+        },
+        {
+          "id": "chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "Chụp lại tấm 'Thắng, 1989' lúc hoàng hôn, ông Thắng tạo dáng lại",
+            "en": "Rephotograph 'Thắng, 1989' at sunset with Mr Thắng re-posing"
+          },
+          "target": "landmarks:cau_long_bien",
+          "params": {
+            "archive_frame": "khai_1989_042_quat_tet_cau_long_bien",
+            "match_threshold": 0.8,
+            "hours": [
+              16.5,
+              17.75
+            ],
+            "subject": "characters:ong_thang"
+          },
+          "next": "hoang_hon"
+        },
+        {
+          "id": "hoang_hon",
+          "kind": "talk",
+          "objective": {
+            "vi": "Trò chuyện trên cầu lúc mặt trời lặn",
+            "en": "Talk on the bridge at sunset"
+          },
+          "target": "landmarks:cau_long_bien",
+          "dialogue": "dialogues:dlg_c1_02_hoang_hon"
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "hoi_nguoi_cao_tuoi_phuong": 10
+        },
+        "set_flags": [
+          "quen_ong_thang"
+        ]
+      },
+      "unlocks": [
+        "activities:act_xich_lo_du_lich",
+        "activities:act_huong_dan_vien",
+        "missions:s02_ky_thu_bo_ho",
+        "missions:s06_dieu_sao_bai_giua",
+        "missions:c1_06_hop_to_dan_pho"
+      ]
+    },
+    {
+      "id": "c1_03_khach_vip_ca_ngay",
+      "tags": [
+        "chapter_1",
+        "minh",
+        "kim_long"
+      ],
+      "name": {
+        "vi": "Khách VIP cả ngày",
+        "en": "The All-Day VIP"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:thao",
+      "summary": {
+        "vi": "Một khách đặt Minh cả ngày với giá hời: giám đốc dự án Kim Long Land, đi khảo sát mười bốn ngôi nhà phố cổ.",
+        "en": "A client books Minh for a whole day at a great rate: Kim Long Land's project director, surveying fourteen Old Quarter houses."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_01_hoc_lai_xe_may"
+        ]
+      },
+      "start": {
+        "lat": 21.017,
+        "lon": 105.7838
+      },
+      "steps": [
+        {
+          "id": "don_thao",
+          "kind": "talk",
+          "objective": {
+            "vi": "Đón khách đặt cả ngày ở sảnh tòa tháp Phạm Hùng",
+            "en": "Pick up the all-day client at the Phạm Hùng tower lobby"
+          },
+          "target": "landmarks:landmark_72",
+          "dialogue": "dialogues:dlg_c1_03_don_thao",
+          "params": {
+            "time_of_day": 7.5
+          },
+          "next": "diem_hang_bac",
+          "fail_if": [
+            "event:den_muon_qua_10_phut"
+          ]
+        },
+        {
+          "id": "diem_hang_bac",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Chở chị Thảo đến Hàng Bạc. Không nghe điện thoại.",
+            "en": "Drive Thảo to Hàng Bạc. No phone calls."
+          },
+          "target": {
+            "lat": 21.0342,
+            "lon": 105.853
+          },
+          "params": {
+            "passenger": "characters:thao",
+            "client_rules": [
+              "khong_nghe_dien_thoai",
+              "khong_vi_pham"
+            ],
+            "phone_rings_scripted": 2
+          },
+          "next": "diem_hang_chieu"
+        },
+        {
+          "id": "diem_hang_chieu",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Điểm tiếp theo: Hàng Chiếu số 49",
+            "en": "Next stop: No. 49 Hàng Chiếu"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "passenger": "characters:thao"
+          },
+          "next": "truoc_pho_tho"
+        },
+        {
+          "id": "truoc_pho_tho",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chờ chị Thảo chụp mặt tiền... nhà chị Lan",
+            "en": "Wait while Thảo photographs the façade... of Lan's house"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c1_03_hang_chieu",
+          "next": "co_hoi_khong"
+        },
+        {
+          "id": "co_hoi_khong",
+          "kind": "choice",
+          "objective": {
+            "vi": "Có hỏi thẳng chị Thảo về dự án không?",
+            "en": "Ask Thảo straight out about the project?"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "branch_source": "player_input",
+            "player_input": "hoi_thang_hay_im_lang"
+          },
+          "next": {
+            "hoi_thang": "hoi",
+            "im_lang": "diem_hang_buom"
+          }
+        },
+        {
+          "id": "hoi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Hỏi chị Thảo trên đường đi",
+            "en": "Ask Thảo on the way"
+          },
+          "target": {
+            "lat": 21.036,
+            "lon": 105.852
+          },
+          "dialogue": "dialogues:dlg_c1_03_hoi_thang",
+          "next": "diem_hang_buom"
+        },
+        {
+          "id": "diem_hang_buom",
+          "kind": "drive_passenger",
+          "objective": {
+            "vi": "Hàng Buồm, Mã Mây, rồi ăn trưa ở Quảng An",
+            "en": "Hàng Buồm, Mã Mây, then lunch in Quảng An"
+          },
+          "target": {
+            "lat": 21.065,
+            "lon": 105.827
+          },
+          "params": {
+            "passenger": "characters:thao",
+            "waypoints": [
+              {
+                "lat": 21.036,
+                "lon": 105.852
+              },
+              {
+                "lat": 21.0348,
+                "lon": 105.8531
+              }
+            ]
+          },
+          "next": "loi_moi"
+        },
+        {
+          "id": "loi_moi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Chị Thảo có lời mời",
+            "en": "Thảo makes an offer"
+          },
+          "target": {
+            "lat": 21.065,
+            "lon": 105.827
+          },
+          "dialogue": "dialogues:dlg_c1_03_loi_moi",
+          "next": "buoi_toi"
+        },
+        {
+          "id": "buoi_toi",
+          "kind": "choice",
+          "objective": {
+            "vi": "Tối đó, có kể cho chị Lan về danh sách 14 ngôi nhà không?",
+            "en": "That evening, tell Lan about the list of 14 houses?"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "branch_source": "player_input",
+            "player_input": "ke_hay_giu_kin"
+          },
+          "next": {
+            "ke_cho_lan": "gap_lan",
+            "giu_kin": "ve_tro"
+          }
+        },
+        {
+          "id": "gap_lan",
+          "kind": "talk",
+          "objective": {
+            "vi": "Đến Phở Thọ kể cho Lan",
+            "en": "Go to Phở Thọ and tell Lan"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c1_03_bao_lan",
+          "next": "end",
+          "set_flags": [
+            "lan_biet_danh_sach"
+          ]
+        },
+        {
+          "id": "ve_tro",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Về phòng trọ, im lặng",
+            "en": "Ride home and say nothing"
+          },
+          "target": {
+            "lat": 20.9905,
+            "lon": 105.815
+          },
+          "set_flags": [
+            "minh_giu_kin_danh_sach"
+          ]
+        }
+      ],
+      "reward": {
+        "money_vnd": 1400000,
+        "reputation": {
+          "kim_long_land": 10
+        }
+      },
+      "unlocks": [
+        "missions:c1_04_cho_dong_xuan_luc_6_gio",
+        "missions:c1_05_mua_ngap_pho",
+        "missions:s04_thach_dau_khong_gps"
+      ]
+    },
+    {
+      "id": "c1_04_cho_dong_xuan_luc_6_gio",
+      "tags": [
+        "chapter_1",
+        "lan",
+        "market"
+      ],
+      "name": {
+        "vi": "Chợ lúc sáu giờ",
+        "en": "Market at Six"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:ba_lua_dong_xuan",
+      "summary": {
+        "vi": "Quán cần tiết kiệm. Lan đi chợ đầu mối lúc nửa đêm và phải chọn giữa tiền và cái nết của nồi nước dùng.",
+        "en": "The shop needs to save money. Lan shops the night markets and must choose between cash and the broth's character."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_03_khach_vip_ca_ngay"
+        ]
+      },
+      "start": {
+        "lat": 21.0413,
+        "lon": 105.8532
+      },
+      "steps": [
+        {
+          "id": "cho_long_bien",
+          "kind": "go_to",
+          "objective": {
+            "vi": "2:30 sáng, ra chợ Long Biên mua hành, gừng",
+            "en": "2:30 a.m., go to Long Biên market for shallots and ginger"
+          },
+          "target": "landmarks:cho_long_bien",
+          "params": {
+            "time_of_day": 2.5,
+            "vehicle": "vehicles:hongdat_tam_nhin"
+          },
+          "next": "mac_ca_rau"
+        },
+        {
+          "id": "mac_ca_rau",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Mặc cả gừng, hành khô, hành lá với cánh buôn đầu mối",
+            "en": "Haggle for ginger, dried shallots and spring onions with the wholesalers"
+          },
+          "target": "activities:act_mac_ca_cho_dau_moi",
+          "params": {
+            "shopping_list": [
+              "gung_10kg",
+              "hanh_kho_5kg",
+              "hanh_la_3kg"
+            ],
+            "budget_vnd": 900000
+          },
+          "next": "dong_xuan"
+        },
+        {
+          "id": "dong_xuan",
+          "kind": "go_to",
+          "objective": {
+            "vi": "6 giờ sáng, vào sạp bà Lụa ở chợ Đồng Xuân",
+            "en": "6 a.m., Mrs Lụa's stall in Đồng Xuân market"
+          },
+          "target": "landmarks:cho_dong_xuan",
+          "params": {
+            "time_of_day": 6.0
+          },
+          "next": "sap_ba_lua"
+        },
+        {
+          "id": "sap_ba_lua",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mua quế, hồi, thảo quả",
+            "en": "Buy cinnamon, star anise and cardamom"
+          },
+          "target": "landmarks:cho_dong_xuan",
+          "dialogue": "dialogues:dlg_c1_04_ba_lua",
+          "next": "chon_gia_vi"
+        },
+        {
+          "id": "chon_gia_vi",
+          "kind": "choice",
+          "objective": {
+            "vi": "Đã chọn loại gia vị nào?",
+            "en": "Which spices did you buy?"
+          },
+          "target": "landmarks:cho_dong_xuan",
+          "params": {
+            "branch_source": "flag",
+            "from_dialogue": "dialogues:dlg_c1_04_ba_lua"
+          },
+          "next": {
+            "lan_mua_gia_vi_chuan": "ve_quan",
+            "lan_mua_gia_vi_re": "ve_quan_re",
+            "default": "ve_quan"
+          }
+        },
+        {
+          "id": "ve_quan",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Chở hàng về quán trước giờ ninh xương",
+            "en": "Bring the goods back before the simmer starts"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "time_limit_s": 600,
+            "cargo_fragile": false
+          },
+          "next": "nem"
+        },
+        {
+          "id": "ve_quan_re",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Chở hàng về quán trước giờ ninh xương",
+            "en": "Bring the goods back before the simmer starts"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "time_limit_s": 600
+          },
+          "next": "nem_re"
+        },
+        {
+          "id": "nem",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông nếm nước dùng",
+            "en": "Grandpa tastes the broth"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c1_04_cu_tho_khen",
+          "next": "end"
+        },
+        {
+          "id": "nem_re",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ông nếm nước dùng",
+            "en": "Grandpa tastes the broth"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c1_04_cu_tho_che",
+          "params": {
+            "business_effect": {
+              "pho_tho_hang_chieu": {
+                "income_bonus": -0.05,
+                "days": 14
+              }
+            }
+          }
+        }
+      ],
+      "reward": {
+        "reputation": {
+          "ban_quan_ly_cho_dong_xuan": 10
+        }
+      },
+      "unlocks": [
+        "activities:act_mac_ca_cho_dau_moi",
+        "missions:c1_07_mark_an_pho",
+        "missions:s08_tem_phieu_bao_cap"
+      ]
+    },
+    {
+      "id": "c1_05_mua_ngap_pho",
+      "tags": [
+        "chapter_1",
+        "minh",
+        "weather",
+        "heat_system"
+      ],
+      "name": {
+        "vi": "Mưa ngập phố",
+        "en": "Flooded Streets"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:minh"
+      ],
+      "giver": "characters:tuan_beo",
+      "summary": {
+        "vi": "Mưa lớn làm ngập nửa thành phố. Minh phải giao 30 suất phở cho Lan, cứu Tuấn, và học cách giảm mức Chú ý của CSGT mà không phạm luật thêm.",
+        "en": "Heavy rain floods half the city. Minh must deliver 30 portions of pho for Lan, rescue Tuấn, and learn to shed police Attention without breaking more laws."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_03_khach_vip_ca_ngay"
+        ]
+      },
+      "start": {
+        "lat": 21.008,
+        "lon": 105.82
+      },
+      "steps": [
+        {
+          "id": "hai_cuoc_goi",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Mưa như trút. Hai cuộc gọi đến khi đang chạy xe.",
+            "en": "Torrential rain. Two calls come in mid-ride."
+          },
+          "target": {
+            "lat": 21.008,
+            "lon": 105.82
+          },
+          "dialogue": "dialogues:dlg_c1_05_mua",
+          "params": {
+            "force_weather": "storm",
+            "force_event": "events:mua_ngap",
+            "auto_violation_if_answered_moving": "traffic_rules:dung_dien_thoai_khi_lai"
+          },
+          "next": "lay_pho"
+        },
+        {
+          "id": "lay_pho",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Về Phở Thọ lấy 30 suất phở",
+            "en": "Collect 30 portions from Phở Thọ"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "next": "giao_kim_ma"
+        },
+        {
+          "id": "giao_kim_ma",
+          "kind": "deliver",
+          "objective": {
+            "vi": "Giao 30 suất phở cho văn phòng ở Kim Mã trong 40 phút, tránh điểm ngập",
+            "en": "Deliver 30 portions to a Kim Mã office within 40 minutes, avoiding flooded spots"
+          },
+          "target": {
+            "lat": 21.0315,
+            "lon": 105.8215
+          },
+          "params": {
+            "time_limit_s": 2400,
+            "cargo": "pho_30_suat",
+            "spill_sensitive": true,
+            "flood_layer": "live"
+          },
+          "next": "chu_y_csgt",
+          "fail_if": [
+            "event:do_qua_5_suat",
+            "event:xe_chet_may_va_khong_dat_kip"
+          ]
+        },
+        {
+          "id": "chu_y_csgt",
+          "kind": "escape_traffic_police",
+          "objective": {
+            "vi": "Bạn đang bị Chú ý 2 sao. Giảm mức Chú ý: chạy đúng luật, ra khỏi tầm nhìn của tổ tuần tra. Không thể 'cắt đuôi' bằng phóng nhanh.",
+            "en": "You have 2 Attention stars. Bring it down by riding lawfully out of the patrol's sight. Speeding away only makes it worse."
+          },
+          "target": {
+            "lat": 21.0315,
+            "lon": 105.8215
+          },
+          "params": {
+            "decay_rule": "chi_giam_khi_tuan_thu_luat",
+            "alternative": "dung_lai_nop_phat",
+            "heat": 2
+          },
+          "next": "cuu_tuan"
+        },
+        {
+          "id": "cuu_tuan",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Đến Nguyễn Trãi đoạn Khương Trung, tìm Tuấn và chiếc xe chết máy",
+            "en": "Go to Nguyễn Trãi by Khương Trung, find Tuấn and his dead bike"
+          },
+          "target": {
+            "lat": 20.9975,
+            "lon": 105.817
+          },
+          "next": "day_xe"
+        },
+        {
+          "id": "day_xe",
+          "kind": "minigame",
+          "objective": {
+            "vi": "Dắt xe của Tuấn qua đoạn ngập đến tiệm Đức Còi",
+            "en": "Push Tuấn's bike through the flood to Đức's shop"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "params": {
+            "mode": "day_xe_loi_nuoc",
+            "distance_m": 900
+          },
+          "next": "o_tiem_duc"
+        },
+        {
+          "id": "o_tiem_duc",
+          "kind": "talk",
+          "objective": {
+            "vi": "Ở tiệm sửa xe sau cơn mưa",
+            "en": "At the repair shop after the rain"
+          },
+          "target": {
+            "lat": 20.9912,
+            "lon": 105.8142
+          },
+          "dialogue": "dialogues:dlg_c1_05_tuan"
+        }
+      ],
+      "reward": {
+        "money_vnd": 450000,
+        "reputation": {
+          "cong_dong_tai_xe_vo": 10,
+          "to_dan_pho_hang_chieu": 5
+        }
+      },
+      "unlocks": [
+        "activities:act_sua_xe_may",
+        "missions:s07_xe_chet_may_sau_mua"
+      ]
+    },
+    {
+      "id": "c1_06_hop_to_dan_pho",
+      "tags": [
+        "chapter_1",
+        "lan",
+        "khoi",
+        "choice_heavy"
+      ],
+      "name": {
+        "vi": "Họp tổ dân phố",
+        "en": "The Neighbourhood Meeting"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:lan",
+        "characters:khoi"
+      ],
+      "giver": "characters:ong_khang",
+      "summary": {
+        "vi": "Kim Long Land trình bày dự án trước tổ dân phố. Lan và Khôi phải nói gì đó, và mọi lời đều có hệ quả.",
+        "en": "Kim Long Land pitches to the neighbourhood. Lan and Khôi must say something, and every word has consequences."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_02_xich_lo_va_buc_anh_1989",
+          "missions:c1_04_cho_dong_xuan_luc_6_gio"
+        ]
+      },
+      "start": {
+        "lat": 21.0378,
+        "lon": 105.8506
+      },
+      "steps": [
+        {
+          "id": "den_hop",
+          "kind": "go_to",
+          "objective": {
+            "vi": "19:30, đến nhà văn hóa tổ dân phố số 5",
+            "en": "7:30 p.m., go to the residential group 5 hall"
+          },
+          "target": {
+            "lat": 21.0378,
+            "lon": 105.8506
+          },
+          "params": {
+            "time_of_day": 19.5
+          },
+          "next": "cuoc_hop"
+        },
+        {
+          "id": "cuoc_hop",
+          "kind": "talk",
+          "objective": {
+            "vi": "Cuộc họp: Kim Long Land trình bày, cả phố lên tiếng",
+            "en": "The meeting: Kim Long Land presents, the street speaks up"
+          },
+          "target": {
+            "lat": 21.0378,
+            "lon": 105.8506
+          },
+          "dialogue": "dialogues:dlg_c1_06_hop",
+          "params": {
+            "switch_protagonist_on_line": {
+              "l07": "characters:lan",
+              "l12": "characters:khoi"
+            }
+          },
+          "next": "sau_hop"
+        },
+        {
+          "id": "sau_hop",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Sau buổi họp, nhóm Alô Chat của tổ dân phố bùng nổ",
+            "en": "After the meeting the neighbourhood Alô Chat group explodes"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "phone_feed": "alo_chat_to_dan_pho_5",
+            "reacts_to_flags": [
+              "lan_lo_thong_tin_mat",
+              "lan_de_xuat_tu_quan",
+              "khoi_giu_phan"
+            ]
+          }
+        }
+      ],
+      "reward": {
+        "set_flags": [
+          "da_hop_to_dan_pho"
+        ]
+      },
+      "unlocks": [
+        "missions:c1_08_pho_di_bo_toi_thu_bay",
+        "missions:s09_bien_hieu_hang_thiec"
+      ]
+    },
+    {
+      "id": "c1_07_mark_an_pho",
+      "tags": [
+        "chapter_1",
+        "lan",
+        "cooking",
+        "social_media"
+      ],
+      "name": {
+        "vi": "Con bò đi spa",
+        "en": "The Cow Went to a Spa"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:lan"
+      ],
+      "giver": "characters:mark",
+      "summary": {
+        "vi": "Một video ẩm thực có thể cứu quán hoặc biến nó thành trò cười. Lan chọn nấu phở đúng, hay nấu phở để lên hình?",
+        "en": "A food video can save the shop or make it a joke. Does Lan cook pho the right way, or pho for the camera?"
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_04_cho_dong_xuan_luc_6_gio"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "mark_den",
+          "kind": "talk",
+          "objective": {
+            "vi": "Vlogger Mark đến quay ở Phở Thọ",
+            "en": "Vlogger Mark comes to film at Phở Thọ"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c1_07_mark_den",
+          "params": {
+            "time_of_day": 9.0
+          },
+          "next": "nau_cho_mark"
+        },
+        {
+          "id": "nau_cho_mark",
+          "kind": "cook",
+          "objective": {
+            "vi": "Nấu bát phở cho Mark trước ống kính, đạt từ 85 điểm",
+            "en": "Cook Mark's bowl on camera, score 85 or more"
+          },
+          "target": "activities:act_nau_pho",
+          "params": {
+            "special_customer": "characters:mark",
+            "orders": 1,
+            "score_threshold": 85,
+            "variant_from_flags": {
+              "lan_pho_chieu_tro": "bat_pho_3_lit"
+            }
+          },
+          "next": "mark_nem",
+          "fail_if": [
+            "event:diem_duoi_60"
+          ]
+        },
+        {
+          "id": "mark_nem",
+          "kind": "talk",
+          "objective": {
+            "vi": "Mark nếm, Khôi phiên dịch",
+            "en": "Mark tastes, Khôi translates"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c1_07_mark_nem",
+          "next": "viral"
+        },
+        {
+          "id": "viral",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "48 giờ sau: video lên xu hướng Tóp Tóp, hàng người xếp đến tận Hàng Đường",
+            "en": "48 hours later: the video trends on Tóp Tóp and the queue reaches Hàng Đường"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "business_effect": {
+              "pho_tho_hang_chieu": {
+                "income_bonus": 0.3,
+                "days": 21
+              }
+            },
+            "phone_feed": "top_top_binh_luan"
+          }
+        }
+      ],
+      "reward": {
+        "money_vnd": 0,
+        "reputation": {
+          "to_dan_pho_hang_chieu": 5
+        },
+        "set_flags": [
+          "video_mark_viral"
+        ]
+      },
+      "unlocks": [
+        "missions:s03_mark_qua_duong"
+      ]
+    },
+    {
+      "id": "c1_08_pho_di_bo_toi_thu_bay",
+      "tags": [
+        "chapter_1",
+        "switching",
+        "walking_street"
+      ],
+      "name": {
+        "vi": "Tối thứ Bảy trên phố đi bộ",
+        "en": "Saturday Night on the Walking Street"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:minh",
+        "characters:lan",
+        "characters:khoi"
+      ],
+      "giver": "characters:linh_bao_ton",
+      "summary": {
+        "vi": "Nhiệm vụ chuyển nhân vật đầu tiên: ba người dựng gian triển lãm ảnh xưa trên phố đi bộ Hồ Gươm, và một bức ảnh khiến đối thủ rơi nước mắt.",
+        "en": "The first switching mission: the three set up an archive-photo stall on the Sword Lake walking street, and one picture brings their rival to tears."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_06_hop_to_dan_pho"
+        ]
+      },
+      "start": {
+        "lat": 21.0295,
+        "lon": 105.8535
+      },
+      "steps": [
+        {
+          "id": "phan_viec",
+          "kind": "talk",
+          "objective": {
+            "vi": "Linh phân việc cho cả ba",
+            "en": "Linh assigns jobs to all three"
+          },
+          "target": {
+            "lat": 21.0295,
+            "lon": 105.8535
+          },
+          "dialogue": "dialogues:dlg_c1_08_mo_dau",
+          "params": {
+            "time_of_day": 19.0,
+            "requires_event": "events:pho_di_bo_cuoi_tuan"
+          },
+          "next": "minh_cho_anh"
+        },
+        {
+          "id": "minh_cho_anh",
+          "kind": "deliver",
+          "objective": {
+            "vi": "MINH: chở 20 khung ảnh từ Hàng Chiếu, gửi xe ở bãi ngoài rào chắn (phố đi bộ cấm xe)",
+            "en": "MINH: haul 20 frames from Hàng Chiếu and park at a lot outside the barriers (no vehicles on the walking street)"
+          },
+          "target": {
+            "lat": 21.0322,
+            "lon": 105.8556
+          },
+          "params": {
+            "protagonist": "characters:minh",
+            "cargo": "khung_anh_20",
+            "trips": 2,
+            "rule_check": "traffic_rules:di_vao_pho_di_bo_duong_cam"
+          },
+          "next": "minh_be_bo"
+        },
+        {
+          "id": "minh_be_bo",
+          "kind": "go_to",
+          "objective": {
+            "vi": "MINH: bê ảnh đi bộ vào gian triển lãm",
+            "en": "MINH: carry the frames on foot to the stall"
+          },
+          "target": {
+            "lat": 21.0295,
+            "lon": 105.8535
+          },
+          "params": {
+            "protagonist": "characters:minh",
+            "on_foot": true,
+            "carry_weight": "nang"
+          },
+          "next": "lan_phuc_vu"
+        },
+        {
+          "id": "lan_phuc_vu",
+          "kind": "cook",
+          "objective": {
+            "vi": "LAN: cuốn và mời nếm 60 cuốn phở cuốn",
+            "en": "LAN: roll and hand out 60 rolled-pho tasters"
+          },
+          "target": {
+            "lat": 21.0295,
+            "lon": 105.8535
+          },
+          "params": {
+            "protagonist": "characters:lan",
+            "recipe": "pho_cuon",
+            "servings": 60
+          },
+          "next": "khoi_chup"
+        },
+        {
+          "id": "khoi_chup",
+          "kind": "photograph",
+          "objective": {
+            "vi": "KHÔI: chụp 5 khoảnh khắc người xem nhận ra phố của mình trong ảnh xưa (xin phép)",
+            "en": "KHÔI: capture 5 moments of visitors recognising their own street in old photos (with consent)"
+          },
+          "target": {
+            "lat": 21.0295,
+            "lon": 105.8535
+          },
+          "params": {
+            "protagonist": "characters:khoi",
+            "targets": 5,
+            "require_consent": true
+          },
+          "next": "thao_xuat_hien"
+        },
+        {
+          "id": "thao_xuat_hien",
+          "kind": "talk",
+          "objective": {
+            "vi": "Một vị khách dừng rất lâu trước bức ảnh năm 1996",
+            "en": "A visitor stops for a long time before a 1996 print"
+          },
+          "target": {
+            "lat": 21.0295,
+            "lon": 105.8535
+          },
+          "dialogue": "dialogues:dlg_c1_08_thao_va_buc_anh",
+          "params": {
+            "switch_protagonist_on_line": {
+              "l06": "characters:khoi",
+              "l10": "characters:lan"
+            }
+          }
+        }
+      ],
+      "reward": {
+        "money_vnd": 0,
+        "reputation": {
+          "hoi_bao_ton_pho_cu": 15,
+          "to_dan_pho_hang_chieu": 5
+        }
+      },
+      "unlocks": [
+        "businesses:ca_phe_trung_hang_gai",
+        "missions:c1_09_bua_toi_tang_72",
+        "missions:s05_anh_cuoi_cau_long_bien"
+      ]
+    },
+    {
+      "id": "c1_09_bua_toi_tang_72",
+      "tags": [
+        "chapter_1",
+        "finale",
+        "switching",
+        "cliffhanger"
+      ],
+      "name": {
+        "vi": "Bữa tối ở tầng bảy mươi hai",
+        "en": "Dinner on the Seventy-Second Floor"
+      },
+      "type": "story",
+      "chapter": 1,
+      "protagonists": [
+        "characters:minh",
+        "characters:lan",
+        "characters:khoi"
+      ],
+      "giver": "characters:vinh",
+      "summary": {
+        "vi": "Chủ tịch Kim Long Land mời cả ba lên tầng thượng với một đề nghị khó từ chối. Đêm đó cụ Thọ mở chiếc hộp bánh quy cũ.",
+        "en": "Kim Long Land's chairman invites the three to the rooftop with an offer hard to refuse. That night Grandpa Thọ opens an old biscuit tin."
+      },
+      "requires": {
+        "missions_completed": [
+          "missions:c1_05_mua_ngap_pho",
+          "missions:c1_07_mark_an_pho",
+          "missions:c1_08_pho_di_bo_toi_thu_bay"
+        ]
+      },
+      "start": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
+      "steps": [
+        {
+          "id": "di_cung_nhau",
+          "kind": "follow",
+          "objective": {
+            "vi": "Hai xe đi cùng nhau lên Phạm Hùng (Khôi tự lái, chở ba là phạm luật)",
+            "en": "Ride in convoy to Phạm Hùng (Khôi rides his own bike; three on one is illegal)"
+          },
+          "target": "landmarks:landmark_72",
+          "params": {
+            "protagonist": "characters:khoi",
+            "follow": "characters:minh",
+            "passenger_of_minh": "characters:lan",
+            "max_gap_m": 80,
+            "time_of_day": 19.0
+          },
+          "next": "len_tang_thuong"
+        },
+        {
+          "id": "len_tang_thuong",
+          "kind": "go_to",
+          "objective": {
+            "vi": "Gửi xe hầm, lên quầy bar tầng thượng",
+            "en": "Park in the basement and go up to the rooftop bar"
+          },
+          "target": "landmarks:landmark_72",
+          "params": {
+            "parking_fee_vnd": 10000
+          },
+          "next": "loi_de_nghi"
+        },
+        {
+          "id": "loi_de_nghi",
+          "kind": "talk",
+          "objective": {
+            "vi": "Nghe đề nghị của ông Vĩnh",
+            "en": "Hear Mr Vĩnh's offer"
+          },
+          "target": "landmarks:landmark_72",
+          "dialogue": "dialogues:dlg_c1_09_vinh",
+          "params": {
+            "switch_protagonist_on_line": {
+              "l08": "characters:minh",
+              "l12": "characters:lan"
+            }
+          },
+          "next": "ve_dem"
+        },
+        {
+          "id": "ve_dem",
+          "kind": "ride",
+          "objective": {
+            "vi": "Về Hàng Chiếu qua đại lộ Thăng Long lúc nửa đêm, không ai nói gì",
+            "en": "Ride back to Hàng Chiếu at midnight along Thăng Long avenue in silence"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "params": {
+            "radio_forced": "radio:ha_noi_xua",
+            "minimap": false
+          },
+          "next": "bi_mat"
+        },
+        {
+          "id": "bi_mat",
+          "kind": "cutscene",
+          "objective": {
+            "vi": "Cụ Thọ gọi cả ba vào",
+            "en": "Grandpa Thọ calls all three in"
+          },
+          "target": {
+            "lat": 21.03745,
+            "lon": 105.8512
+          },
+          "dialogue": "dialogues:dlg_c1_09_bi_mat",
+          "params": {
+            "chapter_end": 1
+          }
+        }
+      ],
+      "reward": {
+        "set_flags": [
+          "ket_thuc_chuong_1",
+          "biet_giay_1957"
+        ],
+        "items": [
+          "items:so_do_hang_chieu"
+        ]
+      },
+      "unlocks": [
+        "activities:act_quan_ly_kinh_doanh",
+        "businesses:pho_tho_linh_dam",
+        "missions:s10_vong_ho_tay_luc_5_gio",
+        "missions:s12_mu_bao_hiem_cho_be"
+      ]
+    }
+  ]
+}

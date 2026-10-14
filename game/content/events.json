@@ -1,0 +1,181 @@
+{
+  "collection": "events",
+  "items": [
+    {
+      "id": "tet_nguyen_dan",
+      "tags": ["lunar", "major_holiday", "city_transform"],
+      "name": {"vi": "Tết Nguyên đán", "en": "Lunar New Year (Tết)"},
+      "description": {"vi": "Từ 23 tháng Chạp phố đã đỏ rực; mùng 1 thành phố vắng lặng như một thị trấn. Chợ hoa Hàng Lược, xe máy chở cây quất, cành đào Nhật Tân. Hầu hết quán đóng cửa, người chơi đi chúc Tết các nhân vật để tăng thiện cảm.", "en": "From the 23rd of the twelfth month the streets turn red; on day one the city goes as quiet as a small town. Hàng Lược flower market, kumquat trees strapped to motorbikes, Nhật Tân peach branches. Most shops close; visit characters with New Year wishes to raise friendship."},
+      "trigger": {"lunar_date": "1-1", "duration_days": 3},
+      "world_changes": ["co_do_sao_vang_moi_nha", "den_long_do_pho_co", "giam_80_phan_tram_giao_thong_mung_1", "dong_cua_70_phan_tram_quan", "ambient_xe_cho_quat_dao", "nhac_xuan_tren_moi_dai", "ao_dai_tren_pho", "phao_hoa_giao_thua_ho_guom"],
+      "locations": ["landmarks:ho_hoan_kiem", "landmarks:den_ngoc_son", "landmarks:phu_tay_ho", "landmarks:cho_dong_xuan"]
+    },
+    {
+      "id": "giao_thua",
+      "tags": ["lunar", "fireworks", "night"],
+      "name": {"vi": "Đêm Giao thừa", "en": "New Year's Eve (Giao thừa)"},
+      "description": {"vi": "Đêm 30 Tết: mâm cúng giao thừa, pháo hoa tầm cao ở Hồ Gươm, Mỹ Đình, Long Biên đúng 0 giờ. Người người đi hái lộc ở đền chùa.", "en": "Lunar New Year's Eve: midnight offerings, high-altitude fireworks over Sword Lake, Mỹ Đình and Long Biên at exactly midnight. Crowds go 'picking luck' at temples."},
+      "trigger": {"lunar_date": "30-12", "hours": [22, 1]},
+      "world_changes": ["phao_hoa_0_gio", "cam_xe_quanh_ho_guom", "dong_nguoi_den_chua"],
+      "locations": ["landmarks:ho_hoan_kiem", "landmarks:svd_my_dinh"]
+    },
+    {
+      "id": "ong_cong_ong_tao",
+      "tags": ["lunar", "folk"],
+      "name": {"vi": "Ông Công ông Táo", "en": "Kitchen Gods' Day"},
+      "description": {"vi": "23 tháng Chạp: nhà nhà thả cá chép ở Hồ Tây, hồ Trúc Bạch, cầu Long Biên. Nhiệm vụ phụ: nhắc người dân thả cá, không ném túi nilon xuống hồ.", "en": "23rd of the twelfth month: families release carp into West Lake, Trúc Bạch and from Long Biên bridge. Side task: remind people to release fish without throwing plastic bags into the water."},
+      "trigger": {"lunar_date": "23-12", "hours": [6, 14]},
+      "world_changes": ["nguoi_tha_ca_chep_ven_ho", "tui_nilon_rac_ven_ho"],
+      "locations": ["landmarks:ho_tay", "landmarks:ho_truc_bach", "landmarks:cau_long_bien"]
+    },
+    {
+      "id": "ram_thang_gieng",
+      "tags": ["lunar", "religious"],
+      "name": {"vi": "Rằm tháng Giêng (Tết Nguyên tiêu)", "en": "First Full Moon (Nguyên Tiêu)"},
+      "description": {"vi": "'Lễ Phật quanh năm không bằng rằm tháng Giêng'. Chùa Trấn Quốc, Phủ Tây Hồ, chùa Hà đông nghịt; đường Thanh Niên tắc từ chiều. Tôn trọng không gian lễ: xe máy phải gửi xa.", "en": "'A year of prayer is worth less than the first full moon.' Trấn Quốc, Tây Hồ Shrine and Hà Pagoda are packed; Thanh Niên road jams from the afternoon. Respect the worship space: bikes must be parked far away."},
+      "trigger": {"lunar_date": "15-1", "duration_days": 1},
+      "world_changes": ["dong_nguoi_di_le", "un_tac_thanh_nien", "ban_hoa_le_nhang"],
+      "locations": ["landmarks:chua_tran_quoc", "landmarks:phu_tay_ho"]
+    },
+    {
+      "id": "gio_to_hung_vuong",
+      "tags": ["lunar", "public_holiday"],
+      "name": {"vi": "Giỗ Tổ Hùng Vương", "en": "Hùng Kings' Commemoration"},
+      "description": {"vi": "Ngày nghỉ lễ: người Hà Nội về Phú Thọ, thành phố thưa hơn. Tuấn Béo về quê, Minh nhận thêm cuốc ra bến xe Mỹ Đình.", "en": "Public holiday: many Hanoians head to Phú Thọ and the city thins out. Tuấn goes home, Minh gets extra rides to Mỹ Đình coach station."},
+      "trigger": {"lunar_date": "10-3", "duration_days": 1},
+      "world_changes": ["giao_thong_ra_ben_xe_tang", "pho_thua_hon"],
+      "locations": ["landmarks:svd_my_dinh"]
+    },
+    {
+      "id": "trung_thu",
+      "tags": ["lunar", "children", "lanterns"],
+      "name": {"vi": "Tết Trung thu", "en": "Mid-Autumn Festival"},
+      "description": {"vi": "Phố Hàng Mã đỏ rực đèn lồng, đèn ông sao, mặt nạ giấy bồi; trẻ con rước đèn, múa lân. Hàng Mã tắc nghẽn từ tuần trước rằm. Nhiệm vụ cụ bà lạc đường xuất hiện.", "en": "Hàng Mã blazes with lanterns, star lanterns and papier-mâché masks; children parade, lion dancers drum. Hàng Mã jams all week before. The lost-grandmother mission appears."},
+      "trigger": {"lunar_date": "15-8", "duration_days": 1},
+      "world_changes": ["den_long_hang_ma", "mua_lan_cac_ngo", "tre_em_ruoc_den", "un_tac_hang_ma_7_ngay_truoc"],
+      "locations": ["landmarks:o_quan_chuong", "landmarks:pho_ta_hien"],
+      "missions": ["missions:s11_cu_ba_lac_duong"]
+    },
+    {
+      "id": "vu_lan",
+      "tags": ["lunar", "religious", "family"],
+      "name": {"vi": "Lễ Vu Lan (Rằm tháng Bảy)", "en": "Vu Lan (Ghost Month full moon)"},
+      "description": {"vi": "Cài hoa hồng trên áo để báo hiếu, cúng cô hồn, người trẻ đi chùa. Khôi lần đầu làm lễ Vu Lan cho bố theo lời dặn của ông Thắng.", "en": "Roses pinned on shirts to honour parents, offerings to wandering souls. Khôi makes his first Vu Lan offering for his father as Mr Thắng instructs."},
+      "trigger": {"lunar_date": "15-7", "duration_days": 1},
+      "world_changes": ["hoa_hong_cai_ao", "mam_cung_co_hon_via_he", "dot_vang_ma_truoc_cua"],
+      "locations": ["landmarks:chua_tran_quoc", "landmarks:den_quan_thanh"]
+    },
+    {
+      "id": "quoc_khanh",
+      "tags": ["solar", "national_day", "respectful"],
+      "name": {"vi": "Quốc khánh 2/9", "en": "National Day (2 September)"},
+      "description": {"vi": "Cờ đỏ sao vàng khắp phố, Quảng trường Ba Đình trang nghiêm, phân luồng giao thông quanh khu vực lễ, pháo hoa buổi tối ở nhiều điểm. Người chơi có thể xem lễ thượng cờ từ khu vực khán giả; không có hoạt động gây ồn.", "en": "Red flags everywhere, solemn Ba Đình Square, traffic diversions around the ceremony area, evening fireworks across the city. Players may watch the flag-raising from public areas; no noisy activities."},
+      "trigger": {"solar_date": "2-9", "duration_days": 2},
+      "world_changes": ["co_moi_nha", "phan_luong_ba_dinh", "phao_hoa_toi", "dong_nguoi_ve_ho_guom"],
+      "locations": ["landmarks:quang_truong_ba_dinh", "landmarks:ho_hoan_kiem"]
+    },
+    {
+      "id": "giai_phong_thu_do",
+      "tags": ["solar", "hanoi_day", "history"],
+      "name": {"vi": "Ngày Giải phóng Thủ đô 10/10", "en": "Capital Liberation Day (10 October)"},
+      "description": {"vi": "Kỷ niệm ngày tiếp quản Thủ đô năm 1954. Triển lãm ảnh xưa ở phố đi bộ: Khôi được mời trưng bày ảnh của bố nếu đã chụp lại đủ 30 tấm.", "en": "Marks the 1954 takeover of the capital. A historic photo exhibition on the walking street: Khôi is invited to show his father's work if he has rephotographed 30 frames."},
+      "trigger": {"solar_date": "10-10", "duration_days": 1},
+      "world_changes": ["trien_lam_anh_pho_di_bo", "co_hoa_khap_pho", "nhac_ha_noi_tren_loa"],
+      "locations": ["landmarks:ho_hoan_kiem", "landmarks:nha_hat_lon"]
+    },
+    {
+      "id": "giai_phong_mien_nam",
+      "tags": ["solar", "public_holiday"],
+      "name": {"vi": "Nghỉ lễ 30/4 - 1/5", "en": "Reunification Day and May Day break"},
+      "description": {"vi": "Kỳ nghỉ dài: dòng xe ra khỏi thành phố tắc từ chiều 29/4 ở cửa ngõ Giải Phóng, Pháp Vân; nội đô thoáng lạ thường.", "en": "A long break: outbound traffic jams from the afternoon of 29 April at the southern exits; the inner city is strangely clear."},
+      "trigger": {"solar_date": "30-4", "duration_days": 2},
+      "world_changes": ["un_tac_cua_ngo_ra", "noi_do_thoang"]
+    },
+    {
+      "id": "pho_di_bo_cuoi_tuan",
+      "tags": ["weekly", "walking_street"],
+      "name": {"vi": "Phố đi bộ Hồ Gươm cuối tuần", "en": "Sword Lake weekend walking street"},
+      "description": {"vi": "Từ tối thứ Sáu đến hết Chủ nhật, các phố quanh hồ cấm xe: trò chơi dân gian, nhảy hiện đại, hát rong, kéo co, ô ăn quan. Xe đi vào sẽ bị tính lỗi 'đi vào phố đi bộ'. Ghi chú: weekday 0 = thứ Hai, nên thứ Sáu = 4, thứ Bảy = 5, Chủ nhật = 6.", "en": "From Friday evening through Sunday, the streets round the lake close to traffic: folk games, dance crews, buskers, tug-of-war, ô ăn quan. Vehicles entering trigger the 'pedestrian zone' offence. Note: weekday 0 = Monday, so Fri = 4, Sat = 5, Sun = 6."},
+      "trigger": {"weekday": [4, 5, 6], "hours": [19, 24]},
+      "world_changes": ["cam_xe_quanh_ho", "tro_choi_dan_gian", "hat_rong", "nhom_nhay_hien_dai", "ban_hang_rong_dong"],
+      "locations": ["landmarks:ho_hoan_kiem", "landmarks:pho_sach_dinh_le"],
+      "missions": ["missions:c1_08_pho_di_bo_toi_thu_bay"]
+    },
+    {
+      "id": "pho_di_bo_ban_ngay",
+      "tags": ["weekly", "walking_street"],
+      "name": {"vi": "Phố đi bộ ban ngày (thứ Bảy, Chủ nhật)", "en": "Walking street, weekend daytime"},
+      "description": {"vi": "Ban ngày thứ Bảy và Chủ nhật các phố quanh hồ vẫn cấm xe. Gia đình đưa trẻ con ra chơi.", "en": "Saturday and Sunday daytime the lakeside streets stay car-free. Families bring kids to play."},
+      "trigger": {"weekday": [5, 6], "hours": [0, 19]},
+      "world_changes": ["cam_xe_quanh_ho", "tre_em_choi_dua"],
+      "locations": ["landmarks:ho_hoan_kiem"]
+    },
+    {
+      "id": "mua_hoa_sua",
+      "tags": ["season", "autumn", "scent"],
+      "name": {"vi": "Mùa hoa sữa", "en": "Milk-flower season"},
+      "description": {"vi": "Tháng 10-11, hương hoa sữa nồng nặc trên Nguyễn Du, Quang Trung. Hà Nội chuyển heo may, trời xanh trong; đường Phan Đình Phùng rụng lá vàng. Đẹp nhất để chụp ảnh.", "en": "October-November: heavy milk-flower scent along Nguyễn Du and Quang Trung. Autumn winds, clear blue sky, yellow leaves falling on Phan Đình Phùng. Peak season for photography."},
+      "trigger": {"solar_date": "5-10", "duration_days": 45},
+      "world_changes": ["hat_phan_hoa_sua_vfx", "am_thanh_gio_heo_may", "la_vang_phan_dinh_phung", "xe_hoa_cuc_hoa_mi_cuoi_mua", "cot_coc_tra_nong_tang"],
+      "locations": ["landmarks:ho_hoan_kiem", "landmarks:cot_co_ha_noi"]
+    },
+    {
+      "id": "mua_hoa_loa_ken",
+      "tags": ["season", "spring", "flowers"],
+      "name": {"vi": "Mùa hoa loa kèn", "en": "Easter-lily season"},
+      "description": {"vi": "Đầu tháng 4, xe đạp chở hoa loa kèn trắng khắp phố; cả thành phố đi chụp ảnh với áo dài trắng.", "en": "Early April, bicycles laden with white lilies everywhere; the whole city poses in white áo dài."},
+      "trigger": {"solar_date": "1-4", "duration_days": 25},
+      "world_changes": ["xe_dap_hoa_loa_ken", "nguoi_chup_anh_ao_dai"],
+      "locations": ["landmarks:ho_hoan_kiem"]
+    },
+    {
+      "id": "mua_nom",
+      "tags": ["season", "humidity", "live_feed"],
+      "name": {"vi": "Nồm ẩm", "en": "Nồm (spring damp)"},
+      "description": {"vi": "Độ ẩm trên 90%, tường đổ mồ hôi, sàn trơn, quần áo không khô. Kích hoạt khi dữ liệu thời tiết thật báo độ ẩm cao và điểm sương gần nhiệt độ (thường tháng 2-4). Tiệm giặt sấy đắt khách, xe dễ trượt.", "en": "Humidity over 90%, walls sweat, floors slick, laundry never dries. Triggered when real weather data shows high humidity with dew point near air temperature (typically February-April). Laundromats boom, bikes skid."},
+      "trigger": {"live_feed": "weather.nom_am"},
+      "world_changes": ["vat_lieu_uot_tuong_san", "do_bam_duong_giam_15", "suong_mu_nhe", "doanh_thu_giat_la_tang"]
+    },
+    {
+      "id": "mua_ngap",
+      "tags": ["weather", "flood", "live_feed", "system"],
+      "name": {"vi": "Mưa lớn, ngập phố", "en": "Torrential rain and street flooding"},
+      "description": {"vi": "Khi dữ liệu thật báo mưa lớn (trên ~50 mm trong vài giờ), các điểm trũng quen thuộc như Nguyễn Khuyến, Phan Bội Châu, Thái Hà, Nguyễn Trãi ngập. Xe số đi qua có thể chết máy, giá cước Vồ nhân 1,5, tiệm sửa xe đắt khách, áo mưa cánh dơi đầy đường.", "en": "When live data reports heavy rain (over ~50 mm within hours), the familiar low spots such as Nguyễn Khuyến, Phan Bội Châu, Thái Hà and Nguyễn Trãi flood. Bikes may stall, Vồ fares surge 1.5x, repair shops fill up, ponchos everywhere."},
+      "trigger": {"live_feed": "weather.heavy_rain"},
+      "world_changes": ["ngap_diem_trung_theo_dem", "xe_chet_may_xac_suat", "nhan_gia_cuoc_1_5", "nguoi_day_xe_loi_nuoc", "ao_mua_canh_doi_ambient"],
+      "missions": ["missions:c1_05_mua_ngap_pho", "missions:s07_xe_chet_may_sau_mua"]
+    },
+    {
+      "id": "nang_nong_dinh_diem",
+      "tags": ["weather", "heat", "live_feed"],
+      "name": {"vi": "Nắng nóng trên 38 độ", "en": "Heatwave above 38°C"},
+      "description": {"vi": "Đường nhựa bốc hơi, người tránh nắng dưới gầm cầu vượt khi chờ đèn đỏ, trà đá cháy hàng, điện có thể cắt luân phiên.", "en": "Asphalt shimmers, riders shelter under flyovers at red lights, iced tea sells out, rolling power cuts possible."},
+      "trigger": {"live_feed": "weather.heatwave"},
+      "world_changes": ["the_luc_giam_nhanh", "nguoi_tru_gam_cau_vuot", "cat_dien_ngau_nhien"]
+    },
+    {
+      "id": "ret_dam",
+      "tags": ["weather", "cold", "live_feed"],
+      "name": {"vi": "Rét đậm, rét hại", "en": "Cold snap"},
+      "description": {"vi": "Dưới 13 độ: áo phao, ngô nướng, khoai lang nướng, lẩu vỉa hè. Phở Thọ đông gấp đôi.", "en": "Below 13°C: puffer jackets, grilled corn and sweet potatoes, pavement hotpot. Phở Thọ gets twice the customers."},
+      "trigger": {"live_feed": "weather.cold_snap"},
+      "world_changes": ["ao_phao_ambient", "hang_ngo_khoai_nuong", "doanh_thu_pho_tang"]
+    },
+    {
+      "id": "bui_min_cao",
+      "tags": ["air_quality", "live_feed"],
+      "name": {"vi": "Bụi mịn PM2.5 cao", "en": "High PM2.5 pollution"},
+      "description": {"vi": "Khi chỉ số AQI thật vượt 150, trời đục, mặt trời như lòng đỏ trứng. Người chơi không đeo khẩu trang giảm thể lực nhanh hơn.", "en": "When the real AQI exceeds 150, the sky turns milky and the sun looks like an egg yolk. Riders without masks lose stamina faster."},
+      "trigger": {"live_feed": "air.aqi_unhealthy"},
+      "world_changes": ["suong_bui_vfx", "nguoi_deo_khau_trang_tang", "tam_nhin_giam"]
+    },
+    {
+      "id": "bao_vao_ha_noi",
+      "tags": ["weather", "storm", "live_feed"],
+      "name": {"vi": "Bão vào Hà Nội", "en": "Typhoon reaches Hanoi"},
+      "description": {"vi": "Gió giật, cây đổ, biển quảng cáo lung lay. Nhiệm vụ cộng đồng: dọn cây đổ, đưa cụ già về nhà, chằng chống quán.", "en": "Gusts, falling trees, swaying billboards. Community tasks: clear trees, bring elders home, batten down the shop."},
+      "trigger": {"live_feed": "weather.storm"},
+      "world_changes": ["cay_do_chan_duong", "mat_dien_tung_khu", "giao_thong_giam_manh"]
+    }
+  ]
+}

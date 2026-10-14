@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "radio.schema.json",
+  "title": "Radio stations",
+  "description": "In-vehicle radio/podcast stations (parody, original or licensed music only).",
+  "x-collection": "radio",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "radio"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "genre"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "genre": {
+            "type": "string"
+          },
+          "host": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "music_licensing": {
+            "enum": [
+              "original",
+              "royalty_free",
+              "licensed_tbd"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

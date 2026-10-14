@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "traffic_rules.schema.json",
+  "title": "Traffic rules",
+  "description": "The 'wanted level' of this game: traffic violations noticed by CSGT and the consequences.",
+  "x-collection": "traffic_rules",
+  "type": "object",
+  "required": [
+    "collection",
+    "items"
+  ],
+  "properties": {
+    "collection": {
+      "const": "traffic_rules"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "detection",
+          "fine_vnd"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "detection": {
+            "type": "object",
+            "properties": {
+              "trigger": {
+                "type": "string"
+              },
+              "base_notice_chance": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "camera_enforced": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "fine_vnd": {
+            "type": "object",
+            "properties": {
+              "motorbike": {
+                "$ref": "common.schema.json#/$defs/money_vnd"
+              },
+              "car": {
+                "$ref": "common.schema.json#/$defs/money_vnd"
+              }
+            },
+            "additionalProperties": false
+          },
+          "heat": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Attention points added (0-5 stars)."
+          },
+          "licence_points": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "legal_basis": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}
