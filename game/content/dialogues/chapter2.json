@@ -2912,6 +2912,155 @@
       ]
     },
     {
+      "id": "dlg_s14_tin_nhan",
+      "tags": [
+        "chapter_1",
+        "minh",
+        "side"
+      ],
+      "context": "Phòng trọ ngõ Khương Đình, 6:30 sáng. Điện thoại Minh sáng lên. (Lời thoại gốc của luồng quận, PR #8.)",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:thao",
+          "text": {
+            "vi": "[Tin nhắn] Anh Minh, việc đầu tiên: Hàng Bạc có nhà nào con cái ở xa, bố mẹ già, đang khó? Anh em xe ôm biết hết. Năm triệu một tin đúng."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(nhìn màn hình) Năm triệu. Hai tháng tiền thuốc của bố."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:tuan_beo",
+          "text": {
+            "vi": "Mày nhìn điện thoại như nhìn người yêu. Đi làm đi."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s14_ong_tu",
+      "tags": [
+        "chapter_1",
+        "minh",
+        "side"
+      ],
+      "context": "Số 7 Hàng Bạc, cửa hàng bạc, ông Tư đeo kính lúp ngồi chạm.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:ong_tu_hang_bac",
+          "text": {
+            "vi": "Hỏi đường đến Hàng Bạc mà đứng ở Hàng Bạc. Cậu muốn hỏi gì thì hỏi thẳng."
+          }
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "Dạ... cháu hỏi nhà bác có bán bạc nguyên miếng không ạ."
+          }
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:ong_tu_hang_bac",
+          "text": {
+            "vi": "Có. Và tôi không bán nhà, nếu cậu định hỏi câu thứ hai. Con tôi trong Sài Gòn nó muốn. Tôi ở đây tám mươi mốt năm. Cái đe này là của cụ tôi."
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(thầm) Con ở xa, bố già, đang khó. Đúng tin chị Thảo cần."
+          }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:ong_tu_hang_bac",
+          "text": {
+            "vi": "Cậu ăn phở Thọ không? Lão Thọ với tôi đánh cờ bốn mươi năm. Bảo lão là tôi còn nợ lão một ván."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dlg_s14_gui_tin",
+      "tags": [
+        "chapter_1",
+        "minh",
+        "side"
+      ],
+      "context": "Phòng trọ, 22 giờ. Minh nằm, điện thoại trên ngực.",
+      "lines": [
+        {
+          "id": "l01",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(gõ rồi xóa, gõ rồi xóa)"
+          },
+          "choices": [
+            {
+              "text": {
+                "vi": "Gửi tin: 'Hàng Bạc số 7, ông cụ 81 tuổi, con trai ở Sài Gòn muốn bán.'"
+              },
+              "effect": {
+                "set_flags": [
+                  "minh_ban_tin_ong_tu"
+                ],
+                "money_vnd": 5000000,
+                "reputation": {
+                  "kim_long_land": 5
+                }
+              },
+              "goto": "l02"
+            },
+            {
+              "text": {
+                "vi": "Gửi tin giả: 'Em hỏi cả phố rồi, Hàng Bạc không nhà nào bán.'"
+              },
+              "effect": {
+                "set_flags": [
+                  "minh_khong_ban_tin"
+                ],
+                "reputation": {
+                  "hoi_nguoi_cao_tuoi_phuong": 5
+                }
+              },
+              "goto": "l03"
+            }
+          ]
+        },
+        {
+          "id": "l02",
+          "speaker": "characters:thao",
+          "text": {
+            "vi": "[Tin nhắn] Tốt. Chuyển khoản rồi. Tuần sau Hàng Buồm."
+          },
+          "goto": "l04"
+        },
+        {
+          "id": "l03",
+          "speaker": "characters:thao",
+          "text": {
+            "vi": "[Tin nhắn] Lạ nhỉ. Hùng Hàng Đậu vừa gửi tin Hàng Bạc số 7. Anh hỏi kỹ chưa?"
+          }
+        },
+        {
+          "id": "l04",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(tắt màn hình, nằm nhìn trần nhà) Con ổn mà mẹ."
+          }
+        }
+      ]
+    },
+    {
       "id": "dlg_s13_hoa_tay_tuu",
       "tags": [
         "chapter_2",

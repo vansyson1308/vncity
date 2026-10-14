@@ -60,9 +60,7 @@ PENDING_FLAGS = {"lan_cong_khai_danh_sach": "docs/gdd/10-sua-chuong-1.md (chapte
                  "khoi_hoc_tu_keo_ly": "docs/gdd/10-sua-chuong-1.md (chapter-1 edit pending)",
                  "tho_cuu_giay": "PR #8 cold open p0 (pending merge)",
                  "minh_bo_viec_kim_long": "PR #8 c1_05 (pending merge)",
-                 "minh_giu_viec_kim_long": "PR #8 c1_05 (pending merge)",
-                 "minh_ban_tin_ong_tu": "PR #8 side s13 Tin đầu tiên (pending merge)",
-                 "minh_khong_ban_tin": "PR #8 side s13 Tin đầu tiên (pending merge)"}
+                 "minh_giu_viec_kim_long": "PR #8 c1_05 (pending merge)"}
 
 
 def load(collection, sub=None):
