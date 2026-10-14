@@ -25,7 +25,7 @@ NAMES = {"hoan_kiem": "Hoàn Kiếm (phố cổ + hồ Gươm)", "ba_dinh": "Ba 
          "bac_tu_liem": "Bắc Từ Liêm", "ha_dong": "Hà Đông"}
 
 
-def montage(names, cols=4, cell=420):
+def montage(names, cols=4, cell=320):
     tiles = []
     for n in names:
         p = ROOT / "out" / n / "preview.png"
@@ -89,7 +89,14 @@ def main():
           "`lang_trong_pho`, `cho_coc`, `pavement_clutter`); các bộ mới chưa được bước `scatter` rải tự động, mới có hợp đồng kích "
           "thước và prompt tham chiếu (`08-nguon-tai-san-3d.md`).", "",
           "## Xem trước", "", "![12 quận, tô màu theo nguồn chiều cao](img/districts_preview.png)", "",
-          "Từng quận: `out/<quận>/preview.png` (khối nhà) và `preview_semantic.png` (kiểu nhà, mặt tiền, đạo cụ quanh tâm quận).", "",
+          "Từng quận: `out/<quận>/preview.png` (khối nhà) và `preview_semantic.png` (kiểu nhà, mặt tiền, đạo cụ quanh tâm quận). "
+          "Ba quận trên 60.000 tòa nhà (Long Biên, Bắc Từ Liêm, Hà Đông) được `build.py` vẽ xem trước ở chế độ thô nên ảnh nhạt; "
+          "số tòa nhà và ô trong bảng là số thật từ `manifest.json`.", "",
+          "## Hạn chế đã biết", "",
+          "- Hơn 98% tòa nhà không có chiều cao gốc trong Overture, nên chung cư và văn phòng cao tầng ngoài lõi bị xếp vào "
+          "`nha_thap_tang`/`nha_ong_hien_dai` (toàn nội thành chỉ nhận ra 244 `chung_cu_cao_tang`). Cần lớp chiều cao bổ sung "
+          "(raster 2.5D, `build.py --heights-tif`) hoặc luật theo diện tích đế + tên dự án trước khi dựng Linh Đàm, Mỹ Đình, Times City.",
+          "- Khung Tây Hồ, Long Biên gồm nhiều mặt nước và bãi sông nên tỷ lệ liên thông đồ thị đường thấp hơn (92-98%).", "",
           "## Chưa làm", "",
           "- Huyện ngoại thành (Gia Lâm, Đông Anh, Thanh Trì, Hoài Đức): khung đã ghi ở `pipeline/districts.json` mục `later`, "
           "cần một lần tải riêng vì nằm ngoài khung cache.",
@@ -99,7 +106,7 @@ def main():
     sheet = montage(order)
     if sheet is not None:
         IMG.parent.mkdir(parents=True, exist_ok=True)
-        sheet.save(IMG, optimize=True)
+        sheet.convert("P", palette=Image.ADAPTIVE, colors=128).save(IMG, optimize=True)
     print(f"{DOC.relative_to(ROOT)}: {len(order)} districts, {tot['buildings']:,} buildings")
 
 
