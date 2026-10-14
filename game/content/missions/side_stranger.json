@@ -163,7 +163,11 @@
             "opponent_style": "phong_thu",
             "difficulty": 2
           },
-          "next": "van_2"
+          "next": {
+            "thang": "van_2",
+            "thua": "mat_tra",
+            "default": "van_2"
+          }
         },
         {
           "id": "van_2",
@@ -177,7 +181,11 @@
             "opponent_style": "tan_cong_ma",
             "difficulty": 3
           },
-          "next": "van_3"
+          "next": {
+            "thang": "van_3",
+            "thua": "mat_tra",
+            "default": "van_3"
+          }
         },
         {
           "id": "van_3",
@@ -192,7 +200,11 @@
             "handicap": "chap_xe",
             "difficulty": 5
           },
-          "next": "thang"
+          "next": {
+            "thang": "thang",
+            "thua": "mat_tra",
+            "default": "thang"
+          }
         },
         {
           "id": "thang",
@@ -206,6 +218,20 @@
             "lon": 105.8513
           },
           "dialogue": "dialogues:dlg_s02_thang"
+        },
+        {
+          "id": "mat_tra",
+          "kind": "talk",
+          "objective": {
+            "vi": "Thua. Cụ Bảo mời trà, mai chơi lại",
+            "en": "Lost. Old Bảo pours tea; play again tomorrow"
+          },
+          "target": {
+            "lat": 21.0305,
+            "lon": 105.8513
+          },
+          "next": "end",
+          "dialogue": "dialogues:dlg_s02_thua"
         }
       ],
       "reward": {
@@ -524,6 +550,9 @@
           "clear",
           "cloudy",
           "cold"
+        ],
+        "flags": [
+          "quen_ong_thang"
         ]
       },
       "start": {
@@ -804,6 +833,9 @@
       "requires": {
         "missions_completed": [
           "missions:c1_06_hop_to_dan_pho"
+        ],
+        "flags": [
+          "da_hop_to_dan_pho"
         ]
       },
       "start": {
@@ -938,7 +970,11 @@
             "scripted_winner_npc": "ong_cu_han_quoc_70_tuoi",
             "max_player_rank": 2
           },
-          "next": "dich",
+          "next": {
+            "top_3": "dich",
+            "ngoai_top_3": "ve_bet",
+            "default": "dich"
+          },
           "fail_if": [
             "event:vi_pham_luat_3_lan"
           ]
@@ -955,6 +991,20 @@
             "lon": 105.838
           },
           "dialogue": "dialogues:dlg_s10_xong"
+        },
+        {
+          "id": "ve_bet",
+          "kind": "talk",
+          "objective": {
+            "vi": "Về ngoài top 3. Tuấn vẫn có clip",
+            "en": "Outside the top three. Tuấn still gets his clip"
+          },
+          "target": {
+            "lat": 21.0465,
+            "lon": 105.838
+          },
+          "next": "end",
+          "dialogue": "dialogues:dlg_s10_ve_bet"
         }
       ],
       "reward": {

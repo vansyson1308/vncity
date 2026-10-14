@@ -797,7 +797,7 @@ struct HANOICITYRUNTIME_API FHanoiDialogueLineChoice
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FName Goto;
 
-	/** Offered only while this holds. Every line with choices keeps at least one unconditional choice (tools/validate.py). [json: condition] */
+	/** The choice is offered only while this holds (flags from earlier choices). Hidden choices are not shown at all. [json: condition] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiCondition Condition;
 
@@ -827,7 +827,7 @@ struct HANOICITYRUNTIME_API FHanoiDialogueLine
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FString Emotion;
 
-	/** Shown only while this holds; otherwise the runtime skips the line and continues with the next line in list order (its goto and choices are ignored). [json: condition] */
+	/** The line is shown only while this holds. A skipped line falls through to the next line in the array (its goto is not followed), so variant lines for earlier choices are written back to back. [json: condition] */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hanoi")
 	FHanoiCondition Condition;
 

@@ -229,6 +229,10 @@
       "gender": "male",
       "bio": {"vi": "Thợ bạc đời thứ tư, số 7 Hàng Bạc (nhà số 7 trong danh sách 14 nhà của Kim Long), nhà ống ba tầng đứng tên hai vợ chồng, bà mất năm 2024 chưa chia thừa kế nên con trai ở Sài Gòn chỉ ký được 'ghi nhớ', chưa bán được. Bạn cờ bốn mươi năm của cụ Thọ. Trở thành 'mục tiêu dễ' trong danh sách của một nhà thầu phụ vì ở một mình. Gương để Thảo nhìn thấy bà ngoại mình."},
       "occupation": {"vi": "Thợ bạc về hưu"},
+      "home": {"lat": 21.0337, "lon": 105.8521},
+      "district": "districts:pho_co",
+      "appearance": {"outfit": "Áo len cổ lọ, kính lúp đeo trán, tay đen vì bạc.", "metahuman_preset": "MH_VN_Male_80s"},
+      "schedule": [{"hours": [7, 11], "activity": "ngoi_ban_cham_bac", "location": {"lat": 21.0337, "lon": 105.8521}}, {"hours": [14, 18], "activity": "ngoi_ban_cham_bac", "location": {"lat": 21.0337, "lon": 105.8521}}],
       "personality": ["hien", "cham", "nho_dai"],
       "voice": {"accent": "hanoi", "notes": "Giọng Hàng Bạc cũ, xưng 'tôi' với người trẻ, hay lặp một ý hai lần."},
       "relationships": [{"with": "characters:cu_tho", "kind": "ban_co_lau_nam"}, {"with": "characters:minh", "kind": "nguoi_cuu"}, {"with": "characters:thao", "kind": "guong_soi"}]
@@ -657,6 +661,74 @@
       "bio": {"vi": "Nghệ sĩ chèo về hưu dẫn chương trình 'Sân Đình' sáng chủ nhật: chèo, ca trù, xẩm chợ và chuyện phố cũ.", "en": "Retired chèo opera artist hosting Sunday morning's 'Village Courtyard': chèo, ca trù, xẩm busking songs and tales of old streets."},
       "occupation": {"vi": "Nghệ sĩ chèo, dẫn chương trình", "en": "Chèo artist and presenter"},
       "voice": {"accent": "hanoi", "notes": "Giọng ngân, hay hát dạo một câu trước khi vào chuyện."}
+    },
+    {
+      "id": "tho_1957",
+      "tags": ["playable_flashback", "family_lan", "pho_master"],
+      "name": {"vi": "Thọ (1957-1972)", "en": "Thọ (1957-1972)"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Mười bảy tuổi, ngồi đầu ngõ ba năm không có chỗ, gửi tiền về Vân Cù cho thầy u; năm 1972 vợ con dưới bom, tờ giấy của hai nhà bén lửa."},
+        "tap": {"vi": "Tin người đã ăn phở mình ba năm; học được rằng giấy trắng mực đen hơn lời nói kể từ khi xa thầy u."},
+        "diet": {"vi": "Một chỗ bán phở không ai bảo là chiếm; giữ được lời hứa với ông Khiêm khi ông đi vắng."},
+        "dao": {"vi": "Ký ngay hay xin thêm một dòng; dập lửa bằng tay hay bế con xuống hầm: mỗi lựa chọn là vết sẹo ông mang năm mươi tư năm."},
+        "tell": "Nói 'ông ạ' cuối câu; nhìn gánh phở trước khi nhìn người."
+      },
+      "age": 17,
+      "gender": "male",
+      "bio": {"vi": "Cụ Thọ thời trẻ, nhân vật người chơi điều khiển trong màn mở đầu: 17 tuổi gánh phở đầu ngõ Hàng Chiếu mùa đông 1957, và 32 tuổi đêm 26/12/1972 khi tờ giấy của hai nhà cháy mất một góc. Hai cảnh đen trắng, cùng một diễn viên lồng tiếng với cụ Thọ nhưng giọng trẻ.", "en": "Young Thọ, the player's character in the cold open: 17 and carrying his pho yoke at the mouth of the Hàng Chiếu alley in the winter of 1957, then 32 on the night of 26 December 1972 when the two families' paper lost a corner to fire. Both scenes in black and white; same voice actor as old Thọ, younger voice."},
+      "home": {"lat": 21.03745, "lon": 105.8512},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Người gánh phở rong", "en": "Itinerant pho seller"},
+      "personality": ["kiem_loi", "nhan_nhin", "ben_bi"],
+      "voice": {"accent": "northern_rural", "notes": "Giọng Nam Định rõ hơn cụ Thọ về già; xưng 'cháu' với ông Khiêm, 'tôi/mình' với vợ."},
+      "appearance": {"outfit": "1957: áo nâu, quần ống rộng, nón lá, đòn gánh tre. 1972: áo bông xanh công nhân, mũ cối.", "metahuman_preset": "MH_VN_Male_20s"},
+      "skills": {"nau_an": 70, "the_luc": 85},
+      "relationships": [{"with": "characters:cu_tho", "kind": "chinh_minh_ve_gia"}, {"with": "characters:ong_khiem", "kind": "hang_xom_an_nhan"}, {"with": "characters:ba_tho", "kind": "vo"}]
+    },
+    {
+      "id": "ong_khiem",
+      "tags": ["family_khoi", "deceased", "flashback_only"],
+      "name": {"vi": "Ông Nguyễn Văn Khiêm", "en": "Mr Nguyễn Văn Khiêm"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Căn nhà chủ cũ vào Nam sắp bán mà thiếu hai cây; đầu năm 1972 phải đi B, để lại vợ ốm và con trai mười bảy tuổi."},
+        "tap": {"vi": "Tin 'người còn thì nhà còn'; tin một dòng chữ giữ được người ở lại tử tế với nhau khi mình không về."},
+        "diet": {"vi": "Hai nhà cùng ở: hiệu ảnh trên gác, phở dưới nhà; vợ con có người che chở nếu mình không về."},
+        "dao": {"vi": "Viết tờ giấy 'nhà này của hai nhà', ăn bát đầu mỗi sáng, viết thêm một dòng trước khi đi."},
+        "tell": "Gọi Thọ là 'chú' dù hơn mười tuổi; húp nước dùng trước khi nói chuyện quan trọng."
+      },
+      "age": 27,
+      "gender": "male",
+      "bio": {"vi": "Ông nội Khôi, bố ông Khải. Năm 1957 là cán bộ kỹ thuật nhà in, 27 tuổi, mua chung căn 49 Hàng Chiếu với Thọ và viết tờ giấy 'Nhà này của hai nhà'. Đầu năm 1972 viết thêm một dòng rồi đi B, không trở về. Chỉ xuất hiện trong màn mở đầu và qua lời kể.", "en": "Khôi's grandfather, Khải's father. In 1957 a 27-year-old print-works technician who bought No. 49 Hàng Chiếu together with Thọ and wrote the paper 'This house belongs to two families'. Early in 1972 he added one more line, went south to the war and never returned. Appears only in the cold open and in others' accounts."},
+      "home": {"lat": 21.03745, "lon": 105.8512},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Cán bộ kỹ thuật nhà in", "en": "Print-works technician"},
+      "personality": ["hao_phong", "nguyen_tac", "it_noi"],
+      "voice": {"accent": "hanoi", "notes": "Giọng Hà Nội cũ, nói chậm, gọi Thọ là 'chú'."},
+      "appearance": {"outfit": "Áo sơ mi trắng cài kín, quần kaki, dép cao su; 1972: quân phục.", "metahuman_preset": "MH_VN_Male_30s"},
+      "relationships": [{"with": "characters:bo_khai", "kind": "con_trai"}, {"with": "characters:tho_1957", "kind": "ban_gop_nha"}]
+    },
+    {
+      "id": "ba_tho",
+      "tags": ["family_lan", "deceased", "flashback_only"],
+      "name": {"vi": "Bà Nguyễn Thị Nhàn (vợ cụ Thọ)", "en": "Mrs Nguyễn Thị Nhàn (Thọ's wife)"},
+      "role": "story",
+      "drive": {
+        "kho": {"vi": "Đêm bom con sốt, chồng phải chọn cứu giấy hay cứu con; sau đó giữ tờ giấy cháy trong hộp bánh quy năm mươi tư năm không nói với ai."},
+        "tap": {"vi": "Tin giấy tờ là chuyện đàn ông; sợ nói ra sẽ mang tiếng tham phần nhà hàng xóm đi B không về."},
+        "diet": {"vi": "Con gái khỏe, chồng lành tay, cái hộp kim chỉ không ai phải mở."},
+        "dao": {"vi": "Bế con, gọi chồng, cất giấy vào hộp kim chỉ, im lặng đến khi mất năm 2009."},
+        "tell": "Gọi chồng là 'mình'; hộp bánh quy luôn ở trong tầm tay."
+      },
+      "age": 26,
+      "gender": "female",
+      "bio": {"vi": "Vợ cụ Thọ, mất năm 2009. Trong màn mở đầu là người mẹ 26 tuổi đêm 26/12/1972, bế bé Hạnh đang sốt. Cái hộp bánh quy đựng kim chỉ của bà là nơi tờ giấy 1957 nằm suốt năm mươi tư năm.", "en": "Thọ's wife, died 2009. In the cold open she is a 26-year-old mother on the night of 26 December 1972, holding feverish baby Hạnh. Her biscuit tin of needles and thread is where the 1957 paper lay for fifty-four years."},
+      "home": {"lat": 21.03745, "lon": 105.8512},
+      "district": "districts:pho_co",
+      "occupation": {"vi": "Công nhân dệt", "en": "Textile worker"},
+      "voice": {"accent": "hanoi", "notes": "Nói nhanh, gọi chồng là 'mình'."},
+      "relationships": [{"with": "characters:tho_1957", "kind": "chong"}, {"with": "characters:co_hanh", "kind": "con_gai"}]
     }
   ]
 }

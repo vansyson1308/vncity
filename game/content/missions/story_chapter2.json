@@ -27,6 +27,10 @@
       "requires": {
         "missions_completed": [
           "missions:c1_09_bua_toi_tang_72"
+        ],
+        "flags": [
+          "biet_giay_1957",
+          "ket_thuc_chuong_1"
         ]
       },
       "start": {
@@ -227,6 +231,9 @@
       "requires": {
         "missions_completed": [
           "missions:c2_01_bang_so_12"
+        ],
+        "flags": [
+          "nghe_bang_12"
         ]
       },
       "start": {
@@ -405,6 +412,9 @@
       "requires": {
         "missions_completed": [
           "missions:c2_01_bang_so_12"
+        ],
+        "flags": [
+          "nghe_bang_12"
         ]
       },
       "start": {
@@ -1201,6 +1211,10 @@
         "missions_completed": [
           "missions:c2_05_ong_cong_ong_tao",
           "missions:c2_06_cho_hoa_hang_luoc"
+        ],
+        "flags": [
+          "da_cung_ong_tao",
+          "khoi_gap_me_thao"
         ]
       },
       "start": {
@@ -1427,6 +1441,9 @@
       "requires": {
         "missions_completed": [
           "missions:c2_07_giao_thua_ho_guom"
+        ],
+        "flags": [
+          "ket_thuc_chuong_2"
         ]
       },
       "start": {

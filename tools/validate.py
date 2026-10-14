@@ -58,7 +58,8 @@ def iter_refs(schema_node, value, path, schemas):
             yield from iter_refs(sub, value, path, schemas)
 
 
-TERMINAL_STEPS = {"end", "success", "fail"}  # common.schema.json#/$defs/step_id; UHanoiMissionSubsystem::Advance
+TERMINAL_STEPS = {"end", "success", "fail"}
+DIALOGUE_CONDITION_KEYS = {"flags", "not_flags", "events_active", "min_reputation", "protagonist"}  # UHanoiMissionSubsystem::ResolveDialogueLine  # common.schema.json#/$defs/step_id; UHanoiMissionSubsystem::Advance
 
 
 def check_missions(docs, items):
@@ -98,7 +99,10 @@ def check_missions(docs, items):
 
 
 def check_dialogues(docs):
-    """Conditional lines/choices (UHanoiMissionSubsystem::ResolveDialogueLine / GetAvailableChoices):
+    """Dialogue graphs: every goto names a line of the same dialogue, line ids are unique, a line with
+    choices has no goto of its own, and `condition` on lines/choices only uses state the dialogue UI
+    can evaluate mid-conversation (flags, not_flags, events_active, min_reputation, protagonist).
+    Conditional lines/choices (UHanoiMissionSubsystem::ResolveDialogueLine / GetAvailableChoices):
     a line with choices keeps at least one unconditional choice, so the UI always has something to
     offer, and the last line of a dialogue carries no condition (skipping it would end the dialogue
     silently)."""
@@ -108,6 +112,24 @@ def check_dialogues(docs):
             continue
         for d in doc.get("items", []):
             lines = d.get("lines", [])
+            ids = [ln.get("id") for ln in lines]
+            where = f"{p}: dialogues:{d.get('id')}"
+            if len(set(ids)) != len(ids):
+                errors.append(f"{where}: duplicate line ids")
+            for ln in lines:
+                targets = [ln["goto"]] if "goto" in ln else []
+                targets += [c.get("goto") for c in ln.get("choices", [])]
+                for tgt in targets:
+                    if tgt not in ids:
+                        errors.append(f"{where}.{ln.get('id')}: goto '{tgt}' is not a line of this dialogue")
+                if ln.get("choices") and "goto" in ln:
+                    errors.append(f"{where}.{ln.get('id')}: a line with choices cannot also have goto")
+                conds = [("line", ln.get("condition"))] + [(f"choice {i}", c.get("condition")) for i, c in enumerate(ln.get("choices", []))]
+                for what, cond in conds:
+                    for key in (cond or {}):
+                        if key not in DIALOGUE_CONDITION_KEYS:
+                            errors.append(f"{where}.{ln.get('id')} {what}: condition.{key} is not evaluable mid-dialogue "
+                                          f"(allowed: {sorted(DIALOGUE_CONDITION_KEYS)})")
             where = f"{p}: dialogues:{d.get('id')}"
             for line in lines:
                 choices = line.get("choices") or []

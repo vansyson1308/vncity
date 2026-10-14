@@ -169,6 +169,10 @@ Mọi khóa trong `steps[].params` đều được khai báo có kiểu trong `m
   `switch_protagonist_on_line` (`{dòng thoại: characters:<id>}`; UI thoại gọi
   `NotifyDialogueLine(dòng)`); cả hai phát `OnProtagonistSwitched`; `minimap: false` ẩn bản đồ
   nhỏ trong bước (`OnMinimapVisibilityChanged`, tự bật lại khi sang bước khác/hết nhiệm vụ).
+- **Thoại có điều kiện**: xem §9. `tools/playtest.py` đi thoại theo đúng `ResolveDialogueLine` /
+  `GetAvailableChoices` và đếm hệ quả đã kích hoạt (`docs/gdd/06`, `08`).
+- **Cờ engine đọc**: `giam_chu_y_vinh_vien_1` (phần thưởng `s12`) do `UHanoiHeatSubsystem` đọc để
+  hạ trần Chú ý một sao vĩnh viễn; nội dung không cần đọc lại.
 - **Nhân vật của nhiệm vụ**: `StartMission` đổi sang mục đầu của `protagonists` nếu nhân vật đang
   điều khiển không nằm trong danh sách (phát `OnProtagonistSwitched`), nên "Nồi nước dùng lúc bốn
   giờ" luôn chơi bằng Lan dù người chơi đang là Minh. Nhiệm vụ nhiều nhân vật đổi tiếp bằng

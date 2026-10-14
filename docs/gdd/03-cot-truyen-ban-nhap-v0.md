@@ -76,6 +76,7 @@ về một quán phở.
 
 | # | Nhiệm vụ | Nhân vật | Nhịp |
 | --- | --- | --- | --- |
+| P0 | Gánh phở 1957 (cold open) | Cụ Thọ năm 1957 | Gánh phở qua ngõ Hàng Chiếu, ông Khiêm mời góp vốn mua chung nhà (lựa chọn: tin ngay / hỏi vợ), ký tờ giấy; đêm 1972 dưới bom (lựa chọn: cứu giấy / cứu con), tờ giấy cháy đúng chỗ tên. Cắt sang 2026 |
 | P1 | Cuốc xe lúc rạng đông | Minh | Hướng dẫn lái xe, app Vồ, đèn đỏ đầu tiên (lựa chọn), gặp Khôi và Lan |
 | P2 | Nồi nước dùng lúc bốn giờ | Lan | Hướng dẫn nấu phở, cụ Thọ chấm điểm (rẽ nhánh), tin bán nhà |
 | P3 | Chiếc tủ sắt trên gác | Khôi | Mở kho ảnh, băng số 1, chụp lại Tháp Rùa 1989 |
@@ -94,9 +95,17 @@ nói "Không nhà nào bán phần mình khi nhà kia còn người ở". Dòng 
 Khiêm "đi B" và không trở về, bị cháy mất đúng chỗ ghi tên người được nhận phần nhà. Ông Khải biết nội
 dung. Câu trả lời nằm trong một cuộn băng cát-sét.
 
-Các cờ (`set_flags`) từ lựa chọn chương 1 được đọc ở các chương sau: `lan_lo_thong_tin_mat`,
-`minh_nhan_viec_kim_long`, `khoi_giu_phan`, `khoi_tang_anh_thao`, `linh_dang_anh_thao`,
-`lan_mua_gia_vi_re`, `lan_de_xuat_tu_quan`...
+Mọi cờ do lựa chọn đặt (34 cờ ở chương 0-1) đều được đọc lại ít nhất một lần, phần lớn ngay trong
+chương (nhân vật nhắc đúng tên việc đã làm, lựa chọn mới mở ra, bước đổi biến thể) và một lần ở chương
+sau. Bảng đủ: `11-mo-man-va-he-qua.md`. Quy tắc viết tiếp: mỗi cờ mới phải có chỗ đọc, CI kiểm.
+
+## Chương 2 "Mùa nồm": đang viết thành dữ liệu ở PR #9
+
+Luồng "Chơi thử và thẩm định cốt truyện" viết chương 2 (8 nhiệm vụ, tháng Chạp tới mùng Một, phủ cả
+sáu quận chưa có truyện, điểm nhấn Giao thừa Hồ Gươm, bảng cờ chương 1 được đọc ở `10-sua-chuong-1.md`).
+Bản nháp chương 2 của luồng "Dựng đủ các quận" đã bàn giao để ghép (nhánh rẽ ba ở ngân hàng, cặp kết
+chương cô Hạnh hoãn ký / đã ký). Gia đình Lan theo hướng A của `10-sua-chuong-1.md` M6: mẹ mất năm 2011,
+bố đi xuất khẩu lao động Hàn Quốc năm 2010 và nhường phần nhà cho cô Hạnh.
 
 ## Dàn ý 5 hồi (sau chương 1)
 

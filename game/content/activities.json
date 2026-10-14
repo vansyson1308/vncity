@@ -78,7 +78,7 @@
       "name": {"vi": "Chụp lại ảnh xưa của bố", "en": "Rephotographing Father's archive"},
       "kind": "collectible",
       "description": {"vi": "120 tấm ảnh trong kho phim của ông Khải (1975-2010). Tìm đúng góc máy, đúng giờ, đúng mùa để chồng ảnh cũ lên cảnh hôm nay. Mỗi tấm mở một đoạn băng ghi âm của bố và một mẩu chuyện của phố.", "en": "120 frames from Khải's archive (1975-2010). Find the exact angle, time and season so the old photo overlays today's scene. Each one unlocks a cassette message from Father and a story of the street."},
-      "unlock": {"missions_completed": ["missions:p3_tu_sat_tren_gac"]},
+      "unlock": {"missions_completed": ["missions:p3_tu_sat_tren_gac"], "flags": ["mo_kho_anh"]},
       "loop": {
         "generator": "rephoto_target",
         "objective": {"vi": "Khớp ảnh cũ với cảnh hiện tại trên 85%", "en": "Match the old photo to the present scene above 85%"},

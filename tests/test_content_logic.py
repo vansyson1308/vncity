@@ -14,12 +14,17 @@ HEAT_CPP = MISSION_CPP.with_name("HanoiHeatSubsystem.cpp")
 TERMINAL = {"end", "success", "fail"}
 
 # Flags the runtime sets itself (docs/gdd/02-he-thong.md §1); content may read them without setting them.
-RUNTIME_FLAGS = {"ho_so_sach_90_ngay", "minh_nghe_dien_thoai_khi_lai"}  # set by C++ / gameplay, see docs/gdd/02 and 10
-# Chapter-1 edits specified in docs/gdd/10-sua-chuong-1.md but applied by the chapter-1 owner
-# thread; chapter 2 already reads them. Delete entries here as those edits land.
-PENDING_CHAPTER1_FLAGS = {"lan_cong_khai_danh_sach", "khoi_hoc_tu_keo_ly",
-                          # set by PR #8 (cold open p0, c1_05 Tuấn); chapter 2 reads them
-                          "tho_cuu_giay", "minh_bo_viec_kim_long", "minh_giu_viec_kim_long"}
+RUNTIME_FLAGS = {"ho_so_sach_90_ngay", "minh_nghe_dien_thoai_khi_lai"}  # set by C++ / gameplay (docs/gdd/02, docs/gdd/10 M2)
+# Chapter 0-1 flags whose read site is chapter 2 (PR #9, docs/gdd/10-sua-chuong-1.md, flag table at the end).
+# Delete entries as chapter 2 lands on main; a flag here is still a consequence, just one chapter later.
+# Progress flags whose reader is the next chapter (chapter 3 reads how the year was opened).
+READ_IN_NEXT_CHAPTER = {"da_xong_dat"}
+# Flags content sets for the engine to read (docs/gdd/02-he-thong.md §1); nothing in content needs to read them.
+RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1"}
+
+
+def _cond_flags(cond):
+    return list((cond or {}).get("flags", [])) + list((cond or {}).get("not_flags", []))
 
 
 def _load(sub):
@@ -46,11 +51,11 @@ def _step_targets(mission, step):
     return [ids[k]] if k < len(ids) else ["end"]
 
 
-def test_every_flag_read_is_set_by_content_or_runtime():
+def _flag_graph():
     flags_set, flags_read = set(RUNTIME_FLAGS), collections.defaultdict(set)
     for m in MISSIONS.values():
         flags_set |= set((m.get("reward") or {}).get("set_flags", []))
-        for f in (m.get("requires") or {}).get("flags", []):
+        for f in _cond_flags(m.get("requires")):
             flags_read[f].add(f"requires {m['id']}")
         for s in m["steps"]:
             flags_set |= set(s.get("set_flags", []))
@@ -67,51 +72,37 @@ def test_every_flag_read_is_set_by_content_or_runtime():
                     flags_read[f].add(f"{key} {m['id']}.{s['id']}")
     for d in DIALOGUES.values():
         for line in d["lines"]:
-            for f in (line.get("condition") or {}).get("flags", []) + (line.get("condition") or {}).get("not_flags", []):
-                flags_read[f].add(f"line {d['id']}/{line['id']}")
+            for f in _cond_flags(line.get("condition")):
+                flags_read[f].add(f"line {d['id']}.{line['id']}")
             for c in line.get("choices", []):
                 flags_set |= set((c.get("effect") or {}).get("set_flags", []))
-                for f in (c.get("condition") or {}).get("flags", []) + (c.get("condition") or {}).get("not_flags", []):
-                    flags_read[f].add(f"choice {d['id']}/{line['id']}")
+                for f in _cond_flags(c.get("condition")):
+                    flags_read[f].add(f"choice {d['id']}.{line['id']}")
     for a in ACTIVITIES.values():
-        for f in (a.get("requires") or a.get("unlock") or {}).get("flags", []):
+        for f in _cond_flags(a.get("requires") or a.get("unlock")):
             flags_read[f].add(f"activity {a['id']}")
-    missing = {f: sorted(w) for f, w in flags_read.items() if f not in flags_set | PENDING_CHAPTER1_FLAGS}
+    return flags_set, flags_read
+
+
+def test_every_flag_read_is_set_by_content_or_runtime():
+    flags_set, flags_read = _flag_graph()
+    missing = {f: sorted(w) for f, w in flags_read.items() if f not in flags_set}
     assert not missing, f"flags read but never set: {missing}"
 
 
-def _flag_reads():
-    """flag -> where it is read (requires, fail_if, flag branches, reacts/variant params, conditions)."""
-    reads = collections.defaultdict(set)
-    for m in MISSIONS.values():
-        for f in (m.get("requires") or {}).get("flags", []) + (m.get("requires") or {}).get("not_flags", []):
-            reads[f].add(f"requires {m['id']}")
-        for s in m["steps"]:
-            for rule in s.get("fail_if", []):
-                if rule.startswith("flag:"):
-                    reads[rule[5:]].add(f"fail_if {m['id']}.{s['id']}")
-            p = s.get("params") or {}
-            if p.get("branch_source") == "flag":
-                for k in s["next"]:
-                    if k != "default":
-                        reads[k].add(f"branch {m['id']}.{s['id']}")
-            for key in ("reacts_to_flags", "variant_from_flags"):
-                for f in p.get(key) or []:
-                    reads[f].add(f"{key} {m['id']}.{s['id']}")
-    for d in DIALOGUES.values():
-        for line in d["lines"]:
-            conds = [line.get("condition") or {}] + [c.get("condition") or {} for c in line.get("choices", [])]
-            for c in conds:
-                for f in c.get("flags", []) + c.get("not_flags", []):
-                    reads[f].add(f"{d['id']}/{line['id']}")
-    return reads
+def test_every_flag_set_is_read_somewhere():
+    """A choice with no consequence is a bug in this project (docs/gdd/07 scores it): every flag content
+    sets is read by a mission gate, a step branch/variant, a dialogue condition, or the engine."""
+    flags_set, flags_read = _flag_graph()
+    unread = sorted(f for f in flags_set - RUNTIME_FLAGS - RUNTIME_READ_FLAGS - READ_IN_NEXT_CHAPTER if f not in flags_read)
+    assert not unread, f"flags set but never read: {unread}"
 
 
 def test_every_choice_flag_from_chapter_2_on_is_read():
     """Owner rule (docs/gdd/08-nhan-qua.md §2): a choice without a consequence is meaningless. Every
     flag a chapter>=2 dialogue choice sets must be read somewhere (a later line's condition, a flag
     branch, requires, fail_if). Chapter 0-1 flags are wired by the chapter-1 owner thread."""
-    reads = _flag_reads()
+    reads = _flag_graph()[1]
     ch2_dialogues = {d["id"] for d in DIALOGUES.values() if "chapter_2" in d.get("tags", [])}
     unread = {}
     for did in ch2_dialogues:
@@ -202,6 +193,8 @@ def test_no_dead_steps_and_every_branch_table_has_a_default_unless_player_input(
 
 
 def test_no_dead_dialogue_lines():
+    """Reachability with the runtime's rules: a conditional line also flows to the next line of the
+    array (when skipped), and a hidden choice still leads somewhere (when shown)."""
     for d in DIALOGUES.values():
         ids = [l["id"] for l in d["lines"]]
         by_id = {l["id"]: l for l in d["lines"]}
@@ -212,6 +205,9 @@ def test_no_dead_dialogue_lines():
                 continue
             reach.add(x)
             line = by_id[x]
+            k = ids.index(x) + 1
+            if "condition" in line and k < len(ids):
+                stack.append(ids[k])
             if "choices" in line:
                 stack += [c["goto"] for c in line["choices"]]
             elif "goto" in line:
@@ -263,7 +259,7 @@ def test_every_mission_is_reachable_from_a_new_game():
         assert ready, f"unreachable or cyclic: {sorted(remaining)}"
         done += ready
         remaining -= set(ready)
-    assert done[0] == "p1_cuoc_xe_luc_rang_dong"
+    assert done[0] == "p0_ganh_pho_1957" and done[1] == "p1_cuoc_xe_luc_rang_dong"
 
 
 def test_dialogue_condition_schema_and_validator_rules():

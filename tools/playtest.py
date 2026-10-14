@@ -18,7 +18,13 @@ What it checks (logic, not taste):
   * economy: money per protagonist after the written content, against the GDD price list
     (repair shop 120M, cô Hạnh's share ~3 billion) and the flat income of a working day
   * cast and consequence: who the player meets, which choices are read later (flags consumed)
-    and which are set but never read (a choice with no consequence)
+    and which are set but never read (a choice with no consequence); conditional dialogue lines
+    and choices (`condition.flags` / `not_flags`) are evaluated the way the runtime does, so the
+    report counts how many consequences each persona actually triggered and how far the personas'
+    paths diverge (steps and lines only some of them saw)
+  * opening: real minutes until the player first holds the controls, until the first choice, the
+    longest stretch without control in the first 20 minutes, and when the central stake (the house
+    and the 1957 paper) is first spoken
 
 Output: out/playtest/<persona>.json (full timeline), out/playtest/summary.json, and a Markdown
 report printed to stdout (`--report docs/gdd/06-gia-lap-choi-thu.md` writes it). Exit code 1 if a
@@ -49,18 +55,17 @@ SPEED_KMH = {"ride": 22.0, "drive_passenger": 20.0, "deliver": 20.0, "follow": 1
 STEP_REAL_MIN = {"talk": 1.5, "cutscene": 2.0, "photograph": 2.5, "minigame": 6.0, "cook": 7.0,
                  "collect": 4.0, "choice": 0.5, "wait_until": 0.0, "escape_traffic_police": 3.0,
                  "follow": 2.0, "deliver": 2.0, "drive_passenger": 1.0, "go_to": 0.5, "ride": 0.5}
-START_MONEY = {"minh": 1_200_000, "lan": 9_500_000, "khoi": 42_000_000}   # before the prologue (GDD bios)
+START_MONEY = {"minh": 1_200_000, "lan": 9_500_000, "khoi": 42_000_000}   # before the prologue (GDD bios); other playable characters start at 0
 DAILY_NET_INCOME = {"minh": 350_000, "lan": 1_600_000, "khoi": 650_000}  # a working day between missions (GDD §kinh tế)
 DAILY_COST = {"minh": 90_000, "lan": 120_000, "khoi": 150_000}           # food, parking, fuel
 GOALS_VND = {"tiem_sua_xe_duc_coi": 120_000_000, "ca_phe_trung_hang_gai": 450_000_000,
              "phan_nha_co_hanh": 3_000_000_000}
 RUNTIME_FLAGS = {"ho_so_sach_90_ngay": "90 game days without a traffic violation (docs/gdd/02-he-thong.md)",
-                 "minh_nghe_dien_thoai_khi_lai": "gameplay: answered the phone while riding in c1_05 (docs/gdd/10-sua-chuong-1.md M2)"}
-PENDING_FLAGS = {"lan_cong_khai_danh_sach": "docs/gdd/10-sua-chuong-1.md (chapter-1 edit pending)",
-                 "khoi_hoc_tu_keo_ly": "docs/gdd/10-sua-chuong-1.md (chapter-1 edit pending)",
-                 "tho_cuu_giay": "PR #8 cold open p0 (pending merge)",
-                 "minh_bo_viec_kim_long": "PR #8 c1_05 (pending merge)",
-                 "minh_giu_viec_kim_long": "PR #8 c1_05 (pending merge)"}
+                 "minh_nghe_dien_thoai_khi_lai": "gameplay: the player answered the phone while riding in c1_05 (docs/gdd/10 M2)"}
+# flags content sets for the runtime to read (no mission or dialogue needs to read them)
+RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1": "UHanoiHeatSubsystem caps heat one star lower for good"}
+CONTROL_KINDS = {"go_to", "ride", "deliver", "photograph", "follow", "escape_traffic_police", "minigame", "cook", "collect", "drive_passenger"}
+STAKE_WORDS = ("tờ giấy", "bán nhà", "bán phần", "ký thỏa thuận", "nhà này của hai nhà", "không nhà nào bán")   # the central stake: the house and the 1957 paper
 
 
 def load(collection, sub=None):
@@ -91,6 +96,8 @@ class World:
         self.rules = {r["id"]: r for r in load("traffic_rules")}
         self.flag_readers = collections.defaultdict(set)
         self.flag_writers = collections.defaultdict(set)
+        self.flag_read_kinds = collections.defaultdict(set)   # flag -> {mission_gate, step_branch, step_variant, fail_if, dialogue_line, dialogue_choice, activity}
+        self.choice_flags = set()                             # flags only a player decision can set
         self.index_flags()
 
     def place(self, target):
@@ -114,35 +121,72 @@ class World:
                    key=lambda d: ((d["center"]["lon"] - pt["lon"]) * k) ** 2 + (d["center"]["lat"] - pt["lat"]) ** 2)["id"]
 
     def index_flags(self):
-        def walk(obj, mid, writer):
-            if isinstance(obj, dict):
-                for k, v in obj.items():
-                    if k == "set_flags" and isinstance(v, list):
-                        for f in v:
-                            self.flag_writers[f].add(mid)
-                    elif k in ("flags", "not_flags") and isinstance(v, list):
-                        for f in v:
-                            self.flag_readers[f].add(mid)
-                    elif k in ("reacts_to_flags", "variant_from_flags") and isinstance(v, (list, dict)):
-                        for f in (v if isinstance(v, list) else v.keys()):
-                            self.flag_readers[f].add(mid)
-                    elif k == "fail_if" and isinstance(v, list):
-                        for cond in v:
-                            if cond.startswith("flag:"):
-                                self.flag_readers[cond[5:]].add(mid)
-                    elif k == "next" and isinstance(v, dict) and obj.get("params", {}).get("branch_source") == "flag":
-                        for f in v:
-                            if f != "default":
-                                self.flag_readers[f].add(mid)
-                    else:
-                        walk(v, mid, writer)
-            elif isinstance(obj, list):
-                for v in obj:
-                    walk(v, mid, writer)
+        def read(f, mid, kind):
+            self.flag_readers[f].add(mid)
+            self.flag_read_kinds[f].add(kind)
+
+        def cond_flags(cond):
+            return list((cond or {}).get("flags", [])) + list((cond or {}).get("not_flags", []))
+
         for m in self.missions.values():
-            walk(m, m["id"], True)
+            mid = m["id"]
+            for f in (m.get("reward") or {}).get("set_flags", []):
+                self.flag_writers[f].add(mid)
+            for f in cond_flags(m.get("requires")):
+                read(f, mid, "mission_gate")
+            branched = set()   # steps only reachable through a branch table = steps a decision led to
+            for s in m["steps"]:
+                if isinstance(s.get("next"), dict):
+                    branched |= set(s["next"].values())
+            for s in m["steps"]:
+                for f in s.get("set_flags", []):
+                    self.flag_writers[f].add(mid)
+                    if s["id"] in branched:
+                        self.choice_flags.add(f)
+                for rule in s.get("fail_if", []):
+                    if rule.startswith("flag:"):
+                        read(rule[5:], mid, "fail_if")
+                p = s.get("params") or {}
+                if p.get("branch_source") == "flag":
+                    for f in s["next"]:
+                        if f != "default":
+                            read(f, mid, "step_branch")
+                for f in p.get("reacts_to_flags") or []:
+                    read(f, mid, "step_variant")
+                for f in (p.get("variant_from_flags") or {}):
+                    read(f, mid, "step_variant")
         for d in self.dialogues.values():
-            walk(d, "dialogue:" + d["id"], True)
+            did = "dialogue:" + d["id"]
+            for line in d["lines"]:
+                for f in cond_flags(line.get("condition")):
+                    read(f, did, "dialogue_line")
+                for c in line.get("choices", []):
+                    for f in (c.get("effect") or {}).get("set_flags", []):
+                        self.flag_writers[f].add(did)
+                        self.choice_flags.add(f)
+                    for f in cond_flags(c.get("condition")):
+                        read(f, did, "dialogue_choice")
+        for a in self.activities.values():
+            for f in cond_flags(a.get("requires") or a.get("unlock")):
+                read(f, a["id"], "activity")
+
+    def holds(self, cond, flags, rep, protagonist, active_events=(), done=None):
+        """A dialogue/mission condition the way UHanoiMissionSubsystem::EvaluateCondition reads it
+        (state only: flags, not_flags, events_active, min_reputation, protagonist, missions_completed)."""
+        c = cond or {}
+        if any(f not in flags for f in c.get("flags", [])):
+            return False
+        if any(f in flags for f in c.get("not_flags", [])):
+            return False
+        if any(x.split(":", 1)[1] not in active_events for x in c.get("events_active", [])):
+            return False
+        if done is not None and any(x.split(":", 1)[1] not in done for x in c.get("missions_completed", [])):
+            return False
+        if any(rep[k] < v for k, v in (c.get("min_reputation") or {}).items()):
+            return False
+        if c.get("protagonist") and protagonist not in [x.split(":", 1)[1] for x in c["protagonist"]]:
+            return False
+        return True
 
 
 # --- personas: how choices get made ------------------------------------------------------
@@ -190,14 +234,17 @@ class Session:
         self.done, self.failed = [], []
         self.unlocked_activities, self.unlocked_businesses = set(), set()
         self.events_seen, self.chars_met, self.landmarks_seen, self.districts_seen = set(), set(), set(), set()
-        self.skipped_lines, self.conditional_choices_seen = 0, 0
         self.hour, self.day = 5.0, 1          # the prologue starts at 5 a.m.
         self.pos = world.characters["minh"]["home"]
         self.protagonist = "minh"
         self.real_minutes = 0.0
+        self.control_log = []                                # (real minute at end of step, player held the controls)
         self.km = collections.Counter()
         self.timeline, self.issues, self.notes = [], [], []
         self.choices = []
+        self.lines_seen, self.steps_seen = set(), set()     # (dialogue, line) / (mission, step) this persona saw
+        self.consequences = []                               # conditional content whose condition was decided by an earlier choice
+        self.opening = {"first_control_min": None, "first_choice_min": None, "first_stake_min": None, "stake_line": None}
 
     # -- helpers --
     def issue(self, sev, mission, step, text):
@@ -225,12 +272,22 @@ class Session:
             r = m.get("requires") or {}
             if any(x.split(":", 1)[1] not in self.done for x in r.get("missions_completed", [])):
                 continue
-            if any(f not in self.flags for f in r.get("flags", [])):
-                continue
-            if any(self.rep[k] < v for k, v in (r.get("min_reputation") or {}).items()):
+            if not self.w.holds(r, self.flags, self.rep, self.protagonist):
                 continue
             out.append(m)
         return out
+
+    def consequence(self, mission, where, kind, cond, shown):
+        """Record conditional content decided by a flag some choice set (or could have set)."""
+        flags = list((cond or {}).get("flags", [])) + list((cond or {}).get("not_flags", []))
+        decided = [f for f in flags if f in self.w.choice_flags]
+        if decided:
+            self.consequences.append({"mission": mission, "where": where, "kind": kind, "flags": decided, "shown": shown})
+
+    def note_opening(self, text):
+        if self.opening["first_stake_min"] is None and any(w in text.lower() for w in STAKE_WORDS):
+            self.opening["first_stake_min"] = round(self.real_minutes, 1)
+            self.opening["stake_line"] = text[:80]
 
     def apply_reward(self, rw, who, mission, where):
         if not rw:
@@ -250,23 +307,6 @@ class Session:
             elif coll == "businesses":
                 self.unlocked_businesses.add(uid)
 
-    def condition_holds(self, cond, active_events=()):
-        """UHanoiMissionSubsystem::EvaluateCondition on this session's state (hours/weather pass)."""
-        c = cond or {}
-        if any(x.split(":", 1)[1] not in self.done for x in c.get("missions_completed", [])):
-            return False
-        if any(self.rep[k] < v for k, v in (c.get("min_reputation") or {}).items()):
-            return False
-        if c.get("protagonist") and all(x.split(":", 1)[1] != self.protagonist for x in c["protagonist"]):
-            return False
-        if any(f not in self.flags for f in c.get("flags", [])):
-            return False
-        if any(f in self.flags for f in c.get("not_flags", [])):
-            return False
-        if any(x.split(":", 1)[1] not in active_events for x in c.get("events_active", [])):
-            return False
-        return True
-
     def run_dialogue(self, did, mission, step, active_events=()):
         d = self.w.dialogues.get(did)
         if not d:
@@ -281,25 +321,36 @@ class Session:
                 self.issue("error", mission, step, f"dialogue {did}: goto '{cur}' is not a line")
                 return
             line = lines[cur]
-            if "condition" in line and not self.condition_holds(line["condition"], active_events):
-                self.skipped_lines += 1   # ResolveDialogueLine: continue in list order
-                i = order.index(cur)
-                cur = order[i + 1] if i + 1 < len(order) else None
-                continue
+            if "condition" in line:
+                ok = self.w.holds(line["condition"], self.flags, self.rep, self.protagonist, active_events, self.done)
+                self.consequence(mission, f"{did}/{cur}", "dialogue_line", line["condition"], ok)
+                if not ok:   # skipped: fall through to the next line of the array (runtime ResolveDialogueLine)
+                    i = order.index(cur)
+                    cur = order[i + 1] if i + 1 < len(order) else None
+                    continue
             sp = line["speaker"].split(":", 1)[1]
             if sp != self.protagonist and sp != "player":
                 self.chars_met.add(sp)
             seen.add(cur)
+            self.lines_seen.add((did, cur))
+            self.note_opening(line["text"]["vi"])
             if line.get("choices"):
-                offered = [c for c in line["choices"] if self.condition_holds(c.get("condition"), active_events)]
-                if not offered:
-                    self.issue("error", mission, step, f"dialogue {did}/{cur}: no choice available")
+                visible = []
+                for c in line["choices"]:
+                    if "condition" in c:
+                        ok = self.w.holds(c["condition"], self.flags, self.rep, self.protagonist, active_events, self.done)
+                        self.consequence(mission, f"{did}/{cur}", "dialogue_choice", c["condition"], ok)
+                        if not ok:
+                            continue
+                    visible.append(c)
+                if not visible:
+                    self.issue("error", mission, step, f"dialogue {did}/{cur}: every choice is hidden by its condition")
                     return
-                if len(offered) < len(line["choices"]):
-                    self.conditional_choices_seen += 1
-                opts = [(c["goto"], c["text"]["vi"]) for c in offered]
+                if self.opening["first_choice_min"] is None:
+                    self.opening["first_choice_min"] = round(self.real_minutes, 1)
+                opts = [(c["goto"], c["text"]["vi"]) for c in visible]
                 pick = self.p.choose(opts)
-                choice = next(c for c in offered if c["goto"] == pick)
+                choice = next(c for c in visible if c["goto"] == pick)
                 self.choices.append({"mission": mission, "dialogue": did, "line": cur, "chose": choice["text"]["vi"][:60]})
                 self.apply_reward(choice.get("effect"), self.protagonist, mission, f"{did}/{cur}")
                 cur = pick
@@ -316,14 +367,19 @@ class Session:
     def run_mission(self, m):
         mid = m["id"]
         steps = {s["id"]: s for s in m["steps"]}
+        protagonists = [p.split(":", 1)[1] for p in m.get("protagonists", [])]
+        if protagonists and self.protagonist not in protagonists:
+            # StartMission possesses protagonists[0] first; the ride to `start` is theirs, from their home
+            self.protagonist = protagonists[0]
+            self.pos = self.w.characters[self.protagonist].get("home", self.pos)
+        self.money.setdefault(self.protagonist, 0)
         if m.get("start"):
             self.travel(m["start"], "ride", mid, "start")
         t0 = self.real_minutes
         self.in_mission = True
-        protagonists = [p.split(":", 1)[1] for p in m.get("protagonists", [])]
-        if protagonists and self.protagonist not in protagonists:
-            self.protagonist = protagonists[0]
-            self.pos = self.w.characters[self.protagonist].get("home", self.pos)
+        r = m.get("requires") or {}
+        if r.get("flags") or r.get("not_flags"):
+            self.consequence(mid, "requires", "mission_gate", r, True)
         cur, visited, n = m["steps"][0]["id"], [], 0
         outcome = "success"
         while cur not in (None, "end", "success", "fail") and n < 100:
@@ -334,9 +390,20 @@ class Session:
                 break
             s = steps[cur]
             visited.append(cur)
+            self.steps_seen.add((mid, cur))
             pr = s.get("params") or {}
             if pr.get("protagonist"):
                 self.protagonist = pr["protagonist"].split(":", 1)[1]
+                self.money.setdefault(self.protagonist, 0)
+            if s["kind"] in CONTROL_KINDS and self.opening["first_control_min"] is None:
+                self.opening["first_control_min"] = round(self.real_minutes, 1)
+            if s["kind"] == "choice" and self.opening["first_choice_min"] is None:
+                self.opening["first_choice_min"] = round(self.real_minutes, 1)
+            self.note_opening(s["objective"]["vi"])
+            for key in ("variant_from_flags", "reacts_to_flags"):
+                if pr.get(key):
+                    hit = [f for f in pr[key] if f in self.flags]
+                    self.consequence(mid, f"{cur}.{key}", "step_variant", {"flags": list(pr[key])}, bool(hit))
             for ev in (pr.get("requires_event"), pr.get("force_event")):
                 if ev:
                     self.events_seen.add(ev.split(":", 1)[1])
@@ -361,7 +428,8 @@ class Session:
                     mode = "walk" if s["kind"] == "go_to" else mode
                 self.travel(target, mode, mid, cur, deadline=pr.get("deadline_hour"))
             # step body
-            self.advance(STEP_REAL_MIN.get(s["kind"], 1.0))
+            self.advance(pr["duration_s"] / 60 if "duration_s" in pr else STEP_REAL_MIN.get(s["kind"], 1.0))
+            self.control_log.append((self.real_minutes, s["kind"] in CONTROL_KINDS))
             if pr.get("cost_vnd"):
                 self.money[self.protagonist] -= pr["cost_vnd"]
             if pr.get("apply_fine"):
@@ -384,6 +452,7 @@ class Session:
                         self.issue("error", mid, cur, f"flag branch has no match and no default: {list(nxt)}")
                         outcome = "dead_end"
                         break
+                    self.consequence(mid, f"{cur}.next", "step_branch", {"flags": [k for k in nxt if k != "default"]}, key != "default")
                 else:
                     key = self.p.choose([(k, k.replace("_", " ")) for k in nxt])
                     self.choices.append({"mission": mid, "step": cur, "chose": key})
@@ -419,7 +488,9 @@ class Session:
         speed = SPEED_KMH.get(mode, SPEED_KMH["ride"])
         real_min = d / speed * 60
         before = self.hour
+        self.control_log.append((self.real_minutes, True))   # riding/walking is the player's, start to end
         self.advance(real_min)
+        self.control_log.append((self.real_minutes, True))
         self.km[self.protagonist] += d
         self.pos = target
         self.districts_seen.add(self.w.district_of(target))
@@ -429,12 +500,14 @@ class Session:
             self.issue("warn", mid, step, f"{d:.1f} km hop in one step (from the previous target)")
 
     def idle_day(self):
-        """A day of free play between story beats: flat income, costs, rent."""
+        """A day of free play between story beats: flat income, costs, rent. Free play is the player's time."""
+        self.control_log.append((self.real_minutes, True))
         for who in self.money:
-            self.money[who] += DAILY_NET_INCOME[who] - DAILY_COST[who]
+            self.money[who] += DAILY_NET_INCOME.get(who, 0) - DAILY_COST.get(who, 0)
         self.day += 1
         self.hour = 6.0
         self.real_minutes += GAME_DAY_REAL_MIN
+        self.control_log.append((self.real_minutes, True))
         if self.day % 30 == 0:
             self.money["minh"] -= 2_500_000 + 6_000_000   # rent + money home (GDD)
         if self.p.name == "lieu":
@@ -467,8 +540,8 @@ class Session:
             if "weather" in r:
                 self.notes.append(f"{m['id']} needs weather {r['weather']}: assumed to occur")
             self.run_mission(m)
-            if m["type"] == "story":
-                self.idle_day()
+            if m["type"] == "story" and m.get("chapter", 0) > 0:
+                self.idle_day()   # the prologue runs as one continuous sequence (p0 cuts straight into p1)
         if guard >= 500:
             self.issue("error", None, None, "session did not terminate")
 
@@ -501,13 +574,28 @@ def static_checks(w):
     for f in sorted(readers - writers):
         if f in RUNTIME_FLAGS:
             issues.append(("info", None, None, f"flag '{f}' is set by the runtime ({RUNTIME_FLAGS[f]}), required by {sorted(w.flag_readers[f])}"))
-        elif f in PENDING_FLAGS:
-            issues.append(("info", None, None, f"flag '{f}' awaits a chapter-1 edit ({PENDING_FLAGS[f]}), read by {sorted(w.flag_readers[f])}"))
         else:
             issues.append(("error", None, None, f"flag '{f}' is required by {sorted(w.flag_readers[f])} but nothing sets it"))
     for f in sorted(writers - readers):
+        if f in RUNTIME_READ_FLAGS:
+            continue   # the engine reads it (RUNTIME_READ_FLAGS)
         issues.append(("info", None, None, f"flag '{f}' set by {sorted(w.flag_writers[f])} is never read (choice without consequence yet)"))
     return issues
+
+
+def longest_no_control(control_log, window_min=20.0):
+    """Longest stretch (real minutes) inside the first `window_min` minutes with no control step."""
+    longest, start = 0.0, 0.0
+    for t, control in control_log:
+        if t > window_min:
+            t = window_min
+        if control:
+            start = t
+        else:
+            longest = max(longest, t - start)
+        if t >= window_min:
+            break
+    return round(longest, 1)
 
 
 def summarize(w, sessions, static):
@@ -530,11 +618,35 @@ def summarize(w, sessions, static):
                 issues.append({**i, "text": key[3]})
     per = {}
     for s in sessions:
+        fired = [c for c in s.consequences if c["shown"]]
         per[s.p.name] = {"days": s.day, "real_hours": round(s.real_minutes / 60, 1), "missions": len(s.done),
                          "violations": s.violations,
                          "failed": s.failed, "money": s.money, "flags": sorted(s.flags), "km": {k: round(v, 1) for k, v in s.km.items()},
-                         "skipped_lines": s.skipped_lines, "conditional_choices_seen": s.conditional_choices_seen,
-                         "choices": s.choices, "timeline": s.timeline, "issues": s.issues, "notes": s.notes}
+                         "choices": s.choices, "timeline": s.timeline, "issues": s.issues, "notes": s.notes,
+                         "consequences_fired": len(fired), "consequences_checked": len(s.consequences),
+                         "consequence_flags": sorted({f for c in fired for f in c["flags"]}),
+                         "opening": {**s.opening, "longest_no_control_min": longest_no_control(s.control_log)}}
+    # how far the personas' paths diverge: content only some of them saw
+    all_lines = [s.lines_seen for s in sessions]
+    all_steps = [s.steps_seen for s in sessions]
+    div_lines = set().union(*all_lines) - set.intersection(*all_lines)
+    div_steps = set().union(*all_steps) - set.intersection(*all_steps)
+    choice_flags = sorted(w.choice_flags)
+    choice_read = [f for f in choice_flags if f in w.flag_readers]
+    consequences = {
+        "choice_flags": len(choice_flags), "choice_flags_read": len(choice_read),
+        "choice_flags_unread": sorted(set(choice_flags) - set(choice_read)),
+        "progress_flags": len([f for f in w.flag_writers if f not in w.choice_flags]),
+        "progress_flags_unread": sorted(f for f in w.flag_writers if f not in w.choice_flags and f not in w.flag_readers and f not in RUNTIME_READ_FLAGS),
+        "read_sites": sum(len(w.flag_readers[f]) for f in choice_read),
+        "kinds": dict(collections.Counter(k for f in choice_read for k in w.flag_read_kinds[f])),
+        "by_flag": {f: {"set_by": sorted(w.flag_writers[f]), "read_by": sorted(w.flag_readers[f]), "kinds": sorted(w.flag_read_kinds[f])} for f in choice_flags},
+        "divergent_lines": len(div_lines), "divergent_steps": len(div_steps),
+        "lines_total": sum(len(d["lines"]) for d in w.dialogues.values()),
+        "in_chapter_payoffs": sorted({(c["mission"], f) for s in sessions for c in s.consequences if c["shown"]
+                                      for f in c["flags"] if (w.missions.get(c["mission"]) or {}).get("chapter") == 1
+                                      and all((w.missions.get(m) or {}).get("chapter") in (0, 1) for m in w.flag_writers[f] if not m.startswith("dialogue:"))}),
+    }
     return {
         "missions": len(w.missions), "story_missions": len(story), "side_missions": len(w.missions) - len(story),
         "unreachable_missions": unreached,
@@ -543,6 +655,7 @@ def summarize(w, sessions, static):
         "landmarks_used": sorted(landmarks_used), "landmarks_total": len(w.landmarks),
         "characters_met": sorted(chars), "characters_total": len([c for c in w.characters.values() if c.get("role") != "protagonist"]),
         "flags_written": sorted(w.flag_writers), "flags_read": sorted(w.flag_readers),
+        "consequences": consequences,
         "issues": issues, "personas": per,
         "goals_vnd": GOALS_VND,
         "mission_clock": sessions[0].mission_clock,
@@ -611,6 +724,29 @@ def render_report(summary, w):
              + (": " + "; ".join(ac["time_warnings"]) if ac["time_warnings"] else "") + ".")
     L.append("- Đề xuất: trong nhiệm vụ cốt truyện, đồng hồ chạy giờ thật (1x) hoặc dừng khi đang thoại; khung giờ (`hours`) chỉ kiểm tra lúc bắt đầu bước; "
              "nhiệm vụ cần hoàng hôn/bình minh thêm `wait_until` trước bước chụp.\n")
+    co = summary["consequences"]
+    L.append("## Mở màn\n")
+    L.append("| Kiểu | Phút thật tới lúc cầm lái | Tới lựa chọn đầu | Đoạn dài nhất không điều khiển (20 phút đầu) | Phút biết câu hỏi lớn (nhà, tờ giấy) |")
+    L.append("| --- | --- | --- | --- | --- |")
+    for name, p in summary["personas"].items():
+        o = p["opening"]
+        L.append(f"| {name} | {o['first_control_min']} | {o['first_choice_min']} | {o['longest_no_control_min']} | {o['first_stake_min']} |")
+    L.append("")
+    L.append("Chuẩn 5/5 (docs/gdd/07): cầm lái trước phút 1, lựa chọn đầu trước phút 3, không quá 3 phút liên tiếp chỉ xem, "
+             "câu hỏi lớn được nói ra trước phút 5.\n")
+    L.append("## Hệ quả lựa chọn\n")
+    L.append(f"- Cờ do lựa chọn đặt: **{co['choice_flags']}**, được đọc lại: **{co['choice_flags_read']}** "
+             f"({100 * co['choice_flags_read'] // max(1, co['choice_flags'])}%), tổng {co['read_sites']} chỗ đọc. "
+             f"Chưa đọc: {', '.join(co['choice_flags_unread']) or 'không'}.")
+    L.append(f"- Loại hệ quả: " + ", ".join(f"{k} {v}" for k, v in sorted(co["kinds"].items())) + ".")
+    L.append(f"- Cờ tiến trình (không do lựa chọn): {co['progress_flags']}, chưa đọc: {', '.join(co['progress_flags_unread']) or 'không'}.")
+    L.append(f"- Hệ quả trả ngay trong chương 1 cho lựa chọn chương 0-1: {len(co['in_chapter_payoffs'])} cặp (nhiệm vụ, cờ).")
+    L.append(f"- Độ phân nhánh giữa các kiểu người chơi: {co['divergent_lines']}/{co['lines_total']} dòng thoại và {co['divergent_steps']} bước chỉ một phần người chơi thấy.")
+    L.append("| Kiểu | Hệ quả kiểm tra | Đã kích hoạt | Cờ lựa chọn đã trả |")
+    L.append("| --- | --- | --- | --- |")
+    for name, p in summary["personas"].items():
+        L.append(f"| {name} | {p['consequences_checked']} | {p['consequences_fired']} | {len(p['consequence_flags'])} |")
+    L.append("")
     sk = summary["step_kinds"]
     tot = summary["steps_total"]
     talk = sk.get("talk", 0) + sk.get("cutscene", 0)
