@@ -121,6 +121,8 @@ Không phe nào "ác". Uy tín Kim Long Land cao là con đường chơi hợp l
   hội (video viral +30% trong 3 tuần).
 - Nhân viên NPC có độ hài lòng; trả lương thấp thì họ nghỉ (như "thằng giao hàng nghỉ" ở chương 1).
 - Lỗ 3 tháng liền thì phải sang nhượng lại.
+- Một cơ sở có thể có bản **góp vốn** là một mục riêng (`tiem_sua_xe_duc_coi_gop_von`: giá 40%, thu
+  40%, mở bằng cờ lựa chọn); nâng cấp "sang nốt phần còn lại" đưa nó thành sở hữu đủ.
 
 ## 7. Sự kiện
 

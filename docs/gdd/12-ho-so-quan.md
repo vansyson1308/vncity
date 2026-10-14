@@ -4,7 +4,7 @@ Trả lời yêu cầu của chủ dự án (14/10/2026): "6/14 quận chưa có
 cho đủ... sửa đổi nó theo triết lý Tứ diệu đế của Đức Phật". Chương 2 (PR #9) đã đưa cốt truyện đi qua
 cả 14 quận; tài liệu này bổ sung phần còn thiếu: **mỗi quận có người của quận đó, với nỗi khổ của quận
 đó, và 3-4 nhiệm vụ mà người chơi phải xuống xe**. Dữ liệu: `game/content/missions/side_districts.json`
-(26 nhiệm vụ), `game/content/dialogues/side_districts.json` (56 đoạn thoại), 15 nhân vật mới trong
+(27 nhiệm vụ), `game/content/dialogues/side_districts.json` (59 đoạn thoại), 15 nhân vật mới trong
 `characters/story.json`, mỗi người có khối `drive` (Khổ-Tập-Diệt-Đạo-tell) như `08-nhan-qua.md` §1.
 
 ## 1. Nguyên tắc áp cho cả tám quận
@@ -133,6 +133,7 @@ cả 14 quận; tài liệu này bổ sung phần còn thiếu: **mỗi quận c
 | q_tx_01 Tăng năm trăm | Minh | 20-21h | trả thêm, "ổn" / mặc cả bằng việc sửa máy bơm (minigame, hỏng thì gọi anh Đức mất 100 nghìn) | cuối nhiệm vụ, q_tx_03 (bà chủ trọ nói với Lan), q_md_04 |
 | q_tx_02 Năm giờ sáng dưới lòng Tô Lịch | Khôi | 4h45-5h30 | ghi tên Nguyễn Văn Sáu / để bóng người | q_md_03 (con gái chú xin bản in / chú thích "11 người") |
 | q_tx_03 Một ki-ốt dưới lòng đất | Lan | 15-16h30 | ký cho mượn tên Phở Thọ, 20% / không ký | q_md_04 (bà Nhung, ông Cả) |
+| q_tx_04 Góp vốn hay mua đứt | Minh | 20-21h | góp 40 triệu làm chung với anh Đức / tự gom 120 triệu mua đứt | q_md_04 (Minh tự nói trước tấm số 49), mở `businesses:tiem_sua_xe_duc_coi_gop_von` |
 
 ## 9. Mỹ Đình: bến xe, sân vận động, kim tự tháp ngược
 
@@ -193,4 +194,5 @@ cả 14 quận; tài liệu này bổ sung phần còn thiếu: **mỗi quận c
    vẽ men lam (`ve_men_lam`) dùng `test` tự do; nếu muốn tính vào kỹ năng thì thêm activity.
 3. **Người đọc Hà Nội**: 56 đoạn thoại mới (~360 dòng) cần người Hà Nội đọc giọng Hà Đông, Lào Cai,
    Hải Dương, Thường Tín.
-4. Kinh tế Minh (mục 2 của `07`) vẫn âm 0,7 triệu/tháng trong giả lập; làm tiếp sau PR này.
+4. ~~Kinh tế Minh (mục 2 của `07`) vẫn âm 0,7 triệu/tháng trong giả lập; làm tiếp sau PR này.~~ Đã làm:
+   bậc thang thu nhập và `q_tx_04_gop_von_duc_coi` (góp vốn 40 triệu hay mua đứt 120), xem `01` và `07` mục 2.

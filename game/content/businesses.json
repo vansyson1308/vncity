@@ -3,164 +3,507 @@
   "items": [
     {
       "id": "pho_tho_hang_chieu",
-      "tags": ["family_owned", "story", "not_purchasable"],
-      "name": {"vi": "Phở Thọ (Hàng Chiếu, từ 1957)", "en": "Phở Thọ (Hàng Chiếu, since 1957)"},
+      "tags": [
+        "family_owned",
+        "story",
+        "not_purchasable"
+      ],
+      "name": {
+        "vi": "Phở Thọ (Hàng Chiếu, từ 1957)",
+        "en": "Phở Thọ (Hàng Chiếu, since 1957)"
+      },
       "kind": "pho_shop",
       "price_vnd": 0,
-      "location": {"lat": 21.03745, "lon": 105.85120},
+      "location": {
+        "lat": 21.03745,
+        "lon": 105.8512
+      },
       "district": "districts:pho_co",
       "income_per_day_vnd": 3500000,
       "upkeep_per_day_vnd": 1800000,
       "upgrades": [
-        {"id": "noi_ninh_xuong_moi", "name": {"vi": "Nồi ninh xương inox 200 lít", "en": "200-litre stainless stock pot"}, "cost_vnd": 18000000, "income_bonus": 0.08},
-        {"id": "ban_ghe_go_moi", "name": {"vi": "Bàn ghế gỗ thay ghế nhựa", "en": "Wooden tables replace plastic stools"}, "cost_vnd": 25000000, "income_bonus": 0.05},
-        {"id": "ma_qr_va_menu_tieng_anh", "name": {"vi": "Mã QR thanh toán và thực đơn tiếng Anh", "en": "QR payment and English menu"}, "cost_vnd": 2000000, "income_bonus": 0.06},
-        {"id": "ban_buoi_toi", "name": {"vi": "Mở thêm ca tối 17-21 giờ", "en": "Add an evening shift 5-9 p.m."}, "cost_vnd": 0, "income_bonus": 0.25}
+        {
+          "id": "noi_ninh_xuong_moi",
+          "name": {
+            "vi": "Nồi ninh xương inox 200 lít",
+            "en": "200-litre stainless stock pot"
+          },
+          "cost_vnd": 18000000,
+          "income_bonus": 0.08
+        },
+        {
+          "id": "ban_ghe_go_moi",
+          "name": {
+            "vi": "Bàn ghế gỗ thay ghế nhựa",
+            "en": "Wooden tables replace plastic stools"
+          },
+          "cost_vnd": 25000000,
+          "income_bonus": 0.05
+        },
+        {
+          "id": "ma_qr_va_menu_tieng_anh",
+          "name": {
+            "vi": "Mã QR thanh toán và thực đơn tiếng Anh",
+            "en": "QR payment and English menu"
+          },
+          "cost_vnd": 2000000,
+          "income_bonus": 0.06
+        },
+        {
+          "id": "ban_buoi_toi",
+          "name": {
+            "vi": "Mở thêm ca tối 17-21 giờ",
+            "en": "Add an evening shift 5-9 p.m."
+          },
+          "cost_vnd": 0,
+          "income_bonus": 0.25
+        }
       ],
-      "unlock": {"missions_completed": ["missions:p2_noi_nuoc_dung_4_gio"]}
+      "unlock": {
+        "missions_completed": [
+          "missions:p2_noi_nuoc_dung_4_gio"
+        ]
+      }
     },
     {
       "id": "pho_tho_linh_dam",
-      "tags": ["expansion", "late_game"],
-      "name": {"vi": "Phở Thọ chi nhánh Linh Đàm", "en": "Phở Thọ Linh Đàm branch"},
+      "tags": [
+        "expansion",
+        "late_game"
+      ],
+      "name": {
+        "vi": "Phở Thọ chi nhánh Linh Đàm",
+        "en": "Phở Thọ Linh Đàm branch"
+      },
       "kind": "pho_shop",
       "price_vnd": 280000000,
-      "location": {"lat": 20.96500, "lon": 105.82900},
+      "location": {
+        "lat": 20.965,
+        "lon": 105.829
+      },
       "district": "districts:hoang_mai",
       "income_per_day_vnd": 2200000,
       "upkeep_per_day_vnd": 1200000,
-      "upgrades": [{"id": "giao_hang_app_doi", "name": {"vi": "Lên app Đói", "en": "List on Đói app"}, "cost_vnd": 3000000, "income_bonus": 0.2}],
-      "unlock": {"missions_completed": ["missions:c1_09_bua_toi_tang_72"], "min_reputation": {"to_dan_pho_hang_chieu": 40}}
+      "upgrades": [
+        {
+          "id": "giao_hang_app_doi",
+          "name": {
+            "vi": "Lên app Đói",
+            "en": "List on Đói app"
+          },
+          "cost_vnd": 3000000,
+          "income_bonus": 0.2
+        }
+      ],
+      "unlock": {
+        "missions_completed": [
+          "missions:c1_09_bua_toi_tang_72"
+        ],
+        "min_reputation": {
+          "to_dan_pho_hang_chieu": 40
+        }
+      }
     },
     {
       "id": "ca_phe_trung_hang_gai",
-      "tags": ["cafe", "tourist", "seller_chi_mai"],
-      "name": {"vi": "Cà phê trứng ngõ Hàng Gai", "en": "Hàng Gai alley egg-coffee café"},
+      "tags": [
+        "cafe",
+        "tourist",
+        "seller_chi_mai"
+      ],
+      "name": {
+        "vi": "Cà phê trứng ngõ Hàng Gai",
+        "en": "Hàng Gai alley egg-coffee café"
+      },
       "kind": "cafe",
       "price_vnd": 450000000,
-      "location": {"lat": 21.03200, "lon": 105.85100},
+      "location": {
+        "lat": 21.032,
+        "lon": 105.851
+      },
       "district": "districts:pho_co",
       "income_per_day_vnd": 3000000,
       "upkeep_per_day_vnd": 1600000,
       "upgrades": [
-        {"id": "gac_xep_view_ho", "name": {"vi": "Mở gác xép nhìn ra hồ", "en": "Open the lake-view loft"}, "cost_vnd": 40000000, "income_bonus": 0.2},
-        {"id": "may_danh_trung", "name": {"vi": "Máy đánh trứng (chị Mai sẽ không vui)", "en": "Electric whisk (Mai won't be pleased)"}, "cost_vnd": 3000000, "income_bonus": 0.1}
+        {
+          "id": "gac_xep_view_ho",
+          "name": {
+            "vi": "Mở gác xép nhìn ra hồ",
+            "en": "Open the lake-view loft"
+          },
+          "cost_vnd": 40000000,
+          "income_bonus": 0.2
+        },
+        {
+          "id": "may_danh_trung",
+          "name": {
+            "vi": "Máy đánh trứng (chị Mai sẽ không vui)",
+            "en": "Electric whisk (Mai won't be pleased)"
+          },
+          "cost_vnd": 3000000,
+          "income_bonus": 0.1
+        }
       ],
-      "unlock": {"missions_completed": ["missions:c1_08_pho_di_bo_toi_thu_bay"]}
+      "unlock": {
+        "missions_completed": [
+          "missions:c1_08_pho_di_bo_toi_thu_bay"
+        ]
+      }
     },
     {
       "id": "bia_hoi_ngo_tam_thuong",
-      "tags": ["bia_hoi", "nightlife"],
-      "name": {"vi": "Bia hơi đầu ngõ Tạm Thương", "en": "Tạm Thương alley draught-beer corner"},
+      "tags": [
+        "bia_hoi",
+        "nightlife"
+      ],
+      "name": {
+        "vi": "Bia hơi đầu ngõ Tạm Thương",
+        "en": "Tạm Thương alley draught-beer corner"
+      },
       "kind": "bia_hoi",
       "price_vnd": 300000000,
-      "location": {"lat": 21.02960, "lon": 105.84880},
+      "location": {
+        "lat": 21.0296,
+        "lon": 105.8488
+      },
       "district": "districts:hoan_kiem",
       "income_per_day_vnd": 4000000,
       "upkeep_per_day_vnd": 2600000,
       "upgrades": [
-        {"id": "them_mon_nhau", "name": {"vi": "Thêm nem chua rán, đậu tẩm hành", "en": "Add fried nem chua and tofu"}, "cost_vnd": 8000000, "income_bonus": 0.15},
-        {"id": "dich_vu_goi_xe_ve", "name": {"vi": "Liên kết gọi xe về cho khách", "en": "Ride-home service for drinkers"}, "cost_vnd": 0, "income_bonus": 0.05}
+        {
+          "id": "them_mon_nhau",
+          "name": {
+            "vi": "Thêm nem chua rán, đậu tẩm hành",
+            "en": "Add fried nem chua and tofu"
+          },
+          "cost_vnd": 8000000,
+          "income_bonus": 0.15
+        },
+        {
+          "id": "dich_vu_goi_xe_ve",
+          "name": {
+            "vi": "Liên kết gọi xe về cho khách",
+            "en": "Ride-home service for drinkers"
+          },
+          "cost_vnd": 0,
+          "income_bonus": 0.05
+        }
       ]
     },
     {
       "id": "tiem_sua_xe_duc_coi",
-      "tags": ["mechanic", "minh_dream", "seller_duc"],
-      "name": {"vi": "Tiệm sửa xe Đức Còi (Khương Đình)", "en": "Skinny Đức's repair shop (Khương Đình)"},
+      "tags": [
+        "mechanic",
+        "minh_dream",
+        "seller_duc"
+      ],
+      "name": {
+        "vi": "Tiệm sửa xe Đức Còi (Khương Đình)",
+        "en": "Skinny Đức's repair shop (Khương Đình)"
+      },
       "kind": "repair_shop",
       "price_vnd": 120000000,
-      "location": {"lat": 20.99120, "lon": 105.81420},
+      "location": {
+        "lat": 20.9912,
+        "lon": 105.8142
+      },
       "district": "districts:thanh_xuan",
       "income_per_day_vnd": 900000,
       "upkeep_per_day_vnd": 250000,
       "upgrades": [
-        {"id": "may_rua_xe", "name": {"vi": "Máy rửa xe áp lực", "en": "Pressure washer"}, "cost_vnd": 6000000, "income_bonus": 0.2},
-        {"id": "kho_phu_tung", "name": {"vi": "Kho phụ tùng chính hãng", "en": "Genuine-parts stockroom"}, "cost_vnd": 20000000, "income_bonus": 0.25},
-        {"id": "dich_vu_cuu_ho_mua_ngap", "name": {"vi": "Dịch vụ cứu hộ xe mùa ngập", "en": "Flood rescue service"}, "cost_vnd": 5000000, "income_bonus": 0.1}
+        {
+          "id": "may_rua_xe",
+          "name": {
+            "vi": "Máy rửa xe áp lực",
+            "en": "Pressure washer"
+          },
+          "cost_vnd": 6000000,
+          "income_bonus": 0.2
+        },
+        {
+          "id": "kho_phu_tung",
+          "name": {
+            "vi": "Kho phụ tùng chính hãng",
+            "en": "Genuine-parts stockroom"
+          },
+          "cost_vnd": 20000000,
+          "income_bonus": 0.25
+        },
+        {
+          "id": "dich_vu_cuu_ho_mua_ngap",
+          "name": {
+            "vi": "Dịch vụ cứu hộ xe mùa ngập",
+            "en": "Flood rescue service"
+          },
+          "cost_vnd": 5000000,
+          "income_bonus": 0.1
+        }
       ],
-      "unlock": {"missions_completed": ["missions:s07_xe_chet_may_sau_mua"]}
+      "unlock": {
+        "missions_completed": [
+          "missions:s07_xe_chet_may_sau_mua"
+        ]
+      }
     },
     {
       "id": "homestay_to_ngoc_van",
-      "tags": ["homestay", "tay_ho", "seller_van"],
-      "name": {"vi": "Homestay ngõ Tô Ngọc Vân", "en": "Tô Ngọc Vân lane homestay"},
+      "tags": [
+        "homestay",
+        "tay_ho",
+        "seller_van"
+      ],
+      "name": {
+        "vi": "Homestay ngõ Tô Ngọc Vân",
+        "en": "Tô Ngọc Vân lane homestay"
+      },
       "kind": "homestay",
       "price_vnd": 600000000,
-      "location": {"lat": 21.06350, "lon": 105.82600},
+      "location": {
+        "lat": 21.0635,
+        "lon": 105.826
+      },
       "district": "districts:tay_ho",
       "income_per_day_vnd": 2500000,
       "upkeep_per_day_vnd": 1200000,
       "upgrades": [
-        {"id": "phong_tang_thuong_view_ho", "name": {"vi": "Cải tạo phòng sân thượng nhìn hồ", "en": "Rooftop lake-view room"}, "cost_vnd": 80000000, "income_bonus": 0.3},
-        {"id": "anh_khoi_treo_tuong", "name": {"vi": "Treo ảnh xưa của ông Khải", "en": "Hang Khải's archive prints"}, "cost_vnd": 5000000, "income_bonus": 0.08}
+        {
+          "id": "phong_tang_thuong_view_ho",
+          "name": {
+            "vi": "Cải tạo phòng sân thượng nhìn hồ",
+            "en": "Rooftop lake-view room"
+          },
+          "cost_vnd": 80000000,
+          "income_bonus": 0.3
+        },
+        {
+          "id": "anh_khoi_treo_tuong",
+          "name": {
+            "vi": "Treo ảnh xưa của ông Khải",
+            "en": "Hang Khải's archive prints"
+          },
+          "cost_vnd": 5000000,
+          "income_bonus": 0.08
+        }
       ]
     },
     {
       "id": "luu_niem_hang_gai",
-      "tags": ["souvenir", "tourist"],
-      "name": {"vi": "Cửa hàng lưu niệm Hàng Gai", "en": "Hàng Gai souvenir shop"},
+      "tags": [
+        "souvenir",
+        "tourist"
+      ],
+      "name": {
+        "vi": "Cửa hàng lưu niệm Hàng Gai",
+        "en": "Hàng Gai souvenir shop"
+      },
       "kind": "souvenir",
       "price_vnd": 350000000,
-      "location": {"lat": 21.03180, "lon": 105.84960},
+      "location": {
+        "lat": 21.0318,
+        "lon": 105.8496
+      },
       "district": "districts:pho_co",
       "income_per_day_vnd": 2000000,
       "upkeep_per_day_vnd": 1300000,
       "upgrades": [
-        {"id": "ao_phong_pho_tho", "name": {"vi": "Áo phông in logo Phở Thọ", "en": "Phở Thọ logo T-shirts"}, "cost_vnd": 10000000, "income_bonus": 0.12},
-        {"id": "buu_thiep_anh_khai", "name": {"vi": "Bưu thiếp ảnh xưa", "en": "Archive-photo postcards"}, "cost_vnd": 4000000, "income_bonus": 0.1}
+        {
+          "id": "ao_phong_pho_tho",
+          "name": {
+            "vi": "Áo phông in logo Phở Thọ",
+            "en": "Phở Thọ logo T-shirts"
+          },
+          "cost_vnd": 10000000,
+          "income_bonus": 0.12
+        },
+        {
+          "id": "buu_thiep_anh_khai",
+          "name": {
+            "vi": "Bưu thiếp ảnh xưa",
+            "en": "Archive-photo postcards"
+          },
+          "cost_vnd": 4000000,
+          "income_bonus": 0.1
+        }
       ]
     },
     {
       "id": "karaoke_kim_lien",
-      "tags": ["karaoke", "nightlife"],
-      "name": {"vi": "Karaoke Hoa Sữa (Kim Liên)", "en": "Milk Flower Karaoke (Kim Liên)"},
+      "tags": [
+        "karaoke",
+        "nightlife"
+      ],
+      "name": {
+        "vi": "Karaoke Hoa Sữa (Kim Liên)",
+        "en": "Milk Flower Karaoke (Kim Liên)"
+      },
       "kind": "karaoke",
       "price_vnd": 900000000,
-      "location": {"lat": 21.00800, "lon": 105.83600},
+      "location": {
+        "lat": 21.008,
+        "lon": 105.836
+      },
       "district": "districts:dong_da",
       "income_per_day_vnd": 5000000,
       "upkeep_per_day_vnd": 3500000,
       "upgrades": [
-        {"id": "cach_am_chuan", "name": {"vi": "Cách âm chuẩn (hàng xóm ngừng phản ánh)", "en": "Proper soundproofing (neighbours stop complaining)"}, "cost_vnd": 60000000, "income_bonus": 0.1},
-        {"id": "phong_vip", "name": {"vi": "Phòng VIP đèn LED", "en": "LED VIP room"}, "cost_vnd": 120000000, "income_bonus": 0.2}
+        {
+          "id": "cach_am_chuan",
+          "name": {
+            "vi": "Cách âm chuẩn (hàng xóm ngừng phản ánh)",
+            "en": "Proper soundproofing (neighbours stop complaining)"
+          },
+          "cost_vnd": 60000000,
+          "income_bonus": 0.1
+        },
+        {
+          "id": "phong_vip",
+          "name": {
+            "vi": "Phòng VIP đèn LED",
+            "en": "LED VIP room"
+          },
+          "cost_vnd": 120000000,
+          "income_bonus": 0.2
+        }
       ]
     },
     {
       "id": "lo_banh_mi_khuong_dinh",
-      "tags": ["bakery", "night_shift"],
-      "name": {"vi": "Lò bánh mì Khương Đình", "en": "Khương Đình bread bakery"},
+      "tags": [
+        "bakery",
+        "night_shift"
+      ],
+      "name": {
+        "vi": "Lò bánh mì Khương Đình",
+        "en": "Khương Đình bread bakery"
+      },
       "kind": "bakery",
       "price_vnd": 200000000,
-      "location": {"lat": 20.99200, "lon": 105.81650},
+      "location": {
+        "lat": 20.992,
+        "lon": 105.8165
+      },
       "district": "districts:thanh_xuan",
       "income_per_day_vnd": 1600000,
       "upkeep_per_day_vnd": 900000,
-      "upgrades": [{"id": "giao_si_cho_xe_banh_mi", "name": {"vi": "Giao sỉ cho xe bánh mì rong", "en": "Wholesale to street bánh mì carts"}, "cost_vnd": 15000000, "income_bonus": 0.3}]
+      "upgrades": [
+        {
+          "id": "giao_si_cho_xe_banh_mi",
+          "name": {
+            "vi": "Giao sỉ cho xe bánh mì rong",
+            "en": "Wholesale to street bánh mì carts"
+          },
+          "cost_vnd": 15000000,
+          "income_bonus": 0.3
+        }
+      ]
     },
     {
       "id": "giat_la_tay_ho",
-      "tags": ["laundry", "expat_clients"],
-      "name": {"vi": "Giặt là Quảng An", "en": "Quảng An laundry"},
+      "tags": [
+        "laundry",
+        "expat_clients"
+      ],
+      "name": {
+        "vi": "Giặt là Quảng An",
+        "en": "Quảng An laundry"
+      },
       "kind": "laundry",
       "price_vnd": 150000000,
-      "location": {"lat": 21.06100, "lon": 105.82500},
+      "location": {
+        "lat": 21.061,
+        "lon": 105.825
+      },
       "district": "districts:tay_ho",
       "income_per_day_vnd": 900000,
       "upkeep_per_day_vnd": 400000,
-      "upgrades": [{"id": "may_say_cong_nghiep", "name": {"vi": "Máy sấy công nghiệp cho mùa nồm", "en": "Industrial dryer for the damp season"}, "cost_vnd": 35000000, "income_bonus": 0.35}]
+      "upgrades": [
+        {
+          "id": "may_say_cong_nghiep",
+          "name": {
+            "vi": "Máy sấy công nghiệp cho mùa nồm",
+            "en": "Industrial dryer for the damp season"
+          },
+          "cost_vnd": 35000000,
+          "income_bonus": 0.35
+        }
+      ]
     },
     {
       "id": "sap_cho_dong_xuan",
-      "tags": ["market_stall", "wholesale"],
-      "name": {"vi": "Sạp gia vị tầng một chợ Đồng Xuân", "en": "Ground-floor spice stall, Đồng Xuân market"},
+      "tags": [
+        "market_stall",
+        "wholesale"
+      ],
+      "name": {
+        "vi": "Sạp gia vị tầng một chợ Đồng Xuân",
+        "en": "Ground-floor spice stall, Đồng Xuân market"
+      },
       "kind": "market_stall",
       "price_vnd": 800000000,
-      "location": {"lat": 21.03830, "lon": 105.84980},
+      "location": {
+        "lat": 21.0383,
+        "lon": 105.8498
+      },
       "district": "districts:pho_co",
       "income_per_day_vnd": 2200000,
       "upkeep_per_day_vnd": 600000,
-      "upgrades": [{"id": "ban_hang_online", "name": {"vi": "Bán hàng online qua Tóp Tóp", "en": "Sell online via Tóp Tóp"}, "cost_vnd": 5000000, "income_bonus": 0.25}],
-      "unlock": {"min_reputation": {"ban_quan_ly_cho_dong_xuan": 60}}
+      "upgrades": [
+        {
+          "id": "ban_hang_online",
+          "name": {
+            "vi": "Bán hàng online qua Tóp Tóp",
+            "en": "Sell online via Tóp Tóp"
+          },
+          "cost_vnd": 5000000,
+          "income_bonus": 0.25
+        }
+      ],
+      "unlock": {
+        "min_reputation": {
+          "ban_quan_ly_cho_dong_xuan": 60
+        }
+      }
+    },
+    {
+      "id": "tiem_sua_xe_duc_coi_gop_von",
+      "tags": [
+        "mechanic",
+        "minh_dream",
+        "seller_duc",
+        "partnership"
+      ],
+      "name": {
+        "vi": "Góp vốn tiệm Đức Còi (40%)",
+        "en": "Buy-in to Skinny Đức's shop (40%)"
+      },
+      "kind": "repair_shop",
+      "price_vnd": 40000000,
+      "location": {
+        "lat": 20.9912,
+        "lon": 105.8142
+      },
+      "district": "districts:thanh_xuan",
+      "income_per_day_vnd": 360000,
+      "upkeep_per_day_vnd": 100000,
+      "upgrades": [
+        {
+          "id": "sang_not_phan_con_lai",
+          "name": {
+            "vi": "Sang nốt 60% còn lại bằng lãi (sau 24 tháng)",
+            "en": "Buy the remaining 60% out of profits (after 24 months)"
+          },
+          "cost_vnd": 80000000,
+          "income_bonus": 1.5
+        }
+      ],
+      "unlock": {
+        "missions_completed": [
+          "missions:q_tx_04_gop_von_duc_coi"
+        ],
+        "flags": [
+          "tx_minh_gop_von"
+        ]
+      }
     }
   ]
 }

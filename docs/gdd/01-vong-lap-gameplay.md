@@ -60,18 +60,38 @@ nhưng hợp pháp.
 | Trà đá | 5.000 đ |
 | Gửi xe máy | 5.000 đ ngày, 10.000 đ tối |
 | Phòng trọ của Minh | 2,5 triệu/tháng + điện 4.000 đ/số |
-| Tiền gửi về quê | 6 triệu/tháng (nhiệm vụ định kỳ của Minh) |
+| Tiền gửi về quê | 6 triệu/tháng = 2 triệu cho mẹ + 4 triệu trả góp viện phí của bố (180 triệu, 60 kỳ; hết nợ thì Minh dư thêm 4 triệu/tháng) |
 | Mũ bảo hiểm đạt chuẩn | 350.000 đ |
 | Phạt vượt đèn đỏ (xe máy) | 4 - 6 triệu (game dùng 5 triệu) |
 
 Một ngày chạy xe chăm của Minh lãi ròng khoảng 300.000 - 400.000 đ sau xăng và ăn uống. Một lần vượt
 đèn đỏ ăn mất hơn hai tuần tiết kiệm: luật giao thông là một **áp lực kinh tế**, không chỉ là hình phạt.
 
+### Bậc thang thu nhập của Minh (sửa theo thẩm định `07` mục 2)
+
+Chỉ chạy app, Minh **âm 0,7 triệu/tháng** (10,5 triệu thu; 2,7 triệu ăn, xăng; 2,5 triệu trọ; 6 triệu
+về quê). Đó là nỗi khổ (Khổ) mở đầu game và là lý do anh nghe lời mời của Kim Long (Tập): một mình app
+không nuôi được anh. Con đường ra (Đạo) là những thứ cốt truyện mở, không phải tiền từ truyện:
+
+| Bậc | Mở ở đâu | Thêm mỗi ngày | Dữ liệu |
+| --- | --- | --- | --- |
+| Tối sửa xe ở tiệm Đức Còi, 2 giờ, 3 xe | `c1_05` mở `act_sua_xe_may` | +100.000 đ | `activities.json` pay 30.000 + tip |
+| 30 khách quen gọi điện, không mất 30% app | nhận sổ của ông Lương (`q_hd_04`) | +60.000 đ | cờ `hd_minh_nhan_so_khach` |
+| Thưởng tuần của app Vồ: 60 cuốc/tuần, sao ≥ 4,8 | luôn có, mất khi bị phạt | +400.000 đ/tuần | `pay.weekly_bonus_vnd` |
+| Chở hàng ba gác đêm | `act_cho_hang_ba_gac` | 250.000 đ/chuyến, thỉnh thoảng | |
+
+Đi đủ bậc: thu khoảng 17 triệu, **dư 5,8 triệu/tháng**. Giả lập `tools/playtest.py` (06) in hai con số
+này. Mục tiêu tiệm Đức Còi có hai cửa, mở ở `q_tx_04_gop_von_duc_coi`: **góp vốn 40 triệu** (40% lãi,
+tên tiệm giữ nguyên, hai năm sau sang nốt bằng lãi; khoảng 7 tháng game nếu chăm) hoặc **mua đứt 120
+triệu** như Minh vẫn tính (khoảng 21 tháng, hoặc nhanh hơn bằng tiền của người mặc vest, với cái giá
+của chương 1-2). Chọn mua đứt là Tập của Minh ("không muốn nợ ai, kể cả anh Đức"); chọn góp vốn là
+chấp nhận giúp đỡ, đúng điều mẹ anh và anh Đức vẫn chờ.
+
 ### Mục tiêu tiền lớn
 
 | Mục tiêu | Giá | Nguồn tiền chính |
 | --- | --- | --- |
-| Tiệm sửa xe Đức Còi (Minh) | 120 triệu | Chạy xe, sửa xe, thưởng nhiệm vụ |
+| Tiệm sửa xe Đức Còi (Minh) | 120 triệu mua đứt, hoặc góp vốn 40 triệu (40%) rồi sang nốt bằng lãi | Chạy xe, sửa xe tối, khách quen, thưởng tuần; thưởng nhiệm vụ |
 | Quán cà phê trứng Hàng Gai | 450 triệu (sang nhượng) | Lãi Phở Thọ, ảnh của Khôi |
 | Homestay Tô Ngọc Vân | 600 triệu (góp vốn) | Kết hợp cả ba |
 | Sạp gia vị chợ Đồng Xuân | 800 triệu, cần uy tín chợ 60 | Kinh doanh |

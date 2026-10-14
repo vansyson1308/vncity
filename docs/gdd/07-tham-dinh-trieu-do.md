@@ -27,7 +27,7 @@ tiền đề, nhân vật, sự cụ thể; điểm thấp ở mở màn, hệ q
 | Lỗi chặn chơi (bước cụt, cờ không ai đặt, thoại trỏ sai) | **0** | Logic dữ liệu sạch; chơi hết được 24/24 nhiệm vụ **[đã sửa: 25/25 sau khi thêm P0, nhánh thua và bước chờ]** |
 | Mâu thuẫn giờ giấc | 3 (đồng hồ 30x) / 2 (đồng hồ 1x) **[đã sửa: 0 với đồng hồ 30x, bước chờ đặt sau khi tới nơi]** | Ngày 48 phút trên bản đồ 1:1: đi bộ 800 m từ Hàng Chiếu ra Bờ Hồ mất 5 giờ game, bước "chụp lúc 5h30-7h" trượt |
 | Lựa chọn có hệ quả về sau | **2/34 cờ được đọc lại** (chỉ cặp gia vị chuẩn/rẻ) **[đã sửa: 34/34 cờ lựa chọn chương 0-1 được đọc ở 48 chỗ, 38 hệ quả ngay trong chương 1; xem 11]** | Gần như toàn bộ lựa chọn chương 1 chưa trả gì, vì chương 2-5 chưa viết. Người chơi bản v0 sẽ thấy "chọn gì cũng thế" |
-| Tiền của Minh sau 90 ngày game | **âm** (dư -0,7 tr/tháng theo bảng giá GDD) | Mục tiêu đời của Minh (tiệm 120 tr) không thể đạt bằng vòng lặp tự do; gửi quê 6 tr/tháng nuốt hết |
+| Tiền của Minh sau 90 ngày game | **âm** (dư -0,7 tr/tháng theo bảng giá GDD) **[đã sửa: -0,7 tr chỉ chạy app là chủ ý; +5,8 tr khi đi đủ bậc; góp vốn 40 tr sau 7 tháng game, xem 01]** | Mục tiêu đời của Minh (tiệm 120 tr) không thể đạt bằng vòng lặp tự do; gửi quê 6 tr/tháng nuốt hết |
 | Nhiệm vụ phụ "Mũ bảo hiểm cho bé" | cần 90 ngày sạch = **72 giờ chơi thật** | Một nhiệm vụ nhỏ bị khóa sau một điều kiện của game 100 giờ |
 | Quận cốt truyện chạm tới | 8/14 **[đã sửa: 14/14 qua chương 2 (PR #9) và 26 nhiệm vụ người lạ của 8 quận, xem 12]** | Cầu Giấy, Hai Bà Trưng, Hoàng Mai, Hà Đông, Bắc Từ Liêm, Gia Lâm chưa có lý do để tới |
 | Địa danh có trong nhiệm vụ | 10/84 **[đã sửa: 36/84]** | 74 địa danh vừa dựng chưa có truyện |
@@ -123,7 +123,7 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
 | Hệ quả lựa chọn | 1 → **5** | 5 | Lúc thẩm định: 2/34 cờ được đọc. Sau khi sửa: 34/34, 48 chỗ đọc, 38 hệ quả trong chương (11 §7) |
 | Logic dữ liệu | 5 | 5 | 0 lỗi chặn chơi |
 | Nhịp chơi | 3 | 4 | 45% thoại, nhiệm vụ 4 phút |
-| Kinh tế | 2 | 4 | Minh lỗ hàng tháng |
+| Kinh tế | 2 → **4** | 4 | Lúc thẩm định: Minh lỗ hàng tháng, mục tiêu 120 tr không bao giờ tới. Sau khi sửa: lỗ nếu chỉ chạy app (chủ ý), dư 5,8 tr nếu đi đủ bậc, góp vốn 40 tr sau 7 tháng game (01, 06) |
 | Thế giới sống | 2 → **3** | 4 | 0 sự kiện ngẫu nhiên; 6 quận trống đã có người, có khổ, có 3-4 nhiệm vụ mỗi quận (12); còn thiếu sự kiện ngẫu nhiên để lên 4 |
 | Độc đáo / dễ kể cho báo chí | 5 | 5 | "Hà Nội thật, không bắn súng, ký ức như dữ liệu" |
 | Khả thi thương mại | 2 | 3 | Cần lát cắt dọc trước khi nói tiếp |
@@ -135,8 +135,14 @@ Có, ở mức dữ liệu và ở mức kể chuyện:
    quyết định của chủ dự án: giữ 30x như GTA5 (ngày 48 phút thật), không có chế độ 8x.** Bước có khung giờ
    đặt sau bước đi tới nơi, kèm `wait_until` có `skip_allowed` tại chỗ (p3, c1_02, c1_04 theo
    `10-sua-chuong-1.md` M1). Giả lập: 0 cảnh báo.
-2. Kinh tế Minh: gửi quê 3 tr, ca đêm giao đồ ăn 20.000 đ/đơn, thưởng tuần của app; mục tiêu
-   "dư 2-3 tr/tháng nếu chăm" để tiệm 120 tr thành 3-4 năm game, tức là *phải* nhờ truyện (và nói rõ).
+2. ~~Kinh tế Minh: gửi quê 3 tr, ca đêm giao đồ ăn 20.000 đ/đơn, thưởng tuần của app; mục tiêu
+   "dư 2-3 tr/tháng nếu chăm" để tiệm 120 tr thành 3-4 năm game, tức là *phải* nhờ truyện (và nói rõ).~~
+   **Đã làm, theo nhân quả thay vì hạ số:** 6 tr về quê giữ nguyên nhưng tách thành 2 tr cho mẹ + 4 tr
+   trả góp viện phí 180 tr (60 kỳ, có ngày hết). Chỉ chạy app vẫn âm 0,7 tr/tháng, đó là Khổ của Minh và
+   là lý do anh nghe Kim Long. Bậc thang (Đạo): tối sửa xe ở tiệm Đức (+100 nghìn/ngày, mở từ c1_05),
+   30 khách quen gọi điện của ông Lương (+60 nghìn, q_hd_04), thưởng tuần app 60 cuốc (+400 nghìn/tuần,
+   `pay.weekly_bonus_vnd`): chăm thì dư 5,8 tr/tháng. Tiệm Đức Còi có cửa thứ hai: góp vốn 40 tr
+   (`q_tx_04_gop_von_duc_coi`, 7 tháng game nếu chăm) thay vì mua đứt 120 tr (21 tháng). `01` §bậc thang, `06`.
 3. ~~Mở màn mới: cold open 2 phút (băng số 1 hoặc cảnh tờ giấy cháy), rồi về P1.~~ **Đã làm:**
    `p0_ganh_pho_1957`, 4,6 phút, người chơi điều khiển cụ Thọ 1957 rồi 1972, tờ giấy cháy trước mắt
    người chơi; rồi về P1 (11 §3).
