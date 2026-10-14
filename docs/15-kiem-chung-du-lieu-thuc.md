@@ -114,7 +114,7 @@ Hà, Bảo tàng Hà Nội, ga Nhổn, ga Yên Nghĩa, chợ đầu mối phía 
 **Toạ độ chép theo.** 76 toạ độ trong nội dung khác là bản chép đúng từng số của ghim cũ (vật sưu tầm, điểm
 bắt đầu nhiệm vụ, nhà và lịch của Minh, nhóm tài xế, ông Bảy bãi giữa...); chúng được dời theo. Toạ độ chỉ
 "gần" địa danh (tiệm anh Đức, homestay Tô Ngọc Vân...) là nơi riêng, giữ nguyên. Nhiệm vụ `q_btl_03` (tàu Nhổn
-sáu giờ) được sửa cho đúng thực tế: Lan gọi xe ôm ra ga Cầu Giấy (ga cuối trên cao của tuyến 3, toạ độ từ
+sáu giờ) được sửa cho đúng thực tế (vùng ngập `bai_giua_phuc_xa` của đêm bão trong `flood_layers.json` cũng dời theo ghim bãi giữa mới): Lan gọi xe ôm ra ga Cầu Giấy (ga cuối trên cao của tuyến 3, toạ độ từ
 OSM) rồi đi tàu tuyến 3 tới Nhổn; bản cũ ghi "đi bộ" từ phố cổ và dùng nhầm tàu tuyến 2A Cát Linh.
 
 **Quận và phường sau sáp nhập.** Từ 1/7/2025 Hà Nội bỏ cấp quận; game giữ tên quận cũ làm vùng chơi
