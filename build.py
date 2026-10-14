@@ -146,7 +146,6 @@ PROV_CODES = list(PROVENANCE_RGBA)
 BCOLS = ["id", "name", "class", "height", "num_floors", "min_height", "is_underground", "sources", "wkb"]
 RCOLS = ["id", "subtype", "class", "width_rules", "wkb"]
 SEMCOLS = ["sem_height", "archetype"]
-RCOLS = ["subtype", "class", "width_rules", "wkb"]
 W = {}  # per-worker state, filled by init_worker
 
 
@@ -191,10 +190,8 @@ def tile_buildings(ix, iy, ox, oy):
         c = g.centroid
         local = shapely.make_valid(shapely.affinity.translate(pg, -ox, -oy).simplify(0.05))
         out.append({
-            "id": row["id"], "name": row["name"], "class": row["class"],
-            "geom": local, "base": base, "top": h,
             "id": row["id"], "name": row["name"], "class": row["class"], "archetype": row["archetype"],
-            "geom": shapely.affinity.translate(pg, -ox, -oy), "base": base, "top": h,
+            "geom": local, "base": base, "top": h,
             "height_m": round(h, 2), "height_source": prov, "min_height_m": base,
             "area_m2": round(pg.area, 1), "lon": round(c.x, 7), "lat": round(c.y, 7),
             "sources": sorted({x["dataset"] for x in (row["sources"] or [])}),
@@ -288,7 +285,6 @@ def build_tile(key):
         m.visual.vertex_colors = np.tile(PROVENANCE_RGBA[b["height_source"]], (len(m.vertices), 1))
         parts.append(m)
         main = max(polygons(b["geom"]), key=lambda p: p.area)
-        attrs.append({k: b[k] for k in ("id", "name", "class", "height_m", "height_source",
         attrs.append({k: b[k] for k in ("id", "name", "class", "archetype", "height_m", "height_source",
                                         "min_height_m", "area_m2", "lon", "lat", "sources")}
                      | {"face_start": face, "face_count": len(m.faces),
