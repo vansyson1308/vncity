@@ -169,15 +169,8 @@ Mọi khóa trong `steps[].params` đều được khai báo có kiểu trong `m
   `switch_protagonist_on_line` (`{dòng thoại: characters:<id>}`; UI thoại gọi
   `NotifyDialogueLine(dòng)`); cả hai phát `OnProtagonistSwitched`; `minimap: false` ẩn bản đồ
   nhỏ trong bước (`OnMinimapVisibilityChanged`, tự bật lại khi sang bước khác/hết nhiệm vụ).
-- **Thoại có điều kiện** (`dialogues.lines[].condition`, `lines[].choices[].condition`, kiểu
-  `common.schema.json#/$defs/condition`, chỉ dùng `flags`, `flags_not`, `min_reputation`,
-  `protagonist`; validator chặn khóa khác): UI thoại gọi `ResolveDialogueLine(row, id)` để lấy dòng
-  đầu tiên từ `id` có điều kiện đúng; dòng bị bỏ qua **rơi xuống dòng kế tiếp trong mảng** (không theo
-  `goto` của nó), nên các biến thể cho lựa chọn trước được viết liền nhau rồi kết bằng một dòng không
-  điều kiện. `NextDialogueLine(row, id)` đi theo `goto` hoặc dòng kế (đã lọc điều kiện);
-  `GetVisibleDialogueChoices(row, id)` trả chỉ số các lựa chọn được phép hiện. `flags_not` giữ khi
-  **không** cờ nào trong danh sách bật, dùng cho hệ quả của việc *không* chọn. `tools/playtest.py`
-  đi thoại theo đúng ba hàm này và đếm hệ quả đã kích hoạt (`docs/gdd/06`).
+- **Thoại có điều kiện**: xem §9. `tools/playtest.py` đi thoại theo đúng `ResolveDialogueLine` /
+  `GetAvailableChoices` và đếm hệ quả đã kích hoạt (`docs/gdd/06`, `08`).
 - **Cờ engine đọc**: `giam_chu_y_vinh_vien_1` (phần thưởng `s12`) do `UHanoiHeatSubsystem` đọc để
   hạ trần Chú ý một sao vĩnh viễn; nội dung không cần đọc lại.
 - **Nhân vật của nhiệm vụ**: `StartMission` đổi sang mục đầu của `protagonists` nếu nhân vật đang
@@ -187,3 +180,35 @@ Mọi khóa trong `steps[].params` đều được khai báo có kiểu trong `m
 - **Gameplay đọc** (ví dụ): đua xe `scripted_winner_npc` + `max_player_rank` (NPC luôn thắng,
   người chơi tối đa hạng đó), `rivals`, `vehicle`, `passenger`, `cargo`, `recipe`, `pass_score`,
   `match_threshold`, `time_of_day` (giờ dàn cảnh)… xem mô tả từng khóa trong schema.
+
+## 9. Thoại có điều kiện: lựa chọn để lại dấu vết
+
+Nguyên tắc của chủ dự án: *lựa chọn không có hệ quả là lựa chọn vô nghĩa*. Hệ quả rẻ nhất và
+"người" nhất là **nhân vật nhớ** việc người chơi đã làm và nói khác đi. Dữ liệu hỗ trợ việc đó bằng
+một khối `condition` (cùng kiểu với `requires` của nhiệm vụ, `common.schema.json#/$defs/condition`)
+đặt trên **dòng thoại** hoặc trên **lựa chọn** trong `dialogues`:
+
+```json
+{"id": "chao_2", "speaker": "characters:ba_hanh", "condition": {"flags": ["minh_tra_lai_vi"]},
+ "text": {"vi": "Thằng cu trả ví hôm nọ đấy à? Vào đây bà bảo."}, "goto": "vao_viec"},
+{"id": "chao_3", "speaker": "characters:ba_hanh", "condition": {"not_flags": ["minh_tra_lai_vi"]},
+ "text": {"vi": "Cháu hỏi ai?"}}
+```
+
+- `condition` có đủ các khóa của `requires`: `missions_completed`, `min_reputation`, `hours`,
+  `weather`, `protagonist`, `flags` (tất cả phải bật), và hai khóa mới dùng chung cho cả nhiệm vụ:
+  `not_flags` (không cờ nào được bật) và `events_active` (`events:<id>` đang diễn ra, do gameplay gọi
+  `SetWorldEventActive`).
+- **Dòng** có `condition` không thỏa thì runtime **bỏ qua và chạy tiếp dòng kế trong mảng** (bỏ cả
+  `goto`/`choices` của dòng đó). Nên viết dòng có điều kiện *trước*, dòng mặc định *sau*, như ví dụ
+  trên. Dòng cuối của một đoạn thoại không được có điều kiện (validator bắt), kẻo thoại kết thúc
+  trong im lặng.
+- **Lựa chọn** có `condition` không thỏa thì không hiện. Mỗi dòng có `choices` phải giữ ít nhất
+  một lựa chọn không điều kiện (validator bắt) để UI luôn có thứ để hiện.
+- Runtime (`UHanoiMissionSubsystem`): `ResolveDialogueLine(dialogue, dòng)` trả dòng đầu tiên hợp
+  lệ từ đó trở đi; `NextDialogueLine` đi tiếp theo `goto` hoặc thứ tự mảng; `GetAvailableChoices`
+  lọc lựa chọn; `ApplyChoice` áp `effect` (tiền, uy tín, đồ, `set_flags`). UI thoại chỉ cần gọi bốn
+  hàm này thay vì tự duyệt mảng.
+- Công cụ: `tools/validate.py` kiểm hai quy tắc trên; `tools/playtest.py` chơi theo đúng ngữ nghĩa
+  (bỏ dòng không thỏa, chỉ chọn trong lựa chọn đang hiện) và đếm cờ trong `condition` là *cờ được
+  đọc*, nên một lựa chọn đặt cờ mà về sau có dòng thoại đọc cờ đó không còn bị báo "không hệ quả".

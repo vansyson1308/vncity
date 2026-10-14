@@ -75,9 +75,9 @@ Trạng thái: 3, 11 và 12 **đã làm**; 1 và 2 đã làm một phần (xem t
    kiểu trong schema và runtime đổi nhân vật (`OnProtagonistSwitched`).
 3. ~~**dialogues.lines[].condition**: dòng thoại chỉ hiện khi đủ điều kiện (cờ, uy tín) để các chương
    sau phản ứng với lựa chọn trước mà không cần nhân đôi đoạn thoại.~~ **Đã làm:** `lines[].condition`
-   và `choices[].condition` (điều kiện chung + `flags_not`); dòng bị bỏ rơi xuống dòng kế trong mảng,
-   lựa chọn bị ẩn; runtime `ResolveDialogueLine` / `NextDialogueLine` / `GetVisibleDialogueChoices`
-   (`02-he-thong.md` §8).
+   và `choices[].condition` (điều kiện chung + `not_flags`, `events_active`; PR #7); dòng bị bỏ rơi
+   xuống dòng kế trong mảng, lựa chọn bị ẩn; runtime `ResolveDialogueLine` / `NextDialogueLine` /
+   `GetAvailableChoices` / `ApplyChoice` (`02-he-thong.md` §9).
 4. **dialogues.lines[].speaker** cho phép giá trị đặc biệt `player` (nhân vật đang điều khiển), để
    một đoạn thoại dùng được cho nhiều nhân vật chính.
 5. **traffic_rules.fine_vnd** thêm `min`/`max` theo khung phạt thật, `points_vehicle` riêng xe máy

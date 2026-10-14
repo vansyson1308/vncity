@@ -47,6 +47,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FHanoiStepWaitingSignature, FName
  * (ReportEvent), "flag:<name>". params.time_limit_s is shorthand for "time>N";
  * params.deadline_hour fails when the game clock passes that hour.
  * Step completion applies Step.SetFlags before the next step is resolved.
+ * Conditions (FHanoiCondition, EvaluateCondition): missions_completed, min_reputation, hours,
+ * weather, protagonist, flags (all set), not_flags (none set), events_active (SetWorldEventActive).
+ * Dialogue lines and choices carry an optional `condition` (dialogues.schema.json): the dialogue UI
+ * walks a tree with ResolveDialogueLine (skips lines whose condition fails, continuing in list
+ * order) and offers only the choices GetAvailableChoices returns; ApplyChoice applies the effect.
+ * This is how an earlier choice (a flag) changes what people say later.
  * Runtime params (x-consumer "runtime" in missions.schema.json): radius_m, heat, hour, until_hour,
  * hours, time_limit_s, deadline_hour, requires_event, apply_fine, protagonist,
  * switch_protagonist_on_line, branch_source, player_input, minimap. Every other param is for
@@ -90,20 +96,29 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Missions")
 	void NotifyDialogueLine(FName LineId);
 
-	/** Dialogue UI: the first line, starting at LineId (or the row's first line when None), whose `condition`
-	 *  holds. A line whose condition fails is skipped to the next line of the array (its goto is not followed),
-	 *  so variant lines for earlier choices are written back to back. Returns None when the dialogue ends. */
-	UFUNCTION(BlueprintPure, Category = "Hanoi|Missions")
-	FName ResolveDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId) const;
+	/** Line LineId of Dialogue, or the first line whose condition holds after it in list order
+	 *  (None = start of the dialogue). False when nothing is left to show (end of dialogue). */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Dialogue")
+	bool ResolveDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId, FHanoiDialogueLine& OutLine) const;
 
-	/** Dialogue UI: the line that follows LineId when it has no choices: its goto if any, else the next line of
-	 *  the array; conditions resolved as in ResolveDialogueLine. None when the dialogue ends. */
-	UFUNCTION(BlueprintPure, Category = "Hanoi|Missions")
-	FName NextDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId) const;
+	/** The line that follows Line when it has no choices: its goto, else the next line in list order
+	 *  (unavailable lines skipped). False at the end of the dialogue. */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Dialogue")
+	bool NextDialogueLine(const FHanoiDialogueRow& Dialogue, const FHanoiDialogueLine& Line, FHanoiDialogueLine& OutLine) const;
 
-	/** Dialogue UI: the choices of LineId whose `condition` holds (indices into Line.Choices, in order). */
-	UFUNCTION(BlueprintPure, Category = "Hanoi|Missions")
-	TArray<int32> GetVisibleDialogueChoices(const FHanoiDialogueRow& Dialogue, FName LineId) const;
+	/** Line.Choices whose condition currently holds, in order. */
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Dialogue")
+	TArray<FHanoiDialogueLineChoice> GetAvailableChoices(const FHanoiDialogueLine& Line) const;
+
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Dialogue")
+	bool IsDialogueLineAvailable(const FHanoiDialogueLine& Line) const { return EvaluateCondition(Line.Condition); }
+
+	UFUNCTION(BlueprintPure, Category = "Hanoi|Dialogue")
+	bool IsChoiceAvailable(const FHanoiDialogueLineChoice& Choice) const { return EvaluateCondition(Choice.Condition); }
+
+	/** The player picked Choice: applies Choice.Effect (money, reputation, items, set_flags). */
+	UFUNCTION(BlueprintCallable, Category = "Hanoi|Dialogue")
+	void ApplyChoice(const FHanoiDialogueLineChoice& Choice) { ApplyReward(Choice.Effect); }
 
 	/** World event (collection "events") started/ended; gates params.requires_event. */
 	UFUNCTION(BlueprintCallable, Category = "Hanoi|Missions")

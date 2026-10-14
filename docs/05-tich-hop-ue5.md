@@ -391,6 +391,11 @@ từng khóa của `game/schemas/missions.schema.json`. Tóm tắt phía UE:
   `next` = bước tiếp theo trong mảng. Id đặc biệt: `end`/`success` (hoàn thành), `fail`.
   `choice` với `branch_source: "flag"` tự rẽ theo cờ; còn lại phát `OnChoiceRequested`.
 * `steps[].set_flags` áp khi bước hoàn thành.
+* Điều kiện (`FHanoiCondition`, dùng cho `requires` và cho `condition` trên dòng/lựa chọn thoại):
+  thêm `not_flags` (không cờ nào bật) và `events_active` (`events:<id>` đang `SetWorldEventActive`).
+  UI thoại duyệt cây bằng `ResolveDialogueLine` (bỏ dòng có `condition` không thỏa, đi tiếp theo
+  thứ tự mảng), `NextDialogueLine`, `GetAvailableChoices`, `ApplyChoice` (xem
+  `docs/gdd/02-he-thong.md` §9).
 * `fail_if`: `time>N` (giây trong bước), `heat>=N` (cũng `> < <= ==`), `event:<tên>` (gameplay gọi
   `ReportEvent`), `flag:<tên>`; `params.time_limit_s` = giới hạn giây; `params.deadline_hour` = giờ
   game chót.

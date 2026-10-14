@@ -53,6 +53,10 @@
                 "emotion": {
                   "type": "string"
                 },
+                "condition": {
+                  "$ref": "common.schema.json#/$defs/condition",
+                  "description": "Shown only while this holds; otherwise the runtime skips the line and continues with the next line in list order (its goto and choices are ignored)."
+                },
                 "choices": {
                   "type": "array",
                   "items": {
@@ -67,6 +71,10 @@
                       },
                       "goto": {
                         "$ref": "common.schema.json#/$defs/id"
+                      },
+                      "condition": {
+                        "$ref": "common.schema.json#/$defs/condition",
+                        "description": "Offered only while this holds. Every line with choices keeps at least one unconditional choice (tools/validate.py)."
                       },
                       "effect": {
                         "$ref": "common.schema.json#/$defs/reward"

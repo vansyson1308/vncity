@@ -19,7 +19,7 @@ What it checks (logic, not taste):
     (repair shop 120M, cô Hạnh's share ~3 billion) and the flat income of a working day
   * cast and consequence: who the player meets, which choices are read later (flags consumed)
     and which are set but never read (a choice with no consequence); conditional dialogue lines
-    and choices (`condition.flags` / `flags_not`) are evaluated the way the runtime does, so the
+    and choices (`condition.flags` / `not_flags`) are evaluated the way the runtime does, so the
     report counts how many consequences each persona actually triggered and how far the personas'
     paths diverge (steps and lines only some of them saw)
   * opening: real minutes until the player first holds the controls, until the first choice, the
@@ -125,7 +125,7 @@ class World:
             self.flag_read_kinds[f].add(kind)
 
         def cond_flags(cond):
-            return list((cond or {}).get("flags", [])) + list((cond or {}).get("flags_not", []))
+            return list((cond or {}).get("flags", [])) + list((cond or {}).get("not_flags", []))
 
         for m in self.missions.values():
             mid = m["id"]
@@ -169,12 +169,17 @@ class World:
             for f in cond_flags(a.get("requires") or a.get("unlock")):
                 read(f, a["id"], "activity")
 
-    def holds(self, cond, flags, rep, protagonist):
-        """A dialogue/mission condition the way UHanoiMissionSubsystem::EvaluateCondition reads it (state only)."""
+    def holds(self, cond, flags, rep, protagonist, active_events=(), done=None):
+        """A dialogue/mission condition the way UHanoiMissionSubsystem::EvaluateCondition reads it
+        (state only: flags, not_flags, events_active, min_reputation, protagonist, missions_completed)."""
         c = cond or {}
         if any(f not in flags for f in c.get("flags", [])):
             return False
-        if any(f in flags for f in c.get("flags_not", [])):
+        if any(f in flags for f in c.get("not_flags", [])):
+            return False
+        if any(x.split(":", 1)[1] not in active_events for x in c.get("events_active", [])):
+            return False
+        if done is not None and any(x.split(":", 1)[1] not in done for x in c.get("missions_completed", [])):
             return False
         if any(rep[k] < v for k, v in (c.get("min_reputation") or {}).items()):
             return False
@@ -273,7 +278,7 @@ class Session:
 
     def consequence(self, mission, where, kind, cond, shown):
         """Record conditional content decided by a flag some choice set (or could have set)."""
-        flags = list((cond or {}).get("flags", [])) + list((cond or {}).get("flags_not", []))
+        flags = list((cond or {}).get("flags", [])) + list((cond or {}).get("not_flags", []))
         decided = [f for f in flags if f in self.w.choice_flags]
         if decided:
             self.consequences.append({"mission": mission, "where": where, "kind": kind, "flags": decided, "shown": shown})
@@ -301,7 +306,7 @@ class Session:
             elif coll == "businesses":
                 self.unlocked_businesses.add(uid)
 
-    def run_dialogue(self, did, mission, step):
+    def run_dialogue(self, did, mission, step, active_events=()):
         d = self.w.dialogues.get(did)
         if not d:
             self.issue("error", mission, step, f"dialogue {did} does not exist")
@@ -316,7 +321,7 @@ class Session:
                 return
             line = lines[cur]
             if "condition" in line:
-                ok = self.w.holds(line["condition"], self.flags, self.rep, self.protagonist)
+                ok = self.w.holds(line["condition"], self.flags, self.rep, self.protagonist, active_events, self.done)
                 self.consequence(mission, f"{did}/{cur}", "dialogue_line", line["condition"], ok)
                 if not ok:   # skipped: fall through to the next line of the array (runtime ResolveDialogueLine)
                     i = order.index(cur)
@@ -332,7 +337,7 @@ class Session:
                 visible = []
                 for c in line["choices"]:
                     if "condition" in c:
-                        ok = self.w.holds(c["condition"], self.flags, self.rep, self.protagonist)
+                        ok = self.w.holds(c["condition"], self.flags, self.rep, self.protagonist, active_events, self.done)
                         self.consequence(mission, f"{did}/{cur}", "dialogue_choice", c["condition"], ok)
                         if not ok:
                             continue
@@ -372,7 +377,7 @@ class Session:
         t0 = self.real_minutes
         self.in_mission = True
         r = m.get("requires") or {}
-        if r.get("flags") or r.get("flags_not"):
+        if r.get("flags") or r.get("not_flags"):
             self.consequence(mid, "requires", "mission_gate", r, True)
         cur, visited, n = m["steps"][0]["id"], [], 0
         outcome = "success"
@@ -433,7 +438,8 @@ class Session:
                 fine = fine if isinstance(fine, (int, float)) else (fine or {}).get("motorbike", 0)
                 self.money[self.protagonist] -= fine or 0
             if s.get("dialogue"):
-                self.run_dialogue(s["dialogue"].split(":", 1)[1], mid, cur)
+                active = {ev.split(":", 1)[1] for ev in (pr.get("requires_event"), pr.get("force_event")) if ev}
+                self.run_dialogue(s["dialogue"].split(":", 1)[1], mid, cur, active)
             for f in s.get("set_flags", []):
                 self.flags.add(f)
             # choose the next step

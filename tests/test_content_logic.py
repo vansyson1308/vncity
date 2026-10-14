@@ -20,7 +20,7 @@ RUNTIME_READ_FLAGS = {"giam_chu_y_vinh_vien_1"}
 
 
 def _cond_flags(cond):
-    return list((cond or {}).get("flags", [])) + list((cond or {}).get("flags_not", []))
+    return list((cond or {}).get("flags", [])) + list((cond or {}).get("not_flags", []))
 
 
 def _load(sub):
@@ -94,16 +94,6 @@ def test_every_flag_set_is_read_somewhere():
     assert not unread, f"flags set but never read: {unread}"
 
 
-def test_runtime_evaluates_flags_not_and_conditional_dialogue():
-    cpp = MISSION_CPP.read_text(encoding="utf-8")
-    assert "C.FlagsNot" in cpp
-    for fn in ("ResolveDialogueLine", "NextDialogueLine", "GetVisibleDialogueChoices"):
-        assert f"UHanoiMissionSubsystem::{fn}" in cpp, fn
-    # a skipped line falls through to the next line of the array, never to its goto
-    body = cpp[cpp.index("UHanoiMissionSubsystem::ResolveDialogueLine"):cpp.index("UHanoiMissionSubsystem::NextDialogueLine")]
-    assert "++i" in body and "Goto" not in body
-
-
 def test_runtime_sets_the_clean_record_flag_and_resets_it_on_fines():
     cpp = MISSION_CPP.read_text(encoding="utf-8")
     assert 'CleanRecordFlag(TEXT("ho_so_sach_90_ngay"))' in cpp
@@ -169,27 +159,28 @@ def test_no_dead_dialogue_lines():
                 stack += [c["goto"] for c in line["choices"]]
             elif "goto" in line:
                 stack.append(line["goto"])
-            elif k < len(ids):
-                stack.append(ids[k])
+            if "choices" not in line and "goto" not in line or "condition" in line:
+                k = ids.index(x) + 1   # ResolveDialogueLine skips a line whose condition fails
+                if k < len(ids):
+                    stack.append(ids[k])
         assert reach == set(ids), f"{d['id']}: unreachable lines {sorted(set(ids) - reach)}"
 
 
-def test_conditional_variants_always_leave_one_visible_line():
-    """Back-to-back variant lines (same speaker slot) must end in an unconditional line, or a line whose
-    conditions are complementary (flags / flags_not of the same flag); otherwise some player sees nothing."""
-    for d in DIALOGUES.values():
-        lines = d["lines"]
-        for i, line in enumerate(lines):
-            if "choices" not in line:
-                continue
-            conds = [c.get("condition") for c in line["choices"]]
-            assert any(c is None for c in conds) or _complementary(conds), f"{d['id']}.{line['id']}: every choice may be hidden"
+def test_every_choice_line_keeps_an_unconditional_choice():
+    """GetAvailableChoices must never come back empty: the UI would have nothing to offer."""
+    bad = [f"{d['id']}/{line['id']}" for d in DIALOGUES.values() for line in d["lines"]
+           if line.get("choices") and all("condition" in c for c in line["choices"])]
+    assert not bad, f"every choice is conditional in {bad}"
 
 
-def _complementary(conds):
-    pos = {f for c in conds if c for f in c.get("flags", [])}
-    neg = {f for c in conds if c for f in c.get("flags_not", [])}
-    return bool(pos & neg)
+def test_conditional_lines_only_use_runtime_condition_fields():
+    """Line/choice conditions are evaluated by UHanoiMissionSubsystem::EvaluateCondition; every key
+    the content uses must be one the C++ reads."""
+    cpp = (ROOT / "ue5/Plugins/HanoiCity/Source/HanoiCityRuntime/Private/HanoiMissionSubsystem.cpp").read_text(encoding="utf-8")
+    body = cpp.split("::EvaluateCondition(", 1)[1].split("\n}\n", 1)[0]
+    for field in ("MissionsCompleted", "MinReputation", "Hours", "Weather", "Protagonist", "Flags", "NotFlags", "EventsActive"):
+        assert f"C.{field}" in body, f"EvaluateCondition does not read {field}"
+    assert "ResolveDialogueLine" in cpp and "GetAvailableChoices" in cpp
 
 
 def test_unlocks_cover_the_requires_graph():
@@ -216,3 +207,27 @@ def test_every_mission_is_reachable_from_a_new_game():
         done += ready
         remaining -= set(ready)
     assert done[0] == "p0_ganh_pho_1957" and done[1] == "p1_cuoc_xe_luc_rang_dong"
+
+
+def test_dialogue_condition_schema_and_validator_rules():
+    """`condition` on lines and choices validates against the schema; tools/validate.py rejects a
+    line whose choices are all conditional and a conditional closing line."""
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import validate
+    from jsonschema import Draft202012Validator
+    schemas, registry = validate.load_registry(ROOT / "game" / "schemas")
+    v = Draft202012Validator(schemas["dialogues"], registry=registry)
+    doc = {"collection": "dialogues", "items": [{"id": "test_dlg", "lines": [
+        {"id": "chao_1", "speaker": "characters:minh", "text": {"vi": "x"}, "goto": "ket",
+         "condition": {"flags": ["f1"], "not_flags": ["f2"], "events_active": ["events:trung_thu"]}},
+        {"id": "chao_2", "speaker": "characters:minh", "text": {"vi": "y"}, "choices": [
+            {"text": {"vi": "1"}, "goto": "ket", "condition": {"flags": ["f1"]}},
+            {"text": {"vi": "2"}, "goto": "ket"}]},
+        {"id": "ket", "speaker": "characters:minh", "text": {"vi": "z"}}]}]}
+    assert not list(v.iter_errors(doc))
+    assert validate.check_dialogues([("x", "dialogues", doc)]) == []
+    doc["items"][0]["lines"][1]["choices"][1]["condition"] = {"flags": ["q"]}
+    doc["items"][0]["lines"][2]["condition"] = {"flags": ["q"]}
+    errs = validate.check_dialogues([("x", "dialogues", doc)])
+    assert len(errs) == 2 and "chao_2" in errs[0] and "ket" in errs[1]

@@ -46,6 +46,14 @@
               "lan_cong_khai_danh_sach"
             ]
           }
+        },
+        {
+          "id": "l05",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Nhanh lên. Lão Tư không chờ được ai.",
+            "en": "Hurry. Old Tư waits for no one."
+          }
         }
       ]
     },
@@ -81,7 +89,7 @@
             "en": "Who are you? Old Thọ said a rider boy was coming. That you?"
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "minh_ban_tin_ong_tu",
               "minh_khong_ban_tin"
             ]
@@ -187,7 +195,7 @@
             "en": "My son signed in Saigon. He says someone tipped the firm. Hùng from Hàng Đậu. The whole street knows. I don't blame him, he's in debt. I blame the company that buys people."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "minh_ban_tin_ong_tu"
             ]
           }
@@ -245,6 +253,14 @@
             "flags": [
               "minh_bo_viec_kim_long"
             ]
+          }
+        },
+        {
+          "id": "l14",
+          "speaker": "characters:ong_tu_hang_bac",
+          "text": {
+            "vi": "Đi đi cháu. Đe nặng, đường ướt, đừng phanh gấp.",
+            "en": "Go on, lad. The anvil is heavy and the road is wet, no hard braking."
           }
         }
       ]
@@ -309,6 +325,14 @@
             "flags": [
               "minh_thu_nhan_ong_tu"
             ]
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:cu_tho",
+          "text": {
+            "vi": "Về thôi. Tối nay ông ngủ lại đây với lão Tư.",
+            "en": "Go home. Tonight I sleep here with old Tư."
           }
         }
       ]
@@ -474,6 +498,14 @@
             "flags": [
               "tho_cuu_con"
             ]
+          }
+        },
+        {
+          "id": "l07",
+          "speaker": "characters:khoi",
+          "text": {
+            "vi": "(nhìn cuộn băng) Còn mười hai cuộn nữa.",
+            "en": "(looking at the cassette) Twelve more to go."
           }
         }
       ]
@@ -1076,7 +1108,7 @@
             "en": "Minh from Phở Thọ. You don't work for them, you don't understand. Forty million at daily interest. My kid is two."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "minh_ban_tin_ong_tu",
               "minh_khong_ban_tin",
               "minh_bo_viec_kim_long",
@@ -1145,7 +1177,7 @@
                 ]
               },
               "condition": {
-                "flags_not": [
+                "not_flags": [
                   "minh_ban_tin_ong_tu"
                 ]
               }
@@ -1221,7 +1253,7 @@
             "en": "You're the boy who delivers for old Thọ. Here to ask for a spot or to talk?"
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "duoc_do_o_quan_chuong"
             ]
           }
@@ -1292,6 +1324,14 @@
             "flags": [
               "minh_lai_xe_khong_do_la"
             ]
+          }
+        },
+        {
+          "id": "l09",
+          "speaker": "characters:chu_cuong",
+          "text": {
+            "vi": "Thôi, đi làm đi. Tết đến nơi rồi.",
+            "en": "Right, back to work. Tết is almost here."
           }
         }
       ]
@@ -1483,7 +1523,7 @@
                 "flags": [
                   "lan_tinh_no_cho_co"
                 ],
-                "flags_not": [
+                "not_flags": [
                   "lan_bao_lanh_co_hanh"
                 ]
               }
@@ -1512,7 +1552,7 @@
                 ]
               },
               "condition": {
-                "flags_not": [
+                "not_flags": [
                   "lan_tinh_no_cho_co"
                 ]
               }
@@ -1661,7 +1701,7 @@
             "en": "[Video call] Son, are you coming home tomorrow? Dad keeps asking. You sent less this month, is something wrong?"
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "minh_giu_viec_kim_long"
             ]
           }
@@ -1790,7 +1830,7 @@
             "en": "The kind... trying to be clean."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "giay_khen_an_toan_giao_thong"
             ]
           }
@@ -1803,7 +1843,7 @@
             "en": "Keep trying. Three months without a violation and I'll offer you a decent job."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "giay_khen_an_toan_giao_thong"
             ]
           }
@@ -2133,7 +2173,7 @@
             "en": "There's something else in the bag. The project's real cash flow, the version I signed. If Lan has it before midnight she'll know Vĩnh can't pay for fourteen houses. I lose my job, for certain. Will you take it?"
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "linh_dang_anh_thao"
             ]
           }
@@ -2146,7 +2186,7 @@
             "en": "(Choose)"
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "linh_dang_anh_thao"
             ]
           },
@@ -2193,7 +2233,7 @@
           },
           "goto": "l11",
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "linh_dang_anh_thao"
             ]
           }
@@ -2207,7 +2247,7 @@
           },
           "goto": "l11",
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "linh_dang_anh_thao"
             ]
           }
@@ -2534,6 +2574,14 @@
             "flags": [
               "hung_dung_ban_tin"
             ]
+          }
+        },
+        {
+          "id": "l06",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(đặt bánh lên bàn thờ nhỏ trên gác) Năm mới.",
+            "en": "(placing the cake on the little altar upstairs) New year."
           }
         }
       ]

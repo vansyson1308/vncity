@@ -929,7 +929,7 @@
             "en": "[Call] Minh, can you deliver thirty portions of pho to an office on Kim Mã? My delivery boy quit and they booked a week ago. Three hundred, plus rain money."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "minh_giu_kin_danh_sach"
             ]
           }
@@ -1001,7 +1001,7 @@
             "en": "Yes, boss. Oh, Minh, the Alô Chat group says a property company pays five hundred for every 'house about to sell' tip in the Old Quarter. Hùng from Hàng Đậu already signed up."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "minh_nhan_viec_kim_long"
             ]
           }
@@ -1027,7 +1027,7 @@
             "en": "...Which company?"
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "minh_nhan_viec_kim_long"
             ]
           }
@@ -1053,7 +1053,7 @@
             "en": "Kim something. Kim Long. Why, you thinking of it? Beats riding in the rain."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "minh_nhan_viec_kim_long"
             ]
           }
@@ -1089,11 +1089,6 @@
                 "reputation": {
                   "cong_dong_tai_xe_vo": 5
                 }
-              },
-              "condition": {
-                "flags_not": [
-                  "minh_nhan_viec_kim_long"
-                ]
               }
             },
             {
@@ -1101,13 +1096,23 @@
                 "vi": "'Để tao tính.'",
                 "en": "'Let me think.'"
               },
-              "goto": "l08",
-              "condition": {
-                "flags_not": [
-                  "minh_nhan_viec_kim_long"
-                ]
-              }
-            },
+              "goto": "l08"
+            }
+          ],
+          "condition": {
+            "not_flags": [
+              "minh_nhan_viec_kim_long"
+            ]
+          }
+        },
+        {
+          "id": "l06b",
+          "speaker": "characters:minh",
+          "text": {
+            "vi": "(Chọn)",
+            "en": "(Choose)"
+          },
+          "choices": [
             {
               "text": {
                 "vi": "'Tao sẽ bỏ. Mai tao nhắn chị Thảo.'",
@@ -1121,11 +1126,6 @@
                 },
                 "set_flags": [
                   "minh_bo_viec_kim_long"
-                ]
-              },
-              "condition": {
-                "flags": [
-                  "minh_nhan_viec_kim_long"
                 ]
               }
             },
@@ -1142,14 +1142,14 @@
                 "set_flags": [
                   "minh_giu_viec_kim_long"
                 ]
-              },
-              "condition": {
-                "flags": [
-                  "minh_nhan_viec_kim_long"
-                ]
               }
             }
-          ]
+          ],
+          "condition": {
+            "flags": [
+              "minh_nhan_viec_kim_long"
+            ]
+          }
         },
         {
           "id": "l07",
@@ -1240,7 +1240,7 @@
             "en": "Lovely words, but do you live four people in twenty square metres, sharing a toilet with two other families?"
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "lan_doi_dau_co_hanh",
               "lan_tinh_no_cho_co"
             ]
@@ -1619,7 +1619,7 @@
             "en": "(slurps) ...Oh. Oh no. Guys. I'm not acting. This broth is... clean. It's like the cow went to a spa."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "lan_mua_gia_vi_re"
             ]
           }
@@ -1653,7 +1653,7 @@
             "en": "He says the broth is so clean the cow must have been to a spa. That's a compliment. In Australia."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "lan_mua_gia_vi_re"
             ]
           }
@@ -1679,7 +1679,7 @@
             "en": "Our cows went to the abattoir, not a spa."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "lan_mua_gia_vi_re"
             ]
           }
@@ -1782,7 +1782,7 @@
             "en": "The walking street is closed to bikes; I park outside the barriers and carry them in? Twenty frames?"
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "duoc_do_o_quan_chuong"
             ]
           }
@@ -2012,7 +2012,7 @@
             "en": "Lan, those photos made me want to cry. Listen, I'm handing over my egg-coffee café; do you and this Việt kiều want it? I won't sell to strangers."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "lan_de_xuat_tu_quan"
             ]
           }
@@ -2029,6 +2029,14 @@
               "lan_de_xuat_tu_quan"
             ]
           }
+        },
+        {
+          "id": "l14",
+          "speaker": "characters:chi_mai_ca_phe",
+          "text": {
+            "vi": "Thôi, mai nói tiếp. Về đi, khuya rồi, mai còn dậy nấu.",
+            "en": "Anyway, tomorrow. Go home, it's late and you're up at four."
+          }
         }
       ]
     },
@@ -2044,7 +2052,7 @@
             "en": "Please, sit. Tân Cương tea, not liquor; I know you have to ride home."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "lan_lo_thong_tin_mat",
               "linh_dang_anh_thao"
             ]
@@ -2074,7 +2082,7 @@
             "flags": [
               "linh_dang_anh_thao"
             ],
-            "flags_not": [
+            "not_flags": [
               "lan_lo_thong_tin_mat"
             ]
           }
@@ -2135,7 +2143,7 @@
             "flags": [
               "minh_nhan_viec_kim_long"
             ],
-            "flags_not": [
+            "not_flags": [
               "minh_bo_viec_kim_long"
             ]
           }
@@ -2227,7 +2235,7 @@
             "en": "My father's photos hanging in a hotel lobby, in place of the people in them."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "khoi_giu_phan"
             ]
           }
@@ -2240,7 +2248,7 @@
             "en": "Every photograph replaces its subject, Mr Photographer."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "khoi_giu_phan"
             ]
           }
@@ -2328,7 +2336,7 @@
                 ]
               },
               "condition": {
-                "flags_not": [
+                "not_flags": [
                   "khoi_xin_thoi_gian"
                 ]
               }
@@ -2410,7 +2418,7 @@
             "en": "(smiling for the first time) Spoken like a banker. Send it. I'll read it."
           },
           "condition": {
-            "flags_not": [
+            "not_flags": [
               "lan_de_xuat_tu_quan"
             ]
           }
@@ -2478,7 +2486,7 @@
             "flags": [
               "khoi_tang_anh_thao"
             ],
-            "flags_not": [
+            "not_flags": [
               "linh_dang_anh_thao"
             ]
           }
@@ -2494,9 +2502,17 @@
             "flags": [
               "khoi_giu_ban_goc"
             ],
-            "flags_not": [
+            "not_flags": [
               "linh_dang_anh_thao"
             ]
+          }
+        },
+        {
+          "id": "l17",
+          "speaker": "characters:thao",
+          "text": {
+            "vi": "(cửa thang máy khép lại) Chúc ngủ ngon. Mai Hà Nội vẫn thế thôi.",
+            "en": "(the lift doors close) Good night. Hanoi will be the same tomorrow."
           }
         }
       ]

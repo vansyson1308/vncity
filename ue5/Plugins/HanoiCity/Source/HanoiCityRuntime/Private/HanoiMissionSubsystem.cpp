@@ -78,71 +78,67 @@ bool UHanoiMissionSubsystem::EvaluateCondition(const FHanoiCondition& C) const
 	{
 		if (!State.Flags.Contains(FName(*Flag))) { return false; }
 	}
-	for (const FString& Flag : C.FlagsNot)
+	for (const FString& Flag : C.NotFlags)
 	{
 		if (State.Flags.Contains(FName(*Flag))) { return false; }
+	}
+	for (const FHanoiRef& Event : C.EventsActive)
+	{
+		if (!ActiveWorldEvents.Contains(Event.Id)) { return false; }
 	}
 	return true;
 }
 
-// ------------------------------------------------------------------ conditional dialogue
+// ------------------------------------------------------------------ dialogue trees
 
-namespace
+bool UHanoiMissionSubsystem::ResolveDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId, FHanoiDialogueLine& OutLine) const
 {
-	int32 DialogueLineIndex(const FHanoiDialogueRow& Dialogue, FName LineId)
+	int32 Index = 0;
+	if (!LineId.IsNone())
 	{
-		if (LineId.IsNone())
+		Index = Dialogue.Lines.IndexOfByPredicate([LineId](const FHanoiDialogueLine& L) { return L.Id == LineId; });
+		if (Index == INDEX_NONE)
 		{
-			return Dialogue.Lines.Num() > 0 ? 0 : INDEX_NONE;
-		}
-		return Dialogue.Lines.IndexOfByPredicate([LineId](const FHanoiDialogueLine& L) { return L.Id == LineId; });
-	}
-}
-
-FName UHanoiMissionSubsystem::ResolveDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId) const
-{
-	// A skipped line falls through to the next line of the array, never to its goto (docs/gdd/02-he-thong.md §8).
-	for (int32 i = DialogueLineIndex(Dialogue, LineId); Dialogue.Lines.IsValidIndex(i); ++i)
-	{
-		if (EvaluateCondition(Dialogue.Lines[i].Condition))
-		{
-			return Dialogue.Lines[i].Id;
+			UE_LOG(LogHanoi, Warning, TEXT("Dialogue %s has no line %s"), *Dialogue.Id.ToString(), *LineId.ToString());
+			return false;
 		}
 	}
-	return NAME_None;
+	for (; Index < Dialogue.Lines.Num(); ++Index)
+	{
+		if (IsDialogueLineAvailable(Dialogue.Lines[Index]))
+		{
+			OutLine = Dialogue.Lines[Index];
+			return true;
+		}
+	}
+	return false;
 }
 
-FName UHanoiMissionSubsystem::NextDialogueLine(const FHanoiDialogueRow& Dialogue, FName LineId) const
+bool UHanoiMissionSubsystem::NextDialogueLine(const FHanoiDialogueRow& Dialogue, const FHanoiDialogueLine& Line, FHanoiDialogueLine& OutLine) const
 {
-	const int32 i = DialogueLineIndex(Dialogue, LineId);
-	if (!Dialogue.Lines.IsValidIndex(i))
-	{
-		return NAME_None;
-	}
-	const FHanoiDialogueLine& Line = Dialogue.Lines[i];
 	if (!Line.Goto.IsNone())
 	{
-		return ResolveDialogueLine(Dialogue, Line.Goto);
+		return ResolveDialogueLine(Dialogue, Line.Goto, OutLine);
 	}
-	return Dialogue.Lines.IsValidIndex(i + 1) ? ResolveDialogueLine(Dialogue, Dialogue.Lines[i + 1].Id) : NAME_None;
+	const int32 Index = Dialogue.Lines.IndexOfByPredicate([&Line](const FHanoiDialogueLine& L) { return L.Id == Line.Id; });
+	if (Index == INDEX_NONE || Index + 1 >= Dialogue.Lines.Num())
+	{
+		return false;
+	}
+	return ResolveDialogueLine(Dialogue, Dialogue.Lines[Index + 1].Id, OutLine);
 }
 
-TArray<int32> UHanoiMissionSubsystem::GetVisibleDialogueChoices(const FHanoiDialogueRow& Dialogue, FName LineId) const
+TArray<FHanoiDialogueLineChoice> UHanoiMissionSubsystem::GetAvailableChoices(const FHanoiDialogueLine& Line) const
 {
-	TArray<int32> Visible;
-	const int32 i = DialogueLineIndex(Dialogue, LineId);
-	if (Dialogue.Lines.IsValidIndex(i))
+	TArray<FHanoiDialogueLineChoice> Out;
+	for (const FHanoiDialogueLineChoice& Choice : Line.Choices)
 	{
-		const TArray<FHanoiDialogueLineChoice>& Choices = Dialogue.Lines[i].Choices;
-		for (int32 c = 0; c < Choices.Num(); ++c)
+		if (IsChoiceAvailable(Choice))
 		{
-			if (EvaluateCondition(Choices[c].Condition))
-			{
-				Visible.Add(c);
-			}
+			Out.Add(Choice);
 		}
 	}
-	return Visible;
+	return Out;
 }
 
 void UHanoiMissionSubsystem::ApplyReward(const FHanoiReward& Reward)

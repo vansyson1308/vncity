@@ -45,16 +45,16 @@ Chuẩn 5/5 (docs/gdd/07): cầm lái trước phút 1, lựa chọn đầu trư
 ## Hệ quả lựa chọn
 
 - Cờ do lựa chọn đặt: **57**, được đọc lại: **57** (100%), tổng 110 chỗ đọc. Chưa đọc: không.
-- Loại hệ quả: dialogue_choice 6, dialogue_line 53, mission_gate 2, step_branch 5, step_variant 5.
+- Loại hệ quả: dialogue_choice 5, dialogue_line 53, mission_gate 2, step_branch 5, step_variant 5.
 - Cờ tiến trình (không do lựa chọn): 21, chưa đọc: không.
 - Hệ quả trả ngay trong chương 1 cho lựa chọn chương 0-1: 35 cặp (nhiệm vụ, cờ).
-- Độ phân nhánh giữa các kiểu người chơi: 186/626 dòng thoại và 22 bước chỉ một phần người chơi thấy.
+- Độ phân nhánh giữa các kiểu người chơi: 188/635 dòng thoại và 22 bước chỉ một phần người chơi thấy.
 | Kiểu | Hệ quả kiểm tra | Đã kích hoạt | Cờ lựa chọn đã trả |
 | --- | --- | --- | --- |
-| tu_te | 142 | 54 | 29 |
-| lieu | 142 | 62 | 32 |
-| toi_uu_tien | 143 | 59 | 31 |
-| ngau_nhien | 141 | 62 | 31 |
+| tu_te | 139 | 53 | 29 |
+| lieu | 139 | 61 | 32 |
+| toi_uu_tien | 141 | 58 | 31 |
+| ngau_nhien | 139 | 61 | 31 |
 
 ## Nhịp chơi
 

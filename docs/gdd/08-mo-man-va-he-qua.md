@@ -111,16 +111,18 @@ khi sửa, rồi trên nội dung này); giống nhau cho cả bốn kiểu ngư
 Ba thứ được thêm vào schema và runtime (chi tiết kỹ thuật ở `02-he-thong.md` §8):
 
 - `dialogues.lines[].condition` và `choices[].condition` (đề xuất schema #3 của `04-danh-sach-noi-dung.md`,
-  nay đã làm). Điều kiện dùng chung `common.schema.json#/$defs/condition`, có thêm `flags_not`.
+  nay đã làm, nền kỹ thuật ở PR #7 của luồng chơi thử). Điều kiện dùng chung
+  `common.schema.json#/$defs/condition`, có `not_flags` (không cờ nào bật) và `events_active`.
   Dòng không đủ điều kiện bị bỏ qua và **rơi xuống dòng kế tiếp trong mảng** (không theo `goto` của
   dòng bị bỏ), nên các biến thể `l05a`/`l05b`/`l05c` xếp liền nhau và dòng cuối không điều kiện làm
-  mặc định. Lựa chọn không đủ điều kiện bị ẩn; `tools/validate.py` và
-  `tests/test_content_logic.py` bảo đảm mọi cụm biến thể luôn còn ít nhất một dòng hiện.
+  mặc định. Lựa chọn không đủ điều kiện bị ẩn; `tools/validate.py` bắt mọi dòng có lựa chọn giữ ít nhất
+  một lựa chọn không điều kiện, dòng cuối mỗi đoạn không điều kiện, mọi `goto` trỏ đúng, id dòng không
+  trùng, và khóa điều kiện chỉ là thứ UI thoại đánh giá được giữa chừng.
 - `missions.steps[].params.duration_s`: độ dài thiết kế của một bước (giây), để giả lập đo phút thật
   của mở màn thay vì ước lượng theo loại bước.
-- Runtime UE5: `EvaluateCondition` hiểu `flags_not`; ba hàm mới trên `UHanoiMissionSubsystem` cho UI
-  thoại gọi: `ResolveDialogueLine` (dòng đầu tiên đủ điều kiện từ một id), `NextDialogueLine` (theo
-  `goto` hoặc dòng kế rồi lọc), `GetVisibleDialogueChoices` (chỉ số các lựa chọn được hiện).
+- Runtime UE5 (`02-he-thong.md` §9): `EvaluateCondition` hiểu `not_flags` và `events_active`; UI thoại
+  gọi `ResolveDialogueLine` (dòng đầu tiên đủ điều kiện từ một id), `NextDialogueLine` (theo `goto`
+  hoặc dòng kế rồi lọc), `GetAvailableChoices` (các lựa chọn được hiện) và `ApplyChoice`.
   `UHanoiHeatSubsystem` đọc cờ `giam_chu_y_vinh_vien_1` (phần thưởng `s12`) để hạ trần Chú ý một bậc.
 
 Cách giả lập phân loại cờ (`tools/playtest.py`, phần "Hệ quả lựa chọn"): cờ **lựa chọn** là cờ do
@@ -189,7 +191,7 @@ Bảng đủ 57 cờ (đặt ở đâu, đọc ở đâu, loại hệ quả) ở
 ## 8. Còn lại, ngoài phạm vi lần này
 
 - **UI thoại trong UE5** phải gọi `ResolveDialogueLine` / `NextDialogueLine` /
-  `GetVisibleDialogueChoices` thay vì đọc mảng `lines` trực tiếp; mã C++ đã có, chưa biên dịch (không
+  `GetAvailableChoices` / `ApplyChoice` thay vì đọc mảng `lines` trực tiếp; mã C++ đã có, chưa biên dịch (không
   có UE trong môi trường này, xem `../05-tich-hop-ue5.md` §7).
 - **Chủ dự án duyệt truyện**: cold open 1957/1972, chương 2 "Mùa nồm", và nhánh cô Hạnh (hoãn ký /
   đã ký) là nội dung mới, chưa qua người đọc Hà Nội. Lời thoại tiếng Việt mới (~300 dòng) nên được một

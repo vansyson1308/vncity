@@ -1223,7 +1223,7 @@
         "flags": [
           "minh_nhan_viec_kim_long"
         ],
-        "flags_not": [
+        "not_flags": [
           "minh_bo_viec_kim_long"
         ]
       },

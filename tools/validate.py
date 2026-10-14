@@ -59,7 +59,7 @@ def iter_refs(schema_node, value, path, schemas):
 
 
 TERMINAL_STEPS = {"end", "success", "fail"}
-DIALOGUE_CONDITION_KEYS = {"flags", "flags_not", "min_reputation", "protagonist"}  # UHanoiMissionSubsystem::ResolveDialogueLine  # common.schema.json#/$defs/step_id; UHanoiMissionSubsystem::Advance
+DIALOGUE_CONDITION_KEYS = {"flags", "not_flags", "events_active", "min_reputation", "protagonist"}  # UHanoiMissionSubsystem::ResolveDialogueLine  # common.schema.json#/$defs/step_id; UHanoiMissionSubsystem::Advance
 
 
 def check_missions(docs, items):
@@ -99,9 +99,13 @@ def check_missions(docs, items):
 
 
 def check_dialogues(docs):
-    """Dialogue graphs: every goto names a line of the same dialogue, line ids are unique, and
-    `condition` on lines/choices only uses state the dialogue UI can evaluate mid-conversation
-    (flags, flags_not, min_reputation, protagonist); a line with choices has no goto of its own."""
+    """Dialogue graphs: every goto names a line of the same dialogue, line ids are unique, a line with
+    choices has no goto of its own, and `condition` on lines/choices only uses state the dialogue UI
+    can evaluate mid-conversation (flags, not_flags, events_active, min_reputation, protagonist).
+    Conditional lines/choices (UHanoiMissionSubsystem::ResolveDialogueLine / GetAvailableChoices):
+    a line with choices keeps at least one unconditional choice, so the UI always has something to
+    offer, and the last line of a dialogue carries no condition (skipping it would end the dialogue
+    silently)."""
     errors = []
     for p, name, doc in docs:
         if name != "dialogues":
@@ -126,6 +130,13 @@ def check_dialogues(docs):
                         if key not in DIALOGUE_CONDITION_KEYS:
                             errors.append(f"{where}.{ln.get('id')} {what}: condition.{key} is not evaluable mid-dialogue "
                                           f"(allowed: {sorted(DIALOGUE_CONDITION_KEYS)})")
+            where = f"{p}: dialogues:{d.get('id')}"
+            for line in lines:
+                choices = line.get("choices") or []
+                if choices and all("condition" in c for c in choices):
+                    errors.append(f"{where}.{line.get('id')}: every choice has a condition; keep one unconditional")
+            if lines and "condition" in lines[-1] and "goto" not in lines[-1] and not lines[-1].get("choices"):
+                errors.append(f"{where}.{lines[-1].get('id')}: the last line is conditional; add an unconditional closing line")
     return errors
 
 
