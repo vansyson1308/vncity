@@ -21,7 +21,7 @@ Chọn engine nào cho máy của bạn: xem `14-chon-engine.md` và chạy `too
 | Đường dẫn | Nội dung |
 | --- | --- |
 | `Packages/manifest.json` | Gói Unity: HDRP, glTFast, Newtonsoft JSON, Input System, Cinemachine, Splines, Test Framework, và gói nhúng `com.vncity.hanoicity` |
-| `ProjectSettings/ProjectVersion.txt` | Unity 6 (6000.0); mở bằng bản Unity 6 LTS mới hơn cũng được, Unity tự nâng cấp |
+| `ProjectSettings/ProjectVersion.txt` | Unity 6.3 LTS (6000.3.25f1, bản chủ dự án đã cài); bản 6000.3.x khác cũng được, Unity tự nâng cấp |
 | `hanoi_setup.json` | Đường dẫn cho Run Full Setup (bản dựng thành phố, `game/content`, `pipeline/districts.json`, đích) |
 | `hanoi_asset_map.json` | `Set/Kind` của điểm PCG → prefab (cùng khoá với `ue5/Config/asset_map.json`, có test kiểm) |
 | `Packages/com.vncity.hanoicity/Runtime/Core/` | Lõi C# thuần (assembly `HanoiCity.Core`, `noEngineReferences`): nội dung, toạ độ, đồng hồ, thời tiết, mọi hệ thống game |
@@ -118,6 +118,26 @@ Giữ `unity/` bên trong repo, cạnh `game/`, `out/`, `pipeline/`. Dữ liệu
 `StreamingAssets` (không sửa ở đó, nguồn thật là `game/content`); chạy lại setup sau mỗi lần
 nội dung đổi.
 
+### 3.4 Dung lượng thực tế (Unity 6.3 đã cài, cả 12 quận)
+
+Ước tính, chưa đo trên máy thật; editor đã cài nên không tính.
+
+| Phần | HDRP | URP |
+| --- | ---: | ---: |
+| Module Windows Build Support (IL2CPP), nếu chưa có | 3 GB | 3 GB |
+| Visual Studio 2022, workload Unity (hoặc Rider) | 8 GB | 8 GB |
+| Repo + venv Python + dữ liệu thô `data/noi_thanh` + `out/` 12 quận (~1 GB glb, footprint, CSV điểm PCG) | 8 GB | 8 GB |
+| `Assets/` (bản chép glb và `StreamingAssets`) | 3 GB | 3 GB |
+| `Library/` (mesh đã nhập, cache shader) | 15 GB | 8 GB |
+| Cache chung của Unity (gói, GI) | 5 GB | 3 GB |
+| Một bản build người chơi | 8 GB | 5 GB |
+| **Cộng** | **~50 GB** | **~38 GB** |
+| Chừa cho Windows (cập nhật, pagefile) | 20 GB | 20 GB |
+
+Với 100 GB trống: HDRP còn dư ~30 GB, URP ~40 GB. Phần sẽ ăn dần chỗ trống là tài sản đồ hoạ (kit
+mặt tiền, texture, nhân vật), thường 20-50 GB cho một thành phố. Khi ổ còn dưới 20 GB: xoá bản build
+cũ, xoá `unity/Library` (Unity tạo lại khi mở) hoặc chuyển repo sang ổ khác.
+
 ## 4. Mở project lần đầu
 
 **Bước 0, ngoài Unity, ở gốc repo:**
@@ -132,7 +152,12 @@ dotnet test unity/dotnet
 ls out/hoankiem/manifest.json out/hoankiem/tiles out/hoankiem/semantics out/hoankiem/pcg
 ```
 
-**Bước 1:** Unity Hub > Projects > **Add** > **Add project from disk** > chọn thư mục `unity/`.
+**Bước 1:** **không** bấm *New project* / *Create project* (template Universal 3D hay High
+Definition 3D đều tạo một project trống, không có gói `com.vncity.hanoicity`). Clone repo vào
+đường dẫn ngắn (ví dụ `C:\vncity`), rồi Unity Hub > Projects > **Add** (mũi tên cạnh nút) >
+**Add project from disk** > chọn thư mục `C:\vncity\unity`. Source control đã là git của repo; AI
+Assistant và Unity CLI không cần.
+
 Hub báo phiên bản trong `ProjectVersion.txt` khác bản đã cài thì chọn bản Unity 6 LTS đã cài và
 đồng ý nâng cấp.
 
@@ -197,7 +222,7 @@ Lớp Unity và editor đã biên dịch thử với thư viện tham chiếu Un
 - [ ] Tên assembly của glTFast trong `HanoiCity.Editor.asmdef` (`glTFast`, `glTFast.Editor`): mã
   hiện không gọi API glTFast trực tiếp (chỉ dựa vào importer của nó cho `.glb`), nên nếu tên khác
   thì xoá hai tham chiếu này.
-- [ ] Phiên bản gói trong `manifest.json` (HDRP 17.0.3, glTFast 6.0.1, Input System 1.11.2,
+- [ ] Phiên bản gói trong `manifest.json` (HDRP 17.3.0 theo Unity 6.3, glTFast 6.0.1, Input System 1.11.2,
   Cinemachine 3.1.2, Splines 2.7.2): mở bằng Unity 6.x mới hơn, Package Manager có thể nâng HDRP
   theo editor; glTFast nên nâng lên bản mới nhất (Package Manager > Unity Registry > glTFast > Update).
 - [ ] `Object.FindAnyObjectByType`, `FindObjectsByType(FindObjectsSortMode.None)` (thay cho
