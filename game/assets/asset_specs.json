@@ -10,7 +10,7 @@
   "file_format": "glTF 2.0 binary (.glb), one asset per file, pivot as specified, applied transforms",
   "licence": "every file needs an entry in game/assets/sources.json (source, author, licence, url)",
   "axes": "Same frame as the city tiles. In Blender: +X = the entry's 'forward', +Z up (Blender +Y becomes UE -Y). In the .glb (exported '+Y up'): +X forward, +Y up, +Z = UE +Y. tools/check_assets.py reads the glb in this frame. If the first UE import shows props turned, fix it once with yaw_offset_deg in ue5/Config/asset_map.json.",
-  "route": "generate = imagegen ref sheet -> image-to-3D -> cleanup; hand = Blender/PCG/spline; hand_vegetation = UE Procedural Vegetation Editor or Blender with photographed bark/leaf; reuse_or_hand = CC0/CC-BY model if one fits (docs/08), else hand; hand_mesh_generated_print = simple frame mesh, generated background print, text rendered in UE. Kits are hand-modelled on the module grid."
+  "route": "generate = imagegen ref sheet -> image-to-3D -> cleanup; hand = Blender/PCG/spline; hand_vegetation = UE Procedural Vegetation Editor or Blender with photographed bark/leaf; reuse_or_hand = CC0/CC-BY model if one fits (docs/08), else hand; hand_mesh_generated_print = simple frame mesh, generated background print, text rendered in UE. Kits are hand-modelled on the module grid. sand3d = a short Python program in game/assets/sand3d/<set>_<kind>.py, built by tools/sand3d_build.py (sand3d over Blender bpy, Apache-2.0); route_before_sand3d keeps the manual route as the fallback."
  },
  "props": [
   {
@@ -391,7 +391,8 @@
    "look_en": "Vietnamese pre-stressed concrete H-frame utility pole: two tapered grey concrete legs joined by cross-braces, steel crossarms, ceramic insulators, a transformer box on some variants; variant n = clutter level 0-3 (more junction boxes, coiled cable, stickers 'khoan cắt bê tông', old signboards)",
    "references_vi": "Phố Hàng Bạc, Tạ Hiện",
    "avoid": [],
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "power_poles/concrete_round",
@@ -421,7 +422,8 @@
    "look_en": "round tapered spun-concrete utility pole with crossarm, insulators, a junction box and coils of telecom cable hanging; variant n = clutter level 0-3",
    "references_vi": "ngõ phố cổ",
    "avoid": [],
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "cable_spans/bundle_0",
@@ -566,7 +568,8 @@
    "look_en": "Hanoi boulevard street lamp: tapered grey steel octagonal pole with two curved arms and LED heads, decorative base",
    "references_vi": "Đinh Tiên Hoàng, Tràng Thi",
    "avoid": [],
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "street_lights/single",
@@ -582,7 +585,7 @@
     "y": 0.4,
     "z": 8.0
    },
-   "pivot": "base_center",
+   "pivot": "base_pole: pole foot at origin, arm toward +X (the plan centre is off the pivot by half the reach)",
    "forward": "+X toward the road (arm side)",
    "scale_axes": "xyz",
    "tris_lod0": 4000,
@@ -595,7 +598,8 @@
    "look_en": "single-arm steel street lamp with one LED head",
    "references_vi": "phố nhỏ",
    "avoid": [],
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "shop_signs/food",
@@ -1441,7 +1445,8 @@
    "references_vi": "phố cổ",
    "avoid": [],
    "mount_z_m": 2.6,
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "parked_motorbikes/scooter",
@@ -1579,7 +1584,8 @@
     "real brand names or logos",
     "readable trademarks"
    ],
-   "route": "reuse_or_hand"
+   "route": "sand3d",
+   "route_before_sand3d": "reuse_or_hand"
   },
   {
    "id": "pavement_seating/tra_da",
@@ -1612,7 +1618,8 @@
     "real brand names or logos",
     "readable trademarks"
    ],
-   "route": "reuse_or_hand"
+   "route": "sand3d",
+   "route_before_sand3d": "reuse_or_hand"
   },
   {
    "id": "pavement_seating/bia_hoi",
@@ -1645,7 +1652,8 @@
     "real brand names or logos",
     "readable trademarks"
    ],
-   "route": "reuse_or_hand"
+   "route": "sand3d",
+   "route_before_sand3d": "reuse_or_hand"
   },
   {
    "id": "street_vendors/ganh_hang",
@@ -1894,7 +1902,10 @@
    "tris_lod0": 8000,
    "nanite": true,
    "material_slots": [
-    "main"
+    "metal",
+    "lamp_red",
+    "lamp_amber",
+    "lamp_green"
    ],
    "texture_px": 2048,
    "look_en": "Vietnamese traffic light pole with red-amber-green heads and a countdown timer",
@@ -1903,7 +1914,8 @@
     "real brand names or logos",
     "readable trademarks"
    ],
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "infrastructure/gate",
@@ -1934,7 +1946,8 @@
     "real brand names or logos",
     "readable trademarks"
    ],
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "infrastructure/bus_stop",
@@ -1956,7 +1969,9 @@
    "tris_lod0": 8000,
    "nanite": true,
    "material_slots": [
-    "main"
+    "metal",
+    "glass",
+    "panel"
    ],
    "texture_px": 2048,
    "look_en": "Hanoi bus shelter with route board",
@@ -1965,7 +1980,8 @@
     "real brand names or logos",
     "readable trademarks"
    ],
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "infrastructure/toilets",
@@ -2027,7 +2043,8 @@
     "real brand names or logos",
     "readable trademarks"
    ],
-   "route": "reuse_or_hand"
+   "route": "sand3d",
+   "route_before_sand3d": "reuse_or_hand"
   },
   {
    "id": "infrastructure/kerb",
@@ -2058,7 +2075,8 @@
     "real brand names or logos",
     "readable trademarks"
    ],
-   "route": "hand"
+   "route": "sand3d",
+   "route_before_sand3d": "hand"
   },
   {
    "id": "infrastructure/vending_machine",
