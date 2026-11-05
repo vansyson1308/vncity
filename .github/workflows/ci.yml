@@ -41,3 +41,25 @@ jobs:
           dotnet-version: "8.0.x"
       - name: Build and test the Unity core
         run: dotnet test unity/dotnet --nologo
+  sand3d-assets:
+    # Props written as sand3d programs (game/assets/sand3d), built over Blender's bpy and checked
+    # against the asset contract. The GLBs are uploaded as the run's artifact "sand3d-props".
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Libraries bpy loads
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends
+             libxrender1 libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1
+      - run: pip install -r requirements-sand3d.txt
+      - name: Build every sand3d prop and check it against asset_specs.json
+        run: python tools/sand3d_build.py --check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sand3d-props
+          path: assets_work/out/sand3d/
+          if-no-files-found: ignore

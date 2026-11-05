@@ -1,4 +1,269 @@
 {
  "_comment": "One entry per delivered asset file (mesh or texture): where it came from and under which licence. tools/check_assets.py refuses meshes without an entry. Allowed licences are listed in tools/check_assets.py (ALLOWED). CC-BY assets need their attribution line in the game credits.",
- "assets": []
+ "assets": [
+  {
+   "file": "SM_awnings_canvas_v0.glb",
+   "source": "sand3d program game/assets/sand3d/awnings_canvas.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_awnings_canvas_v1.glb",
+   "source": "sand3d program game/assets/sand3d/awnings_canvas.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_awnings_canvas_v2.glb",
+   "source": "sand3d program game/assets/sand3d/awnings_canvas.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_awnings_canvas_v3.glb",
+   "source": "sand3d program game/assets/sand3d/awnings_canvas.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_awnings_canvas_v4.glb",
+   "source": "sand3d program game/assets/sand3d/awnings_canvas.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_awnings_canvas_v5.glb",
+   "source": "sand3d program game/assets/sand3d/awnings_canvas.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_infrastructure_bench_v0.glb",
+   "source": "sand3d program game/assets/sand3d/infrastructure_bench.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_infrastructure_bus_stop_v0.glb",
+   "source": "sand3d program game/assets/sand3d/infrastructure_bus_stop.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_infrastructure_gate_v0.glb",
+   "source": "sand3d program game/assets/sand3d/infrastructure_gate.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_infrastructure_kerb_v0.glb",
+   "source": "sand3d program game/assets/sand3d/infrastructure_kerb.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_infrastructure_traffic_signals_v0.glb",
+   "source": "sand3d program game/assets/sand3d/infrastructure_traffic_signals.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_bia_hoi_v0.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_bia_hoi.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_bia_hoi_v1.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_bia_hoi.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_bia_hoi_v2.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_bia_hoi.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_bia_hoi_v3.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_bia_hoi.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_pho_quan_v0.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_pho_quan.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_pho_quan_v1.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_pho_quan.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_pho_quan_v2.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_pho_quan.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_pho_quan_v3.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_pho_quan.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_tra_da_v0.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_tra_da.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_tra_da_v1.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_tra_da.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_tra_da_v2.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_tra_da.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_pavement_seating_tra_da_v3.glb",
+   "source": "sand3d program game/assets/sand3d/pavement_seating_tra_da.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_power_poles_concrete_h_v0.glb",
+   "source": "sand3d program game/assets/sand3d/power_poles_concrete_h.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_power_poles_concrete_h_v1.glb",
+   "source": "sand3d program game/assets/sand3d/power_poles_concrete_h.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_power_poles_concrete_h_v2.glb",
+   "source": "sand3d program game/assets/sand3d/power_poles_concrete_h.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_power_poles_concrete_h_v3.glb",
+   "source": "sand3d program game/assets/sand3d/power_poles_concrete_h.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_power_poles_concrete_round_v0.glb",
+   "source": "sand3d program game/assets/sand3d/power_poles_concrete_round.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_power_poles_concrete_round_v1.glb",
+   "source": "sand3d program game/assets/sand3d/power_poles_concrete_round.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_power_poles_concrete_round_v2.glb",
+   "source": "sand3d program game/assets/sand3d/power_poles_concrete_round.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_power_poles_concrete_round_v3.glb",
+   "source": "sand3d program game/assets/sand3d/power_poles_concrete_round.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_street_lights_boulevard_v0.glb",
+   "source": "sand3d program game/assets/sand3d/street_lights_boulevard.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  },
+  {
+   "file": "SM_street_lights_single_v0.glb",
+   "source": "sand3d program game/assets/sand3d/street_lights_single.py",
+   "author": "vncity",
+   "licence": "own-work",
+   "url": "https://github.com/Sandflow-ai/sand3d",
+   "note": "Built by tools/sand3d_build.py with sand3d (Apache-2.0) over Blender bpy; the output is ours"
+  }
+ ]
 }

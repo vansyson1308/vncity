@@ -58,7 +58,9 @@ def measure(path):
     lo, hi = scene.bounds
     tris = sum(len(m.faces) for m in meshes)
     has_uv = all(getattr(m.visual, "uv", None) is not None for m in meshes)
-    mats = {id(getattr(m.visual, "material", None)) for m in meshes}
+    # scene.dump() copies each mesh with its material, so count materials by name (or value), not identity
+    mats = {getattr(getattr(m.visual, "material", None), "name", None)
+            or repr(getattr(getattr(m.visual, "material", None), "baseColorFactor", None)) for m in meshes}
     return lo, hi, tris, has_uv, len(mats)
 
 

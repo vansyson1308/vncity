@@ -27,6 +27,7 @@ Trường `route` trong `asset_specs.json` nói rõ:
 | `hand` | 14 (cột điện, dây, đèn, đèn giao thông, nhà chờ…) | Dựng tay hoặc spline/PCG trong UE: hình học đơn giản, AI làm còn chậm hơn |
 | `hand_vegetation` | 10 (cây) | Procedural Vegetation Editor của UE hoặc Blender, vỏ và lá chụp thật; ảnh `ref_sheet` dùng làm tham chiếu dáng cây |
 | `reuse_or_hand` | 4 (ghế nhựa, ghế đá) | Dùng model CC0/CC-BY phù hợp ở mục 9 của tài liệu 08, nếu không thì dựng tay |
+| `sand3d` | 13 (bàn ghế vỉa hè, cột điện, đèn đường, đèn giao thông, nhà chờ, cổng ngõ, ghế đá, bó vỉa, mái bạt) | Chương trình Python trong `game/assets/sand3d/`, build bằng `python tools/sand3d_build.py --check` (xem [16-tai-san-sand3d.md](16-tai-san-sand3d.md)); đường cũ giữ ở `route_before_sand3d` |
 | `hand_kit` | 13 bộ kit | Dựng tay theo lưới module; ảnh `facade` dùng làm tham chiếu và để làm trim sheet |
 
 Vật liệu (thạch cao, ngói, bê tông, nhựa đường) lấy từ Poly Haven / ambientCG (CC0) trước; 14 prompt
@@ -98,7 +99,7 @@ Lưu ý từ nghiên cứu (mục 7 tài liệu 08):
 
 1. Kiểm tra tài khoản Epic đã nhận Megascans chưa; tải City Sample (xe hơi, nhà cao tầng, đám đông).
 2. Tải ngay các model Sketchfab CC-BY đã chọn ở tài liệu 08 mục 4 (Epic sẽ đóng tải miễn phí), ghi `sources.json`.
-3. Dựng tay cột điện, dây, đèn, bó vỉa: nhanh, tác động hình ảnh lớn ở phố cổ.
+3. Cột điện, đèn, bó vỉa, bàn ghế vỉa hè đã có bản sand3d (tài liệu 16); dựng tay dây điện và bản chi tiết hơn nếu cần.
 4. Thử trọn quy trình mục 3 và 4 với 3 mục: `street_vendors/xe_day_hoa_qua`, `infrastructure/atm`,
    `parked_motorbikes/scooter`.
 5. Biển hiệu: khung + 192 nền in + chữ UE.

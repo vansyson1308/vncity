@@ -198,6 +198,13 @@ trang model vào `sources.json` (trường `evidence`).
   khung** bằng AI, còn chữ render bằng font OFL (ví dụ Be Vietnam Pro) qua material hoặc Text3D trong
   UE. Prompt có sẵn trong `game/assets/prompts.jsonl` (`tools/asset_prompts.py`).
 
+### 7.1b Dựng bằng code: sand3d (thêm 11/2026)
+
+[sand3d](https://github.com/Sandflow-ai/sand3d) (Apache-2.0, chạy trên `bpy` của Blender) viết vật thể
+thành chương trình Python ngắn, LLM viết được. Không phải image-to-3D: hợp với đạo cụ hình khối rõ (cột,
+đèn, bàn ghế, nhà chờ), không hợp với xe, người, cây. Dùng thương mại được; GLB xuất ra là `own-work`.
+13 mục đã chuyển sang `route: sand3d`, xem [16-tai-san-sand3d.md](16-tai-san-sand3d.md).
+
 ### 7.2 Model image-to-3D mở (tình hình tháng 10/2026)
 
 | Model | Giấy phép | Đầu ra | VRAM | Nhận xét |
