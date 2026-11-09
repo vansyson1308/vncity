@@ -1,0 +1,26 @@
+{
+  "name": "hanoi-dao-pho",
+  "version": "1.0.0",
+  "description": "Hà Nội Dạo Phố: bản web three.js quảng bá du lịch",
+  "scripts": {
+    "assets": "node tools/build_assets.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node tools/smoke.mjs"
+  },
+  "dependencies": {
+    "three": "0.181.0"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "meshoptimizer": "^1.3.0",
+    "playwright": "^1.65.0",
+    "sharp": "^0.35.5",
+    "vite": "^6.4.6"
+  },
+  "private": true,
+  "type": "module"
+}
