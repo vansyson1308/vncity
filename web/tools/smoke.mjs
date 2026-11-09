@@ -24,14 +24,14 @@ const VIEW = {
   opera: '&at=480,560&time=sunset',
 };
 for (const v of views) {
-  const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  const page = await browser.newPage({ viewport: process.env.CI ? { width: 960, height: 540 } : { width: 1280, height: 720 } });
   page.on('console', (m) => { if (m.type() === 'error') errors.push(`${v}: ${m.text()}`); });
   page.on('pageerror', (e) => errors.push(`${v}: ${e.message}`));
   await page.goto(`http://localhost:${port}/?shot&q=low${VIEW[v] ?? ''}`);
   await page.waitForFunction(() => window.__game?.ready, null, { timeout: 240000 });
   await page.waitForTimeout(4000);
   if (v === 'walk') { await page.keyboard.down('w'); await page.waitForTimeout(3000); await page.keyboard.up('w'); }
-  await page.screenshot({ path: path.join(OUT, `${v}.png`) });
+  await page.screenshot({ path: path.join(OUT, `${v}.png`), timeout: 240000 }); // máy CI không có GPU: một khung hình có thể mất hàng chục giây
   const info = await page.evaluate(() => ({ items: window.__game.tour.items.length, calls: window.__game.renderer.info.render.calls, tris: window.__game.renderer.info.render.triangles, pos: window.__game.player.pos }));
   console.log(v, JSON.stringify(info));
   await page.close();
