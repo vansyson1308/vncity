@@ -28,11 +28,13 @@ self.onmessage = async (e) => {
       const p = genProps(ctx, m.cx, m.cz, b);
       if (m.only === 'detail') { self.postMessage({ type: 'detail', cx: m.cx, cz: m.cz, near: p.near, leaf: p.leaf }, [...packBuffers(p.near), ...packBuffers(p.leaf)]); return; }
       const g = genGround(ctx, m.cx, m.cz);
-      const out = { type: 'chunk', cx: m.cx, cz: m.cz, ground: g.ground, water: g.water, shore: g.shore, bld: b.mesh, col: b.col, far: p.far, lamps: p.lamps, extra: p.extra || null, ms: performance.now() - t0 };
+      const out = { type: 'chunk', cx: m.cx, cz: m.cz, ground: g.ground, deck: g.deck, deckTop: g.deckTop, ramp: g.ramp, water: g.water, shore: g.shore, bld: b.mesh, col: b.col, far: p.far, lamps: p.lamps, extra: p.extra || null, ms: performance.now() - t0 };
       const tr = [g.ground.pos.buffer, g.ground.nrm.buffer, g.ground.lay.buffer, g.ground.idx.buffer, g.shore.buffer, b.mesh.pos.buffer, b.mesh.nrm.buffer, b.mesh.uv.buffer, b.mesh.fx.buffer, b.mesh.va.buffer, b.mesh.idx.buffer, b.col.buffer, ...packBuffers(p.far), p.lamps.buffer];
       if (m.detail) { out.near = p.near; out.leaf = p.leaf; tr.push(...packBuffers(p.near), ...packBuffers(p.leaf)); }
       if (p.extra && p.extra.walls) tr.push(p.extra.walls.buffer);
       if (g.water) tr.push(g.water.pos.buffer, g.water.col.buffer, g.water.idx.buffer);
+      if (g.deck) tr.push(g.deck.pos.buffer, g.deck.nrm.buffer, g.deck.lay.buffer, g.deck.idx.buffer);
+      tr.push(g.ramp.buffer);
       self.postMessage(out, tr);
     }
   } catch (err) {

@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { G } from '../core/geo.js';
 import { clamp, damp, dampAngle, hash, segDist2 } from '../core/util.js';
-import { K, F_ONEWAY, F_REVERSE } from '../world/data.js';
+import { K, F_ONEWAY, F_REVERSE, roadY } from '../world/data.js';
 import { motorbike, car, bus } from '../models/vehicles.js';
 import { propGeometry } from '../world/materials.js';
 import { bakePose, appendBaked } from './humans.js';
@@ -82,7 +82,7 @@ export class Traffic {
       const d = Math.hypot(o[0] - px, o[1] - pz); if (d < 45 || d > 230) continue;
       // không hiện ra ngay trước mắt: phải ở xa hoặc sau lưng camera
       if (cam && !this.warming && d < 110 && (o[0] - cam.x) * cam.fx + (o[1] - cam.z) * cam.fz > 0) continue;
-      const T = TYPES[type], a = { e, dir, s, type, v: 3 + Math.random() * 3, x: o[0], z: o[1], yaw: Math.atan2(o[2], o[3]), lean: 0, lat: 0, latT: 0, pace: (0.75 + Math.random() * 0.45) * T.vmul, pref: 0.25 + Math.random() * 0.7, r: T.r, wait: 0, honk: Math.random() * 4, tint: 0, tint2: 0, alive: true };
+      const T = TYPES[type], a = { e, dir, s, type, v: 3 + Math.random() * 3, x: o[0], z: o[1], yaw: Math.atan2(o[2], o[3]), lean: 0, lat: 0, latT: 0, y: 0, pace: (0.75 + Math.random() * 0.45) * T.vmul, pref: 0.25 + Math.random() * 0.7, r: T.r, wait: 0, honk: Math.random() * 4, tint: 0, tint2: 0, alive: true };
       a.tint = type < 3 ? BIKE_COLORS[Math.floor(Math.random() * BIKE_COLORS.length)] : type === 5 ? [1, 1, 1] : Math.random() < 0.3 ? TAXI_COLORS[Math.floor(Math.random() * TAXI_COLORS.length)] : CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)];
       a.tint2 = SHIRT_COLORS[Math.floor(Math.random() * SHIRT_COLORS.length)];
       this.lane(a); a.lat = a.latT; a.x -= o[3] * a.lat; a.z += o[2] * a.lat;
@@ -151,6 +151,7 @@ export class Traffic {
 
     for (const a of A) {
       const e = a.e; this.sample(e, a.s, a.dir, o);
+      a.y = e.r.elev ? roadY(e.r, a.dir > 0 ? a.s : e.len - a.s) : 0;
       const tx = o[2], tz = o[3], rx = -tz, rz = tx;
       let target = (e.kind <= K.secondary ? 9.6 : e.kind === K.tertiary ? 7.8 : 5.6) * a.pace;
       // gần nút giao thì chậm lại
@@ -160,7 +161,7 @@ export class Traffic {
       for (let gx = cx - 1; gx <= cx + 1; gx++) for (let gz = cz - 1; gz <= cz + 1; gz++) {
         const l = grid.get(gx * 65537 + gz); if (!l) continue;
         for (const b of l) {
-          if (b === a) continue;
+          if (b === a || Math.abs((b.y || 0) - a.y) > 2) continue;
           const dx = b.x - a.x, dz = b.z - a.z, f = dx * tx + dz * tz, s = dx * rx + dz * rz, wsum = a.r + b.r + 0.12;
           if (f > 0.2 && f < gap + b.r && Math.abs(s) < wsum) {
             const bv = b.v * (Math.sin(b.yaw) * tx + Math.cos(b.yaw) * tz);
@@ -170,7 +171,7 @@ export class Traffic {
         }
       }
       // người chơi: né khi đi bộ, giữ khoảng cách khi cùng chạy xe
-      {
+      if (Math.abs(player.y - a.y) < 2) {
         const dx = px - a.x, dz = pz - a.z, f = dx * tx + dz * tz, s = dx * rx + dz * rz, wsum = a.r + pr + 0.35;
         if (f > -0.3 && f < gap + 1.5 && Math.abs(s) < wsum + 0.9) {
           if (Math.abs(s) < wsum) { const along = pv * (pfx * tx + pfz * tz); target = Math.min(target, Math.max(0, (player.mode === 'bike' ? along : 0) - 0.3 + (f - a.r - pr - 0.9) * 1.3)); blocked = true; if (target < 0.6) a.wait += dt; }
@@ -213,7 +214,7 @@ export class Traffic {
       arr[off] = fx; arr[off + 1] = 0; arr[off + 2] = fz; arr[off + 3] = 0;
       arr[off + 4] = rx * sl; arr[off + 5] = cl; arr[off + 6] = rz * sl; arr[off + 7] = 0;
       arr[off + 8] = rx * cl; arr[off + 9] = -sl; arr[off + 10] = rz * cl; arr[off + 11] = 0;
-      arr[off + 12] = a.x; arr[off + 13] = 0; arr[off + 14] = a.z; arr[off + 15] = 1;
+      arr[off + 12] = a.x; arr[off + 13] = a.y || 0; arr[off + 14] = a.z; arr[off + 15] = 1;
       const t1 = m.geometry.attributes.aTint.array, t2 = m.geometry.attributes.aTint2.array;
       t1[i * 3] = a.tint[0]; t1[i * 3 + 1] = a.tint[1]; t1[i * 3 + 2] = a.tint[2]; t2[i * 3] = a.tint2[0]; t2[i * 3 + 1] = a.tint2[1]; t2[i * 3 + 2] = a.tint2[2];
     }

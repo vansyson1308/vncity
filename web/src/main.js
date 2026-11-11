@@ -104,7 +104,8 @@ async function boot() {
   if (params.has('yaw')) syaw = +params.get('yaw');
   chunks.update(sx, sz, true);
   await new Promise((res) => { const t = setInterval(() => { chunks.update(sx, sz); const [miss, tot] = chunks.missingNear(sx, sz, 150); progress(0.45 + 0.55 * (1 - miss / tot)); if (miss === 0) { clearInterval(t); res(); } }, 50); });
-  { const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z; }
+  const onDeck = (x, z) => !!nav.elevatedAt(x, z, Infinity) && nav.eY > 0.7; // điểm nằm trên mặt cầu: không đẩy theo tường nhà dưới đất
+  if (!onDeck(sx, sz)) { const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z; }
   player.teleport(sx, sz, syaw);
   if (params.has('bike')) player.toggleBike();
   cam.snap(player); cam.pitch = +(params.get('pitch') || 0.16);
@@ -207,7 +208,7 @@ async function boot() {
 
     const frozen = !G.started || !!hud.modal;
     if (frozen) { input.move.x = input.move.y = 0; }
-    if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }; nav.collide(p, 0.4); player.teleport(p.x, p.z, player.yaw); cam.snap(player); warpTo = null; }
+    if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }; if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, player.yaw); cam.snap(player); warpTo = null; }
     const wasX = player.pos.x, wasZ = player.pos.z;
     player.update(dt, input, cam.yaw);
     traffic.update(dt, player, camera, sky.hours);

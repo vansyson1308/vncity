@@ -3,7 +3,7 @@
 // Tất cả gộp vào lưới "gần" của ô phố; lưới "xa" chỉ giữ thứ nhìn thấy từ xa.
 import { G } from '../../core/geo.js';
 import { hash } from '../../core/util.js';
-import { CS, CURB, K, ZONE, zoneAt, isSolemn } from '../data.js';
+import { CS, CURB, K, ZONE, zoneAt, isSolemn, roadY } from '../data.js';
 import { L } from '../layers.js';
 import { SIGNS, SIGN_COLORS, signUV, FLAG_CELL, PAL } from '../signs.js';
 import { motorbike } from '../../models/vehicles.js';
@@ -80,7 +80,7 @@ export function decorate(ctx, env) {
     }
     // xe máy dựng trên vỉa hè trước cửa hàng
     if (f.shop && hash(s, 11) < 0.42 && env.nBikes < 34) {
-      const rd = ctx.nearestRoad(mx + f.nx * 2, mz + f.nz * 2, 15);
+      const rd = ctx.nearestRoad(mx + f.nx * 2, mz + f.nz * 2, 15, (q) => !q.elev);
       if (rd && rd.d + 2 - rd.r.w / 2 > 2.5) {
         const n = 1 + Math.floor(hash(s, 12) * Math.min(4, bw / 0.8)), B = bikes();
         for (let i = 0; i < n; i++) {
@@ -198,22 +198,25 @@ export function decorate(ctx, env) {
     }
   }
 
-  // ===== đường ray =====
+  // ===== đường ray (trên cầu thì bám theo cao độ mặt cầu) =====
   for (const rl of ctx.railGrid.collect(X0 - 4, Z0 - 4, env.X1 + 4, env.Z1 + 4)) {
-    if (rl.flags & 2) continue;
-    const p = rl.p; let d = 0;
+    const p = rl.p, el = !!rl.elev; let d = 0;
     for (let i = 0; i < p.length - 2; i += 2) {
       const ax = p[i], az = p[i + 1], bx = p[i + 2], bz = p[i + 3], Ls = Math.hypot(bx - ax, bz - az); if (Ls < 0.05) continue;
-      const dx = (bx - ax) / Ls, dz = (bz - az) / Ls, mx = (ax + bx) / 2, mz = (az + bz) / 2;
-      if (inChunk(mx, mz)) for (const o of [-0.52, 0.52]) {
-        const x0 = ax - dz * o - X0, z0 = az + dx * o - Z0, x1 = bx - dz * o - X0, z1 = bz + dx * o - Z0, y = CURB + 0.15, w = 0.035;
-        near.rgb(0.32, 0.27, 0.24).gloss(0.5).quad([x0 + dz * w, y, z0 - dx * w], [x0 - dz * w, y, z0 + dx * w], [x1 - dz * w, y, z1 + dx * w], [x1 + dz * w, y, z1 - dx * w]);
-        near.gloss(0).rgb(0.14, 0.11, 0.1).quad([x0 - dz * w, CURB + 0.02, z0 + dx * w], [x1 - dz * w, CURB + 0.02, z1 + dx * w], [x1 - dz * w, y, z1 + dx * w], [x0 - dz * w, y, z0 + dx * w]).quad([x1 + dz * w, CURB + 0.02, z1 - dx * w], [x0 + dz * w, CURB + 0.02, z0 - dx * w], [x0 + dz * w, y, z0 - dx * w], [x1 + dz * w, y, z1 - dx * w]);
+      const dx = (bx - ax) / Ls, dz = (bz - az) / Ls, n = el ? Math.ceil(Ls / 8) : 1;
+      for (let k = 0; k < n; k++) {
+        const s0 = (Ls * k) / n, s1 = (Ls * (k + 1)) / n, mx = ax + dx * (s0 + s1) / 2, mz = az + dz * (s0 + s1) / 2; if (!inChunk(mx, mz)) continue;
+        const ya = el ? roadY(rl, d + s0) : CURB, yb = el ? roadY(rl, d + s1) : CURB;
+        for (const o of [-0.52, 0.52]) {
+          const x0 = ax + dx * s0 - dz * o - X0, z0 = az + dz * s0 + dx * o - Z0, x1 = ax + dx * s1 - dz * o - X0, z1 = az + dz * s1 + dx * o - Z0, h = 0.15, w = 0.035;
+          near.rgb(0.32, 0.27, 0.24).gloss(0.5).quad([x0 + dz * w, ya + h, z0 - dx * w], [x0 - dz * w, ya + h, z0 + dx * w], [x1 - dz * w, yb + h, z1 + dx * w], [x1 + dz * w, yb + h, z1 - dx * w]);
+          near.gloss(0).rgb(0.14, 0.11, 0.1).quad([x0 - dz * w, ya + 0.02, z0 + dx * w], [x1 - dz * w, yb + 0.02, z1 + dx * w], [x1 - dz * w, yb + h, z1 + dx * w], [x0 - dz * w, ya + h, z0 + dx * w]).quad([x1 + dz * w, yb + 0.02, z1 - dx * w], [x0 + dz * w, ya + 0.02, z0 - dx * w], [x0 + dz * w, ya + h, z0 - dx * w], [x1 + dz * w, yb + h, z1 - dx * w]);
+        }
       }
       near.rgb(0.2, 0.17, 0.14);
       for (let s = Math.ceil((d + 1e-6) / 1.25) * 1.25 - d; s < Ls; s += 1.25) {
         const x = ax + dx * s, z = az + dz * s; if (!inChunk(x, z)) continue;
-        const gx = x - X0, gz = z - Z0, hl = 1.05, hw = 0.11, y = CURB + 0.05;
+        const gx = x - X0, gz = z - Z0, hl = 1.05, hw = 0.11, y = (el ? roadY(rl, d + s) : CURB) + 0.05;
         near.quad([gx - dz * hl - dx * hw, y, gz + dx * hl - dz * hw], [gx - dz * hl + dx * hw, y, gz + dx * hl + dz * hw], [gx + dz * hl + dx * hw, y, gz - dx * hl + dz * hw], [gx + dz * hl - dx * hw, y, gz - dx * hl - dz * hw]);
       }
       d += Ls;

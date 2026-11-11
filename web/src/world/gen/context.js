@@ -1,7 +1,7 @@
 // Chỉ mục không gian và các thuộc tính suy ra (số tầng, kiểu nhà) tính một lần khi worker khởi động.
 import ClipperLib from 'clipper-lib';
 import { hash, pointInRing, segDist2 } from '../../core/util.js';
-import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn } from '../data.js';
+import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn, roadY } from '../data.js';
 
 export const CL = ClipperLib;
 const PT = CL.PolyType, CT = CL.ClipType, FT = CL.PolyFillType;
@@ -87,6 +87,30 @@ export function buildContext(world, landmarks = []) {
     return best;
   };
 
+  // ----- cầu nâng: đường bộ và đường sắt có cao độ (xem computeElevation trong data.js) -----
+  ctx.elevRoads = roads.filter((r) => r.elev && !r.skip); ctx.elevRails = world.rails.filter((r) => r.elev);
+  const elevAll = [...ctx.elevRoads, ...ctx.elevRails];
+  // Cao độ mặt cầu cao nhất phủ lên điểm (x,z) (cộng lề pad), 0 nếu không có cầu. except: bỏ qua đoạn này.
+  ctx.deckAt = (x, z, pad = 0, except = null, only = null) => {
+    let y = 0;
+    for (const r of only ? [only] : elevAll) {
+      if (r === except) continue;
+      const m = r.w / 2 + pad; if (x < r.bb[0] - m || x > r.bb[2] + m || z < r.bb[1] - m || z > r.bb[3] + m) continue;
+      const p = r.p;
+      for (let i = 0; i < p.length - 2; i += 2) {
+        if (segDist2(x, z, p[i], p[i + 1], p[i + 2], p[i + 3], tOut) > m * m) continue;
+        const ey = roadY(r, r.cum[i / 2] + tOut[0] * (r.cum[i / 2 + 1] - r.cum[i / 2])); if (ey > y) y = ey;
+      }
+    }
+    return y;
+  };
+  // nút nối giữa các đoạn cầu: để vát mép mặt cầu cho liền nhau
+  ctx.elevNodes = new Map();
+  for (const r of ctx.elevRoads) for (const e of [0, 1]) {
+    const p = r.p, i = e ? p.length - 2 : 0, j = e ? p.length - 4 : 2, L = Math.hypot(p[j] - p[i], p[j + 1] - p[i + 1]) || 1, k = nk(p[i], p[i + 1]);
+    let l = ctx.elevNodes.get(k); if (!l) ctx.elevNodes.set(k, (l = [])); l.push({ r, lx: (p[j] - p[i]) / L, lz: (p[j + 1] - p[i + 1]) / L }); // (lx,lz): hướng rời nút
+  }
+
   // ----- mặt nước, mảng xanh (đa giác Clipper đã chuẩn hoá) -----
   const norm = (polys) => polys.map((w) => ({ ...w, paths: clip(CT.ctUnion, [toPath(w.p), ...w.holes.map(toPath)], null, FT.pftEvenOdd) }));
   ctx.water = norm(water); ctx.green = norm(green);
@@ -104,6 +128,23 @@ export function buildContext(world, landmarks = []) {
   };
 
   // ----- toà nhà -----
+  // Nhà có bị mặt cầu nâng (cao hơn 0,8 m) phủ lên không: thử các đỉnh nhà, rồi dò dọc tim cầu và hai mép cầu xem có lọt vào nhà.
+  const underDeck = (b) => {
+    for (const r of elevAll) {
+      const m = r.w / 2 + 1.5; if (b.bb[0] > r.bb[2] + m || b.bb[2] < r.bb[0] - m || b.bb[1] > r.bb[3] + m || b.bb[3] < r.bb[1] - m) continue;
+      for (let i = 0; i < b.p.length; i += 2) if (ctx.deckAt(b.p[i], b.p[i + 1], 0.8, null, r) > 0.8) return true;
+      const p = r.p, hw = r.w / 2;
+      for (let i = 0; i < p.length - 2; i += 2) {
+        const L = r.cum[i / 2 + 1] - r.cum[i / 2], dx = (p[i + 2] - p[i]) / (L || 1), dz = (p[i + 3] - p[i + 1]) / (L || 1);
+        for (let s = 0; s <= L; s += 2) {
+          const x = p[i] + dx * s, z = p[i + 1] + dz * s; if (x < b.bb[0] - hw || x > b.bb[2] + hw || z < b.bb[1] - hw || z > b.bb[3] + hw) continue;
+          if (roadY(r, r.cum[i / 2] + s) < 0.8) continue;
+          if (pointInRing(x, z, b.p) || pointInRing(x - dz * hw, z + dx * hw, b.p) || pointInRing(x + dz * hw, z - dx * hw, b.p)) return true;
+        }
+      }
+    }
+    return false;
+  };
   ctx.bldGrid = new Grid(32);
   ctx.chunkBld = new Map();
   const { x0, z0 } = world.bounds;
@@ -111,7 +152,9 @@ export function buildContext(world, landmarks = []) {
     b.zone = zoneAt(b.cx, b.cz);
     // công trình có mô hình dựng tay thì bỏ khối nhà OSM tương ứng
     const lm = landmarks.find((l) => (l.names && l.names.includes(world.names[b.name])) || (l.clear && Math.hypot(b.cx - l.x, b.cz - l.z) < l.clear));
-    b.skip = !!lm; b.ghost = lm && !lm.open; // ghost: không vẽ nhưng vẫn chắn đường (mô hình dựng tay đứng đúng chỗ đó)
+    b.skip = !!lm; b.ghost = lm && !lm.open;
+    // nhà nằm dưới gầm cầu hoặc bị cầu cắt ngang (dữ liệu vẽ nhà sát mép cầu, có khi nhận nhầm chính cây cầu là nhà): bỏ
+    if (!lm && elevAll.length && underDeck(b)) { b.skip = true; b.ghost = false; b.height = 0; continue; }
     if (b.skip) {
       b.height = 12;
       if (b.ghost) { const k = Math.floor((b.cx - x0) / CS) * 1000 + Math.floor((b.cz - z0) / CS); let l = ctx.chunkBld.get(k); if (!l) ctx.chunkBld.set(k, (l = [])); l.push(b); }

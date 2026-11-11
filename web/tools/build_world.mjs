@@ -177,6 +177,18 @@ for (const { t, parts } of polys((t) => ['park', 'garden'].includes(t.leisure) |
   for (const e of parts) if (Math.abs(area(e.outer)) > 1500) green.push({ k, n: N(t.leisure === 'park' ? t.name : null), p: simplify([...e.outer, e.outer[0]], 3, true).slice(0, -1), holes: e.holes.map((h) => simplify([...h, h[0]], 3, true).slice(0, -1)).filter((h) => h.length >= 3) });
 }
 
+// Cắt đoạn a→b theo khung bản đồ nới thêm pad (Liang-Barsky). Trả về [a', b', đầuSauBịCắt] hoặc null nếu nằm ngoài.
+function clipSeg(a, b, pad) {
+  const x0 = B.x0 - pad, x1 = B.x1 + pad, z0 = B.z0 - pad, z1 = B.z1 + pad, dx = b[0] - a[0], dz = b[1] - a[1];
+  let t0 = 0, t1 = 1;
+  for (const [pp, q] of [[-dx, a[0] - x0], [dx, x1 - a[0]], [-dz, a[1] - z0], [dz, z1 - a[1]]]) {
+    if (pp === 0) { if (q < 0) return null; continue; }
+    const r = q / pp; if (pp < 0) { if (r > t1) return null; if (r > t0) t0 = r; } else { if (r < t0) return null; if (r < t1) t1 = r; }
+  }
+  const P = (t) => [Math.round(a[0] + dx * t), Math.round(a[1] + dz * t)];
+  return [t0 > 0 ? P(t0) : a, t1 < 1 ? P(t1) : b, t1 < 1];
+}
+
 // ---------- đường ----------
 const KIND = ['primary', 'secondary', 'tertiary', 'residential', 'service', 'pedestrian', 'footway', 'path', 'steps', 'track'];
 const kindOf = (h) => ({ primary_link: 'primary', secondary_link: 'secondary', tertiary_link: 'tertiary', unclassified: 'residential', living_street: 'residential', busway: 'tertiary', trunk: 'primary', trunk_link: 'primary' }[h] || h);
@@ -207,10 +219,17 @@ for (const w of hw) {
   let cur = [];
   const flush = () => {
     if (cur.length > 1) {
-      // cắt theo khung bản đồ: giữ các đoạn có ít nhất một đầu nằm trong khung (cộng lề)
+      // cắt theo khung bản đồ (cộng lề) bằng hình học: đoạn nào vắt qua mép thì cắt đúng tại mép, không bỏ cả đoạn
+      // (cầu Long Biên chỉ có vài nút, nút kế tiếp nằm tận bờ bên kia sông)
       let part = [];
-      const emit = () => { if (part.length > 1) roads.push({ k: KIND.indexOf(k), w: Math.round(width), f: flags, n: N(t.name), layer: parseInt(t.layer || '0', 10) || 0, ids: part.map((q) => q.id), p: part.map((q) => q.p) }); part = []; };
-      for (const q of cur) { if (inBox(q.p, PAD)) part.push(q); else emit(); }
+      const emit = () => { if (part.length > 1) roads.push({ k: KIND.indexOf(k), w: Math.round(width), f: flags, n: N(t.name), layer: parseInt(t.layer || '0', 10) || 0, p: part }); part = []; };
+      for (let i = 0; i < cur.length - 1; i++) {
+        const c = clipSeg(cur[i].p, cur[i + 1].p, PAD);
+        if (!c) { emit(); continue; }
+        if (!part.length) part.push(c[0]); else if (part[part.length - 1][0] !== c[0][0] || part[part.length - 1][1] !== c[0][1]) { emit(); part.push(c[0]); }
+        part.push(c[1]);
+        if (c[2]) emit(); // đầu sau bị cắt: kết thúc phần này
+      }
       emit();
     }
   };
@@ -257,7 +276,41 @@ for (const w of hw) {
 const rails = [];
 for (const w of ways.values()) if (w.tags?.railway === 'rail' && w.tags.service !== 'siding' && w.tags.service !== 'yard') {
   let part = []; const emit = () => { if (part.length > 1) rails.push({ f: w.tags.bridge && w.tags.bridge !== 'no' ? 2 : 0, p: simplify(part, 2) }); part = []; };
-  for (const p of wayPts(w)) { if (inBox(p, PAD)) part.push(p); else emit(); } emit();
+  const pts = wayPts(w);
+  for (let i = 0; i < pts.length - 1; i++) {
+    const c = clipSeg(pts[i], pts[i + 1], PAD); if (!c) { emit(); continue; }
+    if (!part.length) part.push(c[0]); else if (part[part.length - 1][0] !== c[0][0] || part[part.length - 1][1] !== c[0][1]) { emit(); part.push(c[0]); }
+    part.push(c[1]); if (c[2]) emit();
+  }
+  emit();
+}
+// Cầu Long Biên: hai làn xe chạy hai bên ngoài dàn thép. OSM vẽ hai làn hơi sát tim đường sắt, ở đây nắn lại cho làn xe
+// cách tim đường sắt đúng 4,1 m (dàn thép rộng 4,8 m), và chêm thêm điểm để làn xe bám theo đường sắt.
+{
+  const LB = (r) => (r.f & 2) && /Long Biên/.test(names[r.n] || ''), key = (p) => p[0] * 100003 + p[1];
+  const fixed = new Set();
+  for (const r of roads) if (!LB(r) && r.k <= KIND.indexOf('service')) { fixed.add(key(r.p[0])); fixed.add(key(r.p[r.p.length - 1])); }
+  const nearestRail = (p) => {
+    let bd = 1e18, q = null;
+    for (const rl of rails) for (let i = 0; i < rl.p.length - 1; i++) {
+      const a = rl.p[i], b = rl.p[i + 1], dx = b[0] - a[0], dz = b[1] - a[1], l2 = dx * dx + dz * dz, t = l2 ? Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dz) / l2)) : 0;
+      const x = a[0] + dx * t, z = a[1] + dz * t, d = (p[0] - x) ** 2 + (p[1] - z) ** 2; if (d < bd) { bd = d; q = [x, z]; }
+    }
+    return q && [q[0], q[1], Math.sqrt(bd)];
+  };
+  const move = (p) => { const q = nearestRail(p); if (!q || q[2] < 5 || q[2] > 80) return p; return [Math.round(q[0] + ((p[0] - q[0]) / q[2]) * 41), Math.round(q[1] + ((p[1] - q[1]) / q[2]) * 41)]; };
+  let moved = 0;
+  for (const r of roads) {
+    if (!LB(r)) continue;
+    const out = [];
+    r.p.forEach((p, i) => {
+      const end = i === 0 || i === r.p.length - 1;
+      if (i > 0) { const a = r.p[i - 1], L = Math.hypot(p[0] - a[0], p[1] - a[1]), n = Math.max(1, Math.round(L / 400)); for (let k = 1; k < n; k++) out.push(move([a[0] + ((p[0] - a[0]) * k) / n, a[1] + ((p[1] - a[1]) * k) / n])); }
+      out.push(end && fixed.has(key(p)) ? p : move(p));
+    });
+    r.p = out; r.w = 32; moved++;
+  }
+  console.log('Nắn làn xe cầu Long Biên:', moved, 'đoạn');
 }
 const walls = [];
 for (const w of ways.values()) {

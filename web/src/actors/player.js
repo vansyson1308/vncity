@@ -50,18 +50,19 @@ export class Player {
     this._col = { x: 0, z: 0 };
   }
 
-  teleport(x, z, yaw = this.yaw) {
-    this.pos.x = x; this.pos.z = z; this.yaw = yaw; this.speed = 0; this.vx = this.vz = 0; this.y = this.nav.groundY(x, z);
-    if (this.mode === 'walk') { this.bikePos.x = x + Math.cos(yaw) * 1.1; this.bikePos.z = z - Math.sin(yaw) * 1.1; this.bikePos.yaw = yaw; }
+  teleport(x, z, yaw = this.yaw, onDeck = true) {
+    // onDeck: đặt lên mặt cầu nếu điểm đó có cầu (đi nhanh tới một điểm trên cầu); mặc định đặt xuống đất
+    this.pos.x = x; this.pos.z = z; this.yaw = yaw; this.speed = 0; this.vx = this.vz = 0; this.y = this.nav.groundY(x, z, onDeck ? Infinity : 0);
+    if (this.mode === 'walk') { this.bikePos.x = x + Math.cos(yaw) * 1.1; this.bikePos.z = z - Math.sin(yaw) * 1.1; this.bikePos.yaw = yaw; this.bikePos.y = undefined; }
     this.sync(0);
   }
 
   toggleBike() {
     if (this.mode === 'bike') {
       if (Math.abs(this.speed) > 3) return 'fast';
-      this.mode = 'walk'; this.bikePos.x = this.pos.x; this.bikePos.z = this.pos.z; this.bikePos.yaw = this.yaw; this.speed = 0;
+      this.mode = 'walk'; this.bikePos.x = this.pos.x; this.bikePos.z = this.pos.z; this.bikePos.y = this.y; this.bikePos.yaw = this.yaw; this.speed = 0;
       // bước xuống bên trái xe
-      const p = this._col; p.x = this.pos.x + Math.cos(this.yaw) * 0.75; p.z = this.pos.z - Math.sin(this.yaw) * 0.75; this.nav.collide(p, 0.3); this.pos.x = p.x; this.pos.z = p.z;
+      const p = this._col; p.x = this.pos.x + Math.cos(this.yaw) * 0.75; p.z = this.pos.z - Math.sin(this.yaw) * 0.75; this.nav.collide(p, 0.3, false, this.y); this.pos.x = p.x; this.pos.z = p.z;
       this.helmet.visible = false; return 'off';
     }
     if (this.noRide && this.noRide(this.pos.x, this.pos.z)) return 'forbidden';
@@ -87,9 +88,9 @@ export class Player {
     this.speed = damp(this.speed, target, target > this.speed ? 7 : 10, dt);
     const p = this._col, step = this.speed * dt;
     p.x = this.pos.x + Math.sin(this.yaw) * step; p.z = this.pos.z + Math.cos(this.yaw) * step;
-    if (this.nav.collide(p, 0.3)) this.speed *= 0.9;
+    if (this.nav.collide(p, 0.3, false, this.y)) this.speed *= 0.9;
     this.pos.x = p.x; this.pos.z = p.z;
-    this.y = damp(this.y, this.nav.groundY(p.x, p.z), 14, dt);
+    this.y = damp(this.y, this.nav.groundY(p.x, p.z, this.y), 14, dt);
     this.lean = 0;
     // nhịp bước chân cho âm thanh
     if (this.speed > 0.4) { this.stepPhase += dt * (this.speed < 2 ? this.speed / 1.01 / 0.6 : this.speed / 2.4 / 0.385); if (this.stepPhase >= 1) { this.stepPhase -= 1; this.onStep && this.onStep(this.speed); } }
@@ -111,7 +112,7 @@ export class Player {
     const steps = Math.max(1, Math.ceil((Math.abs(v) * dt) / 0.35)), p = this._col; let hitN = 0;
     for (let i = 0; i < steps; i++) {
       p.x = this.pos.x + (Math.sin(this.yaw) * v * dt) / steps; p.z = this.pos.z + (Math.cos(this.yaw) * v * dt) / steps;
-      if (this.nav.collide(p, 0.42)) {
+      if (this.nav.collide(p, 0.42, false, this.y)) {
         // trượt dọc tường; mất tốc theo độ vuông góc của cú chạm
         const into = Math.max(0, -(Math.sin(this.yaw) * this.nav.nx + Math.cos(this.yaw) * this.nav.nz));
         if (into > 0.3 && Math.abs(v) > 4) { hitN = Math.max(hitN, into * Math.abs(v)); }
@@ -125,8 +126,8 @@ export class Player {
     if (hitN > 2.5) { this.wobble = Math.min(1, hitN / 8); this.onCrash && this.onCrash(hitN); }
     if (this.noRide && this.noRide(this.pos.x, this.pos.z)) { v = Math.min(v, 1.5); this.inNoRide = true; } else this.inNoRide = false;
     this.speed = v;
-    const gy = this.nav.groundY(this.pos.x, this.pos.z);
-    if (Math.abs(gy - this.y) > 0.07 && Math.abs(v) > 2) { this.bump = 0.05; this.onCurb && this.onCurb(Math.abs(v)); }
+    const gy = this.nav.groundY(this.pos.x, this.pos.z, this.y);
+    if (Math.abs(gy - this.y) > 0.07 && Math.abs(gy - this.y) < 0.4 && Math.abs(v) > 2) { this.bump = 0.05; this.onCurb && this.onCurb(Math.abs(v)); }
     this.y = damp(this.y, gy, 20, dt);
     this.lean = damp(this.lean, clamp(Math.atan((v * v * curv) / 9.81), -0.62, 0.62), 7, dt); // dương: nghiêng sang phải
     this.wobble *= Math.exp(-dt * 2.6); this.bump *= Math.exp(-dt * 10);
@@ -155,7 +156,7 @@ export class Player {
       this.bike.position.copy(r.position); this.bike.rotation.set(0, this.yaw - Math.PI / 2, 0); this.bike.rotateX(this.lean + wob);
     } else {
       this.model.position.set(0, 0, 0);
-      this.bike.position.set(this.bikePos.x, this.nav.groundY(this.bikePos.x, this.bikePos.z), this.bikePos.z); this.bike.rotation.set(0.17, this.bikePos.yaw - Math.PI / 2, 0);
+      this.bike.position.set(this.bikePos.x, this.nav.groundY(this.bikePos.x, this.bikePos.z, this.bikePos.y ?? 0), this.bikePos.z); this.bike.rotation.set(0.17, this.bikePos.yaw - Math.PI / 2, 0);
     }
     if (this.helmet.visible) {
       const h = this.bones.Bip01_Head; r.updateMatrixWorld(true); h.getWorldPosition(_v);

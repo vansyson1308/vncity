@@ -2,26 +2,38 @@
 // Các tệp mô hình nằm cùng thư mục, mỗi tệp xuất build(g).
 import * as THREE from 'three';
 import { G } from '../../core/geo.js';
-import { CURB } from '../data.js';
+import { CURB, roadY, alongAt, LB_TRUSS_X } from '../data.js';
+import { segDist2 } from '../../core/util.js';
 import { propGeometry } from '../materials.js';
 
 const modules = import.meta.glob('./*.js');
 
 export async function buildLandmarks(scene, sites, mats, nav, world) {
   const out = [];
-  // cầu Long Biên: dựng dọc tuyến đường sắt trên cầu, chia bốn đoạn để khuất tầm nhìn thì không vẽ
+  // cầu Long Biên: dàn thép dựng dọc tuyến đường sắt trên cầu (đoạn ngoài đê), lan can dọc hai làn xe; chia khúc để khuất tầm nhìn thì không vẽ
   try {
-    const rail = world.rails.filter((r) => r.flags & 2).sort((a, b) => b.p.length - a.p.length)[0];
+    const rail = world.rails.filter((r) => r.elev).sort((a, b) => b.len - a.len)[0];
     if (rail && modules['./cau_long_bien.js']) {
-      const mod = await modules['./cau_long_bien.js'](), pts = []; for (let i = 0; i < rail.p.length; i += 2) pts.push([rail.p[i], rail.p[i + 1]]);
-      // nội suy thêm điểm để chia đoạn theo chiều dài
-      const dense = []; for (let i = 0; i < pts.length - 1; i++) { const n = Math.max(1, Math.round(Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]) / 40)); for (let k = 0; k < n; k++) dense.push([pts[i][0] + ((pts[i + 1][0] - pts[i][0]) * k) / n, pts[i][1] + ((pts[i + 1][1] - pts[i][1]) * k) / n]); } dense.push(pts[pts.length - 1]);
-      const per = Math.ceil(dense.length / 4);
-      for (let q = 0; q < 4; q++) {
-        const part = dense.slice(Math.max(0, q * per - 0), Math.min(dense.length, (q + 1) * per + 1)); if (part.length < 2) continue;
-        const g = new G(); mod.buildAlong(g, part); if (!g.count) continue;
-        const mesh = new THREE.Mesh(propGeometry(g.pack()), mats.prop); mesh.position.y = CURB; mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.name = 'cau_long_bien';
-        scene.add(mesh); const c = part[Math.floor(part.length / 2)]; out.push({ site: { id: 'cau_long_bien', x: c[0], z: c[1] }, mesh });
+      const mod = await modules['./cau_long_bien.js'](), o = [0, 0, 0, 0, 0], y0 = rail.elev.H;
+      const add = (g, x, z) => { if (!g.count) return; const mesh = new THREE.Mesh(propGeometry(g.pack()), mats.prop); mesh.castShadow = true; mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.name = 'cau_long_bien'; scene.add(mesh); out.push({ site: { id: 'cau_long_bien', x, z }, mesh }); };
+      // tim cầu đoạn có dàn thép: từ mép đê ra tới mép bản đồ
+      const P = []; for (let s = 0; s <= rail.len; s += 20) { alongAt(rail, s, o); if (o[0] > LB_TRUSS_X) P.push([o[0], o[1]]); }
+      let L = 0; for (let i = 1; i < P.length; i++) L += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]);
+      const SEG = 106 * 2, n = Math.ceil(L / SEG);
+      for (let q = 0; q < n; q++) { const g = new G(); mod.buildAlong(g, P, q * SEG, Math.min(L, (q + 1) * SEG), y0); const c = P[Math.min(P.length - 1, Math.round(((q + 0.5) * SEG) / 20))]; add(g, c[0], c[1]); }
+      // lan can: mép ngoài (phía xa đường sắt) của từng làn xe, chỗ mặt cầu đã lên cao
+      const railD = (x, z) => { let d = 1e9; for (let i = 0; i < rail.p.length - 2; i += 2) d = Math.min(d, segDist2(x, z, rail.p[i], rail.p[i + 1], rail.p[i + 2], rail.p[i + 3])); return d; };
+      for (const r of world.roads) {
+        if (!r.elev || !/Long Biên/.test(world.names[r.name] || '')) continue;
+        for (let a = 0; a < r.len; a += 198) {
+          const E = [], b = Math.min(r.len, a + 198), m = Math.max(1, Math.round((b - a) / 6.6));
+          for (let k = 0; k <= m; k++) {
+            const s = a + ((b - a) * k) / m, y = roadY(r, s); if (y < 0.45) continue;
+            alongAt(r, s, o); const nx = -o[3], nz = o[2], sd = railD(o[0] + nx, o[1] + nz) > railD(o[0] - nx, o[1] - nz) ? 1 : -1, e = r.w / 2 - 0.08;
+            E.push([o[0] + nx * sd * e, y, o[1] + nz * sd * e]);
+          }
+          if (E.length > 1) { const g = new G(); mod.buildRailing(g, E); const c = E[E.length >> 1]; add(g, c[0], c[2]); }
+        }
       }
     }
   } catch (e) { console.warn('cau_long_bien', e); }
