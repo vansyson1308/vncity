@@ -131,7 +131,7 @@ async function boot() {
     else if (ev === 'pickup') { audio.click(); hud.toast(`${T('fare_to')} ${f.dest.place.name[lang()] || f.dest.place.name.vi}!`, 4, f.name(lang()), f.cust.face); }
     else if (ev === 'drop') { audio.coin(); counts(); hud.toast(`${'★'.repeat(res.stars)}${'☆'.repeat(5 - res.stars)} ${res.comment} ${money(res.base)}${res.tip ? ' + ' + money(res.tip) : ''}`, 6, '', '💵'); }
   };
-  player.onCrash = (v) => { hud.bubble(pick('crash')); audio.thud(Math.min(0.6, 0.2 + v * 0.04)); cam.shake = Math.min(0.5, v * 0.05); fares.bump(0.22); };
+  player.onCrash = (v) => { hud.bubble(pick('crash')); audio.thud(Math.min(0.6, 0.2 + v * 0.04)); cam.shake = Math.min(0.5, v * 0.05); fares.bump(Math.min(0.5, 0.12 + v * 0.03)); }; // v: vận tốc đâm vuông góc vào tường (m/s)
   player.onCurb = () => { audio.thud(0.12); fares.bump(0.025); };
   player.onStep = (v) => audio.footstep(v > 3.6);
 

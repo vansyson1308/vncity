@@ -5,6 +5,9 @@ import * as THREE from 'three';
 import { G } from '../core/geo.js';
 import { clamp, damp, dampAngle, hash, segDist2 } from '../core/util.js';
 import { K, F_ONEWAY, F_REVERSE, roadY } from '../world/data.js';
+import { collide1D, bikeMass } from './physics.js';
+
+const MASS = [165, 170, 150, 1350, 1400, 11000]; // khối lượng từng loại xe trong dòng xe (kg): ba kiểu xe máy có người, ô tô, taxi, xe buýt
 import { motorbike, car, bus } from '../models/vehicles.js';
 import { propGeometry } from '../world/materials.js';
 import { bakePose, appendBaked } from './humans.js';
@@ -83,7 +86,7 @@ export class Traffic {
       // không hiện ra ngay trước mắt: phải ở xa hoặc sau lưng camera
       if (cam && !this.warming && d < 110 && (o[0] - cam.x) * cam.fx + (o[1] - cam.z) * cam.fz > 0) continue;
       const T = TYPES[type], a = { e, dir, s, type, v: 3 + Math.random() * 3, x: o[0], z: o[1], yaw: Math.atan2(o[2], o[3]), lean: 0, lat: 0, latT: 0, y: 0, pace: (0.75 + Math.random() * 0.45) * T.vmul, pref: 0.25 + Math.random() * 0.7, r: T.r, wait: 0, honk: Math.random() * 4, tint: 0, tint2: 0, alive: true };
-      a.tint = type < 3 ? BIKE_COLORS[Math.floor(Math.random() * BIKE_COLORS.length)] : type === 5 ? [1, 1, 1] : Math.random() < 0.3 ? TAXI_COLORS[Math.floor(Math.random() * TAXI_COLORS.length)] : CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)];
+      a.tint = type < 3 ? BIKE_COLORS[Math.floor(Math.random() * BIKE_COLORS.length)] : type === 5 ? [1, 1, 1] : type === 4 ? TAXI_COLORS[Math.floor(Math.random() * TAXI_COLORS.length)] : CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)]; // loại 4 là taxi (có hộp đèn trên nóc): luôn sơn màu hãng taxi
       a.tint2 = SHIRT_COLORS[Math.floor(Math.random() * SHIRT_COLORS.length)];
       this.lane(a); a.lat = a.latT; a.x -= o[3] * a.lat; a.z += o[2] * a.lat;
       this.agents.push(a); return true;
@@ -179,7 +182,18 @@ export class Traffic {
         }
         // chạm vào nhau: đẩy người chơi ra, xe dừng lại
         const d2 = dx * dx + dz * dz, rr = a.r + pr;
-        if (d2 < rr * rr && d2 > 1e-4 && !this.warming) { const d = Math.sqrt(d2), push = (rr - d) * 0.6; player.pos.x += (dx / d) * push; player.pos.z += (dz / d) * push; a.v *= 0.5; if (player.mode === 'bike' && Math.abs(pv) > 3) { player.speed *= 0.82; player.wobble = Math.max(player.wobble, 0.35); this.touch++; } a.wait += dt * 2; }
+        if (d2 < rr * rr && d2 > 1e-4 && !this.warming) { const d = Math.sqrt(d2), push = (rr - d) * 0.6; player.pos.x += (dx / d) * push; player.pos.z += (dz / d) * push; a.wait += dt * 2;
+          // va chạm theo bảo toàn động lượng dọc hướng xe người chơi: xe nặng (ô tô, xe buýt) gần như không suy suyển, xe máy thì cả hai cùng khựng
+          if (player.mode === 'bike' && (a.hitT || 0) <= 0) {
+            const cosA = Math.sin(a.yaw) * pfx + Math.cos(a.yaw) * pfz, u2 = a.v * cosA, rel = pv - u2, ahead = (-dx) * pfx + (-dz) * pfz > 0;
+            if ((ahead && rel > 0.8) || (!ahead && rel < -0.8)) {
+              const [v1, v2] = collide1D(bikeMass(!!player.passenger), pv, MASS[a.type], u2);
+              player.speed = v1; a.v = Math.max(0, a.v + (v2 - u2) * cosA); a.hitT = 0.5;
+              if (Math.abs(rel) > 2) { player.wobble = Math.max(player.wobble, Math.min(1, Math.abs(rel) / 6)); this.touch += Math.min(3, Math.abs(rel) / 3); }
+            }
+          } else if (player.mode !== 'bike') a.v *= 0.5;
+        }
+        if (a.hitT > 0) a.hitT -= dt;
       }
       if (a.wait > 1.1 && a.honk <= 0) { this.honks.push([a.x, a.z, a.type]); a.honk = 2.5 + Math.random() * 3; a.wait = 0; }
       if (!blocked) a.wait = Math.max(0, a.wait - dt);
