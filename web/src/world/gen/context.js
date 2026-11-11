@@ -1,7 +1,8 @@
 // Chỉ mục không gian và các thuộc tính suy ra (số tầng, kiểu nhà) tính một lần khi worker khởi động.
 import ClipperLib from 'clipper-lib';
 import { hash, pointInRing, segDist2 } from '../../core/util.js';
-import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn } from '../data.js';
+import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn, roadY } from '../data.js';
+import { sitePaths } from '../landmarks/sites.js';
 
 export const CL = ClipperLib;
 const PT = CL.PolyType, CT = CL.ClipType, FT = CL.PolyFillType;
@@ -48,6 +49,13 @@ const FLOORS = {
   [ZONE.old]: [2, 3, 3, 3, 4, 4, 5], [ZONE.french]: [2, 3, 3, 4, 4, 5], [ZONE.badinh]: [2, 2, 3, 3, 4], [ZONE.city]: [3, 4, 4, 5, 5, 6], [ZONE.bank]: [2, 3, 3, 4],
 };
 
+// Khoảng cách nhỏ nhất giữa hai đoạn thẳng 2D (0 nếu cắt nhau).
+function segSegDist(ax, az, bx, bz, cx, cz, dx, dz) {
+  const o = (px, pz, qx, qz, rx, rz) => (qx - px) * (rz - pz) - (qz - pz) * (rx - px);
+  if (o(ax, az, bx, bz, cx, cz) * o(ax, az, bx, bz, dx, dz) < 0 && o(cx, cz, dx, dz, ax, az) * o(cx, cz, dx, dz, bx, bz) < 0) return 0;
+  return Math.sqrt(Math.min(segDist2(ax, az, cx, cz, dx, dz), segDist2(bx, bz, cx, cz, dx, dz), segDist2(cx, cz, ax, az, bx, bz), segDist2(dx, dz, ax, az, bx, bz)));
+}
+
 export function buildContext(world, landmarks = []) {
   const ctx = { world, landmarks };
   const { roads, buildings, water, green } = world;
@@ -87,6 +95,30 @@ export function buildContext(world, landmarks = []) {
     return best;
   };
 
+  // ----- cầu nâng: đường bộ và đường sắt có cao độ (xem computeElevation trong data.js) -----
+  ctx.elevRoads = roads.filter((r) => r.elev && !r.skip); ctx.elevRails = world.rails.filter((r) => r.elev);
+  const elevAll = [...ctx.elevRoads, ...ctx.elevRails];
+  // Cao độ mặt cầu cao nhất phủ lên điểm (x,z) (cộng lề pad), 0 nếu không có cầu. except: bỏ qua đoạn này.
+  ctx.deckAt = (x, z, pad = 0, except = null, only = null) => {
+    let y = 0;
+    for (const r of only ? [only] : elevAll) {
+      if (r === except) continue;
+      const m = r.w / 2 + pad; if (x < r.bb[0] - m || x > r.bb[2] + m || z < r.bb[1] - m || z > r.bb[3] + m) continue;
+      const p = r.p;
+      for (let i = 0; i < p.length - 2; i += 2) {
+        if (segDist2(x, z, p[i], p[i + 1], p[i + 2], p[i + 3], tOut) > m * m) continue;
+        const ey = roadY(r, r.cum[i / 2] + tOut[0] * (r.cum[i / 2 + 1] - r.cum[i / 2])); if (ey > y) y = ey;
+      }
+    }
+    return y;
+  };
+  // nút nối giữa các đoạn cầu: để vát mép mặt cầu cho liền nhau
+  ctx.elevNodes = new Map();
+  for (const r of ctx.elevRoads) for (const e of [0, 1]) {
+    const p = r.p, i = e ? p.length - 2 : 0, j = e ? p.length - 4 : 2, L = Math.hypot(p[j] - p[i], p[j + 1] - p[i + 1]) || 1, k = nk(p[i], p[i + 1]);
+    let l = ctx.elevNodes.get(k); if (!l) ctx.elevNodes.set(k, (l = [])); l.push({ r, lx: (p[j] - p[i]) / L, lz: (p[j + 1] - p[i + 1]) / L }); // (lx,lz): hướng rời nút
+  }
+
   // ----- mặt nước, mảng xanh (đa giác Clipper đã chuẩn hoá) -----
   const norm = (polys) => polys.map((w) => ({ ...w, paths: clip(CT.ctUnion, [toPath(w.p), ...w.holes.map(toPath)], null, FT.pftEvenOdd) }));
   ctx.water = norm(water); ctx.green = norm(green);
@@ -104,6 +136,34 @@ export function buildContext(world, landmarks = []) {
   };
 
   // ----- toà nhà -----
+  // Nhà có bị mặt cầu nâng (cao hơn 0,8 m) phủ lên không: thử các đỉnh nhà, rồi dò dọc tim cầu và hai mép cầu xem có lọt vào nhà.
+  // Lối đi phải thông của các công trình dựng tay (sites.js `paths`): nhà nào chạm vào lối thì bỏ hẳn, không giữ va chạm.
+  const keepClear = landmarks.flatMap(sitePaths); ctx.keepClear = keepClear; ctx.ghosts = [];
+  const blocksPath = (b) => {
+    for (const [ax, az, bx, bz, hw] of keepClear) {
+      if (b.bb[0] > Math.max(ax, bx) + hw || b.bb[2] < Math.min(ax, bx) - hw || b.bb[1] > Math.max(az, bz) + hw || b.bb[3] < Math.min(az, bz) - hw) continue;
+      const L = Math.hypot(bx - ax, bz - az) || 1;
+      for (let s = 0; s <= L; s += 0.5) { const x = ax + ((bx - ax) * s) / L, z = az + ((bz - az) * s) / L; if (pointInRing(x, z, b.p)) return true; }
+      for (let i = 0; i < b.p.length; i += 2) { const j = (i + 2) % b.p.length; if (segSegDist(b.p[i], b.p[i + 1], b.p[j], b.p[j + 1], ax, az, bx, bz) < hw) return true; }
+    }
+    return false;
+  };
+  const underDeck = (b) => {
+    for (const r of elevAll) {
+      const m = r.w / 2 + 1.5; if (b.bb[0] > r.bb[2] + m || b.bb[2] < r.bb[0] - m || b.bb[1] > r.bb[3] + m || b.bb[3] < r.bb[1] - m) continue;
+      for (let i = 0; i < b.p.length; i += 2) if (ctx.deckAt(b.p[i], b.p[i + 1], 0.8, null, r) > 0.8) return true;
+      const p = r.p, hw = r.w / 2;
+      for (let i = 0; i < p.length - 2; i += 2) {
+        const L = r.cum[i / 2 + 1] - r.cum[i / 2], dx = (p[i + 2] - p[i]) / (L || 1), dz = (p[i + 3] - p[i + 1]) / (L || 1);
+        for (let s = 0; s <= L; s += 2) {
+          const x = p[i] + dx * s, z = p[i + 1] + dz * s; if (x < b.bb[0] - hw || x > b.bb[2] + hw || z < b.bb[1] - hw || z > b.bb[3] + hw) continue;
+          if (roadY(r, r.cum[i / 2] + s) < 0.8) continue;
+          if (pointInRing(x, z, b.p) || pointInRing(x - dz * hw, z + dx * hw, b.p) || pointInRing(x + dz * hw, z - dx * hw, b.p)) return true;
+        }
+      }
+    }
+    return false;
+  };
   ctx.bldGrid = new Grid(32);
   ctx.chunkBld = new Map();
   const { x0, z0 } = world.bounds;
@@ -111,10 +171,12 @@ export function buildContext(world, landmarks = []) {
     b.zone = zoneAt(b.cx, b.cz);
     // công trình có mô hình dựng tay thì bỏ khối nhà OSM tương ứng
     const lm = landmarks.find((l) => (l.names && l.names.includes(world.names[b.name])) || (l.clear && Math.hypot(b.cx - l.x, b.cz - l.z) < l.clear));
-    b.skip = !!lm; b.ghost = lm && !lm.open; // ghost: không vẽ nhưng vẫn chắn đường (mô hình dựng tay đứng đúng chỗ đó)
+    b.skip = !!lm; b.ghost = lm && !lm.open;
+    // nhà nằm dưới gầm cầu hoặc bị cầu cắt ngang (dữ liệu vẽ nhà sát mép cầu, có khi nhận nhầm chính cây cầu là nhà): bỏ
+    if (!lm && ((elevAll.length && underDeck(b)) || (keepClear.length && blocksPath(b)))) { b.skip = true; b.ghost = false; b.height = 0; continue; }
     if (b.skip) {
       b.height = 12;
-      if (b.ghost) { const k = Math.floor((b.cx - x0) / CS) * 1000 + Math.floor((b.cz - z0) / CS); let l = ctx.chunkBld.get(k); if (!l) ctx.chunkBld.set(k, (l = [])); l.push(b); }
+      if (b.ghost) { ctx.ghosts.push(b); const k = Math.floor((b.cx - x0) / CS) * 1000 + Math.floor((b.cz - z0) / CS); let l = ctx.chunkBld.get(k); if (!l) ctx.chunkBld.set(k, (l = [])); l.push(b); }
       continue;
     }
     const r = hash(b.i, 1), r2 = hash(b.i, 2);
@@ -159,6 +221,9 @@ export function buildContext(world, landmarks = []) {
     ctx.bldGrid.query(x, z, x, z, (b) => { if (!hit && b !== self && b.cat !== CAT.roof && x >= b.bb[0] && x <= b.bb[2] && z >= b.bb[1] && z <= b.bb[3] && pointInRing(x, z, b.p)) hit = b; });
     return hit;
   };
+
+  // Điểm (x,z) nằm trong lòng một khối nhà có va chạm (kể cả khối giữ chỗ của công trình dựng tay).
+  ctx.insideSolid = (x, z) => !!ctx.buildingAt(x, z) || ctx.ghosts.some((b) => x >= b.bb[0] && x <= b.bb[2] && z >= b.bb[1] && z <= b.bb[3] && pointInRing(x, z, b.p));
 
   // điểm rời rạc theo ô: cây OSM, hàng quán, ghế, đài phun
   const bucket = (arr, n) => { const m = new Map(); for (let i = 0; i < arr.length; i += n) { const k = Math.floor((arr[i] - x0) / CS) * 1000 + Math.floor((arr[i + 1] - z0) / CS); let l = m.get(k); if (!l) m.set(k, (l = [])); l.push(i); } return m; };

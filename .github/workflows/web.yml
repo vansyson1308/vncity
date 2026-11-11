@@ -34,8 +34,16 @@ jobs:
         run: |
           node tools/build_places.mjs
           git diff --exit-code -- public/world/places.json
+      - name: Lint (biến chưa khai báo, khai báo trùng)
+        run: npx eslint src dev tools
+      - name: Vật lý xe và người khớp số đo ngoài đời
+        run: node tools/physics_check.mjs
+      - name: Cả 44 điểm hộ chiếu đều có lối đi tới và chỗ đứng khi đi nhanh
+        run: node tools/reach_check.mjs
       - name: Bộ sinh thành phố dựng được mọi ô phố, trong ngân sách tam giác
         run: node tools/gen_check.mjs
+      - name: Xưởng vẽ soát lỗi mọi mô hình thủ tục (ngân sách tam giác, toạ độ hỏng)
+        run: node tools/studio.mjs
       - run: npm run build
       - name: Kiểm thử khói trong Chromium (SwiftShader)
         run: |

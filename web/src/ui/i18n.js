@@ -20,12 +20,12 @@ const S = {
     g_fast: 'Giảm ga rồi hẵng xuống xe cháu ơi.', g_edge: 'Hết bản đồ rồi, quay lại thôi cháu.', g_page: 'Đủ dấu {p} rồi! Chú thưởng {m}.', g_stamp3: 'Ba dấu rồi đấy. Mở hộ chiếu (B) mà xem còn những đâu.',
     crash: ['Ối!', 'Úi giời!', 'Từ từ thôi!', 'Ối giời ơi!'], horn: 'Bíp bíp!',
     fare_to: 'Tới', fare_paid: '{n} trả {m}', fare_tip: 'thưởng thêm {m}', fare_wait: 'Khách đang chờ', fare_none: 'Lên xe đã rồi mới đón khách được.',
-    c5: ['Êm quá, cảm ơn anh!', 'Đi với anh như ngồi xích lô.', 'Năm sao luôn!'], c4: ['Cũng được, cảm ơn anh.', 'Đường đông mà anh đi khéo đấy.'], c3: ['Hơi xóc, nhưng tới nơi là được.', 'Lần sau đi chậm chút anh nhé.'],
+    c5: ['Êm quá, cảm ơn anh!', 'Đi với anh như ngồi xích lô.', 'Năm sao luôn!'], c4: ['Cũng được, cảm ơn anh.', 'Đường đông mà anh đi khéo đấy.'], c2: ['Đâm quệt thế này em sợ lắm, lần sau anh đi cẩn thận nhé.', 'Tới nơi rồi, may quá. Anh chạy ẩu quá.'], c3: ['Hơi xóc, nhưng tới nơi là được.', 'Lần sau đi chậm chút anh nhé.'],
     rank: 'Hạng xe ôm', rank0: 'Xe ôm tập sự', rank1: 'Xe ôm phố cổ', rank2: 'Xe ôm thạo đường', rank3: 'Thổ địa Hà Nội', rides: 'cuốc',
     time_morning: 'Sáng sớm', time_noon: 'Giữa trưa', time_golden: 'Chiều vàng', time_night: 'Phố đêm',
     photo: 'Đã lưu ảnh. Bấm P hoặc chạm để tiếp tục.', photoHint: 'Kéo để chọn góc · Enter hoặc chạm 📷 để chụp · Esc để thoát',
     shareText: 'Mình đã đóng {n}/{t} dấu hộ chiếu ở Hà Nội Dạo Phố.', copied: 'Đã chép đường dẫn.', xeom: 'Xe ôm chở tới', perf: 'Khung hình: {f}/giây · độ phân giải {d}%',
-    money: (v) => `${Math.round(v / 1000)}k`, km: 'km', m: 'm', quality: 'Đổi chất lượng sẽ tải lại trang.',
+    money: (v) => `${Math.round(v / 1000)}k`, km: 'km', m: 'm', quality: 'Đổi chất lượng sẽ tải lại trang.', q_confirm: 'Đổi chất lượng hình sang mức "{q}"? Game sẽ tải lại, vị trí và các dấu đã đóng vẫn được giữ.', perf_wait: 'Khung hình: đang đo…', credits_audio: 'Âm thanh và nhạc nền do game tự tổng hợp, không dùng bản ghi của ai. Chi tiết trong CREDITS.md.',
   },
   en: {
     tagline: 'An easy evening loose in Hanoi', loading: 'Loading the map', building: 'Raising the streets', error: 'Load error:',
@@ -47,17 +47,27 @@ const S = {
     g_fast: 'Slow down before you hop off, kid.', g_edge: 'That is the edge of the map, turn back.', g_page: '{p} page complete! Here is {m} from me.', g_stamp3: 'Three stamps already. Open the passport (B) to see what is left.',
     crash: ['Oops!', 'Whoa!', 'Easy there!', 'Oh dear!'], horn: 'Beep beep!',
     fare_to: 'To', fare_paid: '{n} paid {m}', fare_tip: 'plus a {m} tip', fare_wait: 'A passenger is waiting', fare_none: 'Get on the bike before picking anyone up.',
-    c5: ['So smooth, thank you!', 'Like riding a cyclo.', 'Five stars!'], c4: ['Fine ride, thanks.', 'Busy streets, well handled.'], c3: ['A bit bumpy, but we made it.', 'Slower next time, please.'],
-    rank: 'Xe ôm rank', rank0: 'Trainee xe ôm', rank1: 'Old Quarter xe ôm', rank2: 'Street-smart xe ôm', rank3: 'Hanoi insider', rides: 'rides',
+    c5: ['So smooth, thank you!', 'Like riding a cyclo.', 'Five stars!'], c4: ['Fine ride, thanks.', 'Busy streets, well handled.'], c2: ['That was scary. Please ride more carefully.', 'We made it, somehow. Too reckless.'], c3: ['A bit bumpy, but we made it.', 'Slower next time, please.'],
+    rank: 'Xe ôm rank', rank0: 'Trainee xe ôm', rank1: 'Old Quarter xe ôm', rank2: 'Street-smart xe ôm', rank3: 'Hanoi insider', rides: 'rides', rides1: 'ride',
     time_morning: 'Early morning', time_noon: 'Midday', time_golden: 'Golden hour', time_night: 'Night streets',
     photo: 'Photo saved. Press P or tap to continue.', photoHint: 'Drag to frame · Enter or tap 📷 to shoot · Esc to leave',
     shareText: 'I have {n}/{t} passport stamps in Hanoi Stroll.', copied: 'Link copied.', xeom: 'Xe ôm ride to', perf: 'Frame rate: {f}/s · resolution {d}%',
-    money: (v) => `${Math.round(v / 1000)}k₫`, km: 'km', m: 'm', quality: 'Changing quality reloads the page.',
+    money: (v) => `${Math.round(v / 1000)}k₫`, km: 'km', m: 'm', quality: 'Changing quality reloads the page.', q_confirm: 'Switch graphics to "{q}"? The game will reload; your position and stamps are kept.', perf_wait: 'Frame rate: measuring…', credits_audio: 'All sound and music is synthesised by the game itself; no recordings are used. See CREDITS.md.',
   },
 };
 let cur = 'vi';
 export const lang = () => cur;
 export const T = (k, vars) => { let s = S[cur][k] ?? S.vi[k] ?? k; if (vars && typeof s === 'string') for (const v in vars) s = s.replace(`{${v}}`, vars[v]); return s; };
+// Chuỗi theo cả hai ngôn ngữ (cho những nhãn tự đổi theo ngôn ngữ đang chọn, như ô la bàn).
+export const both = (k) => ({ vi: S.vi[k], en: S.en[k] ?? S.vi[k] });
+// Số đếm kèm danh từ: tiếng Anh chia số ít, số nhiều (khoá k và k + '1'); tiếng Việt không chia.
+export const count = (n, k) => `${n} ${n === 1 && S[cur][k + '1'] ? S[cur][k + '1'] : T(k)}`;
+// Dịch lại một chuỗi đang hiển thị sang ngôn ngữ hiện tại: tìm xem nó là chuỗi nào trong bảng của ngôn ngữ cũ.
+export function retranslate(text, from) {
+  const A = S[from], B = S[cur]; if (!A || from === cur) return text;
+  for (const k in A) { const v = A[k]; if (v === text) return typeof B[k] === 'string' ? B[k] : text; if (Array.isArray(v)) { const i = v.indexOf(text); if (i >= 0 && Array.isArray(B[k])) return B[k][Math.min(i, B[k].length - 1)]; } }
+  return text;
+}
 export const pick = (k) => { const a = T(k); return Array.isArray(a) ? a[Math.floor(Math.random() * a.length)] : a; };
 export const money = (v) => S[cur].money(v);
 export const dist = (d) => (d >= 1000 ? `${(d / 1000).toFixed(1)} km` : `${Math.round(d / 5) * 5} m`);

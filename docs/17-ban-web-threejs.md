@@ -49,7 +49,7 @@ Cả cuốn sách (100 lăng kính) được đọc và rút thành các quyết
 
 | Nguồn | Dùng gì | Giấy phép |
 |---|---|---|
-| OpenStreetMap, tải qua API chính thức (`web/tools/fetch_osm.mjs`) | 18.807 toà nhà, 8.147 đoạn đường có tên và bề rộng, hồ, sông Hồng, công viên, 3.510 cây, tường rào, đường sắt, 1.561 vị trí hàng ăn uống (chỉ lấy vị trí, không lấy tên quán) | ODbL 1.0, ghi "© OpenStreetMap" trong game |
+| OpenStreetMap, tải qua API chính thức (`web/tools/fetch_osm.mjs`) | 18.807 toà nhà, 8.154 đoạn đường có tên và bề rộng, hồ, sông Hồng, công viên, 3.510 cây, tường rào, đường sắt, 1.561 vị trí hàng ăn uống (chỉ lấy vị trí, không lấy tên quán) | ODbL 1.0, ghi "© OpenStreetMap" trong game |
 | Overture Maps 2026-09-23.0 (`web/tools/fetch_overture.py`) | 10.830 toà nhà do máy học vẽ ở những ô phố OSM chưa vẽ nhà | Microsoft ML Buildings: ODbL. Google Open Buildings: CC BY 4.0 |
 | `game/content/world/landmarks.json` | 36 địa danh và con phố nằm trong khung bản đồ, tên và mô tả song ngữ, toạ độ đã kiểm chứng với OSM (docs/15) | Nội dung của dự án |
 | `web/content/foods.json` | 7 món ăn + phố đèn lồng Hàng Mã, chỉ ghi món và phố, không ghi tên quán | Nội dung của dự án |
@@ -95,6 +95,37 @@ Các kỹ thuật chính:
    người chơi tới gần và bị gỡ khi đi xa, nên tầm nhìn tới 760 m mà bộ nhớ GPU vẫn nhỏ.
 6. **Va chạm bằng đoạn thẳng.** Tường nhà, tường rào, bờ nước là các đoạn 2D trong lưới 16 m của từng ô; người
    và xe là vòng tròn bị đẩy ra. Cầu Thê Húc là "mặt cầu" đi bộ được có vòm.
+7. **Cầu có độ cao thật, tính từ một hàm duy nhất.** Các đoạn đường gắn thẻ cầu nối liền nhau thành một cây cầu;
+   cầu dài từ 150 m được nâng lên: dốc 6,5% từ chỗ nối với đường thường tới độ cao mặt cầu (Long Biên 9 m, Chương
+   Dương và vòng xoay đầu cầu 8 m, cầu vượt An Dương 6 m) rồi đi ngang. Hàm `roadY` trong `world/data.js` chạy ở cả
+   worker (dựng mặt cầu, tường chắn dốc, dầm, lan can, trụ, cầu dẫn đường sắt) lẫn luồng chính (cao độ người chơi,
+   dòng xe, va chạm với lan can), nên hình và vật lý không thể lệch nhau. Nước sông chảy dưới gầm cầu, phố dưới gầm
+   cầu vẫn đi lại được, nhà bị cầu cắt ngang trong dữ liệu thì bỏ. `tools/gen_check.mjs` đi dọc cả 19 đoạn cầu bằng
+   chính hàm điều hướng của game và báo lỗi nếu cao độ lệch hay rơi khỏi cầu.
+8. **Chi tiết bề mặt không tốn dung lượng tải.** Mười chất liệu (gạch, đá xẻ, vữa vôi cũ, ngói, gỗ, thép gỉ, bê
+   tông, đá rêu, gạch lát sân, sơn son) được shader vẽ ra từ vị trí và pháp tuyến của điểm trong hệ toạ độ mô hình
+   (`world/detail.js`): không cần UV, không cần ảnh. Mô hình chỉ gọi `g.mat(MAT.brick)`. Ở xa, hoa văn tự hoà về màu
+   trung bình nên không nhấp nháy. Công trình biểu tượng được đèn pha hắt sáng ban đêm ngay trong shader.
+9. **Vật lý theo đơn vị thật.** `actors/physics.js` mô hình hoá chiếc xe số 110 cc bằng số đo ngoài đời: khối lượng xe
+   và người (chở khách thì nặng thêm 58 kg), lực kéo giới hạn bởi công suất 4,8 kW tại bánh, cản lăn, cản gió tỉ lệ v²,
+   lực hãm của máy khi nhả ga, phanh giới hạn bởi độ bám của lốp (0,75 khô, 0,5 ướt) theo vòng tròn ma sát, trọng lực
+   trên dốc cầu. Xe rẽ nhờ nghiêng: v²·κ = g·tan φ, nghiêng tối đa 35°, ngả xe không quá 1,7 rad/s, nên vào cua gắt phải
+   giảm tốc như ngoài đời. Đâm tường mất thành phần vận tốc vuông góc; va vào xe khác tính theo bảo toàn động lượng
+   (ô tô 1,35 tấn gần như không suy suyển, xe máy thì cả hai cùng khựng). Người đi bộ 5,2 km/h, chạy 16 km/h, gia tốc
+   có hạn. `tools/physics_check.mjs` mô phỏng 25 phép thử (0 đến 40 km/h trong 4,2 giây, tối đa 81 km/h, phanh
+   40 về 0 trong 7,8 m...) và báo lỗi nếu lệch khỏi khoảng đo thực tế.
+10. **Lối đi được kiểm chứng.** Tường rào để hở ở cổng thật (nút cổng của OSM) và ở mọi chỗ có lối đi cắt qua. Công
+   trình dựng tay khai báo lối phải thông (`paths`) và khối đặc (`solid`); công trình kín lấy mặt bằng của chính mô
+   hình làm va chạm. `tools/reach_check.mjs` loang trên lưới 0,4 m bằng đúng hàm va chạm của game để chắc rằng cả 44
+   điểm hộ chiếu đều tới được từ mạng đường; `tools/build_places.mjs` dùng cùng thư viện đó để dời điểm đóng dấu về
+   chỗ tới được và tính sẵn chỗ đứng thoáng cho chức năng đi nhanh.
+11. **Camera không vượt tường.** Tia từ đầu nhân vật tới vị trí camera (đã cộng độ lệch ngang) dừng trước mọi bức tường
+   0,35 m; camera còn được đẩy như một vòng tròn 0,5 m để mặt cắt gần của ống kính không cắt vào nhà; bị dồn vào góc
+   thì áp sát đầu nhân vật và nhân vật được ẩn đi. Cột cổng, thân cây, mái hiên chắn giữa camera và nhân vật thì bị
+   đục lỗ lấm tấm ngay trong shader để vẫn thấy nhân vật.
+12. **Âm thanh tổng hợp.** Không tải tệp âm thanh nào: tiếng máy theo vòng tua và hộp số bốn cấp, gió, phanh, bước
+   chân, nền phố ngày và đêm, nhạc ngũ cung tự sáng tác với ba âm sắc gợi đàn bầu, đàn tranh, sáo trúc
+   (`audio/audio.js`, ghi công trong `CREDITS.md`).
 
 ## 5. Hiệu năng
 
@@ -141,6 +172,11 @@ npm run dev        # http://localhost:5173
 npm run check      # dựng thử cả 756 ô phố bằng Node, kiểm ngân sách tam giác
 npm run build      # ra web/dist
 node tools/smoke.mjs   # kiểm thử khói trong Chromium (đặt CHROME_PATH nếu Playwright không có sẵn trình duyệt)
+npm run lint           # biến chưa khai báo, khai báo trùng
+npm run physics        # 25 phép thử vật lý so với số đo ngoài đời
+npm run reach          # cả 44 điểm hộ chiếu có lối đi tới
+node tools/accept.mjs  # nghiệm thu trên trình duyệt: đi bộ qua cầu Thê Húc, xoay camera sát tường, đi nhanh 44 điểm,
+                       # khách ngồi sau, HUD 1140 × 670, âm thanh và hai công tắc, các lỗi nhẹ (chạy lâu, không nằm trong CI)
 ```
 
 Làm mới dữ liệu (không cần cho build thường ngày):
@@ -154,8 +190,27 @@ npm run assets                         # sau khi đổi viewer/assets/walker.glb
 
 Tham số đường dẫn để chụp ảnh và dò lỗi: `?q=low|medium|high`, `?h=17.2` (cố định giờ), `?street=Phố Hàng Mã`,
 `?at=x,z` (mét, gốc ở Hồ Gươm, x hướng đông, z hướng nam), `?yaw=`, `?bike`, `?lang=en`, `?fresh` (bỏ vị trí đã
-lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình). Trình xem mô hình: `/dev/model.html?m=bike`,
-`/dev/model.html?m=lm:nha_tho_lon`.
+lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình).
+
+### Xưởng vẽ: công cụ dựng và soát mô hình
+
+Game không tải mô hình cảnh nào, nên "phần mềm vẽ" của dự án là mã: bộ dựng hình `G`, chất liệu chi tiết `MAT`, và
+xưởng vẽ để nhìn, đo, soát lỗi từng mô hình bằng đúng vật liệu và ánh sáng của game.
+
+```sh
+node tools/studio.mjs                          # soát lỗi mọi mô hình (thuần Node, chạy trong CI)
+node tools/studio.mjs lm:nha_tho_lon --verbose # một mô hình, in toạ độ các mặt trùng nhau
+node tools/studio.mjs --shots out/ lm:thap_rua # chụp bảng 6 góc: 3/4, chính diện, mặt bên, ban đêm, hai cận cảnh
+```
+
+- Trang `/dev/studio.html?m=lm:thap_rua` (khi chạy `npm run dev`): lưới sàn 1 m, người mẫu cao 1,7 m để so tỉ lệ,
+  `&tags` tô màu theo chất liệu, `&wire` khung lưới, `&view=hero&zoom=x,y,z,r` soi gần một điểm, `&h=20.5` đổi giờ.
+  `?m=mats` là bảng mẫu mười chất liệu.
+- Bộ soát (`dev/lint.js`): số tam giác so với ngân sách (8.000 mỗi công trình), kích thước, điểm thấp nhất (lơ lửng
+  hay chìm), tam giác suy biến, diện tích các mặt cùng phẳng khác màu chồng lên nhau (nguyên nhân nhấp nháy khi
+  nhìn xa), tỉ lệ bề mặt chưa gắn chất liệu.
+- Quy trình thêm hoặc sửa một mô hình: sửa tệp trong `src/world/landmarks/` hoặc `src/models/`, chạy soát lỗi, chụp
+  bảng 6 góc, nhìn và sửa tiếp. Mọi mô hình trong game đều đã qua vòng này.
 
 ## 8. Cấu trúc mã (`web/src`)
 
@@ -163,12 +218,13 @@ lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình
 |---|---|
 | `core/` | `geo.js` bộ dựng hình thủ tục `G` (chạy được trong worker), `util.js` |
 | `engine/` | renderer + hậu kỳ + độ phân giải động, bầu trời và giờ trong ngày, camera góc ba, điều khiển (bàn phím, chuột, cảm ứng, tay cầm), bộ điều tiết |
-| `world/` | giải mã bản đồ, worker và các bộ sinh `gen/`, chất liệu vẽ thủ tục, mặt đứng, biển hiệu, quản lý ô phố, va chạm |
+| `world/` | giải mã bản đồ và cao độ cầu (`data.js`), worker và các bộ sinh `gen/`, chất liệu vẽ thủ tục, chất liệu chi tiết (`detail.js`), mặt đứng, biển hiệu, quản lý ô phố, va chạm |
 | `world/landmarks/` | 15 công trình dựng tay (14 đặt theo `sites.js`, cầu Long Biên dựng dọc tuyến cầu) |
 | `models/` | cây, đèn, xe máy, ô tô, xe buýt, xích lô |
 | `actors/` | Minh, dòng xe, người đi bộ, nướng hoạt hình |
 | `game/` | hộ chiếu, cuốc xe ôm |
 | `ui/`, `audio/` | giao diện DOM, bản đồ, chữ song ngữ; âm thanh tổng hợp bằng WebAudio |
+| `../dev/`, `../tools/studio.mjs` | xưởng vẽ: trang soi mô hình, bộ soát lỗi, danh mục mô hình |
 
 ## 9. Giới hạn hiện tại
 
@@ -177,9 +233,15 @@ lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình
   chi tiết của từng ngôi nhà.
 - Mọi người đi bộ và người lái xe dùng chung một mô hình (khác màu áo, chiều cao, nón); chưa có nữ, trẻ em,
   người già riêng.
-- Cầu Long Biên có dàn thép nhấp nhô dựng theo đúng tuyến cầu nhưng mặt cầu nằm sát mặt nước chứ chưa cao 10 m như
-  ngoài đời; cầu Chương Dương và các cầu vượt cũng đang là đường sát mặt đất. Cầu cạn đường sắt phố Phùng Hưng chưa dựng.
-- Chưa có giọng nói, tiếng rao; nhạc nền là vài nốt ngũ cung tổng hợp.
+- Cầu đã có độ cao thật nhưng kết cấu còn giản lược: cầu Chương Dương chưa có dàn thép, trụ cầu là trụ tường đơn
+  giản đặt đều; mặt cầu Long Biên là bản đặc chứ chưa phải sàn thép hở; dốc cầu gãy góc nhẹ ở đỉnh dốc. Cầu cạn đường
+  sắt qua phố Phùng Hưng (ngoài đoạn dẫn lên cầu Long Biên) chưa dựng. Người đi bộ chưa lên cầu. Bản đồ dừng ở giữa
+  sông: chạy hết cầu là gặp mép bản đồ.
+- Chưa có giọng nói, tiếng rao thật; mọi âm thanh và nhạc nền là tổng hợp (không tìm được bản thu nào vừa hợp vừa có
+  giấy phép dùng lại rõ ràng, xem `CREDITS.md`). Chưa có ai nghe thử bằng tai trên loa thật: bài kiểm thử chỉ đo được
+  là có tín hiệu ra loa và hai công tắc có tác dụng.
+- Vật lý xe là mô hình một khối theo đơn vị thật (lực dọc, nghiêng, độ bám), chưa mô phỏng từng bánh, giảm xóc, trượt
+  bánh hay ngã xe: đâm mạnh thì xe khựng lại chứ không đổ. Đường ướt chưa nối với thời tiết.
 - Số tầng của nhà không có thẻ trong OSM là số suy đoán theo khu; nhà lấy từ Overture là hình do máy học vẽ.
 - Chưa đo khung hình trên GPU thật (xem mục 5). Chưa có người Hà Nội duyệt nội dung như GDD yêu cầu.
 - Các hệ thống lớn của GDD (cốt truyện, ba nhân vật, CSGT, thời tiết sống) vẫn thuộc về bản UE5/Unity; bản web

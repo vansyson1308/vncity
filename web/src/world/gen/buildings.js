@@ -56,6 +56,7 @@ export function signFor(ctx, road, seed) {
   return GENERIC[Math.floor(hash(seed, 23) * GENERIC.length)];
 }
 
+const notDeck = (r) => !r.elev; // mặt tiền không quay ra cầu, dốc cầu
 // Trả về { mesh, col (đoạn va chạm [ax,az,bx,bz,cao]), fronts (các gian mặt phố), roofs (mái bằng để đặt bồn nước) }
 export function genBuildings(ctx, cx, cz) {
   const B = ctx.world.bounds, X0 = B.x0 + cx * CS, Z0 = B.z0 + cz * CS;
@@ -87,7 +88,7 @@ export function genBuildings(ctx, cx, cz) {
         if (y0 > 0 || Lw < 1.9) style = ST.BLANK;
         else if (ri > 0) style = ST.ALLEY;
         else {
-          const rd = ctx.nearestRoad(mx + nx * 2, mz + nz * 2, 15);
+          const rd = ctx.nearestRoad(mx + nx * 2, mz + nz * 2, 15, notDeck);
           if (rd && (rd.px - mx) * nx + (rd.pz - mz) * nz > 0.5 && rd.d - rd.r.w / 2 < 8) {
             road = rd.r; street = !b.solemn && (road.kind <= K.residential || road.kind === K.pedestrian);
             if (st === ST.TUBE) { if (street) shop = true; else style = ST.ALLEY; }

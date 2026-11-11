@@ -13,9 +13,9 @@ export class Governor {
   // gọi hai lần mỗi giây với số khung hình/giây vừa đo; hidden: tab đang ẩn thì bỏ qua
   tick(fps) {
     if (document.hidden || this.R.fixedDpr) return;
-    const atMin = this.R.dpr <= this.R.minDpr + 0.03;
+    const atMin = this.R.dpr <= this.R.minDpr + 0.03 || this.R.cpuBound; // hết đường hạ độ phân giải, hoặc hạ cũng không nhanh hơn
     if (fps < 44 && atMin) { this.bad += 0.5; this.good = 0; } else if (fps > 57) { this.good += 0.5; this.bad = Math.max(0, this.bad - 0.25); } else this.bad = Math.max(0, this.bad - 0.1);
-    if (this.bad >= 4 && this.level < 4) { this.level++; this.bad = 0; this.apply(); }
-    else if (this.good >= 30 && this.level > 0 && this.R.dpr >= this.R.maxDpr - 0.03) { this.level--; this.good = 0; this.apply(); }
+    if (this.bad >= 4 && this.level < 4) { this.level++; this.bad = 0; this.apply(); this.R.lock = 0; } // cảnh nhẹ đi rồi: cho thử lại độ phân giải
+    else if (this.good >= 30 && this.level > 0 && (this.R.dpr >= this.R.maxDpr - 0.03 || this.R.cpuBound)) { this.level--; this.good = 0; this.apply(); }
   }
 }

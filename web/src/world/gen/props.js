@@ -1,7 +1,7 @@
 // Đồ vật tĩnh của một ô phố, gộp sẵn thành lưới: bản gần (đủ chi tiết) và bản xa (cây một khối, bỏ đồ nhỏ).
 import { G } from '../../core/geo.js';
 import { hash, hash2, pointInRing } from '../../core/util.js';
-import { CS, CURB, K, ZONE, zoneAt } from '../data.js';
+import { CS, CURB, K, ZONE, zoneAt, roadY, alongAt } from '../data.js';
 import { tree, streetLamp, parkLamp } from '../../models/street.js';
 import { decorate } from './decor.js';
 import { WHITE_UV } from '../signs.js';
@@ -93,6 +93,23 @@ export function genProps(ctx, cx, cz, bld) {
         far.rgb(1, 0.86, 0.6).glow(1).cube(head[0], head[1] + 0.12, head[2], 0.5, 0.12, 0.3).glow(0).pop();
       }
       d += L;
+    }
+  }
+  // đèn trên cầu nâng (cầu Chương Dương, cầu vượt): cột đứng trên lan can mép ngoài, cách nhau 40 m
+  for (const r of ctx.elevRoads) {
+    if (r.w < 8 || r.len < 30 || r.bb[0] > X1 || r.bb[2] < X0 || r.bb[1] > Z1 || r.bb[3] < Z0) continue;
+    const o = [0, 0, 0, 0, 0];
+    for (let s = 20; s < r.len; s += 40) {
+      const y = roadY(r, s); if (y < 1.5) continue;
+      alongAt(r, s, o);
+      for (const side of [-1, 1]) {
+        const e = (r.w / 2 - 0.13) * side, x = o[0] - o[3] * e, z = o[1] + o[2] * e; if (!inChunk(x, z)) continue;
+        if (ctx.deckAt(o[0] - o[3] * (e + 0.6 * side), o[1] + o[2] * (e + 0.6 * side), 0, r) > y - 1.5) continue; // mép này liền với mặt cầu khác
+        const head = streetLamp(near, x - X0, z - Z0, Math.atan2(o[2] * side, o[3] * side), true, y + 0.85);
+        lamps.push(x + head[0], -y, z + head[2], 13); // cao độ âm: vệt sáng nằm trên mặt cầu ở độ cao y
+        far.push().move(x - X0, y + 0.85, z - Z0).rgb(0.2, 0.22, 0.23).cyl(0, 0, 0, 0.1, 0.06, 8.6, 4, false);
+        far.rgb(1, 0.86, 0.6).glow(1).cube(head[0], head[1] + 0.12, head[2], 0.5, 0.12, 0.3).glow(0).pop();
+      }
     }
   }
   // đèn vườn dọc lối dạo trong công viên và quanh hồ

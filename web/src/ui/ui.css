@@ -26,7 +26,8 @@ button { font: inherit; cursor: pointer; border: 0; -webkit-tap-highlight-color:
 #topleft { position: absolute; left: max(12px, env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); display: flex; gap: 8px; flex-wrap: wrap; max-width: 46vw; }
 #topright { position: absolute; right: max(12px, env(safe-area-inset-right)); top: max(12px, env(safe-area-inset-top)); display: flex; gap: 8px; }
 .round { width: 40px; height: 40px; border-radius: 50%; background: rgba(247,241,227,.94); font-size: 18px; box-shadow: 0 2px 10px rgba(0,0,0,.3); } .round.big { width: 62px; height: 62px; font-size: 26px; } .round.on { background: var(--gold); }
-#compass { position: absolute; top: max(12px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); display: flex; gap: 8px; max-width: 44vw; }
+#compass { position: absolute; top: max(12px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); display: flex; gap: 8px; max-width: calc(100vw - 700px); justify-content: center; }
+.pick { min-width: 0; flex: 0 1 auto; } .pick .nm { min-width: 36px; flex: 0 1 auto; } .pick b, .pick .ic, .pick .arr { flex: none; }
 .pick { display: flex; align-items: center; gap: 7px; background: rgba(29,35,48,.78); color: #fff; padding: 6px 12px 6px 8px; border-radius: 999px; font-size: 13px; white-space: nowrap; backdrop-filter: blur(4px); }
 .pick.first { background: rgba(179,18,31,.9); } .pick .arr { display: inline-block; width: 18px; height: 18px; line-height: 18px; text-align: center; color: var(--gold); font-size: 15px; } .pick .nm { max-width: 150px; overflow: hidden; text-overflow: ellipsis; } .pick b { opacity: .85; font-weight: 600; }
 #minimap { position: absolute; left: max(14px, env(safe-area-inset-left)); bottom: max(14px, env(safe-area-inset-bottom)); width: 180px; height: 180px; border-radius: 50%; border: 3px solid rgba(247,241,227,.95); box-shadow: var(--sh); background: #262b33; }
@@ -60,4 +61,15 @@ button { font: inherit; cursor: pointer; border: 0; -webkit-tap-highlight-color:
 .cert { text-align: center; } .cert h2 { color: var(--ink); font-size: 30px; margin: 4px 0 10px; } .cert .row { justify-content: center; }
 @media (max-width: 900px), (max-height: 520px) {
   #minimap { width: 120px; height: 120px; } #street { left: 146px; bottom: 16px; font-size: 12px; } #card { left: 12px; right: 12px; bottom: 150px; width: auto; } #compass { top: 58px; max-width: 94vw; } .pick { padding: 4px 9px 4px 6px; font-size: 12px; } .pick .nm { max-width: 92px; } #toast { top: 96px; font-size: 13px; padding: 6px 12px 6px 8px; } #toast-face { font-size: 20px; } #fare { top: 104px; width: 200px; } #speedo { right: 16px; bottom: 170px; } #speedo b { font-size: 30px; } .keys { grid-template-columns: 1fr; }
+}
+/* cửa sổ hẹp hơn 1400px: ba ô la bàn không đủ chỗ giữa cụm đếm bên trái và cụm nút bên phải, cho xuống hàng thứ hai */
+@media (max-width: 1400px) { #compass { top: calc(max(12px, env(safe-area-inset-top)) + 46px); max-width: 96vw; } #toast { top: 104px; } }
+/* bảng Bản đồ và Hộ chiếu luôn vừa khung nhìn, không phải cuộn */
+#bigmap { width: auto; max-width: 100%; max-height: calc(100vh - 170px); margin: 0 auto; }
+@media (max-height: 820px) {
+  .modal { padding: 8px; } .modal .paper { max-height: 97vh; padding-top: 12px; padding-bottom: 12px; }
+  #book .page { margin-top: 6px; } #book .page h3 { margin-bottom: 3px; font-size: 13px; } #book .rank { margin: 4px 0 2px; font-size: 13px; }
+  #book .stamps { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 4px; }
+  #book .st { padding: 3px 6px; font-size: 11.5px; gap: 5px; border-radius: 7px; } #book .st i { font-size: 15px; } #book .st span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #book .row { margin-top: 6px; }
 }

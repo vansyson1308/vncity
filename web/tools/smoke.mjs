@@ -62,6 +62,22 @@ for (const [name, q] of [['hang_ma_dem', '&street=Phố Hàng Mã&h=20.5'], ['ba
   await page.screenshot({ path: path.join(OUT, `${name}.png`), timeout: SLOW });
   await page.close();
 }
+// 3. Cầu có độ cao thật: đứng giữa cầu Chương Dương thì ở trên mặt cầu, đi xe dọc cầu không rơi; dưới gầm cầu vẫn là mặt đất, mặt nước
+{
+  const page = await open('cau_chuong_duong', '&at=1009.8,-1047.9&yaw=1.97&bike&h=10');
+  const a = await page.evaluate(() => { const g = window.__game, n = g.nav; return { y: g.player.y, top: n.groundY(1009.8, -1047.9, Infinity), under: n.groundY(1009.8, -1047.9, 0), lb: n.groundY(701.6, -1616.2, Infinity), water: n.isWater(1009.8, -1047.9) }; });
+  console.log('cầu', JSON.stringify(a));
+  a.y > 6 && a.top > 6 ? ok(`mặt cầu Chương Dương cao ${a.top.toFixed(1)} m, người chơi đứng trên cầu`) : fail(`cầu Chương Dương không có độ cao: y=${a.y}, mặt cầu=${a.top}`);
+  a.under < 0.5 && a.water ? ok('dưới gầm cầu là mặt sông') : fail(`gầm cầu sai: cao độ ${a.under}, nước ${a.water}`);
+  a.lb > 7 ? ok(`mặt cầu Long Biên cao ${a.lb.toFixed(1)} m`) : fail(`cầu Long Biên không có độ cao: ${a.lb}`);
+  await page.keyboard.down('w');
+  await page.waitForFunction(() => Math.hypot(window.__game.player.pos.x - 1009.8, window.__game.player.pos.z + 1047.9) > 4, null, { timeout: SLOW });
+  await page.keyboard.up('w');
+  const y = await page.evaluate(() => window.__game.player.y);
+  y > 6 ? ok('xe chạy dọc mặt cầu') : fail(`xe rơi khỏi mặt cầu: y=${y}`);
+  await page.screenshot({ path: path.join(OUT, 'cau_chuong_duong.png'), timeout: SLOW });
+  await page.close();
+}
 await browser.close(); server.close();
 if (errors.length) { console.error(`\n${errors.length} lỗi`); process.exit(1); }
 console.log('OK, ảnh trong', OUT);

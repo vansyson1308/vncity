@@ -1,6 +1,6 @@
 // Giao diện trong game (DOM): hộ chiếu, la bàn ba gợi ý, thẻ địa danh không chặn màn hình, lời chú Thắng,
 // đồng hồ cuốc xe, hộp thoại bản đồ, cài đặt. Mọi thông tin phụ nằm sau một nút bấm; thế giới là chính.
-import { T, lang, setLang, money, dist } from './i18n.js';
+import { T, lang, setLang, money, dist, count, retranslate } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
 const DIRS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
@@ -56,8 +56,11 @@ export class Hud {
   hideCard() { $('card').classList.add('hidden'); this.cardT = 0; }
 
   // lời nhắn ngắn, không chặn màn hình; who: tên người nói (mặc định chú Thắng)
-  toast(text, secs = 5, who = T('guide'), face = '🧓') {
-    if (this.toastT > 0.4 && this._toastText !== text) { if (this.queue.length < 3) this.queue.push([text, secs, who, face]); return; }
+  // now: thông báo thay ngay cho cái đang hiện và xoá hàng chờ (đổi buổi trong ngày: chỉ thông báo mới nhất còn đúng)
+  toast(text, secs = 5, who = T('guide'), face = '🧓', now = false) {
+    if (now) this.queue.length = 0;
+    else if (this.toastT > 0.4 && this._toastText !== text) { if (this.queue.length < 3) this.queue.push([text, secs, who, face]); return; }
+    this._toastWho = who;
     this._toastText = text; $('toast-who').textContent = who ? who + ':' : ''; $('toast-text').textContent = text; $('toast-face').textContent = face;
     const t = $('toast'); t.classList.remove('hidden'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; this.toastT = secs;
   }
@@ -69,6 +72,14 @@ export class Hud {
     $('fare-face').textContent = f.cust ? f.cust.face : '🙋'; $('fare-name').textContent = name; $('fare-dest').textContent = `${T('fare_to')} ${f.dest.place.name[L] || f.dest.place.name.vi}`;
     $('fare-dist').textContent = dist(f.left || 0); $('fare-money').textContent = money(f.fareNow()); $('fare-comfort').style.width = `${Math.round(f.comfort * 100)}%`;
   }
+  // Đổi ngôn ngữ: dịch lại ngay mọi chữ đang hiển thị (lời nhắn, hàng chờ, lời nhắc phím, thẻ địa danh).
+  relang(from) {
+    if (this.toastT > 0) { this._toastText = retranslate(this._toastText, from); this._toastWho = retranslate(this._toastWho, from); $('toast-text').textContent = this._toastText; $('toast-who').textContent = this._toastWho ? this._toastWho + ':' : ''; }
+    for (const q of this.queue) { q[0] = retranslate(q[0], from); q[2] = retranslate(q[2], from); }
+    this._prompt = null; this._street = null;
+    if (this.cardItem && !$('card').classList.contains('hidden')) { const it = this.cardItem, L = lang(); $('c-kind').textContent = `${it.icon} ${T('kind_' + it.kind)} · ${T('page_' + it.page)}`; $('c-name').textContent = it.name[L] || it.name.vi; $('c-desc').textContent = it.desc?.[L] || it.desc?.vi || ''; $('c-extra').textContent = [it.year ? `${T('built')} ${it.year}` : '', it.street || ''].filter(Boolean).join(' · '); $('c-next').textContent = ''; $('stampmark').textContent = T('stamped'); $('c-hint').textContent = this.touch ? T('readTouch') : T('read'); }
+    const b = $('bubble'); if (!b.classList.contains('hidden')) b.textContent = retranslate(b.textContent, from);
+  }
   flash() { const f = $('flash'); f.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => f.classList.remove('on'))); }
   update(dt) {
     if (this.toastT > 0) { this.toastT -= dt; if (this.toastT <= 0) { $('toast').classList.add('hidden'); const n = this.queue.shift(); if (n) this.toast(...n); } }
@@ -78,7 +89,7 @@ export class Hud {
   openBook(passport) {
     const L = lang(), el = $('pages'); el.innerHTML = '';
     const r = passport.rides, rk = r >= 25 ? 3 : r >= 10 ? 2 : r >= 3 ? 1 : 0;
-    $('rank').innerHTML = ''; $('rank').append(`${T('rank')}: `); const b = document.createElement('b'); b.textContent = T('rank' + rk); $('rank').append(b, ` · ${r} ${T('rides')} · ${money(passport.money)}`);
+    $('rank').innerHTML = ''; $('rank').append(`${T('rank')}: `); const b = document.createElement('b'); b.textContent = T('rank' + rk); $('rank').append(b, ` · ${count(r, 'rides')} · ${money(passport.money)}`);
     for (const pg of passport.pages) {
       const items = passport.pageOf(pg), done = items.filter((i) => passport.visited.has(i.id)).length;
       const d = document.createElement('div'); d.className = 'page'; const h = document.createElement('h3'); h.textContent = T('page_' + pg); const sp = document.createElement('span'); sp.textContent = `${done}/${items.length}`; h.appendChild(sp); d.appendChild(h);

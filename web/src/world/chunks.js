@@ -43,6 +43,13 @@ export class Chunks {
       g.boundingSphere = sphere(2, 2);
       const mesh = place(new THREE.Mesh(g, M.ground)); mesh.receiveShadow = true;
     }
+    if (m.deck) { // mặt cầu nâng: lưới riêng, có đổ bóng xuống đất
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(m.deck.pos, 3)); g.setAttribute('normal', new THREE.BufferAttribute(m.deck.nrm, 3, true));
+      g.setAttribute('aLayer', new THREE.BufferAttribute(m.deck.lay, 1)); g.setIndex(new THREE.BufferAttribute(m.deck.idx, 1));
+      g.boundingSphere = sphere(Math.max(4, m.deckTop || 12), 8);
+      const mesh = place(new THREE.Mesh(g, M.ground)); mesh.castShadow = true; mesh.receiveShadow = true;
+    }
     if (m.bld.idx.length) { // nhà
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.BufferAttribute(m.bld.pos, 3)); g.setAttribute('normal', new THREE.BufferAttribute(m.bld.nrm, 3, true));
@@ -59,7 +66,10 @@ export class Chunks {
     c.X0 = X0; c.Z0 = Z0;
     if (m.near) this.addDetail(c, m);
     if (m.far.idx.length) { c.far = place(new THREE.Mesh(propGeometry(m.far), M.prop)); c.far.visible = false; }
-    this.nav.addChunk(key, m.col, m.shore, m.extra && m.extra.walls);
+    // tường chắn hai bên dốc cầu cũng là vật cản như tường rào
+    let walls = m.extra && m.extra.walls;
+    if (m.ramp && m.ramp.length) { const w = new Float32Array((walls ? walls.length : 0) + m.ramp.length); if (walls) w.set(walls); w.set(m.ramp, walls ? walls.length : 0); walls = w; }
+    this.nav.addChunk(key, m.col, m.shore, walls);
     this.loaded.set(key, c); this.lampsDirty = true;
     this.stats.chunks = this.loaded.size; this.stats.genMs = m.ms; this.stats.built++;
     this.applyLod(c, this.last.x, this.last.z);
@@ -141,7 +151,7 @@ export class LightPools {
   set(lists) {
     let n = 0; const m = this._m;
     for (const l of lists) for (let i = 0; i < l.length && n < this.max; i += 4) {
-      const r = l[i + 3] * 1.25; m.makeScale(r, 1, r); m.setPosition(l[i], (l[i + 1] > 5 ? 0.03 : CURB + 0.03), l[i + 2]); this.mesh.setMatrixAt(n++, m);
+      const r = l[i + 3] * 1.25; m.makeScale(r, 1, r); m.setPosition(l[i], l[i + 1] < 0 ? 0.06 - l[i + 1] : l[i + 1] > 5 ? 0.03 : CURB + 0.03, l[i + 2]); this.mesh.setMatrixAt(n++, m);
     }
     this.mesh.count = n; this.mesh.instanceMatrix.needsUpdate = true;
   }

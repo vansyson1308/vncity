@@ -1,6 +1,8 @@
 // Khuê Văn Các (1805) trong Văn Miếu – Quốc Tử Giám, biểu tượng của Hà Nội: bốn trụ gạch vuông quét vôi trắng (cạnh 1 m,
 // cao 3,9 m) trên nền vuông, đỡ gác gỗ sơn son thếp vàng có bốn cửa sổ tròn với các nan toả tia (sao Khuê), lan can gỗ
 // quanh gác, hai tầng mái ngói cong tám mái, đỉnh nóc có bầu rượu. Cao chừng 9 m, bên dưới để trống (đi xuyên theo trục z).
+// Chất liệu: trụ quét vôi (MAT.plaster), gác sơn son (MAT.lacquer), mái ngói (MAT.tile), nền lát gạch (MAT.pave).
+import { MAT } from '../../core/geo.js';
 
 const RED = 0x92281b, RED_DK = 0x6a1c13, GOLD = 0xc9a23a, TILE = 0x74483a, WHITE = 0xd8d3c4, WOOD = 0x58241a, MORTAR = 0x9a9486;
 
@@ -21,11 +23,11 @@ function roof(g, o) {
     const P = side(k);
     g.push().rotY((k * Math.PI) / 2);
     for (let j = 0; j < nv; j++) {
-      g.color(tile).shade([0.82, 1.0, 0.9, 1.08, 0.86, 1.0][(j + k) % 6]);
+      g.mat(MAT.tile).color(tile).shade(0.95 + 0.04 * ((j + k) % 2));
       g.ribbon(row(P, (j + 1) / nv, 0), row(P, j / nv, 0));
     }
-    g.color(tile).shade(0.6); g.ribbon(row(P, 0, 0), row(P, 0, -th));   // diềm mái
-    g.color(under);                                                   // dạ mái nhìn từ dưới lên
+    g.mat().color(tile).shade(0.6); g.ribbon(row(P, 0, 0), row(P, 0, -th));   // diềm mái
+    g.mat(MAT.wood).color(under);                                                   // dạ mái nhìn từ dưới lên
     g.ribbon(row(P, vin, -th), row(P, vin / 2, -th), true); g.ribbon(row(P, vin / 2, -th), row(P, 0, -th), true);
     g.pop();
   }
@@ -34,7 +36,7 @@ function roof(g, o) {
 
 // Bờ dải chạy theo bốn góc mái, kết thúc bằng đầu đao cong vút.
 function hips(g, hip, nv, r, col, tip) {
-  g.color(col);
+  g.mat(MAT.plaster).color(col);
   for (let k = 0; k < 4; k++) {
     let p = hip(k, 1, 0.04);
     for (let j = nv - 1; j >= 0; j--) { const q = hip(k, j / nv, 0.05); g.tube(p, q, r, 4, r); p = q; }
@@ -49,7 +51,8 @@ function hips(g, hip, nv, r, col, tip) {
 function khueWindow(g, y, z, R) {
   const n = 16, ring = (r0, r1, zz) => { for (let i = 0; i < n; i++) { const a = (i / n) * 6.28319, b = ((i + 1) / n) * 6.28319; g.quad([Math.cos(a) * r0, y + Math.sin(a) * r0, zz], [Math.cos(a) * r1, y + Math.sin(a) * r1, zz], [Math.cos(b) * r1, y + Math.sin(b) * r1, zz], [Math.cos(b) * r0, y + Math.sin(b) * r0, zz]); } };
   const fan = (r, zz) => { for (let i = 0; i < n; i++) { const a = (i / n) * 6.28319, b = ((i + 1) / n) * 6.28319; g.tri3([0, y, zz], [Math.cos(a) * r, y + Math.sin(a) * r, zz], [Math.cos(b) * r, y + Math.sin(b) * r, zz]); } };
-  g.rgb(0.02, 0.014, 0.012); fan(R * 0.84, z + 0.03);
+  g.mat().rgb(0.02, 0.014, 0.012); fan(R * 0.84, z + 0.03);
+  g.mat(MAT.lacquer);
   g.color(RED_DK); ring(R * 0.84, R * 1.0, z + 0.05);
   g.color(GOLD); ring(R * 1.0, R * 1.09, z + 0.05); ring(R * 0.78, R * 0.84, z + 0.06);
   g.color(RED);
@@ -58,6 +61,7 @@ function khueWindow(g, y, z, R) {
     g.quad([c * r0 + s * w, y + s * r0 - c * w, z + 0.07], [c * r1 + s * w, y + s * r1 - c * w, z + 0.07], [c * r1 - s * w, y + s * r1 + c * w, z + 0.07], [c * r0 - s * w, y + s * r0 + c * w, z + 0.07]);
   }
   g.color(GOLD); fan(R * 0.22, z + 0.08);
+  g.mat(MAT.lacquer);
 }
 
 export function build(g) {
@@ -65,14 +69,16 @@ export function build(g) {
   const B = 0.3, P = 2.75, PT = B + 3.9;
 
   // ----- nền gạch và bậc thềm trước, sau -----
-  g.color(0x8f8676).box(-3.4, 0, -3.4, 3.4, B, 3.4);
+  g.mat(MAT.stone).color(0x8f8676).box(-3.4, 0, -3.4, 3.4, B, 3.4);
   g.color(0x7a7265).box(-3.44, 0, -3.44, 3.44, 0.08, 3.44, 'xXYzZ');
-  g.color(0x9a5f48).box(-2.25, B, -2.25, 2.25, B + 0.012, 2.25, 'Y');       // lòng nền lát gạch đỏ
+  g.mat(MAT.pave).color(0x9a5f48).box(-2.25, B, -2.25, 2.25, B + 0.03, 2.25, 'xXYzZ');       // lòng nền lát gạch đỏ
+  g.mat(MAT.stone);
   for (const s of [-1, 1]) {
     g.color(0x8f8676).shade(0.92).box(-1.75, 0, s > 0 ? 3.4 : -3.7, 1.75, 0.15, s > 0 ? 3.7 : -3.4, 'xXYzZ');
   }
 
   // ----- bốn trụ gạch quét vôi -----
+  g.mat(MAT.plaster);
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
     const x = sx * P, z = sz * P;
     g.color(WHITE).shade(0.72).cube(x, B, z, 1.12, 0.32, 1.12, 'xXYzZ');      // chân trụ ố rêu
@@ -85,10 +91,10 @@ export function build(g) {
 
   // ----- sàn gác: xà gỗ trên đầu trụ, sàn vươn ra đỡ lan can -----
   const F = PT + 0.34;
-  g.color(RED_DK);
+  g.mat(MAT.lacquer).color(RED_DK);
   for (const s of [-1, 1]) { g.box(-3.3, PT, s * P - 0.2, 3.3, PT + 0.3, s * P + 0.2); g.box(s * P - 0.2, PT, -3.3, s * P + 0.2, PT + 0.3, 3.3); }
-  g.color(WOOD).box(-3.25, PT + 0.2, -3.25, 3.25, PT + 0.22, 3.25, 'y');         // trần gỗ nhìn từ dưới
-  g.color(RED).box(-3.42, PT + 0.22, -3.42, 3.42, F, 3.42, 'xXYzZ');
+  g.mat(MAT.wood).color(WOOD).box(-3.25, PT + 0.2, -3.25, 3.25, PT + 0.22, 3.25, 'y');         // trần gỗ nhìn từ dưới
+  g.mat(MAT.lacquer).color(RED).box(-3.42, PT + 0.22, -3.42, 3.42, F, 3.42, 'xXYzZ');
   g.color(GOLD).box(-3.44, F - 0.07, -3.44, 3.44, F - 0.03, 3.44, 'xXzZ');
 
   // lan can con tiện quanh gác
@@ -107,6 +113,7 @@ export function build(g) {
 
   // ----- gác gỗ sơn son: bốn cột góc, vách có cửa sổ tròn sao Khuê -----
   const W = 2.5, WT = F + 1.9;
+  g.mat(MAT.lacquer);
   g.color(RED).shade(0.92).box(-W, F, -W, W, WT + 0.1, W, 'xXzZ');
   for (let k = 0; k < 4; k++) {
     g.push().rotY((k * Math.PI) / 2);
@@ -124,22 +131,24 @@ export function build(g) {
   const Y1 = WT - 0.2, H1 = 0.82, N = 1.55;
   const hip1 = roof(g, { ex: 3.9, ez: 3.9, rx: N, rz: N, y0: Y1, h: H1, lift: 0.6, out: 0.3, nu: 10, nv: 3, sag: 0.16, vin: 0.66 });
   hips(g, hip1, 3, 0.075, MORTAR, 0.42);
+  g.mat(MAT.lacquer);
   // cổ diêm giữa hai tầng mái, biển tên thếp vàng ở mặt trước
   const NY = Y1 + H1 - 0.06, NT = NY + 0.48;
   g.color(RED).shade(0.85).box(-N, NY, -N, N, NT + 0.06, N, 'zZ').box(-N, NY, -N, N, NT + 0.2, N, 'xX'); // vách hồi cao hơn cho kín dạ mái
-  g.color(MORTAR).box(-N - 0.06, NY, -N - 0.06, N + 0.06, NY + 0.1, N + 0.06, 'xXYzZ');
-  g.color(GOLD).box(-0.62, NY + 0.14, N, 0.62, NT - 0.08, N + 0.05, 'xXyYZ');
+  g.mat(MAT.plaster).color(MORTAR).box(-N - 0.06, NY, -N - 0.06, N + 0.06, NY + 0.1, N + 0.06, 'xXYzZ');
+  g.mat(MAT.lacquer).color(GOLD).box(-0.62, NY + 0.14, N, 0.62, NT - 0.08, N + 0.05, 'xXyYZ');
   g.color(RED_DK).box(-0.55, NY + 0.19, N + 0.05, 0.55, NT - 0.13, N + 0.06, 'Z');
   const Y2 = NT - 0.12, H2 = 0.9, RX = 0.95;
   const hip2 = roof(g, { ex: 2.7, ez: 2.7, rx: RX, rz: 0, y0: Y2, h: H2, lift: 0.5, out: 0.24, nu: 8, nv: 3, sag: 0.16, vin: 0.7 });
   hips(g, hip2, 3, 0.07, MORTAR, 0.38);
   // bờ nóc, hai đầu kìm, bầu rượu trên đỉnh
   const TY = Y2 + H2;
+  g.mat(MAT.plaster);
   g.color(MORTAR).box(-RX - 0.1, TY - 0.08, -0.1, RX + 0.1, TY + 0.2, 0.1);
   for (const s of [-1, 1]) { g.tube([s * (RX + 0.02), TY + 0.15, 0], [s * (RX + 0.2), TY + 0.4, 0], 0.085, 4, 0.06); g.tube([s * (RX + 0.2), TY + 0.4, 0], [s * (RX + 0.1), TY + 0.62, 0], 0.06, 4, 0.02); }
   g.color(MORTAR).shade(1.08).box(-0.18, TY + 0.2, -0.14, 0.18, TY + 0.28, 0.14);
   g.lathe(0, TY + 0.28, 0, [[0.09, 0], [0.18, 0.06], [0.19, 0.15], [0.1, 0.23], [0.12, 0.29], [0.08, 0.37], [0.02, 0.47], [0, 0.5]], 8);
 
-  g.gloss(0).glow(0).sway(0).color(0xffffff);
+  g.mat().gloss(0).glow(0).sway(0).color(0xffffff);
   g.pop();
 }

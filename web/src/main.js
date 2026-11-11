@@ -12,6 +12,7 @@ import { Nav } from './world/nav.js';
 import { buildMaterials } from './world/materials.js';
 import { Chunks, LightPools } from './world/chunks.js';
 import { buildLandmarks } from './world/landmarks/index.js';
+import { siteDecks } from './world/landmarks/sites.js';
 import { signAtlas } from './world/atlas.js';
 import { Player } from './actors/player.js';
 import { Traffic } from './actors/traffic.js';
@@ -20,7 +21,7 @@ import { Passport } from './game/passport.js';
 import { Fares } from './game/fares.js';
 import { Hud, $ } from './ui/hud.js';
 import { Minimap } from './ui/minimap.js';
-import { T, lang, setLang, money, pick } from './ui/i18n.js';
+import { T, lang, setLang as setLangRaw, money, pick, both } from './ui/i18n.js';
 import { Audio } from './audio/audio.js';
 import { Governor } from './engine/governor.js';
 import '@fontsource/be-vietnam-pro/vietnamese-400.css';
@@ -34,7 +35,7 @@ const params = new URLSearchParams(location.search);
 const quality = pickQuality(params);
 const canvas = $('game');
 const progress = (f, text) => { $('bar').style.width = `${Math.round(f * 100)}%`; if (text) $('loadtext').textContent = text; };
-setLang(params.get('lang') || (() => { try { return localStorage.getItem('hn-lang'); } catch { return null; } })() || ((navigator.language || 'vi').startsWith('vi') ? 'vi' : 'en'));
+setLangRaw(params.get('lang') || (() => { try { return localStorage.getItem('hn-lang'); } catch { return null; } })() || ((navigator.language || 'vi').startsWith('vi') ? 'vi' : 'en'));
 $('lang').textContent = lang() === 'vi' ? 'English' : 'Tiếng Việt';
 
 async function boot() {
@@ -68,22 +69,17 @@ async function boot() {
   progress(0.45);
 
   // cầu Thê Húc: mặt cầu vòm đi bộ được
-  const th = site('cau_the_huc');
-  if (th) nav.addDeck({ ax: th.x, az: th.z, bx: th.x + Math.sin(th.yaw) * 46.2, bz: th.z + Math.cos(th.yaw) * 46.2, w: 2.6, y: (t) => 0.35 + 1.25 * Math.sin(Math.PI * t) });
+  for (const d of siteDecks(sites)) nav.addDeck(d);
   const landmarks = await buildLandmarks(scene, sites, mats, nav, world);
 
-  const player = new Player(scene, nav, humanGltf, mats);
+  const player = new Player(scene, nav, humanGltf, mats, humanLod);
   const cam = new FollowCamera(camera, nav);
   const traffic = new Traffic(scene, world, nav, mats, humanFar, quality);
   const crowd = new Crowd(scene, world, nav, humanLod, quality);
   const passport = new Passport(scene, nav, places);
   const fares = new Fares(scene, nav, passport, crowd);
   const governor = new Governor(R, sky, quality, traffic, crowd, chunks);
-  // vài mốc đặt lại cho khớp mô hình: dấu cầu Thê Húc ở đầu cầu, dấu Tháp Bút ở chân tháp
-  const gate = site('ngoc_son_gate');
-  if (th && passport.byId.get('cau_the_huc')) passport.place(passport.byId.get('cau_the_huc'), th.x + Math.sin(th.yaw) * 6, th.z + Math.cos(th.yaw) * 6);
-  if (gate && passport.byId.get('thap_but_dai_nghien')) passport.place(passport.byId.get('thap_but_dai_nghien'), gate.x - Math.sin(gate.yaw) * 9, gate.z - Math.cos(gate.yaw) * 9);
-  for (const it of passport.items) if (it.id === 'cau_the_huc' || it.id === 'thap_but_dai_nghien') it.radius = 7;
+  // vị trí các điểm đóng dấu đã được neo vào mô hình và vào chỗ tới được ngay trong places.json (tools/build_places.mjs)
   passport.refresh();
   // khu vực trang nghiêm: không chạy xe
   const solemn = passport.items.filter((i) => i.solemn).map((i) => ({ x: i.x, z: i.z, r: i.id === 'quang_truong_ba_dinh' ? 150 : 100 }));
@@ -91,6 +87,7 @@ async function boot() {
 
   // ----- điểm xuất phát: bờ hồ, trước cổng đền Ngọc Sơn, nhìn về cầu Thê Húc lúc chiều vàng -----
   let sx = 124, sz = -211, syaw = -1.67, resumed = false;
+  const gate = site('ngoc_son_gate'); // bắt đầu trước cổng đền Ngọc Sơn
   if (gate) { sx = gate.x + Math.sin(gate.yaw) * 7; sz = gate.z + Math.cos(gate.yaw) * 7; syaw = gate.yaw + Math.PI; }
   const saved = passport.flags.pos;
   if (saved && passport.visited.size > 0 && !params.has('fresh')) { [sx, sz, syaw] = saved; resumed = true; if (!fixedTime && passport.flags.hours) sky.setHours(passport.flags.hours); }
@@ -104,7 +101,8 @@ async function boot() {
   if (params.has('yaw')) syaw = +params.get('yaw');
   chunks.update(sx, sz, true);
   await new Promise((res) => { const t = setInterval(() => { chunks.update(sx, sz); const [miss, tot] = chunks.missingNear(sx, sz, 150); progress(0.45 + 0.55 * (1 - miss / tot)); if (miss === 0) { clearInterval(t); res(); } }, 50); });
-  { const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z; }
+  const onDeck = (x, z) => !!nav.elevatedAt(x, z, Infinity) && nav.eY > 0.7; // điểm nằm trên mặt cầu: không đẩy theo tường nhà dưới đất
+  if (!onDeck(sx, sz)) { const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z; }
   player.teleport(sx, sz, syaw);
   if (params.has('bike')) player.toggleBike();
   cam.snap(player); cam.pitch = +(params.get('pitch') || 0.16);
@@ -133,7 +131,7 @@ async function boot() {
     else if (ev === 'pickup') { audio.click(); hud.toast(`${T('fare_to')} ${f.dest.place.name[lang()] || f.dest.place.name.vi}!`, 4, f.name(lang()), f.cust.face); }
     else if (ev === 'drop') { audio.coin(); counts(); hud.toast(`${'★'.repeat(res.stars)}${'☆'.repeat(5 - res.stars)} ${res.comment} ${money(res.base)}${res.tip ? ' + ' + money(res.tip) : ''}`, 6, '', '💵'); }
   };
-  player.onCrash = (v) => { hud.bubble(pick('crash')); audio.thud(Math.min(0.6, 0.2 + v * 0.04)); cam.shake = Math.min(0.5, v * 0.05); fares.bump(0.22); };
+  player.onCrash = (v) => { hud.bubble(pick('crash')); audio.thud(Math.min(0.6, 0.2 + v * 0.04)); cam.shake = Math.min(0.5, v * 0.05); fares.bump(Math.min(0.5, 0.12 + v * 0.03)); }; // v: vận tốc đâm vuông góc vào tường (m/s)
   player.onCurb = () => { audio.thud(0.12); fares.bump(0.025); };
   player.onStep = (v) => audio.footstep(v > 3.6);
 
@@ -144,25 +142,34 @@ async function boot() {
       const [wx, wz] = toWorld(e.clientX, e.clientY); let best = null, bd = 70;
       for (const it of passport.items) { if (!passport.visited.has(it.id)) continue; const d = Math.hypot(it.x - wx, it.z - wz); if (d < bd) { bd = d; best = it; } }
       if (!best || fares.state === 'ride') return;
-      const h = nav.nearestRoad(best.x, best.z, 120, (r) => !r.bridge && !r.skip), tx = h ? h.px : best.x, tz = h ? h.pz : best.z;
-      hud.close(); warp(tx, tz); hud.toast(`${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
+      // chỗ đứng thoáng cạnh địa danh đã tính sẵn và kiểm tra bằng va chạm thật (tools/build_places.mjs, reach_check.mjs);
+      // tới nơi thì quay mặt về địa danh
+      const [tx, tz] = best.s || [best.x, best.z], far = Math.hypot(best.x - tx, best.z - tz) > 1.5;
+      hud.close(); warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined); hud.toast(`${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
     };
   };
   let warpTo = null;
-  const warp = (x, z) => { warpTo = [x, z]; chunks.update(x, z, true); };
+  const warp = (x, z, yaw) => { warpTo = [x, z, yaw]; chunks.update(x, z, true); };
   const shareText = () => T('shareText', { n: passport.visited.size, t: passport.items.length });
   const share = async () => { const url = location.origin + location.pathname; try { if (navigator.share) await navigator.share({ title: document.title, text: shareText(), url }); else { await navigator.clipboard.writeText(`${shareText()} ${url}`); hud.toast(T('copied'), 3, '', '🔗'); } } catch { /* người dùng huỷ */ } };
   $('k-share').addEventListener('click', share); $('d-share').addEventListener('click', share);
   $('k-reset').addEventListener('click', () => { passport.reset(); counts(); hud.openBook(passport); });
-  document.querySelectorAll('#s-quality button').forEach((b) => b.addEventListener('click', () => { try { localStorage.setItem('hn-quality', b.dataset.q); } catch { /* */ } savePos(); const u = new URL(location.href); u.searchParams.delete('q'); location.href = u; }));
+  document.querySelectorAll('#s-quality button').forEach((b) => b.addEventListener('click', () => {
+    if (b.dataset.q === quality.name) return; // bấm lại mức đang dùng: không làm gì, không tải lại
+    if (!window.confirm(T('q_confirm', { q: T('q_' + b.dataset.q) }))) return;
+    try { localStorage.setItem('hn-quality', b.dataset.q); } catch { /* */ } savePos(); const u = new URL(location.href); u.searchParams.delete('q'); location.href = u;
+  }));
   document.querySelectorAll('#s-sound button').forEach((b) => b.addEventListener('click', () => { audio.start(); audio.setEnabled(b.dataset.v === '1'); settings(); }));
   document.querySelectorAll('#s-music button').forEach((b) => b.addEventListener('click', () => { audio.start(); audio.setMusic(b.dataset.v === '1'); settings(); }));
   document.querySelectorAll('#s-lang button').forEach((b) => b.addEventListener('click', () => { setLang(b.dataset.l); settings(); }));
-  const settings = () => hud.openSettings(quality.name, audio, T('perf', { f: Math.round(G.fps), d: Math.round((R.dpr / (window.devicePixelRatio || 1)) * 100) }));
+  // số khung hình hiển thị là số đo lúc đang chơi (trước khi mở bảng: khi bảng mở, cảnh 3D tạm dừng vẽ)
+  const settings = () => hud.openSettings(quality.name, audio, G.fpsPlay ? T('perf', { f: Math.round(G.fpsPlay), d: Math.round((R.dpr / (window.devicePixelRatio || 1)) * 100) }) : T('perf_wait'));
+  // đổi ngôn ngữ: mọi chữ đang hiện trên màn hình đổi theo ngay
+  const setLang = (l) => { const from = lang(); setLangRaw(l); if (from !== lang()) { hud.relang(from); sugT = 0; } };
   const savePos = () => { passport.flags.pos = [+player.pos.x.toFixed(1), +player.pos.z.toFixed(1), +player.yaw.toFixed(2)]; passport.flags.hours = +sky.hours.toFixed(2); passport.save(); };
   addEventListener('pagehide', savePos);
   const TIMES = [6.3, 12, 17.2, 20.5], TNAME = ['time_morning', 'time_noon', 'time_golden', 'time_night'];
-  const nextTime = () => { const i = TIMES.findIndex((h) => h > sky.hours + 0.3), k = i < 0 ? 0 : i; sky.setHours(TIMES[k]); hud.toast(T(TNAME[k]), 2.5, '', k === 3 ? '🌙' : k === 2 ? '🌇' : '☀️'); };
+  const nextTime = () => { const i = TIMES.findIndex((h) => h > sky.hours + 0.3), k = i < 0 ? 0 : i; sky.setHours(TIMES[k]); hud.toast(T(TNAME[k]), 2.5, '', k === 3 ? '🌙' : k === 2 ? '🌇' : k === 0 ? '🌅' : '☀️', true); G.wasNight = sky.night > 0.5; };
   const capture = () => {
     R.render(16, sky.exposure, sky.night);
     canvas.toBlob((blob) => { if (!blob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ha-noi-dao-pho-${Date.now()}.png`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); }, 'image/png');
@@ -207,7 +214,7 @@ async function boot() {
 
     const frozen = !G.started || !!hud.modal;
     if (frozen) { input.move.x = input.move.y = 0; }
-    if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }; nav.collide(p, 0.4); player.teleport(p.x, p.z, player.yaw); cam.snap(player); warpTo = null; }
+    if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }; if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, warpTo[2] ?? player.yaw); cam.snap(player); warpTo = null; }
     const wasX = player.pos.x, wasZ = player.pos.z;
     player.update(dt, input, cam.yaw);
     traffic.update(dt, player, camera, sky.hours);
@@ -217,6 +224,9 @@ async function boot() {
     traffic.honks.length = 0;
     if (G.started && !G.photo) { passport.update(player.pos.x, player.pos.z); fares.update(dt, player); }
     cam.update(dt, player, frozen ? null : input);
+    // camera áp sát đầu (bị dồn vào góc tường) thì ẩn nhân vật để không nhìn xuyên vào trong người
+    { const near = cam.close < 0.8; player.root.visible = !near; player.helmet.visible = player.mode === 'bike' && !near;
+      skyU.uCut.value.set(player.pos.x, player.y + 1.25, player.pos.z, near || G.photo ? 0 : 0.62); }
     // đang đi nhanh tới nơi khác thì dựng các ô quanh điểm đến trước
     if (warpTo) chunks.update(warpTo[0], warpTo[1]); else chunks.update(player.pos.x, player.pos.z);
     sky.update(fixedTime || frozen ? 0 : dt, player.root.position); if (fixedTime || frozen) skyU.uTime.value += dt;
@@ -228,8 +238,9 @@ async function boot() {
       sugT -= dt;
       if (sugT <= 0) {
         sugT = 0.4; sugs = passport.suggestions(player.pos.x, player.pos.z).map((s) => ({ x: s.it.x, z: s.it.z, d: s.d, icon: s.it.icon, name: s.it.name, kind: s.it.kind }));
+        if (fares.state === 'ride') sugs = sugs.filter((q) => !(Math.hypot(q.x - fares.dest.place.x, q.z - fares.dest.place.z) < 1)); // điểm trả khách trùng địa danh gợi ý: chỉ giữ một ô
         if (fares.state === 'ride') sugs = [{ x: fares.dest.x, z: fares.dest.z, d: fares.left || 0, icon: '🏁', name: fares.dest.place.name, kind: 'fare', color: '#3ae07a', big: true }, ...sugs.slice(0, 2)];
-        else if (fares.state === 'offer') sugs = [...sugs.slice(0, 2), { x: fares.cust.x, z: fares.cust.z, d: Math.hypot(fares.cust.x - player.pos.x, fares.cust.z - player.pos.z), icon: '🙋', name: { vi: T('fare_wait'), en: T('fare_wait') }, kind: 'fare', color: '#ffd23a', big: true }];
+        else if (fares.state === 'offer') sugs = [...sugs.slice(0, 2), { x: fares.cust.x, z: fares.cust.z, d: Math.hypot(fares.cust.x - player.pos.x, fares.cust.z - player.pos.z), icon: '🙋', name: both('fare_wait'), kind: 'fare', color: '#ffd23a', big: true }];
         const rd = nav.nearestRoad(player.pos.x, player.pos.z, 14); hud.setStreet(rd && rd.r.name >= 0 ? world.names[rd.r.name] : '');
         hud.setClock(sky.hours); hud.fare(fares, fares.cust ? fares.name(lang()) : ''); counts();
         // lời nhắc theo tình huống
@@ -249,17 +260,19 @@ async function boot() {
       if (!G.photo) minimap.draw(player, cam.yaw, sugs, player.mode === 'bike');
       hud.update(dt);
       const moved = Math.hypot(player.pos.x - wasX, player.pos.z - wasZ) / Math.max(dt, 1e-3);
-      audio.update(dt, { riding: player.mode === 'bike', speed: player.speed, throttle: input.move.y, agentsNear: traffic.countNear(player.pos.x, player.pos.z, 30), night: sky.night, green: G.green || 0, calm: (G.green || 0) > 0.4 && moved < 4 });
+      audio.update(dt, { riding: player.mode === 'bike', speed: player.speed, throttle: input.move.y, full: !!input.run, brake: player.mode === 'bike' ? player.braking || 0 : 0, hours: sky.hours, agentsNear: traffic.countNear(player.pos.x, player.pos.z, 30), night: sky.night, green: G.green || 0, calm: (G.green || 0) > 0.4 && moved < 4 });
       if (!G.greenT || G.t - G.greenT > 1.5) { G.greenT = G.t; G.green = nav.isWater(player.pos.x + 25, player.pos.z) || nav.isWater(player.pos.x - 25, player.pos.z) || nav.isWater(player.pos.x, player.pos.z + 25) || nav.isWater(player.pos.x, player.pos.z - 25) ? 0.8 : 0.2; }
     }
     input.endFrame();
     jsAcc += performance.now() - t0;
-    R.render(dtMs, sky.exposure, sky.night);
+    // bảng đang mở: cảnh 3D đứng yên phía sau, vẽ thêm vài khung cho xong rồi thôi (đỡ tốn máy, quạt không rú)
+    G.modalFrames = hud.modal ? (G.modalFrames || 0) + 1 : 0;
+    if (!window.__norender && G.modalFrames < 4) R.render(dtMs, sky.exposure, sky.night); // __norender: bài nghiệm thu tự động tắt vẽ để chạy nhanh trên máy không có GPU
     frames++; acc += dtMs;
     if (acc > 500) {
-      const i = R.r.info.render; G.fps = (1000 * frames) / acc;
+      const i = R.r.info.render; G.fps = (1000 * frames) / acc; if (G.started && !hud.modal && !document.hidden) G.fpsPlay = G.fps;
       window.__info = { fps: +G.fps.toFixed(1), js: +(jsAcc / frames).toFixed(2), calls: i.calls, tris: i.triangles, chunks: chunks.loaded.size, pending: chunks.pending.size, geo: R.r.info.memory.geometries, tex: R.r.info.memory.textures, pos: [+player.pos.x.toFixed(1), +player.pos.z.toFixed(1)], speed: +player.speed.toFixed(1), agents: traffic.agents.length, people: crowd.people.length, dpr: +R.dpr.toFixed(2), stamps: passport.visited.size, landmarks: landmarks.length, level: governor.level };
-      governor.tick(G.fps);
+      if (!hud.modal) governor.tick(G.fps);
       // công trình ở quá xa (khuất trong sương) thì khỏi vẽ
       for (const l of landmarks) l.mesh.visible = (l.site.x - player.pos.x) ** 2 + (l.site.z - player.pos.z) ** 2 < (quality.view + 260) ** 2;
       if (dbg) dbg.textContent = Object.entries(window.__info).map(([k, v]) => `${k} ${v}`).join('  ');
@@ -267,7 +280,7 @@ async function boot() {
       if (!chunks.pending.size && !chunks.want.length) document.title = lang() === 'vi' ? 'Hà Nội Dạo Phố' : 'Hanoi Stroll', window.__ready = true;
     }
   }
-  window.__game = { chunks, sky, nav, world, cam, R, scene, camera, player, input, traffic, crowd, passport, fares, hud, landmarks, sites, warp, get warping() { return !!warpTo; }, ready: true };
+  window.__game = { audio, G, setLang, chunks, sky, nav, world, cam, R, scene, camera, player, input, traffic, crowd, passport, fares, hud, landmarks, sites, warp, get warping() { return !!warpTo; }, ready: true };
   requestAnimationFrame(loop);
 }
 

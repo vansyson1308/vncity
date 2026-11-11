@@ -3,6 +3,7 @@
 // Mặt ván đúng theo đường cong deckY(z) mà trò chơi dùng để cho người đi bộ: y = 0.35 + 1.25·sin(π·z/L).
 // 15 nhịp → 16 vì, mỗi vì hai cột gỗ tròn cắm xuống nước (y = -1.6; mặt nước ở y = -0.5).
 import { hash } from '../../core/util.js';
+import { MAT } from '../../core/geo.js';
 
 export const LENGTH = 46.2, SPANS = 15, WIDTH = 2.6;
 export const deckY = (z) => 0.35 + 1.25 * Math.sin(Math.PI * (z / LENGTH));
@@ -25,7 +26,7 @@ function beam(g, xa, xb, z0, z1, b0, b1, h, faces = 'xXyY') {
 export function build(g) {
   const L = LENGTH, N = SPANS, span = L / N, HW = WIDTH / 2;
   const red = (seed, k = 1) => g.color(RED).shade((0.9 + hash(seed, 1) * 0.2) * k);
-  g.gloss(0.3).glow(0).sway(0);
+  g.gloss(0.3).glow(0).sway(0).mat(MAT.lacquer);   // sơn son: mọi cấu kiện đỏ; gỗ mộc chỉ còn ở chân cột ngâm nước và ván mặt cầu
 
   // ----- vì cầu: hai cột tròn, xà mũ, giằng ngang và giằng chéo -----
   const PX = 1.08, PR = 0.135;
@@ -33,13 +34,13 @@ export function build(g) {
     const z = i * span, yd = deckY(z), capTop = yd - 0.07 - 0.2, capBot = capTop - 0.2;
     for (const s of [-1, 1]) {
       // đoạn chân cột ngâm nước: gỗ sẫm, bám rêu
-      g.gloss(0.05).color(0x4b2a1c).shade(0.8 + hash(i, 5 + s) * 0.3);
+      g.gloss(0.05).mat(MAT.wood).color(0x5a3626).shade(0.85 + hash(i, 5 + s) * 0.3);
       g.cyl(s * PX, -1.6, z, PR * 1.06, PR * 1.04, 1.28, 6, false);
-      g.gloss(0.3); red(i * 2 + s, 0.86);
+      g.gloss(0.3).mat(MAT.lacquer); red(i * 2 + s, 0.86);
       const from = g.count;
       g.cyl(s * PX, -0.32, z, PR * 1.02, PR * 0.94, capBot + 0.02 + 0.32, 8, false);
       // vệt ố sẫm gần mặt nước
-      for (let v = from; v < g.count; v += 2) { g.col[v * 4] *= 0.5; g.col[v * 4 + 1] *= 0.55; g.col[v * 4 + 2] *= 0.5; }
+      for (let v = from; v < g.count; v += 2) { g.col[v * 4] *= 0.55; g.col[v * 4 + 1] *= 0.6; g.col[v * 4 + 2] *= 0.55; }
     }
     // xà mũ đỡ dầm dọc, hai đầu thò ra ngoài cột
     red(i + 40, 0.92); g.box(-HW - 0.12, capBot, z - 0.1, HW + 0.12, capTop, z + 0.1);
@@ -67,12 +68,13 @@ export function build(g) {
       beam(g, s > 0 ? HW - 0.11 : -HW, s > 0 ? HW : -HW + 0.11, z0, z1, y0 - 0.13, y1 - 0.13, 0.16, s > 0 ? 'XyYx' : 'xyYX');
     }
   }
-  // ván lát ngang, mỗi tấm một sắc nâu đỏ hơi khác nhau; bám sát đường cong sin
-  const NP = N * 10, pl = L / NP;
-  g.gloss(0.12);
+  // ván lát ngang, bám sát đường cong sin. Khe ván do chất liệu gỗ vẽ (cứ 19 cm một khe theo z), nên mỗi dải hình học
+  // rộng đúng hai tấm (38 cm) và đổi sắc độ theo dải: ranh giới màu luôn trùng một khe ván.
+  const pl = 0.38, NP = Math.ceil(L / pl - 1e-6);
+  g.gloss(0.12).mat(MAT.wood);
   for (let k = 0; k < NP; k++) {
-    const z0 = k * pl, z1 = z0 + pl, h = hash(k, 31);
-    g.color(h < 0.12 ? 0x7d3220 : PLANK).shade(0.82 + hash(k, 32) * 0.34);
+    const z0 = k * pl, z1 = Math.min(L, z0 + pl), h = hash(k, 31);
+    g.color(h < 0.12 ? 0x8a3a26 : PLANK).shade(0.92 + hash(k, 32) * 0.2);
     beam(g, -HW + 0.11, HW - 0.11, z0, z1, deckY(z0) - 0.07, deckY(z1) - 0.07, 0.07, 'Y');
   }
   g.color(PLANK).shade(0.8);
@@ -80,7 +82,7 @@ export function build(g) {
   beam(g, -HW, HW, L - 0.01, L, deckY(L) - 0.13, deckY(L) - 0.13, 0.13, 'Z');
 
   // ----- lan can: trụ ở mỗi vì, tay vịn, hai thanh ngang, hàng con tiện mảnh -----
-  g.gloss(0.35).glow(0.06);
+  g.gloss(0.35).glow(0.06).mat(MAT.lacquer);
   const RX = HW - 0.085;            // tim lan can
   const TOPR = 1.0, UP = 0.8, LOW = 0.15;
   for (const s of [-1, 1]) {
@@ -114,5 +116,5 @@ export function build(g) {
       }
     }
   }
-  g.color(0xffffff).gloss(0).glow(0).sway(0);
+  g.color(0xffffff).gloss(0).glow(0).sway(0).mat();
 }
