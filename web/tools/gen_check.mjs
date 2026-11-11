@@ -24,7 +24,7 @@ for (const [cx, cz] of list) {
   const t = performance.now();
   try {
     const g = genGround(ctx, cx, cz), b = genBuildings(ctx, cx, cz), p = genProps(ctx, cx, cz, b);
-    const n = { ground: g.ground.idx.length / 3, deck: g.deck ? g.deck.idx.length / 3 : 0, bld: b.mesh.idx.length / 3, near: p.near.idx.length / 3, far: p.far.idx.length / 3 };
+    const n = { ground: g.ground.idx.length / 3, deck: g.deck ? g.deck.idx.length / 3 : 0, bld: b.mesh.idx.length / 3, near: p.near.idx.length / 3 + p.plate.idx.length / 3, far: p.far.idx.length / 3 };
     for (const k in n) { tris[k] += n[k]; maxTris[k] = Math.max(maxTris[k], n[k]); }
     for (const arr of [g.ground.pos, g.deck ? g.deck.pos : [], b.mesh.pos, p.near.pos, p.far.pos]) for (let i = 0; i < arr.length; i++) if (!Number.isFinite(arr[i])) { throw new Error('NaN trong toạ độ'); }
     if (args.length && args[0] !== 'all') console.log(cx, cz, n, `${(performance.now() - t).toFixed(1)} ms`);

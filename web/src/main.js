@@ -14,6 +14,7 @@ import { Chunks, LightPools } from './world/chunks.js';
 import { buildLandmarks } from './world/landmarks/index.js';
 import { siteDecks } from './world/landmarks/sites.js';
 import { signAtlas } from './world/atlas.js';
+import { streetMaterial } from './world/streetatlas.js';
 import { Player } from './actors/player.js';
 import { Traffic } from './actors/traffic.js';
 import { Crowd } from './actors/crowd.js';
@@ -59,6 +60,7 @@ async function boot() {
   const nav = new Nav(world);
   const atlas = await signAtlas(R.r, quality.aniso);
   const mats = buildMaterials(R.r, quality, atlas);
+  mats.street = await streetMaterial(mats, R.r, world, quality); // biển tên phố, đèn tín hiệu, băng rôn
   const chunks = new Chunks(scene, world, mats, nav, quality);
   const pools = new LightPools(scene);
   chunks.onLamps = (l) => pools.set(l);
