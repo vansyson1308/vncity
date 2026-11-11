@@ -33,7 +33,20 @@ const FinalShader = {
 export class Renderer {
   constructor(canvas, quality, params) {
     this.q = quality;
-    const r = this.r = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', stencil: false, preserveDrawingBuffer: params.has('shot') });
+    // Tự tạo ngữ cảnh WebGL2 trước rồi mới đưa cho three.js, thử lần lượt vài cấu hình (máy dùng card tích hợp có thể từ chối
+    // "high-performance"). Nếu không cấu hình nào được thì báo lỗi rõ ràng (mã NO_WEBGL2) để màn hình tải hướng dẫn người chơi.
+    // Lý do không để three.js tự tạo: bản 0.181 có lỗi trong khối catch (biến `error` che mất hàm ghi log cùng tên), khiến
+    // người chơi chỉ thấy "A is not a function" thay vì nguyên nhân thật.
+    const preserve = params.has('shot'), base = { alpha: false, depth: true, stencil: false, antialias: false, premultipliedAlpha: true, preserveDrawingBuffer: preserve, failIfMajorPerformanceCaveat: false };
+    let why = ''; const onErr = (e) => { why = e.statusMessage || why; }; canvas.addEventListener('webglcontextcreationerror', onErr);
+    let gl = null;
+    for (const extra of [{ powerPreference: 'high-performance' }, { powerPreference: 'default' }, { powerPreference: 'low-power' }]) {
+      try { gl = canvas.getContext('webgl2', { ...base, ...extra }); } catch (e) { why = e.message || why; }
+      if (gl) break;
+    }
+    canvas.removeEventListener('webglcontextcreationerror', onErr);
+    if (!gl) throw Object.assign(new Error(why || 'WebGL2 context could not be created'), { code: 'NO_WEBGL2' });
+    const r = this.r = new THREE.WebGLRenderer({ canvas, context: gl, antialias: false, stencil: false, preserveDrawingBuffer: preserve });
     r.shadowMap.enabled = quality.shadow > 0; r.shadowMap.type = quality.name === 'high' ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
     r.shadowMap.autoUpdate = false;
     r.toneMapping = THREE.ACESFilmicToneMapping; r.outputColorSpace = THREE.SRGBColorSpace;

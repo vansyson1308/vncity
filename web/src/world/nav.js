@@ -123,6 +123,7 @@ export class Nav {
   // Đẩy vòng tròn bán kính r tại p {x,z} ra khỏi các bức tường. Trả về số lần chạm; pháp tuyến va chạm cuối ở this.nx, this.nz.
   collide(p, r, skipWater = false, y = 0) {
     let hits = 0; const t = this._t; this.nx = 0; this.nz = 0;
+    if (!(Number.isFinite(p.x) && Number.isFinite(p.z))) return 0; // toạ độ hỏng: không đụng tới, nơi gọi tự khôi phục
     // trên mặt cầu nâng (cao hơn 0,7 m): không va vào nhà bên dưới, chỉ bị lan can giữ lại
     if (this.hasElev && y > 0.7) {
       const er = this.elevatedAt(p.x, p.z, y, 3);
@@ -159,6 +160,13 @@ export class Nav {
     if (p.x < b.x0 + m) { p.x = b.x0 + m; hits++; this.nx = 1; } else if (p.x > b.x1 - m) { p.x = b.x1 - m; hits++; this.nx = -1; }
     if (p.z < b.z0 + m) { p.z = b.z0 + m; hits++; this.nz = 1; } else if (p.z > b.z1 - m) { p.z = b.z1 - m; hits++; this.nz = -1; }
     return hits;
+  }
+
+  // Vòng tròn bán kính r tại (x,z) có trống không: không chạm bức tường nào cao từ y trở lên (bờ nước không tính).
+  clearAt(x, z, r, y = 0) {
+    let ok = true; const r2 = r * r;
+    this.eachSeg(x, z, r + 0.05, (s, i) => { if (ok && s[i + 4] >= y && s[i + 4] >= 0 && segDist2(x, z, s[i], s[i + 1], s[i + 2], s[i + 3]) < r2) ok = false; });
+    return ok;
   }
 
   // Tia từ (x,z) theo hướng ngang (dx,dz) dài tối đa max. Tia ở độ cao y tại gốc và lên/xuống ky mét mỗi mét ngang;

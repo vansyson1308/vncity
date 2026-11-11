@@ -2,6 +2,7 @@
 //   a1  đi bộ từ trước cổng đền qua cổng, lên cầu Thê Húc, sang đảo; phải nhận đủ hai dấu cau_the_huc và den_ngoc_son
 //   a2  ép nhân vật vào tường ở các điểm từng bị đen màn hình rồi xoay camera đủ 360°: không khung hình nào đen
 //   a3  đi nhanh lần lượt tới cả 44 điểm: không kẹt trong vật thể, không đen màn hình
+//   d1  hướng đi theo phím ở 4 góc camera, camera hồi phục sau khi sát tường, thông báo khi không có WebGL2
 //   b1  (gồm cả B2, B4, C3, C5 đến C10) khách ngồi sau, HUD ở 1140 × 670, âm thanh và hai công tắc, các lỗi nhẹ
 // Dùng: node tools/accept.mjs [a1] [a2] [a3] [thư mục ảnh]     (CHROME_PATH để chỉ định trình duyệt)
 import { chromium } from 'playwright';
@@ -9,8 +10,8 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const args = process.argv.slice(2), want = (k) => !args.some((a) => /^[a-c]\d+$/.test(a)) || args.includes(k);
-const DIST = path.resolve('dist'), OUT = path.resolve(args.find((a) => !/^[a-c]\d+$/.test(a)) || 'shots');
+const args = process.argv.slice(2), want = (k) => !args.some((a) => /^[a-d]\d+$/.test(a)) || args.includes(k);
+const DIST = path.resolve('dist'), OUT = path.resolve(args.find((a) => !/^[a-d]\d+$/.test(a)) || 'shots');
 fs.mkdirSync(OUT, { recursive: true });
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary', '.woff2': 'font/woff2', '.woff': 'font/woff', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg' };
 const server = http.createServer((req, res) => {
@@ -126,6 +127,52 @@ if (want('a3')) {
   if (!bad) ok(`A3: đi nhanh tới cả ${ids.length} điểm, không kẹt, không đen màn hình, đứng trong tầm đóng dấu`);
   await page.close();
 }
+// ----- D (đợt QC thứ hai): hướng đi theo phím, camera hồi phục, báo lỗi khi không có WebGL -----
+if (want('d1')) {
+  const page = await open('d1', '&at=150,-150');
+  // D1: ở bốn góc camera, W đi ra xa ống kính, S đi về phía ống kính, D sang phải màn hình, A sang trái màn hình
+  const r = await page.evaluate(async () => {
+    const g = window.__game, P = g.player, out = [], sleep = (ms) => new Promise((r2) => setTimeout(r2, ms));
+    window.__norender = true;
+    { const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, 0, false); await window.__push(0, 800, false); } // chạy đà: bỏ khung hình đầu sau khi tắt vẽ
+    for (const deg of [0, 90, 180, 270]) for (const key of ['w', 's', 'd', 'a', 'arrowup', 'arrowdown', 'arrowright', 'arrowleft']) {
+      const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, 0, false); const yaw = (deg * Math.PI) / 180;
+      // nhân vật ban đầu quay mặt về hướng nam: có hướng phải quay người 180° rồi mới đi, nên bỏ 0,9 giây đầu và đo 1 giây sau đó
+      let x0 = P.pos.x, z0 = P.pos.z, marked = false; const t0 = performance.now(); g.input.keys.add(key);
+      while (performance.now() - t0 < 1900) { g.cam.yaw = yaw; g.input.lastLook = performance.now(); await sleep(30); if (!marked && performance.now() - t0 > 900) { marked = true; x0 = P.pos.x; z0 = P.pos.z; } }
+      g.input.keys.delete(key); await sleep(120);
+      const mx = P.pos.x - x0, mz = P.pos.z - z0, len = Math.hypot(mx, mz) || 1;
+      // camera ở phía (sin yaw, cos yaw) của nhân vật: hướng nhìn là (-sin, -cos), bên phải màn hình là (cos, -sin)
+      const fwd = (mx * -Math.sin(yaw) + mz * -Math.cos(yaw)) / len, right = (mx * Math.cos(yaw) + mz * -Math.sin(yaw)) / len;
+      out.push({ deg, key, len: +len.toFixed(2), fwd: +fwd.toFixed(2), right: +right.toFixed(2) });
+    }
+    window.__norender = false; return out;
+  });
+  const want2 = { w: ['fwd', 1], arrowup: ['fwd', 1], s: ['fwd', -1], arrowdown: ['fwd', -1], d: ['right', 1], arrowright: ['right', 1], a: ['right', -1], arrowleft: ['right', -1] };
+  const wrong = r.filter((q) => q.len < 0.3 || q[want2[q.key][0]] * want2[q.key][1] < 0.9);
+  wrong.length ? fail(`D1: hướng đi sai ở ${wrong.length}/${r.length} trường hợp: ${JSON.stringify(wrong.slice(0, 4))}`) : ok(`D1: ${r.length} trường hợp (4 góc camera × 8 phím) đều đi đúng hướng so với màn hình`);
+  // D2: ép vào tường cho camera áp sát rồi đi ra chỗ trống, camera phải tự giãn ra lại; không có toạ độ hỏng
+  const c = await page.evaluate(async () => {
+    const g = window.__game, P = g.player, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true;
+    const p = { x: 88, z: -217 }; g.nav.collide(p, 0.3); P.teleport(p.x, p.z, 0, false);
+    let minClose = 9; for (let k = 0; k < 24; k++) { g.cam.yaw = (k / 24) * 6.2832; g.input.lastLook = performance.now(); await sleep(120); minClose = Math.min(minClose, g.cam.close); }
+    const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, 0, false); await sleep(2500);
+    const cp = g.camera.position; window.__norender = false;
+    return { minClose: +minClose.toFixed(2), after: +g.cam.close.toFixed(2), finite: [cp.x, cp.y, cp.z, g.cam.yaw, g.cam.pitch, P.pos.x, P.pos.z].every(Number.isFinite), near: g.camera.near };
+  });
+  console.log('d2', JSON.stringify(c));
+  c.after > 3 && c.finite ? ok(`D2: sát tường camera thu về ${c.minClose} m, ra chỗ trống tự giãn lại ${c.after} m, không có toạ độ hỏng`) : fail(`D2: camera không hồi phục: ${JSON.stringify(c)}`);
+  await page.close();
+  // D3: trình duyệt không tạo được WebGL2 thì màn hình tải nói rõ nguyên nhân và cách khắc phục
+  const p2 = await browser.newPage({ viewport: { width: 960, height: 540 } });
+  await p2.addInitScript(() => { const orig = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function (type, ...a) { return /webgl/.test(type) ? null : orig.call(this, type, ...a); }; });
+  await p2.goto(`http://localhost:${port}/?fresh&lang=vi`);
+  await p2.waitForFunction(() => window.__bootError !== undefined, null, { timeout: 120000 }).catch(() => {});
+  const e = await p2.evaluate(() => ({ code: window.__bootError, text: document.getElementById('loadtext').textContent }));
+  e.code === 'NO_WEBGL2' && /WebGL2/.test(e.text) && /Tăng tốc phần cứng/.test(e.text) && !/is not a function/.test(e.text) ? ok('D3: không có WebGL2 thì báo rõ nguyên nhân và cách khắc phục') : fail(`D3: thông báo lỗi chưa đúng: ${JSON.stringify(e)}`);
+  await p2.screenshot({ path: path.join(OUT, 'd3_no_webgl.png') }); await p2.close();
+}
+
 // ----- B và C: khách ngồi sau, HUD, âm thanh, các lỗi nhẹ -----
 if (want('b1') || want('b2') || want('b4') || want('c1')) {
   const page = await open('bc', '&at=121,-211&lang=vi');

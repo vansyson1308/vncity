@@ -168,6 +168,9 @@ async function boot() {
   const setLang = (l) => { const from = lang(); setLangRaw(l); if (from !== lang()) { hud.relang(from); sugT = 0; } };
   const savePos = () => { passport.flags.pos = [+player.pos.x.toFixed(1), +player.pos.z.toFixed(1), +player.yaw.toFixed(2)]; passport.flags.hours = +sky.hours.toFixed(2); passport.save(); };
   addEventListener('pagehide', savePos);
+  // card đồ hoạ bị ngắt giữa chừng (máy ngủ, driver khởi động lại): giữ vị trí, báo cho người chơi, có lại thì tải lại trang
+  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); savePos(); hud.toast(T('gl_lost'), 30, '', '⚠️', true); });
+  canvas.addEventListener('webglcontextrestored', () => location.reload());
   const TIMES = [6.3, 12, 17.2, 20.5], TNAME = ['time_morning', 'time_noon', 'time_golden', 'time_night'];
   const nextTime = () => { const i = TIMES.findIndex((h) => h > sky.hours + 0.3), k = i < 0 ? 0 : i; sky.setHours(TIMES[k]); hud.toast(T(TNAME[k]), 2.5, '', k === 3 ? '🌙' : k === 2 ? '🌇' : k === 0 ? '🌅' : '☀️', true); G.wasNight = sky.night > 0.5; };
   const capture = () => {
@@ -284,4 +287,9 @@ async function boot() {
   requestAnimationFrame(loop);
 }
 
-boot().catch((e) => { console.error(e); $('loadtext').textContent = `${T('error')} ${e.message}`; $('bar').style.background = '#b3121f'; });
+boot().catch((e) => {
+  console.error(e);
+  // không tạo được WebGL2: nói rõ nguyên nhân và cách khắc phục thay vì một dòng lỗi kỹ thuật
+  $('loadtext').textContent = e && e.code === 'NO_WEBGL2' ? T('no_webgl') : `${T('error')} ${e && e.message ? e.message : e}`;
+  $('loadtext').style.whiteSpace = 'pre-line'; $('bar').style.background = '#b3121f'; window.__bootError = e && (e.code || e.message);
+});

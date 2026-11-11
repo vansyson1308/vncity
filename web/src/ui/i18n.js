@@ -1,7 +1,7 @@
 // Chữ giao diện hai thứ tiếng. Phần tử có data-i18n tự đổi theo ngôn ngữ.
 const S = {
   vi: {
-    tagline: 'Một buổi chiều tối thong dong ở Hà Nội', loading: 'Đang tải bản đồ', building: 'Đang dựng phố phường', error: 'Lỗi tải:',
+    tagline: 'Một buổi chiều tối thong dong ở Hà Nội', loading: 'Đang tải bản đồ', building: 'Đang dựng phố phường', error: 'Lỗi tải:', no_webgl: 'Trình duyệt này chưa bật được đồ hoạ 3D (WebGL2) nên game không chạy được.\nCách khắc phục: bật "Tăng tốc phần cứng" trong cài đặt trình duyệt rồi mở lại; cập nhật trình duyệt và driver card màn hình; hoặc mở bằng Chrome, Edge, Firefox bản mới trên máy khác.', gl_lost: 'Đồ hoạ vừa bị ngắt. Game sẽ tự tải lại khi card màn hình hoạt động trở lại; vị trí của bạn đã được lưu.',
     goal: 'Đóng đầy cuốn hộ chiếu Hà Nội: đi tới các địa danh và món ngon, mỗi nơi một con dấu.',
     intro: 'Bạn là Minh, chạy xe ôm phố cổ. Dạo bộ quanh Hồ Gươm, lên xe luồn qua dòng xe máy, chở khách kiếm tiền ăn phở. Không thua, không đồng hồ đếm ngược: cứ thong thả.',
     k_move: 'đi, lái', k_run: 'chạy, tăng ga', k_bike: 'lên, xuống xe', k_use: 'đón khách, đọc thẻ', k_horn: 'bóp còi, phanh', k_map: 'bản đồ', k_time: 'đổi giờ', k_photo: 'chụp ảnh',
@@ -28,7 +28,7 @@ const S = {
     money: (v) => `${Math.round(v / 1000)}k`, km: 'km', m: 'm', quality: 'Đổi chất lượng sẽ tải lại trang.', q_confirm: 'Đổi chất lượng hình sang mức "{q}"? Game sẽ tải lại, vị trí và các dấu đã đóng vẫn được giữ.', perf_wait: 'Khung hình: đang đo…', credits_audio: 'Âm thanh và nhạc nền do game tự tổng hợp, không dùng bản ghi của ai. Chi tiết trong CREDITS.md.',
   },
   en: {
-    tagline: 'An easy evening loose in Hanoi', loading: 'Loading the map', building: 'Raising the streets', error: 'Load error:',
+    tagline: 'An easy evening loose in Hanoi', loading: 'Loading the map', building: 'Raising the streets', error: 'Load error:', no_webgl: 'This browser could not start 3D graphics (WebGL2), so the game cannot run.\nTo fix: turn on "hardware acceleration" in the browser settings and reopen; update the browser and graphics driver; or try a recent Chrome, Edge or Firefox on another device.', gl_lost: 'Graphics were interrupted. The game reloads by itself when the graphics card is back; your position is saved.',
     goal: 'Fill your Hanoi passport: reach landmarks and street food, one stamp each.',
     intro: 'You are Minh, a motorbike-taxi driver from the Old Quarter. Stroll around Hoàn Kiếm lake, hop on and thread the motorbike swarm, carry passengers to pay for your phở. No losing, no countdowns: take your time.',
     k_move: 'walk, ride', k_run: 'run, throttle up', k_bike: 'get on/off the bike', k_use: 'pick up, read card', k_horn: 'horn, brake', k_map: 'map', k_time: 'change time', k_photo: 'photo',

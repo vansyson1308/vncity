@@ -88,6 +88,10 @@ export class Player {
 
   update(dt, input, camYaw) {
     if (this.mode === 'bike') this.updateBike(dt, input, camYaw); else this.updateWalk(dt, input, camYaw);
+    // phòng số hỏng (NaN, vô cực) lọt vào toạ độ: quay về trạng thái tốt gần nhất thay vì làm hỏng cả khung hình
+    const G = this._good || (this._good = { x: this.pos.x, z: this.pos.z, y: this.y, yaw: this.yaw });
+    if (Number.isFinite(this.pos.x) && Number.isFinite(this.pos.z) && Number.isFinite(this.y) && Number.isFinite(this.yaw) && Number.isFinite(this.speed)) { G.x = this.pos.x; G.z = this.pos.z; G.y = this.y; G.yaw = this.yaw; }
+    else { this.pos.x = G.x; this.pos.z = G.z; this.y = G.y; this.yaw = G.yaw; this.speed = 0; this.phi = 0; this.curv = 0; this.lean = 0; this.pitch = 0; this.accel = 0; }
     this.sync(dt);
   }
 
