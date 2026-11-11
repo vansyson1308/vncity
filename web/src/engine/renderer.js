@@ -78,15 +78,24 @@ export class Renderer {
   }
 
   // Độ phân giải động: giữ thời gian khung hình quanh 16,7 ms (60 Hz).
+  // Hạ độ phân giải chỉ có ích khi máy đang nghẽn ở khâu tô điểm ảnh. Vì vậy mỗi lần hạ một nấc đều đo lại: nếu khung hình
+  // không nhanh lên ít nhất 4% (bớt 19% điểm ảnh mà không ăn thua) thì máy đang nghẽn ở chỗ khác (CPU, số lệnh vẽ, số đỉnh):
+  // trả lại độ phân giải cũ, đặt cờ cpuBound để bộ điều tiết (governor.js) giảm khối lượng cảnh thay vì làm mờ hình vô ích.
   adapt(dtMs) {
     if (this.fixedDpr || dtMs > 250) return;
-    this.avg += (dtMs - this.avg) * 0.05; this.cool -= dtMs;
+    this.avg = this.avg > 0 ? this.avg + (dtMs - this.avg) * 0.05 : dtMs; this.cool -= dtMs; if (this.lock > 0) this.lock -= dtMs;
     if (this.cool > 0) return;
-    let next = this.dpr;
     const vsync30 = this.avg > 31.5 && this.avg < 35.5; // màn hình khoá 30 Hz (tiết kiệm pin): hạ độ phân giải cũng không nhanh hơn
     if (vsync30) { this.cool = 1000; return; }
-    if (this.avg > 21 && this.dpr > this.minDpr) next = Math.max(this.minDpr, this.dpr * (this.avg > 30 ? 0.8 : 0.9));
-    else if (this.avg < 17.4 && this.dpr < this.maxDpr) next = Math.min(this.maxDpr, this.dpr * 1.06);
-    if (Math.abs(next - this.dpr) > 0.02) { this.dpr = next; this.resize(); this.cool = 1500; this.avg = 17; } else this.cool = 500;
+    if (this.probe) { // vừa hạ một nấc: có nhanh lên không?
+      const gain = (this.probe.before - this.avg) / this.probe.before, from = this.probe.from; this.probe = null;
+      if (gain < 0.04) { this.cpuBound = true; this.lock = 30000; this.setDpr(from); return; }
+      this.cpuBound = false;
+    }
+    if (this.avg > 21 && this.dpr > this.minDpr && !(this.lock > 0)) {
+      this.probe = { before: this.avg, from: this.dpr }; this.setDpr(Math.max(this.minDpr, this.dpr * (this.avg > 30 ? 0.8 : 0.9)));
+    } else if (this.avg < 17.4 && this.dpr < this.maxDpr) { this.cpuBound = false; this.setDpr(Math.min(this.maxDpr, this.dpr * 1.06)); }
+    else { if (this.avg <= 21) this.cpuBound = false; this.cool = 500; }
   }
+  setDpr(v) { if (Math.abs(v - this.dpr) > 0.005) { this.dpr = v; this.resize(); } this.cool = 1500; this.avg = 0; }
 }

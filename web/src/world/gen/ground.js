@@ -229,7 +229,7 @@ export function genGround(ctx, cx, cz) {
   const deckTop = ctx.elevRoads.length || ctx.elevRails.length ? genDecks(ctx, db, X0, Z0, X1, Z1, ramp) : 0;
 
   // ----- vạch sơn: tim đường, làn xe, vạch người đi bộ -----
-  const inChunk = (x, z) => x >= X0 && x < X1 && z >= Z0 && z < Z1;
+  const inChunk = (x, z) => x >= X0 && x < X1 && z >= Z0 && z < Z1, zebras = [];
   for (const r of roads) {
     if (!r.veh || r.kind > K.tertiary || r.w < 6.5 || r.len < 14) continue;
     const p = r.p, oneway = r.flags & F_ONEWAY, el = !!r.elev, mb = el ? db : gb;
@@ -253,6 +253,11 @@ export function genGround(ctx, cx, cz) {
       for (const [jr, at] of [[j0, j0 + 2.6], [j1, r.len - j1 - 2.6]]) {
         if (!jr || r.len < 2 * jr + 16 || at < d || at >= d + L) continue;
         const s = at - d, x = ax + dx * s, z = az + dz * s; if (!inChunk(x, z)) continue;
+        // nút giao phức tạp (vòng xoay, nhiều nhánh sát nhau): nếu có lòng đường khác cắt qua chỗ định kẻ vạch, hoặc đã có một
+        // vạch qua đường khác trong vòng 7 m, thì thôi không kẻ, kẻo các vạch chồng chéo lên nhau
+        const other = ctx.nearestRoad(x, z, r.w / 2 + 6, (q) => q !== r && q.veh && !q.skip && !q.elev);
+        if (other && other.d < other.r.w / 2 + 1.6) continue;
+        if (zebras.some((q) => (q[0] - x) ** 2 + (q[1] - z) ** 2 < 49)) continue; zebras.push([x, z]);
         for (let o = -r.w / 2 + 0.55; o < r.w / 2 - 0.3; o += 0.95) gb.flatQuad(x - dz * o, z + dx * o, dx, dz, 1.4, 0.22, 0.016, LAYER.white);
       }
       d += L;
