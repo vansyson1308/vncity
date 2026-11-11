@@ -180,24 +180,59 @@ export function decorate(ctx, env) {
   }
 
   // ===== tường rào, hàng rào (OSM barrier) =====
+  // Tường không bao giờ chắn lối đi có trong bản đồ: để hở ở cổng (nút cổng của OSM) và ở mọi chỗ có đường, lối đi cắt qua.
+  const GT = ctx.world.gates;
   for (const w of ctx.wallGrid.collect(X0, Z0, env.X1, env.Z1)) {
     const p = w.p, H = w.k === 3 ? 4.2 : w.k === 1 ? 1.7 : w.k === 2 ? 1.1 : 2.3, th = w.k === 2 ? 0.4 : w.k === 1 ? 0.03 : 0.14;
     for (let i = 0; i < p.length - 2; i += 2) {
       const ax = p[i], az = p[i + 1], bx = p[i + 2], bz = p[i + 3], Ls = Math.hypot(bx - ax, bz - az); if (Ls < 0.3) continue;
-      const mx = (ax + bx) / 2, mz = (az + bz) / 2; if (!inChunk(mx, mz)) continue;
-      const rd = ctx.nearestRoad(mx, mz, Ls / 2 + 4); if (rd && rd.d < rd.r.w / 2 + 0.6) continue; // lối đi cắt qua: để hở làm cổng
-      if (ctx.buildingAt(mx, mz)) continue;
-      const nx = (bz - az) / Ls * th, nz = -(bx - ax) / Ls * th, lx = ax - X0, lz = az - Z0, rx = bx - X0, rz = bz - Z0;
-      for (const g of [near, far]) {
+      const dx = (bx - ax) / Ls, dz = (bz - az) / Ls, cuts = [], posts = [];
+      for (let k = 0; k < GT.length; k += 2) { // cổng: hở 3,4 m, hai trụ cổng hai bên
+        const gx = GT[k] - ax, gz = GT[k + 1] - az, sg = gx * dx + gz * dz;
+        if (Math.abs(gx * dz - gz * dx) < 1.2 && sg > -1.7 && sg < Ls + 1.7) { cuts.push([sg - 1.7, sg + 1.7]); posts.push(sg - 1.7, sg + 1.7); }
+      }
+      ctx.roadGrid.query(Math.min(ax, bx) - 1, Math.min(az, bz) - 1, Math.max(ax, bx) + 1, Math.max(az, bz) + 1, (r) => {
+        if (r.skip || r.elev) return;
+        const q = r.p, hw = Math.max(1.5, r.w / 2 + 0.6);
+        for (let j = 0; j < q.length - 2; j += 2) {
+          const ex = q[j + 2] - q[j], ez = q[j + 3] - q[j + 1], den = dx * ez - dz * ex; if (Math.abs(den) < 1e-6) continue;
+          const sx = q[j] - ax, sz = q[j + 1] - az, sw = (sx * ez - sz * ex) / den, u = (sx * dz - sz * dx) / den;
+          if (u >= -0.02 && u <= 1.02 && sw > -hw && sw < Ls + hw) cuts.push([sw - hw / Math.max(0.35, Math.abs(den) / Math.hypot(ex, ez)), sw + hw / Math.max(0.35, Math.abs(den) / Math.hypot(ex, ez))]);
+        }
+      });
+      for (const [cx0, cz0, cx1, cz1, hw] of ctx.keepClear) { // lối đi phải thông của công trình dựng tay (cổng đền, đầu cầu)
+        const ex = cx1 - cx0, ez = cz1 - cz0, el = Math.hypot(ex, ez) || 1, den = dx * ez - dz * ex; if (Math.abs(den) < 1e-6) continue;
+        const sx = cx0 - ax, sz = cz0 - az, sw = (sx * ez - sz * ex) / den, u = (sx * dz - sz * dx) / den, k = (hw + 0.4) / Math.max(0.35, Math.abs(den) / el);
+        if (u >= -0.05 && u <= 1.05 && sw > -k && sw < Ls + k) cuts.push([sw - k, sw + k]);
+      }
+      cuts.sort((u, v) => u[0] - v[0]);
+      const pieces = []; let s0 = 0;
+      for (const [c0, c1] of cuts) { if (c0 > s0 + 0.3) pieces.push([s0, Math.min(c0, Ls)]); s0 = Math.max(s0, c1); if (s0 >= Ls) break; }
+      if (s0 < Ls - 0.3) pieces.push([s0, Ls]);
+      const paint = (g) => {
         // tường rào xây: vữa vôi vàng đã cũ; tường thành: đá rêu phong; hàng rào sắt, bờ giậu thì để trơn
         g.mat(w.k === 0 ? MAT.plaster : w.k === 3 ? MAT.mossy : MAT.none);
         if (w.k === 2) g.rgb(0.1, 0.22, 0.07); else if (w.k === 1) g.rgb(0.07, 0.11, 0.08); else if (w.k === 3) g.rgb(0.42, 0.4, 0.36); else g.rgb(0.62, 0.48, 0.2);
-        g.quad([lx + nx, CURB, lz + nz], [rx + nx, CURB, rz + nz], [rx + nx, CURB + H, rz + nz], [lx + nx, CURB + H, lz + nz]);
-        g.quad([rx - nx, CURB, rz - nz], [lx - nx, CURB, lz - nz], [lx - nx, CURB + H, lz - nz], [rx - nx, CURB + H, rz - nz]);
-        if (g === near || w.k === 2) { g.shade(0.6); g.quad([lx + nx, CURB + H, lz + nz], [rx + nx, CURB + H, rz + nz], [rx - nx, CURB + H, rz - nz], [lx - nx, CURB + H, lz - nz]); }
+      };
+      for (const [a0, a1] of pieces) {
+        const pax = ax + dx * a0, paz = az + dz * a0, pbx = ax + dx * a1, pbz = az + dz * a1, mx = (pax + pbx) / 2, mz = (paz + pbz) / 2; if (!inChunk(mx, mz)) continue;
+        const rd = ctx.nearestRoad(mx, mz, 14, (r) => !r.elev); if (rd && rd.d < rd.r.w / 2 + 0.3) continue; // tường nằm trong lòng đường (dữ liệu lệch)
+        if (ctx.buildingAt(mx, mz)) continue;
+        const nx = dz * th, nz = -dx * th, lx = pax - X0, lz = paz - Z0, rx = pbx - X0, rz = pbz - Z0;
+        for (const g of [near, far]) {
+          paint(g);
+          g.quad([lx + nx, CURB, lz + nz], [rx + nx, CURB, rz + nz], [rx + nx, CURB + H, rz + nz], [lx + nx, CURB + H, lz + nz]);
+          g.quad([rx - nx, CURB, rz - nz], [lx - nx, CURB, lz - nz], [lx - nx, CURB + H, lz - nz], [rx - nx, CURB + H, rz - nz]);
+          if (g === near || w.k === 2) { g.shade(0.6); g.quad([lx + nx, CURB + H, lz + nz], [rx + nx, CURB + H, rz + nz], [rx - nx, CURB + H, rz - nz], [lx - nx, CURB + H, lz - nz]); }
+        }
+        if (w.k !== 2) extraWalls.push(pax, paz, pbx, pbz);
+      }
+      if (w.k === 0 || w.k === 3) for (const sp of posts) { // trụ cổng
+        if (sp < -0.2 || sp > Ls + 0.2) continue; const x = ax + dx * sp, z = az + dz * sp; if (!inChunk(x, z)) continue;
+        for (const g of [near, far]) { paint(g); g.cube(x - X0, CURB, z - Z0, 0.5, H + 0.3, 0.5, 'xXzZ'); g.shade(0.8).cube(x - X0, CURB + H + 0.3, z - Z0, 0.64, 0.14, 0.64); }
+        extraWalls.push(x - 0.25, z, x + 0.25, z);
       }
       near.mat(); far.mat();
-      if (w.k !== 2) extraWalls.push(ax, az, bx, bz);
     }
   }
 

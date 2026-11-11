@@ -48,6 +48,7 @@ export function decodeWorld(W, { withBuildings = true } = {}) {
   world.rails = W.rails.map((r) => { const p = dec(r[1]), cum = new Float32Array(p.length / 2); let len = 0; for (let k = 0; k < p.length - 2; k += 2) { len += Math.hypot(p[k + 2] - p[k], p[k + 3] - p[k + 1]); cum[k / 2 + 1] = len; } return { flags: r[0], p, len, cum, w: 4.8, bb: bbox(p), elev: null }; });
   world.walls = W.walls.map((w) => { const p = dec(w[1]); return { k: w[0], p, bb: bbox(p) }; });
   const pts = (a, n = 2) => { const o = new Float32Array(a.length); for (let i = 0; i < a.length; i++) o[i] = i % n < 2 ? a[i] / 10 : a[i]; return o; };
+  world.gates = pts(W.gates || []); // cổng trên tường rào [x, z, ...]
   world.trees = pts(W.trees); world.food = pts(W.food, 3); world.bench = pts(W.bench); world.fountain = pts(W.fountain);
 
   computeElevation(world);

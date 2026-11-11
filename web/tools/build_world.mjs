@@ -312,9 +312,15 @@ for (const w of ways.values()) if (w.tags?.railway === 'rail' && w.tags.service 
   }
   console.log('Nắn làn xe cầu Long Biên:', moved, 'đoạn');
 }
+// cổng trên tường rào: nút OSM gắn thẻ cổng/lối vào nằm trên một đường tường. Bộ sinh sẽ để hở tường ở đó,
+// nếu không các khuôn viên có tường bao (Văn Miếu, bảo tàng, Cột cờ) bị vây kín, người chơi không vào được.
+const GATE = new Set(['gate', 'lift_gate', 'wicket_gate', 'sally_port', 'entrance', 'swing_gate', 'sliding_gate']);
+const isGate = (n) => !!n?.tags && (GATE.has(n.tags.barrier) || (n.tags.entrance && n.tags.entrance !== 'no' && n.tags.entrance !== 'emergency'));
+const gates = [];
 const walls = [];
 for (const w of ways.values()) {
   const b = w.tags?.barrier; if (!['wall', 'fence', 'city_wall', 'retaining_wall', 'hedge'].includes(b)) continue;
+  for (const id of w.nodes) if (isGate(nodes.get(id))) { const g = P(id); if (g && inBox(g)) gates.push(g); }
   const pts = wayPts(w).filter((p) => inBox(p)); if (pts.length < 2) continue;
   walls.push({ k: b === 'fence' ? 1 : b === 'hedge' ? 2 : b === 'city_wall' ? 3 : 0, p: simplify(pts, 2) });
 }
@@ -347,7 +353,7 @@ const world = {
   green: green.map((g) => (g.holes.length ? [g.k, g.n, enc(g.p), g.holes.map(enc)] : [g.k, g.n, enc(g.p)])),
   rails: rails.map((r) => [r.f, enc(r.p)]),
   walls: walls.map((w) => [w.k, enc(w.p)]),
-  trees: flat(trees), food: flat(food), bench: flat(bench), fountain: flat(fountain),
+  gates: flat(gates), trees: flat(trees), food: flat(food), bench: flat(bench), fountain: flat(fountain),
 };
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify(world));

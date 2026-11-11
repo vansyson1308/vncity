@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { G } from '../../core/geo.js';
 import { CURB, roadY, alongAt, LB_TRUSS_X } from '../data.js';
 import { segDist2 } from '../../core/util.js';
+import { siteCollision } from './sites.js';
 import { propGeometry } from '../materials.js';
 
 const modules = import.meta.glob('./*.js');
@@ -52,11 +53,8 @@ export async function buildLandmarks(scene, sites, mats, nav, world) {
     mesh.position.set(s.x, CURB + (s.lift || 0), s.z); mesh.rotation.y = s.yaw; mesh.castShadow = true; mesh.receiveShadow = true; mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.name = s.id;
     scene.add(mesh); out.push({ site: s, mesh });
     // va chạm cho các khối đặc khai báo trong sites.js (toạ độ cục bộ)
-    if (s.solid) {
-      const col = [], c = Math.cos(s.yaw), sn = Math.sin(s.yaw), W = (lx, lz) => [s.x + lx * c + lz * sn, s.z - lx * sn + lz * c];
-      for (const [x0, z0, x1, z1] of s.solid) { const P = [W(x0, z0), W(x1, z0), W(x1, z1), W(x0, z1)]; for (let i = 0; i < 4; i++) col.push(P[i][0], P[i][1], P[(i + 1) % 4][0], P[(i + 1) % 4][1], 8); }
-      nav.addChunk('lm:' + s.id, new Float32Array(col), new Float32Array(0));
-    }
+    // va chạm: khối khai trong sites.js, hoặc mặt bằng của chính mô hình nếu là công trình kín
+    { const col = siteCollision({ ...s, y: 0 }, g.pos); if (col.length) nav.addChunk('lm:' + s.id, col, new Float32Array(0)); }
   }
   return out;
 }

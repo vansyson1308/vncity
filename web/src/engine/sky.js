@@ -9,12 +9,15 @@ export const skyU = {
   uZenith: { value: new THREE.Color() }, uHorizon: { value: new THREE.Color() }, uGroundCol: { value: new THREE.Color() },
   uSunDir: { value: new THREE.Vector3(0, 1, 0) }, uSunCol: { value: new THREE.Color() }, uMoonDir: { value: new THREE.Vector3(-0.4, 0.7, 0.5).normalize() },
   uNight: { value: 0 }, uTime: { value: 0 }, uClouds: { value: 0.45 }, uWet: { value: 0 }, uLit: { value: 0 },
+  // lỗ nhìn xuyên vật che: (x, y, z) ngực nhân vật và bán kính; vật nằm chắn giữa camera và nhân vật bị đục lỗ lấm tấm
+  uCut: { value: new THREE.Vector4(0, -1000, 0, 0) },
 };
 
 // Màu trời theo hướng nhìn, bản rút gọn (không mây, không sao) cho phản chiếu.
 export const SKY_GLSL = /* glsl */`
 uniform vec3 uZenith, uHorizon, uGroundCol, uSunDir, uSunCol, uMoonDir;
 uniform float uNight, uTime, uClouds, uWet, uLit;
+uniform vec4 uCut;
 vec3 skyColor(vec3 d) {
   float h = d.y;
   vec3 c = mix(uHorizon, uZenith, pow(clamp(h, 0.0, 1.0), 0.42));

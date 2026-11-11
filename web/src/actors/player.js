@@ -40,7 +40,7 @@ export class Player {
 
     // xe của Minh: xe số đỏ
     const g = tintMasked(motorbike(new G(), 'wave', 1), [0.62, 0.03, 0.03]);
-    this.bike = new THREE.Mesh(propGeometry(g.pack()), mats.prop); this.bike.castShadow = true; this.bike.rotation.order = 'YXZ';
+    this.bike = new THREE.Mesh(propGeometry(g.pack()), mats.propSolid); this.bike.castShadow = true; this.bike.rotation.order = 'YXZ';
     scene.add(this.bike);
     this.bikePos = { x: 0, z: 0, yaw: 0 };
     // mũ bảo hiểm (đội khi lên xe)

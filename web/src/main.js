@@ -12,6 +12,7 @@ import { Nav } from './world/nav.js';
 import { buildMaterials } from './world/materials.js';
 import { Chunks, LightPools } from './world/chunks.js';
 import { buildLandmarks } from './world/landmarks/index.js';
+import { siteDecks } from './world/landmarks/sites.js';
 import { signAtlas } from './world/atlas.js';
 import { Player } from './actors/player.js';
 import { Traffic } from './actors/traffic.js';
@@ -68,8 +69,7 @@ async function boot() {
   progress(0.45);
 
   // cầu Thê Húc: mặt cầu vòm đi bộ được
-  const th = site('cau_the_huc');
-  if (th) nav.addDeck({ ax: th.x, az: th.z, bx: th.x + Math.sin(th.yaw) * 46.2, bz: th.z + Math.cos(th.yaw) * 46.2, w: 2.6, y: (t) => 0.35 + 1.25 * Math.sin(Math.PI * t) });
+  for (const d of siteDecks(sites)) nav.addDeck(d);
   const landmarks = await buildLandmarks(scene, sites, mats, nav, world);
 
   const player = new Player(scene, nav, humanGltf, mats);
@@ -79,11 +79,7 @@ async function boot() {
   const passport = new Passport(scene, nav, places);
   const fares = new Fares(scene, nav, passport, crowd);
   const governor = new Governor(R, sky, quality, traffic, crowd, chunks);
-  // vài mốc đặt lại cho khớp mô hình: dấu cầu Thê Húc ở đầu cầu, dấu Tháp Bút ở chân tháp
-  const gate = site('ngoc_son_gate');
-  if (th && passport.byId.get('cau_the_huc')) passport.place(passport.byId.get('cau_the_huc'), th.x + Math.sin(th.yaw) * 6, th.z + Math.cos(th.yaw) * 6);
-  if (gate && passport.byId.get('thap_but_dai_nghien')) passport.place(passport.byId.get('thap_but_dai_nghien'), gate.x - Math.sin(gate.yaw) * 9, gate.z - Math.cos(gate.yaw) * 9);
-  for (const it of passport.items) if (it.id === 'cau_the_huc' || it.id === 'thap_but_dai_nghien') it.radius = 7;
+  // vị trí các điểm đóng dấu đã được neo vào mô hình và vào chỗ tới được ngay trong places.json (tools/build_places.mjs)
   passport.refresh();
   // khu vực trang nghiêm: không chạy xe
   const solemn = passport.items.filter((i) => i.solemn).map((i) => ({ x: i.x, z: i.z, r: i.id === 'quang_truong_ba_dinh' ? 150 : 100 }));
@@ -91,6 +87,7 @@ async function boot() {
 
   // ----- điểm xuất phát: bờ hồ, trước cổng đền Ngọc Sơn, nhìn về cầu Thê Húc lúc chiều vàng -----
   let sx = 124, sz = -211, syaw = -1.67, resumed = false;
+  const gate = site('ngoc_son_gate'); // bắt đầu trước cổng đền Ngọc Sơn
   if (gate) { sx = gate.x + Math.sin(gate.yaw) * 7; sz = gate.z + Math.cos(gate.yaw) * 7; syaw = gate.yaw + Math.PI; }
   const saved = passport.flags.pos;
   if (saved && passport.visited.size > 0 && !params.has('fresh')) { [sx, sz, syaw] = saved; resumed = true; if (!fixedTime && passport.flags.hours) sky.setHours(passport.flags.hours); }
@@ -145,12 +142,14 @@ async function boot() {
       const [wx, wz] = toWorld(e.clientX, e.clientY); let best = null, bd = 70;
       for (const it of passport.items) { if (!passport.visited.has(it.id)) continue; const d = Math.hypot(it.x - wx, it.z - wz); if (d < bd) { bd = d; best = it; } }
       if (!best || fares.state === 'ride') return;
-      const h = nav.nearestRoad(best.x, best.z, 120, (r) => !r.bridge && !r.skip), tx = h ? h.px : best.x, tz = h ? h.pz : best.z;
-      hud.close(); warp(tx, tz); hud.toast(`${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
+      // chỗ đứng thoáng cạnh địa danh đã tính sẵn và kiểm tra bằng va chạm thật (tools/build_places.mjs, reach_check.mjs);
+      // tới nơi thì quay mặt về địa danh
+      const [tx, tz] = best.s || [best.x, best.z], far = Math.hypot(best.x - tx, best.z - tz) > 1.5;
+      hud.close(); warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined); hud.toast(`${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
     };
   };
   let warpTo = null;
-  const warp = (x, z) => { warpTo = [x, z]; chunks.update(x, z, true); };
+  const warp = (x, z, yaw) => { warpTo = [x, z, yaw]; chunks.update(x, z, true); };
   const shareText = () => T('shareText', { n: passport.visited.size, t: passport.items.length });
   const share = async () => { const url = location.origin + location.pathname; try { if (navigator.share) await navigator.share({ title: document.title, text: shareText(), url }); else { await navigator.clipboard.writeText(`${shareText()} ${url}`); hud.toast(T('copied'), 3, '', '🔗'); } } catch { /* người dùng huỷ */ } };
   $('k-share').addEventListener('click', share); $('d-share').addEventListener('click', share);
@@ -208,7 +207,7 @@ async function boot() {
 
     const frozen = !G.started || !!hud.modal;
     if (frozen) { input.move.x = input.move.y = 0; }
-    if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }; if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, player.yaw); cam.snap(player); warpTo = null; }
+    if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }; if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, warpTo[2] ?? player.yaw); cam.snap(player); warpTo = null; }
     const wasX = player.pos.x, wasZ = player.pos.z;
     player.update(dt, input, cam.yaw);
     traffic.update(dt, player, camera, sky.hours);
@@ -225,6 +224,9 @@ async function boot() {
     pools.update(skyU.uLit.value);
 
     // ----- giao diện -----
+    // camera áp sát đầu (bị dồn vào góc tường) thì ẩn nhân vật để không nhìn xuyên vào trong người
+    { const near = cam.close < 0.8; player.root.visible = !near; player.helmet.visible = player.mode === 'bike' && !near;
+      skyU.uCut.value.set(player.pos.x, player.y + 1.25, player.pos.z, near || G.photo ? 0 : 0.62); }
     if (G.started) {
       sugT -= dt;
       if (sugT <= 0) {
@@ -268,7 +270,7 @@ async function boot() {
       if (!chunks.pending.size && !chunks.want.length) document.title = lang() === 'vi' ? 'Hà Nội Dạo Phố' : 'Hanoi Stroll', window.__ready = true;
     }
   }
-  window.__game = { chunks, sky, nav, world, cam, R, scene, camera, player, input, traffic, crowd, passport, fares, hud, landmarks, sites, warp, get warping() { return !!warpTo; }, ready: true };
+  window.__game = { audio, G, setLang, chunks, sky, nav, world, cam, R, scene, camera, player, input, traffic, crowd, passport, fares, hud, landmarks, sites, warp, get warping() { return !!warpTo; }, ready: true };
   requestAnimationFrame(loop);
 }
 

@@ -62,6 +62,10 @@ export function buildMaterials(renderer, quality, atlas) {
         .replace('#include <project_vertex>', `#include <project_vertex>\nvFx = aFx; vWPos = (modelMatrix * ${opts.instanced ? 'instanceMatrix * ' : ''}vec4(transformed, 1.0)).xyz; vWN = normalize(mat3(modelMatrix) * ${opts.instanced ? 'mat3(instanceMatrix) * ' : ''}objectNormal);`);
       sh.fragmentShader = sh.fragmentShader
         .replace('#include <common>', `#include <common>\nvarying vec4 vFx; varying vec3 vWPos; varying vec3 vWN;\n${SKY_GLSL}${det ? '\nvarying vec3 vOPos; varying vec3 vON; uniform sampler2D uNoise;\n' + DETAIL_GLSL : ''}`)
+        .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>${opts.cut ? `
+          if (uCut.w > 0.0) { vec3 ab = uCut.xyz - cameraPosition; float ct = dot(vWPos - cameraPosition, ab) / dot(ab, ab);
+            if (ct > 0.04 && ct < 0.88) { float cd = length(vWPos - (cameraPosition + ab * ct));
+              if (1.0 - smoothstep(uCut.w * 0.5, uCut.w, cd) > hash12(gl_FragCoord.xy) * 0.94 + 0.03) discard; } }` : ''}`)
         .replace('#include <color_fragment>', `#include <color_fragment>${det ? '\n{ float mid = floor(vFx.w * 15.9375 + 0.5); if (mid > 0.5) diffuseColor.rgb = detailColor(mid, diffuseColor.rgb, vOPos, normalize(vON), uNoise); }' : ''}`)
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * vFx.x * (${opts.alwaysGlow ? '1.0' : 'uLit'}) * 2.6;${opts.flood ? `\ntotalEmissiveRadiance += diffuseColor.rgb * vec3(1.0, 0.8, 0.56) * uLit * ${opts.flood.toFixed(2)} * (1.0 - 0.45 * smoothstep(2.0, 30.0, vWPos.y)) * (0.75 + 0.25 * abs(normalize(vWN).y));` : ''}${opts.alphaTest ? '\ntotalEmissiveRadiance += diffuseColor.rgb * uSunCol * 0.05 * max(dot(normalize(vWN), -uSunDir) * 0.5 + 0.5, 0.0);' : ''}`)
         .replace('#include <opaque_fragment>', `
@@ -72,11 +76,13 @@ export function buildMaterials(renderer, quality, atlas) {
     };
     return mat;
   };
-  M.prop = M.makeProp({ map: atlas, detail: true });
+  // cut: vật che giữa camera và nhân vật (cột cổng, thân cây, mái hiên) bị đục lỗ lấm tấm để vẫn thấy nhân vật
+  M.prop = M.makeProp({ map: atlas, detail: true, cut: true });
+  M.propSolid = M.makeProp({ map: atlas }); // cho xe của người chơi: không bao giờ bị đục lỗ
   // công trình biểu tượng: có chất liệu chi tiết, ban đêm được đèn pha hắt sáng như ngoài đời
-  M.landmark = M.makeProp({ side: THREE.DoubleSide, detail: true, flood: 0.34 });
+  M.landmark = M.makeProp({ side: THREE.DoubleSide, detail: true, flood: 0.34, cut: true });
   // tán lá: thẻ lá trong suốt cắt theo alpha, hai mặt, đung đưa theo gió
-  M.leaf = M.makeProp({ map: leafTexture(quality.texSize), alphaTest: 0.42, side: THREE.DoubleSide });
+  M.leaf = M.makeProp({ map: leafTexture(quality.texSize), alphaTest: 0.42, side: THREE.DoubleSide, cut: true });
 
   // ----- mặt nước -----
   const wn = waterNormals(256);

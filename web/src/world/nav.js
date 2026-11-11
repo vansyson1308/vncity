@@ -161,19 +161,20 @@ export class Nav {
     return hits;
   }
 
-  // Tia ngang từ (x,z) theo hướng (dx,dz) dài tối đa max, chỉ tính tường cao hơn y. Trả về khoảng cách chạm đầu tiên.
-  raycast(x, z, dx, dz, max, y = 0) {
+  // Tia từ (x,z) theo hướng ngang (dx,dz) dài tối đa max. Tia ở độ cao y tại gốc và lên/xuống ky mét mỗi mét ngang;
+  // chỉ tính bức tường cao hơn tia ngay tại chỗ tia cắt tường. Trả về khoảng cách chạm đầu tiên.
+  raycast(x, z, dx, dz, max, y = 0, ky = 0) {
     let best = max;
     const steps = Math.ceil(max / CELL) + 1;
     const seen = this._seen || (this._seen = new Set()); seen.clear();
     for (let s = 0; s <= steps; s++) {
       const px = x + dx * Math.min(max, s * CELL), pz = z + dz * Math.min(max, s * CELL);
       this.eachSeg(px, pz, CELL * 0.75, (sg, i) => {
-        if (sg[i + 4] < y) return;
+        if (sg[i + 4] < 0) return; // bờ nước không chắn tầm nhìn
         const ax = sg[i] - x, az = sg[i + 1] - z, ex = sg[i + 2] - sg[i], ez = sg[i + 3] - sg[i + 1], den = dx * ez - dz * ex;
         if (Math.abs(den) < 1e-9) return;
         const tt = (ax * ez - az * ex) / den, u = (ax * dz - az * dx) / den;
-        if (tt > 0 && tt < best && u >= 0 && u <= 1) best = tt;
+        if (tt > 0 && tt < best && u >= 0 && u <= 1 && sg[i + 4] >= y + ky * tt) best = tt;
       });
     }
     return best;
