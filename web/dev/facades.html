@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><title>…</title><body style="margin:0;background:#556;font:12px sans-serif;color:#fff">
+<div id="s" style="display:flex;flex-wrap:wrap;gap:4px;padding:4px"></div><canvas id="a"></canvas>
+<script type="module">
+// Bảng soát các lớp mặt đứng và bảng chữ biển hiệu: /dev/facades.html?s=256 (xem tools/facade_sheet.mjs)
+import { facadeLayers } from '../src/world/facades.js';
+import { drawSignAtlas } from '../src/world/atlas.js';
+import { L } from '../src/world/layers.js';
+const q = new URLSearchParams(location.search), S = +(q.get('s') || 256);
+try { await Promise.race([document.fonts.load('800 60px "Be Vietnam Pro"', 'PHỞ'), new Promise((r) => setTimeout(r, 1500))]); } catch { /* phông hệ thống */ }
+const { canvases } = facadeLayers(S), names = Object.entries(L).filter(([k]) => !/^N_|COUNT/.test(k));
+const only = q.get('only') ? q.get('only').split(',').map(Number) : null;
+canvases.forEach((c, i) => { if (only && !only.includes(i)) return; const d = document.createElement('div'); d.textContent = i + ' ' + names.filter(([, v]) => v === i).map(([k]) => k).join('/'); d.appendChild(document.createElement('br')); c.style.width = c.style.height = (q.get('px') || 240) + 'px'; d.appendChild(c); document.getElementById('s').appendChild(d); });
+if (q.has('atlas')) { document.getElementById('s').remove(); const a = drawSignAtlas(document.getElementById('a')); a.style.width = '1280px'; }
+document.title = 'ready';
+</script>
