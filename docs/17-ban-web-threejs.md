@@ -106,6 +106,26 @@ Các kỹ thuật chính:
    tông, đá rêu, gạch lát sân, sơn son) được shader vẽ ra từ vị trí và pháp tuyến của điểm trong hệ toạ độ mô hình
    (`world/detail.js`): không cần UV, không cần ảnh. Mô hình chỉ gọi `g.mat(MAT.brick)`. Ở xa, hoa văn tự hoà về màu
    trung bình nên không nhấp nháy. Công trình biểu tượng được đèn pha hắt sáng ban đêm ngay trong shader.
+9. **Vật lý theo đơn vị thật.** `actors/physics.js` mô hình hoá chiếc xe số 110 cc bằng số đo ngoài đời: khối lượng xe
+   và người (chở khách thì nặng thêm 58 kg), lực kéo giới hạn bởi công suất 4,8 kW tại bánh, cản lăn, cản gió tỉ lệ v²,
+   lực hãm của máy khi nhả ga, phanh giới hạn bởi độ bám của lốp (0,75 khô, 0,5 ướt) theo vòng tròn ma sát, trọng lực
+   trên dốc cầu. Xe rẽ nhờ nghiêng: v²·κ = g·tan φ, nghiêng tối đa 35°, ngả xe không quá 1,7 rad/s, nên vào cua gắt phải
+   giảm tốc như ngoài đời. Đâm tường mất thành phần vận tốc vuông góc; va vào xe khác tính theo bảo toàn động lượng
+   (ô tô 1,35 tấn gần như không suy suyển, xe máy thì cả hai cùng khựng). Người đi bộ 5,2 km/h, chạy 16 km/h, gia tốc
+   có hạn. `tools/physics_check.mjs` mô phỏng 25 phép thử (0 đến 40 km/h trong 4,2 giây, tối đa 81 km/h, phanh
+   40 về 0 trong 7,8 m...) và báo lỗi nếu lệch khỏi khoảng đo thực tế.
+10. **Lối đi được kiểm chứng.** Tường rào để hở ở cổng thật (nút cổng của OSM) và ở mọi chỗ có lối đi cắt qua. Công
+   trình dựng tay khai báo lối phải thông (`paths`) và khối đặc (`solid`); công trình kín lấy mặt bằng của chính mô
+   hình làm va chạm. `tools/reach_check.mjs` loang trên lưới 0,4 m bằng đúng hàm va chạm của game để chắc rằng cả 44
+   điểm hộ chiếu đều tới được từ mạng đường; `tools/build_places.mjs` dùng cùng thư viện đó để dời điểm đóng dấu về
+   chỗ tới được và tính sẵn chỗ đứng thoáng cho chức năng đi nhanh.
+11. **Camera không vượt tường.** Tia từ đầu nhân vật tới vị trí camera (đã cộng độ lệch ngang) dừng trước mọi bức tường
+   0,35 m; camera còn được đẩy như một vòng tròn 0,5 m để mặt cắt gần của ống kính không cắt vào nhà; bị dồn vào góc
+   thì áp sát đầu nhân vật và nhân vật được ẩn đi. Cột cổng, thân cây, mái hiên chắn giữa camera và nhân vật thì bị
+   đục lỗ lấm tấm ngay trong shader để vẫn thấy nhân vật.
+12. **Âm thanh tổng hợp.** Không tải tệp âm thanh nào: tiếng máy theo vòng tua và hộp số bốn cấp, gió, phanh, bước
+   chân, nền phố ngày và đêm, nhạc ngũ cung tự sáng tác với ba âm sắc gợi đàn bầu, đàn tranh, sáo trúc
+   (`audio/audio.js`, ghi công trong `CREDITS.md`).
 
 ## 5. Hiệu năng
 
@@ -152,6 +172,11 @@ npm run dev        # http://localhost:5173
 npm run check      # dựng thử cả 756 ô phố bằng Node, kiểm ngân sách tam giác
 npm run build      # ra web/dist
 node tools/smoke.mjs   # kiểm thử khói trong Chromium (đặt CHROME_PATH nếu Playwright không có sẵn trình duyệt)
+npm run lint           # biến chưa khai báo, khai báo trùng
+npm run physics        # 25 phép thử vật lý so với số đo ngoài đời
+npm run reach          # cả 44 điểm hộ chiếu có lối đi tới
+node tools/accept.mjs  # nghiệm thu trên trình duyệt: đi bộ qua cầu Thê Húc, xoay camera sát tường, đi nhanh 44 điểm,
+                       # khách ngồi sau, HUD 1140 × 670, âm thanh và hai công tắc, các lỗi nhẹ (chạy lâu, không nằm trong CI)
 ```
 
 Làm mới dữ liệu (không cần cho build thường ngày):
@@ -212,7 +237,11 @@ node tools/studio.mjs --shots out/ lm:thap_rua # chụp bảng 6 góc: 3/4, chí
   giản đặt đều; mặt cầu Long Biên là bản đặc chứ chưa phải sàn thép hở; dốc cầu gãy góc nhẹ ở đỉnh dốc. Cầu cạn đường
   sắt qua phố Phùng Hưng (ngoài đoạn dẫn lên cầu Long Biên) chưa dựng. Người đi bộ chưa lên cầu. Bản đồ dừng ở giữa
   sông: chạy hết cầu là gặp mép bản đồ.
-- Chưa có giọng nói, tiếng rao; nhạc nền là vài nốt ngũ cung tổng hợp.
+- Chưa có giọng nói, tiếng rao thật; mọi âm thanh và nhạc nền là tổng hợp (không tìm được bản thu nào vừa hợp vừa có
+  giấy phép dùng lại rõ ràng, xem `CREDITS.md`). Chưa có ai nghe thử bằng tai trên loa thật: bài kiểm thử chỉ đo được
+  là có tín hiệu ra loa và hai công tắc có tác dụng.
+- Vật lý xe là mô hình một khối theo đơn vị thật (lực dọc, nghiêng, độ bám), chưa mô phỏng từng bánh, giảm xóc, trượt
+  bánh hay ngã xe: đâm mạnh thì xe khựng lại chứ không đổ. Đường ướt chưa nối với thời tiết.
 - Số tầng của nhà không có thẻ trong OSM là số suy đoán theo khu; nhà lấy từ Overture là hình do máy học vẽ.
 - Chưa đo khung hình trên GPU thật (xem mục 5). Chưa có người Hà Nội duyệt nội dung như GDD yêu cầu.
 - Các hệ thống lớn của GDD (cốt truyện, ba nhân vật, CSGT, thời tiết sống) vẫn thuộc về bản UE5/Unity; bản web

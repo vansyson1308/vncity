@@ -50,7 +50,7 @@ for (const f of foods) {
   for (const it of items) {
     const radius = it.kind === 'food' ? 7 : it.type === 'lake' || it.type === 'park' ? 26 : 16; // như game/passport.js
     const set = (p) => { it.x = p[0]; it.z = p[1]; };
-    if (it.id === 'cau_the_huc' && th) { set(fwd(th, 23.1).map((v) => +v.toFixed(1))); it.s = fwd(th, 3).map((v) => +v.toFixed(1)); continue; }        // giữa cầu; đứng ở đầu cầu phía bờ
+    if (it.id === 'cau_the_huc' && th) { set(fwd(th, 23.1).map((v) => +v.toFixed(1))); it.s = fwd(th, 9).map((v) => +v.toFixed(1)); continue; }        // dấu ở giữa cầu; đi nhanh thì đứng trên cầu, cách đầu bờ 9 m
     // đền Ngọc Sơn: dấu đặt ở sân trước đền, ngay sau lầu Đắc Nguyệt (toạ độ gốc nằm trong lòng đền, không ai đứng tới được);
     // phải qua hết cầu mới vào tầm đóng dấu. Chỗ đứng khi đi nhanh: đầu cầu phía đảo.
     if (it.id === 'den_ngoc_son' && th) { set(fwd(th, 60).map((v) => +v.toFixed(1))); it.s = R.anchor(...fwd(th, 51), 40, 0.8); continue; }
