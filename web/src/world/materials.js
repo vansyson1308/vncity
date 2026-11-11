@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { SKY_GLSL, skyU } from '../engine/sky.js';
 import { arrayTexture, groundTextures, GROUND_SCALE, noiseTexture, waterNormals, leafTexture } from './textures.js';
 import { facadeTexture, facadeMaterial } from './facades.js';
+import { DETAIL_GLSL } from './detail.js';
 
 export function buildMaterials(renderer, quality, atlas) {
   const aniso = Math.min(quality.aniso, renderer.capabilities.getMaxAnisotropy());
@@ -49,18 +50,20 @@ export function buildMaterials(renderer, quality, atlas) {
     const mat = new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true, map: opts.map || null, side: opts.side || THREE.FrontSide, alphaTest: opts.alphaTest || 0 });
     if (opts.alphaTest && quality.msaa) mat.alphaToCoverage = true;
     mat.onBeforeCompile = (sh) => {
-      Object.assign(sh.uniforms, skyU, { uWind: { value: 1 } });
+      Object.assign(sh.uniforms, skyU, { uWind: { value: 1 }, uNoise: { value: noise } });
+      const det = !!opts.detail && !opts.instanced; // chất liệu chi tiết (detail.js): chỉ cho lưới đứng yên
       sh.vertexShader = sh.vertexShader
-        .replace('#include <common>', `#include <common>\nattribute vec4 aFx; varying vec4 vFx; varying vec3 vWPos; varying vec3 vWN; uniform float uTime; uniform float uWind;${opts.instanced ? '\nattribute vec3 aTint; attribute vec3 aTint2;' : ''}`)
+        .replace('#include <common>', `#include <common>\nattribute vec4 aFx; varying vec4 vFx; varying vec3 vWPos; varying vec3 vWN; uniform float uTime; uniform float uWind;${det ? ' varying vec3 vOPos; varying vec3 vON;' : ''}${opts.instanced ? '\nattribute vec3 aTint; attribute vec3 aTint2;' : ''}`)
         .replace('#include <color_vertex>', `#include <color_vertex>\nvColor.rgb *= vColor.rgb;${opts.instanced ? '\nvColor.rgb = mix(vColor.rgb, vColor.rgb * aTint, step(0.75, color.a)); vColor.rgb = mix(vColor.rgb, vColor.rgb * aTint2, step(0.25, color.a) * (1.0 - step(0.75, color.a)));' : ''}\nvColor.a = 1.0;`)
-        .replace('#include <begin_vertex>', `#include <begin_vertex>
+        .replace('#include <begin_vertex>', `#include <begin_vertex>${det ? '\nvOPos = position; vON = normal;' : ''}
           { float sw = aFx.y; if (sw > 0.0) { vec3 wp = (modelMatrix * vec4(position, 1.0)).xyz;
             transformed.x += sw * (sin(uTime * 1.25 + wp.x * 0.31 + wp.z * 0.27) * 0.07 + sin(uTime * 3.1 + wp.x * 1.9 + wp.y) * 0.022) * uWind;
             transformed.z += sw * (cos(uTime * 1.05 + wp.z * 0.33 + wp.x * 0.19) * 0.06 + sin(uTime * 2.7 + wp.z * 1.7) * 0.02) * uWind; } }`)
         .replace('#include <project_vertex>', `#include <project_vertex>\nvFx = aFx; vWPos = (modelMatrix * ${opts.instanced ? 'instanceMatrix * ' : ''}vec4(transformed, 1.0)).xyz; vWN = normalize(mat3(modelMatrix) * ${opts.instanced ? 'mat3(instanceMatrix) * ' : ''}objectNormal);`);
       sh.fragmentShader = sh.fragmentShader
-        .replace('#include <common>', `#include <common>\nvarying vec4 vFx; varying vec3 vWPos; varying vec3 vWN;\n${SKY_GLSL}`)
-        .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * vFx.x * (${opts.alwaysGlow ? '1.0' : 'uLit'}) * 2.6;${opts.alphaTest ? '\ntotalEmissiveRadiance += diffuseColor.rgb * uSunCol * 0.05 * max(dot(normalize(vWN), -uSunDir) * 0.5 + 0.5, 0.0);' : ''}`)
+        .replace('#include <common>', `#include <common>\nvarying vec4 vFx; varying vec3 vWPos; varying vec3 vWN;\n${SKY_GLSL}${det ? '\nvarying vec3 vOPos; varying vec3 vON; uniform sampler2D uNoise;\n' + DETAIL_GLSL : ''}`)
+        .replace('#include <color_fragment>', `#include <color_fragment>${det ? '\n{ float mid = floor(vFx.w * 15.9375 + 0.5); if (mid > 0.5) diffuseColor.rgb = detailColor(mid, diffuseColor.rgb, vOPos, normalize(vON), uNoise); }' : ''}`)
+        .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * vFx.x * (${opts.alwaysGlow ? '1.0' : 'uLit'}) * 2.6;${opts.flood ? `\ntotalEmissiveRadiance += diffuseColor.rgb * vec3(1.0, 0.8, 0.56) * uLit * ${opts.flood.toFixed(2)} * (1.0 - 0.45 * smoothstep(2.0, 30.0, vWPos.y)) * (0.75 + 0.25 * abs(normalize(vWN).y));` : ''}${opts.alphaTest ? '\ntotalEmissiveRadiance += diffuseColor.rgb * uSunCol * 0.05 * max(dot(normalize(vWN), -uSunDir) * 0.5 + 0.5, 0.0);' : ''}`)
         .replace('#include <opaque_fragment>', `
           if (vFx.z > 0.02) { vec3 V = normalize(vWPos - cameraPosition); vec3 N = normalize(vWN); vec3 Rf = reflect(V, N);
             float fr = 0.05 + 0.95 * pow(1.0 - max(dot(-V, N), 0.0), 4.0);
@@ -69,8 +72,9 @@ export function buildMaterials(renderer, quality, atlas) {
     };
     return mat;
   };
-  M.prop = M.makeProp({ map: atlas });
-  M.landmark = M.makeProp({ side: THREE.DoubleSide });
+  M.prop = M.makeProp({ map: atlas, detail: true });
+  // công trình biểu tượng: có chất liệu chi tiết, ban đêm được đèn pha hắt sáng như ngoài đời
+  M.landmark = M.makeProp({ side: THREE.DoubleSide, detail: true, flood: 0.34 });
   // tán lá: thẻ lá trong suốt cắt theo alpha, hai mặt, đung đưa theo gió
   M.leaf = M.makeProp({ map: leafTexture(quality.texSize), alphaTest: 0.42, side: THREE.DoubleSide });
 

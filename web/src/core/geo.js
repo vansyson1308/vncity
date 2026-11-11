@@ -2,11 +2,15 @@
 // Mọi thứ không phải mô hình tải về (cây, cột đèn, xe máy, tháp, cầu...) đều dựng bằng lớp G này rồi gộp
 // thành một lưới duy nhất: một lệnh vẽ cho cả một ô phố.
 // Mỗi đỉnh: vị trí, pháp tuyến, màu RGBA (A: mặt nạ đổi màu của xe), uv (ô chữ trong bảng biển hiệu),
-// fx = [phát sáng ban đêm, đung đưa theo gió, độ bóng, dự phòng] (0..255).
+// fx = [phát sáng ban đêm, đung đưa theo gió, độ bóng, chất liệu chi tiết] (0..255).
 import earcut from 'earcut';
 
 const hex = (h) => [((h >> 16) & 255) / 255, ((h >> 8) & 255) / 255, (h & 255) / 255];
 const srgb2lin = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+
+// Chất liệu chi tiết: hoa văn bề mặt do shader vẽ theo vị trí (world/detail.js), không cần UV, không tốn dung lượng tải.
+// Dùng: g.color(0xa8553a).mat(MAT.brick).box(...); g.mat() để trở về mặt trơn.
+export const MAT = { none: 0, brick: 1, stone: 2, plaster: 3, tile: 4, wood: 5, rust: 6, concrete: 7, mossy: 8, pave: 9, lacquer: 10 };
 
 export class G {
   constructor() {
@@ -34,7 +38,7 @@ export class G {
   glow(v = 1) { this.f[0] = v; return this; }
   sway(v = 1) { this.f[1] = v; return this; }
   gloss(v = 1) { this.f[2] = v; return this; }
-  tag(v = 0) { this.f[3] = v; return this; }
+  mat(id = 0) { this.f[3] = (id * 16) / 255; return this; } // chất liệu chi tiết (MAT.*)
 
   // ----- đỉnh và mặt -----
   v(x, y, z, nx, ny, nz, u, w) {
