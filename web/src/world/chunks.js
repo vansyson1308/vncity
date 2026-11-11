@@ -1,7 +1,7 @@
 // Quản lý các ô phố 128 m: yêu cầu worker dựng ô gần người chơi (gần trước, xa sau), gỡ ô đã xa,
 // đổi bản chi tiết/bản xa của đồ vật theo khoảng cách. Luồng chính chỉ việc nạp mảng vào GPU.
 import * as THREE from 'three';
-import { CS, CURB } from './data.js';
+import { CS, CURB, ZONE, zoneAt } from './data.js';
 import { propGeometry } from './materials.js';
 
 export class Chunks {
@@ -134,26 +134,52 @@ export class Chunks {
   }
 }
 
-// Vệt sáng dưới chân đèn đường: một InstancedMesh cộng màu, chỉ hiện khi trời tối.
+// Vệt sáng dưới chân đèn đường và trước cửa hàng: một InstancedMesh, chỉ hiện khi trời tối.
 // Rẻ hơn rất nhiều so với đặt đèn điểm thật (mỗi đèn điểm làm mọi điểm ảnh phải tính thêm một nguồn sáng).
+// Vệt sáng NHÂN độ sáng của mặt đất bên dưới (trộn màu: nền × (1 + đèn)) chứ không cộng một màu phẳng lên trên, nên vân đá lát,
+// vạch sơn, miếng vá vẫn rõ dưới đèn và mặt nhựa sẫm không bị phủ một lớp sương trắng.
+// Màu theo loại đèn (art bible mục 7): trục chính dùng LED trắng trung tính, phố nhỏ và phố cổ còn đèn sodium vàng cam,
+// đèn vườn quanh hồ vàng ấm, tuýp LED cửa hàng trắng lạnh hắt ra vỉa hè, phố đèn lồng thì đỏ cam.
+// Loại đèn suy từ bán kính vệt sáng mà bộ sinh đồ vật ghi trong danh sách [x, y, z, bán kính] (props.js, decor.js).
+const POOL = { led: [4.4, 4.2, 3.3], sodium: [6.0, 3.2, 0.9], park: [4.6, 3.2, 1.6], shop: [3.3, 2.9, 2.2], lantern: [4.6, 1.0, 0.4] };
+const poolKind = (x, z, r) => (r >= 11 ? (zoneAt(x, z) === ZONE.old ? POOL.sodium : POOL.led) : r >= 8 ? POOL.sodium : r >= 6.5 ? POOL.park : r >= 5.5 ? POOL.lantern : POOL.shop);
 export class LightPools {
   constructor(scene, max = 5000) {
-    const S = 128, cv = document.createElement('canvas'); cv.width = cv.height = S; const g = cv.getContext('2d');
-    const gr = g.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.35, 'rgba(255,255,255,0.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
-    g.fillStyle = gr; g.fillRect(0, 0, S, S);
-    const tex = new THREE.CanvasTexture(cv);
-    this.mat = new THREE.MeshBasicMaterial({ map: tex, color: 0xffc98a, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0, fog: true, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 });
+    // Hình vệt sáng tính bằng công thức (không cần texture): sáng ở tâm, tắt dần ra rìa; ở xa mờ dần theo đúng hệ số sương của cảnh.
+    this.mat = new THREE.ShaderMaterial({
+      uniforms: { uOpacity: { value: 0 }, uDirect: { value: 0 }, fogColor: { value: new THREE.Color() }, fogDensity: { value: 0.001 } },
+      transparent: true, depthWrite: false, fog: true, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4,
+      blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.DstColorFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor,
+      vertexShader: /* glsl */`
+        uniform float fogDensity; varying vec2 vP; varying vec3 vTint;
+        void main(){
+          vP = position.xz; vec4 mv = modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+          float fx = fogDensity * -mv.z; vTint = instanceColor * exp(-fx * fx - fx * 0.3);
+          gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: /* glsl */`
+        uniform float uOpacity, uDirect; varying vec2 vP; varying vec3 vTint;
+        void main(){
+          float k = max(1.0 - dot(vP, vP), 0.0); k = k * k * (0.25 + 0.75 * k * k);
+          vec3 gain = vTint * (k * uOpacity);
+          // vẽ thẳng ra màn hình (mức chất lượng thấp, không hậu kỳ): nền đã mã hoá sRGB nên hệ số nhân phải nén lại tương ứng
+          if (uDirect > 0.5) gain = pow(1.0 + gain, vec3(0.4545)) - 1.0;
+          gl_FragColor = vec4(gain, 1.0);
+        }`,
+    });
     const geo = new THREE.PlaneGeometry(2, 2); geo.rotateX(-Math.PI / 2);
     this.mesh = new THREE.InstancedMesh(geo, this.mat, max); this.mesh.count = 0; this.mesh.frustumCulled = false; this.mesh.renderOrder = 5; this.max = max;
+    this.mesh.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(max * 3), 3);
+    this.mesh.onBeforeRender = (renderer) => { this.mat.uniforms.uDirect.value = renderer.getRenderTarget() ? 0 : 1; };
     scene.add(this.mesh);
     this._m = new THREE.Matrix4();
   }
   set(lists) {
-    let n = 0; const m = this._m;
+    let n = 0; const m = this._m, col = this.mesh.instanceColor.array;
     for (const l of lists) for (let i = 0; i < l.length && n < this.max; i += 4) {
-      const r = l[i + 3] * 1.25; m.makeScale(r, 1, r); m.setPosition(l[i], l[i + 1] < 0 ? 0.06 - l[i + 1] : l[i + 1] > 5 ? 0.03 : CURB + 0.03, l[i + 2]); this.mesh.setMatrixAt(n++, m);
+      const r = l[i + 3] * 1.25, c = poolKind(l[i], l[i + 2], l[i + 3]); m.makeScale(r, 1, r); m.setPosition(l[i], l[i + 1] < 0 ? 0.06 - l[i + 1] : l[i + 1] > 5 ? 0.03 : CURB + 0.03, l[i + 2]);
+      col[n * 3] = c[0]; col[n * 3 + 1] = c[1]; col[n * 3 + 2] = c[2]; this.mesh.setMatrixAt(n++, m);
     }
-    this.mesh.count = n; this.mesh.instanceMatrix.needsUpdate = true;
+    this.mesh.count = n; this.mesh.instanceMatrix.needsUpdate = true; this.mesh.instanceColor.needsUpdate = true;
   }
-  update(lit) { this.mat.opacity = lit * 0.5; this.mesh.visible = lit > 0.02; }
+  update(lit) { this.mat.uniforms.uOpacity.value = lit; this.mesh.visible = lit > 0.02; }
 }

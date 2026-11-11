@@ -5,6 +5,7 @@ import { CS, CURB, K, ZONE, zoneAt, roadY, alongAt } from '../data.js';
 import { tree, streetLamp, parkLamp } from '../../models/street.js';
 import { decorate } from './decor.js';
 import { WHITE_UV } from '../signs.js';
+import { treePit } from './pits.js';
 
 export function genProps(ctx, cx, cz, bld) {
   const W = ctx.world, B = W.bounds, X0 = B.x0 + cx * CS, Z0 = B.z0 + cz * CS, X1 = X0 + CS, Z1 = Z0 + CS;
@@ -20,6 +21,7 @@ export function genProps(ctx, cx, cz, bld) {
   const addTree = (x, z, kind, seed) => {
     for (const p of placed) if ((p[0] - x) ** 2 + (p[1] - z) ** 2 < 16) return;
     placed.push([x, z]);
+    treePit(near, ctx, x, z, X0, Z0, seed); // ô cây trên vỉa hè (gen/pits.js)
     // ô nào quá nhiều cây (rừng, công viên) thì từ cây thứ 56 dùng luôn bản một khối để giữ số tam giác
     if (placed.length <= 56) tree(near, x - X0, z - Z0, seed, kind, 0, CURB, leaf); else tree(near, x - X0, z - Z0, seed, kind, 1, CURB);
     tree(far, x - X0, z - Z0, seed, kind, 1, CURB);
