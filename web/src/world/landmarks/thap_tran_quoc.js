@@ -1,6 +1,8 @@
 // Bảo tháp Lục độ đài sen, chùa Trấn Quốc: tháp gạch lục giác 11 tầng cao chừng 15 m, đỏ thẫm; mỗi mặt mỗi tầng có một khám
-// vòm đặt tượng Phật A Di Đà bằng đá trắng; các tầng ngăn nhau bằng diềm mái cong; đỉnh là đài sen chín tầng (cửu phẩm
-// liên hoa) bằng đá nhạt màu. Đế lục giác giật cấp.
+// vòm đặt tượng Phật A Di Đà bằng đá trắng (66 pho); các tầng ngăn nhau bằng diềm mái cong; đỉnh là đài sen chín tầng
+// (cửu phẩm liên hoa) bằng đá nhạt màu. Đế lục giác giật cấp.
+// Chất liệu: gạch đỏ (MAT.brick), diềm ngói (MAT.tile), đế đá (MAT.stone), đài sen vữa cũ (MAT.plaster).
+import { MAT } from '../../core/geo.js';
 
 const BRICK = 0x93412b, TILE = 0x5f3026, PALE = 0xcfc8b6, WHITE = 0xe9e6dc;
 const C30 = Math.cos(Math.PI / 6);
@@ -14,36 +16,46 @@ function hex(g, r0, r1, y0, y1, cap = true) {
   if (cap) { const p = []; for (let i = 0; i < 6; i++) { const a = (i * Math.PI) / 3; p.push([Math.cos(a) * r1, Math.sin(a) * r1]); } g.prism(p, y1, y1, true, false, false); }
 }
 
-// Một mặt của một tầng tháp trong hệ toạ độ cục bộ (mặt tường ở z = r·cos30°, rộng r): tường có khám lõm,
+// Tượng Phật A Di Đà ngồi kiết già trên toà sen: nửa mặt tròn xoay (phía trước) ép dẹt theo chiều sâu.
+// Dáng: đùi xếp bằng rộng, thắt eo, vai, cổ, đầu có nhục kế. lod 0: tầng thấp gần mắt người dựng kỹ; 2: tầng cao chỉ còn dáng.
+function buddha(g, y, z, bw, H, lod) {
+  const P = lod < 2
+    ? [[bw * 1.0, 0], [bw * 0.98, H * 0.2], [bw * 0.52, H * 0.31], [bw * 0.6, H * 0.56], [bw * 0.2, H * 0.66], [bw * 0.3, H * 0.8], [bw * 0.1, H]]
+    : [[bw * 1.0, 0], [bw * 0.55, H * 0.3], [bw * 0.6, H * 0.58], [bw * 0.24, H * 0.7], [bw * 0.14, H]];
+  g.push().move(0, y, z).scale(1, 1, 0.62);
+  g.mat().color(WHITE).lathe(0, 0, 0, P, lod === 0 ? 4 : lod === 1 ? 3 : 2, 0, Math.PI);
+  g.pop();
+}
+
+// Một mặt của một tầng tháp trong hệ toạ độ cục bộ (mặt tường ở z = r·cos30°, rộng r): tường gạch có khám vòm lõm,
 // tượng Phật trắng ngồi trong khám, diềm mái cong phía trên.
 function face(g, r, y, hb, he, k, tier) {
   const z = r * C30, hw = r / 2;
-  const nw = Math.min(0.27, hw * 0.42), n0 = y + 0.13, n1 = y + hb - 0.14, dp = 0.17;
+  const nw = Math.min(0.27, hw * 0.42), n0 = y + 0.13, n1 = y + hb - 0.12, dp = 0.18;
   // tường quanh khám
-  g.color(BRICK).shade(k * 0.82); g.quad([-hw, y, z], [hw, y, z], [hw, n0, z], [-hw, n0, z]);
+  g.mat(MAT.brick).color(BRICK).shade(k * 0.86); g.quad([-hw, y, z], [hw, y, z], [hw, n0, z], [-hw, n0, z]);
   g.color(BRICK).shade(k);
   g.quad([-hw, n0, z], [-nw, n0, z], [-nw, n1, z], [-hw, n1, z]); g.quad([nw, n0, z], [hw, n0, z], [hw, n1, z], [nw, n1, z]);
-  g.color(BRICK).shade(k * 0.7); g.quad([-hw, n1, z], [hw, n1, z], [hw, y + hb, z], [-hw, y + hb, z]);   // phần tường dưới diềm mái, sẫm bóng
+  g.color(BRICK).shade(k * 0.74); g.quad([-hw, n1, z], [hw, n1, z], [hw, y + hb, z], [-hw, y + hb, z]);   // phần tường dưới diềm mái, sẫm bóng
+  // vòm khám: hai mảng góc lấp phần trên cung bán nguyệt
+  const ns = tier < 5 ? 4 : 3, ys = n1 - nw;
+  g.color(BRICK).shade(k);
+  for (const s of [-1, 1]) for (let i = 0; i < ns; i++) {
+    const a = (Math.PI / 2) * (i / ns), b = (Math.PI / 2) * ((i + 1) / ns);
+    const pa = [s * nw * Math.cos(a), ys + nw * Math.sin(a), z], pb = [s * nw * Math.cos(b), ys + nw * Math.sin(b), z], c = [s * nw, n1, z];
+    s > 0 ? g.tri3(c, pb, pa) : g.tri3(c, pa, pb);
+  }
+  g.mat(MAT.plaster).color(PALE).shade(0.86);                                 // bệ khám bằng đá nhạt màu, nhô nhẹ
+  g.box(-nw - 0.05, n0 - 0.05, z, nw + 0.05, n0, z + 0.035, 'xXYZ');
   // lòng khám tối
   const zi = z - dp;
-  g.rgb(0.03, 0.014, 0.01); g.quad([-nw, n0, zi], [nw, n0, zi], [nw, n1, zi], [-nw, n1, zi]);
-  g.rgb(0.07, 0.028, 0.02);
+  g.mat().rgb(0.035, 0.016, 0.012); g.quad([-nw, n0, zi], [nw, n0, zi], [nw, n1, zi], [-nw, n1, zi]);
+  g.rgb(0.075, 0.03, 0.022);
   g.quad([-nw, n0, zi], [-nw, n1, zi], [-nw, n1, z], [-nw, n0, z]); g.quad([nw, n0, z], [nw, n1, z], [nw, n1, zi], [nw, n0, zi]);
   g.quad([-nw, n1, z], [-nw, n1, zi], [nw, n1, zi], [nw, n1, z]);
-  g.color(BRICK).shade(k * 0.9); g.quad([-nw, n0, z], [nw, n0, z], [nw, n0, zi], [-nw, n0, zi]);
-  // hai góc vát cho khám thành vòm
-  const cv = nw * 0.62;
-  g.color(BRICK).shade(k);
-  g.tri3([-nw, n1 - cv, z + 0.004], [-nw + cv, n1, z + 0.004], [-nw, n1, z + 0.004]); g.tri3([nw, n1 - cv, z + 0.004], [nw, n1, z + 0.004], [nw - cv, n1, z + 0.004]);
-  // tượng Phật ngồi bằng đá trắng: chân xếp bằng, thân, đầu (mỗi phần một nêm hai mặt hướng ra)
-  const zs = z - dp * 0.72, bw = nw * 0.74, H = (n1 - n0) * 0.84, sy = n0 + 0.01;
-  const wedge = (w0, w1, ya, yb, d, sh) => {
-    g.color(WHITE).shade(sh).quad([-w0, ya, zs], [0, ya, zs + d], [0, yb, zs + d * 0.8], [-w1, yb, zs]);
-    g.color(WHITE).shade(sh * 0.9).quad([0, ya, zs + d], [w0, ya, zs], [w1, yb, zs], [0, yb, zs + d * 0.8]);
-  };
-  wedge(bw, bw * 0.8, sy, sy + H * 0.22, 0.11, 0.9);                       // chân xếp bằng trên toà sen
-  wedge(bw * 0.5, bw * 0.6, sy + H * 0.22, sy + H * 0.64, 0.085, 1.0);       // thân, vai
-  wedge(bw * 0.27, bw * 0.22, sy + H * 0.7, sy + H, 0.07, 1.0);             // đầu
+  g.mat(MAT.brick).color(BRICK).shade(k * 0.9); g.quad([-nw, n0, z], [nw, n0, z], [nw, n0, zi], [-nw, n0, zi]);
+  // tượng Phật ngồi bằng đá trắng
+  buddha(g, n0, zi + 0.012, nw * 0.72, (n1 - n0) * 0.88, tier < 3 ? 0 : tier < 6 ? 1 : 2);
   // diềm mái cong: mép ngoài vểnh ở hai góc
   const ye = y + hb, ro = r + 0.36, n = 4, top0 = [], out = [], outB = [], inB = [];
   for (let i = 0; i <= n; i++) {
@@ -52,19 +64,20 @@ function face(g, r, y, hb, he, k, tier) {
     out.push([(u * rr) / 2, ye + 0.02 + 0.15 * c, rr * C30]); outB.push([(u * rr) / 2, ye - 0.04 + 0.15 * c, rr * C30]);
     inB.push([(u * r) / 2, ye - 0.05, z]);
   }
-  g.color(TILE).shade(tier % 2 ? 0.92 : 1.05); g.ribbon(top0, out);
-  g.color(TILE).shade(0.6); g.ribbon(out, outB);
-  g.color(PALE).shade(0.5); g.ribbon(inB, outB, true);
+  g.mat(MAT.tile).color(TILE).shade(tier % 2 ? 0.96 : 1.04); g.ribbon(top0, out);
+  g.mat().color(TILE).shade(0.6); g.ribbon(out, outB);
+  g.mat(MAT.plaster).color(PALE).shade(0.5); g.ribbon(inB, outB, true);
+  g.mat();
 }
 
 export function build(g) {
   g.push(); g.glow(0).sway(0).gloss(0);
 
   // ----- đế lục giác giật cấp -----
-  g.color(0x8d857a); hex(g, 3.1, 3.1, 0, 0.3);
+  g.mat(MAT.stone).color(0x8d857a); hex(g, 3.1, 3.1, 0, 0.3);
   g.color(0x9a9286); hex(g, 2.75, 2.75, 0.3, 0.6);
-  g.color(BRICK).shade(0.75); hex(g, 2.4, 2.3, 0.6, 0.95);
-  g.color(PALE).shade(0.8); hex(g, 2.36, 2.36, 0.95, 1.05);
+  g.mat(MAT.brick).color(BRICK).shade(0.8); hex(g, 2.4, 2.3, 0.6, 0.95);
+  g.mat(MAT.plaster).color(PALE).shade(0.8); hex(g, 2.36, 2.36, 0.95, 1.05);
 
   // ----- 11 tầng tháp -----
   const NT = 11, Y0 = 1.05, TH = 1.02, HB = 0.78;
@@ -72,16 +85,17 @@ export function build(g) {
     const r = 1.86 - t * 0.058, y = Y0 + t * TH;
     for (let i = 0; i < 6; i++) {
       g.push().rotY((i * Math.PI) / 3);
-      face(g, r, y, HB, TH - HB, 0.9 + ((t * 5 + i * 3) % 4) * 0.045, t);
+      face(g, r, y, HB, TH - HB, 0.94 + ((t * 5 + i * 3) % 4) * 0.03, t);
       g.pop();
     }
   }
 
   // ----- đỉnh tháp: đài sen chín tầng bằng đá -----
   let y = Y0 + NT * TH;
-  g.color(TILE).shade(0.9); hex(g, 1.86 - (NT - 1) * 0.058, 1.86 - (NT - 1) * 0.058, y - 0.001, y, true);   // nắp mái tầng trên cùng
-  g.color(BRICK).shade(0.85); hex(g, 0.95, 0.8, y - 0.02, y + 0.22);
+  g.mat(MAT.tile).color(TILE).shade(0.9); hex(g, 1.86 - (NT - 1) * 0.058, 1.86 - (NT - 1) * 0.058, y - 0.001, y, true);   // nắp mái tầng trên cùng
+  g.mat(MAT.brick).color(BRICK).shade(0.85); hex(g, 0.95, 0.8, y - 0.02, y + 0.22);
   y += 0.22;
+  g.mat(MAT.plaster);
   g.color(PALE).shade(0.9).cyl(0, y, 0, 0.62, 0.7, 0.14, 10, true);            // cánh sen đỡ
   g.color(PALE).cyl(0, y + 0.14, 0, 0.5, 0.36, 0.14, 10, true);
   y += 0.28;
@@ -94,6 +108,6 @@ export function build(g) {
   g.color(PALE).shade(1.05).ball(0, y + 0.17, 0, 0.17, 8, 4, 1.15);               // bảo châu
   g.cyl(0, y + 0.32, 0, 0.05, 0, 0.28, 6, false);
 
-  g.gloss(0).glow(0).sway(0).color(0xffffff);
+  g.mat().gloss(0).glow(0).sway(0).color(0xffffff);
   g.pop();
 }

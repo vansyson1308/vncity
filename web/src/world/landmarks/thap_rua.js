@@ -3,6 +3,7 @@
 // Số đo thật: tầng một 6,28 × 4,54 m; tầng hai 4,8 × 3,64 m; tầng ba 2,97 × 1,9 m; vọng lâu trên đỉnh vuông ~2 m;
 // từ nền gò lên đỉnh 8,8 m. Hai tầng dưới cửa vòm nhọn (ba cửa mặt dài, hai cửa mặt ngắn), tầng ba mỗi mặt một cửa vòm tròn.
 import { hash } from '../../core/util.js';
+import { MAT } from '../../core/geo.js';
 
 const s2l = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 const lin = (h) => [s2l(((h >> 16) & 255) / 255), s2l(((h >> 8) & 255) / 255), s2l((h & 255) / 255)];
@@ -15,6 +16,9 @@ const DARK = 0x16130f;      // lòng cửa
 const MOSS = lin(0x4f5a2c);
 const SOOT = lin(0x2e2b25);
 
+// Chất liệu chi tiết (vữa cũ, đá rêu) đã tự vẽ loang màu, vệt nước mưa và chân tường ẩm, nên lớp phong hoá nướng vào màu đỉnh
+// chỉ giữ phần mà shader không biết: sẫm dần về chân TỪNG tầng và ngay dưới từng gờ mái. WK: hệ số giảm để không tối hai lần.
+const WK = 0.7;
 // Phong hoá: các đỉnh từ `from` tới hết được làm tối dần về phía chân (y0) và ngay dưới gờ (y1), loang rêu và vệt đen theo băm vị trí.
 function weather(g, from, y0, y1, seed = 0, moss = 0.5, soot = 0.5) {
   for (let i = from; i < g.count; i++) {
@@ -24,9 +28,9 @@ function weather(g, from, y0, y1, seed = 0, moss = 0.5, soot = 0.5) {
     const n2 = hash(Math.round(x * 1.3) * 57 + Math.round(z * 1.3) * 29, seed + 5);
     const low = (1 - t) * (1 - t);                       // ẩm, rêu ở chân tường
     const high = t > 0.8 ? (t - 0.8) / 0.2 : 0;          // vệt nước đen chảy từ gờ xuống
-    const km = Math.min(0.65, moss * (low * 1.0 + n2 * 0.25) * (0.4 + n));
-    const ks = Math.min(0.62, soot * (high * 0.7 + low * 0.22 + (n > 0.66 ? 0.4 : 0) + n2 * 0.12));
-    const k = 0.84 + n * 0.26;
+    const km = Math.min(0.5, WK * moss * (low * 1.0 + n2 * 0.25) * (0.4 + n));
+    const ks = Math.min(0.5, WK * soot * (high * 0.7 + low * 0.22 + (n > 0.66 ? 0.3 : 0) + n2 * 0.12));
+    const k = 0.92 + n * 0.14;
     for (let c = 0; c < 3; c++) {
       let v = g.col[i * 4 + c] * k;
       v = v * (1 - km) + MOSS[c] * km;
@@ -70,8 +74,10 @@ function arcade(g, W, y0, H, n, ow, sh, pointed, th, seed) {
       g.quad([cx + p[0], ys + p[1], 0], [cx + p[0], ys + p[1], -th], [cx + q[0], ys + q[1], -th], [cx + q[0], ys + q[1], 0]);
     }
     // ngưỡng cửa và lòng tháp tối phía sau
-    g.color(TRIM).shade(0.7).quad([cx - a, y0 + 0.02, 0], [cx + a, y0 + 0.02, 0], [cx + a, y0 + 0.02, -th], [cx - a, y0 + 0.02, -th]);
-    g.color(DARK).quad([cx - a, y0, -th], [cx + a, y0, -th], [cx + a, ys + arch[(arch.length - 1) / 2][1] + 0.02, -th], [cx - a, ys + arch[(arch.length - 1) / 2][1] + 0.02, -th]);
+    // ngưỡng cửa: cao hơn mặt gờ bên dưới 5 cm (trước đây 2 cm, trùng đúng mặt trên của gờ chân tầng)
+    g.color(TRIM).shade(0.7).quad([cx - a, y0 + 0.05, 0], [cx + a, y0 + 0.05, 0], [cx + a, y0 + 0.05, -th], [cx - a, y0 + 0.05, -th]);
+    g.mat().color(DARK).quad([cx - a, y0, -th], [cx + a, y0, -th], [cx + a, ys + arch[(arch.length - 1) / 2][1] + 0.02, -th], [cx - a, ys + arch[(arch.length - 1) / 2][1] + 0.02, -th]);
+    g.mat(MAT.plaster);
     x += ow;
   }
 }
@@ -135,7 +141,9 @@ function islet(g) {
   };
   for (let j = 0; j < rings.length - 1; j++) {
     const from = g.count;
-    g.color(rings[j][2]).shade(rings[j][3]);
+    // kè đá quanh mép nước: đá rêu. Mặt cỏ: dùng lớp loang màu của «vữa» (trên mặt gần phẳng nó chỉ còn là các mảng đậm nhạt,
+    // không có vệt chảy hay chân ẩm) để thảm cỏ không phẳng lì.
+    g.mat(j < 3 ? MAT.mossy : MAT.plaster).color(rings[j][2]).shade(rings[j][3]);
     g.ribbon(ring(j + 1), ring(j));
     // tô lại hàng đỉnh trong theo màu vòng kế để chuyển sắc mượt, thêm loang lổ cỏ/đất
     const ci = lin(rings[j + 1][2]), ks = rings[j + 1][3];
@@ -145,6 +153,7 @@ function islet(g) {
       else { g.col[i * 4] *= n; g.col[i * 4 + 1] *= n; g.col[i * 4 + 2] *= n; }
     }
   }
+  g.mat();
 }
 
 export function build(g) {
@@ -152,14 +161,15 @@ export function build(g) {
   islet(g);
 
   g.push().move(0, TOP - 0.06, 0);
-  // Sáng nhẹ ban đêm: tháp được chiếu đèn vàng sau khi tắt nắng.
-  g.glow(0.1);
+  // Ban đêm tháp được rọi đèn tự động như mọi công trình (không tự phát sáng).
 
   // nền móng hai cấp
   let from = g.count;
-  g.color(0x777165); g.cube(0, 0, 0, 7.7, 0.26, 5.95);
-  g.color(0x857f70); g.cube(0, 0.26, 0, 7.0, 0.3, 5.26);
-  weather(g, from, 0, 0.56, 3, 0.9, 0.5);
+  g.mat(MAT.mossy);
+  g.color(0x8a8476); g.cube(0, 0, 0, 7.7, 0.26, 5.95, 'xXYzZ');
+  g.color(0x958f80); g.cube(0, 0.26, 0, 7.0, 0.3, 5.26, 'xXYzZ');
+  weather(g, from, 0, 0.56, 3, 0.5, 0.4);
+  g.mat(MAT.plaster);
 
   // tầng một: 6,28 × 4,54 m, ba cửa vòm nhọn mặt dài, hai cửa mặt ngắn
   const y1 = 0.56, H1 = 2.72;
@@ -198,7 +208,7 @@ export function build(g) {
   g.color(TRIM); g.cyl(0, y5 + 0.34, 0, 0.13, 0.04, 0.3, 6);
   weather(g, from, y5, y5 + 0.6, 9, 0.2, 0.7);
 
-  g.glow(0).pop();
+  g.glow(0).mat().pop();
 
   // vài bụi cây và khóm cỏ cao quanh gò
   const bushes = [[-9.2, 1.6, 1.0], [-7.4, -3.6, 0.8], [8.6, -2.4, 1.1], [9.6, 1.2, 0.7], [5.6, 5.2, 0.75], [-4.6, 5.9, 0.6], [2.2, -6.6, 0.7], [-10.6, -0.8, 0.6]];
@@ -206,5 +216,5 @@ export function build(g) {
     const e = Math.hypot(x / 13, z / 9), y = e > 0.74 ? 0.62 - (e - 0.74) * 1.6 : 0.84 - e * 0.3;
     shrub(g, x, y - 0.1, z, r, 100 + i * 13);
   });
-  g.color(0xffffff).gloss(0).glow(0).sway(0);
+  g.color(0xffffff).gloss(0).glow(0).sway(0).mat();
 }

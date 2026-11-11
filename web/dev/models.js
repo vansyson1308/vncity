@@ -35,3 +35,5 @@ export async function buildModel(name, g, lf, load) {
   if (name.startsWith('lm:')) { const mod = await load(name.slice(3)); mod.build(g, { lf }); return; }
   await REGISTRY[name](g, { lf });
 }
+// xe cộ vẽ bằng instancing nên không gắn chất liệu chi tiết; cây và đèn chủ yếu là tán lá, kim loại sơn
+export const PLAIN_OK = new Set(['bike', 'car', 'bus', 'cyclo', 'trees', 'lamps']);

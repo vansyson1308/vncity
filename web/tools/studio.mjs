@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { G } from '../src/core/geo.js';
-import { ALL, BUDGET, buildModel } from '../dev/models.js';
+import { ALL, BUDGET, PLAIN_OK, buildModel } from '../dev/models.js';
 import { lint } from '../dev/lint.js';
 
 const args = process.argv.slice(2), opt = {}; const names = [];
@@ -17,7 +17,7 @@ for (const name of list) {
   const g = new G(), lf = new G();
   try { await buildModel(name, g, lf, (id) => import(`../src/world/landmarks/${id}.js`)); }
   catch (e) { console.error(`LỖI dựng ${name}: ${e.message}`); failed++; continue; }
-  const rep = lint(g.pack(), { budget: BUDGET[name] || 8000 });
+  const rep = lint(g.pack(), { budget: BUDGET[name] || 8000, plainOk: PLAIN_OK.has(name) });
   rows.push([name, rep]); if (rep.err.length) failed++;
 }
 const pad = (s, n) => String(s).padEnd(n);

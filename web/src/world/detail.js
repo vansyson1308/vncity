@@ -20,7 +20,7 @@ vec3 detailColor(float mid, vec3 base, vec3 P, vec3 N, sampler2D nzTex) {
   if (mid < 1.5) {            // gạch xây: viên 22×7 cm, mạch vữa sáng
     vec2 q = uv / vec2(0.23, 0.08); q.x += 0.5 * mod(floor(q.y), 2.0);
     vec2 id = floor(q), f = fract(q);
-    float fade = clamp(1.7 - px / 0.03, 0.0, 1.0);
+    float fade = clamp(1.4 - px / 0.022, 0.0, 1.0); // hàng gạch 8 cm: dưới 2,6 điểm ảnh một hàng thì hoà hẳn về màu trung bình, không sinh vân giao thoa
     float brick = smoothstep(0.0, 0.07, f.x) * smoothstep(1.0, 0.93, f.x) * smoothstep(0.0, 0.17, f.y) * smoothstep(1.0, 0.83, f.y);
     vec3 bc = base * (0.82 + 0.36 * hash12(id)) * (0.9 + 0.2 * n2.r);
     vec3 mortar = mix(base, vec3(0.5, 0.48, 0.44), 0.6);
@@ -38,7 +38,7 @@ vec3 detailColor(float mid, vec3 base, vec3 P, vec3 N, sampler2D nzTex) {
   } else if (mid < 4.5) {     // ngói: hàng 16 cm so le, hàng trên đè bóng xuống hàng dưới, rêu bám loang lổ
     vec2 q = uv / vec2(0.15, 0.16); q.x += 0.5 * mod(floor(q.y), 2.0);
     vec2 id = floor(q), f = fract(q);
-    float fade = clamp(1.7 - px / 0.05, 0.0, 1.0);
+    float fade = clamp(1.4 - px / 0.04, 0.0, 1.0);
     float sh = mix(1.1, 0.62, smoothstep(0.5, 1.0, f.y)) * mix(0.72, 1.0, smoothstep(0.0, 0.1, f.x) * smoothstep(1.0, 0.9, f.x));
     c = base * mix(0.92, sh * (0.84 + 0.32 * hash12(id)), fade);
     c = mix(c, vec3(0.1, 0.13, 0.07), smoothstep(0.55, 0.92, n1.b * 0.6 + n2.r * 0.4) * 0.42);

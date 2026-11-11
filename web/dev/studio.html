@@ -15,7 +15,7 @@ import { buildMaterials, propGeometry } from '../src/world/materials.js';
 import { signAtlas } from '../src/world/atlas.js';
 import { QUALITY } from '../src/config.js';
 import { G, MAT } from '../src/core/geo.js';
-import { buildModel, BUDGET } from './models.js';
+import { buildModel, BUDGET, PLAIN_OK } from './models.js';
 import { lint, MAT_NAMES } from './lint.js';
 
 const q = new URLSearchParams(location.search), name = q.get('m') || 'lm:thap_rua', isLm = name.startsWith('lm:');
@@ -27,7 +27,7 @@ const atlas = await signAtlas(r, 8), M = buildMaterials(r, QUALITY.high, atlas);
 const g = new G(), lf = new G();
 const mods = import.meta.glob('../src/world/landmarks/*.js');
 await buildModel(name, g, lf, (id) => mods[`../src/world/landmarks/${id}.js`]());
-const pack = g.pack(), report = lint(pack, { budget: BUDGET[name] || 8000 });
+const pack = g.pack(), report = lint(pack, { budget: BUDGET[name] || 8000, plainOk: PLAIN_OK.has(name) });
 const box = new THREE.Box3(new THREE.Vector3(pack.box[0], pack.box[1], pack.box[2]), new THREE.Vector3(pack.box[3], pack.box[4], pack.box[5]));
 const size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3()), rad = size.length() / 2;
 const sky = new Sky(scene, cam, { ...QUALITY.high, fog: 0.0002, shadowRange: Math.max(20, rad * 1.3) });

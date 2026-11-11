@@ -4,7 +4,8 @@ import { MAT } from '../src/core/geo.js';
 
 export const MAT_NAMES = Object.fromEntries(Object.entries(MAT).map(([k, v]) => [v, k]));
 
-export function lint(p, { budget = 6000, ground = true } = {}) {
+// plainOk: mô hình vẽ bằng instancing (xe cộ) không dùng được chất liệu chi tiết, bề mặt trơn là đúng thiết kế
+export function lint(p, { budget = 6000, ground = true, plainOk = false } = {}) {
   const { pos, idx, fx } = p, nt = idx.length / 3, out = { tris: nt, verts: pos.length / 3, warn: [], err: [] };
   let x0 = 1e9, y0 = 1e9, z0 = 1e9, x1 = -1e9, y1 = -1e9, z1 = -1e9, nan = 0;
   for (let i = 0; i < pos.length; i += 3) {
@@ -51,6 +52,6 @@ export function lint(p, { budget = 6000, ground = true } = {}) {
   if (ground && y0 > 0.3) out.warn.push(`lơ lửng: điểm thấp nhất cao ${y0.toFixed(2)} m`);
   if (ground && y0 < -3.5) out.warn.push(`chìm sâu: điểm thấp nhất ${y0.toFixed(2)} m`);
   if (fight > 0.5) out.warn.push(`${fight.toFixed(1)} m² mặt trùng nhau khác màu (dễ nhấp nháy): tách ra ít nhất 3 cm`);
-  if (out.plain > 60) out.warn.push(`${out.plain}% bề mặt còn trơn (chưa gắn chất liệu)`);
+  if (out.plain > 60 && !plainOk) out.warn.push(`${out.plain}% bề mặt còn trơn (chưa gắn chất liệu)`);
   return out;
 }
