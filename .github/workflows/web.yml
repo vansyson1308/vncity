@@ -36,6 +36,8 @@ jobs:
           git diff --exit-code -- public/world/places.json
       - name: Bộ sinh thành phố dựng được mọi ô phố, trong ngân sách tam giác
         run: node tools/gen_check.mjs
+      - name: Xưởng vẽ soát lỗi mọi mô hình thủ tục (ngân sách tam giác, toạ độ hỏng)
+        run: node tools/studio.mjs
       - run: npm run build
       - name: Kiểm thử khói trong Chromium (SwiftShader)
         run: |

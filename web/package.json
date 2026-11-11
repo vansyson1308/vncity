@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "test": "node tools/gen_check.mjs && node tools/smoke.mjs",
     "check": "node tools/gen_check.mjs",
+    "studio": "node tools/studio.mjs",
     "world": "node tools/fetch_osm.mjs && node tools/build_world.mjs && node tools/build_places.mjs",
     "places": "node tools/build_places.mjs",
     "assets": "node tools/build_assets.mjs"

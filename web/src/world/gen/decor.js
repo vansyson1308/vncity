@@ -1,7 +1,7 @@
 // Chi tiết phố phường gắn theo mặt tiền và vỉa hè: biển hiệu nổi, mái hiên bạt, ban công, cục nóng điều hoà,
 // cờ, xe máy dựng vỉa hè, bàn ghế nhựa quán cóc, cột điện và búi dây, bồn nước inox trên mái, tường rào, đường ray.
 // Tất cả gộp vào lưới "gần" của ô phố; lưới "xa" chỉ giữ thứ nhìn thấy từ xa.
-import { G } from '../../core/geo.js';
+import { G, MAT } from '../../core/geo.js';
 import { hash } from '../../core/util.js';
 import { CS, CURB, K, ZONE, zoneAt, isSolemn, roadY } from '../data.js';
 import { L } from '../layers.js';
@@ -189,11 +189,14 @@ export function decorate(ctx, env) {
       if (ctx.buildingAt(mx, mz)) continue;
       const nx = (bz - az) / Ls * th, nz = -(bx - ax) / Ls * th, lx = ax - X0, lz = az - Z0, rx = bx - X0, rz = bz - Z0;
       for (const g of [near, far]) {
+        // tường rào xây: vữa vôi vàng đã cũ; tường thành: đá rêu phong; hàng rào sắt, bờ giậu thì để trơn
+        g.mat(w.k === 0 ? MAT.plaster : w.k === 3 ? MAT.mossy : MAT.none);
         if (w.k === 2) g.rgb(0.1, 0.22, 0.07); else if (w.k === 1) g.rgb(0.07, 0.11, 0.08); else if (w.k === 3) g.rgb(0.42, 0.4, 0.36); else g.rgb(0.62, 0.48, 0.2);
         g.quad([lx + nx, CURB, lz + nz], [rx + nx, CURB, rz + nz], [rx + nx, CURB + H, rz + nz], [lx + nx, CURB + H, lz + nz]);
         g.quad([rx - nx, CURB, rz - nz], [lx - nx, CURB, lz - nz], [lx - nx, CURB + H, lz - nz], [rx - nx, CURB + H, rz - nz]);
         if (g === near || w.k === 2) { g.shade(0.6); g.quad([lx + nx, CURB + H, lz + nz], [rx + nx, CURB + H, rz + nz], [rx - nx, CURB + H, rz - nz], [lx - nx, CURB + H, lz - nz]); }
       }
+      near.mat(); far.mat();
       if (w.k !== 2) extraWalls.push(ax, az, bx, bz);
     }
   }

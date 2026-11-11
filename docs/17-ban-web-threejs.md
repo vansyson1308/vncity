@@ -49,7 +49,7 @@ Cả cuốn sách (100 lăng kính) được đọc và rút thành các quyết
 
 | Nguồn | Dùng gì | Giấy phép |
 |---|---|---|
-| OpenStreetMap, tải qua API chính thức (`web/tools/fetch_osm.mjs`) | 18.807 toà nhà, 8.147 đoạn đường có tên và bề rộng, hồ, sông Hồng, công viên, 3.510 cây, tường rào, đường sắt, 1.561 vị trí hàng ăn uống (chỉ lấy vị trí, không lấy tên quán) | ODbL 1.0, ghi "© OpenStreetMap" trong game |
+| OpenStreetMap, tải qua API chính thức (`web/tools/fetch_osm.mjs`) | 18.807 toà nhà, 8.154 đoạn đường có tên và bề rộng, hồ, sông Hồng, công viên, 3.510 cây, tường rào, đường sắt, 1.561 vị trí hàng ăn uống (chỉ lấy vị trí, không lấy tên quán) | ODbL 1.0, ghi "© OpenStreetMap" trong game |
 | Overture Maps 2026-09-23.0 (`web/tools/fetch_overture.py`) | 10.830 toà nhà do máy học vẽ ở những ô phố OSM chưa vẽ nhà | Microsoft ML Buildings: ODbL. Google Open Buildings: CC BY 4.0 |
 | `game/content/world/landmarks.json` | 36 địa danh và con phố nằm trong khung bản đồ, tên và mô tả song ngữ, toạ độ đã kiểm chứng với OSM (docs/15) | Nội dung của dự án |
 | `web/content/foods.json` | 7 món ăn + phố đèn lồng Hàng Mã, chỉ ghi món và phố, không ghi tên quán | Nội dung của dự án |
@@ -95,6 +95,17 @@ Các kỹ thuật chính:
    người chơi tới gần và bị gỡ khi đi xa, nên tầm nhìn tới 760 m mà bộ nhớ GPU vẫn nhỏ.
 6. **Va chạm bằng đoạn thẳng.** Tường nhà, tường rào, bờ nước là các đoạn 2D trong lưới 16 m của từng ô; người
    và xe là vòng tròn bị đẩy ra. Cầu Thê Húc là "mặt cầu" đi bộ được có vòm.
+7. **Cầu có độ cao thật, tính từ một hàm duy nhất.** Các đoạn đường gắn thẻ cầu nối liền nhau thành một cây cầu;
+   cầu dài từ 150 m được nâng lên: dốc 6,5% từ chỗ nối với đường thường tới độ cao mặt cầu (Long Biên 9 m, Chương
+   Dương và vòng xoay đầu cầu 8 m, cầu vượt An Dương 6 m) rồi đi ngang. Hàm `roadY` trong `world/data.js` chạy ở cả
+   worker (dựng mặt cầu, tường chắn dốc, dầm, lan can, trụ, cầu dẫn đường sắt) lẫn luồng chính (cao độ người chơi,
+   dòng xe, va chạm với lan can), nên hình và vật lý không thể lệch nhau. Nước sông chảy dưới gầm cầu, phố dưới gầm
+   cầu vẫn đi lại được, nhà bị cầu cắt ngang trong dữ liệu thì bỏ. `tools/gen_check.mjs` đi dọc cả 19 đoạn cầu bằng
+   chính hàm điều hướng của game và báo lỗi nếu cao độ lệch hay rơi khỏi cầu.
+8. **Chi tiết bề mặt không tốn dung lượng tải.** Mười chất liệu (gạch, đá xẻ, vữa vôi cũ, ngói, gỗ, thép gỉ, bê
+   tông, đá rêu, gạch lát sân, sơn son) được shader vẽ ra từ vị trí và pháp tuyến của điểm trong hệ toạ độ mô hình
+   (`world/detail.js`): không cần UV, không cần ảnh. Mô hình chỉ gọi `g.mat(MAT.brick)`. Ở xa, hoa văn tự hoà về màu
+   trung bình nên không nhấp nháy. Công trình biểu tượng được đèn pha hắt sáng ban đêm ngay trong shader.
 
 ## 5. Hiệu năng
 
@@ -154,8 +165,27 @@ npm run assets                         # sau khi đổi viewer/assets/walker.glb
 
 Tham số đường dẫn để chụp ảnh và dò lỗi: `?q=low|medium|high`, `?h=17.2` (cố định giờ), `?street=Phố Hàng Mã`,
 `?at=x,z` (mét, gốc ở Hồ Gươm, x hướng đông, z hướng nam), `?yaw=`, `?bike`, `?lang=en`, `?fresh` (bỏ vị trí đã
-lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình). Trình xem mô hình: `/dev/model.html?m=bike`,
-`/dev/model.html?m=lm:nha_tho_lon`.
+lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình).
+
+### Xưởng vẽ: công cụ dựng và soát mô hình
+
+Game không tải mô hình cảnh nào, nên "phần mềm vẽ" của dự án là mã: bộ dựng hình `G`, chất liệu chi tiết `MAT`, và
+xưởng vẽ để nhìn, đo, soát lỗi từng mô hình bằng đúng vật liệu và ánh sáng của game.
+
+```sh
+node tools/studio.mjs                          # soát lỗi mọi mô hình (thuần Node, chạy trong CI)
+node tools/studio.mjs lm:nha_tho_lon --verbose # một mô hình, in toạ độ các mặt trùng nhau
+node tools/studio.mjs --shots out/ lm:thap_rua # chụp bảng 6 góc: 3/4, chính diện, mặt bên, ban đêm, hai cận cảnh
+```
+
+- Trang `/dev/studio.html?m=lm:thap_rua` (khi chạy `npm run dev`): lưới sàn 1 m, người mẫu cao 1,7 m để so tỉ lệ,
+  `&tags` tô màu theo chất liệu, `&wire` khung lưới, `&view=hero&zoom=x,y,z,r` soi gần một điểm, `&h=20.5` đổi giờ.
+  `?m=mats` là bảng mẫu mười chất liệu.
+- Bộ soát (`dev/lint.js`): số tam giác so với ngân sách (8.000 mỗi công trình), kích thước, điểm thấp nhất (lơ lửng
+  hay chìm), tam giác suy biến, diện tích các mặt cùng phẳng khác màu chồng lên nhau (nguyên nhân nhấp nháy khi
+  nhìn xa), tỉ lệ bề mặt chưa gắn chất liệu.
+- Quy trình thêm hoặc sửa một mô hình: sửa tệp trong `src/world/landmarks/` hoặc `src/models/`, chạy soát lỗi, chụp
+  bảng 6 góc, nhìn và sửa tiếp. Mọi mô hình trong game đều đã qua vòng này.
 
 ## 8. Cấu trúc mã (`web/src`)
 
@@ -163,12 +193,13 @@ lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình
 |---|---|
 | `core/` | `geo.js` bộ dựng hình thủ tục `G` (chạy được trong worker), `util.js` |
 | `engine/` | renderer + hậu kỳ + độ phân giải động, bầu trời và giờ trong ngày, camera góc ba, điều khiển (bàn phím, chuột, cảm ứng, tay cầm), bộ điều tiết |
-| `world/` | giải mã bản đồ, worker và các bộ sinh `gen/`, chất liệu vẽ thủ tục, mặt đứng, biển hiệu, quản lý ô phố, va chạm |
+| `world/` | giải mã bản đồ và cao độ cầu (`data.js`), worker và các bộ sinh `gen/`, chất liệu vẽ thủ tục, chất liệu chi tiết (`detail.js`), mặt đứng, biển hiệu, quản lý ô phố, va chạm |
 | `world/landmarks/` | 15 công trình dựng tay (14 đặt theo `sites.js`, cầu Long Biên dựng dọc tuyến cầu) |
 | `models/` | cây, đèn, xe máy, ô tô, xe buýt, xích lô |
 | `actors/` | Minh, dòng xe, người đi bộ, nướng hoạt hình |
 | `game/` | hộ chiếu, cuốc xe ôm |
 | `ui/`, `audio/` | giao diện DOM, bản đồ, chữ song ngữ; âm thanh tổng hợp bằng WebAudio |
+| `../dev/`, `../tools/studio.mjs` | xưởng vẽ: trang soi mô hình, bộ soát lỗi, danh mục mô hình |
 
 ## 9. Giới hạn hiện tại
 
@@ -177,8 +208,10 @@ lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình
   chi tiết của từng ngôi nhà.
 - Mọi người đi bộ và người lái xe dùng chung một mô hình (khác màu áo, chiều cao, nón); chưa có nữ, trẻ em,
   người già riêng.
-- Cầu Long Biên có dàn thép nhấp nhô dựng theo đúng tuyến cầu nhưng mặt cầu nằm sát mặt nước chứ chưa cao 10 m như
-  ngoài đời; cầu Chương Dương và các cầu vượt cũng đang là đường sát mặt đất. Cầu cạn đường sắt phố Phùng Hưng chưa dựng.
+- Cầu đã có độ cao thật nhưng kết cấu còn giản lược: cầu Chương Dương chưa có dàn thép, trụ cầu là trụ tường đơn
+  giản đặt đều; mặt cầu Long Biên là bản đặc chứ chưa phải sàn thép hở; dốc cầu gãy góc nhẹ ở đỉnh dốc. Cầu cạn đường
+  sắt qua phố Phùng Hưng (ngoài đoạn dẫn lên cầu Long Biên) chưa dựng. Người đi bộ chưa lên cầu. Bản đồ dừng ở giữa
+  sông: chạy hết cầu là gặp mép bản đồ.
 - Chưa có giọng nói, tiếng rao; nhạc nền là vài nốt ngũ cung tổng hợp.
 - Số tầng của nhà không có thẻ trong OSM là số suy đoán theo khu; nhà lấy từ Overture là hình do máy học vẽ.
 - Chưa đo khung hình trên GPU thật (xem mục 5). Chưa có người Hà Nội duyệt nội dung như GDD yêu cầu.
