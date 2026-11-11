@@ -72,7 +72,7 @@ async function boot() {
   for (const d of siteDecks(sites)) nav.addDeck(d);
   const landmarks = await buildLandmarks(scene, sites, mats, nav, world);
 
-  const player = new Player(scene, nav, humanGltf, mats);
+  const player = new Player(scene, nav, humanGltf, mats, humanLod);
   const cam = new FollowCamera(camera, nav);
   const traffic = new Traffic(scene, world, nav, mats, humanFar, quality);
   const crowd = new Crowd(scene, world, nav, humanLod, quality);
@@ -232,7 +232,7 @@ async function boot() {
       if (sugT <= 0) {
         sugT = 0.4; sugs = passport.suggestions(player.pos.x, player.pos.z).map((s) => ({ x: s.it.x, z: s.it.z, d: s.d, icon: s.it.icon, name: s.it.name, kind: s.it.kind }));
         if (fares.state === 'ride') sugs = [{ x: fares.dest.x, z: fares.dest.z, d: fares.left || 0, icon: '🏁', name: fares.dest.place.name, kind: 'fare', color: '#3ae07a', big: true }, ...sugs.slice(0, 2)];
-        else if (fares.state === 'offer') sugs = [...sugs.slice(0, 2), { x: fares.cust.x, z: fares.cust.z, d: Math.hypot(fares.cust.x - player.pos.x, fares.cust.z - player.pos.z), icon: '🙋', name: { vi: T('fare_wait'), en: T('fare_wait') }, kind: 'fare', color: '#ffd23a', big: true }];
+        else if (fares.state === 'offer') sugs = [...sugs.slice(0, 2), { x: fares.cust.x, z: fares.cust.z, d: Math.hypot(fares.cust.x - player.pos.x, fares.cust.z - player.pos.z), icon: '🙋', name: both('fare_wait'), kind: 'fare', color: '#ffd23a', big: true }];
         const rd = nav.nearestRoad(player.pos.x, player.pos.z, 14); hud.setStreet(rd && rd.r.name >= 0 ? world.names[rd.r.name] : '');
         hud.setClock(sky.hours); hud.fare(fares, fares.cust ? fares.name(lang()) : ''); counts();
         // lời nhắc theo tình huống

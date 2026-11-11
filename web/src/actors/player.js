@@ -12,6 +12,8 @@ import { BIKE, WALK, bikeMass, bikeStep, bikeCurvature, leanFor, wallHit, stepUp
 // Tốc độ gốc của các đoạn hoạt hình (m/s), đo từ chuyển động gốc trong tệp mô hình.
 const CLIP_SPEED = { walk: 1.01, jog: 2.4, run: 2.9 };
 // Tư thế ngồi lái: xoay thêm quanh trục z cục bộ của xương (radian), áp lên tư thế đứng yên.
+// khách ngồi sau: đùi gập, tay đưa ra trước ôm eo người lái
+export const PILLION_POSE = [['Bip01_L_Thigh', 1.22], ['Bip01_R_Thigh', 1.22], ['Bip01_L_Calf', -1.3], ['Bip01_R_Calf', -1.3], ['Bip01_L_UpperArm', -0.72], ['Bip01_R_UpperArm', -0.72], ['Bip01_L_Forearm', -0.55], ['Bip01_R_Forearm', -0.55], ['Bip01_Spine', 0.04]];
 export const RIDE_POSE = [['Bip01_L_Thigh', 1.18], ['Bip01_R_Thigh', 1.18], ['Bip01_L_Calf', -1.2], ['Bip01_R_Calf', -1.2], ['Bip01_L_UpperArm', -0.98], ['Bip01_R_UpperArm', -0.98], ['Bip01_L_Forearm', -0.3], ['Bip01_R_Forearm', -0.3], ['Bip01_Spine', 0.1]];
 
 // Bỏ chuyển động tịnh tiến ngang của xương gốc để nhân vật không trôi rồi giật về.
@@ -24,7 +26,7 @@ export function tintMasked(g, tint) { for (let i = 0; i < g.count; i++) { const 
 const _q = new THREE.Quaternion(), _z = new THREE.Vector3(0, 0, 1), _v = new THREE.Vector3();
 
 export class Player {
-  constructor(scene, nav, gltf, mats) {
+  constructor(scene, nav, gltf, mats, guestGltf) {
     this.nav = nav; this.scene = scene;
     this.pos = { x: 0, z: 0 }; this.y = CURB; this.yaw = 0; this.speed = 0; this.vx = 0; this.vz = 0;
     this.mode = 'walk'; this.lean = 0; this.steer = 0; this.wobble = 0; this.bump = 0; this.passenger = false;
@@ -45,6 +47,16 @@ export class Player {
     this.bike = new THREE.Mesh(propGeometry(g.pack()), mats.propSolid); this.bike.castShadow = true; this.bike.rotation.order = 'YXZ';
     scene.add(this.bike);
     this.bikePos = { x: 0, z: 0, yaw: 0 };
+    // khách ngồi yên sau: người mẫu nướng sẵn ở tư thế ngồi ôm eo, đội mũ bảo hiểm, gắn vào xe nên nghiêng theo xe.
+    // passT chạy 0 → 1 khi khách bước từ vỉa hè lên yên (0,6 giây) và ngược lại khi xuống.
+    this.passT = 0; this.guest = null;
+    if (guestGltf) {
+      const b = bakePose(guestGltf, 'idle', 0, PILLION_POSE), pg = new G();
+      pg.push().rotY(Math.PI / 2); appendBaked(pg, b);
+      pg.rgb(0.86, 0.86, 0.84).gloss(0.7).lathe(b.head[0], b.head[1] + 0.085, b.head[2], [[0.128, -0.02], [0.134, 0.02], [0.122, 0.09], [0.088, 0.14], [0.035, 0.162], [0, 0.165]], 10).gloss(0).pop();
+      tintMasked(pg, [0.95, 0.75, 0.1]); // áo vàng, cùng màu với khách đứng vẫy
+      this.guest = new THREE.Mesh(propGeometry(pg.pack()), mats.makeProp({ side: THREE.DoubleSide })); this.guest.castShadow = true; this.guest.visible = false; this.bike.add(this.guest);
+    }
     // mũ bảo hiểm (đội khi lên xe)
     const hg = new G(); hg.rgb(0.8, 0.62, 0.06).gloss(0.8).lathe(0, 0, 0, [[0.128, -0.02], [0.134, 0.02], [0.122, 0.09], [0.088, 0.14], [0.035, 0.162], [0, 0.165]], 12).gloss(0);
     hg.rgb(0.05, 0.05, 0.05).box(-0.09, -0.02, 0.1, 0.09, 0.0, 0.2); // lưỡi trai
@@ -79,6 +91,7 @@ export class Player {
     this.sync(dt);
   }
 
+  // Đi bộ: tăng, giảm tốc với gia tốc có hạn của người thật (3,5 và 5,5 m/s²), không đổi vận tốc tức thời.
   updateWalk(dt, input, camYaw) {
     const mx = input.move.x, my = input.move.y, m = Math.min(1, Math.hypot(mx, my));
     const target = m * (input.run ? WALK.run : WALK.speed);
@@ -91,7 +104,6 @@ export class Player {
     const p = this._col, step = this.speed * dt;
     p.x = this.pos.x + Math.sin(this.yaw) * step; p.z = this.pos.z + Math.cos(this.yaw) * step;
     if (this.nav.collide(p, 0.3, false, this.y)) this.speed = Math.min(this.speed, Math.hypot(p.x - this.pos.x, p.z - this.pos.z) / Math.max(dt, 1e-4) + 0.3); // bị tường cản: chỉ còn phần trượt dọc tường
-  // Đi bộ: tăng, giảm tốc với gia tốc có hạn của người thật (3,5 và 5,5 m/s²), không đổi vận tốc tức thời.
     this.pos.x = p.x; this.pos.z = p.z;
     this.y = damp(this.y, this.nav.groundY(p.x, p.z, this.y), 14, dt);
     this.lean = 0; this.pitch = 0; this.accel = 0;
@@ -99,6 +111,8 @@ export class Player {
     if (this.speed > 0.4) { this.stepPhase += dt * (this.speed < 2 ? this.speed / 1.01 / 0.6 : this.speed / 2.4 / 0.385); if (this.stepPhase >= 1) { this.stepPhase -= 1; this.onStep && this.onStep(this.speed); } }
   }
 
+  // Xe máy: lực thật theo đơn vị SI (actors/physics.js). W vặn ga vừa, Shift mở hết ga, S phanh vừa (đứng yên thì lùi bằng chân),
+  // Space phanh gấp. Xe rẽ nhờ nghiêng: muốn ôm cua gắt phải giảm tốc như ngoài đời.
   updateBike(dt, input, camYaw) {
     const B = BIKE, m = bikeMass(!!this.passenger), fwd = input.move.y, st = input.move.x, mu = this.wet ? B.muWet : B.mu;
     let v = this.speed; const v0 = v;
@@ -117,8 +131,6 @@ export class Player {
     this.steer = damp(this.steer, st, 9, dt);
     this.phi = (this.phi || 0) + clamp((st * B.leanMax - (this.phi || 0)) * 9, -B.rollRate, B.rollRate) * dt;
     const curv = bikeCurvature(v, this.phi, this.steer); this.curv = curv;
-  // Xe máy: lực thật theo đơn vị SI (actors/physics.js). W vặn ga vừa, Shift mở hết ga, S phanh vừa (đứng yên thì lùi bằng chân),
-  // Space phanh gấp. Xe rẽ nhờ nghiêng: muốn ôm cua gắt phải giảm tốc như ngoài đời.
     this.yaw = wrapAngle(this.yaw - curv * v * dt);
     const steps = Math.max(1, Math.ceil((Math.abs(v) * dt) / 0.35)), p = this._col; let hitN = 0;
     for (let i = 0; i < steps; i++) {
@@ -171,6 +183,12 @@ export class Player {
     } else {
       this.model.position.set(0, 0, 0);
       this.bike.position.set(this.bikePos.x, this.nav.groundY(this.bikePos.x, this.bikePos.z, this.bikePos.y ?? 0), this.bikePos.z); this.bike.rotation.set(0.17, this.bikePos.yaw - Math.PI / 2, 0);
+    }
+    if (this.guest) { // khách lên, xuống xe: bước ngang từ bên phải (phía vỉa hè) vào yên sau
+      this.passT = clamp(this.passT + (this.passenger && riding ? dt : -dt) / 0.6, 0, 1);
+      const t = this.passT, e = t * t * (3 - 2 * t);
+      this.guest.visible = t > 0.02;
+      if (this.guest.visible) { this.guest.position.set(-0.72, -0.07 + (1 - e) * 0.07 + Math.sin(e * Math.PI) * 0.12, (1 - e) * 0.62); this.guest.scale.setScalar(0.94); }
     }
     if (this.helmet.visible) {
       const h = this.bones.Bip01_Head; r.updateMatrixWorld(true); h.getWorldPosition(_v);
