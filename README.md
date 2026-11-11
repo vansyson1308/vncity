@@ -13,7 +13,7 @@ pipeline dựng thành phố, dữ liệu thiết kế game, và harness để n
 | `ue5/` | Project UE 5.8, plugin `HanoiCity` (C++), script import Python |
 | `unity/` | Phương án Unity 6 (HDRP): gói `com.vncity.hanoicity` (lõi C# có test chạy bằng .NET, lớp Unity, importer editor) |
 | `tools/` | Kiểm tra nội dung, giả lập chơi thử cốt truyện (`playtest.py`), sinh USTRUCT từ schema, xuất bản xem trước web |
-| `web/` | Bản web three.js "Hà Nội Dạo Phố" quảng bá du lịch, chơi ngay trên trình duyệt: <https://vansyson1308.github.io/vncity/> |
+| `web/` | Bản web three.js "Hà Nội Dạo Phố" quảng bá du lịch, chơi ngay trên trình duyệt: 12 km² trung tâm Hà Nội dựng thủ tục từ OpenStreetMap, dòng xe máy, hộ chiếu 44 dấu, xe ôm. <https://vansyson1308.github.io/vncity/> |
 | `docs/` | Nghiên cứu, kiến trúc, giấy phép dữ liệu, hướng dẫn tích hợp UE5, lộ trình, tài liệu thiết kế game |
 
 Đọc trước: [docs/02-kien-truc.md](docs/02-kien-truc.md), rồi [docs/06-lo-trinh.md](docs/06-lo-trinh.md). Ngày cắm UE5: [docs/05-tich-hop-ue5.md](docs/05-tich-hop-ue5.md); kết quả QC cuối: [docs/07-qc-checklist.md](docs/07-qc-checklist.md); chơi thử và thẩm định cốt truyện chương 1: [docs/11-tham-dinh-choi-thu.md](docs/11-tham-dinh-choi-thu.md); mở màn và hệ quả lựa chọn (cold open, thoại có điều kiện, chương 2): [docs/gdd/11-mo-man-va-he-qua.md](docs/gdd/11-mo-man-va-he-qua.md); tám quận ngoài phố cổ, nhân vật và nhiệm vụ người lạ theo Tứ diệu đế: [docs/gdd/12-ho-so-quan.md](docs/gdd/12-ho-so-quan.md); chương 3-5 và ba kết cục: [docs/gdd/13-chuong-3-5.md](docs/gdd/13-chuong-3-5.md).

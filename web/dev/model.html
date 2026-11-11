@@ -1,0 +1,33 @@
+<!doctype html><meta charset="utf-8"><title>…</title><body style="margin:0;background:#789;overflow:hidden"><canvas id="c"></canvas>
+<script type="module">
+// Trình xem mô hình thủ tục: /dev/model.html?m=<tên>&ang=0.6&el=0.25&d=1.2&h=15 (h: giờ trong ngày)
+import * as THREE from 'three';
+import { Sky, skyU } from '../src/engine/sky.js';
+import { buildMaterials, propGeometry } from '../src/world/materials.js';
+import { signAtlas } from '../src/world/atlas.js';
+import { QUALITY } from '../src/config.js';
+import { G } from '../src/core/geo.js';
+import { WHITE_UV } from '../src/world/signs.js';
+import { REGISTRY } from './models.js';
+const q = new URLSearchParams(location.search);
+const canvas = document.getElementById('c');
+const r = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true }); r.setSize(innerWidth, innerHeight);
+r.toneMapping = THREE.ACESFilmicToneMapping; r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.05, 3000);
+const sky = new Sky(scene, cam, { ...QUALITY.high, fog: 0.0003, shadowRange: +(q.get('sr') || 30) }); sky.setHours(+(q.get('h') || 15.5));
+const atlas = await signAtlas(r, 8), M = buildMaterials(r, QUALITY.high, atlas);
+const g = new G(), lf = new G();
+const name = q.get('m') || 'bike';
+// m=lm:<id> nạp động src/world/landmarks/<id>.js và gọi build(g)
+const extra = name.startsWith('lm:') ? (await import(`../src/world/landmarks/${name.slice(3)}.js`)).build(g, { lf }) : await REGISTRY[name](g, { THREE, M, scene, q, lf });
+if (lf.count) { const lm = new THREE.Mesh(propGeometry(lf.pack()), M.leaf); lm.castShadow = true; scene.add(lm); }
+const mesh = new THREE.Mesh(propGeometry(g.pack()), M.prop); mesh.castShadow = mesh.receiveShadow = true; if (g.count) scene.add(mesh);
+const gg = new G(); gg.rgb(0.35, 0.36, 0.35).quad([-400, 0, 400], [400, 0, 400], [400, 0, -400], [-400, 0, -400]);
+const ground = new THREE.Mesh(propGeometry(gg.pack()), M.prop); ground.receiveShadow = true; if (!q.has('nog')) scene.add(ground);
+const box = new THREE.Box3().setFromObject(extra && extra.isObject3D ? extra : mesh); if (extra && extra.isObject3D && g.count) box.expandByObject(mesh);
+const c = box.getCenter(new THREE.Vector3()), s = box.getSize(new THREE.Vector3()).length() * +(q.get('d') || 1.15);
+const ang = +(q.get('ang') || 0.6), el = +(q.get('el') || 0.22);
+cam.position.set(c.x + Math.sin(ang) * Math.cos(el) * s, c.y + Math.sin(el) * s, c.z + Math.cos(ang) * Math.cos(el) * s); cam.lookAt(c);
+window.__info = { leafTris: lf.idx.length / 3, tris: g.idx.length / 3, verts: g.count, size: box.getSize(new THREE.Vector3()).toArray().map((v) => +v.toFixed(2)) };
+let n = 0; const loop = () => { sky.update(0, c); skyU.uTime.value += 0.016; r.shadowMap.needsUpdate = true; r.toneMappingExposure = sky.exposure; r.render(scene, cam); if (++n === 3) { document.title = "ready"; window.__ready = true; } requestAnimationFrame(loop); }; loop();
+</script>

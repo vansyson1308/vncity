@@ -1,5 +1,5 @@
-// Kiểm thử khói: mở bản build trong Chromium, chờ game dựng xong, chụp ảnh, báo lỗi console.
-// Dùng: node tools/smoke.mjs [thư mục ảnh]
+// Kiểm thử khói: mở bản build trong Chromium, chờ game dựng xong, kiểm tra thế giới, công trình, lối chơi cơ bản,
+// chụp ảnh và báo lỗi console. Dùng: node tools/smoke.mjs [thư mục ảnh]   (CHROME_PATH để chỉ định trình duyệt)
 import { chromium } from 'playwright';
 import http from 'node:http';
 import fs from 'node:fs';
@@ -7,7 +7,7 @@ import path from 'node:path';
 
 const DIST = path.resolve('dist'), OUT = path.resolve(process.argv[2] || 'shots');
 fs.mkdirSync(OUT, { recursive: true });
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.ogg': 'audio/ogg' };
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary', '.woff2': 'font/woff2', '.woff': 'font/woff' };
 const server = http.createServer((req, res) => {
   const p = path.join(DIST, decodeURIComponent(req.url.split('?')[0]).replace(/\/$/, '/index.html'));
   if (!p.startsWith(DIST) || !fs.existsSync(p)) { res.writeHead(404); return res.end(); }
@@ -15,27 +15,53 @@ const server = http.createServer((req, res) => {
 }).listen(0);
 const port = server.address().port;
 const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || undefined, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
-const errors = [];
-const views = (process.env.VIEWS || 'start,night,oldquarter').split(',');
-const VIEW = {
-  start: '',
-  night: '&time=night',
-  oldquarter: '&at=-60,-560&time=afternoon',
-  opera: '&at=480,560&time=sunset',
-};
-for (const v of views) {
-  const page = await browser.newPage({ viewport: process.env.CI ? { width: 960, height: 540 } : { width: 1280, height: 720 } });
-  page.on('console', (m) => { if (m.type() === 'error') errors.push(`${v}: ${m.text()}`); });
-  page.on('pageerror', (e) => errors.push(`${v}: ${e.message}`));
-  await page.goto(`http://localhost:${port}/?shot&q=low${VIEW[v] ?? ''}`);
-  await page.waitForFunction(() => window.__game?.ready, null, { timeout: 240000 });
-  await page.waitForTimeout(4000);
-  if (v === 'walk') { await page.keyboard.down('w'); await page.waitForTimeout(3000); await page.keyboard.up('w'); }
-  await page.screenshot({ path: path.join(OUT, `${v}.png`), timeout: 240000 }); // máy CI không có GPU: một khung hình có thể mất hàng chục giây
-  const info = await page.evaluate(() => ({ items: window.__game.tour.items.length, calls: window.__game.renderer.info.render.calls, tris: window.__game.renderer.info.render.triangles, pos: window.__game.player.pos }));
-  console.log(v, JSON.stringify(info));
+const errors = [], fail = (m) => { errors.push(m); console.error('✗', m); }, ok = (m) => console.log('✓', m);
+const SLOW = 300000; // máy CI không có GPU: một khung hình có thể mất cả giây
+
+async function open(name, query) {
+  const page = await browser.newPage({ viewport: { width: 960, height: 540 } });
+  page.on('console', (m) => { if (m.type() === 'error') fail(`${name}: console: ${m.text().slice(0, 300)}`); });
+  page.on('pageerror', (e) => fail(`${name}: ${e.message}`));
+  await page.goto(`http://localhost:${port}/?shot&q=low&fresh${query}`);
+  await page.waitForFunction(() => window.__ready === true, null, { timeout: SLOW });
+  return page;
+}
+const info = (page) => page.evaluate(() => { const g = window.__game, i = g.R.r.info; return { ...window.__info, sites: g.sites.length, items: g.passport.items.length, visited: g.passport.visited.size, mode: g.player.mode, x: g.player.pos.x, z: g.player.pos.z, programs: i.programs.length }; });
+
+// 1. Bắt đầu ở Bờ Hồ lúc chiều vàng: thế giới dựng xong, đủ công trình, trong ngân sách
+{
+  const page = await open('start', '&h=17.2');
+  const a = await info(page); console.log('start', JSON.stringify(a));
+  a.chunks >= 20 ? ok(`dựng ${a.chunks} ô phố`) : fail(`chỉ dựng được ${a.chunks} ô phố`);
+  a.landmarks >= a.sites && a.sites >= 14 ? ok(`${a.landmarks} lưới công trình biểu tượng cho ${a.sites} vị trí`) : fail(`thiếu công trình: ${a.landmarks}/${a.sites}`);
+  a.items >= 40 ? ok(`${a.items} điểm đóng dấu`) : fail(`thiếu điểm đóng dấu: ${a.items}`);
+  a.calls < 260 ? ok(`${a.calls} lệnh vẽ`) : fail(`quá nhiều lệnh vẽ: ${a.calls}`);
+  a.tris < 700000 ? ok(`${a.tris} tam giác`) : fail(`quá nhiều tam giác: ${a.tris}`);
+  a.agents > 10 ? ok(`${a.agents} xe trong dòng xe`) : fail(`dòng xe trống: ${a.agents}`);
+  await page.screenshot({ path: path.join(OUT, 'start.png'), timeout: SLOW });
+  // đi tới Tháp Bút là có dấu đầu tiên; lên xe được
+  await page.evaluate(() => { const g = window.__game, it = g.passport.byId.get('thap_but_dai_nghien'); g.player.teleport(it.x + 1, it.z + 1); });
+  await page.waitForFunction(() => window.__game.passport.visited.size >= 1, null, { timeout: SLOW });
+  ok('đóng được dấu đầu tiên');
+  await page.keyboard.press('f');
+  await page.waitForFunction(() => window.__game.player.mode === 'bike', null, { timeout: SLOW });
+  ok('lên xe máy được');
+  const b0 = await info(page);
+  await page.keyboard.down('w');
+  await page.waitForFunction((p) => Math.hypot(window.__game.player.pos.x - p[0], window.__game.player.pos.z - p[1]) > 1.5, [b0.x, b0.z], { timeout: SLOW });
+  await page.keyboard.up('w');
+  ok('xe chạy được');
+  await page.screenshot({ path: path.join(OUT, 'bike.png'), timeout: SLOW });
+  await page.close();
+}
+// 2. Phố cổ ban đêm và khu Ba Đình ban ngày: không lỗi shader, có đèn, có nhà
+for (const [name, q] of [['hang_ma_dem', '&street=Phố Hàng Mã&h=20.5'], ['ba_dinh', '&at=-1700,-880&h=9']]) {
+  const page = await open(name, q);
+  const a = await info(page); console.log(name, JSON.stringify(a));
+  a.chunks >= 12 ? ok(`${name}: ${a.chunks} ô phố`) : fail(`${name}: chỉ ${a.chunks} ô phố`);
+  await page.screenshot({ path: path.join(OUT, `${name}.png`), timeout: SLOW });
   await page.close();
 }
 await browser.close(); server.close();
-if (errors.length) { console.error('Lỗi:\n' + errors.join('\n')); process.exit(1); }
+if (errors.length) { console.error(`\n${errors.length} lỗi`); process.exit(1); }
 console.log('OK, ảnh trong', OUT);

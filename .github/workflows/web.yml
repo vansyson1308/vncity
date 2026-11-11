@@ -1,11 +1,12 @@
 name: web
-# Bản web three.js "Hà Nội Dạo Phố" (web/): build, kiểm thử khói trong Chromium, đưa lên GitHub Pages khi vào main.
+# Bản web three.js "Hà Nội Dạo Phố" (web/): kiểm tra bộ sinh thành phố, build, kiểm thử khói trong Chromium,
+# đưa lên GitHub Pages khi vào main. Bản đồ (OSM, Overture) và mô hình đã nằm sẵn trong repo nên build không cần mạng ngoài npm.
 on:
   push:
     branches: [main]
-    paths: ['web/**', 'game/content/world/**', '.github/workflows/web.yml']
+    paths: ['web/**', 'game/content/world/landmarks.json', 'viewer/assets/walker.glb', '.github/workflows/web.yml']
   pull_request:
-    paths: ['web/**', 'game/content/world/**', '.github/workflows/web.yml']
+    paths: ['web/**', 'game/content/world/landmarks.json', 'viewer/assets/walker.glb', '.github/workflows/web.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -14,10 +15,6 @@ permissions:
 concurrency:
   group: web-${{ github.ref }}
   cancel-in-progress: true
-env:
-  # Mô hình CC0 và bản đồ OSM lấy từ craft-anything, ghim theo commit để build lặp lại được.
-  CRAFT_REPO: vansyson1308/craft-anything
-  CRAFT_REF: d658c617e2eaeb32a3cbb925cf78f94cd35e8638
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -27,28 +24,23 @@ jobs:
         working-directory: web
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ env.CRAFT_REPO }}
-          ref: ${{ env.CRAFT_REF }}
-          path: craft-anything
-          sparse-checkout: examples/game-hanoi-city/assets
-          lfs: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
-      - name: Đóng gói tài nguyên (WebP + meshopt)
-        run: node tools/build_assets.mjs
-        env:
-          CRAFT_DIR: ${{ github.workspace }}/craft-anything
+      - name: Điểm đóng dấu khớp với nội dung game (landmarks.json)
+        run: |
+          node tools/build_places.mjs
+          git diff --exit-code -- public/world/places.json
+      - name: Bộ sinh thành phố dựng được mọi ô phố, trong ngân sách tam giác
+        run: node tools/gen_check.mjs
       - run: npm run build
       - name: Kiểm thử khói trong Chromium (SwiftShader)
         run: |
           npx playwright install --with-deps chromium
-          VIEWS=start node tools/smoke.mjs shots
+          node tools/smoke.mjs shots
       - uses: actions/upload-artifact@v4
         if: always()
         with:

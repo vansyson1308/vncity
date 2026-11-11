@@ -1,0 +1,169 @@
+// Chỉ mục không gian và các thuộc tính suy ra (số tầng, kiểu nhà) tính một lần khi worker khởi động.
+import ClipperLib from 'clipper-lib';
+import { hash, pointInRing, segDist2 } from '../../core/util.js';
+import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn } from '../data.js';
+
+export const CL = ClipperLib;
+const PT = CL.PolyType, CT = CL.ClipType, FT = CL.PolyFillType;
+export const toPath = (p) => { const o = new Array(p.length / 2); for (let i = 0; i < o.length; i++) o[i] = { X: Math.round(p[i * 2] * 10), Y: Math.round(p[i * 2 + 1] * 10) }; return o; };
+export function clip(type, subj, clipP, fill = FT.pftNonZero) {
+  const c = new CL.Clipper();
+  if (subj.length) c.AddPaths(subj, PT.ptSubject, true);
+  if (clipP && clipP.length) c.AddPaths(clipP, PT.ptClip, true);
+  const out = new CL.Paths(); c.Execute(type, out, fill, fill); return out;
+}
+export const union = (a, b) => clip(CT.ctUnion, a, b);
+export const inter = (a, b) => (a.length && b.length ? clip(CT.ctIntersection, a, b) : []);
+export const diff = (a, b) => (a.length && b.length ? clip(CT.ctDifference, a, b) : a);
+export function offset(paths, delta, open = false, arc = 1.2) {
+  if (!paths.length) return [];
+  const co = new CL.ClipperOffset(2, arc);
+  co.AddPaths(paths, CL.JoinType.jtRound, open ? CL.EndType.etOpenRound : CL.EndType.etClosedPolygon);
+  const out = new CL.Paths(); co.Execute(out, delta); return out;
+}
+export function toEx(paths) {
+  if (!paths.length) return [];
+  const c = new CL.Clipper(); c.AddPaths(paths, PT.ptSubject, true);
+  const tree = new CL.PolyTree(); c.Execute(CT.ctUnion, tree, FT.pftNonZero, FT.pftNonZero);
+  return CL.JS.PolyTreeToExPolygons(tree);
+}
+export const rectPath = (x0, z0, x1, z1) => [{ X: x0, Y: z0 }, { X: x1, Y: z0 }, { X: x1, Y: z1 }, { X: x0, Y: z1 }];
+
+class Grid {
+  constructor(cell) { this.cell = cell; this.m = new Map(); }
+  key(cx, cz) { return cx * 65537 + cz; }
+  addBox(x0, z0, x1, z1, v) {
+    const c = this.cell;
+    for (let cx = Math.floor(x0 / c); cx <= Math.floor(x1 / c); cx++) for (let cz = Math.floor(z0 / c); cz <= Math.floor(z1 / c); cz++) { const k = this.key(cx, cz); let l = this.m.get(k); if (!l) this.m.set(k, (l = [])); l.push(v); }
+  }
+  // gọi fn cho mọi phần tử trong các ô chạm hộp (có thể lặp nếu phần tử nằm trên nhiều ô)
+  query(x0, z0, x1, z1, fn) {
+    const c = this.cell;
+    for (let cx = Math.floor(x0 / c); cx <= Math.floor(x1 / c); cx++) for (let cz = Math.floor(z0 / c); cz <= Math.floor(z1 / c); cz++) { const l = this.m.get(this.key(cx, cz)); if (l) for (let i = 0; i < l.length; i++) fn(l[i]); }
+  }
+  collect(x0, z0, x1, z1) { const s = new Set(); this.query(x0, z0, x1, z1, (v) => s.add(v)); return s; }
+}
+
+const FLOORS = {
+  [ZONE.old]: [2, 3, 3, 3, 4, 4, 5], [ZONE.french]: [2, 3, 3, 4, 4, 5], [ZONE.badinh]: [2, 2, 3, 3, 4], [ZONE.city]: [3, 4, 4, 5, 5, 6], [ZONE.bank]: [2, 3, 3, 4],
+};
+
+export function buildContext(world, landmarks = []) {
+  const ctx = { world, landmarks };
+  const { roads, buildings, water, green } = world;
+
+  // ----- đường -----
+  ctx.roadGrid = new Grid(48);
+  for (const r of roads) {
+    r.veh = isVehicle(r); r.bridge = !!(r.flags & F_BRIDGE);
+    // cầu đi bộ vượt đường (không phải cầu Thê Húc): bỏ khỏi mặt đất và va chạm
+    r.skip = r.bridge && !r.veh && world.names[r.name] !== 'Cầu Thê Húc' ? true : (r.kind === K.steps && r.bridge);
+    r.path = toPath(r.p);
+    ctx.roadGrid.addBox(r.bb[0] - r.w, r.bb[1] - r.w, r.bb[2] + r.w, r.bb[3] + r.w, r);
+  }
+  // ngã ba, ngã tư: đếm số đường xe chạy tại mỗi đầu mút
+  ctx.nodes = new Map();
+  const nk = (x, z) => Math.round(x * 10) * 100003 + Math.round(z * 10);
+  ctx.nodeKey = nk;
+  for (const r of roads) {
+    if (!r.veh || r.skip) continue;
+    for (const e of [0, r.p.length - 2]) { const k = nk(r.p[e], r.p[e + 1]); let n = ctx.nodes.get(k); if (!n) ctx.nodes.set(k, (n = { deg: 0, major: 0, maxW: 0 })); n.deg++; if (r.kind <= K.residential) n.major++; n.maxW = Math.max(n.maxW, r.w); }
+  }
+  // Đường gần điểm (x,z) nhất trong bán kính max. Trả về { r, d, t..., px, pz } hoặc null.
+  const tOut = [0];
+  ctx.nearestRoad = (x, z, max, filter) => {
+    let best = null, bd = max * max;
+    ctx.roadGrid.query(x - max, z - max, x + max, z + max, (r) => {
+      if (r.skip || (filter && !filter(r))) return;
+      const p = r.p;
+      for (let i = 0; i < p.length - 2; i += 2) {
+        const d = segDist2(x, z, p[i], p[i + 1], p[i + 2], p[i + 3], tOut);
+        if (d < bd) { bd = d; best = best || {}; best.r = r; best.seg = i; best.t = tOut[0]; }
+      }
+    });
+    if (!best) return null;
+    const p = best.r.p, i = best.seg;
+    best.px = p[i] + (p[i + 2] - p[i]) * best.t; best.pz = p[i + 1] + (p[i + 3] - p[i + 1]) * best.t; best.d = Math.sqrt(bd);
+    return best;
+  };
+
+  // ----- mặt nước, mảng xanh (đa giác Clipper đã chuẩn hoá) -----
+  const norm = (polys) => polys.map((w) => ({ ...w, paths: clip(CT.ctUnion, [toPath(w.p), ...w.holes.map(toPath)], null, FT.pftEvenOdd) }));
+  ctx.water = norm(water); ctx.green = norm(green);
+  ctx.waterGrid = new Grid(CS); ctx.water.forEach((w) => ctx.waterGrid.addBox(...w.bb, w));
+  ctx.greenGrid = new Grid(CS); ctx.green.forEach((g) => ctx.greenGrid.addBox(...g.bb, g));
+  ctx.isWater = (x, z) => {
+    let hit = null;
+    ctx.waterGrid.query(x, z, x, z, (w) => { if (!hit && x >= w.bb[0] && x <= w.bb[2] && z >= w.bb[1] && z <= w.bb[3] && pointInRing(x, z, w.p) && !w.holes.some((h) => pointInRing(x, z, h))) hit = w; });
+    return hit;
+  };
+  ctx.isGreen = (x, z) => {
+    let hit = null;
+    ctx.greenGrid.query(x, z, x, z, (g) => { if (!hit && x >= g.bb[0] && x <= g.bb[2] && z >= g.bb[1] && z <= g.bb[3] && pointInRing(x, z, g.p) && !g.holes.some((h) => pointInRing(x, z, h))) hit = g; });
+    return hit;
+  };
+
+  // ----- toà nhà -----
+  ctx.bldGrid = new Grid(32);
+  ctx.chunkBld = new Map();
+  const { x0, z0 } = world.bounds;
+  for (const b of buildings) {
+    b.zone = zoneAt(b.cx, b.cz);
+    // công trình có mô hình dựng tay thì bỏ khối nhà OSM tương ứng
+    const lm = landmarks.find((l) => (l.names && l.names.includes(world.names[b.name])) || (l.clear && Math.hypot(b.cx - l.x, b.cz - l.z) < l.clear));
+    b.skip = !!lm; b.ghost = lm && !lm.open; // ghost: không vẽ nhưng vẫn chắn đường (mô hình dựng tay đứng đúng chỗ đó)
+    if (b.skip) {
+      b.height = 12;
+      if (b.ghost) { const k = Math.floor((b.cx - x0) / CS) * 1000 + Math.floor((b.cz - z0) / CS); let l = ctx.chunkBld.get(k); if (!l) ctx.chunkBld.set(k, (l = [])); l.push(b); }
+      continue;
+    }
+    const r = hash(b.i, 1), r2 = hash(b.i, 2);
+    let style, fh = 3.3, floors = 0;
+    switch (b.cat) {
+      case CAT.apart: style = ST.APART; fh = 3.2; floors = 5; break;
+      case CAT.modern: style = ST.MODERN; fh = 3.5; floors = b.area > 600 ? 6 + Math.floor(r * 7) : 4 + Math.floor(r * 4); break;
+      case CAT.public: style = ST.PUBLIC; fh = 3.8; floors = 2 + Math.floor(r * 3); break;
+      case CAT.temple: style = ST.TEMPLE; fh = 4.6; floors = 1; break;
+      case CAT.church: style = ST.CHURCH; fh = 5; floors = 3; break;
+      case CAT.market: case CAT.station: style = ST.MARKET; fh = 4.5; floors = 2; break;
+      case CAT.small: style = ST.SMALL; fh = 3; floors = 1; break;
+      case CAT.roof: style = ST.ROOF_TIN; fh = 4; floors = 1; break;
+      default: {
+        const f = FLOORS[b.zone]; floors = f[Math.floor(r * f.length)];
+        if (b.area < 22) floors = Math.min(floors, 2); else if (b.area > 260) floors = Math.min(Math.max(floors, 3), 5);
+        const colonial = b.zone === ZONE.french ? 0.42 : b.zone === ZONE.badinh ? 0.55 : b.zone === ZONE.old ? 0.08 : 0.05;
+        style = r2 < colonial ? ST.FRENCH : ST.TUBE; if (style === ST.FRENCH) { fh = 3.8; floors = Math.min(floors, 4); }
+      }
+    }
+    if (b.lv > 0) floors = b.lv;
+    let h = b.h > 0 ? b.h : floors * fh + (style === ST.TEMPLE ? 0 : 0.4);
+    if (b.h > 0 && !b.lv) floors = Math.max(1, Math.round(b.h / fh));
+    b.solemn = isSolemn(b.cx, b.cz);
+    if (b.solemn && (style === ST.TUBE || style === ST.APART || style === ST.MODERN)) { style = ST.FRENCH; fh = 3.8; floors = Math.min(floors, 3); h = b.h > 0 ? Math.min(b.h, 14) : floors * fh + 0.4; }
+    if (b.cat === CAT.house && floors >= 9) style = ST.MODERN;       // nhà cao tầng gắn thẻ building=yes
+    if (style === ST.MODERN && floors < 6 && b.area < 400) style = ST.TUBE; // khách sạn, cửa hàng trong nhà ống
+    b.style = style; b.floors = Math.max(1, Math.min(floors, 80)); b.height = Math.min(h, 260);
+    // mái: nhà ống phố cổ hay lợp ngói dốc, nhà mới mái bằng hoặc tôn
+    const r3 = hash(b.i, 3);
+    b.roof = style === ST.TEMPLE || style === ST.CHURCH ? ST.ROOF_TILE
+      : style === ST.MARKET || b.cat === CAT.roof ? ST.ROOF_TIN
+      : (style === ST.TUBE || style === ST.FRENCH) && b.floors <= 4 && r3 < (b.zone === ZONE.old ? 0.4 : b.zone === ZONE.french || b.zone === ZONE.badinh ? 0.5 : 0.15) ? ST.ROOF_TILE
+      : r3 > 0.86 ? ST.ROOF_TIN : ST.ROOF_FLAT;
+    ctx.bldGrid.addBox(...b.bb, b);
+    const k = Math.floor((b.cx - x0) / CS) * 1000 + Math.floor((b.cz - z0) / CS);
+    let l = ctx.chunkBld.get(k); if (!l) ctx.chunkBld.set(k, (l = [])); l.push(b);
+  }
+  // Toà nhà chứa điểm (x,z), bỏ qua toà `self`.
+  ctx.buildingAt = (x, z, self) => {
+    let hit = null;
+    ctx.bldGrid.query(x, z, x, z, (b) => { if (!hit && b !== self && b.cat !== CAT.roof && x >= b.bb[0] && x <= b.bb[2] && z >= b.bb[1] && z <= b.bb[3] && pointInRing(x, z, b.p)) hit = b; });
+    return hit;
+  };
+
+  // điểm rời rạc theo ô: cây OSM, hàng quán, ghế, đài phun
+  const bucket = (arr, n) => { const m = new Map(); for (let i = 0; i < arr.length; i += n) { const k = Math.floor((arr[i] - x0) / CS) * 1000 + Math.floor((arr[i + 1] - z0) / CS); let l = m.get(k); if (!l) m.set(k, (l = [])); l.push(i); } return m; };
+  ctx.treeIdx = bucket(world.trees, 2); ctx.foodIdx = bucket(world.food, 3); ctx.benchIdx = bucket(world.bench, 2); ctx.fountainIdx = bucket(world.fountain, 2);
+  ctx.wallGrid = new Grid(CS); world.walls.forEach((w) => ctx.wallGrid.addBox(...w.bb, w));
+  ctx.railGrid = new Grid(CS); world.rails.forEach((r) => { const p = r.p; let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (let i = 0; i < p.length; i += 2) { a = Math.min(a, p[i]); b = Math.min(b, p[i + 1]); c = Math.max(c, p[i]); d = Math.max(d, p[i + 1]); } ctx.railGrid.addBox(a, b, c, d, r); });
+  return ctx;
+}
