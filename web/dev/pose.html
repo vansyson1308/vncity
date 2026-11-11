@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0;background:#789"><canvas id="c" width="1100" height="800"></canvas>
+<script type="module">
+// Thử tư thế xương: /dev/pose.html?rot=Bip01_L_Thigh:z:-1.4;Bip01_L_Calf:z:1.3&ang=1.57
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const q = new URLSearchParams(location.search);
+const r = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: true, preserveDrawingBuffer: true });
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x8899aa);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x555555, 2.2)); const d = new THREE.DirectionalLight(0xffffff, 2); d.position.set(2, 4, 3); scene.add(d);
+scene.add(new THREE.GridHelper(4, 8)); scene.add(new THREE.AxesHelper(1));
+const cam = new THREE.PerspectiveCamera(35, 1100 / 800, 0.05, 100);
+const l = new GLTFLoader(); l.setMeshoptDecoder(MeshoptDecoder);
+const g = await l.loadAsync('/models/human.glb'); scene.add(g.scene);
+const mixer = new THREE.AnimationMixer(g.scene); const clip = g.animations.find((a) => a.name === (q.get('a') || 'idle')); mixer.clipAction(clip).play(); mixer.update(+(q.get('t') || 0.1));
+const bones = {}; g.scene.traverse((o) => { if (o.isBone) bones[o.name] = o; });
+const info = { tracks: {}, rest: {} };
+for (const a of g.animations) info.tracks[a.name] = a.tracks.filter((t) => t.name.endsWith('.position')).map((t) => { const v = t.values, n = v.length / 3; let mn = [1e9, 1e9, 1e9], mx = [-1e9, -1e9, -1e9]; for (let i = 0; i < n; i++) for (let k = 0; k < 3; k++) { mn[k] = Math.min(mn[k], v[i * 3 + k]); mx[k] = Math.max(mx[k], v[i * 3 + k]); } return [t.name, mx.map((m, k) => +(m - mn[k]).toFixed(3))]; }).filter((t) => Math.max(...t[1]) > 0.02);
+for (const n of ['Bip01', 'Bip01_Pelvis', 'Bip01_Spine', 'Bip01_L_Thigh', 'Bip01_L_Calf', 'Bip01_L_UpperArm', 'Bip01_L_Forearm', 'Bip01_Head', 'Bip01_R_Thigh']) if (bones[n]) { const w = new THREE.Vector3(); bones[n].getWorldPosition(w); info.rest[n] = { parent: bones[n].parent?.name, pos: w.toArray().map((v) => +v.toFixed(2)), q: bones[n].quaternion.toArray().map((v) => +v.toFixed(2)) }; }
+info.roots = Object.values(bones).filter((b) => !b.parent?.isBone).map((b) => [b.name, b.parent?.name]);
+for (const part of (q.get('rot') || '').split(';').filter(Boolean)) { const [n, ax, v] = part.split(':'); const b = bones[n]; if (!b) { info.missing = (info.missing || []).concat(n); continue; } const qq = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(ax === 'x' ? 1 : 0, ax === 'y' ? 1 : 0, ax === 'z' ? 1 : 0), +v); b.quaternion.multiply(qq); }
+const ang = +(q.get('ang') || 1.57);
+cam.position.set(Math.sin(ang) * 4.2, 1.3, Math.cos(ang) * 4.2); cam.lookAt(0, 0.9, 0);
+r.render(scene, cam); window.__info = info; document.title = 'ready';
+</script>

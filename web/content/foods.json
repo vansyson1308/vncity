@@ -1,0 +1,124 @@
+{
+ "_note": "Điểm ăn uống và văn hoá cho bản web quảng bá du lịch. Chỉ ghi món và phố, không ghi tên quán cụ thể. Vị trí được đặt vào giữa phố có tên trong bản đồ OSM (street). price: giá tham khảo một suất (đồng), dùng trong lối chơi.",
+ "items": [
+  {
+   "id": "pho_bat_dan",
+   "kind": "food",
+   "icon": "🍜",
+   "street": "Phố Bát Đàn",
+   "name": {
+    "vi": "Phở bò phố Bát Đàn",
+    "en": "Beef phở on Bát Đàn"
+   },
+   "description": {
+    "vi": "Phở Hà Nội nước trong, ngọt từ xương bò ninh suốt đêm, bánh phở mềm, hành hoa thái nhỏ. Người Hà Nội xếp hàng từ sáng sớm, tự bưng bát, ngồi ghế nhựa thấp.",
+    "en": "Hanoi phở has a clear broth simmered overnight from beef bones, soft rice noodles and chopped spring onion. Locals queue at dawn, carry their own bowl and sit on low plastic stools."
+   },
+   "price": 45000
+  },
+  {
+   "id": "bun_cha_hang_manh",
+   "kind": "food",
+   "icon": "🥢",
+   "street": "Phố Hàng Mành",
+   "name": {
+    "vi": "Bún chả phố Hàng Mành",
+    "en": "Bún chả on Hàng Mành"
+   },
+   "description": {
+    "vi": "Chả viên và chả miếng nướng than hoa, thả vào bát nước chấm chua ngọt có đu đủ xanh, ăn với bún và rau sống. Mùi khói chả là mùi của buổi trưa phố cổ.",
+    "en": "Grilled pork patties and slices over charcoal, served in a sweet and sour dipping broth with green papaya, rice vermicelli and fresh herbs. That smoke is the smell of lunchtime in the Old Quarter."
+   },
+   "price": 45000
+  },
+  {
+   "id": "ca_phe_trung",
+   "kind": "food",
+   "icon": "☕",
+   "street": "Phố Nguyễn Hữu Huân",
+   "name": {
+    "vi": "Cà phê trứng",
+    "en": "Egg coffee"
+   },
+   "description": {
+    "vi": "Ra đời ở Hà Nội những năm 1940 khi sữa tươi khan hiếm: lòng đỏ trứng đánh bông với đường và sữa đặc, phủ lên cà phê phin đậm. Uống nóng, ngồi trên gác nhìn xuống phố.",
+    "en": "Invented in Hanoi in the 1940s when fresh milk was scarce: egg yolk whipped with sugar and condensed milk, spooned over strong drip coffee. Drink it hot, upstairs, watching the street below."
+   },
+   "price": 35000
+  },
+  {
+   "id": "kem_trang_tien",
+   "kind": "food",
+   "icon": "🍦",
+   "street": "Phố Tràng Tiền",
+   "name": {
+    "vi": "Kem phố Tràng Tiền",
+    "en": "Ice cream on Tràng Tiền"
+   },
+   "description": {
+    "vi": "Que kem cốm, kem đậu xanh ăn đứng trên vỉa hè, kể cả giữa mùa đông. Tràng Tiền nối Bờ Hồ với Nhà hát Lớn, là con phố hẹn hò của nhiều thế hệ.",
+    "en": "Green rice and mung bean ice cream bars eaten standing on the pavement, even in winter. Tràng Tiền links the lake to the Opera House and has been a dating street for generations."
+   },
+   "price": 15000
+  },
+  {
+   "id": "banh_mi_hang_ca",
+   "kind": "food",
+   "icon": "🥖",
+   "street": "Phố Hàng Cá",
+   "name": {
+    "vi": "Bánh mì phố cổ",
+    "en": "Old Quarter bánh mì"
+   },
+   "description": {
+    "vi": "Ổ bánh mì vỏ giòn, ruột xốp, kẹp pa tê, chả lụa, dưa góp và rau mùi. Món ăn sáng, ăn trưa, ăn khuya của người phố cổ và là món khách nước ngoài nhớ nhất.",
+    "en": "A crisp, airy baguette filled with pâté, Vietnamese pork roll, pickles and coriander. Breakfast, lunch and late-night snack for the Old Quarter, and the dish visitors remember most."
+   },
+   "price": 25000
+  },
+  {
+   "id": "cha_ca",
+   "kind": "food",
+   "icon": "🐟",
+   "street": "Phố Chả Cá",
+   "name": {
+    "vi": "Chả cá phố Chả Cá",
+    "en": "Turmeric fish on Chả Cá street"
+   },
+   "description": {
+    "vi": "Cá lăng ướp nghệ, riềng, mẻ, rán trên chảo mỡ ngay tại bàn với thì là và hành, ăn với bún, lạc rang và mắm tôm. Món ăn nổi tiếng đến mức đổi luôn tên phố từ Hàng Sơn thành Chả Cá.",
+    "en": "Catfish marinated in turmeric, galangal and fermented rice, fried at your table with dill and spring onion, eaten with noodles, peanuts and shrimp paste. So famous it renamed the street from Hàng Sơn to Chả Cá."
+   },
+   "price": 30000
+  },
+  {
+   "id": "o_mai_hang_duong",
+   "kind": "food",
+   "icon": "🍬",
+   "street": "Phố Hàng Đường",
+   "name": {
+    "vi": "Ô mai phố Hàng Đường",
+    "en": "Ô mai on Hàng Đường"
+   },
+   "description": {
+    "vi": "Mơ, mận, sấu dầm đường, gừng và cam thảo: món quà Hà Nội người ta mua mang đi xa. Hàng Đường xưa là phố bán đường và mứt, tên phố vẫn giữ đến nay.",
+    "en": "Apricots, plums and sấu fruit candied with sugar, ginger and liquorice: the Hanoi gift people carry home. Hàng Đường was once the sugar and jam street, and it kept the name."
+   },
+   "price": 30000
+  },
+  {
+   "id": "pho_hang_ma",
+   "kind": "culture",
+   "icon": "🏮",
+   "street": "Phố Hàng Mã",
+   "name": {
+    "vi": "Phố đèn lồng Hàng Mã",
+    "en": "Hàng Mã lantern street"
+   },
+   "description": {
+    "vi": "Phố bán đồ mã, đèn lồng và đồ chơi Trung thu. Rằm tháng Tám cả phố đỏ rực đèn lồng, trẻ con rước đèn ông sao, người lớn chen nhau chụp ảnh.",
+    "en": "The street of paper offerings, lanterns and Mid-Autumn toys. On the full moon of the eighth lunar month it glows red with lanterns, children parade star lanterns and everyone squeezes in for photos."
+   }
+  }
+ ]
+}

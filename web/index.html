@@ -2,96 +2,126 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Hà Nội Dạo Phố</title>
-<meta name="description" content="Dạo phố cổ và Hồ Gươm 3D ngay trên trình duyệt: đóng dấu hộ chiếu du lịch ở các địa danh, thử món ngon Hà Nội. Bản đồ thật từ OpenStreetMap.">
-<meta property="og:title" content="Hà Nội Dạo Phố: Hồ Gươm và phố cổ 3D">
-<meta property="og:description" content="Đi bộ hoặc chạy xe máy quanh Hồ Gươm, phố cổ, Nhà hát Lớn. Chơi ngay trên trình duyệt, không cần cài đặt.">
+<meta name="description" content="Dạo Hồ Gươm, phố cổ, khu phố Pháp, Ba Đình và Hồ Tây 3D ngay trên trình duyệt: đi bộ, chạy xe máy giữa dòng xe, đóng dấu hộ chiếu ở các địa danh và món ngon Hà Nội. Bản đồ thật từ OpenStreetMap.">
+<meta property="og:title" content="Hà Nội Dạo Phố: một buổi chiều tối thong dong ở Hà Nội">
+<meta property="og:description" content="Đi bộ hoặc chạy xe máy qua 12 km² trung tâm Hà Nội dựng từ bản đồ thật. Chơi ngay trên trình duyệt, không cần cài đặt.">
 <meta name="theme-color" content="#b3121f">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%23b3121f'/><text x='32' y='44' font-size='34' text-anchor='middle'>🏮</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./src/ui.css">
+<link rel="stylesheet" href="./src/ui/ui.css">
 </head>
 <body>
-<canvas id="game"></canvas>
+<canvas id="game" tabindex="0"></canvas>
 
 <div id="loading" class="screen">
-  <div class="brand"><span class="lantern">🏮</span><h1>Hà Nội Dạo Phố</h1><p class="sub" data-i18n="tagline">Hồ Gươm và phố cổ 3D, ngay trên trình duyệt</p></div>
+  <div class="brand"><span class="lantern">🏮</span><h1>Hà Nội Dạo Phố</h1><p class="sub" data-i18n="tagline">Một buổi chiều tối thong dong ở Hà Nội</p></div>
   <div class="bar"><div id="bar"></div></div>
   <p id="loadtext" class="muted">Đang tải…</p>
 </div>
 
 <div id="start" class="screen hidden">
-  <div class="card intro">
-    <div class="brand"><span class="lantern">🏮</span><h1>Hà Nội Dạo Phố</h1><p class="sub" data-i18n="tagline">Hồ Gươm và phố cổ 3D, ngay trên trình duyệt</p></div>
-    <p data-i18n="intro">Bạn đi cùng Minh, anh xe ôm phố cổ, và chú chó vàng Bơ. Đi tới các cột sáng để đóng dấu hộ chiếu: địa danh màu xanh, món ăn màu cam. Đủ dấu thì nhận chứng nhận "Người Hà Nội danh dự".</p>
-    <div class="keys">
-      <div><b>WASD</b> <span data-i18n="k_move">đi</span></div><div><b>Shift</b> <span data-i18n="k_run">chạy</span></div>
-      <div><b>F</b> <span data-i18n="k_bike">lên/xuống xe máy</span></div><div><b>M</b> <span data-i18n="k_map">bản đồ, đi nhanh</span></div>
-      <div><b>N</b> <span data-i18n="k_time">sáng, chiều, hoàng hôn, đêm</span></div><div><b>Chuột</b> <span data-i18n="k_look">kéo để nhìn, lăn để gần xa</span></div>
+  <div class="paper intro">
+    <div class="brand"><span class="lantern">🏮</span><h1>Hà Nội Dạo Phố</h1><p class="sub" data-i18n="tagline">Một buổi chiều tối thong dong ở Hà Nội</p></div>
+    <p class="goal" data-i18n="goal">Đóng đầy cuốn hộ chiếu Hà Nội: đi tới các địa danh và món ngon, mỗi nơi một con dấu.</p>
+    <p data-i18n="intro">Bạn là Minh, chạy xe ôm phố cổ. Dạo bộ quanh Hồ Gươm, lên xe luồn qua dòng xe máy, chở khách kiếm tiền ăn phở. Không thua, không đồng hồ đếm ngược: cứ thong thả.</p>
+    <div class="keys" id="keys-desktop">
+      <div><b>WASD</b> <span data-i18n="k_move">đi, lái</span></div><div><b>Shift</b> <span data-i18n="k_run">chạy, tăng ga</span></div>
+      <div><b>F</b> <span data-i18n="k_bike">lên, xuống xe</span></div><div><b>E</b> <span data-i18n="k_use">đón khách, đọc thẻ</span></div>
+      <div><b>Space</b> <span data-i18n="k_horn">bóp còi, phanh</span></div><div><b>M</b> <span data-i18n="k_map">bản đồ</span></div>
+      <div><b>N</b> <span data-i18n="k_time">đổi giờ</span></div><div><b>P</b> <span data-i18n="k_photo">chụp ảnh</span></div>
+    </div>
+    <div class="keys hidden" id="keys-touch">
+      <div><b>👆</b> <span data-i18n="t_move">nửa trái: di chuyển</span></div><div><b>👉</b> <span data-i18n="t_look">nửa phải: nhìn quanh</span></div>
     </div>
     <div class="row">
       <button id="play" class="primary" data-i18n="play">Bắt đầu dạo phố</button>
       <button id="lang" class="ghost">English</button>
     </div>
-    <p class="muted small" data-i18n="credit">Bản đồ © OpenStreetMap (ODbL). Mô hình 3D CC0 từ craft-anything. Không quảng cáo, không thu dữ liệu.</p>
+    <p class="muted small" data-i18n="credit">Bản đồ © OpenStreetMap (ODbL) và Overture Maps. Nhân vật: Microsoft Rocketbox (MIT). Không quảng cáo, không thu thập dữ liệu.</p>
   </div>
 </div>
 
 <div id="hud" class="hidden">
-  <div id="passport" class="pill"><span>🛂</span> <b id="count">0/0</b> <span data-i18n="stamps">dấu</span></div>
-  <div id="objective" class="pill"><span id="arrow">➤</span> <span id="objname"></span> <b id="objdist"></b></div>
-  <canvas id="minimap" width="200" height="200"></canvas>
-  <div id="toolbar">
-    <button id="b-bike" title="F">🛵</button>
-    <button id="b-map" title="M">🗺️</button>
-    <button id="b-time" title="N">🌅</button>
-    <button id="b-book" title="B">📖</button>
-    <button id="b-lang" title="L">VI</button>
-    <button id="b-q" title="Q">⚙️</button>
+  <div id="topleft">
+    <button id="b-book" class="chip" title="B"><span>🛂</span> <b id="count">0/0</b></button>
+    <div class="chip" id="wallet"><span>💵</span> <b id="money">0</b></div>
+    <div class="chip" id="clock"><span id="clock-icon">🌇</span> <b id="clock-time">17:10</b></div>
   </div>
-  <div id="toast" class="hidden"></div>
-  <div id="stick" class="touch"><div id="knob"></div></div>
-  <button id="t-run" class="touch round">🏃</button>
-</div>
-
-<div id="stamp" class="modal hidden">
-  <div class="card">
+  <div id="compass"></div>
+  <div id="topright">
+    <button id="b-map" class="round" title="M">🗺️</button>
+    <button id="b-photo" class="round" title="P">📷</button>
+    <button id="b-time" class="round" title="N">🌗</button>
+    <button id="b-set" class="round">⚙️</button>
+  </div>
+  <canvas id="minimap" width="360" height="360"></canvas>
+  <div id="street"></div>
+  <div id="speedo" class="hidden"><b id="kmh">0</b><span>km/h</span></div>
+  <div id="fare" class="paper hidden">
+    <div class="farehead"><span id="fare-face">🙋</span><div><b id="fare-name"></b><div class="muted small" id="fare-dest"></div></div></div>
+    <div class="farerow"><span id="fare-dist"></span><b id="fare-money"></b></div>
+    <div class="comfort"><div id="fare-comfort"></div></div>
+  </div>
+  <div id="card" class="paper hidden">
     <div class="stampmark" id="stampmark">ĐÃ ĐẾN</div>
-    <p class="kind" id="s-kind"></p>
-    <h2 id="s-name"></h2>
-    <p id="s-desc"></p>
-    <p class="muted small" id="s-extra"></p>
-    <button class="primary" id="s-close" data-i18n="continue">Đi tiếp</button>
+    <p class="kind" id="c-kind"></p>
+    <h2 id="c-name"></h2>
+    <p id="c-desc"></p>
+    <p class="muted small" id="c-extra"></p>
+    <p class="next small" id="c-next"></p>
+    <div class="cardfoot"><span class="muted small" id="c-hint"></span><button class="ghost small" id="c-close">✕</button></div>
+  </div>
+  <div id="prompt" class="hidden"></div>
+  <div id="toast" class="hidden"><span id="toast-face">🧓</span><div><b id="toast-who"></b><span id="toast-text"></span></div></div>
+  <div id="bubble" class="hidden"></div>
+  <div id="stick"><div id="knob"></div></div>
+  <div id="touchbtns" class="hidden">
+    <button id="t-run" class="round big">🏃</button>
+    <button id="t-horn" class="round big">📣</button>
+    <button id="t-use" class="round big">🅴</button>
+    <button id="t-bike" class="round big">🛵</button>
   </div>
 </div>
+<div id="flash"></div>
 
 <div id="map" class="modal hidden">
-  <div class="card wide">
-    <div class="maphead"><h2 data-i18n="map">Bản đồ Hoàn Kiếm</h2><button class="ghost" id="m-close">✕</button></div>
-    <p class="muted small" data-i18n="maphelp">Bấm vào một điểm để xe ôm chở tới ngay.</p>
+  <div class="paper wide">
+    <div class="modalhead"><h2 data-i18n="map">Bản đồ Hà Nội</h2><button class="ghost" data-close>✕</button></div>
+    <p class="muted small" data-i18n="maphelp">Bấm vào một điểm đã có dấu để xe ôm chở tới ngay. Điểm chưa đến hiện dấu hỏi.</p>
     <div class="mapwrap"><canvas id="bigmap"></canvas></div>
   </div>
 </div>
 
 <div id="book" class="modal hidden">
-  <div class="card wide">
-    <div class="maphead"><h2 data-i18n="book">Hộ chiếu du lịch</h2><button class="ghost" id="k-close">✕</button></div>
-    <div id="booklist"></div>
-    <div class="row"><button class="ghost" id="k-reset" data-i18n="reset">Xoá dấu, chơi lại</button></div>
+  <div class="paper wide">
+    <div class="modalhead"><h2 data-i18n="book">Hộ chiếu Hà Nội</h2><button class="ghost" data-close>✕</button></div>
+    <div id="rank" class="rank"></div>
+    <div id="pages"></div>
+    <div class="row"><button class="ghost small" id="k-share" data-i18n="share">Chia sẻ hộ chiếu</button><button class="ghost small" id="k-reset" data-i18n="reset">Xoá dấu, chơi lại</button></div>
+  </div>
+</div>
+
+<div id="settings" class="modal hidden">
+  <div class="paper">
+    <div class="modalhead"><h2 data-i18n="settings">Cài đặt</h2><button class="ghost" data-close>✕</button></div>
+    <div class="setrow"><span data-i18n="s_quality">Chất lượng hình</span><div class="seg" id="s-quality"><button data-q="low" data-i18n="q_low">Nhẹ</button><button data-q="medium" data-i18n="q_medium">Vừa</button><button data-q="high" data-i18n="q_high">Đẹp</button></div></div>
+    <div class="setrow"><span data-i18n="s_sound">Âm thanh</span><div class="seg" id="s-sound"><button data-v="1" data-i18n="on">Bật</button><button data-v="0" data-i18n="off">Tắt</button></div></div>
+    <div class="setrow"><span data-i18n="s_music">Nhạc nền</span><div class="seg" id="s-music"><button data-v="1" data-i18n="on">Bật</button><button data-v="0" data-i18n="off">Tắt</button></div></div>
+    <div class="setrow"><span data-i18n="s_lang">Ngôn ngữ</span><div class="seg" id="s-lang"><button data-l="vi">Tiếng Việt</button><button data-l="en">English</button></div></div>
+    <p class="muted small" id="s-perf"></p>
+    <p class="muted small" data-i18n="credit">Bản đồ © OpenStreetMap (ODbL) và Overture Maps. Nhân vật: Microsoft Rocketbox (MIT). Không quảng cáo, không thu thập dữ liệu.</p>
   </div>
 </div>
 
 <div id="done" class="modal hidden">
-  <div class="card cert">
+  <div class="paper cert">
     <p class="kind" data-i18n="certk">Chứng nhận</p>
     <h2 data-i18n="cert">Người Hà Nội danh dự</h2>
-    <p data-i18n="certp">Bạn đã đi khắp Hồ Gươm và phố cổ, đóng đủ dấu hộ chiếu. Hà Nội ngoài đời còn đẹp hơn thế: hẹn bạn ở Bờ Hồ!</p>
-    <div class="row"><button class="primary" id="d-share" data-i18n="share">Chia sẻ</button><button class="ghost" id="d-close" data-i18n="continue">Đi tiếp</button></div>
+    <p data-i18n="certp">Bạn đã đi khắp Hồ Gươm, phố cổ, khu phố Pháp, Ba Đình và Hồ Tây, đóng đủ dấu hộ chiếu. Hà Nội ngoài đời còn đẹp hơn thế: hẹn bạn ở Bờ Hồ!</p>
+    <div class="row"><button class="primary" id="d-share" data-i18n="share">Chia sẻ hộ chiếu</button><button class="ghost" data-close data-i18n="continue">Đi tiếp</button></div>
   </div>
 </div>
-
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>

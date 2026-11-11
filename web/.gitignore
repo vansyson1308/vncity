@@ -1,4 +1,4 @@
 node_modules/
 dist/
-public/assets/
-!src/data/
+shots/
+.cache/
