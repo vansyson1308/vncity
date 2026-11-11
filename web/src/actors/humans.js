@@ -2,7 +2,12 @@
 // và nướng hoạt hình thành texture ma trận xương (đám đông người đi bộ vẽ bằng instancing, skinning trên GPU).
 import * as THREE from 'three';
 
-const _v = new THREE.Vector3(), _z = new THREE.Vector3(0, 0, 1), _q = new THREE.Quaternion();
+const _v = new THREE.Vector3(), _z = new THREE.Vector3(0, 0, 1), _x = new THREE.Vector3(1, 0, 0), _y = new THREE.Vector3(0, 1, 0), _q = new THREE.Quaternion();
+const AXIS = { x: _x, y: _y, z: _z };
+// Vùng cơ thể của một đỉnh theo xương chi phối nó: 1 thân, 2 cánh tay, 3 bàn tay, 4 đùi, 5 ống chân, 6 bàn chân, 7 đầu cổ.
+export const REG = { torso: 1, arm: 2, hand: 3, thigh: 4, calf: 5, foot: 6, head: 7 };
+const boneRegion = (n) => (/UpperArm|Forearm/.test(n) ? 2 : /Hand|Finger/.test(n) ? 3 : /Thigh/.test(n) ? 4 : /Calf/.test(n) ? 5 : /Foot|Toe/.test(n) ? 6 : /Head|Neck|Eye|Mouth|Lip|Jaw|Tongue|Cheek|Nose|[Bb]row|Masseter|Caninus/.test(n) ? 7 : 1);
+function vertexRegion(m, i) { const si = m.geometry.attributes.skinIndex, sw = m.geometry.attributes.skinWeight; let b = 0, w = -1; for (let k = 0; k < 4; k++) { const ww = sw.getComponent(i, k); if (ww > w) { w = ww; b = si.getComponent(i, k); } } return boneRegion(m.skeleton.bones[b].name); }
 const s2l = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 
 function texPixels(map) {
@@ -21,14 +26,15 @@ function applyPose(H, gltf, clip, time, extra) {
   H.mixer.stopAllAction();
   const c = gltf.animations.find((a) => a.name === clip);
   if (c) { for (const t of c.tracks) if (t.name === 'Bip01.position') { const v = t.values; for (let i = 3; i < v.length; i += 3) { v[i] = v[0]; v[i + 2] = v[2]; } } const a = H.mixer.clipAction(c); a.play(); H.mixer.setTime(time); }
-  if (extra) for (const [name, ang] of extra) { const b = H.bones[name]; if (b) b.quaternion.multiply(_q.setFromAxisAngle(_z, ang)); }
+  if (extra) for (const [name, ang, ax] of extra) { const b = H.bones[name]; if (b) b.quaternion.multiply(_q.setFromAxisAngle(AXIS[ax] || _z, ang)); }
   H.root.updateMatrixWorld(true);
   for (const m of H.meshes) m.skeleton.update();
 }
 
 // Nướng mô hình ở một tư thế thành mảng đỉnh có màu (lấy từ ảnh da/quần áo). Áo tối màu được đánh dấu mặt nạ 0,5
-// và tô xám sáng để mỗi người lái nhuộm một màu áo riêng.
-export function bakePose(gltf, clip, time, extraPose) {
+// và tô xám sáng để mỗi người lái nhuộm một màu áo riêng. opt.sleeves: da cánh tay mang mặt nạ 0,35 (dòng xe tô thành tay áo dài
+// cho người mặc áo khoác); opt.shirtMask: mặt nạ khác cho áo (khách ngồi xích lô nhuộm theo màu khác người đạp).
+export function bakePose(gltf, clip, time, extraPose, opt = {}) {
   const H = prepare(gltf); applyPose(H, gltf, clip, time, extraPose);
   const pos = [], col = [], idx = []; let head = [0, 1.65, 0];
   if (H.bones.Bip01_Head) { H.bones.Bip01_Head.getWorldPosition(_v); head = [_v.x, _v.y, _v.z]; }
@@ -41,7 +47,11 @@ export function bakePose(gltf, clip, time, extraPose) {
       if (tex && UV) { const x = Math.min(tex.w - 1, Math.max(0, Math.floor(UV.getX(i) * tex.w))), y = Math.min(tex.h - 1, Math.max(0, Math.floor(UV.getY(i) * tex.h))), o = (y * tex.w + x) * 4; r = s2l(tex.d[o] / 255); g = s2l(tex.d[o + 1] / 255); b = s2l(tex.d[o + 2] / 255); }
       const lum = 0.3 * r + 0.59 * g + 0.11 * b, sat = Math.max(r, g, b) - Math.min(r, g, b);
       void restY;
-      if (body && lum < 0.06 && sat < 0.03 && _v.y > head[1] - 0.72) col.push(0.75, 0.75, 0.75, 0.5); else col.push(r, g, b, 0);
+      if (opt.sleeves) { // phân vùng theo xương: áo là phần vải tối trên thân và tay, da tay là phần còn lại của cánh tay
+        const reg = body ? vertexRegion(m, i) : 0;
+        if ((reg === 1 || reg === 2) && lum < 0.09 && sat < 0.045) col.push(0.75, 0.75, 0.75, opt.shirtMask || 0.5);
+        else if (reg === 2 && !opt.bare) col.push(r, g, b, 0.35); else col.push(r, g, b, 0);
+      } else if (body && lum < 0.06 && sat < 0.03 && _v.y > head[1] - 0.72) col.push(0.75, 0.75, 0.75, 0.5); else col.push(r, g, b, 0);
     }
     const I = geo.index.array; for (let i = 0; i < I.length; i++) idx.push(I[i] + base);
   }
