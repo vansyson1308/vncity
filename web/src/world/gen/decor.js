@@ -22,7 +22,7 @@ const LANTERN = [[0.82, 0.05, 0.03], [0.95, 0.58, 0.07], [0.88, 0.16, 0.42]];
 // Đèn lồng tròn: thân vải đỏ (vàng, hồng), hai đai vàng, tua rua; ban đêm tự sáng. lo: bản rút gọn cho lưới xa.
 function lantern(g, x, y, z, r, kind, lo) {
   const c = LANTERN[kind];
-  g.rgb(c[0], c[1], c[2]).glow(0.75).ball(x, y, z, r, lo ? 4 : 5, lo ? 2 : 3, 0.92).glow(0);
+  g.rgb(c[0], c[1], c[2]).glow(0.34).ball(x, y, z, r, lo ? 4 : 5, lo ? 2 : 3, 0.92).glow(0);
   if (lo) return;
   g.rgb(0.75, 0.55, 0.1).glow(0.3).cyl(x, y + r * 0.8, z, r * 0.42, r * 0.42, r * 0.22, 3, false).cyl(x, y - r * 1.02, z, r * 0.42, r * 0.3, r * 0.22, 3, false).glow(0);
   g.rgb(0.7, 0.1, 0.05).quad([x - 0.02, y - r * 1.02 - 0.22, z], [x + 0.02, y - r * 1.02 - 0.22, z], [x + 0.02, y - r * 1.02, z], [x - 0.02, y - r * 1.02, z]);
@@ -475,7 +475,7 @@ export function decorate(ctx, env) {
 
   // ===== tường rào, hàng rào (OSM barrier) =====
   // Tường không bao giờ chắn lối đi có trong bản đồ: để hở ở cổng (nút cổng của OSM) và ở mọi chỗ có đường, lối đi cắt qua.
-  const GT = ctx.world.gates;
+  const GT = ctx.world.gates, doneGate = new Set(), booths = []; // một cổng có thể nằm trên nhiều đoạn tường: chỉ dựng cánh cổng, bốt gác một lần
   // Phía trong của một bức tường tại (x,z): phía xa đường phố hơn. (ux,uz): pháp tuyến tường. Trả về +1, -1 hoặc 0 nếu không rõ.
   const pub = (r) => r.veh && r.kind <= K.residential && !r.elev;
   const insideSide = (x, z, ux, uz) => { const a = ctx.nearestRoad(x + ux * 3, z + uz * 3, 40, pub), b = ctx.nearestRoad(x - ux * 3, z - uz * 3, 40, pub), da = a ? a.d : 99, db = b ? b.d : 99; return Math.abs(da - db) < 1.5 ? 0 : da > db ? 1 : -1; };
@@ -511,7 +511,7 @@ export function decorate(ctx, env) {
       const paint = (g) => {
         // tường rào xây: vữa vôi vàng (Ba Đình, khu phố Pháp vàng đậm hơn); tường thành: đá rêu phong; hàng rào sắt xanh rêu; bờ giậu để trơn
         g.mat(w.k === 0 ? MAT.plaster : w.k === 3 ? MAT.mossy : MAT.none);
-        if (w.k === 2) g.rgb(0.1, 0.22, 0.07); else if (w.k === 1) g.rgb(IRON[0], IRON[1], IRON[2]); else if (w.k === 3) g.rgb(0.42, 0.4, 0.36); else if (formal) g.rgb(0.7, 0.45, 0.12); else g.rgb(0.62, 0.48, 0.2);
+        if (w.k === 2) g.rgb(0.1, 0.22, 0.07); else if (w.k === 1) g.rgb(IRON[0], IRON[1], IRON[2]); else if (w.k === 3) g.rgb(0.42, 0.4, 0.36); else if (formal) g.rgb(0.66, 0.45, 0.16); else g.rgb(0.62, 0.48, 0.2);
       };
       for (const [a0, a1] of pieces) {
         const pax = ax + dx * a0, paz = az + dz * a0, pbx = ax + dx * a1, pbz = az + dz * a1, mx = (pax + pbx) / 2, mz = (paz + pbz) / 2; if (!inChunk(mx, mz)) continue;
@@ -529,7 +529,7 @@ export function decorate(ctx, env) {
           // hàng rào sắt: bệ xây thấp, song sắt đứng, hai thanh ngang (bản xa chỉ còn bệ và hai thanh ngang)
           const PH = 0.5, y0 = CURB + PH;
           for (const g of [near, far]) {
-            g.mat(MAT.plaster); if (formal) g.rgb(0.7, 0.45, 0.12); else g.rgb(0.4, 0.39, 0.36);
+            g.mat(MAT.plaster); if (formal) g.rgb(0.66, 0.45, 0.16); else g.rgb(0.4, 0.39, 0.36);
             slab(g, CURB, y0, 0.11, g === near);
             g.mat(MAT.none).rgb(IRON[0], IRON[1], IRON[2]); slab(g, CURB + H - 0.1, CURB + H - 0.04, 0.02, false); slab(g, y0 + 0.08, y0 + 0.13, 0.02, false);
           }
@@ -553,7 +553,7 @@ export function decorate(ctx, env) {
       }
       if (w.k === 0 || w.k === 3 || (w.k === 1 && formal)) for (const sp of posts) { // trụ cổng
         if (sp < -0.2 || sp > Ls + 0.2) continue; const x = ax + dx * sp, z = az + dz * sp; if (!inChunk(x, z)) continue;
-        for (const g of [near, far]) { paint(g); if (w.k === 1) g.mat(MAT.plaster).rgb(0.7, 0.45, 0.12); g.cube(x - X0, CURB, z - Z0, 0.5, H + 0.3, 0.5, 'xXzZ'); g.shade(0.8).cube(x - X0, CURB + H + 0.3, z - Z0, 0.64, 0.14, 0.64); }
+        for (const g of [near, far]) { paint(g); if (w.k === 1) g.mat(MAT.plaster).rgb(0.66, 0.45, 0.16); g.cube(x - X0, CURB, z - Z0, 0.5, H + 0.3, 0.5, 'xXzZ'); g.shade(0.8).cube(x - X0, CURB + H + 0.3, z - Z0, 0.64, 0.14, 0.64); }
         extraWalls.push(x - 0.25, z, x + 0.25, z);
       }
       near.mat(); far.mat();
@@ -564,6 +564,7 @@ export function decorate(ctx, env) {
         const ix = dz * sd, iz = -dx * sd, seed = (Math.round(gx * 3) * 7919 + Math.round(gz * 3)) | 0;
         for (const e of [-1, 1]) { // mỗi trụ một cánh, bản lề ở mép trong của trụ
           const hs = sg + e * 1.42; if (hs < -0.2 || hs > Ls + 0.2) continue;
+          const hk = Math.round((ax + dx * hs) * 2) * 100003 + Math.round((az + dz * hs) * 2); if (doneGate.has(hk)) continue; doneGate.add(hk);
           const hx = ax + dx * hs + ix * 0.2, hz = az + dz * hs + iz * 0.2, sw = 0.35 * e * (0.4 + hash(seed, 3 + e)); // cánh khép hờ vào trong
           const ex = ix * Math.cos(sw) - dx * Math.sin(sw) * sd, ez = iz * Math.cos(sw) - dz * Math.sin(sw) * sd, LW = 1.38, y0 = CURB + 0.1, y1 = CURB + H - 0.15;
           near.rgb(IRON[0], IRON[1], IRON[2]);
@@ -571,11 +572,12 @@ export function decorate(ctx, env) {
           bar(0, LW, y0, y0 + 0.06); bar(0, LW, y1 - 0.06, y1); bar(0, LW, (y0 + y1) / 2 - 0.03, (y0 + y1) / 2 + 0.03);
           for (let k = 0; k <= 6; k++) bar((LW * k) / 6 - 0.016, (LW * k) / 6 + 0.016, y0, y1 + (k > 0 && k < 6 ? 0.14 : 0));
         }
-        if (zw !== ZONE.badinh || sg < 0 || sg >= Ls || hash(seed, 1) > 0.7) continue;
+        if (zw !== ZONE.badinh || sg < 0 || sg >= Ls || hash(seed, 1) > 0.6 || booths.some((q) => (q[0] - gx) ** 2 + (q[1] - gz) ** 2 < 64)) continue;
         let bs = hash(seed, 2) < 0.5 ? -1 : 1;
         for (let t = 0; t < 2; t++, bs = -bs) {
-          const s2 = sg + bs * 2.75, bx2 = ax + dx * s2 + ix * 1.0, bz2 = az + dz * s2 + iz * 1.0;
-          if (!free(bx2, bz2) || onRoad(bx2, bz2, 0.9) || ctx.nearestRoad(bx2, bz2, 1.6)) continue;
+          const s2 = sg + bs * 2.75, bx2 = ax + dx * s2 - ix * 0.8, bz2 = az + dz * s2 - iz * 0.8; // đứng ngoài tường, sát trụ cổng, nhìn ra phố
+          if (!free(bx2, bz2) || onRoad(bx2, bz2, 1.2) || ctx.nearestRoad(bx2, bz2, 1.8)) continue;
+          booths.push([gx, gz]);
           for (const g of [near, far]) { g.push().move(bx2 - X0, CURB, bz2 - Z0).rotY(Math.atan2(-dz, dx)); guardBooth(g, g === far); g.pop(); }
           extraWalls.push(bx2 - 0.6, bz2 - 0.6, bx2 + 0.6, bz2 - 0.6, bx2 + 0.6, bz2 - 0.6, bx2 + 0.6, bz2 + 0.6, bx2 + 0.6, bz2 + 0.6, bx2 - 0.6, bz2 + 0.6, bx2 - 0.6, bz2 + 0.6, bx2 - 0.6, bz2 - 0.6);
           break;

@@ -522,7 +522,7 @@ export function facadeMaterial(tex, noise) {
         vec3 warm = wc < 0.46 ? vec3(1.0, 0.7, 0.38) : wc < 0.68 ? vec3(1.0, 0.86, 0.6) : wc < 0.93 ? vec3(0.76, 0.92, 1.0) : vec3(0.42, 0.58, 1.0);
         warm = mix(warm, vec3(0.86, 0.94, 1.0), fmod * 0.7);
         float wbr = 0.4 + 0.9 * fract(wr * 37.0);
-        totalEmissiveRadiance += (fglass * won * warm * wbr * (0.14 + 0.55 * tx.rgb) + flit * tx.rgb * 0.9 + fsign * fcol * 0.5) * uLit;`)
+        totalEmissiveRadiance += (fglass * won * warm * wbr * (0.42 + 1.3 * tx.rgb) * (0.75 + 0.5 * ff.y) + flit * tx.rgb * 0.9 + fsign * fcol * 0.5) * uLit;`)
       .replace('#include <opaque_fragment>', `
         { vec3 V = normalize(vWPos - cameraPosition); vec3 Rf = reflect(V, normalize(vWN));
           float fr = 0.06 + 0.94 * pow(1.0 - max(dot(-V, normalize(vWN)), 0.0), 4.0);
