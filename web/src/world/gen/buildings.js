@@ -127,40 +127,107 @@ export function civicOf(ctx, b) {
   return (b.civic = c);
 }
 
+// Thứ hạng của gian thứ j trên cạnh k của nhà b: dùng chung cho mọi ô phố, để hai ô cạnh nhau cùng biết gian nào phải nhường.
+const rankOf = (b, k, j) => (b.i * 4096 + (k >> 1)) * 256 + j;
+// Các gian mặt phố (và chỗ gắn biển số nhà quay ra ngõ) của nhà b, tính riêng, không dựng hình: biển, vẻ biển, số nhà ban đầu theo vị
+// trí. Ô phố bên cạnh cần chúng để soát trùng biển và trùng số qua ranh giới ô. Các bước chọn đường, chia gian, chọn biển phải giữ
+// khớp với vòng dựng trong genBuildings (cùng điều kiện, cùng hạt giống); tools/qa_signs.mjs so hai bên.
+const stubCache = new WeakMap();
+export function frontStubs(ctx, b) {
+  let out = stubCache.get(b); if (out) return out;
+  stubCache.set(b, (out = []));
+  if (b.ghost || b.skip || b.cat === CAT.roof) return out;
+  const civ = civicOf(ctx, b), h = b.height, st = civ === 1 && b.style === ST.TUBE ? ST.PUBLIC : b.style, hero = b.hero || null, zone = b.zone;
+  const numbered = !hero && st !== ST.TEMPLE && st !== ST.CHURCH && st !== ST.MARKET && st !== ST.SMALL, row = st === ST.TUBE && b.area > 140 && !hero;
+  const ring = b.p, n = ring.length; let area = 0, hotelDone = false;
+  for (let k = 0; k < n; k += 2) { const j = (k + 2) % n; area += ring[k] * ring[j + 1] - ring[j] * ring[k + 1]; }
+  const dir = area > 0 ? 1 : -1;
+  for (let k = 0; k < n; k += 2) {
+    const ax = ring[k], az = ring[k + 1], dx = ring[(k + 2) % n] - ax, dz = ring[(k + 3) % n] - az, Lw = Math.hypot(dx, dz); if (Lw < 1.9) continue;
+    const nx = (dz / Lw) * dir, nz = (-dx / Lw) * dir, mx = ax + dx / 2, mz = az + dz / 2;
+    const nb = ctx.buildingAt(mx + nx * 0.9, mz + nz * 0.9, b); if (nb && !nb.skip) continue; // tường giáp nhà bên cạnh: tường trơn hoặc khuất
+    const rd = ctx.nearestRoad(mx + nx * 2, mz + nz * 2, 15, notDeck);
+    if (!rd || (rd.px - mx) * nx + (rd.pz - mz) * nz <= 0.5 || rd.d - rd.r.w / 2 >= 8) continue;
+    const road = rd.r, street = !b.solemn && (road.kind <= K.residential || road.kind === K.pedestrian);
+    let shop = false, style = st;
+    if (hero) shop = !!hero.shop && street;
+    else if (civ === 1) shop = false;
+    else if (st === ST.TUBE) { if (street) shop = true; else style = ST.ALLEY; }
+    else if (st === ST.FRENCH) shop = street && hash(b.i, 5) < (zone === ZONE.badinh ? 0.12 : 0.45);
+    else if (st === ST.APART) shop = street && hash(b.i, 6) < 0.6;
+    const bays = Math.max(1, Math.round(Lw / (BAY[style] || 4))), cuts = [0];
+    if (row && bays > 1) { let t = 0; const ws = []; for (let j = 0; j < bays; j++) { ws.push(2.9 + hash(b.i * 97 + k * 13 + j, 45) * 2.4); t += ws[j]; } let c = 0; for (let j = 0; j < bays; j++) { c += ws[j] / t; cuts.push(j === bays - 1 ? 1 : c); } }
+    else for (let j = 1; j <= bays; j++) cuts.push(j / bays);
+    alongStreet(ctx.world, road, mx, mz, _as); const wS = _as[0], wSide = _as[1], wDir = dx * _as[2] + dz * _as[3] >= 0 ? 1 : -1;
+    for (let j = 0; j < bays; j++) {
+      const t = (cuts[j] + cuts[j + 1]) / 2, mid = j === bays >> 1, fi = frontInfo(ctx, road, wS + wDir * (t - 0.5) * Lw, wSide), sb = shop && (civ !== 2 || (mid && !hotelDone && Lw >= 3.2));
+      if (sb && civ === 2) hotelDone = true;
+      const q = { x: ax + dx * t, z: az + dz * t, w: Lw * (cuts[j + 1] - cuts[j]), road, S: fi.S, side: fi.side, rk: rankOf(b, k, j), sign: sb ? (civ === 2 ? HOTEL_SIGN : fi.sign) : 0, sv: fi.sv, num: 0, door: !street };
+      if (street) q.num = numbered && (row || mid) ? fi.num : 0;
+      else if (mid && numbered && !b.solemn && Lw >= 2.2 && (road.kind === K.service || road.name >= 0)) q.num = fi.num;
+      if (q.sign || q.num) out.push(q);
+    }
+  }
+  return out;
+}
+
 // Soát lại biển hiệu và số nhà của cả ô sau khi dựng xong. signAt() đã cho mỗi gian một biển theo vị trí dọc phố, nhưng nhà lùi sau
-// nhà khác, tường quay ngang đầu phố hay hai phố gặp nhau ở góc vẫn có thể cho hai gian sát nhau cùng một chữ. Ở đây xét từng gian
-// theo thứ tự dựng: gian nào trùng chữ với một gian sát bên, hoặc giống hệt (cùng chữ, cùng vẻ) một gian trong vòng 30 m, thì lấy
-// biển của khe kế tiếp trong vòng biển của chính phố đó cho tới khi hết trùng, rồi sửa luôn lớp tầng trệt và màu dải biển trên lưới.
-// Số nhà cùng phố cùng lề được đẩy cho tăng dần (không hai nhà nào trùng số). Chỉ nhìn các gian của ô này nên ô nào cũng ra cùng kết quả.
-function settleFronts(ctx, fronts, doors, bb) {
-  const cell = 30, grid = new Map(), K = (x, z) => Math.floor(x / cell) * 8191 + Math.floor(z / cell);
-  const clash = (f, sign, sv) => {
-    const gx = Math.floor(f.mx / cell), gz = Math.floor(f.mz / cell);
-    for (let a = -1; a <= 1; a++) for (let c = -1; c <= 1; c++) {
-      const l = grid.get((gx + a) * 8191 + gz + c); if (!l) continue;
-      for (const g of l) { if (g.sign !== sign) continue; const d = Math.hypot(g.mx - f.mx, g.mz - f.mz); if (d < (f.w + g.w) / 2 + 1 || (d < 30.5 && g.sv === sv)) return true; }
+// nhà khác, tường quay ngang đầu phố hay hai phố gặp nhau ở góc vẫn có thể cho hai gian sát nhau cùng một chữ. Luật chung cho mọi ô:
+// mỗi gian có một thứ hạng (rankOf); gian nào trùng chữ với một gian sát bên, hoặc giống hệt (cùng chữ, cùng vẻ) một gian trong vòng
+// 30 m, mà gian kia có hạng nhỏ hơn, thì gian này nhường: lấy biển của khe kế tiếp trong vòng biển của chính phố đó cho tới khi không
+// trùng với gian nào quanh nó nữa (kể cả gian của các ô bên cạnh, xem frontStubs), rồi sửa luôn lớp tầng trệt và màu dải biển trên
+// lưới. Vì ô bên cạnh xét cùng một luật trên cùng dữ liệu, hai ô không bao giờ cùng giữ hai biển trùng nhau ở ranh giới.
+// Số nhà: số lấy theo quãng dọc phố (houseNumber) nên tự tăng dần; hai nhà hẹp rơi vào cùng một số thì nhà sau thêm chữ A, B, C...
+// như số nhà tách thửa ở Hà Nội ("12A"). Việc này chỉ phụ thuộc các nhà cùng số (cách nhau dưới 4 m), nên cũng khớp qua ranh giới ô.
+const SUFFIX = ['', 'A', 'B', 'C', 'D', 'E'];
+function settleFronts(ctx, fronts, doors, bb, cx, cz) {
+  const B = ctx.world.bounds, X0 = B.x0 + cx * CS, Z0 = B.z0 + cz * CS, M = 31, cls = (cx + 2 * cz) % 3;
+  // gian của các nhà thuộc tám ô xung quanh, trong dải 31 m quanh ô này
+  const ext = [];
+  for (let a = -1; a <= 1; a++) for (let c = -1; c <= 1; c++) {
+    if (!a && !c) continue;
+    for (const b of ctx.chunkBld.get((cx + a) * 1000 + cz + c) || []) {
+      if (b.bb[2] < X0 - M || b.bb[0] > X0 + CS + M || b.bb[3] < Z0 - M || b.bb[1] > Z0 + CS + M) continue;
+      for (const q of frontStubs(ctx, b)) if (q.x > X0 - M && q.x < X0 + CS + M && q.z > Z0 - M && q.z < Z0 + CS + M) ext.push(q);
+    }
+  }
+  const cell = 30, own = new Map(), nbr = new Map(), K = (x, z) => Math.floor(x / cell) * 8191 + Math.floor(z / cell);
+  const put = (m, q) => { const k = K(q.x, q.z); let l = m.get(k); if (!l) m.set(k, (l = [])); l.push(q); };
+  for (const q of ext) if (q.sign && !q.door) put(nbr, q);
+  // mode 0: biển ban đầu, chỉ xét gian của ô bên cạnh có hạng nhỏ hơn; 1: biển mới, xét mọi gian, khắt khe (không trùng chữ với gian nào
+  // trong vòng 12 m, để không có A, B, A liền nhau); 2: biển mới, xét mọi gian, chỉ cấm trùng chữ gian sát bên (khi không tìm được biển theo 1)
+  const clash = (f, sign, sv, mode) => {
+    const gx = Math.floor(f.x / cell), gz = Math.floor(f.z / cell);
+    for (let a = -1; a <= 1; a++) for (let c = -1; c <= 1; c++) for (const m of [own, nbr]) {
+      const l = m.get((gx + a) * 8191 + gz + c); if (!l) continue;
+      for (const g of l) {
+        if (g.sign !== sign || (!mode && m === nbr && g.rk > f.rk)) continue;
+        const d = Math.hypot(g.x - f.x, g.z - f.z); if (d < (mode === 1 ? 12 : (f.w + g.w) / 2 + 1.2) || (d < 30.5 && g.sv === sv)) return true;
+      }
     }
     return false;
   };
-  for (const f of fronts) {
-    if (!f.shop || !f.sign) continue;
-    f.mx = (f.x0 + f.x1) / 2; f.mz = (f.z0 + f.z1) / 2;
-    if (f.vi >= 0 && clash(f, f.sign, f.sv)) {
+  const shops = fronts.filter((f) => f.shop && f.sign).sort((p, q) => p.rk - q.rk);
+  for (const f of shops) {
+    f.x = (f.x0 + f.x1) / 2; f.z = (f.z0 + f.z1) / 2;
+    if (f.vi >= 0 && clash(f, f.sign, f.sv, 0)) {
       const name = f.road.name >= 0 ? ctx.world.names[f.road.name] : null, key = name || f.road.i, trade = name ? TRADES[name] : null;
-      for (let k = 1; k <= 42; k++) {
-        const sg = signAt(key, trade, f.S + k * 4.8, f.side); if (clash(f, sg[0], sg[1])) continue;
-        f.sign = sg[0]; f.sv = sg[1]; f.gnd = shopLayer(f.eraS, f.sign, f.seed);
+      // Hai gian ở hai ô khác nhau cùng phải nhường thì không thấy biển mới của nhau: tìm theo hai chiều khác nhau, và biển mới mang vẻ
+      // theo lớp của ô (cls: hai ô chung cạnh luôn khác lớp), nên hai biển nhường cạnh nhau không bao giờ giống hệt.
+      const step = hash(f.rk, 71) < 0.5 ? 4.8 : -4.8;
+      search: for (const mode of [1, 2]) for (let k = 1; k <= 42; k++) {
+        const sg = signAt(key, trade, f.S + k * step, f.side), sv = (f.side ? 3 : 0) + cls; if (clash(f, sg[0], sv, mode)) continue;
+        f.sign = sg[0]; f.sv = sv; f.gnd = shopLayer(f.eraS, f.sign, f.seed);
         for (let v = f.vi; v < f.vi + 4; v++) { bb.va[v * 4 + 1] = f.gnd; bb.va[v * 4 + 3] = SIGNS[f.sign][2]; }
-        break;
+        break search;
       }
     }
-    const k = K(f.mx, f.mz); let l = grid.get(k); if (!l) grid.set(k, (l = [])); l.push(f);
+    put(own, f); // các gian của ô này được xét theo thứ hạng tăng dần: gian xét sau so với biển cuối cùng của gian xét trước
   }
-  for (const list of [fronts, doors]) {
-    const by = new Map();
-    for (const f of list) { if (!f.num) continue; const k = f.road.i * 2 + f.side, nk = f.road.name >= 0 ? -2 - f.road.name * 2 - f.side : k; let l = by.get(nk); if (!l) by.set(nk, (l = [])); l.push(f); }
-    for (const l of by.values()) { l.sort((p, q) => p.S - q.S); let prev = -1; for (const f of l) { if (f.num <= prev) f.num = prev + 2; prev = f.num; } }
-  }
+  // số nhà: gom các nhà cùng phố, cùng lề, cùng số (của ô này và ô bên cạnh), xếp theo quãng dọc phố
+  const by = new Map(), key = (q) => (q.road.name >= 0 ? 'n' + q.road.name : 'r' + q.road.i) + (q.door ? 'd' : 'f') + q.side + '|' + q.num;
+  for (const list of [fronts, doors, ext]) for (const q of list) { if (!q.num) continue; q.suf = ''; const k = key(q); let l = by.get(k); if (!l) by.set(k, (l = [])); l.push(q); }
+  for (const l of by.values()) if (l.length > 1) { l.sort((p, q) => p.S - q.S || p.rk - q.rk); l.forEach((q, i) => { q.suf = SUFFIX[Math.min(i, 5)]; }); }
 }
 
 // Khoảng cách từ điểm (x,z) đi theo hướng (dx,dz) tới cạnh gần nhất của vòng ring (bỏ qua cạnh xuất phát).
@@ -187,6 +254,7 @@ export function genBuildings(ctx, cx, cz) {
     if (b.cat === CAT.roof) { canopy(bb, b); continue; }
     if (hero) heroes.push(b);
     const rings = [b.p, ...b.holes]; let hotelDone = false; // khách sạn có tên: cả nhà chỉ treo một biển
+    const numbered = !hero && st !== ST.TEMPLE && st !== ST.CHURCH && st !== ST.MARKET && st !== ST.SMALL; // di tích, đền chùa, nhà thờ, chợ, chòi: không gắn biển số nhà
     const pitched = b.roof === ST.ROOF_TILE && b.p.length === 8 && !b.holes.length && st === ST.TUBE && !hero;
     const hip = !pitched && b.roof === ST.ROOF_TILE && !b.holes.length ? hipRing(b) : null;
     const row = st === ST.TUBE && b.area > 140 && !hero; // dãy nhà gộp chung một hình: cắt thành từng lô
@@ -276,8 +344,9 @@ export function genBuildings(ctx, cx, cz) {
           }
           const fx = [style, fseed, f, (sb ? FLAG_SHOP : 0) | (lot.age << 1)], vi = bb.n;
           bb.wall(x0, z0, x1, z1, 0, top, nx, nz, 0, 1, 0, f + lot.par / lot.fh, fx, [ly[0], ly[1], lot.tint, sign ? SIGNS[sign][2] : 0]);
-          if (street) fronts.push({ b, x0, z0, x1, z1, nx, nz, w: (Lw * (lot.t1 - lot.t0)), h: lot.H, fh: lot.fh, floors: f, style, shop: sb, up: ly[0], gnd: ly[1], sign, sv: fi.sv, num: row || mid ? fi.num : 0, S: fi.S, side: fi.side, vi: sb && civ !== 2 && !(hero && hero.up !== undefined) ? vi : -1, eraS, tint: lot.tint, road, seed: bs + j * 7, era: lot.look ? lot.look.era : -1, tile: lot.tile || pitched, zone, hero, civic: civ });
-          else if (fi && mid && style === ST.ALLEY && ri === 0 && !b.solemn && Lw >= 2.2) doors.push({ x: (x0 + x1) / 2, z: (z0 + z1) / 2, nx, nz, w: Lw * (lot.t1 - lot.t0), fh: lot.fh, road, num: fi.num, S: fi.S, side: fi.side, named: fi.named });
+          if (street) fronts.push({ b, x0, z0, x1, z1, nx, nz, w: (Lw * (lot.t1 - lot.t0)), h: lot.H, fh: lot.fh, floors: f, style, shop: sb, up: ly[0], gnd: ly[1], sign, sign0: sign, sv: fi.sv, num: numbered && (row || mid) ? fi.num : 0, S: fi.S, side: fi.side, vi: sb && civ !== 2 && !(hero && hero.up !== undefined) ? vi : -1, eraS, tint: lot.tint, road, seed: bs + j * 7, era: lot.look ? lot.look.era : -1, tile: lot.tile || pitched, zone, hero, civic: civ, rk: rankOf(b, k, j) });
+          else if (fi && mid && numbered && ri === 0 && !b.solemn && Lw >= 2.2 && (road.kind === K.service || road.name >= 0)) doors.push( // nhà quay ra ngõ: chỗ gắn biển số nhà
+            { x: (x0 + x1) / 2, z: (z0 + z1) / 2, nx, nz, w: Lw * (lot.t1 - lot.t0), fh: lot.fh, road, num: fi.num, S: fi.S, side: fi.side, named: fi.named, door: true, rk: rankOf(b, k, j) });
           if (lot.H <= h) continue;
           // khối lô nhô lên: hai tường hồi (chỉ phần cao hơn lô bên cạnh), tường sau, mái
           const depth = lot.d, ix = -nx * depth, iz = -nz * depth, fxB = [ST.BLANK, fseed, f, lot.age << 1], vaB = [L.BLANK + (hash(bs, 57) < 0.7 ? 0 : 1), L.BLANK, lot.tint, 0], ud = depth / 4;
@@ -322,7 +391,7 @@ export function genBuildings(ctx, cx, cz) {
       }
     }
   }
-  settleFronts(ctx, fronts, doors, bb);
+  settleFronts(ctx, fronts, doors, bb, cx, cz);
   return { mesh: bb.pack(), col: new Float32Array(col), fronts, roofs, heroes, doors };
 }
 

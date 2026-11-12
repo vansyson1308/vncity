@@ -310,9 +310,9 @@ export function furnish(ctx, env) {
   // ===================== 9. biển số nhà (art bible mục 2.2), bảng thực đơn và bảng nhỏ ở cửa hàng =====================
   // Biển số nhà: nền xanh lam sẫm, viền và chữ số trắng, 20 × 15 cm (ba, bốn ký tự thì rộng hơn; phóng 10% cho dễ đọc), gắn cạnh cửa
   // ở độ cao 2 m. Số lấy theo vị trí của nhà dọc phố (world/signs.js houseNumber): một bên lẻ, một bên chẵn, tăng dần.
-  // Vẽ trong hệ cục bộ: tâm biển ở gốc, mặt quay về +z. pre: số ngõ, biển ghi dạng "12/34".
-  const numPlate = (num, pre) => {
-    const txt = pre ? `${pre}/${num}` : `${num}`, n = txt.length, W2 = (0.22 + Math.max(0, n - 2) * 0.052) / 2, H2 = 0.0825, gw = Math.min(0.062, (2 * W2 - 0.05) / n), gh = 0.112;
+  // Vẽ trong hệ cục bộ: tâm biển ở gốc, mặt quay về +z. pre: số ngõ, biển ghi dạng "12/34"; suf: chữ của nhà tách thửa ("12A").
+  const numPlate = (num, pre, suf = '') => {
+    const txt = pre ? `${pre}/${num}${suf}` : `${num}${suf}`, n = txt.length, W2 = Math.min(0.17, (0.22 + Math.max(0, n - 2) * 0.052) / 2), H2 = 0.0825, gw = Math.min(0.062, (2 * W2 - 0.05) / n), gh = 0.112;
     pg.color(HNUM_BLUE, 0).gloss(0.3).glow(0.05).quad([-W2, -H2, 0], [W2, -H2, 0], [W2, H2, 0], [-W2, H2, 0], L.hframe);
     for (let i = 0; i < n; i++) {
       const u = Math.max(0, HNUM_CHARS.indexOf(txt[i])) * L.hnumStep, x0 = (i - n / 2) * gw;
@@ -321,22 +321,24 @@ export function furnish(ctx, env) {
     pg.gloss(0).glow(0);
   };
   const SALE = ['QUẦN ÁO', 'THỜI TRANG', 'GIÀY DÉP', 'TÚI XÁCH', 'ÁO DÀI'];
+  // bảng đã treo trong ô: hai cửa hàng gần nhau (dưới 9 m) không treo cùng một bảng
+  const boards = [], fresh = (id, x, z) => { for (let i = 0; i < boards.length; i += 3) if (boards[i] === id && (boards[i + 1] - x) ** 2 + (boards[i + 2] - z) ** 2 < 81) return false; boards.push(id, x, z); return true; };
   for (const f of bld.fronts) {
     const mx = (f.x0 + f.x1) / 2, mz = (f.z0 + f.z1) / 2, s = f.seed, bw = f.w, side = hash(s, 83) < 0.5 ? -1 : 1;
     if (!f.num && !(f.shop && f.sign)) continue;
     pg.push().move(mx - X0, CURB, mz - Z0).rotY(Math.atan2(f.nx, f.nz)); // +z cục bộ = hướng ra phố, +x = dọc tường
-    if (f.num && bw > 1.6) { pg.push().move(side * (bw / 2 - 0.19), 2.0, 0.035); numPlate(f.num, 0); pg.pop(); mark('hnum', mx, mz); }
+    if (f.num && bw > 1.6) { pg.push().move(side * (bw / 2 - 0.19), 2.0, 0.035); numPlate(f.num, 0, f.suf); pg.pop(); mark('hnum', mx, mz); }
     if (f.shop && f.sign) {
       const title = SIGNS[f.sign][0], mi = MENU_OF[f.sign], gnd = f.gnd;
-      if (mi >= 0 && (gnd === LY.S_EAT || gnd === LY.S_CAFE || gnd === LY.S_WOOD || gnd === LY.S_OPEN) && bw > 2.4 && hash(s, 81) < 0.85) {
+      if (mi >= 0 && (gnd === LY.S_EAT || gnd === LY.S_CAFE || gnd === LY.S_WOOD || gnd === LY.S_OPEN) && bw > 2.4 && hash(s, 81) < 0.85 && fresh(mi, mx, mz)) {
         // bảng thực đơn đúng món của biển hiệu, treo ở mép cửa phía không có biển số nhà: bảng trắng chữ đỏ, bảng đen viết phấn, bảng vàng chữ đỏ
         const st = Math.floor(hash(s, 82) * 3), w = 0.64 + hash(s, 88) * 0.1, h = w * 0.7, cx = -side * (bw / 2 - 0.24 - w / 2), y0 = 1.2 + hash(s, 89) * 0.3;
         signPlate(pg, cx - w / 2, y0, w, h, L.menu(mi), st === 0 ? 0xf1ece0 : st === 1 ? 0x1c3328 : 0xe7b420, { back: false, z: 0.045, code: st === 1 ? (hash(s, 84) < 0.5 ? 0 : INK_YELLOW) : INK_RED, glow: 0.14, gloss: 0.05 });
-      } else if ((title === 'NHÀ NGHỈ' || title === 'KHÁCH SẠN') && gnd === LY.S_LOBBY && hash(s, 85) < 0.55) {
+      } else if ((title === 'NHÀ NGHỈ' || title === 'KHÁCH SẠN') && gnd === LY.S_LOBBY && hash(s, 85) < 0.55 && fresh(BOARD0 + BOARD.room, mx, mz)) {
         signPlate(pg, -side * (bw / 2 - 0.75), 1.42, 0.4, 0.46, L.menu(BOARD0 + BOARD.room), 0x1e2b34, { back: false, z: 0.045, glow: 0.3, gloss: 0.2 }); // hộp đèn "CÒN PHÒNG"
-      } else if (gnd === LY.S_ROLL && hash(s, 86) < 0.3) {
+      } else if (gnd === LY.S_ROLL && hash(s, 86) < 0.3 && fresh(BOARD0 + BOARD.rent, mx, mz)) {
         signPlate(pg, (hash(s, 90) - 0.5) * bw * 0.4 - 0.31, 1.15 + hash(s, 91) * 0.3, 0.62, 0.38, L.menu(BOARD0 + BOARD.rent), 0xf0eee6, { back: false, z: 0.03, code: INK_RED, glow: 0, gloss: 0 }); // tờ giấy dán trên cửa cuốn
-      } else if (gnd === LY.S_GLASS && SALE.includes(title) && hash(s, 87) < 0.4) {
+      } else if (gnd === LY.S_GLASS && SALE.includes(title) && hash(s, 87) < 0.4 && fresh(BOARD0 + BOARD.sale, mx, mz)) {
         signPlate(pg, side * bw * 0.16 - 0.24, 1.72, 0.48, 0.3, L.menu(BOARD0 + BOARD.sale), 0xb81f1a, { back: false, z: 0.04, glow: 0.18, gloss: 0.1 });
       }
     }
@@ -346,9 +348,9 @@ export function furnish(ctx, env) {
   let nDoor = 0;
   for (const d of bld.doors) {
     if (nDoor >= 150) break; // ô quá dày ngõ ngách: thôi không gắn thêm để giữ ngân sách tam giác
-    const nm = d.named ? W.names[d.road.name] : null, m = nm && /^(Ngõ|Ngách|Hẻm) (\d{1,3})(?!\d)/.exec(nm), pre = m ? +m[2] : d.named ? 0 : 3 + 2 * Math.floor(hash(d.road.i, 91) * 80);
+    const nm = d.named ? W.names[d.road.name] : null, m = nm && /^(Ngõ|Ngách|Hẻm) (\d{1,3})(?!\d)/.exec(nm), pre = m ? +m[2] : d.named ? 0 : 3 + 2 * Math.floor(hash(d.road.i, 91) * 48);
     const sd = hash(Math.round(d.x * 7) * 31 + Math.round(d.z * 7), 92) < 0.5 ? -1 : 1;
-    pg.push().move(d.x - X0, CURB, d.z - Z0).rotY(Math.atan2(d.nx, d.nz)).move(sd * Math.min(d.w / 2 - 0.3, 1.0), 1.95, 0.035); numPlate(d.num, pre); pg.pop(); nDoor++;
+    pg.push().move(d.x - X0, CURB, d.z - Z0).rotY(Math.atan2(d.nx, d.nz)).move(sd * Math.min(d.w / 2 - 0.3, 1.0), 1.95, 0.035); numPlate(d.num, pre, d.suf); pg.pop(); nDoor++;
   }
 
   // ===================== 10. biển cấm đi ngược chiều (P.102) ở đầu ra của phố một chiều =====================

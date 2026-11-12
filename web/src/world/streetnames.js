@@ -39,7 +39,7 @@ export const SITE_TEXT = [
   ['ĐƯỜNG SẮT ĐÔ THỊ THÍ ĐIỂM THÀNH PHỐ HÀ NỘI', 'ĐOẠN NHỔN - GA HÀ NỘI'],
 ];
 export const WARN_TEXT = ['CẤM LẠI GẦN!', 'CÓ ĐIỆN NGUY HIỂM CHẾT NGƯỜI'];
-export const HNUM_CHARS = '0123456789/'; // ký tự trên biển số nhà (trong ngõ ghi dạng 12/34)
+export const HNUM_CHARS = '0123456789/ABCDE'; // ký tự trên biển số nhà (trong ngõ ghi dạng 12/34; nhà tách thửa thêm chữ: 12A)
 export const HNUM_BLUE = 0x12408f;
 
 // Mã ghi vào kênh alpha của màu đỉnh (0..255) để shader của bảng đồ đạc biết cách tô (streetatlas.js):
@@ -71,10 +71,10 @@ export function plateLayout(world) {
     park: rect(5, 5.5, E0), sickle: rect(5.5, 6, E0),
     site: [rect(6, 10, E0), rect(10, 14, E0), rect(14, 18, E0)], warn: rect(18, 20, E0),
     banner: [rect(0, 5, E1), rect(5, 10, E1), rect(10, 15, E1), rect(15, 20, E1)],
-    // biển số nhà: 11 ký tự HNUM_CHARS, mỗi ký tự một ô hẹp cách nhau hnumStep theo u; hframe: viền trắng bo góc của biển
-    hnum: rect(0, 0.2, E2, 0.01, 0.05), hnumStep: 0.2 * cw, hframe: rect(2.4, 3.4, E2),
+    // biển số nhà: 16 ký tự HNUM_CHARS, mỗi ký tự một ô hẹp cách nhau hnumStep theo u; hframe: viền trắng bo góc của biển
+    hnum: rect(0, 0.2, E2, 0.01, 0.05), hnumStep: 0.2 * cw, hframe: rect(3.3, 4.3, E2),
     // bảng thực đơn và bảng nhỏ treo cửa (world/signs.js MENU_LIST): 20 ô đầu ở hàng cuối, các ô sau nối vào hàng số nhà
-    menu: (i) => (i < COLS ? rect(i, i + 1, E3) : rect(4 + i - COLS, 5 + i - COLS, E2)),
+    menu: (i) => (i < COLS ? rect(i, i + 1, E3) : rect(5 + i - COLS, 6 + i - COLS, E2)),
   };
   cache.set(world, L); return L;
 }

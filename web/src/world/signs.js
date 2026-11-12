@@ -135,7 +135,7 @@ export const SIGN_VARIANTS = [[0, 0], [1, 1], [2, 2], [1, 0], [0, 3], [2, 4]];
 // Các khe còn lại lấy biển chung: các ngành hàng chung của phố được chia đôi cho hai lề (cùng một chữ không bao giờ có ở cả hai bên
 // đường), mỗi lề xoay vòng hết nửa của mình rồi mới lặp lại (ít nhất 19 khe, hơn 30 m).
 // Gian rộng ít nhất 1,9 m nên hai gian cùng lề không bao giờ chung một khe.
-const CYC = 14, HALF = 7, SLOT = 1.6, NUM_STEP = 4;
+const CYC = 14, HALF = 7, SLOT = 1.6, NUM_STEP = 3.4;
 const hashStr = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h | 0; };
 const h01 = (i, k) => { let h = (Math.imul(i | 0, 374761393) + Math.imul(k | 0, 668265263)) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 const cycles = new Map();
@@ -161,8 +161,8 @@ export function signAt(key, trade, S, side) {
   else { const l = c.fill[side ? 1 : 0]; o = L * c.F + c.fpos[i]; sign = l[o % l.length]; }
   return [sign, (side ? 3 : 0) + (o % 3)];
 }
-// Số nhà: lề trái số lẻ, lề phải số chẵn, tăng dần theo chiều dài phố (mỗi 4 m một số, xấp xỉ bề rộng một nhà ống). Hai nhà hẹp liền
-// nhau có thể rơi vào cùng một số: gen/buildings.js soát lại từng ô và đẩy số nhà sau lên cho tăng dần.
+// Số nhà: lề trái số lẻ, lề phải số chẵn, tăng dần theo chiều dài phố (mỗi 3,4 m một số, hẹp hơn bề rộng phần lớn nhà ống). Hai nhà hẹp
+// liền nhau rơi vào cùng một số thì nhà sau mang thêm chữ A, B... như nhà tách thửa ("12A"): gen/buildings.js settleFronts.
 export const houseNumber = (S, side) => 2 * Math.max(0, Math.floor(S / NUM_STEP)) + (side ? 2 : 1);
 
 // Quãng đường dọc cả con phố. Bản đồ cắt một phố thành nhiều đoạn; ở đây nối các đoạn cùng tên lại và đo từ đầu phố gần Hồ Gươm
