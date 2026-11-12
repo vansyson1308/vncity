@@ -1,7 +1,7 @@
 // Chỉ mục không gian và các thuộc tính suy ra (số tầng, kiểu nhà) tính một lần khi worker khởi động.
 import ClipperLib from 'clipper-lib';
 import { hash, pointInRing, segDist2 } from '../../core/util.js';
-import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn, roadY } from '../data.js';
+import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn, roadY, alongAt, chuongDuongMid, CD_TRUSS_S } from '../data.js';
 import { sitePaths } from '../landmarks/sites.js';
 import { resolveHeroes } from './heroes.js';
 
@@ -99,6 +99,8 @@ export function buildContext(world, landmarks = []) {
 
   // ----- cầu nâng: đường bộ và đường sắt có cao độ (xem computeElevation trong data.js) -----
   ctx.elevRoads = roads.filter((r) => r.elev && !r.skip); ctx.elevRails = world.rails.filter((r) => r.elev);
+  // lòng giữa cầu Chương Dương và hoành độ chỗ dàn thép bắt đầu (bộ dựng mặt cầu đặt trụ theo nhịp dàn từ đó ra sông)
+  { const cd = chuongDuongMid(world); if (cd && cd.r.elev && cd.r.len > CD_TRUSS_S) { const o = [0, 0, 0, 0, 0]; alongAt(cd.r, cd.rev ? cd.r.len - CD_TRUSS_S : CD_TRUSS_S, o); ctx.cdMid = { r: cd.r, rev: cd.rev, x0: o[0] }; } else ctx.cdMid = null; }
   const elevAll = [...ctx.elevRoads, ...ctx.elevRails];
   // Cao độ mặt cầu cao nhất phủ lên điểm (x,z) (cộng lề pad), 0 nếu không có cầu. except: bỏ qua đoạn này.
   ctx.deckAt = (x, z, pad = 0, except = null, only = null) => {

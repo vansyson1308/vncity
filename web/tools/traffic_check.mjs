@@ -51,6 +51,7 @@ for (const [name, at, hours] of SCENES) {
   console.log(`   xe ôm công nghệ ${((hail / Math.max(1, cnt[0])) * 100).toFixed(0)}% xe máy, chở khách ${((pill / Math.max(1, cnt[0])) * 100).toFixed(0)}%; taxi ${(taxi / samples).toFixed(1)} chiếc, trong đó điện ${taxi ? ((ev / taxi) * 100).toFixed(0) : '-'}%`);
   console.log(`   co mình gỡ kẹt ${sim.stats.unstuck - u0} lần, huỷ ${sim.stats.removed - r0} xe, đè lên nhau (tâm cách dưới 36 cm) ${overlap} lần, lấn mép ${offroad} lần; người chơi bước qua đường ${(crossFrames * dt * 1.4 / (2 * half)).toFixed(0)} lượt: bị xe đang chạy tông ${sim.stats.hits - h0} lần (chạm ${touchFrames}/${crossFrames} khung hình); ${(ms * 1000).toFixed(0)} µs/bước`);
   check(offroad === 0, 'có xe lấn ra ngoài lòng đường');
+  check(overlap <= 150, `xe đè lên nhau ${overlap} lần (hàng chờ đèn đỏ dồn lên nhau?)`);
   check(ms < 1.2, `mô phỏng chậm: ${ms.toFixed(2)} ms mỗi bước`);
   if (sim.zone === 1 && sim.density > 0.5) check(cnt[0] / tot > 0.78 && cnt[0] / tot < 0.9, `tỉ lệ xe máy phố cổ ${(cnt[0] / tot * 100).toFixed(0)}% (cần 80-85%)`);
   if (sim.density > 0.5) check(stop1 / Math.max(1, tot1) < 0.12, 'quá nhiều xe đứng yên khi không ai cản (tắc)'); // nút Tràng Tiền - Hàng Bài giờ cao điểm đông thật, nhưng không được khoá cứng

@@ -17,9 +17,11 @@ export class Traffic extends TrafficSim {
     this.occluded = (x, z) => { const c = this._cam, dx = x - c.x, dz = z - c.z, d = Math.hypot(dx, dz); return d > 1 && nav.raycast(c.x, c.z, dx / d, dz / d, d, 1.4) < d - 1.5; };
   }
   cam(camera) { const f = camera.getWorldDirection(this._d), c = this._cam; c.x = camera.position.x; c.z = camera.position.z; c.fx = f.x; c.fz = f.z; return c; }
-  prewarm(player, camera, hours) { super.prewarm(player, this.cam(camera), hours); }
+  // lúc rải xe ban đầu mô phỏng chạy trước mấy chục giây bằng đồng hồ riêng (đèn vẫn đổi pha); sau đó theo đồng hồ của shader vẽ đèn
+  prewarm(player, camera, hours) { this.clock = null; super.prewarm(player, this.cam(camera), hours); }
 
   update(dt, player, camera, hours, simOnly = false) {
+    this.clock = skyU.uTime.value; // đèn tín hiệu: cùng đồng hồ với shader vẽ bóng đèn và số đếm ngược
     this.step(dt, player, this.cam(camera), hours);
     if (simOnly) return;
     const F = this.fleet, cx = camera.position.x, cz = camera.position.z, lit = skyU.uLit.value > 0.02;

@@ -4,7 +4,7 @@
 // Chi tiết nhỏ không tốn hình học riêng: chất liệu là các lớp của một texture mảng, đề can là tứ giác trong cùng lưới.
 import earcut from 'earcut';
 import { CL, clip, union, inter, diff, offset, toEx, rectPath, toPath } from './context.js';
-import { CS, CURB, WATER_Y, K, ZONE, zoneAt, isSolemn, F_ONEWAY, F_REVERSE, roadY, lowSpans, subPath, alongAt, LB_TRUSS_X } from '../data.js';
+import { CS, CURB, WATER_Y, K, ZONE, zoneAt, isSolemn, F_ONEWAY, F_REVERSE, roadY, lowSpans, subPath, alongAt, LB_TRUSS_X, CD_TRUSS_S, CD_SPAN } from '../data.js';
 import { hash2 } from '../../core/util.js';
 
 // Lớp chất liệu: phải khớp thứ tự vẽ trong world/textures.js (groundTextures).
@@ -185,8 +185,15 @@ function genDecks(ctx, db, X0, Z0, X1, Z1, ramp) {
     }
     // trụ: cầu đường bộ cách 24 đến 36 m; cầu dẫn đường sắt là dãy trụ đá dày cách 9 m (vòm cầu dẫn phố Gầm Cầu).
     // Phần dàn thép Long Biên ngoài đê có trụ đá riêng dựng cùng dàn (landmarks/cau_long_bien.js).
-    const gap = rail ? 9 : r.len > 500 ? 36 : 24, hl = rail ? 1.3 : 0.65, pw = Math.max(0.8, hw - (rail ? 0.25 : 0.9));
-    for (let s = gap / 2; s < r.len; s += gap) {
+    // Cầu Chương Dương, đoạn có dàn thép: trụ đứng đúng đầu mỗi nhịp dàn (CD_SPAN), một trụ rộng đỡ cả lòng giữa lẫn hai làn xe máy;
+    // hai làn ngoài không có trụ riêng trên đoạn đó.
+    const cd = !rail && ctx.cdMid && r.len > 500 && ctx.world.names[r.name] === 'Cầu Chương Dương' ? ctx.cdMid : null, cdS = (s) => (cd.rev ? r.len - s : s);
+    const gap = rail ? 9 : r.len > 500 ? 36 : 24, pos = [];
+    for (let s = gap / 2; s < r.len; s += gap) { if (cd) { if (cd.r === r) { if (cdS(s) > CD_TRUSS_S - gap / 2) continue; } else { alongAt(r, s, o); if (o[0] > cd.x0) continue; } } pos.push(s); }
+    if (cd && cd.r === r) for (let q = CD_TRUSS_S; q <= r.len; q += CD_SPAN) pos.push(-cdS(q) - 1e-3); // dấu âm: trụ rộng ở đầu nhịp dàn
+    for (let s of pos) {
+      const wide = s < 0; if (wide) s = -s;
+      const hl = rail ? 1.3 : wide ? 1.5 : 0.65, pw = wide ? 9.6 : Math.max(0.8, hw - (rail ? 0.25 : 0.9));
       alongAt(r, s, o); const x = o[0], z = o[1], tx = o[2], tz = o[3];
       if (!inChunk(x, z) || ((rail || lb) && x >= LB_TRUSS_X)) continue;
       const y = roadY(r, s) - GIRD; if (y < (rail ? 0.6 : SOLID - GIRD + 0.5)) continue;
