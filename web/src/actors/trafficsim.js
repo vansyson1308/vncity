@@ -634,7 +634,7 @@ export class TrafficSim {
             if (a.sq > 0 && room > 0.1) t2 = Math.max(t2, 0.9);
             // vòng chờ nhau (hai xe cùng hướng đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước; hoặc vòng dài hơn):
             // xe có số thứ tự nhỏ nhất trong vòng bỏ qua xe chắn để đi trước, các xe còn lại chờ như thường
-            if (b.v < 0.3 && a.stuck > 0.8 && this.cycle(a, b)) continue;
+            if (b.v < 0.3 && (a.stuck > 0.8 || a.redD > 40) && this.cycle(a, b)) continue;
             if (t2 < target) { target = t2; blk = b; if (this.trace) a.blc = cosB; }
             blocked = true;
             shift += (s > 0.06 ? -1 : s < -0.06 ? 1 : a.latT > 0 ? -1 : 1) * (bike ? 1 : 0.4); // lách sang bên trống (ô tô lách ít hơn)
@@ -661,17 +661,17 @@ export class TrafficSim {
         const ne = a.ne, c4 = ne.i * 4 + (a.nd > 0 ? 1 : 0), la = this.entryLat(a, ne);
         const H = this.mlistAt(c4);
         if (H !== null) for (let i = 0; i < H.n; i++) { const b = H.a[i], pf = rem + b.s; if (b === a || pf > gap + b.hl || Math.abs(la - b.lat) >= a.r + b.r + 0.1) continue;
-          if (b.v < 0.3 && a.stuck > 0.8 && this.cycle(a, b)) continue;
+          if (b.v < 0.3 && (a.stuck > 0.8 || a.redD > 40) && this.cycle(a, b)) continue;
           const t2 = Math.max(0, b.v + (pf - a.hl - b.hl - 0.45) * 1.2 - 0.3); if (t2 < target) { target = t2; a.blk = b; } blocked = true; }
         const I = this.mlistAt(c4 + 2);
         if (I !== null) for (let i = 0; i < I.n; i++) { const b = I.a[i]; if (b === a) continue; const rb2 = b.e.len - b.s, d = rem - rb2; if (d < 0 || (d < 1e-3 && b.id > a.id) || d > a.hl + b.hl + 0.5 + a.v * 0.4) continue;
           if (Math.abs(la - this.entryLat(b, ne)) >= a.r + b.r + 0.1) continue;
           // xe kia cùng cạnh và đang ở ngay trước mũi thì luật bám đuôi thường đã lo; ở đây lo trường hợp chạy song song hoặc tới từ cạnh khác
-          if (b.v < 0.3 && a.stuck > 0.8 && this.cycle(a, b)) continue;
+          if (b.v < 0.3 && (a.stuck > 0.8 || a.redD > 40) && this.cycle(a, b)) continue;
           const t2 = Math.max(0, b.v + (d - a.hl - b.hl - 0.3) * 1.2 - 0.3); if (t2 < target) { target = t2; a.blk = b; } blocked = true; }
       }
       // không chui vào lòng nút khi xe ngay phía trước còn nằm chắn trong đó: chờ ở vạch tới khi nó chạy thoát
-      if (atLine < 99 && lead !== null && lead.v < 1.2 && leadF > atLine + a.hl + 0.5 && !(a.stuck > 0.8 && this.cycle(a, lead))) { const t2 = Math.max(0, atLine * 1.2); if (t2 < target) { target = t2; a.blk = lead; } }
+      if (atLine < 99 && lead !== null && lead.v < 1.2 && leadF > atLine + a.hl + 0.5 && !((a.stuck > 0.8 || a.redD > 40) && this.cycle(a, lead))) { const t2 = Math.max(0, atLine * 1.2); if (t2 < target) { target = t2; a.blk = lead; } }
       // xe trước chậm hẳn (xích lô, xe đạp, xe buýt đang rù rì): tìm cách vượt, ô tô chỉ lấn sang phần đường ngược chiều khi thoáng
       // (trên đường hai chiều: chỉ khi phần đường ngược chiều thoáng và không ở sát nút giao; trong lòng nút mà lấn trái là hai dòng
       // ngược chiều đâm đầu vào nhau rồi khoá cứng)
@@ -724,9 +724,11 @@ export class TrafficSim {
       // kẹt: sau 3 giây thì co mình lách qua khe hẹp; kẹt cứng quá 7 giây ở chỗ người chơi không nhìn thấy thì cho xe biến mất để gỡ nút thắt
       // đang chờ đèn đỏ (kể cả xếp hàng sau xe chờ đèn) thì không tính là kẹt. redD: số xe tính từ xe đang thật sự chờ đèn tới xe này
       // dọc hàng. Hai xe là "xe trước" của nhau (chỗ nhập làn chéo) từng giữ cờ đỏ cho nhau mãi, nên luật gỡ kẹt không bao giờ chạy
-      // (reviewer vòng 3: 8–10 xe đứng yên ~50 s trong lòng nút đã xanh): trong một vòng như thế redD tăng mỗi khung hình và vượt ngưỡng.
+      // (reviewer vòng 3: 8–10 xe đứng yên ~50 s trong lòng nút đã xanh): trong một vòng như thế redD tăng mỗi khung hình; quá 40 thì
+      // luật vòng chờ nhau (cycle: xe số nhỏ nhất trong vòng đi trước) được chạy ngay, không qua bộ đếm kẹt và các luật lách (vốn để
+      // hai thân xe lồng vào nhau).
       a.redD = red && a.v < 1.5 ? 0 : lead !== null && lead.red && lead.v < 0.8 && lead.redD >= 0 ? lead.redD + 1 : -1;
-      a.red = a.redD >= 0 && a.redD < 40;
+      a.red = a.redD >= 0;
       if (blocked && a.v < 0.4 && !a.red) a.stuck += dt; else a.stuck = Math.max(0, a.stuck - dt * 3);
       if (a.sq > 0) a.sq -= dt; else if (a.stuck > 3 && !pblock) { a.sq = 2.5; this.stats.unstuck++; }
       if (a.stuck > 7) { const d2 = (a.x - px) ** 2 + (a.z - pz) ** 2; const back = cam && (a.x - cam.x) * cam.fx + (a.z - cam.z) * cam.fz < -2; if (this.blind || (d2 > 200 && back) || d2 > 32400 || (d2 > 1600 && (!cam || a.stuck > 25 || (this.occluded && this.occluded(a.x, a.z))))) { a.x = 1e9; continue; } } // ở xa mà kẹt quá 25 giây thì gỡ cả khi đang trong tầm nhìn, kẻo nút thắt tồn tại mãi
