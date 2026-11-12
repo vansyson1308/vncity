@@ -94,7 +94,26 @@ async function boot() {
   // phố đi bộ tối cuối tuần (world/walkzone.js): trong giờ đóng phố, các đoạn đường sau rào cũng là khu không chạy xe
   for (const r of world.roads) r.walk = isWalkRoad(world.names, r);
   const walkStreet = new WalkStreet(scene, mats);
-  const behindGate = (x, z) => { const h = nav.nearestRoad(x, z, 16, (rd) => rd.veh); return !!h && !!h.r.shut; };
+  // Sau rào: đường xe gần nhất là đoạn đang đóng, và điểm không nằm trước vạch của một rào gần đó (phía phố còn mở). Ở nút giao,
+  // một điểm trên làn của phố còn mở có thể gần tim đoạn phố đóng hơn tim phố mở (reviewer vòng 3: xe người chơi bị chặn đứng khi chỉ
+  // đi ngang miệng Đinh Lễ trên Ngô Quyền); rào đặt cách nút 4,5 m vào trong phố đóng (trafficsim walkPlan), nên xe chỉ dừng khi qua
+  // đúng vạch rào nhìn thấy.
+  // Trong bề ngang một rào: qua vạch (tới 6 m) là sau rào, trước vạch là phía phố mở. Ngoài mọi rào thì chỉ tính là sau rào khi điểm
+  // không nằm trên lòng một đường đang mở (đi sát lề phố mở ngang qua miệng phố đóng vẫn là đi trên phố mở).
+  const behindGate = (x, z) => {
+    let front = false;
+    for (const g of traffic.gates) {
+      const dx = x - g.x, dz = z - g.z, along = dx * g.tx + dz * g.tz, side = -dx * g.tz + dz * g.tx;
+      if (Math.abs(side) < g.w / 2 + 1.5 && along > -6 && along < 6) { if (along >= 0) return true; front = true; }
+    }
+    if (front) return false;
+    const h = nav.nearestRoad(x, z, 16, (rd) => rd.veh); if (!h || !h.r.shut) return false;
+    // nằm trên lòng một trong ba đường đang mở gần nhất (tim gần nhất có khi là một ngõ hẹp bên cạnh, không phải phố đang đi)
+    // (nav.nearestRoad trả về cùng một đối tượng mỗi lần gọi: đọc h xong mới gọi tiếp)
+    const seen = new Set();
+    for (let i = 0; i < 3; i++) { const o = nav.nearestRoad(x, z, 16, (rd) => rd.veh && !rd.shut && !seen.has(rd)); if (!o) break; if (o.d < o.r.w / 2 + 0.3) return false; seen.add(o.r); }
+    return true;
+  };
   const inSolemn = (x, z) => solemn.some((s) => (x - s.x) ** 2 + (z - s.z) ** 2 < s.r * s.r);
   player.noRide = (x, z) => inSolemn(x, z) || (traffic.walk && behindGate(x, z));
   player.noEnter = (x, z) => traffic.walk && behindGate(x, z);

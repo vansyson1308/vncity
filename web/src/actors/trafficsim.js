@@ -358,7 +358,7 @@ export class TrafficSim {
     const T = TYPES[type], Z = 1e-9;
     return { id: this.seq++, e, dir, s, type, cls: T.cls, taxi, v: T.vmax ? T.vmax * 0.8 : 3 + Math.random() * 3, x: o[0], z: o[1], yaw: Math.atan2(o[2], o[3]), lean: Z, lat: Z, latT: Z, y: Z,
       pace: (0.78 + Math.random() * 0.4) * (T.vmul || 1), vown: T.vmax ? T.vmax * (0.8 + Math.random() * 0.3) : 0, pref: 0.25 + Math.random() * 0.7, r: T.r, hl: T.hl, wait: Z, honk: Math.random() * 4, stuck: Z, sq: -Z, slowT: Z, over: -Z, hitT: -Z,
-      wob: Math.random() * 6.28, wobF: 0.5 + Math.random() * 0.7, wobA: T.cls === 0 ? 0.15 + Math.random() * 0.3 : T.cls === 3 ? 0.08 : 0.04, ne: null, nd: 1, vj: 3.2, sg: null, sgG: 0, sgX: 0, sgL: 0, sgS: 0, hold: false, pbT: Z, pushT: -Z, pushB: null, blk: null, ghost: false, gT: 0, red: false, vendor: 0,
+      wob: Math.random() * 6.28, wobF: 0.5 + Math.random() * 0.7, wobA: T.cls === 0 ? 0.15 + Math.random() * 0.3 : T.cls === 3 ? 0.08 : 0.04, ne: null, nd: 1, vj: 3.2, sg: null, sgG: 0, sgX: 0, sgL: 0, sgS: 0, hold: false, pbT: Z, pushT: -Z, pushB: null, blk: null, ghost: false, gT: 0, red: false, redD: -1, turnT: 0, vendor: 0,
       bits: 0, pill: 0, pbits: 0, hail: false, tint: WHITE, tint2: WHITE, tint3: WHITE, ptint2: WHITE, ptint3: WHITE };
   }
   follow(lead, back) {
@@ -467,7 +467,10 @@ export class TrafficSim {
       for (const [n, dir] of [[e.n0, 1], [e.n1, -1]]) {
         const open = this.nodes.get(n).some((f) => !f.closed), edge = e.walk && this.nodes.get(n).some((f) => f !== e && !f.walk && !inner(f));
         if (!open && !edge) continue;
-        this.sample(e, Math.min(4.5, e.len * 0.4), dir, o);
+        // rào đứng ngoài lòng mọi đường còn mở ở nút đó (nửa bề rộng lớn nhất + 1,5 m, ít nhất 4,5 m): mẩu sát nút ngắn thì rào trước đây
+        // nằm ngay trên làn phố mở, xe người chơi đi ngang miệng phố đóng bị coi là đã qua rào (reviewer vòng 3)
+        const half = this.nodes.get(n).reduce((m, f) => (f.closed ? m : Math.max(m, f.w / 2)), 0);
+        this.sample(e, Math.min(Math.max(4.5, half + 1.5), e.len * 0.8), dir, o);
         if (gates.some((g) => (g.x - o[0]) ** 2 + (g.z - o[1]) ** 2 < 4)) continue; // hai cạnh gặp nhau ở cùng một chỗ: một rào là đủ
         gates.push({ x: o[0], z: o[1], tx: o[2], tz: o[3], w: e.w });
       }
@@ -582,6 +585,7 @@ export class TrafficSim {
         else if (st === 1 && (a.hold || rs - a.hl - a.sgS + 1.4 > a.v * 0.25 + 0.15)) { red = true; target = 0; a.hold = true; }
       }
       if (a.pushT > 0) { a.pushT -= dt; target = Math.min(target, 2.4); if (a.pushT <= 0) a.pushB = null; }
+      if (a.turnT > 0) { a.turnT -= dt; target = Math.min(target, 1.5); } // đang quay đầu: đi chậm
       const gap = 1.4 + a.v * 0.8 + a.hl, sq = a.sq > 0 ? 0.3 : 0;
       // nửa bề dọc của thân xe a theo hướng phố, tính theo đúng hướng đầu xe (cho luật đoán trước xe cắt ngang)
       const aLx = Math.sin(a.yaw), aLz = Math.cos(a.yaw), aT = a.hl * Math.abs(aLx * tx + aLz * tz) + a.r * Math.abs(aLz * tx - aLx * tz); let blocked = false, shift = 0, side = 0, sep = 0, sepX = 0, lead = null, leadF = 1e9, lb = false, rb = false, blk = null;
@@ -716,9 +720,13 @@ export class TrafficSim {
       // Xe còn sót trong phố đi bộ vừa đóng (ghost) mà bị người chơi, hay chiếc xe máy người chơi dựng giữa lòng phố, chắn lối quá 8 giây:
       // quay đầu dắt xe ra lối khác (trong phố đã đóng thì chiều một chiều không còn nghĩa) thay vì đứng chờ mãi giữa phố đi bộ.
       if (pblock && target < 0.6) a.pbT += dt; else a.pbT = Math.max(0, a.pbT - dt);
-      if (a.ghost && a.pbT > 8) { a.pbT = 0; a.dir = -a.dir; a.s = Math.max(0, e.len - a.s); a.lat = -a.lat; this.lane(a); this.plan(a); }
+      if (a.ghost && a.pbT > 8) { a.pbT = 0; a.dir = -a.dir; a.s = Math.max(0, e.len - a.s); a.lat = -a.lat; a.turnT = 4; this.lane(a); this.plan(a); } // quay đầu: 4 s xoay chậm (dưới)
       // kẹt: sau 3 giây thì co mình lách qua khe hẹp; kẹt cứng quá 7 giây ở chỗ người chơi không nhìn thấy thì cho xe biến mất để gỡ nút thắt
-      a.red = (red && a.v < 1.5) || (lead !== null && lead.red && lead.v < 0.8); // đang chờ đèn đỏ (kể cả xếp hàng sau xe chờ đèn) thì không tính là kẹt
+      // đang chờ đèn đỏ (kể cả xếp hàng sau xe chờ đèn) thì không tính là kẹt. redD: số xe tính từ xe đang thật sự chờ đèn tới xe này
+      // dọc hàng. Hai xe là "xe trước" của nhau (chỗ nhập làn chéo) từng giữ cờ đỏ cho nhau mãi, nên luật gỡ kẹt không bao giờ chạy
+      // (reviewer vòng 3: 8–10 xe đứng yên ~50 s trong lòng nút đã xanh): trong một vòng như thế redD tăng mỗi khung hình và vượt ngưỡng.
+      a.redD = red && a.v < 1.5 ? 0 : lead !== null && lead.red && lead.v < 0.8 && lead.redD >= 0 ? lead.redD + 1 : -1;
+      a.red = a.redD >= 0 && a.redD < 40;
       if (blocked && a.v < 0.4 && !a.red) a.stuck += dt; else a.stuck = Math.max(0, a.stuck - dt * 3);
       if (a.sq > 0) a.sq -= dt; else if (a.stuck > 3 && !pblock) { a.sq = 2.5; this.stats.unstuck++; }
       if (a.stuck > 7) { const d2 = (a.x - px) ** 2 + (a.z - pz) ** 2; const back = cam && (a.x - cam.x) * cam.fx + (a.z - cam.z) * cam.fz < -2; if (this.blind || (d2 > 200 && back) || d2 > 32400 || (d2 > 1600 && (!cam || a.stuck > 25 || (this.occluded && this.occluded(a.x, a.z))))) { a.x = 1e9; continue; } } // ở xa mà kẹt quá 25 giây thì gỡ cả khi đang trong tầm nhìn, kẻo nút thắt tồn tại mãi
@@ -757,7 +765,9 @@ export class TrafficSim {
         // lệch tối đa giảm theo tốc độ (quay đầu 37° lúc đứng gần như yên là chúi mũi sang sườn xe bên cạnh)
         const ty = Math.atan2(o[2], o[3]), lim = (a.cls === 0 ? 0.65 : a.cls === 2 ? 0.22 : a.cls === 1 ? 0.32 : 0.5) * clamp(a.v / 4, 0.2, 1);
         let dev = Math.atan2(mvx, mvz) - ty; dev = Math.atan2(Math.sin(dev), Math.cos(dev));
-        const ny = ty + clamp(dev, -lim, lim), dy = ny - a.yaw; a.yaw = dampAngle(a.yaw, ny, a.cls === 0 ? 9 : 5, dt);
+        const ny = ty + clamp(dev, -lim, lim), dy = ny - a.yaw, y0 = a.yaw; a.yaw = dampAngle(a.yaw, ny, a.cls === 0 ? 9 : 5, dt);
+        // vừa quay đầu (xe ma trong phố đóng): xoay đầu xe tối đa 0,8 rad/s (xe máy 1,6), không lật ngược trong một giây (reviewer vòng 3)
+        if (a.turnT > 0) { const m = (a.cls === 0 ? 1.6 : 0.8) * dt, d = Math.atan2(Math.sin(a.yaw - y0), Math.cos(a.yaw - y0)); if (Math.abs(d) > m) a.yaw = y0 + Math.sign(d) * m; }
         const turn = Math.atan2(Math.sin(dy), Math.cos(dy)); a.lean = damp(a.lean, bike || a.type === VT.bicycle ? clamp(-turn * a.v * 0.9, -0.45, 0.45) : 0, 5, dt);
       } else a.lean = damp(a.lean, 0, 5, dt);
     }
