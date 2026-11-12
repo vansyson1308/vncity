@@ -444,7 +444,14 @@ export class TrafficSim {
       const ox = a.x, oz = a.z, k = 1 - Math.exp(-dt * 7);
       a.x += (gxp - a.x) * k; a.z += (gzp - a.z) * k;
       const mvx = a.x - ox, mvz = a.z - oz;
-      if (mvx * mvx + mvz * mvz > 1e-6) { const ny = Math.atan2(mvx, mvz), dy = ny - a.yaw; a.yaw = dampAngle(a.yaw, ny, a.cls === 0 ? 9 : 5, dt); const turn = Math.atan2(Math.sin(dy), Math.cos(dy)); a.lean = damp(a.lean, bike || a.type === VT.bicycle ? clamp(-turn * a.v * 0.9, -0.45, 0.45) : 0, 5, dt); }
+      // hướng đầu xe: theo hướng đang trôi nhưng không lệch khỏi hướng phố quá góc đánh lái của loại xe đó
+      // (xe bò chậm mà dạt ngang thì không được quay ngang ra giữa đường); gần như đứng yên thì giữ nguyên hướng
+      if (mvx * mvx + mvz * mvz > (0.25 * dt) ** 2) {
+        const ty = Math.atan2(o[2], o[3]), lim = a.cls === 0 ? 0.65 : a.cls === 2 ? 0.22 : a.cls === 1 ? 0.32 : 0.5;
+        let dev = Math.atan2(mvx, mvz) - ty; dev = Math.atan2(Math.sin(dev), Math.cos(dev));
+        const ny = ty + clamp(dev, -lim, lim), dy = ny - a.yaw; a.yaw = dampAngle(a.yaw, ny, a.cls === 0 ? 9 : 5, dt);
+        const turn = Math.atan2(Math.sin(dy), Math.cos(dy)); a.lean = damp(a.lean, bike || a.type === VT.bicycle ? clamp(-turn * a.v * 0.9, -0.45, 0.45) : 0, 5, dt);
+      } else a.lean = damp(a.lean, 0, 5, dt);
     }
   }
   // Phần đường bên trái (ngược chiều) có thoáng trong 30 m tới không: ô tô, xe buýt chỉ vượt khi không có xe đi ngược lại.

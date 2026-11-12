@@ -25,12 +25,12 @@ export function crowdMix(zone, h, lake) {
   let f, w, seat, gym = 0;
   if (h < 4.5 || h >= 23) { f = 0.12; w = [1, 0, 0, 0.4, 0.1, 0.5, 0]; seat = 0.06; }
   else if (h < 6.6) { f = lake ? 1 : 0.4; w = [2, 0.2, 0, 0.2, 3, 1, lake ? 3 : 0.3]; seat = 0.08; gym = lake ? 0.5 : 0; }       // rạng sáng: gánh hàng, tập dưỡng sinh, chạy bộ quanh hồ
-  else if (h < 9) { f = 0.85; w = [2, 3, 2.5, 0.5, 1.5, 0.4, lake ? 1 : 0]; seat = 0.2; gym = lake && h < 7.6 ? 0.25 : 0; }      // cao điểm sáng: công chức, học sinh, quán ăn sáng kín ghế
+  else if (h < 9) { f = 0.85; w = [2, 3, 2.5, 0.5, 1.5, 0.4, lake ? 1 : 0]; seat = 0.25; gym = lake && h < 7.6 ? 0.25 : 0; }      // cao điểm sáng: công chức, học sinh, quán ăn sáng kín ghế
   else if (h < 11.5) { f = 0.8; w = [3, 1, 0.2, 3, 1.5, 0.3, 0]; seat = 0.12; }                                                   // khách du lịch theo đoàn, buôn bán
-  else if (h < 13.5) { f = 0.75; w = [2.5, 3, 0.4, 1.5, 0.8, 0.2, 0]; seat = 0.3; }                                               // trưa: dân văn phòng ăn trưa, trà đá
+  else if (h < 13.5) { f = 0.8; w = [2.5, 3, 0.4, 1.5, 0.8, 0.2, 0]; seat = 0.4; }                                               // trưa: dân văn phòng ăn trưa, trà đá
   else if (h < 17) { f = 0.5; w = [2, 0.8, 0.3, 2, 0.6, 0.3, 0]; seat = 0.12; }                                                   // đầu giờ chiều vắng
-  else if (h < 19.5) { f = 0.9; w = [3, 2.5, 1.5, 2, 0.8, 0.5, lake ? 1 : 0]; seat = 0.25; gym = lake ? 0.08 : 0; }              // cao điểm chiều, bia hơi dọn bàn ra hè
-  else { f = zone === ZONE.old || lake ? 1 : 0.5; w = [3, 0.5, 0.3, 4, 0.3, 0.8, lake ? 0.4 : 0]; seat = 0.3; }                  // tối: dạo hồ, phố cổ kín khách
+  else if (h < 19.5) { f = 0.9; w = [3, 2.5, 1.5, 2, 0.8, 0.5, lake ? 1 : 0]; seat = 0.3; gym = lake ? 0.08 : 0; }              // cao điểm chiều, bia hơi dọn bàn ra hè
+  else { f = zone === ZONE.old || lake ? 1 : 0.5; w = [3, 0.5, 0.3, 4, 0.3, 0.8, lake ? 0.4 : 0]; seat = lake ? 0.15 : 0.35; }                  // tối: dạo hồ, phố cổ kín khách
   if (zone === ZONE.french) { w[1] *= 1.5; w[3] *= 0.8; w[4] *= 0.5; } else if (zone === ZONE.badinh) { w[1] *= 1.3; w[3] *= h >= 9 && h < 11.5 ? 1.5 : 0.5; w[4] *= 0.2; f *= 0.7; seat *= 0.4; }
   else if (zone !== ZONE.old) { w[0] *= 1.5; w[3] *= lake ? 1 : 0.3; f *= lake ? 1 : 0.75; }
   if (lake) w[3] *= 1.4;
@@ -123,8 +123,10 @@ export class Crowd {
   visible(x, z, px, pz, cam, near) { const d = Math.hypot(x - px, z - pz); return !this.warming && cam && d < near && (x - cam.x) * cam.fx + (z - cam.z) * cam.fz > 0; }
   // Khách ngồi ghế đẩu cạnh một quán cóc: hai bên dãy bàn của quán, quay mặt vào nhau; có khi thêm một người đứng chờ.
   spawnStall(px, pz, cam) {
-    const cx = Math.floor(px / 64), cz = Math.floor(pz / 64), l = this.stalls.get((cx + Math.floor(Math.random() * 3) - 1) * 65537 + cz + Math.floor(Math.random() * 3) - 1); if (!l) return 0;
-    const st = l[Math.floor(Math.random() * l.length)]; if (st.used || st.bad) return 0;
+    // quán gần người chơi được ngồi kín trước: thử vài quán, lấy quán gần nhất còn trống
+    const cx = Math.floor(px / 64), cz = Math.floor(pz / 64); let st = null, bd = 1e9;
+    for (let t = 0; t < 4; t++) { const l = this.stalls.get((cx + Math.floor(Math.random() * 3) - 1) * 65537 + cz + Math.floor(Math.random() * 3) - 1); if (!l) continue; const q = l[Math.floor(Math.random() * l.length)]; if (q.used || q.bad) continue; const dq = (q.x - px) ** 2 + (q.z - pz) ** 2; if (dq < bd) { bd = dq; st = q; } }
+    if (!st) return 0;
     const d = Math.hypot(st.x - px, st.z - pz); if (d > 85 || d < (this.warming ? 5 : 12) || this.visible(st.x, st.z, px, pz, cam, 40)) return 0;
     const rd = this.nav.nearestRoad(st.x, st.z, 22, (r) => r.veh && r.kind <= K.residential); if (!rd || rd.d < 0.5) { st.bad = true; return 0; }
     const ux = (st.x - rd.px) / rd.d, uz = (st.z - rd.pz) / rd.d, bx = rd.px + ux * (rd.r.w / 2 + 1.05), bz = rd.pz + uz * (rd.r.w / 2 + 1.05), tx = uz, tz = -ux; // tx,tz: dọc theo phố
