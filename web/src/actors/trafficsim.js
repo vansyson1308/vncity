@@ -610,7 +610,9 @@ export class TrafficSim {
               if (a.stuck > 9 || (a.id < b.id && (a.stuck > 1.2 || dx * dx + dz * dz < (a.r + b.r + 0.3) ** 2) && (cosB < -0.6 || this.facing(b, a)))) { a.pushB = b; a.pushT = 2.5; if (a.v < 1.6) a.v = 1.6; continue; }
             }
             const bv = b.v * cosB, room = f - (cross ? a.hl + bext : ov) - 0.45;
-            let t2 = Math.max(0, bv + room * 1.2 - 0.3);
+            // xe cùng chiều phía trước: giữ thêm khoảng cách bằng 0,35 giây chạy (không thì ở mọi tốc độ chỉ cách xe trước chừng 0,7 m,
+            // xe trước phanh gấp là đâm vào đuôi; đo trên 75 nút có đèn: cặp xe lồng nhau quá 2 giây giảm 18 đến 28%)
+            let t2 = Math.max(0, bv + (room - (cosB > 0.6 ? 0.35 * a.v : 0)) * 1.2 - 0.3);
             // xe cắt ngang hoặc đi ngược đang chắn nhau: xe có số thứ tự nhỏ hơn được lách qua trước (không đứng nhìn nhau mãi)
             if (cosB < 0.6 && room > 0.15 && (a.id < b.id || b.v < 0.3 && a.sq > 0)) t2 = Math.max(t2, 1.5);
             if (a.sq > 0 && room > 0.1) t2 = Math.max(t2, 0.9);

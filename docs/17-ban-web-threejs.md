@@ -167,7 +167,9 @@ Các kỹ thuật chính:
    phương ngang của chính nó phần độ lồng chiếu lên phương đó (trục tách ngắn nhất của hai hình chữ nhật, SAT), xe nhẹ nhường xe
    nặng, và không bao giờ bị đẩy về phía người chơi đứng sát bên; luật này không huỷ bước tiến nào nên không gây tắc (công cụ soát
    của reviewer, 75 nút × 60 s, ba hạt giống: cặp lồng nhau quá 2 giây 1006/931/871 → 503/591/485, trong khung nhìn của camera
-   294/269/192 → 127/139/109, lưu lượng qua vạch gần như không đổi). Mỗi xe nhớ xe đang chắn mình; khi chuỗi "ai chắn
+   294/269/192 → 127/139/109, lưu lượng qua vạch gần như không đổi). Xe bám đuôi giữ thêm khoảng cách bằng 0,35 giây chạy (trước
+   đây ở mọi tốc độ chỉ cách xe trước chừng 0,7 m nên xe trước phanh gấp là đâm vào đuôi): cùng ba hạt giống, cặp lồng nhau
+   503/591/485 → 413/484/347, trong khung nhìn 127/139/109 → 90/71/103. Mỗi xe nhớ xe đang chắn mình; khi chuỗi "ai chắn
    ai" khép thành vòng (hai xe đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước), xe có số thứ tự nhỏ nhất
    trong vòng đi trước. Xe cắt ngang đang chạy tới từ bên hông được đoán trước tới 2 giây: nó sẽ vào vệt đường của mình trước lúc
    mình tới chỗ đó thì nhả ga như gặp xe đứng ở đúng chỗ nó cắt qua, mình tới trước thì đi. Đường bị cắt
