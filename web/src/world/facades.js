@@ -220,7 +220,13 @@ export function facadeLayers(S = 512) {
     p.rect(30, 128, 452, 364, '#5a3d28'); p.grad(44, 142, 250, 336, '#caa56a', '#6b4a2a'); p.rect(44, 142, 250, 336, 'rgba(0,0,0,0)', M_LIT);
     p.grad(316, 142, 152, 350, '#c79b5c', '#5f3f22'); p.rect(316, 142, 152, 350, 'rgba(0,0,0,0)', M_LIT);
     p.rect(166, 142, 6, 336, '#5a3d28', 0).rect(44, 250, 250, 6, '#5a3d28', 0).rect(390, 142, 5, 350, '#5a3d28', 0);
-    p.rect(70, 330, 60, 8, '#3a2a1c', M_LIT).rect(96, 338, 8, 60, '#3a2a1c', M_LIT).rect(196, 320, 70, 8, '#3a2a1c', M_LIT).rect(226, 328, 8, 70, '#3a2a1c', M_LIT);
+    // quầy pha chế: thân quầy gỗ, máy pha cà phê, hàng cốc; kệ lọ trên tường. Chỉ vẽ khối đặc, không vẽ bàn ghế mảnh (nhìn xa, bóng
+    // bàn ghế mảnh trên nền sáng thành một hàng "chữ" giả)
+    p.rect(50, 366, 238, 10, '#5a3d28', M_LIT).rect(56, 376, 226, 102, '#3a2a1c', M_LIT).rect(56, 420, 226, 4, '#5a3d28', M_LIT);
+    p.rect(78, 318, 54, 48, '#6c7378', M_LIT).rect(86, 326, 38, 14, '#2a2e30', M_LIT).rect(96, 346, 18, 20, '#8a9196', M_LIT);
+    for (let i = 0; i < 6; i++) p.rect(176 + i * 20, 350, 13, 16, i % 3 ? '#e9e3d0' : '#c94a4a', M_LIT);
+    p.rect(184, 214, 104, 6, '#5a3d28', M_LIT); for (let i = 0; i < 6; i++) p.rect(190 + i * 16, 186 + p.R() * 8, 11, 28 - p.R() * 8, ['#8a5a34', '#d9c9a0', '#6a7a4a', '#a8442e'][(p.R() * 4) | 0], M_LIT);
+    p.rect(330, 300, 124, 6, '#5a3d28', M_LIT); for (let i = 0; i < 7; i++) p.rect(334 + i * 17, 268 + p.R() * 8, 12, 32 - p.R() * 8, ['#8a5a34', '#d9c9a0', '#e0b23c', '#a8442e'][(p.R() * 4) | 0], M_LIT);
     p.grad(44, 142, 424, 120, 'rgba(180,205,220,0.25)', 'rgba(180,205,220,0)'); p.plant(26, 500, 1.3).plant(486, 500, 1.2); p.step();
   });
   add(14, (p) => { // quán ăn: quầy kính, nồi nước dùng, ghế nhựa
@@ -242,18 +248,16 @@ export function facadeLayers(S = 512) {
     p.rect(0, 152, 36, 340, '#dedad0').rect(476, 152, 36, 340, '#dedad0'); p.rect(36, 152, 440, 8, '#3f4a52').rect(36, 484, 440, 8, '#3f4a52').rect(252, 152, 8, 340, '#3f4a52');
     p.dirtBase().step();
   });
-  add(17, (p) => { // cửa hàng thời trang, kim hoàn: mặt kính lớn khung trắng, ma-nơ-canh, đèn sáng
+  add(17, (p) => { // cửa hàng mặt kính lớn khung trắng, đèn sáng: kệ hàng sát tường, tủ quầy kính (kim hoàn, đồng hồ, hiệu thuốc, thời trang...).
+    // Không vẽ ma-nơ-canh ở đây nữa (hiệu thuốc, tiệm đồng hồ cũng dùng lớp này): cửa hàng quần áo bày ma-nơ-canh ra hè bằng hình nổi (gen/decor.js).
     shopBase(p); p.rect(26, 126, 460, 366, '#f4f4f0');
     p.grad(38, 138, 282, 340, '#f8f1e0', '#cfc0a2'); p.rect(38, 138, 282, 340, 'rgba(0,0,0,0)', M_LIT);
     p.grad(334, 138, 140, 354, '#f1e8d4', '#bbac8e'); p.rect(334, 138, 140, 354, 'rgba(0,0,0,0)', M_LIT);
     const cols = ['#c94a4a', '#e0b23c', '#4a78a8', '#6aa07a', '#2c3e50', '#d98aa8', '#8a5ac0', '#f2f2ee'];
-    p.rect(48, 168, 262, 5, '#8a8f94', M_LIT); for (let i = 0; i < 9; i++) p.rect(54 + i * 28, 174, 21, 64 + p.R() * 36, cols[(p.R() * cols.length) | 0], M_LIT);
-    const g = p.g, k = p.k;
-    for (const [x, c] of [[104, '#b3261e'], [186, '#2c3e50'], [264, '#e0b23c']]) {
-      g.fillStyle = '#e6c8a8'; g.beginPath(); g.arc(x * k, 246 * k, 15 * k, 0, 7); g.fill(); p.rect(x - 5, 258, 10, 12, '#e6c8a8', M_LIT);
-      g.fillStyle = c; g.beginPath(); g.moveTo((x - 22) * k, 270 * k); g.lineTo((x + 22) * k, 270 * k); g.lineTo((x + 34) * k, 420 * k); g.lineTo((x - 34) * k, 420 * k); g.fill();
-      p.rect(x - 3, 420, 6, 46, '#9a9a94', M_LIT).rect(x - 22, 464, 44, 6, '#8a8a84', M_LIT);
-    }
+    p.rect(48, 168, 262, 5, '#8a8f94', M_LIT);
+    for (let r = 0; r < 3; r++) { p.rect(48, 226 + r * 52, 262, 5, '#8a8f94', M_LIT); for (let i = 0; i < 9; i++) { const h = 26 + p.R() * 14; p.rect(54 + i * 28, 226 + r * 52 - h, 21, h, cols[(p.R() * cols.length) | 0], M_LIT); } }
+    p.rect(52, 384, 256, 84, '#b9c9cf', M_LIT).rect(52, 384, 256, 7, '#eef1f3', M_LIT).rect(52, 461, 256, 7, '#8a8f94', M_LIT); for (let i = 1; i < 4; i++) p.rect(52 + i * 64 - 2, 391, 4, 70, '#8a8f94', M_LIT);
+    for (let i = 0; i < 8; i++) { const h = 12 + p.R() * 12; p.rect(62 + i * 30, 440 - h, 18, h, cols[(p.R() * cols.length) | 0], M_LIT); }
     p.rect(404, 138, 5, 354, '#f4f4f0', 0).rect(392, 300, 6, 64, '#b9bfc4', M_LIT).rect(415, 300, 6, 64, '#b9bfc4', M_LIT);
     p.grad(38, 138, 436, 110, 'rgba(190,215,230,0.22)', 'rgba(190,215,230,0)'); p.step();
   });
@@ -492,22 +496,27 @@ export function facadeMaterial(tex, noise) {
         float plast = isRoof ? 1.0 : smoothstep(0.4, 0.62, lum) * (1.0 - smoothstep(0.05, 0.14, sat)) * (1.0 - mk) * (1.0 - fsign);
         vec3 fcol = tx.rgb * mix(vec3(1.0), tint, plast);
         // hàng bày trong cửa hàng: mỗi gian ngả một màu khác (hàng vải, hàng giấy đỏ, hàng nhựa xanh...) để các gian liền nhau không y hệt
-        if (shopL > 0.5 && fsign < 0.5) { float gh = fract(fseed * 0.7548777 + 0.11); vec3 gt = gh < 0.25 ? vec3(1.0, 0.86, 0.7) : gh < 0.5 ? vec3(0.78, 0.92, 1.0) : gh < 0.75 ? vec3(1.0, 0.76, 0.76) : vec3(0.86, 1.0, 0.8); fcol *= mix(vec3(1.0), gt, mk * 0.75); }
+        // (lớp hàng bày và lớp tủ kính: món hàng có màu được hoán kênh màu theo gian, nên kệ hàng hai nhà liền nhau không cùng một bảng màu)
+        if (shopL > 0.5 && fsign < 0.5) {
+          float gh = fract(fseed * 0.7548777 + 0.11), gp = fract(fseed * 0.5698403 + 0.37);
+          if (sat > 0.25 && mk > 0.5 && (abs(layer - ${L.S_OPEN}.0) < 0.5 || abs(layer - ${L.S_GLASS}.0) < 0.5)) fcol = gp < 0.34 ? fcol : gp < 0.67 ? fcol.gbr : fcol.brg;
+          vec3 gt = gh < 0.25 ? vec3(1.0, 0.86, 0.7) : gh < 0.5 ? vec3(0.78, 0.92, 1.0) : gh < 0.75 ? vec3(1.0, 0.76, 0.76) : vec3(0.86, 1.0, 0.8); fcol *= mix(vec3(1.0), gt, mk * 0.75);
+        }
         fcol = mix(fcol, tx.rgb * SIGNC[int(vVar.w + 0.5)] * 1.5, fsign);
         // Mảng vữa bong lộ gạch: chỉ ở nhà cũ (tuổi từ 2), vị trí và hình dạng lấy từ nhiễu theo hạt giống của từng gian nên hai nhà
         // liền kề không bao giờ có cùng một mảng; một phần nhà cũ không có mảng nào. Ở xa hoa văn gạch hoà về màu gạch trung bình.
+        // (Mẫu nhiễu và đạo hàm lấy ngoài nhánh rẽ để mức mip luôn xác định trên mọi GPU.)
+        float bsd = fract(fseed * 0.3183099 + 0.07);
+        float bn = texture(uNoise, vec2(fuv.x * 0.21 + fseed * 0.613, fuv.y * 0.17 + bsd * 3.7)).r * 0.75 + texture(uNoise, vec2(fuv.x * 0.83 - bsd, fuv.y * 0.71 + fseed * 0.37)).g * 0.25;
+        vec2 bq = vec2(fuv.x * 17.0, fuv.y * 44.0); float bfade = clamp(1.0 - fwidth(bq.y) * 1.2, 0.0, 1.0);
         if (!isRoof && fage > 0.6 && fst < 12.5) {
-          float bsd = fract(fseed * 0.3183099 + 0.07);
-          float bn = texture(uNoise, vec2(fuv.x * 0.21 + fseed * 0.613, fuv.y * 0.17 + bsd * 3.7)).r * 0.75 + texture(uNoise, vec2(fuv.x * 0.83 - bsd, fuv.y * 0.71 + fseed * 0.37)).g * 0.25;
           float bthr = mix(0.63, 0.74, bsd) + 0.1 * smoothstep(1.4, 3.0, fuv.y);
           float bm = smoothstep(bthr, bthr + 0.012, bn) * plast * step(0.3, bsd);
-          if (bm > 0.001) {
-            vec2 bq = vec2(fuv.x * 17.0, fuv.y * 44.0); bq.x += step(1.0, mod(bq.y, 2.0)) * 0.5;
-            vec2 bf = fract(bq); float bfade = clamp(1.0 - fwidth(bq.y) * 1.2, 0.0, 1.0);
-            float bmort = max(step(bf.x, 0.07), step(bf.y, 0.16)) * bfade;
-            vec3 bcol = mix(vec3(0.3, 0.1, 0.06) * (0.8 + 0.4 * hash12(floor(bq) + fseed)), vec3(0.5, 0.46, 0.38), bmort * 0.85);
-            fcol = mix(fcol, bcol, bm); fcol *= 1.0 - 0.3 * smoothstep(bthr - 0.03, bthr, bn) * (1.0 - bm) * plast;
-          }
+          bq.x += step(1.0, mod(bq.y, 2.0)) * 0.5;
+          vec2 bf = fract(bq);
+          float bmort = max(step(bf.x, 0.07), step(bf.y, 0.16)) * bfade;
+          vec3 bcol = mix(vec3(0.3, 0.1, 0.06) * (0.8 + 0.4 * hash12(floor(bq) + fseed)), vec3(0.5, 0.46, 0.38), bmort * 0.85);
+          fcol = mix(fcol, bcol, bm); fcol *= 1.0 - 0.3 * smoothstep(bthr - 0.03, bthr, bn) * (1.0 - bm) * plast;
         }
         // loang ố, rêu mốc: nhiễu tần số thấp theo toạ độ tường; nhà càng cũ càng loang, càng nhiều vệt nước mưa chảy dọc
         vec2 nuv = isRoof ? vWPos.xz * 0.035 : vec2(fuv.x * 0.27 + fseed * 0.37, fuv.y * 0.19 + fseed * 0.11);

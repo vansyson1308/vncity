@@ -5,7 +5,7 @@ import { G, MAT } from '../../core/geo.js';
 import { hash } from '../../core/util.js';
 import { CS, CURB, K, ST, ZONE, zoneAt, isSolemn, roadY } from '../data.js';
 import { L } from '../layers.js';
-import { SIGNS, SIGN_COLORS, SIGN_KIND, SIGN_TINTS, SIGN_BACKS, SIGN_VARIANTS, signUV, bladeUV, FLAG_CELL, TEXT0, PAL } from '../signs.js';
+import { SIGNS, SIGN_COLORS, SIGN_KIND, SIGN_TINTS, SIGN_BACKS, SIGN_VARIANTS, TRADES, signUV, bladeUV, FLAG_CELL, TEXT0, PAL } from '../signs.js';
 import { mainAxis } from './buildings.js';
 import { stallLayout } from '../stalls.js';
 import { motorbike } from '../../models/vehicles.js';
@@ -22,6 +22,7 @@ const bikes = () => BIKES || (BIKES = [motorbike(new G(), 'wave', 0), motorbike(
 
 const CLOTH = [0xc94a4a, 0xe9e3d0, 0x4a78a8, 0xe0b23c, 0x6aa07a, 0xd98aa8, 0xf2f2ee, 0x2c3e50, 0x8a5ac0, 0x3a3a3a].map(lin);
 const LANTERN = [[0.82, 0.05, 0.03], [0.95, 0.58, 0.07], [0.88, 0.16, 0.42]];
+const MA_SIGNS = TRADES['Phố Hàng Mã'] || [];
 // Đèn lồng tròn: thân vải đỏ (vàng, hồng), hai đai vàng, tua rua; ban đêm tự sáng. lo: bản rút gọn cho lưới xa.
 function lantern(g, x, y, z, r, kind, lo) {
   const c = LANTERN[kind];
@@ -305,21 +306,22 @@ function plaza(ctx, env, b, walls) {
 
 // ----- hàng hoá bày tràn ra hè phố cổ (art bible mục 3.1: "hàng hóa bày tràn 0,5–1,5 m ra hè"; mục 2.5: khoảng 60% chiều dài hè) -----
 // Mỗi nghề một kiểu bày, khớp với biển hiệu của gian: giá treo quần áo và ma-nơ-canh, kệ giày, mẹt và thùng hàng khô, đồ mã vàng đỏ,
-// đồ thờ sơn son, đồ tôn thiếc, tre nứa và chiếu cuộn, chum vại, xô hoa, chồng sách, bếp và nồi nước dùng của hàng ăn, bom bia và két bia.
+// đồ thờ sơn son, đồ tôn thiếc, tre nứa và chiếu cuộn, chum vại, xô hoa, chồng sách, bếp và nồi nước dùng của hàng ăn, bom bia và két bia, bàn ghế nhựa của quán nước.
 const GOODS_KIND = {};
 for (const [k, list] of Object.entries({
   rack: ['QUẦN ÁO', 'THỜI TRANG', 'MAY ĐO', 'ÁO DÀI', 'LỤA TƠ TẰM', 'VẢI', 'CHĂN GA GỐI', 'LEN · SỢI', 'PHỤ LIỆU MAY', 'TRANH THÊU'],
   shoes: ['GIÀY DÉP', 'TÚI XÁCH', 'ĐỒ LƯU NIỆM', 'ĐỒ CHƠI'],
   paper: ['VÀNG MÃ', 'HƯƠNG · NẾN', 'ĐÈN LỒNG', 'ĐỒ TRANG TRÍ'],
-  worship: ['ĐỒ THỜ', 'ĐỒ ĐỒNG', 'KHẮC DẤU'],
+  worship: ['ĐỒ THỜ', 'ĐỒ ĐỒNG'],
   metal: ['ĐỒ THIẾC', 'KIM KHÍ', 'GƯƠNG · KÍNH', 'SƠN · VÔI'],
   bamboo: ['TRE NỨA', 'CHIẾU CÓI', 'DÂY THỪNG'],
   pots: ['ĐỒ GỐM'],
   flowers: ['HOA TƯƠI', 'CÂY CẢNH'],
-  books: ['SÁCH', 'VĂN PHÒNG PHẨM', 'TRANH DÂN GIAN', 'PHÒNG TRANH'],
+  books: ['SÁCH', 'VĂN PHÒNG PHẨM', 'TRANH DÂN GIAN', 'PHÒNG TRANH', 'KHẮC DẤU'],
   boxes: ['TẠP HOÁ', 'BÁNH KẸO', 'Ô MAI', 'MẮM · MUỐI', 'CHÈ THÁI NGUYÊN', 'BÁNH CỐM', 'DƯỢC LIỆU', 'THUỐC BẮC', 'ĐÔNG Y'],
   beer: ['BIA HƠI', 'LẨU · NƯỚNG', 'NEM CHUA RÁN'],
   repair: ['SỬA XE MÁY', 'RỬA XE'],
+  stools: ['CÀ PHÊ', 'TRÀ ĐÁ', 'NƯỚC MÍA', 'TRÀ CHANH', 'KEM'],
 })) for (const t of list) GOODS_KIND[t] = k;
 const GOODS_COL = [0xc94a4a, 0xe0b23c, 0x4a78a8, 0x6aa07a, 0xe9e3d0, 0xd98aa8, 0x8a5ac0, 0xf08a3a, 0x2c3e50, 0x7a4a2a].map(lin);
 // Bày một cụm hàng trong khoảng x từ xa tới xb (dọc tường), sâu từ sát tường ra tới zm mét. Hệ cục bộ của mặt tiền: y = 0 là mặt hè.
@@ -387,6 +389,10 @@ function spill(g, kind, xa, xb, zm, s) {
     g.rgb(0.03, 0.03, 0.035); for (let k = 0; k < 4; k++) g.cyl(xa + 0.35, k * 0.13, z, 0.3, 0.3, 0.12, 8, k === 3);
     if (w > 1.3) { g.rgb(0.6, 0.07, 0.05).gloss(0.3).tube([xb - 0.75, 0.38, z], [xb - 0.15, 0.38, z], 0.17, 6).gloss(0).rgb(0.08, 0.08, 0.08).box(xb - 0.7, 0, z - 0.14, xb - 0.2, 0.22, z + 0.14, 'xXzZ'); }
     for (let i = 0; i < 2; i++) { col(i + 40).box(xa + 0.8 + i * 0.26, 0, z + 0.1, xa + 1.0 + i * 0.26, 0.3, z + 0.26, 'xXYZ'); if (xa + 1.26 + i * 0.26 > xb) break; }
+  } else if (kind === 'stools') { // quán nước, cà phê vỉa hè: bàn nhựa thấp, ghế đẩu nhựa kê sát tường (art bible, dấu hiệu 6)
+    const z = Math.min(zm - 0.36, 0.62), red = hash(s, 134) < 0.5, n = Math.floor(w / 1.4);
+    if (!n) { stool(g, xa + 0.25, z, red); if (w > 0.75) stool(g, xb - 0.25, z, red); }
+    for (let i = 0; i < n; i++) { const x = xa + (w * (i + 0.5)) / n; lowTable(g, x, z, false); stool(g, x - 0.52, z, red); stool(g, x + 0.52, z, red); if (zm > 1.15 && hash(s + i, 135) < 0.6) stool(g, x, z + 0.52, !red); }
   } else if (kind === 'kitchen') { // hàng ăn bày bếp ra cửa: quầy inox, tủ kính bày đồ, nồi nước dùng, chồng bát
     const d = Math.min(zm, 0.68), x1 = Math.min(xb, xa + 1.3);
     g.rgb(0.34, 0.36, 0.38).gloss(0.7).box(xa, 0, 0.14, x1, 0.8, d, 'xXZ').rgb(0.46, 0.48, 0.5).box(xa, 0.8, 0.14, x1, 0.83, d, 'xXYZ').gloss(0);
@@ -466,7 +472,7 @@ export function decorate(ctx, env) {
       g.rgb(0.2, 0.2, 0.2).tube([-aw / 2 + 0.05, yb, out], [-aw / 2 + 0.05, ya - 0.5, 0.04], 0.012, 3).tube([aw / 2 - 0.05, yb, out], [aw / 2 - 0.05, ya - 0.5, 0.04], 0.012, 3);
     }
     // phố Hàng Mã: đèn lồng, đồ giấy đỏ treo kín mặt tiền quanh năm (art bible, dấu hiệu 26)
-    if (f.shop && f.road && W.names[f.road.name] === 'Phố Hàng Mã') {
+    if (f.shop && f.road && W.names[f.road.name] === 'Phố Hàng Mã' && MA_SIGNS.includes(f.sign)) { // chỉ hàng mã, đèn lồng, đồ chơi mới treo; quán ăn, hiệu giặt trên phố thì không
       const n = Math.max(3, Math.round(bw / 0.78));
       for (let i = 0; i < n; i++) for (let r = 0; r < 2; r++) {
         if (hash(s + i * 3 + r, 61) < (r ? 0.45 : 0.1)) continue;
@@ -548,15 +554,17 @@ export function decorate(ctx, env) {
     }
     // hàng hoá bày tràn ra hè phố cổ, sát mặt tiền. Bề sâu lấy theo khoảng cách thật từ tường nhà tới mép lòng đường (không gắn cứng theo
     // tim đường): hè hẹp thì hàng thu sát tường, luôn chừa lối đi và không bao giờ lấn xuống lòng đường.
-    if (isOld && open && f.road && !lite && bw > 2.2 && hash(s, 90) < 0.62) {
+    if (isOld && open && f.road && !lite && bw > 2.2 && hash(s, 90) < 0.78) {
       const kind = GOODS_KIND[SIGNS[f.sign][0]] || (SIGN_KIND[f.sign] === 'F' ? 'kitchen' : SIGN_KIND[f.sign] === 'G' ? 'boxes' : null);
       const q = kind ? ctx.nearestRoad(mx, mz, 20, (r) => r === f.road) : null, depth = q ? q.d - f.road.w / 2 : 0; // bề sâu của hè trước nhà
       if (kind && depth > 0.75) {
-        const parked = hash(s, 11) < 0.42 && depth > 2.5, zm = Math.min(parked ? 0.8 : 1.3, depth - (depth > 1.9 ? 0.9 : 0.35));
+        const parked = hash(s, 11) < 0.42 && depth > 2.5; let zm = Math.min(parked ? 0.8 : 1.3, depth > 1.9 ? depth - 0.9 : depth * 0.55); // hè hẹp: hàng chỉ chiếm hơn nửa hè
         // chừa lối vào cửa ở giữa gian: bày một bên, gian rộng thì bày cả hai bên
         const gap = 0.5, xl = -bw / 2 + 0.14, xr = bw / 2 - 0.14, two = bw > 3.4 && hash(s, 91) < 0.6, left = hash(s, 92) < 0.5;
+        // mép ngoài của hàng (hai góc và giữa) không được chạm lòng đường nào, kể cả đường ngang ở góc phố: chạm thì thu hàng vào sát tường
+        for (let t = 0; zm > 0.38 && [xl, 0, xr].some((x) => onRoad(mx + x * f.nz + zm * f.nx, mz - x * f.nx + zm * f.nz, 0.05)); t++) zm = t < 2 ? zm * 0.7 : 0;
         if (zm > 0.38) {
-          if (kind === 'kitchen' || kind === 'beer' || kind === 'repair') { if (left) spill(g, kind, xl, Math.min(-gap, xl + 1.9), zm, s); else spill(g, kind, Math.max(gap, xr - 1.9), xr, zm, s); }
+          if (kind === 'kitchen' || kind === 'beer' || kind === 'repair' || kind === 'stools') { if (left) spill(g, kind, xl, Math.min(-gap, xl + 1.9), zm, s); else spill(g, kind, Math.max(gap, xr - 1.9), xr, zm, s); }
           else { if (two || left) spill(g, kind, xl, -gap, zm, s); if (two || !left) spill(g, kind, gap, xr, zm, s + 77); }
         }
       }
