@@ -15,13 +15,36 @@ export async function buildLandmarks(scene, sites, mats, nav, world) {
   try {
     const rail = world.rails.filter((r) => r.elev).sort((a, b) => b.len - a.len)[0];
     if (rail && modules['./cau_long_bien.js']) {
-      const mod = await modules['./cau_long_bien.js'](), o = [0, 0, 0, 0, 0], y0 = rail.elev.H;
+      const mod = await modules['./cau_long_bien.js'](), o = [0, 0, 0, 0, 0];
       const add = (g, x, z) => { if (!g.count) return; const mesh = new THREE.Mesh(propGeometry(g.pack()), mats.prop); mesh.castShadow = true; mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.name = 'cau_long_bien'; scene.add(mesh); out.push({ site: { id: 'cau_long_bien', x, z }, mesh }); };
-      // tim cầu đoạn có dàn thép: từ mép đê ra tới mép bản đồ
-      const P = []; for (let s = 0; s <= rail.len; s += 20) { alongAt(rail, s, o); if (o[0] > LB_TRUSS_X) P.push([o[0], o[1]]); }
+      // tim cầu đoạn có dàn thép: từ mố ở mép đê (LB_TRUSS_X) ra tới mép bản đồ, cả đoạn vượt bãi lẫn đoạn giữa sông
+      let sT = 0; while (sT < rail.len - 40 && alongAt(rail, sT, o)[0] <= LB_TRUSS_X) sT += 1;
+      const P = [], wb = world.bounds; for (let s = sT; s <= rail.len; s += 20) { alongAt(rail, s, o); P.push([o[0], o[1]]); if (o[0] > wb.x1 + 20) break; }
       let L = 0; for (let i = 1; i < P.length; i++) L += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]);
-      const SEG = 106 * 2, n = Math.ceil(L / SEG);
-      for (let q = 0; q < n; q++) { const g = new G(); mod.buildAlong(g, P, q * SEG, Math.min(L, (q + 1) * SEG), y0); const c = P[Math.min(P.length - 1, Math.round(((q + 0.5) * SEG) / 20))]; add(g, c[0], c[1]); }
+      // cao độ mặt cầu đường sắt dọc dàn, và cao độ làn xe máy cạnh dàn (ở đoạn dốc lên cầu ba mặt cầu chưa bằng nhau)
+      const yAt = (s) => roadY(rail, Math.min(rail.len, sT + s)), tt = [0];
+      const lanes = world.roads.filter((r) => r.elev && /Long Biên/.test(world.names[r.name] || ''));
+      const laneY = (x, z, y) => { let bd = 9; for (const r of lanes) for (let i = 0; i < r.p.length - 2; i += 2) { const d = segDist2(x, z, r.p[i], r.p[i + 1], r.p[i + 2], r.p[i + 3], tt); if (d < bd) { bd = d; y = roadY(r, r.cum[i / 2] + tt[0] * (r.cum[i / 2 + 1] - r.cum[i / 2])); } } return y; };
+      const SEG = mod.LB_HIGH, n = Math.ceil(L / SEG), piers = mod.pierStations(L), col = [];
+      for (let q = 0; q < n; q++) {
+        const g = new G(), sa = q * SEG, sb = Math.min(L, (q + 1) * SEG); mod.buildAlong(g, P, sa, sb, yAt, laneY);
+        // trụ dưới mỗi đầu nhịp. Có đường, lối đi chui qua đúng chỗ đó thì bỏ trụ (nhịp vượt liền hai khoang); trụ trên bãi có va chạm
+        for (const [s, slim] of piers) {
+          if (s < sa || s >= sb) continue;
+          alongAt(rail, Math.min(rail.len, sT + s), o); const x = o[0], z = o[1], tx = o[2], tz = o[3], hl = slim ? 1.55 : 2.3, e = 5.6 - hl;
+          if (x < wb.x0 + 4 || x > wb.x1 - 4 || z < wb.z0 + 4 || z > wb.z1 - 4) continue;
+          let water = false, blocked = false;
+          for (const b of [-5.2, 0, 5.2]) if (nav.isWater(x - tz * b, z + tx * b)) water = true;
+          // mặt bằng trụ coi như một dải bo tròn hai đầu (bán kính hl): đường nào chạm vào dải đó thì chỗ này không dựng trụ
+          for (let b = -e; b <= e + 0.01; b += e / 3) { const h = nav.nearestRoad(x - tz * b, z + tx * b, 10, (r) => !r.elev && !r.skip); if (h && h.d < h.r.w / 2 + hl + 0.4) blocked = true; }
+          if (blocked) continue;
+          const top = Math.min(yAt(s), laneY(x - tz * 4.1, z + tx * 4.1, 99), laneY(x + tz * 4.1, z - tx * 4.1, 99)) - 1.12; if (top < 1.2) continue;
+          const F = mod.buildPier(g, [x, z, tx, tz], top, water, slim, yAt(s) - 1.12);
+          if (!water) for (let i = 0; i < 4; i++) col.push(F[i][0], F[i][1], F[(i + 1) % 4][0], F[(i + 1) % 4][1], Math.max(2.6, top));
+        }
+        const c = P[Math.min(P.length - 1, Math.round(((q + 0.5) * SEG) / 20))]; add(g, c[0], c[1]);
+      }
+      if (col.length) nav.addChunk('lm:cau_long_bien', new Float32Array(col), new Float32Array(0));
       // lan can: mép ngoài (phía xa đường sắt) của từng làn xe, chỗ mặt cầu đã lên cao
       const railD = (x, z) => { let d = 1e9; for (let i = 0; i < rail.p.length - 2; i += 2) d = Math.min(d, segDist2(x, z, rail.p[i], rail.p[i + 1], rail.p[i + 2], rail.p[i + 3])); return d; };
       for (const r of world.roads) {
@@ -54,6 +77,8 @@ export async function buildLandmarks(scene, sites, mats, nav, world) {
       }
     }
   } catch (e) { console.warn('cau_chuong_duong', e); }
+  // đèn pha rọi công trình ban đêm: mô hình nào khai `flood` riêng (lighting.js) thì dùng một bản chất liệu công trình có mức đèn pha ấy
+  const floodMats = new Map(), matFor = (f) => { if (!f || !mats.makeProp) return mats.landmark; if (!floodMats.has(f)) floodMats.set(f, mats.makeProp({ side: THREE.DoubleSide, detail: true, flood: f, cut: true })); return floodMats.get(f); };
   for (const s of sites) {
     const load = modules[`./${s.id}.js`]; if (!load) continue;
     let mod; try { mod = await load(); } catch (e) { console.warn('landmark', s.id, e); continue; }
@@ -65,7 +90,7 @@ export async function buildLandmarks(scene, sites, mats, nav, world) {
       if (s.id === 'cau_the_huc' && modules['./ngoc_son_gate.js']) { const gate = await modules['./ngoc_son_gate.js'](); if (gate.moonPavilion) { g.push().move(0, 0, 46.2 + 1.7); gate.moonPavilion(g); g.pop(); } }
     } catch (e) { console.warn('landmark build', s.id, e); continue; }
     if (!g.count) continue;
-    const mesh = new THREE.Mesh(propGeometry(g.pack()), mats.landmark);
+    const mesh = new THREE.Mesh(propGeometry(g.pack()), matFor(mod.flood));
     mesh.position.set(s.x, CURB + (s.lift || 0), s.z); mesh.rotation.y = s.yaw; mesh.castShadow = true; mesh.receiveShadow = true; mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.name = s.id;
     scene.add(mesh); out.push({ site: s, mesh });
     // va chạm cho các khối đặc khai báo trong sites.js (toạ độ cục bộ)

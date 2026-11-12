@@ -12,7 +12,7 @@ import { Nav } from './world/nav.js';
 import { buildMaterials } from './world/materials.js';
 import { Chunks, LightPools } from './world/chunks.js';
 import { buildLandmarks } from './world/landmarks/index.js';
-import { siteDecks } from './world/landmarks/sites.js';
+import { siteDecks, freeSpot } from './world/landmarks/sites.js';
 import { signAtlas } from './world/atlas.js';
 import { streetMaterial } from './world/streetatlas.js';
 import { Player } from './actors/player.js';
@@ -118,8 +118,16 @@ async function boot() {
   await new Promise((res) => { const t = setInterval(() => { chunks.update(sx, sz); const [miss, tot] = chunks.missingNear(sx, sz, 150); progress(0.45 + 0.55 * (1 - miss / tot)); if (miss === 0) { clearInterval(t); res(); } }, 50); });
   const onDeck = (x, z) => !!nav.elevatedAt(x, z, Infinity) && nav.eY > 0.7; // điểm nằm trên mặt cầu: không đẩy theo tường nhà dưới đất
   if (!onDeck(sx, sz)) {
+    const wet = (x, z) => nav.isWater(x, z) && !(nav.decks.length && nav.deckAt(x, z, 0.3)); // đứng trên cầu Thê Húc thì không phải đang ở dưới nước
     // bản lưu cũ có thể nằm trong lòng một ngôi nhà hay trên mặt hồ (lỗi xuống xe sát tường của bản trước): đưa ra chỗ trống gần nhất
-    if (resumed && (nav.inSolid(sx, sz) || nav.isWater(sx, sz))) [sx, sz] = nav.nearestFree(sx, sz, (x, z) => nav.inSolid(x, z) || !nav.clearAt(x, z, 0.45));
+    if (resumed && (nav.inSolid(sx, sz) || wet(sx, sz))) [sx, sz] = nav.nearestFree(sx, sz, (x, z) => nav.inSolid(x, z) || !nav.clearAt(x, z, 0.45));
+    // tham số at/street/site (đường dẫn chụp ảnh, người chơi dán lại cũng dùng được) cũng có thể rơi xuống hồ hay vào lòng nhà: dò từng vòng
+    // quanh điểm đó lấy chỗ trống gần nhất có đường đi tới (không lấy gò đảo giữa hồ); với `site` thì ưu tiên chỗ còn nhìn thấy công trình
+    // và quay mặt về phía nó
+    else if (!resumed && (params.get('at') || params.get('street') || params.get('site')) && (wet(sx, sz) || nav.inSolid(sx, sz))) {
+      const tg = params.get('site') ? site(params.get('site')) : null, to = freeSpot(nav, sx, sz, tg);
+      if (to) { [sx, sz] = to; if (tg && !params.has('yaw')) syaw = Math.atan2(tg.x - sx, tg.z - sz); }
+    }
     const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z;
   }
   player.teleport(sx, sz, syaw);

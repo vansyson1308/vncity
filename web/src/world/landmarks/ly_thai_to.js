@@ -5,6 +5,7 @@
 // tay phải nâng cuộn Chiếu dời đô ngang ngực, tay trái đưa ra trước chỉ xuống đất Thăng Long.
 import { hash } from '../../core/util.js';
 import { MAT } from '../../core/geo.js';
+import { floodlit } from './lighting.js';
 
 const s2l = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 const lin = (h) => [s2l(((h >> 16) & 255) / 255), s2l(((h >> 8) & 255) / 255), s2l((h & 255) / 255)];
@@ -271,10 +272,13 @@ function statue(g) {
 export function build(g) {
   g.gloss(0).glow(0).sway(0);
   plinth(g);
-  // tượng đài được rọi đèn tự động ban đêm như mọi công trình: không tự phát sáng
+  // Ban đêm: đồng sẫm màu nên lớp đèn pha chung gần như không làm tượng sáng lên (bệ đá thì sáng), tượng thành một bóng đen.
+  // Thêm ánh đèn rọi nhẹ riêng cho bệ đồng và tượng. (Art bible không ghi tượng đài này trong danh sách chiếu sáng: giữ mức thấp.)
+  const bronze0 = g.count;
   pedestal(g, 0.9, 3.3);
   g.push().move(0, 4.2, 0);
   statue(g);
   g.pop();
+  floodlit(g, bronze0, g.count, () => 0.26);
   g.color(0xffffff).gloss(0).glow(0).sway(0).mat();
 }

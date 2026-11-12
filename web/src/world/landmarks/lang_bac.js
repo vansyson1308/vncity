@@ -3,8 +3,10 @@
 // Dựng nghiêm trang, giản dị: chỉ đá xám, đá đỏ mận ở cửa, lễ đài và dòng chữ trên mái.
 // Chất liệu: bệ, khán đài, mái ốp đá hoa cương xám xẻ khối (MAT.stone); cột, diềm mái và tường phòng thi hài là đá tấm lớn
 // mài nhẵn (MAT.lacquer màu xám, mạch ghép ngang dựng bằng hình); đá đỏ mận mài bóng ở cửa, lễ đài và dòng chữ.
-// Ban đêm lòng hiên cột hắt ánh vàng ấm (glow nhẹ trên tường trong và trần hiên).
+// Ban đêm lòng hiên cột hắt ánh vàng ấm (glow nhẹ trên tường trong và trần hiên); mặt ngoài được đèn pha trắng ấm rọi đều, sáng nhất ở
+// mặt chính nhìn ra quảng trường (art bible mục 7).
 import { MAT } from '../../core/geo.js';
+import { floodlit } from './lighting.js';
 
 const GRANITE = 0x8e8c88, DARK = 0x5e5c5a, PLUM = 0x5c1c26, PLUM_DK = 0x43141c, PLUM_LT = 0x6b1a26, WARM = 0x918b82;
 
@@ -158,6 +160,9 @@ export function build(g) {
 
   // ----- khán đài hai bên -----
   stand(g, 1); stand(g, -1);
+
+  // đèn pha trắng ấm rọi đều: mặt chính sáng nhất, ba mặt còn lại và khán đài dịu hơn, mặt nằm ngang chỉ hửng nhẹ
+  floodlit(g, 0, g.count, (x, y, z, nx, ny, nz) => (ny > 0.5 ? 0.05 : ny < -0.5 ? 0 : (nz > 0.5 ? 0.2 : 0.11) * (Math.abs(x) > 20.7 ? 0.6 : 1)));
 
   // ----- hai hàng cây cảnh thấp trước bệ -----
   g.gloss(0);

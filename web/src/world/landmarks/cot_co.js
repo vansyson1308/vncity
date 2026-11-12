@@ -5,6 +5,10 @@
 // lối lên nằm trong lòng cửa; tầng ba chỉ có một cửa trông về phía bắc (-z) dẫn vào cầu thang xoáy trong thân cột.
 // Gạch phong hoá do shader vẽ (MAT.brick): mô hình chỉ đặt màu nền nâu đỏ sẫm, ngả rêu xám dần về chân mỗi tầng đế.
 import { MAT } from '../../core/geo.js';
+import { floodlit } from './lighting.js';
+
+// Ban đêm Cột cờ được rọi đèn (art bible mục 7). Gạch nâu sẫm hút sáng nên mức đèn pha riêng cao hơn mức chung; thân cột sáng hơn ba tầng đế.
+export const flood = 0.9;
 
 const BRICK = [0.152, 0.095, 0.07];   // gạch cũ nâu đỏ sẫm (tuyến tính)
 const GREY = [0.105, 0.098, 0.088];   // mảng xám đen do mưa nắng
@@ -167,6 +171,8 @@ export function build(g) {
   g.mat(MAT.plaster).color(TRIM).shade(0.72);
   { const p = []; for (let i = 0; i < 8; i++) { const a = OCT + (i * Math.PI) / 4; p.push([Math.cos(a) * 2.66, Math.sin(a) * 2.66]); } g.prism(p, L1 - 0.3, L1, true, true); }
   g.mat(MAT.brick); weather(g, 0.9, 0.08); g.cyl(0, L1, 0, 1.1, 0.5, 0.45, 8, true);                              // bệ trụ cờ
+
+  floodlit(g, 0, g.count, (x, y, z, nx, ny) => (ny > 0.5 ? 0.02 : y > 11.5 ? 0.12 : 0.06));
 
   // ----- trụ cờ và cờ đỏ sao vàng -----
   const P1 = L1 + 7.75;

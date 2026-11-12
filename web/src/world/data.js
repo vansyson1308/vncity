@@ -146,8 +146,9 @@ export function subPath(r, s0, s1) {
   for (let i = 1; i < r.cum.length - 1; i++) if (r.cum[i] > s0 + 0.05 && r.cum[i] < s1 - 0.05) out.push(r.p[i * 2], r.p[i * 2 + 1]);
   alongAt(r, s1, o); out.push(o[0], o[1]); return out;
 }
-// Dàn thép cầu Long Biên bắt đầu từ mép đê (x > LB_TRUSS_X); phía trong là cầu dẫn bằng đá.
-export const LB_TRUSS_X = 420;
+// Dàn thép cầu Long Biên bắt đầu từ mép đê, ngay sau khi vượt đường Trần Nhật Duật và đường Hồng Hà (x > LB_TRUSS_X), rồi đi
+// trên bãi Phúc Tân ra sông; phía trong đê là cầu dẫn bằng đá.
+export const LB_TRUSS_X = -102;
 // Dàn thép cầu Chương Dương: bắt đầu cách đầu cầu phía phố CD_TRUSS_S mét (phần trước đó là cầu dẫn bê tông), nhịp CD_SPAN mét.
 export const CD_TRUSS_S = 290, CD_SPAN = 89.28;
 // Lòng giữa cầu Chương Dương (tuyến hai chiều dài nhất mang tên cầu), hướng từ phố ra sông: { r, rev } hoặc null.
