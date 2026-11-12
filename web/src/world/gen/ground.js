@@ -410,7 +410,7 @@ export function genGround(ctx, cx, cz) {
         for (let k = 2; k < p.length; k += 2) { const j = end ? p.length - 2 - k : k; ux = p[j] - x0; uz = p[j + 1] - z0; if (ux * ux + uz * uz >= 25) break; }
         const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul;
         const x = x0 + ux * sd, z = z0 + uz * sd, q = ctx.nearestRoad(x, z, r.w / 2 + 4, (c) => c !== r && c.veh && !c.skip && !c.elev);
-        if (!q || q.d > 0.8 || Math.abs(q.r.w - r.w) > 1.6) return false;
+        if (!q || q.d > 0.8 || Math.abs(q.r.w - r.w) > Math.max(1.6, r.w * 0.15)) return false;
         const qp = q.r.p, sx = qp[q.seg + 2] - qp[q.seg], sz = qp[q.seg + 3] - qp[q.seg + 1], sl = Math.hypot(sx, sz) || 1;
         if (Math.abs((sx * ux + sz * uz) / sl) < 0.94) return false;
         out[0] = x; out[1] = z; out[2] = end ? -ux : ux; out[3] = end ? -uz : uz; out[5] = q.r; return true;
@@ -423,7 +423,17 @@ export function genGround(ctx, cx, cz) {
       const nodeK = end ? ctx.nodeKey(p[p.length - 2], p[p.length - 1]) : ctx.nodeKey(p[0], p[1]), ends = new Set();
       for (const q of cont ? [r, cont] : [r]) for (const i of [0, q.p.length - 2]) { const k = ctx.nodeKey(q.p[i], q.p[i + 1]); if (k !== nodeK) ends.add(k); }
       const mouth = (q) => { for (const i of [0, q.p.length - 2]) { const k = ctx.nodeKey(q.p[i], q.p[i + 1]); if (ends.has(k)) { const nd = ctx.nodes.get(k); return !nd || nd.major < 3; } } return false; };
-      const other = ctx.nearestRoad(x, z, r.w / 2 + 6, (q) => q !== r && q !== cont && q.veh && !q.skip && !q.elev && !mouth(q));
+      // (đoạn cùng hướng mà tim đường đi qua đúng chỗ kẻ vạch là phần kéo dài của chính phố này, cách vài mẩu ngắn: cũng không tính)
+      const skipQ = new Set([r, cont]);
+      let other = null;
+      for (let t = 0; t < 4; t++) {
+        other = ctx.nearestRoad(x, z, r.w / 2 + 6, (q) => !skipQ.has(q) && q.veh && !q.skip && !q.elev && !mouth(q));
+        if (!other || other.d >= other.r.w / 2 + 1.6) break;
+        const op = other.r.p, sx = op[other.seg + 2] - op[other.seg], sz = op[other.seg + 3] - op[other.seg + 1], sl = Math.hypot(sx, sz) || 1;
+        const lat = Math.abs(((x - op[other.seg]) * sz - (z - op[other.seg + 1]) * sx) / sl); // lệch ngang khỏi đường thẳng của đoạn đó
+        if (Math.abs((sx * dx + sz * dz) / sl) > 0.94 && lat < 1 && Math.abs(other.r.w - r.w) <= Math.max(1.6, r.w * 0.15)) { skipQ.add(other.r); other = null; continue; }
+        break;
+      }
       if (other && other.d < other.r.w / 2 + 1.6) continue;
       zr.push([x, z, dx, dz, zl, r.w / 2]);
       if (!inChunk(x, z)) continue;

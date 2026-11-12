@@ -164,9 +164,10 @@ Các kỹ thuật chính:
      chung pha; các nút phụ trên quãng nối thành lòng nút.
    - *Vạch sang đường theo khoảng cách từ tâm nút*, không theo độ dài mẩu đường: mẩu sát nút ngắn hơn chỗ kẻ vạch thì vạch
      nằm trên mẩu nối tiếp (kéo thẳng theo hướng nhánh từ tâm nút, chỉ nhận khi đầu kia của mẩu là nút nhỏ và chỗ đó nằm trên
-     tim một đoạn đường xe cùng bề rộng, cùng hướng); miệng ngõ, phố nhỏ đổ vào ngay chỗ kẻ vạch không làm mất vạch; vạch dọc
-     của mẩu nối tiếp tự chừa chỗ vạch sang đường. Trước đây 30/75 nút có đèn không có vạch sang đường nào; giờ cả 75 nút
-     đều có (118 → 323 vạch).
+     tim một đoạn đường xe cùng bề rộng, cùng hướng); miệng ngõ, phố nhỏ đổ vào ngay chỗ kẻ vạch và phần kéo dài của chính phố
+     đó (cách vài mẩu ngắn) không làm mất vạch; vạch dọc tự chừa chỗ vạch sang đường. Trước đây 30/75 nút có đèn không có vạch
+     sang đường nào và chỉ 94/300 nhánh có vạch; giờ cả 75 nút đều có, 272/300 nhánh (118 → 331 vạch); 28 nhánh còn lại ở nút
+     phức tạp (đường đôi, vòng xoay) nơi vạch sẽ đè lên một lòng đường khác nên cố ý không kẻ.
    - *Chia pha theo phương của nhánh, ít xung đột nhất*: thử mọi cách cắt vòng phương làm hai cung, phạt hai nhánh cùng pha
      mà cắt nhau và hai nhánh khác pha mà gần song song. Hai phố cắt nhau không bao giờ chung pha, hai nhánh chụm góc hẹp
      luôn chung pha (trước đây chia cứng ở ±45° quanh trục chính nên ngã năm có nhánh chạy trong khi nhánh sát bên đỏ).
