@@ -143,7 +143,7 @@ import { ZONE, zoneAt } from './data.js'; // (để riêng ở đây cho phần 
 // Màu theo loại đèn (art bible mục 7): trục chính dùng LED trắng trung tính, phố nhỏ và phố cổ còn đèn sodium vàng cam,
 // đèn vườn quanh hồ vàng ấm, tuýp LED cửa hàng trắng lạnh hắt ra vỉa hè, phố đèn lồng thì đỏ cam.
 // Loại đèn suy từ bán kính vệt sáng mà bộ sinh đồ vật ghi trong danh sách [x, y, z, bán kính] (props.js, decor.js).
-const POOL = { led: [4.4, 4.2, 3.3], sodium: [6.0, 3.2, 0.9], park: [4.6, 3.2, 1.6], shop: [3.3, 2.9, 2.2], lantern: [4.6, 1.0, 0.4] };
+const POOL = { led: [4.0, 3.8, 3.0], sodium: [5.4, 2.9, 0.8], park: [4.2, 2.9, 1.5], shop: [2.6, 2.3, 1.8], lantern: [4.2, 0.9, 0.35] };
 const poolKind = (x, z, r) => (r >= 11 ? (zoneAt(x, z) === ZONE.old ? POOL.sodium : POOL.led) : r >= 8 ? POOL.sodium : r >= 6.5 ? POOL.park : r >= 5.5 ? POOL.lantern : POOL.shop);
 export class LightPools {
   constructor(scene, max = 5000) {
@@ -161,7 +161,7 @@ export class LightPools {
       fragmentShader: /* glsl */`
         uniform float uOpacity, uDirect; varying vec2 vP; varying vec3 vTint;
         void main(){
-          float k = max(1.0 - dot(vP, vP), 0.0); k = k * k * (0.25 + 0.75 * k * k);
+          float k = max(1.0 - dot(vP, vP), 0.0); k *= sqrt(k); // sáng nhất dưới chân đèn, toả rộng và tắt êm ở rìa để hai đèn liền nhau nối được vệt sáng
           vec3 gain = vTint * (k * uOpacity);
           // vẽ thẳng ra màn hình (mức chất lượng thấp, không hậu kỳ): nền đã mã hoá sRGB nên hệ số nhân phải nén lại tương ứng
           if (uDirect > 0.5) gain = pow(1.0 + gain, vec3(0.4545)) - 1.0;
@@ -178,7 +178,7 @@ export class LightPools {
   set(lists) {
     let n = 0; const m = this._m, col = this.mesh.instanceColor.array;
     for (const l of lists) for (let i = 0; i < l.length && n < this.max; i += 4) {
-      const r = l[i + 3] * 1.25, c = poolKind(l[i], l[i + 2], l[i + 3]); m.makeScale(r, 1, r); m.setPosition(l[i], l[i + 1] < 0 ? 0.06 - l[i + 1] : l[i + 1] > 5 ? 0.03 : CURB + 0.03, l[i + 2]);
+      const r = l[i + 3] * 1.4, c = poolKind(l[i], l[i + 2], l[i + 3]); m.makeScale(r, 1, r); m.setPosition(l[i], l[i + 1] < 0 ? 0.06 - l[i + 1] : CURB + 0.03, l[i + 2]); // ngang mặt hè: sáng cả vỉa hè lẫn lòng đường bên dưới
       col[n * 3] = c[0]; col[n * 3 + 1] = c[1]; col[n * 3 + 2] = c[2]; this.mesh.setMatrixAt(n++, m);
     }
     this.mesh.count = n; this.mesh.instanceMatrix.needsUpdate = true; this.mesh.instanceColor.needsUpdate = true;
