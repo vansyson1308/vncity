@@ -2,7 +2,7 @@
 // Các tệp mô hình nằm cùng thư mục, mỗi tệp xuất build(g).
 import * as THREE from 'three';
 import { G } from '../../core/geo.js';
-import { CURB, roadY, alongAt, LB_TRUSS_X } from '../data.js';
+import { CURB, roadY, alongAt, LB_TRUSS_X, CD_TRUSS_S, CD_SPAN, chuongDuongMid } from '../data.js';
 import { segDist2 } from '../../core/util.js';
 import { siteCollision } from './sites.js';
 import { propGeometry } from '../materials.js';
@@ -38,6 +38,22 @@ export async function buildLandmarks(scene, sites, mats, nav, world) {
       }
     }
   } catch (e) { console.warn('cau_long_bien', e); }
+  // cầu Chương Dương: dàn thép biên song song dọc lòng giữa, từ hết cầu dẫn ra tới mép bản đồ; mỗi lưới hai nhịp
+  try {
+    const cd = chuongDuongMid(world);
+    if (cd && modules['./cau_chuong_duong.js']) {
+      const mod = await modules['./cau_chuong_duong.js'](), { r, rev } = cd, o = [0, 0, 0, 0, 0], P = [];
+      for (let s = CD_TRUSS_S; s <= r.len; s += 10) { alongAt(r, rev ? r.len - s : s, o); P.push([o[0], o[1]]); }
+      let L = 0; for (let i = 1; i < P.length; i++) L += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]);
+      const y0 = roadY(r, r.len / 2), SEG = CD_SPAN * 2, n = Math.floor(L / CD_SPAN);
+      for (let q = 0; q * SEG < n * CD_SPAN; q++) {
+        const g = new G(); mod.buildAlong(g, P, q * SEG, Math.min(n * CD_SPAN, (q + 1) * SEG), y0); if (!g.count) continue;
+        const c = P[Math.min(P.length - 1, Math.round(((q + 0.5) * SEG) / 10))];
+        const mesh = new THREE.Mesh(propGeometry(g.pack()), mats.prop); mesh.castShadow = true; mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.name = 'cau_chuong_duong';
+        scene.add(mesh); out.push({ site: { id: 'cau_chuong_duong', x: c[0], z: c[1] }, mesh });
+      }
+    }
+  } catch (e) { console.warn('cau_chuong_duong', e); }
   for (const s of sites) {
     const load = modules[`./${s.id}.js`]; if (!load) continue;
     let mod; try { mod = await load(); } catch (e) { console.warn('landmark', s.id, e); continue; }

@@ -215,7 +215,9 @@ for (const w of hw) {
   let width = tw > 1 && tw < 40 ? tw * 10 : lanes ? Math.max(DEF_W[k] * 0.6, lanes * 31 + 8) : DEF_W[k];
   if (VEH.has(k) && lanes) width = Math.min(width, 220);
   const bridge = t.bridge && t.bridge !== 'no' ? 1 : 0;
-  const flags = (t.oneway === 'yes' || t.junction === 'roundabout' ? 1 : 0) | (bridge ? 2 : 0) | (t.tunnel === 'building_passage' ? 4 : 0) | (t.oneway === '-1' ? 8 : 0);
+  // 16: cấm ô tô (ngõ nhỏ, cầu Long Biên); 32: cấm xe máy (lòng giữa cầu Chương Dương)
+  const flags = (t.oneway === 'yes' || t.junction === 'roundabout' ? 1 : 0) | (bridge ? 2 : 0) | (t.tunnel === 'building_passage' ? 4 : 0) | (t.oneway === '-1' ? 8 : 0)
+    | (t.motorcar === 'no' ? 16 : 0) | (t.motorcycle === 'no' ? 32 : 0);
   let cur = [];
   const flush = () => {
     if (cur.length > 1) {
@@ -311,6 +313,39 @@ for (const w of ways.values()) if (w.tags?.railway === 'rail' && w.tags.service 
     r.p = out; r.w = 32; moved++;
   }
   console.log('Nắn làn xe cầu Long Biên:', moved, 'đoạn');
+}
+// Cầu Chương Dương: lòng giữa dành cho ô tô (thẻ motorcycle=no), hai làn xe máy chạy ngoài dàn thép, mỗi bên một làn
+// (thẻ lanes=1, motorcycle=yes). OSM vẽ ba tuyến cách nhau 6 đến 7 m, với bề rộng mặc định 9 m thì ba mặt cầu chồng lên nhau.
+// Ở đây nắn hai làn ngoài cho cách tim lòng giữa đúng 7,3 m, đặt lòng giữa rộng 10,4 m và làn xe máy rộng 3,4 m:
+// giữa các mặt cầu còn khe 0,4 m, là chỗ đứng của hai mặt phẳng dàn (landmarks/cau_chuong_duong.js, CD_HALF = 5,4 m).
+{
+  const CD = (r) => (r.f & 2) && names[r.n] === 'Cầu Chương Dương', key = (p) => p[0] * 100003 + p[1];
+  const plen = (r) => { let L = 0; for (let i = 1; i < r.p.length; i++) L += Math.hypot(r.p[i][0] - r.p[i - 1][0], r.p[i][1] - r.p[i - 1][1]); return L; };
+  const long = roads.filter((r) => CD(r) && plen(r) > 3000), mid = long.find((r) => !(r.f & 1)), outer = long.filter((r) => r.f & 1);
+  if (mid && outer.length === 2) {
+    const fixed = new Set();
+    for (const r of roads) if (!outer.includes(r) && r.k <= KIND.indexOf('service')) { fixed.add(key(r.p[0])); fixed.add(key(r.p[r.p.length - 1])); }
+    const nearestMid = (p) => {
+      let bd = 1e18, q = null;
+      for (let i = 0; i < mid.p.length - 1; i++) {
+        const a = mid.p[i], b = mid.p[i + 1], dx = b[0] - a[0], dz = b[1] - a[1], l2 = dx * dx + dz * dz, t = l2 ? Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dz) / l2)) : 0;
+        const x = a[0] + dx * t, z = a[1] + dz * t, d = (p[0] - x) ** 2 + (p[1] - z) ** 2; if (d < bd) { bd = d; q = [x, z]; }
+      }
+      return [q[0], q[1], Math.sqrt(bd)];
+    };
+    const move = (p) => { const q = nearestMid(p); if (q[2] < 5) return p; return [Math.round(q[0] + ((p[0] - q[0]) / q[2]) * 73), Math.round(q[1] + ((p[1] - q[1]) / q[2]) * 73)]; };
+    for (const r of outer) {
+      const out = [];
+      r.p.forEach((p, i) => {
+        const end = i === 0 || i === r.p.length - 1;
+        if (i > 0) { const a = r.p[i - 1], L = Math.hypot(p[0] - a[0], p[1] - a[1]), n = Math.max(1, Math.round(L / 400)); for (let k = 1; k < n; k++) out.push(move([a[0] + ((p[0] - a[0]) * k) / n, a[1] + ((p[1] - a[1]) * k) / n])); }
+        out.push(end && fixed.has(key(p)) ? p : move(p));
+      });
+      r.p = dedupe(out); r.w = 34; r.f |= 16;
+    }
+    mid.w = 104; mid.f |= 32;
+    console.log('Nắn cầu Chương Dương: lòng giữa', (plen(mid) / 10).toFixed(0), 'm, hai làn xe máy', outer.map((r) => (plen(r) / 10).toFixed(0)).join(' và '), 'm');
+  } else console.log('Cầu Chương Dương: không nhận ra ba tuyến, giữ nguyên');
 }
 // cổng trên tường rào: nút OSM gắn thẻ cổng/lối vào nằm trên một đường tường. Bộ sinh sẽ để hở tường ở đó,
 // nếu không các khuôn viên có tường bao (Văn Miếu, bảo tàng, Cột cờ) bị vây kín, người chơi không vào được.

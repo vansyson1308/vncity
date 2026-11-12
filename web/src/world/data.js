@@ -7,7 +7,7 @@ export const CURB = 0.16;     // vỉa hè cao hơn lòng đường (m)
 export const WATER_Y = -0.55; // mặt nước hồ thấp hơn bờ kè
 export const K = { primary: 0, secondary: 1, tertiary: 2, residential: 3, service: 4, pedestrian: 5, footway: 6, path: 7, steps: 8, track: 9 };
 export const CAT = { house: 0, apart: 1, modern: 2, public: 3, temple: 4, church: 5, roof: 6, small: 7, station: 8, market: 9 };
-export const F_ONEWAY = 1, F_BRIDGE = 2, F_PASSAGE = 4, F_REVERSE = 8;
+export const F_ONEWAY = 1, F_BRIDGE = 2, F_PASSAGE = 4, F_REVERSE = 8, F_NOCAR = 16, F_NOBIKE = 32; // 16: cấm ô tô, 32: cấm xe máy
 
 // Kiểu mặt đứng (khớp với shader trong world/facades.js)
 export const ST = { ROOF_FLAT: 0, ROOF_TILE: 1, ROOF_TIN: 2, TUBE: 10, ALLEY: 11, BLANK: 12, FRENCH: 13, MODERN: 14, APART: 15, PUBLIC: 16, TEMPLE: 17, CHURCH: 18, MARKET: 19, SMALL: 20 };
@@ -139,3 +139,11 @@ export function subPath(r, s0, s1) {
 }
 // Dàn thép cầu Long Biên bắt đầu từ mép đê (x > LB_TRUSS_X); phía trong là cầu dẫn bằng đá.
 export const LB_TRUSS_X = 420;
+// Dàn thép cầu Chương Dương: bắt đầu cách đầu cầu phía phố CD_TRUSS_S mét (phần trước đó là cầu dẫn bê tông), nhịp CD_SPAN mét.
+export const CD_TRUSS_S = 290, CD_SPAN = 89.28;
+// Lòng giữa cầu Chương Dương (tuyến hai chiều dài nhất mang tên cầu), hướng từ phố ra sông: { r, rev } hoặc null.
+export function chuongDuongMid(world) {
+  let best = null;
+  for (const r of world.roads) if ((r.flags & F_BRIDGE) && !(r.flags & F_ONEWAY) && r.len > 300 && world.names[r.name] === 'Cầu Chương Dương' && (!best || r.len > best.len)) best = r;
+  return best ? { r: best, rev: best.p[0] > best.p[best.p.length - 2] } : null;
+}
