@@ -139,8 +139,9 @@ if (want('d1')) {
     for (const deg of [0, 90, 180, 270]) for (const key of ['w', 's', 'd', 'a', 'arrowup', 'arrowdown', 'arrowright', 'arrowleft']) {
       const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, 0, false); const yaw = (deg * Math.PI) / 180;
       // nhân vật ban đầu quay mặt về hướng nam: có hướng phải quay người 180° rồi mới đi, nên bỏ 0,9 giây đầu và đo 1 giây sau đó
-      let x0 = P.pos.x, z0 = P.pos.z, marked = false; const t0 = performance.now(); g.input.keys.add(key);
-      while (performance.now() - t0 < 1900) { g.cam.yaw = yaw; g.input.lastLook = performance.now(); await sleep(30); if (!marked && performance.now() - t0 > 900) { marked = true; x0 = P.pos.x; z0 = P.pos.z; } }
+      // (đo theo giờ trong game G.t, không theo giờ thật: máy chậm thì mỗi khung hình chỉ tính tối đa 0,05 s)
+      let x0 = P.pos.x, z0 = P.pos.z, marked = false; const t0 = g.G.t, w0 = performance.now(); g.input.keys.add(key);
+      while (g.G.t - t0 < 1.9 && performance.now() - w0 < 30000) { g.cam.yaw = yaw; g.input.lastLook = performance.now(); await sleep(30); if (!marked && g.G.t - t0 > 0.9) { marked = true; x0 = P.pos.x; z0 = P.pos.z; } }
       g.input.keys.delete(key); await sleep(120);
       const mx = P.pos.x - x0, mz = P.pos.z - z0, len = Math.hypot(mx, mz) || 1;
       // camera ở phía (sin yaw, cos yaw) của nhân vật: hướng nhìn là (-sin, -cos), bên phải màn hình là (cos, -sin)
@@ -184,15 +185,17 @@ if (want('d1')) {
   {
     const hold = (keys, secs, bike = false, faceCam = false) => page.evaluate(async ([ks, T, bk, fc]) => {
       const g = window.__game, P = g.player, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true; g.input.keys.clear();
+      // chờ theo giờ trong game (máy chậm thì mỗi khung hình chỉ tính tối đa 0,05 s nên giờ thật không đo được quãng chạy)
+      const gwait = async (sec) => { const t = g.G.t, w = performance.now(); while (g.G.t - t < sec && performance.now() - w < 60000) await sleep(20); };
       if (P.mode === 'bike') { P.speed = 0; P.toggleBike(); }
       const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4);
       // nhân vật quay mặt về phía camera (fc) hoặc quay lưng lại camera; camera ở phía (sin, cos) của góc cam.yaw
-      g.cam.yaw = 0.6; P.teleport(spot.x, spot.z, fc ? 0.6 : 0.6 + Math.PI, false); g.input.lastLook = 0; await sleep(150);
-      if (bk) { P.toggleBike(); await sleep(100); }
+      g.cam.yaw = 0.6; P.teleport(spot.x, spot.z, fc ? 0.6 : 0.6 + Math.PI, false); g.input.lastLook = 0; await gwait(0.15);
+      if (bk) { P.toggleBike(); await gwait(0.1); }
       for (const k of ks) g.input.keys.add(k);
       const pts = [], yaws = [], t0 = g.clock ? g.clock() : 0; let steps = 0, path = 0, px = P.pos.x, pz = P.pos.z; const f0 = window.__info ? window.__info.frame : 0;
-      const tEnd = performance.now() + T * 1000;
-      while (performance.now() < tEnd) { await sleep(40); steps++; path += Math.hypot(P.pos.x - px, P.pos.z - pz); px = P.pos.x; pz = P.pos.z; pts.push([px, pz]); yaws.push(g.cam.yaw); }
+      const g0 = g.G.t, w0 = performance.now();
+      while (g.G.t - g0 < T && performance.now() - w0 < T * 30000) { await sleep(40); steps++; path += Math.hypot(P.pos.x - px, P.pos.z - pz); px = P.pos.x; pz = P.pos.z; pts.push([px, pz]); yaws.push(g.cam.yaw); }
       for (const k of ks) g.input.keys.delete(k);
       const a = pts[0], b = pts[pts.length - 1], net = Math.hypot(b[0] - a[0], b[1] - a[1]);
       // hướng đi ở 30% cuối so với camera lúc đó: tiến (ra xa ống kính) và phải màn hình
@@ -276,7 +279,7 @@ if (want('b1') || want('b2') || want('b4') || want('c1')) {
       P.teleport(F.dest.x, F.dest.z, P.yaw, false); P.speed = 0;
       let res = null; const old = F.onEvent; F.onEvent = (ev, f, done) => { if (ev === 'drop') res = done; old && old(ev, f, done); };
       for (let i = 0; i < 50 && !res; i++) await sleep(100);
-      await sleep(1000); window.__norender = false;
+      { const t1 = g.G.t, w1 = performance.now(); while (g.G.t - t1 < 1 && performance.now() - w1 < 30000) await sleep(50); } window.__norender = false; // 1 giây trong game cho khách bước xuống
       return { seated, comfort, stars: res && res.stars, hits: res && res.hits, after: { visible: !!(P.guest && P.guest.visible), passenger: P.passenger } };
     });
     console.log('b1/c10', JSON.stringify(r));
@@ -307,7 +310,7 @@ if (want('b1') || want('b2') || want('b4') || want('c1')) {
   }
   // C3 + C7: bảng Cài đặt hiện số khung hình đo lúc đang chơi; bấm lại mức chất lượng đang chọn không tải lại trang
   {
-    const r = await page.evaluate(async () => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__mark = 1; g.input.press('settings'); await sleep(1500); const perf = document.getElementById('s-perf').textContent; document.querySelector('#s-quality button.on').click(); await sleep(800); const still = window.__mark === 1, open = g.hud.modal; g.hud.close(); return { perf, fpsPlay: g.G.fpsPlay, still, open }; });
+    const r = await page.evaluate(async () => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__mark = 1; g.input.press('settings'); for (let i = 0; i < 600 && g.hud.modal !== 'settings'; i++) await sleep(50); await sleep(200); const perf = document.getElementById('s-perf').textContent; document.querySelector('#s-quality button.on').click(); await sleep(800); const still = window.__mark === 1, open = g.hud.modal; g.hud.close(); return { perf, fpsPlay: g.G.fpsPlay, still, open }; });
     console.log('c3/c7', JSON.stringify(r));
     r.fpsPlay > 0 && r.perf.includes(String(Math.round(r.fpsPlay))) ? ok(`C3: bảng Cài đặt ghi số đo lúc đang chơi ("${r.perf}")`) : fail(`C3: bảng ghi "${r.perf}" trong khi đo được ${r.fpsPlay}`);
     r.still ? ok('C7: bấm lại mức chất lượng đang chọn không tải lại trang') : fail('C7: trang bị tải lại');
