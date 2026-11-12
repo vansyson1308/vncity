@@ -155,7 +155,8 @@ export function frontStubs(ctx, b) {
   for (let k = 0; k < n; k += 2) {
     const ax = ring[k], az = ring[k + 1], dx = ring[(k + 2) % n] - ax, dz = ring[(k + 3) % n] - az, Lw = Math.hypot(dx, dz); if (Lw < 1.9) continue;
     const nx = (dz / Lw) * dir, nz = (-dx / Lw) * dir, mx = ax + dx / 2, mz = az + dz / 2;
-    const nb = ctx.buildingAt(mx + nx * 0.9, mz + nz * 0.9, b); if (nb && !nb.skip) continue; // tường giáp nhà bên cạnh: tường trơn hoặc khuất
+    const nb = ctx.buildingAt(mx + nx * 0.9, mz + nz * 0.9, b); if (nb && !nb.skip) continue; // tường giáp nhà bên cạnh: tường trơn
+    { const ov = ctx.coEdge(mx, mz, mx - nx * 0.3, mz - nz * 0.3, b); if (ov && (ov.height > h + 0.05 || (Math.abs(ov.height - h) <= 0.05 && ov.i < b.i))) continue; } // cạnh nhường toà chồng lên (như vòng dựng)
     const rd = ctx.nearestRoad(mx + nx * 2, mz + nz * 2, 15, notDeck);
     if (!rd || (rd.px - mx) * nx + (rd.pz - mz) * nz <= 0.5 || rd.d - rd.r.w / 2 >= 8) continue;
     const road = rd.r, street = !b.solemn && (road.kind <= K.residential || road.kind === K.pedestrian);
