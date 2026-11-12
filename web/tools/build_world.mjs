@@ -518,18 +518,21 @@ const F_FLUSH = 64;
 // Sau khi thu hẹp, lòng đường vẫn có chỗ ăn vào nhà (đường đã ở bề rộng tối thiểu; nhà máy học vẽ lệch; nhà trùm lên ngã rẽ;
 // lối xuyên qua nhà, qua cổng). Xe trong dòng xe và người chơi đi trong lòng đường, nên phần nhà nằm trong lòng đường bị cắt đi;
 // mảnh còn lại dưới 10 m² hoặc mỏng dưới 1 m thì bỏ. Đường chui qua nhà (kể cả có thẻ building_passage) thành lối hở.
+// Phố trong khu phố cổ (trừ ngõ lát liền, lối vào sân) giữ thêm một dải hè tối thiểu 1,2 m (phố hẹp dưới 4,5 m: 0,9 m): nhà vẽ lấn ra
+// lòng đường (tim đường OSM lệch về một bên) mà chỉ cắt tới mép lòng đường thì thành bức tường dựng ngay trên bó vỉa, không còn hè.
 {
   const deg = new Map(); for (const r of roads) for (const e of [r.p[0], r.p[r.p.length - 1]]) deg.set(keyP(e), (deg.get(keyP(e)) || 0) + 1);
   const disc = (c, rad) => { const o = []; for (let i = 0; i < 12; i++) o.push({ X: Math.round(c[0] + Math.cos((i / 12) * 6.2832) * rad), Y: Math.round(c[1] + Math.sin((i / 12) * 6.2832) * rad) }); return o; };
+  const minPave = (r) => (KIND[r.k] === 'service' || (r.f & F_FLUSH) || !midOld(r) ? 0 : r.w < 45 ? 9 : 12);
   const rib = [], rgrid = new Map();
   for (const r of roads) {
     if (!VEH.has(KIND[r.k]) || (r.f & 2)) continue;
-    const hw = r.w / 2, a = r.p[0], e = r.p[r.p.length - 1], dA = deg.get(keyP(a)) === 1, dE = deg.get(keyP(e)) === 1;
+    const hw = r.w / 2 + minPave(r), a = r.p[0], e = r.p[r.p.length - 1], dA = deg.get(keyP(a)) === 1, dE = deg.get(keyP(e)) === 1;
     // đầu cụt: cắt phẳng (không khoét nửa vòng tròn vào nhà ở cuối ngõ); đầu nối với đường khác: bo tròn
     let paths = cOffset([toC(r.p)], hw, dA || dE ? ET.etOpenButt : ET.etOpenRound, JT.jtRound);
     if (dA !== dE) paths = [...paths, disc(dA ? e : a, hw)];
     const bb = bbOf(r.p); bb[0] -= hw; bb[1] -= hw; bb[2] += hw; bb[3] += hw;
-    const it = { bb, paths, r }; rib.push(it);
+    const it = { bb, paths, r, hw }; rib.push(it);
     // ghi vào lưới theo từng cạnh (đường chéo dài có hộp bao rất rộng)
     for (let i = 0; i < r.p.length - 1; i++) { const x0 = Math.min(r.p[i][0], r.p[i + 1][0]) - hw, x1 = Math.max(r.p[i][0], r.p[i + 1][0]) + hw, z0 = Math.min(r.p[i][1], r.p[i + 1][1]) - hw, z1 = Math.max(r.p[i][1], r.p[i + 1][1]) + hw;
       for (let x = Math.floor(x0 / BCELL); x <= Math.floor(x1 / BCELL); x++) for (let z = Math.floor(z0 / BCELL); z <= Math.floor(z1 / BCELL); z++) { const k = x * 100003 + z; let l = rgrid.get(k); if (!l) rgrid.set(k, (l = [])); if (!l.includes(it)) l.push(it); } }
@@ -541,7 +544,7 @@ const F_FLUSH = 64;
     for (let x = Math.floor(b.bb[0] / BCELL); x <= Math.floor(b.bb[2] / BCELL); x++) for (let z = Math.floor(b.bb[1] / BCELL); z <= Math.floor(b.bb[3] / BCELL); z++) for (const it of rgrid.get(x * 100003 + z) || []) if (it.bb[0] <= b.bb[2] && it.bb[2] >= b.bb[0] && it.bb[1] <= b.bb[3] && it.bb[3] >= b.bb[1]) cand.add(it);
     if (!cand.size) continue;
     // chỉ xét đường thật sự chạm nhà: tim đường cách mép nhà dưới nửa bề rộng, hoặc có điểm nằm trong nhà
-    const hitRoads = [...cand].filter((it) => { const hw = it.r.w / 2, p = it.r.p; for (let i = 0; i < p.length - 1; i++) { const L = Math.hypot(p[i + 1][0] - p[i][0], p[i + 1][1] - p[i][1]), ns = Math.max(1, Math.ceil(L / 10)); for (let s = 0; s <= ns; s++) { const x = p[i][0] + ((p[i + 1][0] - p[i][0]) * s) / ns, z = p[i][1] + ((p[i + 1][1] - p[i][1]) * s) / ns; if (x < b.bb[0] - hw || x > b.bb[2] + hw || z < b.bb[1] - hw || z > b.bb[3] + hw) continue; if (lineD([x, z], b.p, true) < hw || inB(b, x, z)) return true; } } return false; });
+    const hitRoads = [...cand].filter((it) => { const hw = it.hw, p = it.r.p; for (let i = 0; i < p.length - 1; i++) { const L = Math.hypot(p[i + 1][0] - p[i][0], p[i + 1][1] - p[i][1]), ns = Math.max(1, Math.ceil(L / 10)); for (let s = 0; s <= ns; s++) { const x = p[i][0] + ((p[i + 1][0] - p[i][0]) * s) / ns, z = p[i][1] + ((p[i + 1][1] - p[i][1]) * s) / ns; if (x < b.bb[0] - hw || x > b.bb[2] + hw || z < b.bb[1] - hw || z > b.bb[3] + hw) continue; if (lineD([x, z], b.p, true) < hw || inB(b, x, z)) return true; } } return false; });
     if (!hitRoads.length) continue;
     const before = b.a * 100, ex = cExec(CT.ctDifference, bPaths(b), hitRoads.flatMap((it) => it.paths), FT.pftEvenOdd, FT.pftNonZero);
     const after = ex.reduce((s, e) => s + exArea(e), 0); if (before - after < 30) continue; // dưới 0,3 m²: coi như không chạm
