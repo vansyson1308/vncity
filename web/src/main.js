@@ -50,6 +50,7 @@ async function boot() {
   const fixedTime = params.has('h'); if (fixedTime) sky.setHours(+params.get('h'));
   const input = new Input(canvas), audio = new Audio(), hud = new Hud(input);
   input.onFirstGesture = () => audio.start();
+  input.onIme = () => hud.toast(T('ime_hint'), 10); // bộ gõ tiếng Việt nuốt phím: báo một lần
 
   const base = (p) => new URL(p, document.baseURI).href;
   const json = (u) => fetch(base(u)).then((r) => { if (!r.ok) throw new Error(`${u}: ${r.status}`); return r.json(); });

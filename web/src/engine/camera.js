@@ -7,7 +7,7 @@ export class FollowCamera {
     this.cam = camera; this.nav = nav;
     this.yaw = 0; this.pitch = 0.2; this.dist = 4.6; this.zoom = 1; this.cur = 4.6;
     this.target = new THREE.Vector3(); this.shake = 0; this.fov = 58; this.cine = null; this._first = true;
-    this.sens = 0.0026;
+    this.sens = 0.0026; this.snapT = 0; this.wasRiding = false;
   }
   snap(player) { this.yaw = player.yaw + Math.PI; this._first = true; }
 
@@ -18,9 +18,26 @@ export class FollowCamera {
     if (input) {
       this.yaw -= input.look.x * this.sens; this.pitch = clamp(this.pitch + input.look.y * this.sens * 0.8, -0.35, 1.25);
       if (input.zoom) this.zoom = clamp(this.zoom * (1 + input.zoom * 0.12), 0.55, 2.6);
-      // đang chạy mà không đụng chuột thì camera trôi về sau lưng
-      const idle = (performance.now() - input.lastLook) / 1000;
-      if (idle > (riding ? 0.9 : 2.5) && speed > (riding ? 1.2 : 2.2)) this.yaw = dampAngle(this.yaw, player.yaw + Math.PI, riding ? 2.4 : 0.9, dt);
+      // Camera tự về sau lưng khi không đụng chuột. off: góc lệch giữa camera và vị trí "sau lưng".
+      const idle = (performance.now() - input.lastLook) / 1000, behind = player.yaw + Math.PI;
+      const off = Math.atan2(Math.sin(behind - this.yaw), Math.cos(behind - this.yaw));
+      if (riding && !this.wasRiding) this.snapT = 0.9;
+      this.wasRiding = riding;
+      if (riding) {
+        // Xe lái theo hướng xe (W là ga, A/D là tay lái), nên camera phải ở sau lưng thì trái phải trên màn hình mới khớp tay lái:
+        // vừa lên xe thì quay ngay ra sau; bắt đầu ga hoặc bẻ lái khi camera còn ở trước mũi xe thì cũng quay nhanh ra sau.
+        const driving = input.move.y > 0.05 || Math.abs(input.move.x) > 0.05;
+        if (this.snapT > 0) { this.snapT -= dt; this.yaw = dampAngle(this.yaw, behind, 7, dt); }
+        else if (idle > 0.9 && speed > 1.2) this.yaw = dampAngle(this.yaw, behind, 2.4, dt);
+        else if (idle > 0.35 && driving && Math.abs(off) > 1.2) this.yaw = dampAngle(this.yaw, behind, 5, dt);
+      } else {
+        // Đi bộ theo hướng camera. Camera chỉ trôi theo phần "tiến" của hướng đi: chạy thẳng thì không đổi, chạy chéo (W + A/D) thì
+        // vòng dần theo, còn chạy ngang (A/D) hay chạy về phía ống kính (S) thì camera đứng yên. Nếu nó cũng xoay theo thì hướng
+        // "trái, phải, lùi" trên màn hình xoay theo từng khung hình và nhân vật chạy thành vòng tròn.
+        this.snapT = 0;
+        const fwd = Math.cos(off);
+        if (idle > 2.5 && speed > 2.2 && fwd > 0.2) this.yaw = dampAngle(this.yaw, behind, 0.9 * fwd, dt);
+      }
     }
     const want = (riding ? 5.6 + speed * 0.12 : 4.4) * this.zoom;
     this.dist = damp(this.dist, want, 4, dt);

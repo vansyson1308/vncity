@@ -151,6 +151,67 @@ if (want('d1')) {
   const want2 = { w: ['fwd', 1], arrowup: ['fwd', 1], s: ['fwd', -1], arrowdown: ['fwd', -1], d: ['right', 1], arrowright: ['right', 1], a: ['right', -1], arrowleft: ['right', -1] };
   const wrong = r.filter((q) => q.len < 0.3 || q[want2[q.key][0]] * want2[q.key][1] < 0.9);
   wrong.length ? fail(`D1: hướng đi sai ở ${wrong.length}/${r.length} trường hợp: ${JSON.stringify(wrong.slice(0, 4))}`) : ok(`D1: ${r.length} trường hợp (4 góc camera × 8 phím) đều đi đúng hướng so với màn hình`);
+  // D4: lớp sự kiện bàn phím. Phím thật qua trình duyệt, rồi các biến thể của phím W mà người dùng Việt hay gặp: Caps Lock,
+  // bộ gõ đang ghép chữ (key = "Process"), Telex biến W thành "ư". Cả bốn phải đi tới như nhau vì game đọc theo vị trí phím.
+  {
+    const run = async (press, release) => {
+      await page.evaluate(async () => { const g = window.__game, P = g.player, spot = { x: 150, z: -150 }; window.__norender = true; g.input.keys.clear(); g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, Math.PI, false); g.cam.yaw = 0; await new Promise((r2) => setTimeout(r2, 200)); });
+      await press();
+      const d = await page.evaluate(async () => { const g = window.__game, P = g.player, t0 = performance.now(); let x0 = P.pos.x, z0 = P.pos.z, m = false; while (performance.now() - t0 < 1700) { g.cam.yaw = 0; g.input.lastLook = performance.now(); await new Promise((r2) => setTimeout(r2, 30)); if (!m && performance.now() - t0 > 700) { m = true; x0 = P.pos.x; z0 = P.pos.z; } } return { fwd: -(P.pos.z - z0), side: P.pos.x - x0, held: [...g.input.keys] }; });
+      await release();
+      const left = await page.evaluate(() => { const k = [...window.__game.input.keys]; window.__norender = false; return k; });
+      return { ...d, left };
+    };
+    const synth = (type, key, code) => page.evaluate(([t, k, c]) => { window.dispatchEvent(new KeyboardEvent(t, { key: k, code: c, bubbles: true })); }, [type, key, code]);
+    const cases = [
+      ['phím W thật', () => page.keyboard.down('KeyW'), () => page.keyboard.up('KeyW')],
+      ['mũi tên lên thật', () => page.keyboard.down('ArrowUp'), () => page.keyboard.up('ArrowUp')],
+      ['Caps Lock (key = W)', () => synth('keydown', 'W', 'KeyW'), () => synth('keyup', 'W', 'KeyW')],
+      ['bộ gõ đang ghép (key = Process)', () => synth('keydown', 'Process', 'KeyW'), () => synth('keyup', 'w', 'KeyW')],
+      ['Telex (key = ư)', () => synth('keydown', 'ư', 'KeyW'), () => synth('keyup', 'ư', 'KeyW')],
+    ];
+    const bad = [];
+    for (const [name, press, release] of cases) { const q = await run(press, release); if (!(q.fwd > 0.5 && Math.abs(q.side) < q.fwd * 0.3) || q.left.length) bad.push(`${name}: tiến ${q.fwd.toFixed(2)} m, lệch ${q.side.toFixed(2)} m, phím còn kẹt [${q.left}]`); }
+    bad.length ? fail('D4: lớp bàn phím: ' + bad.join('; ')) : ok(`D4: ${cases.length} cách nhấn phím tiến (phím thật, Caps Lock, bộ gõ đang ghép, Telex) đều đi tới, nhả phím là dừng`);
+    // bộ gõ nuốt phím (ký tự có dấu tới mà không kèm mã phím): hiện lời nhắc đúng một lần
+    const hint = await page.evaluate(async () => { const has = () => /W A S D/.test(document.body.innerText); const before = has(); window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ư', code: '', bubbles: true })); window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ư', code: '', bubbles: true })); await new Promise((r2) => setTimeout(r2, 2500)); return { before, after: has(), keys: [...window.__game.input.keys] }; });
+    !hint.before && hint.after && !hint.keys.length ? ok('D4: bộ gõ nuốt phím thì game nhắc tắt bộ gõ hoặc dùng phím mũi tên') : fail('D4: không thấy lời nhắc về bộ gõ tiếng Việt: ' + JSON.stringify(hint));
+  }
+  // D5: giữ phím lâu mà KHÔNG ép góc camera (như người chơi chỉ dùng bàn phím). Chạy lùi về phía ống kính và chạy ngang phải đi
+  // thẳng: nếu camera tự xoay theo thì hướng trên màn hình xoay theo từng khung hình và nhân vật chạy thành vòng tròn.
+  {
+    const hold = (keys, secs, bike = false, faceCam = false) => page.evaluate(async ([ks, T, bk, fc]) => {
+      const g = window.__game, P = g.player, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true; g.input.keys.clear();
+      if (P.mode === 'bike') { P.speed = 0; P.toggleBike(); }
+      const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4);
+      // nhân vật quay mặt về phía camera (fc) hoặc quay lưng lại camera; camera ở phía (sin, cos) của góc cam.yaw
+      g.cam.yaw = 0.6; P.teleport(spot.x, spot.z, fc ? 0.6 : 0.6 + Math.PI, false); g.input.lastLook = 0; await sleep(150);
+      if (bk) { P.toggleBike(); await sleep(100); }
+      for (const k of ks) g.input.keys.add(k);
+      const pts = [], yaws = [], t0 = g.clock ? g.clock() : 0; let steps = 0, path = 0, px = P.pos.x, pz = P.pos.z; const f0 = window.__info ? window.__info.frame : 0;
+      const tEnd = performance.now() + T * 1000;
+      while (performance.now() < tEnd) { await sleep(40); steps++; path += Math.hypot(P.pos.x - px, P.pos.z - pz); px = P.pos.x; pz = P.pos.z; pts.push([px, pz]); yaws.push(g.cam.yaw); }
+      for (const k of ks) g.input.keys.delete(k);
+      const a = pts[0], b = pts[pts.length - 1], net = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      // hướng đi ở 30% cuối so với camera lúc đó: tiến (ra xa ống kính) và phải màn hình
+      const i0 = Math.floor(pts.length * 0.7), c = pts[i0], cy = g.cam.yaw, mx = b[0] - c[0], mz = b[1] - c[1], ml = Math.hypot(mx, mz) || 1;
+      let turn = 0, turnTail = 0; for (let i = 1; i < yaws.length; i++) { const d = yaws[i] - yaws[i - 1], q = Math.atan2(Math.sin(d), Math.cos(d)); turn += q; if (i > yaws.length * 0.5) turnTail += q; }
+      void t0; void f0; void steps;
+      const out = { net: +net.toFixed(2), path: +path.toFixed(2), turn: +turn.toFixed(2), turnTail: +turnTail.toFixed(2), fwd: +((mx * -Math.sin(cy) + mz * -Math.cos(cy)) / ml).toFixed(2), right: +((mx * Math.cos(cy) + mz * -Math.sin(cy)) / ml).toFixed(2), tail: +ml.toFixed(2), speed: +P.speed.toFixed(2) };
+      if (P.mode === 'bike') { P.speed = 0; P.toggleBike(); } window.__norender = false; return out;
+    }, [keys, secs, bike, faceCam]);
+    const bad = [];
+    const back = await hold(['s', 'shift'], 6), side = await hold(['d', 'shift'], 6), diag = await hold(['w', 'd', 'shift'], 6);
+    if (!(back.path > 4 && back.net > back.path * 0.9 && Math.abs(back.turn) < 0.25)) bad.push('chạy lùi (S) không thẳng hoặc camera tự xoay: ' + JSON.stringify(back));
+    if (!(side.path > 4 && side.net > side.path * 0.9 && Math.abs(side.turn) < 0.25)) bad.push('chạy ngang (D) không thẳng hoặc camera tự xoay: ' + JSON.stringify(side));
+    if (!(diag.path > 4 && diag.right > 0.2 && diag.fwd > 0.2)) bad.push('chạy chéo (W + D) không đi về phía phải-trước của màn hình: ' + JSON.stringify(diag));
+    // lên xe khi nhân vật đang quay mặt về phía ống kính (vừa đi lùi về phía camera rồi bấm lên xe): camera phải ra sau lưng xe,
+    // giữ W thì xe chạy ra xa ống kính; W + D thì xe vòng sang phải màn hình
+    const ride = await hold(['w'], 5, true, true), rideR = await hold(['w', 'd'], 4, true, true);
+    if (!(ride.path > 6 && ride.fwd > 0.9)) bad.push('lên xe lúc xe quay mặt về camera, giữ W: xe không chạy ra xa ống kính: ' + JSON.stringify(ride));
+    if (!(rideR.path > 3 && rideR.fwd > 0.3 && rideR.turnTail < -0.2)) bad.push('đi xe, W + D: xe không vòng sang phải: ' + JSON.stringify(rideR));
+    bad.length ? fail('D5: ' + bad.join('; ')) : ok(`D5: giữ phím lâu không đụng chuột: chạy lùi thẳng ${back.net} m, chạy ngang thẳng ${side.net} m (camera không tự xoay), chạy chéo vòng dần; lên xe lúc quay mặt về camera rồi giữ W thì xe chạy ra xa ống kính (${ride.fwd}), W + D vòng phải`);
+  }
   // D2: ép vào tường cho camera áp sát rồi đi ra chỗ trống, camera phải tự giãn ra lại; không có toạ độ hỏng
   const c = await page.evaluate(async () => {
     const g = window.__game, P = g.player, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true;
@@ -256,9 +317,9 @@ if (want('b1') || want('b2') || want('b4') || want('c1')) {
   }
   // C9: bảng Hộ chiếu và Bản đồ vừa khung 1140 × 670, không phải cuộn
   for (const [id, key] of [['book', null], ['map', 'map']]) {
-    const r = await page.evaluate(async ([id, key]) => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); if (key) { g.hud.close(); await sleep(100); g.input.press(key); await sleep(600); } const p = document.querySelector(`#${id} .paper`), b = p.getBoundingClientRect(); return { h: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: p.scrollHeight - p.clientHeight, vh: innerHeight }; }, [id, key]);
+    const r = await page.evaluate(async ([id, key]) => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); g.hud.close(); await sleep(100); if (key) g.input.press(key); else g.hud.open(id); await sleep(700); const p = document.querySelector(`#${id} .paper`), b = p.getBoundingClientRect(); return { h: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: p.scrollHeight - p.clientHeight, vh: innerHeight }; }, [id, key]);
     console.log('c9', id, JSON.stringify(r));
-    r.top >= 0 && r.bottom <= r.vh && r.scroll <= 1 ? ok(`C9: bảng ${id} cao ${r.h} px, vừa khung ${r.vh} px, không cuộn`) : fail(`C9: bảng ${id} không vừa khung: ${JSON.stringify(r)}`);
+    r.h > 200 && r.top >= 0 && r.bottom <= r.vh && r.scroll <= 1 ? ok(`C9: bảng ${id} cao ${r.h} px, vừa khung ${r.vh} px, không cuộn`) : fail(`C9: bảng ${id} không vừa khung: ${JSON.stringify(r)}`);
     await page.screenshot({ path: path.join(OUT, `c9_${id}.png`), timeout: SLOW });
   }
   await page.evaluate(() => { window.__game.hud.close(); });
