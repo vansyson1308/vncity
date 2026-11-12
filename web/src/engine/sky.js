@@ -130,7 +130,7 @@ export class Sky {
       this.sun.castShadow = true; this.sun.shadow.mapSize.set(quality.shadow, quality.shadow);
       const R = quality.shadowRange; Object.assign(this.sun.shadow.camera, { left: -R, right: R, top: R, bottom: -R, near: 10, far: 700 });
       this.sun.shadow.bias = -0.0005; this.sun.shadow.normalBias = 0.06; this.shadowRange = R;
-      this.sun.shadow.radius = 2.2; // mép bóng mềm: nắng qua lớp mù không sắc cạnh
+      this.sun.shadow.radius = 1.5; // mép bóng mềm hơn một chút: nắng qua lớp mù không sắc cạnh (lớn hơn nữa thì lộ vân bậc thang)
     }
     this.hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 1);
     scene.add(this.sun, this.sun.target, this.hemi);
