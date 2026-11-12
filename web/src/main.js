@@ -12,7 +12,7 @@ import { Nav } from './world/nav.js';
 import { buildMaterials } from './world/materials.js';
 import { Chunks, LightPools } from './world/chunks.js';
 import { buildLandmarks } from './world/landmarks/index.js';
-import { siteDecks, freeSpot } from './world/landmarks/sites.js';
+import { siteDecks, freeSpot, openWays } from './world/landmarks/sites.js';
 import { signAtlas } from './world/atlas.js';
 import { streetMaterial } from './world/streetatlas.js';
 import { Player } from './actors/player.js';
@@ -129,11 +129,15 @@ async function boot() {
     // tham số at/street/site (đường dẫn chụp ảnh, người chơi dán lại cũng dùng được) cũng có thể rơi xuống hồ hay vào lòng nhà: dò từng vòng
     // quanh điểm đó lấy chỗ trống gần nhất có đường đi tới (không lấy gò đảo giữa hồ); với `site` thì ưu tiên chỗ còn nhìn thấy công trình
     // và quay mặt về phía nó
-    else if (!resumed && (params.get('at') || params.get('street') || params.get('site')) && (wet(sx, sz) || nav.inSolid(sx, sz))) {
-      const tg = params.get('site') ? site(params.get('site')) : null, to = freeSpot(nav, sx, sz, tg);
-      if (to) { [sx, sz] = to; if (tg && !yawSet) syaw = Math.atan2(tg.x - sx, tg.z - sz); }
-    }
+    // (chỗ bị vây kín, đi ra không được theo 3 trong 8 hướng, cũng phải dời). Không có chỗ nào trong 120 m (giữa mặt nước rộng) thì
+    // lấy điểm gần nhất trên một con đường.
+    const linked = !resumed && (params.get('at') || params.get('street') || params.get('site'));
+    const tg = params.get('site') ? site(params.get('site')) : null, inside = (x, z) => nav.inSolid(x, z) || !nav.clearAt(x, z, 0.45);
+    const relocate = (x, z) => { const to = freeSpot(nav, x, z, tg) || nav.nearestFree(x, z, inside, 600); if (tg && !yawSet) syaw = Math.atan2(tg.x - to[0], tg.z - to[1]); return to; };
+    if (linked && (wet(sx, sz) || nav.inSolid(sx, sz) || openWays(nav, sx, sz) < 3)) [sx, sz] = relocate(sx, sz);
     const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z;
+    // bước đẩy khỏi tường ở trên có thể đẩy một chỗ sát bờ xuống mặt nước hay vào khe tường: soát lại lần cuối
+    if ((linked || resumed) && (wet(sx, sz) || nav.inSolid(sx, sz))) [sx, sz] = linked ? relocate(sx, sz) : nav.nearestFree(sx, sz, inside);
   }
   player.teleport(sx, sz, syaw);
   // trạng thái phố đi bộ phải có trước khi lên xe theo ?bike: vào game giữa phố đang đóng thì không ngồi sẵn trên xe

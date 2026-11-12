@@ -83,9 +83,11 @@ export function siteCollision(s, pos) {
 // lòng khối đặc, đủ rộng cho một người và có đường, lối đi trong vòng 45 m (để không rơi lên gò đảo giữa hồ). tg: công trình cần nhìn
 // {x, z} (tham số site): trong 40 m kể từ chỗ trống đầu tiên, ưu tiên chỗ còn nhìn thông tới công trình. nav: world/nav.js, các ô quanh
 // điểm đặt đã nạp va chạm. Trả về [x, z], hoặc null nếu trong 120 m không có chỗ nào.
+// Số hướng (trong 8 hướng) đi được 3 m từ (x, z) mà không vướng tường hay xuống nước: dưới 3 là chỗ bị vây kín (sân trong, góc rào).
+export function openWays(nav, x, z) { let n = 0; for (let k = 0; k < 8; k++) { const a = (k * Math.PI) / 4; if (nav.freeStep(x, z, x + Math.sin(a) * 3, z + Math.cos(a) * 3, 0.3)) n++; } return n; }
 export function freeSpot(nav, x0, z0, tg = null) {
   const b = nav.b, m = 10, onDeck = (x, z) => nav.decks.length > 0 && !!nav.deckAt(x, z, 0.3);
-  const free = (x, z) => x > b.x0 + m && x < b.x1 - m && z > b.z0 + m && z < b.z1 - m && (!nav.isWater(x, z) || onDeck(x, z)) && nav.clearAt(x, z, 0.6) && !!nav.nearestRoad(x, z, 45, (r) => !r.bridge) && !nav.inSolid(x, z);
+  const free = (x, z) => x > b.x0 + m && x < b.x1 - m && z > b.z0 + m && z < b.z1 - m && (!nav.isWater(x, z) || onDeck(x, z)) && nav.clearAt(x, z, 0.6) && !!nav.nearestRoad(x, z, 45, (r) => !r.bridge) && !nav.inSolid(x, z) && openWays(nav, x, z) >= 3;
   // nhìn thông: tia từ chỗ đứng, và hai tia lệch ngang 4 m xuất phát từ chỗ camera (sau lưng 4 m), để khung hình không bị một góc nhà
   // ngay cạnh che mất nửa công trình
   const sees = (x, z) => {
