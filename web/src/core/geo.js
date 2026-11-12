@@ -45,7 +45,7 @@ export class G {
     const m = this.m;
     this.pos.push(m[0] * x + m[3] * y + m[6] * z + m[9], m[1] * x + m[4] * y + m[7] * z + m[10], m[2] * x + m[5] * y + m[8] * z + m[11]);
     let ax = m[0] * nx + m[3] * ny + m[6] * nz, ay = m[1] * nx + m[4] * ny + m[7] * nz, az = m[2] * nx + m[5] * ny + m[8] * nz;
-    const l = Math.hypot(ax, ay, az) || 1; this.nrm.push(ax / l, ay / l, az / l);
+    const l = Math.sqrt(ax * ax + ay * ay + az * az) || 1; this.nrm.push(ax / l, ay / l, az / l);
     this.col.push(this.c[0], this.c[1], this.c[2], this.c[3]);
     this.uv.push(u === undefined ? this.u0 : u, w === undefined ? this.v0 : w);
     this.fx.push(this.f[0], this.f[1], this.f[2], this.f[3]);
@@ -55,7 +55,7 @@ export class G {
   // Tứ giác phẳng qua 4 điểm [x,y,z] theo chiều ngược kim đồng hồ khi nhìn từ phía mặt trước.
   quad(p0, p1, p2, p3, uv) {
     const ux = p1[0] - p0[0], uy = p1[1] - p0[1], uz = p1[2] - p0[2], vx = p3[0] - p0[0], vy = p3[1] - p0[1], vz = p3[2] - p0[2];
-    let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx; const l = Math.hypot(nx, ny, nz) || 1; nx /= l; ny /= l; nz /= l;
+    let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx; const l = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1; nx /= l; ny /= l; nz /= l;
     const a = this.v(p0[0], p0[1], p0[2], nx, ny, nz, uv && uv[0], uv && uv[1]), b = this.v(p1[0], p1[1], p1[2], nx, ny, nz, uv && uv[2], uv && uv[1]);
     const c = this.v(p2[0], p2[1], p2[2], nx, ny, nz, uv && uv[2], uv && uv[3]), d = this.v(p3[0], p3[1], p3[2], nx, ny, nz, uv && uv[0], uv && uv[3]);
     this.idx.push(a, b, c, a, c, d);
@@ -63,7 +63,7 @@ export class G {
   }
   tri3(p0, p1, p2) {
     const ux = p1[0] - p0[0], uy = p1[1] - p0[1], uz = p1[2] - p0[2], vx = p2[0] - p0[0], vy = p2[1] - p0[1], vz = p2[2] - p0[2];
-    let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx; const l = Math.hypot(nx, ny, nz) || 1; nx /= l; ny /= l; nz /= l;
+    let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx; const l = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1; nx /= l; ny /= l; nz /= l;
     this.idx.push(this.v(p0[0], p0[1], p0[2], nx, ny, nz), this.v(p1[0], p1[1], p1[2], nx, ny, nz), this.v(p2[0], p2[1], p2[2], nx, ny, nz));
     return this;
   }
@@ -101,9 +101,9 @@ export class G {
   }
   // Trụ nằm dọc theo đoạn a→b (ống, tay vịn, dây).
   tube(a, b, r, seg = 6, r1 = r) {
-    const dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2], L = Math.hypot(dx, dy, dz); if (L < 1e-6) return this;
+    const dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2], L = Math.sqrt(dx * dx + dy * dy + dz * dz); if (L < 1e-6) return this;
     const ux = dx / L, uy = dy / L, uz = dz / L;
-    let px = -uz, py = 0, pz = ux; let pl = Math.hypot(px, pz);
+    let px = -uz, py = 0, pz = ux; let pl = Math.sqrt(px * px + pz * pz);
     if (pl < 1e-4) { px = 1; py = 0; pz = 0; pl = 1; } px /= pl; pz /= pl;
     const qx = uy * pz - uz * py, qy = uz * px - ux * pz, qz = ux * py - uy * px;
     const base = this.count;
@@ -121,7 +121,7 @@ export class G {
       const a = a0 + ((a1 - a0) * i) / seg, c = Math.cos(a), s = Math.sin(a);
       for (let j = 0; j < n; j++) {
         const p = profile[j], q = profile[Math.min(n - 1, j + 1)], o = profile[Math.max(0, j - 1)];
-        let dr = q[0] - o[0], dy = q[1] - o[1]; const l = Math.hypot(dr, dy) || 1; dr /= l; dy /= l;
+        let dr = q[0] - o[0], dy = q[1] - o[1]; const l = Math.sqrt(dr * dr + dy * dy) || 1; dr /= l; dy /= l;
         this.v(x + c * p[0], y + p[1], z + s * p[0], c * dy, -dr, s * dy);
       }
     }
@@ -170,7 +170,7 @@ export class G {
       const i0 = Math.max(0, i - 1), i1 = Math.min(n - 1, i + 1);
       const tx = a[i1][0] - a[i0][0], ty = a[i1][1] - a[i0][1], tz = a[i1][2] - a[i0][2];
       const sx = b[i][0] - a[i][0], sy = b[i][1] - a[i][1], sz = b[i][2] - a[i][2];
-      let nx = sy * tz - sz * ty, ny = sz * tx - sx * tz, nz = sx * ty - sy * tx; const l = Math.hypot(nx, ny, nz) || 1; nx /= l; ny /= l; nz /= l;
+      let nx = sy * tz - sz * ty, ny = sz * tx - sx * tz, nz = sx * ty - sy * tx; const l = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1; nx /= l; ny /= l; nz /= l;
       if (flip) { nx = -nx; ny = -ny; nz = -nz; }
       this.v(a[i][0], a[i][1], a[i][2], nx, ny, nz); this.v(b[i][0], b[i][1], b[i][2], nx, ny, nz);
     }
@@ -185,7 +185,7 @@ export class G {
       const x = o.pos[i * 3], y = o.pos[i * 3 + 1], z = o.pos[i * 3 + 2];
       this.pos.push(m[0] * x + m[3] * y + m[6] * z + m[9], m[1] * x + m[4] * y + m[7] * z + m[10], m[2] * x + m[5] * y + m[8] * z + m[11]);
       const nx = o.nrm[i * 3], ny = o.nrm[i * 3 + 1], nz = o.nrm[i * 3 + 2];
-      const ax = m[0] * nx + m[3] * ny + m[6] * nz, ay = m[1] * nx + m[4] * ny + m[7] * nz, az = m[2] * nx + m[5] * ny + m[8] * nz, l = Math.hypot(ax, ay, az) || 1;
+      const ax = m[0] * nx + m[3] * ny + m[6] * nz, ay = m[1] * nx + m[4] * ny + m[7] * nz, az = m[2] * nx + m[5] * ny + m[8] * nz, l = Math.sqrt(ax * ax + ay * ay + az * az) || 1;
       this.nrm.push(ax / l, ay / l, az / l);
       const k = tint ? o.col[i * 4 + 3] : 0;
       if (k > 0) this.col.push(o.col[i * 4] * (1 - k) + o.col[i * 4] * tint[0] * k, o.col[i * 4 + 1] * (1 - k) + o.col[i * 4 + 1] * tint[1] * k, o.col[i * 4 + 2] * (1 - k) + o.col[i * 4 + 2] * tint[2] * k, 0);
@@ -201,8 +201,12 @@ export class G {
   pack() {
     const n = this.count;
     const pos = new Float32Array(this.pos), nrm = new Int8Array(n * 3), col = new Uint8Array(n * 4), fx = new Uint8Array(n * 4), uv = new Float32Array(this.uv);
-    for (let i = 0; i < n * 3; i++) nrm[i] = Math.round(this.nrm[i] * 127);
-    for (let i = 0; i < n * 4; i++) { const k = i & 3; col[i] = Math.round(Math.min(1, Math.max(0, k === 3 ? this.col[i] : Math.sqrt(this.col[i]))) * 255); fx[i] = Math.round(Math.min(1, Math.max(0, this.fx[i])) * 255); }
+    const N = this.nrm, C = this.col, F = this.fx;
+    for (let i = 0; i < n * 3; i++) nrm[i] = Math.round(N[i] * 127);
+    // màu: căn bậc hai (nén gần sRGB) cho ba kênh đầu, kênh 4 (mặt nạ) giữ nguyên; kẹp về [0, 1] (NaN thành 0)
+    for (let i = 0; i < n * 4; i += 4) {
+      for (let k = 0; k < 4; k++) { let c = C[i + k]; c = c > 0 ? (c < 1 ? c : 1) : 0; col[i + k] = Math.round((k === 3 ? c : Math.sqrt(c)) * 255); let f = F[i + k]; f = f > 0 ? (f < 1 ? f : 1) : 0; fx[i + k] = Math.round(f * 255); }
+    }
     const idx = n > 65535 ? new Uint32Array(this.idx) : new Uint16Array(this.idx);
     let x0 = 1e9, y0 = 1e9, z0 = 1e9, x1 = -1e9, y1 = -1e9, z1 = -1e9;
     for (let i = 0; i < n * 3; i += 3) { const x = pos[i], y = pos[i + 1], z = pos[i + 2]; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; if (z < z0) z0 = z; if (z > z1) z1 = z; }
