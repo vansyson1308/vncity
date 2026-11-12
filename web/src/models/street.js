@@ -9,31 +9,74 @@ export function shadeByNormal(g, from, lo = 0.55, hi = 1.05) {
 }
 
 // Loài cây phố Hà Nội. Màu tuyến tính [r,g,b].
+// Dáng tán (để hai loài đứng cạnh nhau không lẫn vào nhau): blobs = số khối tán; squash = độ dẹt (<1) hay thuôn cao (>1) của mỗi
+// khối; spread = các khối quanh xoè xa tâm bao nhiêu (× bán kính tán R); top = khối giữa nhô cao bao nhiêu (× R); vert = các khối
+// quanh rải theo chiều đứng bao nhiêu (× R); crown = tán bắt đầu ở mấy phần chiều cao cây; clear = độ cao thông thoáng dưới tán
+// (mét: cây phố được cắt tỉa cho người và xe đi dưới, lá không bao giờ sà xuống ngang mặt người); cell = ô lá trong texture (0 lá to,
+// 1 lá nhỏ); limb = cành cái to bằng mấy phần thân; cards = số thẻ lá mỗi khối.
 export const TREES = {
-  xacu: { h: [7.5, 10.5], r: [3.6, 5.0], trunk: 0.34, col: [0.145, 0.323, 0.093], blobs: 6, squash: 0.72, bark: [0.17, 0.135, 0.1] },   // xà cừ: cao, tán rộng
-  sau: { h: [6, 8.5], r: [2.8, 3.8], trunk: 0.26, col: [0.085, 0.264, 0.068], blobs: 5, squash: 0.85, bark: [0.14, 0.11, 0.08] },         // sấu: tán dày, xanh thẫm
-  bang: { h: [4.5, 6.5], r: [2.6, 3.4], trunk: 0.2, col: [0.187, 0.408, 0.085], blobs: 4, squash: 0.45, bark: [0.18, 0.155, 0.125] },        // bàng: tán xoè tầng
-  banglang: { h: [4.5, 6], r: [2.0, 2.8], trunk: 0.17, col: [0.204, 0.425, 0.119], blobs: 4, squash: 0.8, flower: [0.42, 0.2, 0.5], bark: [0.25, 0.2, 0.15] }, // bằng lăng tím
-  phuong: { h: [6, 8], r: [3.2, 4.4], trunk: 0.26, col: [0.221, 0.459, 0.102], blobs: 5, squash: 0.5, flower: [0.72, 0.1, 0.04], bark: [0.2, 0.17, 0.135] },    // phượng đỏ
-  lieu: { h: [4.5, 6], r: [2.2, 2.8], trunk: 0.18, col: [0.340, 0.561, 0.153], blobs: 5, squash: 1.5, droop: true, bark: [0.11, 0.085, 0.06] }, // liễu rủ ven hồ
-  hoasua: { h: [6.5, 9], r: [2.4, 3.2], trunk: 0.22, col: [0.153, 0.340, 0.119], blobs: 5, squash: 1.0, flower: [0.4, 0.47, 0.3], bark: [0.19, 0.17, 0.145] }, // hoa sữa: tán cao thành tầng, cuối thu nở chùm hoa trắng xanh
+  // xà cừ: rất cao, thân to vỏ bong từng mảng sáng màu, cành cái lớn vươn ngang, tán XOÈ RỘNG như cái ô và thưa, lá to xanh ô liu
+  xacu: { h: [9.5, 12.5], r: [4.4, 5.6], trunk: 0.4, col: [0.165, 0.31, 0.075], blobs: 6, squash: 0.58, spread: 0.66, top: 0.3, vert: 0.3, crown: 0.74, clear: 4.2, limb: 0.6, cell: 0, cards: 11, bark: [0.3, 0.265, 0.21] },
+  // sấu: thân thẳng có bạnh gốc, vỏ nâu xám sẫm, tán DÀY hình trứng thuôn cao, lá kép nhỏ xanh thẫm ngả lam
+  sau: { h: [8, 10.5], r: [2.5, 3.2], trunk: 0.27, col: [0.05, 0.185, 0.075], blobs: 6, squash: 1.12, spread: 0.24, top: 1.0, vert: 0.95, crown: 0.6, clear: 3.2, limb: 0.34, cell: 1, cards: 12, bark: [0.125, 0.1, 0.08], buttress: true },
+  bang: { h: [4.5, 6.5], r: [2.6, 3.4], trunk: 0.2, col: [0.187, 0.408, 0.085], blobs: 4, squash: 0.45, clear: 2.5, bark: [0.18, 0.155, 0.125] },        // bàng: tán xoè tầng
+  banglang: { h: [4.8, 6.2], r: [2.0, 2.8], trunk: 0.17, col: [0.204, 0.425, 0.119], blobs: 4, squash: 0.8, clear: 2.5, cell: 1, flower: [0.42, 0.2, 0.5], bark: [0.25, 0.2, 0.15] }, // bằng lăng tím
+  phuong: { h: [6, 8], r: [3.2, 4.4], trunk: 0.26, col: [0.221, 0.459, 0.102], blobs: 5, squash: 0.5, clear: 2.9, cell: 1, flower: [0.72, 0.1, 0.04], bark: [0.2, 0.17, 0.135] },    // phượng đỏ
+  lieu: { h: [4.8, 6.2], r: [2.2, 2.8], trunk: 0.18, col: [0.340, 0.561, 0.153], blobs: 5, squash: 1.5, clear: 1.9, droop: true, bark: [0.11, 0.085, 0.06] }, // liễu rủ ven hồ
+  hoasua: { h: [6.5, 9], r: [2.4, 3.2], trunk: 0.22, col: [0.153, 0.340, 0.119], blobs: 5, squash: 1.0, clear: 3.0, cell: 1, flower: [0.4, 0.47, 0.3], bark: [0.19, 0.17, 0.145] }, // hoa sữa: tán cao thành tầng, cuối thu nở chùm hoa trắng xanh
   // --- theo từng phố (docs/18, mục 6) ---
-  nhoi: { h: [8, 11], r: [3.4, 4.6], trunk: 0.3, col: [0.11, 0.3, 0.075], blobs: 6, squash: 0.8, bark: [0.2, 0.15, 0.11] },               // nhội (Phan Đình Phùng đoạn đông, Trần Hưng Đạo): cao, tán tròn dày
-  xacuco: { h: [13, 17], r: [5.6, 7.2], trunk: 0.52, col: [0.13, 0.3, 0.085], blobs: 7, squash: 0.7, bark: [0.17, 0.135, 0.1] },          // xà cừ cổ thụ phố Hoàng Diệu: thân Ø hơn 1 m, tán trùm cả lòng đường
-  comnguoi: { h: [6, 8], r: [2.6, 3.4], trunk: 0.2, col: [0.4, 0.4, 0.085], blobs: 5, squash: 0.85, bark: [0.3, 0.28, 0.24] },           // cơm nguội vàng (Lý Thường Kiệt): cuối năm lá ngả vàng
-  da: { h: [7, 9.5], r: [4.2, 5.6], trunk: 0.5, col: [0.09, 0.25, 0.07], blobs: 6, squash: 0.55, bark: [0.22, 0.2, 0.17], roots: true },   // đa, si: gốc to nhiều rễ phụ buông, tán thấp xoè rộng
-  locvung: { h: [4.5, 6], r: [3, 4], trunk: 0.24, col: [0.16, 0.36, 0.08], blobs: 5, squash: 0.6, flower: [0.6, 0.06, 0.08], bark: [0.16, 0.13, 0.1] }, // lộc vừng ven Hồ Gươm: tháng 10-11 buông hoa đỏ
-  non: { h: [3.6, 4.6], r: [0.9, 1.3], trunk: 0.055, col: [0.2, 0.45, 0.1], blobs: 3, squash: 1.1, bark: [0.25, 0.2, 0.14], stakes: true }, // cây non trồng dặm sau bão Yagi, có ba cọc chống
+  nhoi: { h: [8, 11], r: [3.4, 4.6], trunk: 0.3, col: [0.11, 0.3, 0.075], blobs: 6, squash: 0.8, clear: 3.4, bark: [0.2, 0.15, 0.11] },               // nhội (Phan Đình Phùng đoạn đông, Trần Hưng Đạo): cao, tán tròn dày
+  xacuco: { h: [13, 17], r: [5.6, 7.2], trunk: 0.52, col: [0.155, 0.295, 0.07], blobs: 7, squash: 0.62, spread: 0.66, top: 0.3, vert: 0.3, crown: 0.74, clear: 5.5, limb: 0.6, cell: 0, cards: 11, bark: [0.3, 0.265, 0.21] }, // xà cừ cổ thụ phố Hoàng Diệu: thân Ø hơn 1 m, tán trùm cả lòng đường
+  comnguoi: { h: [6, 8], r: [2.6, 3.4], trunk: 0.2, col: [0.2, 0.39, 0.09], blobs: 5, squash: 0.85, clear: 2.9, cell: 1, bark: [0.3, 0.28, 0.24] },   // cơm nguội vàng (Lý Thường Kiệt): cuối năm lá ngả vàng (xem SEASON)
+  da: { h: [7, 9.5], r: [4.2, 5.6], trunk: 0.5, col: [0.09, 0.25, 0.07], blobs: 6, squash: 0.55, clear: 2.7, bark: [0.22, 0.2, 0.17], roots: true },   // đa, si: gốc to nhiều rễ phụ buông, tán thấp xoè rộng
+  locvung: { h: [4.5, 6], r: [3, 4], trunk: 0.24, col: [0.16, 0.36, 0.08], blobs: 5, squash: 0.6, clear: 2.3, flower: [0.6, 0.06, 0.08], strings: true, bark: [0.16, 0.13, 0.1] }, // lộc vừng ven Hồ Gươm: thân nghiêng ra mặt nước, tháng 10-11 buông hoa đỏ
+  non: { h: [3.6, 4.6], r: [0.9, 1.3], trunk: 0.055, col: [0.2, 0.45, 0.1], blobs: 3, squash: 1.1, clear: 1.9, bark: [0.25, 0.2, 0.14], stakes: true }, // cây non trồng dặm sau bão Yagi, có ba cọc chống
 };
 const KINDS = Object.keys(TREES);
 export const treeKind = (i) => KINDS[i % KINDS.length];
+
+// Lá và hoa theo MÙA (art bible mục 6, bảng "Lịch hoa và lá"). Mùa đi theo thời tiết của game (engine/sky.js WEATHER):
+//   mu = đông (tháng 11 đến tháng 1, mặc định của game), nom = xuân nồm ẩm (2 đến 4), he = hè (5 đến 8), thu = thu (9 đến 10).
+// Mỗi dòng: alt = màu lá đổi mùa, mix = bao nhiêu phần tán mang màu đó, thin = tán còn bao nhiêu phần lá (cây đang rụng lá),
+// flower = bao nhiêu phần khối tán có chùm hoa. Không ghi gì = lá xanh quanh năm, KHÔNG có hoa.
+// Hoa chỉ nở đúng mùa: phượng và bằng lăng tháng 5-6 (hè); hoa sữa tháng 10-11; lộc vừng buông hoa đỏ tháng 10-11.
+const YELLOW = [0.55, 0.43, 0.07], RUSSET = [0.5, 0.17, 0.05], REDLEAF = [0.52, 0.085, 0.04], FRESH = [0.32, 0.55, 0.1];
+export const SEASON = {
+  mu: {
+    banglang: { alt: RUSSET, mix: 0.6, thin: 0.85 },   // bằng lăng: lá ngả đỏ vàng trước khi rụng, không hoa
+    phuong: { alt: YELLOW, mix: 0.3, thin: 0.7 },       // phượng: chỉ còn lá, tán thưa, điểm lá vàng
+    bang: { alt: REDLEAF, mix: 0.75 },                  // bàng lá đỏ
+    comnguoi: { alt: YELLOW, mix: 0.85 },               // cơm nguội vàng lá
+    hoasua: { flower: 0.22 },                           // hoa sữa cuối mùa: còn lác đác vài chùm
+    locvung: { flower: 0.4 },                           // lộc vừng còn buông dây hoa đỏ (tháng 10-11)
+    lieu: { alt: [0.42, 0.5, 0.12], mix: 0.35 },        // liễu cuối năm ngả vàng nhẹ
+    non: { alt: YELLOW, mix: 0.2 },
+  },
+  thu: {
+    hoasua: { flower: 0.75 }, locvung: { flower: 0.6 },
+    comnguoi: { alt: YELLOW, mix: 0.3 }, bang: { alt: REDLEAF, mix: 0.15 }, banglang: { alt: RUSSET, mix: 0.12 },
+  },
+  he: { phuong: { flower: 0.65 }, banglang: { flower: 0.65 } },
+  nom: {
+    sau: { alt: YELLOW, mix: 0.3, alt2: FRESH },              // sấu trút lá vàng và ra lộc xanh non cùng lúc
+    xacu: { alt: YELLOW, mix: 0.25, thin: 0.75 }, xacuco: { alt: YELLOW, mix: 0.25, thin: 0.75 }, // xà cừ rụng lá
+    locvung: { alt: RUSSET, mix: 0.6 },                       // lộc vừng thay lá vàng đỏ
+    bang: { alt: FRESH, mix: 0.9, thin: 0.6 },                // bàng vừa trụi lá, đang nhú lộc non
+    banglang: { alt: FRESH, mix: 0.6, thin: 0.8 }, phuong: { alt: FRESH, mix: 0.5, thin: 0.6 }, comnguoi: { alt: FRESH, mix: 0.5 },
+    nhoi: { alt: FRESH, mix: 0.3 }, lieu: { alt: FRESH, mix: 0.4 }, non: { alt: FRESH, mix: 0.5 },
+  },
+};
+const EVERGREEN = {};
+export const seasonOf = (kind, season) => (SEASON[season] || SEASON.mu)[kind] || EVERGREEN;
 
 // Thẻ lá quanh một khối tán tâm (cx,cy,cz), bán kính r. cell: ô trong texture lá (0 lá to, 1 lá nhỏ, 2 liễu, 3 hoa).
 // Mỗi thẻ quay một hướng riêng (pháp tuyến = hướng ra ngoài tán trộn với một hướng ngẫu nhiên) nên không có hai thẻ song song,
 // và được GẬP theo đường chéo thành hình mái (hai tam giác lệch nhau 40-60 độ): nhìn từ hướng nào cũng còn ít nhất nửa thẻ
 // quay mặt về mắt, hết cảnh cả thẻ nằm nghiêng thành vệt sọc. Pháp tuyến chiếu sáng vẫn hướng ra ngoài tán cho bóng đổ mềm.
 // hang: thẻ treo đứng (sợi liễu rủ), mép trên của ô texture luôn ở trên.
-function leafCards(lf, cx, cy, cz, r, squash, n, seed, cell, col, swayBase, hang = false) {
+// col2, p2: một phần thẻ (tỉ lệ p2) mang màu thứ hai (lá đổi mùa lốm đốm trong tán). minY: không đỉnh nào thấp hơn độ cao này
+// (toạ độ của cây; tán được "cắt tỉa" phẳng ở độ cao thông thoáng thay vì sà xuống mặt người đi đường).
+function leafCards(lf, cx, cy, cz, r, squash, n, seed, cell, col, swayBase, hang = false, col2 = null, p2 = 0, minY = -1e9) {
   const u0 = (cell % 2) * 0.5, v0 = cell < 2 ? 0.5 : 0, sy = hang ? Math.min(1.5, squash) : 1;
   for (let i = 0; i < n; i++) {
     const t = (i + 0.5) / n, ph = Math.acos(1 - 1.7 * t), th = i * 2.39996 + hash(seed, i) * 0.8;
@@ -56,50 +99,99 @@ function leafCards(lf, cx, cy, cz, r, squash, n, seed, cell, col, swayBase, hang
     }
     const ul = Math.hypot(ux, uy, uz) || 1; ux /= ul; uy /= ul; uz /= ul;
     const vx = my * uz - mz * uy, vy = mz * ux - mx * uz, vz = mx * uy - my * ux;
-    const sh = 0.72 + 0.42 * (dy * 0.5 + 0.5) + (hash(seed, 100 + i) - 0.5) * 0.2;
-    lf.rgb(col[0] * sh, col[1] * sh, col[2] * sh).sway(swayBase);
+    const sh = 0.72 + 0.42 * (dy * 0.5 + 0.5) + (hash(seed, 100 + i) - 0.5) * 0.2, cc = col2 && hash(seed, 200 + i) < p2 ? col2 : col;
+    lf.rgb(cc[0] * sh, cc[1] * sh, cc[2] * sh).sway(swayBase);
     let nx = dx, ny = dy * 0.6 + 0.4, nz = dz; const nl = Math.hypot(nx, ny, nz); nx /= nl; ny /= nl; nz /= nl;
     const fu = hash(seed, 120 + i) < 0.5, ua = fu ? u0 + 0.5 : u0, ub = fu ? u0 : u0 + 0.5;
     // gập: hai góc B, D lùi vào trong theo −m; sống mái là đường chéo A–C
     const f = s * (hang ? 0.35 : 0.75 + hash(seed, 180 + i) * 0.3), fx = -mx * f, fy = -my * f * sy, fz = -mz * f;
-    const A = lf.v(px - ux * s - vx * s, py + (-uy - vy) * s * sy, pz - uz * s - vz * s, nx, ny, nz, ua, v0);
-    const B = lf.v(px + ux * s - vx * s + fx, py + (uy - vy) * s * sy + fy, pz + uz * s - vz * s + fz, nx, ny, nz, ub, v0);
-    const C = lf.v(px + ux * s + vx * s, py + (uy + vy) * s * sy, pz + uz * s + vz * s, nx, ny, nz, ub, v0 + 0.5);
-    const D = lf.v(px - ux * s + vx * s + fx, py + (-uy + vy) * s * sy + fy, pz - uz * s + vz * s + fz, nx, ny, nz, ua, v0 + 0.5);
+    const yA = py + (-uy - vy) * s * sy, yB = py + (uy - vy) * s * sy + fy, yC = py + (uy + vy) * s * sy, yD = py + (-uy + vy) * s * sy + fy;
+    const lo = hang ? minY + hash(seed, 220 + i) * 0.9 : minY; // sợi liễu: mỗi sợi dài ngắn một khác, không cắt bằng một đường
+    if (Math.max(yA, yB, yC, yD) < lo + 0.25) continue; // cả thẻ nằm dưới độ cao thông thoáng: bỏ
+    const A = lf.v(px - ux * s - vx * s, Math.max(yA, lo), pz - uz * s - vz * s, nx, ny, nz, ua, v0);
+    const B = lf.v(px + ux * s - vx * s + fx, Math.max(yB, lo), pz + uz * s - vz * s + fz, nx, ny, nz, ub, v0);
+    const C = lf.v(px + ux * s + vx * s, Math.max(yC, lo), pz + uz * s + vz * s, nx, ny, nz, ub, v0 + 0.5);
+    const D = lf.v(px - ux * s + vx * s + fx, Math.max(yD, lo), pz - uz * s + vz * s + fz, nx, ny, nz, ua, v0 + 0.5);
     lf.tri(A, B, C); lf.tri(A, C, D);
   }
   lf.sway(0);
 }
 
+// Ống uốn cong liền mạch qua các điểm pts (bán kính rad[i] tại từng điểm): các vòng đỉnh dùng chung giữa hai đoạn nên chỗ thân
+// cây đổi hướng không hở khe như khi nối nhiều ống thẳng. Không nắp hai đầu (gốc cắm xuống đất, ngọn chìm trong tán).
+function pipe(g, pts, rad, seg = 6) {
+  const base = g.count, n = pts.length;
+  let px = 1, py = 0, pz = 0; // trục ngang của vòng trước: giữ cho các vòng không xoắn
+  for (let i = 0; i < n; i++) {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
+    let tx = b[0] - a[0], ty = b[1] - a[1], tz = b[2] - a[2]; const tl = Math.hypot(tx, ty, tz) || 1; tx /= tl; ty /= tl; tz /= tl;
+    const d = px * tx + py * ty + pz * tz; px -= tx * d; py -= ty * d; pz -= tz * d;
+    let pl = Math.hypot(px, py, pz); if (pl < 1e-4) { px = -tz; py = 0; pz = tx; pl = Math.hypot(px, pz) || 1; } px /= pl; py /= pl; pz /= pl;
+    const qx = ty * pz - tz * py, qy = tz * px - tx * pz, qz = tx * py - ty * px;
+    for (let k = 0; k <= seg; k++) { const t = (k / seg) * 6.283185, c = Math.cos(t), s = Math.sin(t), nx = px * c + qx * s, ny = py * c + qy * s, nz = pz * c + qz * s; g.v(pts[i][0] + nx * rad[i], pts[i][1] + ny * rad[i], pts[i][2] + nz * rad[i], nx, ny, nz); }
+  }
+  for (let i = 0; i < n - 1; i++) for (let k = 0; k < seg; k++) { const a = base + i * (seg + 1) + k, b = a + seg + 1; g.idx.push(a, b + 1, b, a, a + 1, b + 1); }
+  return g;
+}
+
 // Cây ở (x,z). lod 0: thân, cành, lõi tán tối và các thẻ lá (ghi vào lf); lod 1: một khối tán, thân bốn cạnh.
 // lime: gốc quét vôi trắng (1 có, 0 không, -1 tuỳ hạt giống). Dải vôi cao 1,2 m, có cả ở bản xa để nhìn từ xa vẫn ra hàng cây Hà Nội.
+// season: 'mu' | 'thu' | 'he' | 'nom' (xem SEASON). tilt: [dx, dz] (mét, toạ độ thế giới) = tán lệch khỏi gốc bao nhiêu về phía
+// nào: cây ven hồ nghiêng thân ra mặt nước (lộc vừng gần như nằm ngang trên mặt hồ). Gốc cây luôn ở đúng (x, z) trên bờ.
 const LIME_H = 1.2;
-export function tree(g, x, z, seed, kind = 'sau', lod = 0, y = 0, lf = null, lime = -1) {
-  const T = TREES[kind] || TREES.sau, r1 = hash(seed, 1), r2 = hash(seed, 2), r3 = hash(seed, 3);
+export function tree(g, x, z, seed, kind = 'sau', lod = 0, y = 0, lf = null, lime = -1, season = 'mu', tilt = null) {
+  const T = TREES[kind] || TREES.sau, S = seasonOf(TREES[kind] ? kind : 'sau', season), r1 = hash(seed, 1), r2 = hash(seed, 2), r3 = hash(seed, 3);
   const H = T.h[0] + (T.h[1] - T.h[0]) * r1, R = T.r[0] + (T.r[1] - T.r[0]) * r2, tr = T.trunk * (0.8 + r3 * 0.5);
-  const crownY = H * (T.droop ? 0.72 : 0.68), lean = (r3 - 0.5) * 0.5, lz = (r1 - 0.5) * 0.4;
-  g.push().move(x, y, z).rotY(r2 * 6.283);
+  const yaw = r2 * 6.283, tl = tilt ? Math.hypot(tilt[0], tilt[1]) : 0, leaning = tl > 0.6;
+  let crownY = H * (T.crown || (T.droop ? 0.72 : 0.68)), lean = (r3 - 0.5) * 0.5, lz = (r1 - 0.5) * 0.4;
+  if (tl > 0) { // đưa hướng nghiêng (thế giới) về hệ toạ độ đã xoay của cây; thân càng ngả thì tán càng thấp
+    const c = Math.cos(yaw), s = Math.sin(yaw); lean += tilt[0] * c - tilt[1] * s; lz += tilt[0] * s + tilt[1] * c;
+    crownY = Math.max(crownY - tl * 0.42, Math.min(crownY, 2.7));
+  }
+  const clear = leaning ? Math.max(1.9, (T.clear || 2.5) - tl * 0.2) : T.clear || 2.5;
+  g.push().move(x, y, z).rotY(yaw);
   if (lf) { lf.push(); lf.m = g.m.slice(); }
   const bk = T.bark || [0.11, 0.085, 0.06], bark = () => g.rgb(bk[0], bk[1], bk[2]).mat(MAT.wood); // vỏ cây: thớ dọc, khe nứt
   bark().sway(0).gloss(0).glow(0);
-  const tint = 0.82 + hash(seed, 9) * 0.36, c = T.col;
+  const tint = 0.82 + hash(seed, 9) * 0.36, c = T.col, alt = S.alt || null, mixP = alt ? S.mix : 0, thin = S.thin || 1, flowerP = T.flower ? S.flower || 0 : 0;
   const limed = !T.stakes && !T.roots && (lime < 0 ? hash(seed, 12) < 0.45 : lime > 0);
+  // thân nghiêng: uốn cong dần từ gốc (gốc gần như thẳng đứng, càng lên càng ngả ra), điểm trên đường cong ở độ cao h
+  const bend = (h) => { const t = Math.min(1, h / crownY), k = leaning ? t * t * (0.55 + 0.45 * t) : t; return [lean * k, h, lz * k]; };
   if (lod > 0) {
-    if (limed) { const k = LIME_H / crownY; g.mat().rgb(0.66, 0.66, 0.62).tube([0, 0, 0], [lean * k, LIME_H, lz * k], tr * 1.2, 4, tr * 1.02); bark().tube([lean * k, LIME_H, lz * k], [lean, crownY, lz], tr, 4, tr * 0.6); }
+    const cm = [c[0] + ((alt ? alt[0] : c[0]) - c[0]) * mixP, c[1] + ((alt ? alt[1] : c[1]) - c[1]) * mixP, c[2] + ((alt ? alt[2] : c[2]) - c[2]) * mixP];
+    if (flowerP > 0) { const f = flowerP * (T.strings ? 0.15 : 0.5); cm[0] += (T.flower[0] - cm[0]) * f; cm[1] += (T.flower[1] - cm[1]) * f; cm[2] += (T.flower[2] - cm[2]) * f; }
+    const mid = leaning ? bend(crownY * 0.55) : null;
+    if (mid) pipe(g, [[0, 0, 0], bend(crownY * 0.3), mid, bend(crownY * 0.8), [lean, crownY, lz]], [tr * 1.1, tr, tr * 0.85, tr * 0.7, tr * 0.6], 4);
+    else if (limed) { const b0 = bend(LIME_H); g.mat().rgb(0.66, 0.66, 0.62).tube([0, 0, 0], b0, tr * 1.2, 4, tr * 1.02); bark().tube(b0, [lean, crownY, lz], tr, 4, tr * 0.6); }
     else g.tube([0, 0, 0], [lean, crownY, lz], tr, 4, tr * 0.6);
-    g.mat().rgb(c[0] * tint * 0.8, c[1] * tint * 0.8, c[2] * tint * 0.8).sway(0.6);
-    const from = g.count; g.ball(lean, crownY + R * T.squash * 0.35, lz, R * 1.02, 6, 3, T.squash * 0.95, 0.25, seed);
+    g.mat().rgb(cm[0] * tint * 0.8, cm[1] * tint * 0.8, cm[2] * tint * 0.8).sway(0.6);
+    // một khối tán: rộng, cao và đặt theo đúng dáng loài (xà cừ dẹt xoè, sấu thuôn cao) để từ xa hàng cây đã ra đúng loài
+    const wide = R * (0.6 + (T.spread ?? 0.45) * 0.95) * (0.85 + 0.15 * thin);
+    let cy = crownY + R * T.squash * 0.35, tall = T.squash * 0.95;
+    if (!T.droop) { const yb = Math.max(clear, crownY - R * (0.3 * (T.vert ?? 0.45) + 0.6 * T.squash)), yt = crownY + R * ((T.top ?? 0.55) + 0.7 * T.squash); cy = (yb + yt) / 2; tall = (yt - yb) / 2 / wide; }
+    const from = g.count; g.ball(lean, cy, lz, wide, 6, 3, tall, 0.25, seed);
     shadeByNormal(g, from, 0.5, 1.08);
     g.sway(0).pop(); return;
   }
   // gốc xoè, thân, vòng vôi trắng chống sâu (rất Hà Nội)
   // (vòng vôi là chính đoạn gốc đổi màu, không ốp chồng lên thân: hai mặt gần trùng nhau sẽ nhấp nháy)
-  const yl = LIME_H, kl = yl / 1.3, rl = tr * 1.04;
-  if (limed) { g.rgb(0.86, 0.86, 0.82).mat(MAT.plaster).tube([0, 0, 0], [lean * 0.25 * kl, yl, lz * 0.25 * kl], tr * 1.3, 6, rl); bark().tube([lean * 0.25 * kl, yl, lz * 0.25 * kl], [lean * 0.25, 1.3, lz * 0.25], rl, 6, tr); }
-  else g.tube([0, 0, 0], [lean * 0.25, 1.3, lz * 0.25], tr * 1.25, 6, tr);
-  g.tube([lean * 0.25, 1.3, lz * 0.25], [lean, crownY, lz], tr, 6, tr * 0.62);
+  const yl = LIME_H, rl = tr * 1.04, pL = bend(yl), p13 = bend(1.3);
+  if (leaning) { // thân nghiêng: một ống uốn cong liền mạch, thon dần từ gốc lên tán (cây ven hồ không quét vôi)
+    const pts = [[0, 0, 0], bend(0.65), p13], rad = [tr * 1.28, tr * 1.08, tr];
+    for (let q = 1; q <= 5; q++) { pts.push(q === 5 ? [lean, crownY, lz] : bend(1.3 + ((crownY - 1.3) * q) / 5)); rad.push(tr * (1 - 0.076 * q)); }
+    pipe(g, pts, rad, 6);
+  } else {
+    if (limed) { g.rgb(0.86, 0.86, 0.82).mat(MAT.plaster).tube([0, 0, 0], pL, tr * 1.3, 6, rl); bark().tube(pL, p13, rl, 6, tr); }
+    else g.tube([0, 0, 0], p13, tr * 1.25, 6, tr);
+    g.tube(p13, [lean, crownY, lz], tr, 6, tr * 0.62);
+  }
+  if (T.buttress) { // bạnh gốc của sấu: bốn sống rễ ngắn, dày, áp sát chân thân (quét vôi cùng với gốc)
+    if (limed) g.rgb(0.86, 0.86, 0.82).mat(MAT.plaster);
+    for (let i = 0; i < 4; i++) { const a = (i / 4) * 6.283 + hash(seed, 250) * 1.5, rr = tr * (1.75 + hash(seed, 251 + i) * 0.4); g.tube([Math.cos(a) * rr, -0.05, Math.sin(a) * rr], [Math.cos(a) * tr * 0.72, 0.6 + hash(seed, 255 + i) * 0.25, Math.sin(a) * tr * 0.72], tr * 0.5, 4, tr * 0.3); }
+    bark();
+  }
   if (T.roots) { // rễ phụ của đa, si: vài sợi buông từ cành xuống đất quanh gốc, và bạnh gốc
-    for (let i = 0; i < 5; i++) { const a = hash(seed, 200 + i) * 6.283, rr = tr * (1.5 + hash(seed, 210 + i) * 2.6), top = crownY * (0.62 + hash(seed, 220 + i) * 0.3); g.tube([Math.cos(a) * rr, 0, Math.sin(a) * rr], [lean * 0.6 + Math.cos(a) * rr * 0.75, top, lz * 0.6 + Math.sin(a) * rr * 0.75], 0.05 + hash(seed, 230 + i) * 0.05, 3, 0.03); }
+    for (let i = 0; i < 5; i++) { const a = hash(seed, 200 + i) * 6.283, rr = tr * (1.5 + hash(seed, 210 + i) * 2.6), top = crownY * (0.62 + hash(seed, 220 + i) * 0.3), bt = bend(top); g.tube([Math.cos(a) * rr, 0, Math.sin(a) * rr], [bt[0] * (leaning ? 1 : 0.6) + Math.cos(a) * rr * 0.75, top, bt[2] * (leaning ? 1 : 0.6) + Math.sin(a) * rr * 0.75], 0.05 + hash(seed, 230 + i) * 0.05, 3, 0.03); }
     for (let i = 0; i < 4; i++) { const a = (i / 4) * 6.283 + hash(seed, 240) * 1.5; g.tube([Math.cos(a) * tr * 1.9, 0, Math.sin(a) * tr * 1.9], [Math.cos(a) * tr * 0.5, 1.5, Math.sin(a) * tr * 0.5], tr * 0.42, 4, tr * 0.2); }
   }
   if (T.stakes) { // ba cọc tre chống và đai buộc
@@ -107,30 +199,40 @@ export function tree(g, x, z, seed, kind = 'sau', lod = 0, y = 0, lf = null, lim
     for (let i = 0; i < 3; i++) { const a = (i / 3) * 6.283 + 0.4; g.tube([Math.cos(a) * 0.62, 0, Math.sin(a) * 0.62], [lean * 0.3 + Math.cos(a) * 0.07, 1.75, lz * 0.3 + Math.sin(a) * 0.07], 0.028, 3); }
     g.mat().rgb(0.05, 0.05, 0.05).cyl(lean * 0.28, 1.6, lz * 0.28, 0.09, 0.09, 0.07, 5, false);
   }
-  const nb = T.blobs;
+  const nb = T.blobs, spread = T.spread ?? 0.45, top = T.top ?? 0.55, vert = T.vert ?? 0.45, limb = T.limb || 0.42;
+  const nCards = Math.max(4, Math.round((T.cards || 12) * thin)), cell = T.cell || 0, fork = bend(crownY - 0.6);
   for (let i = 0; i < nb; i++) {
-    const a = (i / nb) * 6.283 + hash(seed, 20 + i) * 1.2, rr = i === 0 ? 0 : R * (0.45 + hash(seed, 30 + i) * 0.2);
+    const a = (i / nb) * 6.283 + hash(seed, 20 + i) * 1.2, rr = i === 0 ? 0 : R * (spread + hash(seed, 30 + i) * 0.2);
     const bx = lean + Math.cos(a) * rr, bz = lz + Math.sin(a) * rr;
-    const by = crownY + (i === 0 ? R * 0.55 : (hash(seed, 40 + i) - 0.3) * R * 0.45) * (T.droop ? 0.4 : 1);
-    const br = R * (i === 0 ? 0.74 : 0.52 + hash(seed, 50 + i) * 0.16);
-    if (i > 0) { bark().sway(0.15); g.tube([lean, crownY - 0.6, lz], [bx * 0.8 + lean * 0.2, by - br * 0.3, bz * 0.8 + lz * 0.2], tr * 0.42, 4, tr * 0.2); }
-    const k = tint * (0.86 + hash(seed, 60 + i) * 0.3);
-    const cr = c[0] * k, cg = c[1] * k, cb = c[2] * k, sq = T.squash * (0.9 + hash(seed, 90 + i) * 0.25), sw = T.droop ? 1 : 0.55 + (by / H) * 0.45;
+    const br = R * (i === 0 ? 0.74 : 0.52 + hash(seed, 50 + i) * 0.16), sq = T.squash * (0.9 + hash(seed, 90 + i) * 0.25);
+    // khối tán không sà xuống dưới độ cao thông thoáng (liễu thì thả sợi rủ xuống, chỉ giữ khối tán ở trên)
+    const by = Math.max(crownY + (i === 0 ? R * top : (hash(seed, 40 + i) - 0.3) * R * vert) * (T.droop ? 0.4 : 1), clear + br * sq * (T.droop ? 0.2 : 0.8));
+    if (i > 0) { bark().sway(0.15); g.tube(fork, [bx * 0.8 + lean * 0.2, by - br * 0.3, bz * 0.8 + lz * 0.2], tr * limb, 4, tr * limb * 0.48); }
+    const k = tint * (0.86 + hash(seed, 60 + i) * 0.3), turned = hash(seed, 300 + i) < mixP; // turned: khối tán này đã đổi màu theo mùa
+    const m1 = turned ? alt : c, m2 = turned ? (S.alt2 || c) : alt;
+    const cr = m1[0] * k, cg = m1[1] * k, cb = m1[2] * k, sw = T.droop ? 1 : 0.55 + (by / H) * 0.45;
+    const col2 = m2 ? [m2[0] * k, m2[1] * k, m2[2] * k] : null, p2 = !m2 ? 0 : turned ? 0.3 : mixP * 0.3;
     g.mat();
     if (lf) {
       // lõi tán tối để nhìn xuyên qua kẽ lá không thấy trời
       g.rgb(cr * 0.42, cg * 0.42, cb * 0.42).sway(sw);
-      g.ball(bx, by - (T.droop ? br * 0.4 : 0), bz, br * 0.78, 6, 3, sq, 0.2, seed + i);
-      if (T.droop) leafCards(lf, bx, by - br * 0.9, bz, br * 1.05, 1.5, 9, seed * 7 + i, 2, [cr, cg, cb], 1, true);
+      // (liễu: lõi nhỏ, dẹt, nằm trên cao chỗ các sợi rủ xuất phát; không để một khối tối to treo ngang tầm mắt sau rèm lá thưa)
+      if (T.droop) g.ball(bx, Math.max(by + br * 0.15, clear + 1.2 + br * 0.45), bz, br * 0.62, 6, 3, 0.7, 0.2, seed + i);
+      else g.ball(bx, Math.max(by, clear + br * 0.78 * sq), bz, br * 0.78 * (0.55 + 0.45 * thin), 6, 3, sq, 0.2, seed + i);
+      if (T.droop) leafCards(lf, bx, by - br * 0.9, bz, br * 1.05, 1.5, Math.round(9 * thin), seed * 7 + i, 2, [cr, cg, cb], 1, true, col2, p2, clear);
       else {
-        leafCards(lf, bx, by, bz, br * 1.08, sq, 12, seed * 7 + i, kind === 'hoasua' || kind === 'banglang' ? 1 : 0, [cr, cg, cb], sw);
-        if (T.flower && hash(seed, 70 + i) < 0.6) leafCards(lf, bx, by + br * 0.12, bz, br * 1.12, sq, 5, seed * 13 + i, 3, [T.flower[0] * 1.6, T.flower[1] * 1.6, T.flower[2] * 1.6], sw);
+        leafCards(lf, bx, by, bz, br * 1.08, sq, nCards, seed * 7 + i, cell, [cr, cg, cb], sw, false, col2, p2, clear);
+        if (flowerP > 0 && hash(seed, 70 + i) < flowerP) {
+          // lộc vừng: hoa là những dây đỏ buông thõng dưới tán (thẻ treo đứng, ô sợi rủ); loài khác: chùm hoa phủ mặt ngoài tán
+          if (T.strings) leafCards(lf, bx, by - br * 0.75, bz, br * 0.8, 1.1, 4, seed * 13 + i, 2, [T.flower[0] * 1.3, T.flower[1] * 1.3, T.flower[2] * 1.3], 1, true, null, 0, clear - 0.9);
+          else leafCards(lf, bx, by + br * 0.12, bz, br * 1.12, sq, 5, seed * 13 + i, 3, [T.flower[0] * 1.6, T.flower[1] * 1.6, T.flower[2] * 1.6], sw, false, null, 0, clear);
+        }
       }
     } else {
       let fr = cr, fg = cg, fb = cb;
-      if (T.flower && hash(seed, 70 + i) < 0.55) { const f = 0.35 + hash(seed, 80 + i) * 0.4; fr += (T.flower[0] - fr) * f; fg += (T.flower[1] - fg) * f; fb += (T.flower[2] - fb) * f; }
+      if (flowerP > 0 && hash(seed, 70 + i) < flowerP) { const f = (0.35 + hash(seed, 80 + i) * 0.4) * (T.strings ? 0.3 : 1); fr += (T.flower[0] - fr) * f; fg += (T.flower[1] - fg) * f; fb += (T.flower[2] - fb) * f; }
       g.rgb(fr, fg, fb).sway(sw);
-      const from = g.count; g.ball(bx, by - (T.droop ? br * 0.5 : 0), bz, br, 7, 4, sq, 0.32, seed + i);
+      const from = g.count; g.ball(bx, Math.max(by - (T.droop ? br * 0.5 : 0), clear + br * sq), bz, br * (0.7 + 0.3 * thin), 7, 4, sq, 0.32, seed + i);
       shadeByNormal(g, from, 0.5, 1.12);
     }
   }

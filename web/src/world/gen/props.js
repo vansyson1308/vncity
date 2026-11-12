@@ -27,6 +27,10 @@ const STREET_TREES = [
 // Các phố bị bão Yagi (9/2024) quật đổ nhiều cây: hàng cổ thụ có chỗ trống, xen cây non có cọc chống.
 const YAGI = /Phan Đình Phùng|Hoàng Diệu|Điện Biên Phủ|Đinh Tiên Hoàng|Lê Thái Tổ|Thanh Niên|Cửa Bắc|Hàng Bông/;
 const CUA_BAC_X = -880; // nút Phan Đình Phùng - Cửa Bắc
+const FULL_TREES = 90; // số cây đủ chi tiết (thân, cành, thẻ lá) tối đa trong một ô phố; cây bản đồ OSM và cây dọc phố được xếp trước
+// Cây ven hồ nghiêng thân ra mặt nước (art bible mục 6): tán lệch khỏi gốc bao nhiêu mét [ít nhất, nhiều nhất] theo loài.
+// Lộc vừng Hồ Gươm ngả gần như nằm ngang trên mặt hồ; liễu, đa, phượng vươn ra vừa phải; cây bóng mát khác chỉ hơi ngả về phía trống.
+const LAKE_LEAN = { locvung: [3.0, 4.6], da: [1.6, 2.6], lieu: [1.1, 1.9], phuong: [1.0, 1.8], banglang: [0.6, 1.2], sau: [0.5, 1.0], xacu: [0.5, 1.0] };
 
 // opt.mark(kind, x, z, dx, dz, len): công cụ soi vị trí (ngoài game) nhận dấu của từng món đồ đạc; trong game không dùng.
 export function genProps(ctx, cx, cz, bld, opt = {}) {
@@ -41,15 +45,34 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
   const onRoad = (x, z, pad = 0.4) => { const r = ctx.nearestRoad(x, z, 14, (q) => q.veh || q.kind === K.pedestrian); return r && r.d < r.r.w / 2 + pad; };
 
   // ----- cây -----
-  const placed = [];
+  const placed = [], season = ctx.season || 'mu'; // mùa của lá và hoa đi theo thời tiết (models/street.js SEASON)
+  // Mép nước gần nhất quanh (x, z): quét 16 hướng trong 10 m. Trả về [hướng x, hướng z, khoảng cách] hoặc null. Hướng là trung bình
+  // các hướng chạm nước (gần thì nặng ký hơn) nên cây ngả vuông góc với đường bờ chứ không ngả theo một tia lẻ.
+  const toWater = (x, z) => {
+    let any = false; // dò thô trước (hai vòng 5 m và 9,5 m): cây không ở sát nước thì dừng ngay
+    for (let a = 0; a < 12 && !any; a++) any = !!ctx.isWater(x + Math.cos(a * 0.5236) * 9.5, z + Math.sin(a * 0.5236) * 9.5) || (a % 2 === 0 && !!ctx.isWater(x + Math.cos(a * 0.5236) * 5, z + Math.sin(a * 0.5236) * 5));
+    if (!any) return null;
+    let sx = 0, sz = 0, near = 99;
+    for (let a = 0; a < 16; a++) { const dx = Math.cos(a * 0.3927), dz = Math.sin(a * 0.3927); for (let d = 1.5; d <= 10; d += 0.85) if (ctx.isWater(x + dx * d, z + dz * d)) { const w = 11 - d; sx += dx * w; sz += dz * w; if (d < near) near = d; break; } }
+    const l = Math.hypot(sx, sz); return near > 50 || l < 1e-3 ? null : [sx / l, sz / l, near];
+  };
+  // ô phố không có mặt nước nào trong tầm 12 m thì khỏi dò (đa số các ô): không tốn một phép thử điểm-trong-đa-giác nào
+  let wet = false; for (const w of ctx.waterGrid.collect(X0 - 12, Z0 - 12, X1 + 12, Z1 + 12)) if (w.bb[0] < X1 + 12 && w.bb[2] > X0 - 12 && w.bb[1] < Z1 + 12 && w.bb[3] > Z0 - 12) { wet = true; break; }
+  const lakeTilt = (x, z, kind, seed) => {
+    const L = LAKE_LEAN[kind]; if (!wet || !L) return null;
+    const w = toWater(x, z); if (!w) return null;
+    const amt = (L[0] + (L[1] - L[0]) * hash(seed, 14)) * (w[2] > 6.5 ? 0.45 : 1); // cây đứng xa mép nước thì chỉ hơi ngả
+    return [w[0] * amt, w[1] * amt];
+  };
   // lime: gốc quét vôi trắng (cây dọc phố gần như cây nào cũng quét, cây trong công viên thì ít)
   const addTree = (x, z, kind, seed, lime = hash(seed, 12) < 0.2) => {
     for (const p of placed) if ((p[0] - x) ** 2 + (p[1] - z) ** 2 < 16) return;
     placed.push([x, z]); occ.push([x, z, 0.55]); treeList.push([x, z, kind, seed]);
     treePit(near, ctx, x, z, X0, Z0, seed); // ô cây trên vỉa hè (gen/pits.js)
-    // ô nào quá nhiều cây (rừng, công viên) thì từ cây thứ 56 dùng luôn bản một khối để giữ số tam giác
-    if (placed.length <= 56) tree(near, x - X0, z - Z0, seed, kind, 0, CURB, leaf, lime ? 1 : 0); else tree(near, x - X0, z - Z0, seed, kind, 1, CURB, null, lime ? 1 : 0);
-    tree(far, x - X0, z - Z0, seed, kind, 1, CURB, null, lime ? 1 : 0);
+    const tilt = lakeTilt(x, z, kind, seed);
+    // ô nào quá nhiều cây (rừng, công viên) thì quá FULL_TREES cây dùng luôn bản một khối để giữ số tam giác
+    if (placed.length <= FULL_TREES) tree(near, x - X0, z - Z0, seed, kind, 0, CURB, leaf, lime ? 1 : 0, season, tilt); else tree(near, x - X0, z - Z0, seed, kind, 1, CURB, null, lime ? 1 : 0, season, tilt);
+    tree(far, x - X0, z - Z0, seed, kind, 1, CURB, null, lime ? 1 : 0, season, tilt);
   };
   // name: tên con phố mà cây đứng dọc theo (nếu có). Phố có trong bảng thì theo bảng, còn lại theo khu.
   const kindFor = (x, z, seed, name) => {

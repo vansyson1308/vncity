@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { CS } from './data.js';
 import { propGeometry } from './materials.js';
-import { lampU, LAMP_STORE } from '../engine/sky.js';
+import { lampU, LAMP_STORE, WEATHER } from '../engine/sky.js';
 
 export class Chunks {
   constructor(scene, world, mats, nav, quality) {
@@ -16,9 +16,12 @@ export class Chunks {
     this.worker.onmessage = (e) => this.onMessage(e.data);
     this.worker.onerror = (e) => this.onError && this.onError(e.message || 'worker');
     this.last = { x: 1e9, z: 1e9 }; this.want = [];
+    // mùa của cây đi theo thời tiết của game (tham số ?weather=, mặc định "mu" = mùa đông): worker tô lá, hoa theo mùa này
+    let w = 'mu'; try { w = new URLSearchParams(location.search).get('weather') || w; } catch { /* node */ }
+    this.season = WEATHER[w] ? w : 'mu';
   }
   init(url, landmarks, mapPpm) {
-    return new Promise((res, rej) => { this._ready = res; this._fail = rej; this.worker.postMessage({ type: 'init', url, landmarks, mapPpm }); });
+    return new Promise((res, rej) => { this._ready = res; this._fail = rej; this.worker.postMessage({ type: 'init', url, landmarks, mapPpm, season: this.season }); });
   }
   onMessage(m) {
     if (m.type === 'ready') this._ready(m);
