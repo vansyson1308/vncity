@@ -85,13 +85,13 @@ function drawHero(ctx, g, b, X0, Z0, lo) {
   }
   if (F.dome) domeAt(g, cx, H, cz, F.dome.r, F.dome.col, lo, 0.55);
   if (F.cone) { // mái tôn hình nón của tháp nước: mái thoải nên đứng dưới phố chỉ thấy vành mái đua ra, mặt dưới mái đua và chóp thông hơi trên đỉnh
-    const c = F.cone.col, seg = lo ? 12 : 24, r = R + 0.8, hc = F.cone.h, yv = H + hc * 0.8; // mái chính tới khoảng 24,7 m, chóp thông hơi tới 25,6 m (art bible: đỉnh mái khoảng 25 m)
+    const c = F.cone.col, seg = lo ? 12 : 24, r = R + 0.8, hc = F.cone.h, yv = H + hc * 0.87; // mái chính dốc khoảng 23° tới 25 m (art bible: thân 21 m, đỉnh mái khoảng 25 m), chóp thông hơi nhỏ trên cùng
     g.rgb(c[0] * 0.55, c[1] * 0.55, c[2] * 0.55).disc(cx, H + 0.02, cz, r, seg, -1);                              // mặt dưới mái đua
     g.rgb(c[0] * 0.8, c[1] * 0.8, c[2] * 0.8).cyl(cx, H, cz, r, r, 0.42, seg, false);                           // diềm mái
-    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, H + 0.42, cz, r, 1.5, hc * 0.8 - 0.42, seg, false).gloss(0);    // mái nón
-    g.rgb(c[0] * 0.7, c[1] * 0.7, c[2] * 0.7).cyl(cx, yv, cz, 1.5, 1.5, hc * 0.09, lo ? 6 : 10, false);         // cổ chóp thông hơi
-    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, yv + hc * 0.09, cz, 1.9, 0.06, hc * 0.11, lo ? 6 : 10, false).gloss(0);
-    g.rgb(0.2, 0.2, 0.2).cyl(cx, H + hc - 0.1, cz, 0.12, 0.04, 1.1, 4, false);
+    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, H + 0.42, cz, r, 1.5, hc * 0.87 - 0.42, seg, false).gloss(0);   // mái nón
+    g.rgb(c[0] * 0.7, c[1] * 0.7, c[2] * 0.7).cyl(cx, yv, cz, 1.5, 1.5, hc * 0.07, lo ? 6 : 10, false);         // cổ chóp thông hơi
+    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, yv + hc * 0.07, cz, 1.9, 0.06, hc * 0.12, lo ? 6 : 10, false).gloss(0);
+    g.rgb(0.2, 0.2, 0.2).cyl(cx, yv + hc * 0.19 - 0.1, cz, 0.12, 0.04, 1.1, 4, false);
   }
   if (F.drum) { // phòng họp tròn nhô lên giữa khối vuông: thân loe dần lên trên, ốp kim loại màu đồng, băng kính sáng đèn ban đêm, mái phẳng
     const c = F.drum.col, seg = lo ? 16 : 32, r = F.drum.r, hd = F.drum.h;
