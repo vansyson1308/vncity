@@ -37,7 +37,7 @@ vec3 skyBase(vec3 d) {
 }
 // màu lớp mù theo hướng nhìn: vật ở xa tan vào đúng màu trời phía sau nó
 vec3 hazeColor(vec3 d) { return skyBase(d); }
-vec3 skyColor(vec3 d) { return mix(skyBase(d), uGroundCol, smoothstep(0.0, -0.12, d.y)); }
+vec3 skyColor(vec3 d) { return mix(skyBase(d), uGroundCol, (1.0 - smoothstep(-0.12, 0.0, d.y))); }
 float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 `;
 
@@ -159,7 +159,7 @@ export class Sky {
           if (sh > 0.9955 && d.y > 0.3) {
             vec2 so = vec2(hash12(si + 7.3), hash12(si + 3.1)) * 0.6 + 0.2;
             float tw = 0.6 + 0.4 * sin(uTime * 1.7 + sh * 900.0);
-            c += vec3(0.8, 0.82, 0.9) * smoothstep(0.075, 0.0, length(fract(sp) - so)) * smoothstep(0.3, 0.62, d.y) * tw * 0.22 * uNight;
+            c += vec3(0.8, 0.82, 0.9) * (1.0 - smoothstep(0.0, 0.075, length(fract(sp) - so))) * smoothstep(0.3, 0.62, d.y) * tw * 0.22 * uNight;
           }
           // mây tầng cao trôi chậm; ban đêm mây bắt sáng đèn thành phố từ dưới hắt lên
           if (d.y > 0.01) {
@@ -174,11 +174,11 @@ export class Sky {
           if (d.y > -0.035 && d.y < 0.04) {
             vec2 hd = normalize(d.xz + vec2(1e-5, 0.0));
             float sk = 0.004 + 0.016 * vnoise(hd * 11.0 + 3.0) + 0.012 * vnoise(hd * 37.0 + 9.0);
-            float band = smoothstep(sk, sk - 0.005, d.y) * smoothstep(-0.03, -0.004, d.y);
+            float band = (1.0 - smoothstep(sk - 0.005, sk, d.y)) * smoothstep(-0.03, -0.004, d.y);
             c = mix(c, c * mix(0.86, 0.8, uNight), band);
             vec2 lc = vec2(floor(hd.x * 420.0) + floor(hd.y * 420.0) * 57.0, floor(d.y * 700.0));
             float lh = hash12(lc);
-            float lamp = step(0.86, lh) * smoothstep(sk + 0.004, sk - 0.004, d.y) * smoothstep(-0.012, -0.002, d.y) * (0.35 + 0.65 * vnoise(hd * 23.0 + 5.0));
+            float lamp = step(0.86, lh) * (1.0 - smoothstep(sk - 0.004, sk + 0.004, d.y)) * smoothstep(-0.012, -0.002, d.y) * (0.35 + 0.65 * vnoise(hd * 23.0 + 5.0));
             vec3 lcol = mix(vec3(1.0, 0.62, 0.3), vec3(0.85, 0.92, 1.0), step(0.93, lh));
             c += lcol * lamp * (0.35 + 0.25 * sin(uTime * 0.9 + lh * 70.0)) * 0.5 * uLit;
           }

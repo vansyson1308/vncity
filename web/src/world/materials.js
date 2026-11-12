@@ -64,12 +64,12 @@ export function buildMaterials(renderer, quality, atlas) {
         float gwet = uWet * ghard;`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
         if (uLit > 0.01 && bl > 14.5 && bl < 15.5) { // kè Hồ Gươm: dải LED vàng ấm dưới mép kè, sáng hắt xuống mặt kè và bậc thềm
-          float gy = vWPos.y - 0.06, gled = smoothstep(0.035, 0.012, abs(gy)) * 1.7 + step(gy, 0.0) * (exp(gy * 7.0) * 0.4 + step(0.5, gan.y) * 0.2);
+          float gy = vWPos.y - 0.06, gled = (1.0 - smoothstep(0.012, 0.035, abs(gy))) * 1.7 + step(gy, 0.0) * (exp(gy * 7.0) * 0.4 + step(0.5, gan.y) * 0.2);
           totalEmissiveRadiance += vec3(1.0, 0.66, 0.34) * gled * uLit;
         }`)
       .replace('#include <opaque_fragment>', `
         if (gwet > 0.01) { vec3 V = normalize(vWPos - cameraPosition); vec3 Rf = reflect(V, vec3(0.0, 1.0, 0.0));
-          float fr = 0.04 + 0.96 * pow(1.0 - max(-V.y, 0.0), 5.0);
+          float fr = 0.04 + 0.96 * pow(clamp(1.0 + V.y, 0.0, 1.0), 5.0);
           outgoingLight = mix(outgoingLight * (1.0 - 0.35 * gwet), skyColor(Rf), fr * gwet * 0.7); }
         #include <opaque_fragment>`);
   };
@@ -103,7 +103,7 @@ export function buildMaterials(renderer, quality, atlas) {
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * vFx.x * (${opts.alwaysGlow ? '1.0' : 'uLit'}) * 2.6;${opts.flood ? `\ntotalEmissiveRadiance += diffuseColor.rgb * vec3(1.0, 0.8, 0.56) * uLit * ${opts.flood.toFixed(2)} * (1.0 - 0.45 * smoothstep(2.0, 30.0, vWPos.y)) * (0.75 + 0.25 * abs(normalize(vWN).y));` : ''}${opts.alphaTest ? '\ntotalEmissiveRadiance += diffuseColor.rgb * uSunCol * 0.05 * max(dot(normalize(vWN), -uSunDir) * 0.5 + 0.5, 0.0);' : ''}`)
         .replace('#include <opaque_fragment>', `
           if (vFx.z > 0.02) { vec3 V = normalize(vWPos - cameraPosition); vec3 N = normalize(vWN); vec3 Rf = reflect(V, N);
-            float fr = 0.05 + 0.95 * pow(1.0 - max(dot(-V, N), 0.0), 4.0);
+            float fr = 0.05 + 0.95 * pow(clamp(1.0 - dot(-V, N), 0.0, 1.0), 4.0);
             outgoingLight += skyColor(Rf) * fr * vFx.z * 0.55 + uSunCol * pow(max(dot(Rf, uSunDir), 0.0), 40.0) * vFx.z * 0.25; }
           #include <opaque_fragment>`);
     };
@@ -135,8 +135,8 @@ export function buildMaterials(renderer, quality, atlas) {
       // Sát chân người nhìn thì tắt dần (ở đó ngoài đời là bóng của bờ kè, hàng cây ngay trước mặt chứ không phải đèn bờ bên kia).
       vec3 shoreLights(vec2 dir, float ry) { // dir: hướng ngang của tia phản xạ; ry: độ ngẩng của tia sau khi sóng làm lệch
         float a = atan(dir.y, dir.x) * 28.6479, ci = floor(a), h = hash12(vec2(ci, 3.7)), b = fract(h * 17.0);
-        float w = smoothstep(0.3, 0.03, abs(fract(a) - 0.5 + (b - 0.5) * 0.3)) * step(0.52, h);
-        float band = smoothstep(0.0, 0.015, ry) * smoothstep(0.17, 0.02, ry);
+        float w = (1.0 - smoothstep(0.03, 0.3, abs(fract(a) - 0.5 + (b - 0.5) * 0.3))) * step(0.52, h);
+        float band = smoothstep(0.0, 0.015, ry) * (1.0 - smoothstep(0.02, 0.17, ry));
         vec3 col = mix(vec3(1.0, 0.6, 0.26), vec3(0.85, 0.93, 1.0), step(0.84, h));
         col = mix(col, vec3(1.0, 0.16, 0.1), step(0.95, h));
         return col * (w * band * (0.12 + 0.88 * b * b));
@@ -148,7 +148,7 @@ export function buildMaterials(renderer, quality, atlas) {
         float dist = length(vWPos - cameraPosition);
         vec3 N = normalize(vec3((n1.x + n2.x * 0.6) * 0.5, 3.0 + dist * 0.014, (n1.y + n2.y * 0.6) * 0.5)); // hồ lặng: sóng lăn tăn rất nhẹ
         vec3 V = normalize(cameraPosition - vWPos);
-        float fr = 0.03 + 0.97 * pow(1.0 - max(dot(N, V), 0.0), 5.0);
+        float fr = 0.03 + 0.97 * pow(clamp(1.0 - dot(N, V), 0.0, 1.0), 5.0);
         vec3 Rf = reflect(-V, N); Rf.y = abs(Rf.y);
         // nước hồ đục: màu nước theo ánh trời lúc đó, cộng một chút nắng xuyên; mặt nước phản chiếu trời theo góc nhìn
         vec3 base = vCol.rgb * vCol.rgb * (uHemi * 0.9 + uSunCol * max(uSunDir.y, 0.0) * 0.22);

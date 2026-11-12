@@ -7,6 +7,7 @@ import { CS, CURB, K, ST, ZONE, zoneAt, isSolemn, roadY } from '../data.js';
 import { L } from '../layers.js';
 import { SIGNS, SIGN_COLORS, signUV, bladeUV, FLAG_CELL, LED_CELL, TEXT0, PAL } from '../signs.js';
 import { mainAxis } from './buildings.js';
+import { stallLayout } from '../stalls.js';
 import { motorbike } from '../../models/vehicles.js';
 
 const lin = (h) => [((h >> 16) & 255) / 255, ((h >> 8) & 255) / 255, (h & 255) / 255].map((c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)));
@@ -240,6 +241,7 @@ function lowTable(g, x, z, steel) { if (steel) g.rgb(0.55, 0.56, 0.58).gloss(0.6
 
 export function decorate(ctx, env) {
   const { near, far, lamps, X0, Z0, inChunk, free, onRoad, roads, bld } = env;
+  const shopPools = []; // vị trí các vệt sáng cửa hàng đã đặt trong ô này: [x, z, ...]
   const W = ctx.world, extraWalls = [];
 
   // ===== mặt tiền =====
@@ -263,7 +265,9 @@ export function decorate(ctx, env) {
         g.rgb(1, 1, 1).glow(0.45).quad([sx + t, yb, z1], [sx + t, yb, z0], [sx + t, yb + bh, z0], [sx + t, yb + bh, z1], uvb).quad([sx - t, yb, z0], [sx - t, yb, z1], [sx - t, yb + bh, z1], [sx - t, yb + bh, z0], uvb).glow(0);
         g.rgb(0.1, 0.1, 0.1).box(sx - 0.015, yb + bh * 0.42, 0, sx + 0.015, yb + bh * 0.58, z0, 'xXyY');
       }
-      if (open && hash(s, 8) < 0.75) lamps.push(mx + f.nx * 1.6, 3, mz + f.nz * 1.6, 4.6);
+      // ánh đèn cửa hàng hắt ra hè: mỗi chỗ một vệt, hai vệt không gần nhau dưới 8 m. Trước đây gian nào cũng có một vệt 13 × 13 m,
+      // dọc phố cổ sáu bảy lớp trong suốt chồng lên nhau và tổng số vệt vượt sức chứa của lưới vệt sáng.
+      if (open && hash(s, 8) < 0.75) { const lx = mx + f.nx * 1.6, lz = mz + f.nz * 1.6; let ok = true; for (let q = 0; q < shopPools.length; q += 2) if ((shopPools[q] - lx) ** 2 + (shopPools[q + 1] - lz) ** 2 < 64) { ok = false; break; } if (ok) { shopPools.push(lx, lz); lamps.push(lx, 3, lz, 5.2); } }
     }
     // mái hiên bạt: 40% cửa hàng. Loại nhỏ gắn ngay dưới biển, loại lớn gắn ở mép sàn tầng hai vươn 2-3 m; bạt trơn hoặc kẻ sọc
     if (f.shop && f.sign && hash(s, 2) < 0.42 && f.gnd !== L.S_ROLL && !bare) {
@@ -374,18 +378,16 @@ export function decorate(ctx, env) {
 
   // ===== quán cóc vỉa hè ở những chỗ OSM ghi có hàng ăn uống =====
   for (const i of ctx.foodIdx.get(env.cx * 1000 + env.cz) || []) {
-    const x = W.food[i], z = W.food[i + 1], kind = W.food[i + 2], seed = (i * 40503) | 0;
+    const x = W.food[i], z = W.food[i + 1], kind = W.food[i + 2];
     if (isSolemn(x, z)) continue;
     const rd = ctx.nearestRoad(x, z, 22, (r) => r.veh && r.kind <= K.residential); if (!rd || rd.d < 0.5) continue;
     const ux = (x - rd.px) / rd.d, uz = (z - rd.pz) / rd.d, px = rd.px + ux * (rd.r.w / 2 + 1.05), pz = rd.pz + uz * (rd.r.w / 2 + 1.05);
     if (!free(px, pz) || onRoad(px, pz, 0.3)) continue;
     near.push().move(px - X0, CURB, pz - Z0).rotY(Math.atan2(ux, uz));
-    const tables = 1 + Math.floor(hash(seed, 1) * 2.4), red = hash(seed, 2) < 0.6;
-    for (let t = 0; t < tables; t++) {
-      const tx = (t - (tables - 1) / 2) * 1.5;
-      lowTable(near, tx, 0, kind === 0 && hash(seed, 3) < 0.5);
-      for (const [sx, sz] of [[-0.5, 0], [0.5, 0], [0, 0.5], [0, -0.48]]) if (hash(seed + t * 7 + sx * 3 + sz * 5, 4) < 0.8) stool(near, tx + sx, sz, red);
-    }
+    // bàn và các ghế trống; khách và ghế khách ngồi do actors/crowd.js đặt theo cùng bố cục (world/stalls.js)
+    const lay = stallLayout(i, kind);
+    for (const tx of lay.tables) lowTable(near, tx, 0, lay.steel);
+    for (const [sx, sz] of lay.spare) stool(near, sx, sz, lay.red);
     near.pop();
   }
 

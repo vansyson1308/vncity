@@ -209,5 +209,5 @@ export class G {
     return { pos, nrm, col, fx, uv, idx, box: n ? [x0, y0, z0, x1, y1, z1] : [0, 0, 0, 0, 0, 0] };
   }
 }
-G.U0 = 0.125; G.V0 = 0.96875;
+G.U0 = 0.5 / 4; G.V0 = 1 - 0.5 / 24; // tâm ô trắng của bảng biển hiệu 4 × 24 ô (world/signs.js WHITE_UV; tools/gen_check.mjs soát hai nơi khớp nhau)
 export const packBuffers = (p) => [p.pos.buffer, p.nrm.buffer, p.col.buffer, p.fx.buffer, p.uv.buffer, p.idx.buffer];

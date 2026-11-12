@@ -44,7 +44,7 @@ export function drawSignAtlas(c) {
     for (let j = 0; j < 10; j++) { const a = -Math.PI / 2 + (j * Math.PI) / 5, rr = j % 2 ? 21 : 55; g.lineTo(256 + Math.cos(a) * rr, 76 + Math.sin(a) * rr); }
     g.closePath(); g.fill();
     g.font = `800 76px ${FONT}`; g.fillText('HÀ NỘI', 256, 178);
-    g.font = `700 34px ${FONT}`; g.fillText('THÀNH PHỐ VÌ HÒA BÌNH', 256, 248);
+    g.font = `700 34px ${FONT}`; g.fillText('THÀNH PHỐ VÌ HOÀ BÌNH', 256, 248);
     g.restore();
   }
   { // cờ đỏ sao vàng (ô 6:1 căng lên lá cờ 3:2)
@@ -59,7 +59,7 @@ export function drawSignAtlas(c) {
 
 export async function signAtlas(renderer, aniso = 4) {
   // phông tiếng Việt tự lưu trữ; nếu chưa kịp tải thì canvas dùng phông hệ thống
-  try { await Promise.race([Promise.all([document.fonts.load('800 60px "Be Vietnam Pro"', 'PHỞ'), document.fonts.load('600 24px "Be Vietnam Pro"', 'PHỞ')]), new Promise((r) => setTimeout(r, 2500))]); } catch { /* bỏ qua */ }
+  try { await Promise.race([Promise.all([document.fonts.load('800 60px "Be Vietnam Pro"', 'PHỞ'), document.fonts.load('600 24px "Be Vietnam Pro"', 'PHỞ')]), new Promise((r) => setTimeout(r, 5000))]); } catch { /* bỏ qua */ }
   const t = new THREE.CanvasTexture(drawSignAtlas(document.createElement('canvas'))); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = Math.min(aniso, renderer.capabilities.getMaxAnisotropy()); t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter;
   return t;
 }

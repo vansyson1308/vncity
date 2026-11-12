@@ -94,7 +94,7 @@ function fleetMaterial() {
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * vFx.x * uLit * 2.6;`)
       .replace('#include <opaque_fragment>', `
         if (vFx.z > 0.02) { vec3 V = normalize(vWPos - cameraPosition); vec3 N = normalize(vWN); vec3 Rf = reflect(V, N);
-          float fr = 0.05 + 0.95 * pow(1.0 - max(dot(-V, N), 0.0), 4.0);
+          float fr = 0.05 + 0.95 * pow(clamp(1.0 - dot(-V, N), 0.0, 1.0), 4.0);
           outgoingLight += skyColor(Rf) * fr * vFx.z * 0.55 + uSunCol * pow(max(dot(Rf, uSunDir), 0.0), 40.0) * vFx.z * 0.25; }
         #include <opaque_fragment>`);
   };
@@ -102,7 +102,7 @@ function fleetMaterial() {
   return mat;
 }
 // bộ phận mang mã pid (kênh aFx.w) chỉ hiện khi bit (pid − 1) của aVar.w bật
-const HIDE = `{ float pid = floor(aFx.w * 15.9375 + 0.5); if (pid > 0.5 && mod(floor(aVar.w / exp2(pid - 1.0)), 2.0) < 0.5) transformed = vec3(0.0); }`;
+const HIDE = `{ float pid = floor(aFx.w * 15.9375 + 0.5); if (pid > 0.5 && mod(floor((aVar.w + 0.5) / exp2(pid - 1.0)), 2.0) < 0.5) transformed = vec3(0.0); }`;
 function fleetDepth() {
   const d = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
   d.onBeforeCompile = (sh) => { sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute vec4 aFx; attribute vec4 aVar;').replace('#include <begin_vertex>', `#include <begin_vertex>\n${HIDE}`); };
@@ -281,7 +281,7 @@ class Glare {
             float a = exp(-d2 * 9.0) * 1.3 + exp(-d2 * 2.2) * 0.22; a *= 1.0 - smoothstep(0.6, 1.0, d2);
             col = (vQ.z < 0.5 ? vec3(1.0, 0.9, 0.72) * 2.4 : vec3(1.0, 0.07, 0.03) * 1.9) * a;
           } else {
-            float t = vQ.y * 0.5 + 0.5, a = pow(1.0 - vQ.x * vQ.x, 2.0) * smoothstep(0.0, 0.12, t) * pow(1.0 - t, 1.6);
+            float t = clamp(vQ.y * 0.5 + 0.5, 0.0, 1.0), a = pow(max(1.0 - vQ.x * vQ.x, 0.0), 2.0) * smoothstep(0.0, 0.12, t) * pow(max(1.0 - t, 0.0), 1.6); // mép tam giác khi khử răng cưa nhiều mẫu: giá trị nội suy vượt khỏi [-1, 1], pow cơ số âm cho NaN
             col = vec3(1.0, 0.86, 0.62) * a * 0.3;
           }
           float ff = exp(-fogDensity * fogDensity * vFogDepth * vFogDepth);

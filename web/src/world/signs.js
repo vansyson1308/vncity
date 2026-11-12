@@ -44,7 +44,7 @@ export const SIGNS = [
   ['DU LỊCH', 'VÉ TÀU · VÉ MÁY BAY · VISA', 1], ['VÀNG BẠC', 'ĐÁ QUÝ · KIM HOÀN', 3], ['LỤA TƠ TẰM', 'KHĂN LỤA · ÁO DÀI MAY SẴN', 4], ['ĐỒ CHƠI', 'ĐÈN LỒNG · ĐÈN ÔNG SAO', 0],
   ['VÀNG MÃ', 'ĐỒ THỜ · HƯƠNG NẾN', 8], ['THUỐC BẮC', 'ĐÔNG Y GIA TRUYỀN', 12], ['Ô MAI', 'MỨT SẤU · MƠ GỪNG', 5], ['BÁNH KẸO', 'MỨT TẾT · HẠT DƯA', 9],
   ['CHIẾU CÓI', 'THẢM · MÀNH TRÚC', 2], ['TRANH THÊU', 'TRANH SƠN MÀI · LỤA', 4], ['ĐỒ THIẾC', 'TÔN · HÒM THƯ · ỐNG NƯỚC', 7], ['GIÀY DÉP', 'GIÀY DA · DÉP TÔNG', 1],
-  ['SÁCH', 'TRUYỆN · VĂN PHÒNG PHẨM', 6], ['KEM', 'KEM CỐM · KEM ĐẬU XANH', 1], ['TRANH DÂN GIAN', 'TRANH HÀNG TRỐNG · KHUNG ẢNH', 0], ['CHẢ CÁ', 'CHẢ CÁ LÃ VỌNG', 5],
+  ['SÁCH', 'TRUYỆN · VĂN PHÒNG PHẨM', 6], ['KEM', 'KEM CỐM · KEM ĐẬU XANH', 1], ['TRANH DÂN GIAN', 'TRANH HÀNG TRỐNG · KHUNG ẢNH', 0], ['CHẢ CÁ', 'CHẢ CÁ THÌ LÀ · BÚN · MẮM TÔM', 5],
   ['ĐỒ GỐM', 'BÁT ĐĨA · LỌ HOA BÁT TRÀNG', 6], ['KIM KHÍ', 'KHOÁ · ĐINH · DỤNG CỤ', 7], ['VẢI', 'VẢI VÓC · RÈM CỬA', 9], ['TRE NỨA', 'ĐIẾU CÀY · THANG TRE', 2],
   ['BÁNH CỐM', 'BÁNH XU XÊ · CỐM LÀNG VÒNG', 2], ['QUẦN ÁO', 'THỜI TRANG NAM NỮ', 9], ['ĐỒ ĐỒNG', 'CHUÔNG · LƯ HƯƠNG · HOÀNH PHI', 3], ['MẮM · MUỐI', 'ĐỒ KHÔ · GIA VỊ', 8],
   ['SƠN · VÔI', 'VẬT LIỆU XÂY DỰNG', 1], ['NHA KHOA', 'RĂNG SỨ · NIỀNG RĂNG', 6], ['RỬA XE', 'THAY DẦU · BƠM VÁ', 7], ['BÚN ĐẬU', 'MẮM TÔM · CHẢ CỐM', 2],

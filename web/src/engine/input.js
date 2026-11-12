@@ -8,10 +8,18 @@ const KEYMAP = { e: 'interact', enter: 'interact', f: 'mount', ' ': 'horn', h: '
 // Việt đều không làm lệch điều khiển (gõ Telex thì phím W cho ra "ư", còn trình duyệt báo e.key = "Process" khi đang ghép chữ).
 // Phím không có trong bảng thì mới xét theo ký tự. Bộ gõ kiểu Unikey nuốt hẳn phím gốc rồi gửi ký tự đã ghép (e.code rỗng):
 // trường hợp đó trang web không giữ phím được, nên chỉ báo cho người chơi biết (onIme) để tắt bộ gõ hoặc dùng phím mũi tên.
-const CODE = { KeyW: 'w', KeyA: 'a', KeyS: 's', KeyD: 'd', KeyE: 'e', KeyF: 'f', KeyH: 'h', KeyM: 'm', KeyN: 'n', KeyB: 'b', KeyP: 'p', KeyL: 'l', KeyC: 'c', KeyR: 'r', KeyV: 'v', KeyG: 'g',
-  Space: ' ', ShiftLeft: 'shift', ShiftRight: 'shift', ArrowUp: 'arrowup', ArrowDown: 'arrowdown', ArrowLeft: 'arrowleft', ArrowRight: 'arrowright', Enter: 'enter', NumpadEnter: 'enter', Escape: 'escape', Tab: 'tab' };
+// Phím đi lại và phím chức năng không in chữ: luôn theo vị trí. Phím tắt bằng chữ cái (E, M, B...): theo chữ in trên phím (đúng với
+// cả Dvorak, Colemak, AZERTY); chỉ khi ký tự tới không phải chữ thường ASCII (bộ gõ đang ghép chữ) mới lấy theo vị trí.
+const MOVE = { KeyW: 'w', KeyA: 'a', KeyS: 's', KeyD: 'd', Space: ' ', ShiftLeft: 'shift', ShiftRight: 'shift', ArrowUp: 'arrowup', ArrowDown: 'arrowdown', ArrowLeft: 'arrowleft', ArrowRight: 'arrowright',
+  Enter: 'enter', NumpadEnter: 'enter', Escape: 'escape', Tab: 'tab' };
+const LETTER = { KeyE: 'e', KeyF: 'f', KeyH: 'h', KeyM: 'm', KeyN: 'n', KeyB: 'b', KeyP: 'p', KeyL: 'l', KeyC: 'c', KeyR: 'r', KeyV: 'v', KeyG: 'g' };
 const VI = { ư: 'w', đ: 'd', â: 'a', ă: 'a', ê: 'e', ô: 'o', ơ: 'o' };
-export const keyToken = (e) => { const c = CODE[e.code]; if (c) return c; const k = (e.key || '').toLowerCase(); return VI[k] || k; };
+export const keyToken = (e) => {
+  const m = MOVE[e.code]; if (m) return m;
+  const k = (e.key || '').toLowerCase();
+  if (k.length === 1 && k >= 'a' && k <= 'z') return k === 'w' || k === 'a' || k === 's' || k === 'd' ? (e.code ? '' : k) : k; // chữ W A S D nằm ở phím khác (bàn phím không phải QWERTY): không phải phím đi lại
+  return LETTER[e.code] || VI[k] || k;
+};
 // ký tự tiếng Việt đã ghép tới mà không kèm mã phím: dấu hiệu của bộ gõ đang nuốt phím
 const imeEaten = (e) => !e.code && typeof e.key === 'string' && e.key.length === 1 && e.key.charCodeAt(0) > 127;
 

@@ -169,10 +169,11 @@ if (want('d1')) {
       ['Caps Lock (key = W)', () => synth('keydown', 'W', 'KeyW'), () => synth('keyup', 'W', 'KeyW')],
       ['bộ gõ đang ghép (key = Process)', () => synth('keydown', 'Process', 'KeyW'), () => synth('keyup', 'w', 'KeyW')],
       ['Telex (key = ư)', () => synth('keydown', 'ư', 'KeyW'), () => synth('keyup', 'ư', 'KeyW')],
+      ['sự kiện chỉ có key = w, không có code (công cụ tự động)', () => synth('keydown', 'w', ''), () => synth('keyup', 'w', '')],
     ];
     const bad = [];
     for (const [name, press, release] of cases) { const q = await run(press, release); if (!(q.fwd > 0.5 && Math.abs(q.side) < q.fwd * 0.3) || q.left.length) bad.push(`${name}: tiến ${q.fwd.toFixed(2)} m, lệch ${q.side.toFixed(2)} m, phím còn kẹt [${q.left}]`); }
-    bad.length ? fail('D4: lớp bàn phím: ' + bad.join('; ')) : ok(`D4: ${cases.length} cách nhấn phím tiến (phím thật, Caps Lock, bộ gõ đang ghép, Telex) đều đi tới, nhả phím là dừng`);
+    bad.length ? fail('D4: lớp bàn phím: ' + bad.join('; ')) : ok(`D4: ${cases.length} cách nhấn phím tiến (phím thật, Caps Lock, bộ gõ đang ghép, Telex, sự kiện không có mã phím) đều đi tới, nhả phím là dừng`);
     // bộ gõ nuốt phím (ký tự có dấu tới mà không kèm mã phím): hiện lời nhắc đúng một lần
     const hint = await page.evaluate(async () => { const has = () => /W A S D/.test(document.body.innerText); const before = has(); window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ư', code: '', bubbles: true })); window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ư', code: '', bubbles: true })); await new Promise((r2) => setTimeout(r2, 2500)); return { before, after: has(), keys: [...window.__game.input.keys] }; });
     !hint.before && hint.after && !hint.keys.length ? ok('D4: bộ gõ nuốt phím thì game nhắc tắt bộ gõ hoặc dùng phím mũi tên') : fail('D4: không thấy lời nhắc về bộ gõ tiếng Việt: ' + JSON.stringify(hint));

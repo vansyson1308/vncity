@@ -72,7 +72,7 @@ function drawBus(g, w, h) {
 
 // Dựng texture. Vẽ từng hàng ô vào một canvas dải rồi chép kênh đỏ sang mảng một kênh (không bao giờ cần canvas 4096²).
 export async function streetAtlas(renderer, world, quality) {
-  try { await Promise.race([Promise.all([document.fonts.load(`800 40px ${FONT}`, 'PHỐ'), document.fonts.load(`600 20px ${FONT}`, 'PHỐ')]), new Promise((r) => setTimeout(r, 2500))]); } catch { /* dùng phông hệ thống */ }
+  try { await Promise.race([Promise.all([document.fonts.load(`800 40px ${FONT}`, 'PHỐ'), document.fonts.load(`600 20px ${FONT}`, 'PHỐ')]), new Promise((r) => setTimeout(r, 5000))]); } catch { /* dùng phông hệ thống */ }
   const L = plateLayout(world), S = quality.name === 'low' || renderer.capabilities.maxTextureSize < 4096 ? 2048 : 4096;
   const data = new Uint8Array(S * S), rowH = Math.ceil(S * L.ch) + 2;
   const cv = document.createElement('canvas'); cv.width = S; cv.height = rowH;

@@ -8,6 +8,8 @@ import { genGround } from '../src/world/gen/ground.js';
 import { genBuildings } from '../src/world/gen/buildings.js';
 import { genProps } from '../src/world/gen/props.js';
 import { resolveSites } from '../src/world/landmarks/sites.js';
+import { G } from '../src/core/geo.js';
+import { WHITE_UV } from '../src/world/signs.js';
 
 const t0 = performance.now();
 const world = decodeWorld(JSON.parse(fs.readFileSync(new URL('../public/world/hanoi.json', import.meta.url), 'utf8')));
@@ -19,6 +21,8 @@ const args = process.argv.slice(2);
 const list = [];
 if (args.length && args[0] !== 'all') for (const a of args) list.push(a.split(',').map(Number));
 else for (let cx = 0; cx < world.nx; cx++) for (let cz = 0; cz < world.nz; cz++) list.push([cx, cz]);
+// ô trắng mặc định của bộ dựng hình phải trùng ô trắng của bảng biển hiệu (bảng đổi số hàng thì hằng số trong core/geo.js phải đổi theo)
+if (Math.abs(G.U0 - WHITE_UV[0]) > 1e-6 || Math.abs(G.V0 - WHITE_UV[1]) > 1e-6) { console.error(`LỖI: G.U0/G.V0 (${G.U0}, ${G.V0}) lệch WHITE_UV (${WHITE_UV})`); process.exit(1); }
 let worst = 0, total = 0, tris = { ground: 0, deck: 0, bld: 0, near: 0, far: 0 }, maxTris = { ground: 0, deck: 0, bld: 0, near: 0, far: 0 }, errors = 0;
 for (const [cx, cz] of list) {
   const t = performance.now();
@@ -26,7 +30,7 @@ for (const [cx, cz] of list) {
     const g = genGround(ctx, cx, cz), b = genBuildings(ctx, cx, cz), p = genProps(ctx, cx, cz, b);
     const n = { ground: g.ground.idx.length / 3, deck: g.deck ? g.deck.idx.length / 3 : 0, bld: b.mesh.idx.length / 3, near: p.near.idx.length / 3 + p.plate.idx.length / 3, far: p.far.idx.length / 3 };
     for (const k in n) { tris[k] += n[k]; maxTris[k] = Math.max(maxTris[k], n[k]); }
-    for (const arr of [g.ground.pos, g.deck ? g.deck.pos : [], b.mesh.pos, p.near.pos, p.far.pos]) for (let i = 0; i < arr.length; i++) if (!Number.isFinite(arr[i])) { throw new Error('NaN trong toạ độ'); }
+    for (const arr of [g.ground.pos, g.deck ? g.deck.pos : [], b.mesh.pos, p.near.pos, p.far.pos, p.plate ? p.plate.pos : [], p.leaf ? p.leaf.pos : [], p.leafFar ? p.leafFar.pos : []]) for (let i = 0; i < arr.length; i++) if (!Number.isFinite(arr[i])) { throw new Error('NaN trong toạ độ'); }
     if (args.length && args[0] !== 'all') console.log(cx, cz, n, `${(performance.now() - t).toFixed(1)} ms`);
   } catch (e) { errors++; console.error('LỖI ô', cx, cz, e.stack.split('\n').slice(0, 4).join('\n')); if (errors > 5) break; }
   const ms = performance.now() - t; worst = Math.max(worst, ms); total += ms;

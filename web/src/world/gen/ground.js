@@ -414,28 +414,18 @@ export function genGround(ctx, cx, cz) {
     }
   }
 
-  // ----- ô đỗ xe kẻ sơn trắng (art bible 2.5) -----
-  // Xe máy: trên vỉa hè, một dải sâu 2 m tính từ bó vỉa (xe dựng một hàng vuông góc với bó vỉa), chỉ kẻ khi hè rộng từ 3,5 m để còn
-  // lối đi bộ 1,5 m; phố cổ và khu phố Pháp (phường Hoàn Kiếm, Cửa Nam) có nhiều nhất. Ô tô: trên lòng đường rộng, dọc bó vỉa,
-  // mỗi ô 2,2 × 5,5 m. Khu trang nghiêm ở Ba Đình không có.
+  // ----- ô đỗ ô tô kẻ sơn trắng sát bó vỉa trên phố rộng (art bible 2.5) -----
+  // mỗi ô 2,2 × 5,5 m. Khu trang nghiêm ở Ba Đình không có. Ô đỗ xe máy trên vỉa hè (có xe dựng) do gen/furniture.js kẻ:
+  // trước đây ở đây cũng kẻ một bộ ô xe máy trống, 300 ô trùng chỗ với bộ kia.
   for (const r of roads) {
-    if (!r.veh || r.elev || r.bridge || r.kind > K.residential || r.w < 5.5 || r.len < 44) continue;
+    if (!r.veh || r.elev || r.bridge || r.kind > K.tertiary || r.w < 10 || r.len < 44) continue;
     const zn = zoneAt(r.p[0], r.p[1]); if (zn === ZONE.bank || isSolemn(r.p[0], r.p[1])) continue;
-    const pBike = zn === ZONE.old || zn === ZONE.french ? 0.5 : zn === ZONE.city ? 0.28 : 0.1;
     for (const side of [-1, 1]) for (let s = 14, k = 0; s + 12 < r.len - 14; s += 18, k++) {
       const h = hash2(r.i * 2 + (side > 0 ? 1 : 0), k, 21), pt = (ss, o) => { alongAt(r, ss, o5); return [o5[0] - o5[3] * o * side, o5[1] + o5[2] * o * side, o5[2], o5[3]]; };
-      if (h < pBike) {
-        const e = r.w / 2; let ok = true;
-        for (const ss of [s, s + 6, s + 12]) { const a = pt(ss, e + 2), b = pt(ss, e + 3.5); if (!freePave(a[0], a[1], 1.2) || !freePave(b[0], b[1], 2.6)) { ok = false; break; } }
-        if (!ok) continue;
-        const paint = (q, hl, hw, across) => { if (inChunk(q[0], q[1])) gb.decal(DECAL.paint, q[0], q[1], across ? -q[3] : q[2], across ? q[2] : q[3], hl, hw, CURB + 0.008, CURB + 0.008, pavingAt(ctx, q[0], q[1]), 0.9, 0.9); };
-        for (let ss = s + 2; ss < s + 12; ss += 4) paint(pt(ss, e + 2), 2, 0.05, false);
-        for (const ss of [s, s + 12]) paint(pt(ss, e + 1.12), 0.93, 0.05, true);
-      } else if (h > 0.88 && r.w >= 10 && r.kind <= K.tertiary) {
-        const e = r.w / 2, a = pt(s + 5.5, e - 2.2); if (!onAsphalt(a[0], a[1], 1.9)) continue;
-        for (let ss = s + 2.75; ss < s + 11; ss += 5.5) { const q = pt(ss, e - 2.2); if (inChunk(q[0], q[1])) gb.flatQuad(q[0], q[1], q[2], q[3], 2.75, 0.05, PAINT_Y, LAYER.white); }
-        for (const ss of [s, s + 5.5, s + 11]) { const q = pt(ss, e - 1.31); if (inChunk(q[0], q[1])) gb.flatQuad(q[0], q[1], -q[3], q[2], 0.89, 0.05, PAINT_Y, LAYER.white); }
-      }
+      if (h <= 0.88) continue;
+      const e = r.w / 2, a = pt(s + 5.5, e - 2.2); if (!onAsphalt(a[0], a[1], 1.9)) continue;
+      for (let ss = s + 2.75; ss < s + 11; ss += 5.5) { const q = pt(ss, e - 2.2); if (inChunk(q[0], q[1])) gb.flatQuad(q[0], q[1], q[2], q[3], 2.75, 0.05, PAINT_Y, LAYER.white); }
+      for (const ss of [s, s + 5.5, s + 11]) { const q = pt(ss, e - 1.31); if (inChunk(q[0], q[1])) gb.flatQuad(q[0], q[1], -q[3], q[2], 0.89, 0.05, PAINT_Y, LAYER.white); }
     }
   }
 

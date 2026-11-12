@@ -17,12 +17,7 @@ export function signalState(t, grp, off) {
 }
 // Nhóm pha của một xe đang chạy theo hướng (tx,tz) vào nút có đèn sig.
 export const signalGroup = (sig, tx, tz) => (Math.abs(tx * sig.ax + tz * sig.az) >= 0.707 ? 0 : 1);
-// Để dòng xe dừng đèn đỏ (chưa nối: actors/traffic.js thuộc nhóm khác). Khoá nút ở đây trùng với khoá nút của Traffic:
-//   const sig = junctionsOf(world).signalNode.get(a.dir > 0 ? e.n1 : e.n0);        // nút cuối cạnh đang chạy
-//   if (sig && signalState(skyU.uTime.value, signalGroup(sig, tx, tz), sig.off) !== 3) {
-//     const rem = e.len - a.s;                                                      // sig.stop: quãng từ tim nút tới vạch dừng
-//     if (rem > sig.stop - 1 && rem < sig.stop + 30) target = Math.min(target, Math.max(0, (rem - sig.stop) * 0.8)); }
-// Cạnh ngắn hơn sig.stop (đường bị cắt thành nhiều đoạn ngắn) thì phải xét nút có đèn ở cuối cạnh kế tiếp.
+// Dòng xe (actors/trafficsim.js) dùng đúng bảng signalNode, signalGroup và signalState này với đồng hồ của shader vẽ đèn.
 
 const cache = new WeakMap();
 export function junctionsOf(world) { let J = cache.get(world); if (!J) cache.set(world, (J = build(world))); return J; }
@@ -130,7 +125,10 @@ function build(world) {
       sig.arms.push({ x: n.x, z: n.z, r: a.r, e: a.e, dx: a.dx, dz: a.dz, w: a.w, kind: a.kind, ow: a.ow, inbound: a.inbound, grp, stop: 0 });
     }
     // cột đèn đứng ngay sau vạch sang đường (gen/ground.js kẻ vạch cách tim nút max(5, 0,55 × bề rộng lớn nhất) + 2,6 m, rộng 2,8 m)
-    sig.stop = Math.max(5, maxW * 0.55) + 5.0; for (const a of sig.arms) a.stop = sig.stop; // sig.stop: quãng từ tim nút tới vạch dừng (dòng xe dùng để dừng đèn đỏ)
+    sig.stop = Math.max(5, maxW * 0.55) + 5.0; for (const a of sig.arms) a.stop = sig.stop; // sig.stop: quãng từ tim nút tới chân cột đèn
+    // sig.line: quãng từ tim nút tới chỗ mũi xe dừng khi đèn đỏ, ngay trước vạch dừng sơn trên mặt đường. gen/ground.js kẻ vạch sang
+    // đường từ jr + 1,2 tới jr + 1,2 + 2·zl rồi vạch dừng ở jr + 3,8 + 2·zl (jr = max(5; 0,55 × bề rộng lớn nhất), zl = 1,6 m, phố từ 12 m là 2 m).
+    sig.line = Math.max(5, maxW * 0.55) + 3.8 + 2 * (maxW >= 12 ? 2 : 1.6) + 0.4;
     // thí điểm từ 11/2025: các nút trên trục Trần Hưng Đạo và nút Hùng Vương - Trần Phú chỉ hiện 8 giây cuối
     sig.last8 = nm.has('Phố Trần Hưng Đạo') || (nm.has('Đường Hùng Vương') && nm.has('Phố Trần Phú'));
     if (sig.arms.filter((a) => a.inbound).length < 2) continue;

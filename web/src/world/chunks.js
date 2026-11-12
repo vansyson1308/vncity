@@ -124,7 +124,7 @@ export class Chunks {
       if (this.loaded.has(key) || this.pending.has(key)) continue;
       this.pending.set(key, 1); this.worker.postMessage({ type: 'chunk', cx, cz, detail: Math.hypot(this.world.bounds.x0 + (cx + 0.5) * CS - px, this.world.bounds.z0 + (cz + 0.5) * CS - pz) < this.q.near + 70 });
     }
-    if (this.lampsDirty && this.onLamps && !this.pending.size) { this.lampsDirty = false; this.onLamps([...this.loaded.values()].map((c) => c.lamps)); }
+    if (this.lampsDirty && this.onLamps && !this.pending.size) { this.lampsDirty = false; this.onLamps([...this.loaded.values()].sort((a, b) => (a.x - px) ** 2 + (a.z - pz) ** 2 - (b.x - px) ** 2 - (b.z - pz) ** 2).map((c) => c.lamps)); } // ô gần trước: nếu vượt sức chứa thì phần bị bỏ là vệt sáng ở xa nhất
   }
 
   // Số ô còn thiếu trong bán kính r quanh điểm (để màn hình tải biết khi nào vào game được).
@@ -147,7 +147,7 @@ import { ZONE, zoneAt } from './data.js'; // (để riêng ở đây cho phần 
 const POOL = { led: [4.0, 3.8, 3.0], sodium: [5.4, 2.9, 0.8], park: [4.2, 2.9, 1.5], shop: [2.6, 2.3, 1.8], lantern: [4.2, 0.9, 0.35] };
 const poolKind = (x, z, r) => (r >= 11 ? (zoneAt(x, z) === ZONE.old ? POOL.sodium : POOL.led) : r >= 8 ? POOL.sodium : r >= 6.5 ? POOL.park : r >= 5.5 ? POOL.lantern : POOL.shop);
 export class LightPools {
-  constructor(scene, max = 5000) {
+  constructor(scene, max = 6000) {
     // Hình vệt sáng tính bằng công thức (không cần texture): sáng ở tâm, tắt dần ra rìa; ở xa mờ dần theo đúng hệ số sương của cảnh.
     this.mat = new THREE.ShaderMaterial({
       uniforms: { uOpacity: { value: 0 }, uDirect: { value: 0 }, fogColor: { value: new THREE.Color() }, fogDensity: { value: 0.001 } },
@@ -165,7 +165,7 @@ export class LightPools {
           float k = max(1.0 - dot(vP, vP), 0.0); k *= sqrt(k); // sáng nhất dưới chân đèn, toả rộng và tắt êm ở rìa để hai đèn liền nhau nối được vệt sáng
           vec3 gain = vTint * (k * uOpacity);
           // vẽ thẳng ra màn hình (mức chất lượng thấp, không hậu kỳ): nền đã mã hoá sRGB nên hệ số nhân phải nén lại tương ứng
-          if (uDirect > 0.5) gain = pow(1.0 + gain, vec3(0.4545)) - 1.0;
+          if (uDirect > 0.5) gain = pow(1.0 + max(gain, vec3(0.0)), vec3(0.4545)) - 1.0;
           gl_FragColor = vec4(gain, 1.0);
         }`,
     });

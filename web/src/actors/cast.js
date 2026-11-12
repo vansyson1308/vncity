@@ -215,7 +215,7 @@ export class Cast {
   }
 }
 const WHITE = [1, 1, 1], POLE_BITS = PROP.ganh | PROP.fruit | PROP.flowers | PROP.pot;
-const KIT_HIDE = 'if (mod(floor(aLook2.w / exp2(aPm.x - 1.0)), 2.0) < 0.5) transformed = vec3(0.0);';
+const KIT_HIDE = 'if (mod(floor((aLook2.w + 0.5) / exp2(aPm.x - 1.0)), 2.0) < 0.5) transformed = vec3(0.0);';
 
 // Hàng mẫu cho trang soi (dev/life.html?set=people): mỗi kiểu người một dáng, hoạt hình chạy thật.
 export function buildCastPreview(scene, lod, far, full, quality, query) {

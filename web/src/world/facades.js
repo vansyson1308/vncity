@@ -525,7 +525,7 @@ export function facadeMaterial(tex, noise) {
         totalEmissiveRadiance += (fglass * won * warm * wbr * (0.42 + 1.3 * tx.rgb) * (0.75 + 0.5 * ff.y) + flit * tx.rgb * 0.9 + fsign * fcol * 0.5) * uLit;`)
       .replace('#include <opaque_fragment>', `
         { vec3 V = normalize(vWPos - cameraPosition); vec3 Rf = reflect(V, normalize(vWN));
-          float fr = 0.06 + 0.94 * pow(1.0 - max(dot(-V, normalize(vWN)), 0.0), 4.0);
+          float fr = 0.06 + 0.94 * pow(clamp(1.0 - dot(-V, normalize(vWN)), 0.0, 1.0), 4.0);
           outgoingLight = mix(outgoingLight, skyColor(Rf) * mix(vec3(1.0), gtint * 1.25, 0.8) + outgoingLight * 0.3, fglass * fr * mix(0.85, 1.0, fmod) * (1.0 - uLit * won * 0.7)); }
         #include <opaque_fragment>`);
   };

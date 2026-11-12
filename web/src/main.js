@@ -109,7 +109,7 @@ async function boot() {
   player.teleport(sx, sz, syaw);
   if (params.has('bike')) player.toggleBike();
   cam.snap(player); cam.pitch = +(params.get('pitch') || 0.16);
-  if (params.has('camyaw')) cam.yaw = +params.get('camyaw');
+  if (params.has('camyaw')) { cam.yaw = +params.get('camyaw'); cam.wasRiding = player.mode === 'bike'; } // góc camera đặt sẵn: không tự quay ra sau xe lúc vào game
   if (params.has('zoom')) cam.zoom = +params.get('zoom');
 
   camera.position.set(player.pos.x - Math.sin(player.yaw) * 5, 3, player.pos.z - Math.cos(player.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();

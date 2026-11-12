@@ -6,6 +6,7 @@ import { clamp, dampAngle, hash } from '../core/util.js';
 import { K, CURB, ZONE, zoneAt, isSolemn } from '../world/data.js';
 import { Cast, STYLE, PROP, WALK_FRAMES, TAICHI_FRAMES, SWING_FRAMES, JOG_FRAMES } from './cast.js';
 import { STOOL_RED, STOOL_BLUE } from '../models/life.js';
+import { stallLayout } from '../world/stalls.js';
 
 // ----- bảng màu (tuyến tính) -----
 const SHIRTS = [[0.85, 0.85, 0.82], [0.1, 0.22, 0.5], [0.62, 0.08, 0.08], [0.1, 0.1, 0.12], [0.12, 0.35, 0.18], [0.8, 0.6, 0.08], [0.45, 0.45, 0.47], [0.7, 0.28, 0.42], [0.18, 0.5, 0.55], [0.85, 0.42, 0.1], [0.55, 0.4, 0.7], [0.9, 0.82, 0.6], [0.03, 0.03, 0.04], [0.04, 0.07, 0.2], [0.3, 0.05, 0.07], [0.16, 0.17, 0.19]];
@@ -130,11 +131,12 @@ export class Crowd {
     if (!st) return 0;
     const rd = this.nav.nearestRoad(st.x, st.z, 22, (r) => r.veh && r.kind <= K.residential); if (!rd || rd.d < 0.5) { st.bad = true; return 0; }
     const ux = (st.x - rd.px) / rd.d, uz = (st.z - rd.pz) / rd.d, bx = rd.px + ux * (rd.r.w / 2 + 1.05), bz = rd.pz + uz * (rd.r.w / 2 + 1.05), tx = uz, tz = -ux; // tx,tz: dọc theo phố
-    const seed = st.i * 131 + 7, n = 1 + Math.floor(hash(seed, 1) * 3.6), red = hash(st.i * 40503, 2) < 0.6; let made = 0;
+    // khách ngồi vào các chỗ quanh bàn của đúng quán này (cùng bố cục với bàn ghế dựng sẵn: world/stalls.js), quay mặt vào bàn
+    const lay = stallLayout(st.i * 3), seed = st.i * 131 + 7, red = lay.red, n = Math.min(lay.seats.length, 1 + Math.floor(hash(seed, 1) * 3.6)), first = Math.floor(hash(seed, 2) * lay.seats.length); let made = 0;
     for (let k = 0; k < n; k++) {
-      const sd = k % 2 ? -1 : 1, along = sd * (1.95 + Math.floor(k / 2) * 0.72 + hash(seed, 10 + k) * 0.15), out = (hash(seed, 20 + k) - 0.4) * 0.5;
-      const x = bx + tx * along + ux * out, z = bz + tz * along + uz * out; if (!this.ok(x, z)) continue;
-      const a = this.person(KIND.seated, x, z, Math.atan2(-tx * sd, -tz * sd) + (hash(seed, 30 + k) - 0.5) * 0.7);
+      const [lx, lz, tbl] = lay.seats[(first + k) % lay.seats.length], x = bx + tx * lx + ux * lz, z = bz + tz * lx + uz * lz; if (!this.ok(x, z)) continue;
+      const fx = tx * (tbl - lx) - ux * lz, fz = tz * (tbl - lx) - uz * lz; // hướng từ ghế tới bàn
+      const a = this.person(KIND.seated, x, z, Math.atan2(fx, fz) + (hash(seed, 30 + k) - 0.5) * 0.5);
       a.kind = Math.random() < 0.25 ? KIND.tourist : Math.random() < 0.4 ? KIND.office : KIND.local; this.dress(a); a.kind = KIND.seated;
       a.props = (a.props & (PROP.cap | PROP.scarf)) | PROP.stool; a.ptint = red ? STOOL_RED : STOOL_BLUE; a.clip = hash(seed, 40 + k) < 0.4 ? CLIP.sit2 : CLIP.sit; a.stat = true; a.v = 0; a.anchor = st;
       this.people.push(a); made++;
