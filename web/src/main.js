@@ -231,7 +231,9 @@ async function boot() {
   let last = performance.now(), frames = 0, acc = 0, jsAcc = 0, sugT = 0, sugs = [];
   function loop(now) {
     requestAnimationFrame(loop);
-    const dtMs = now - last, dt = Math.min(dtMs / 1000, 0.05); last = now; G.t += dt;
+    // Dấu thời gian của requestAnimationFrame là lúc khung hình bắt đầu, có thể sớm hơn lần đo trước (performance.now() lúc khởi động
+    // xong một tác vụ dài, hoặc khung trước): dt âm làm mọi phép damp ngoại suy bùng nổ (nhân vật, camera bay lên hàng trăm mét).
+    const dtMs = Math.max(0, now - last), dt = Math.min(dtMs / 1000, 0.05); last = Math.max(last, now); G.t += dt;
     const t0 = performance.now();
     input.poll();
     if (auto && G.started) { input.move.y = auto.includes('w') ? 1 : 0; input.move.x = auto.includes('d') ? 0.35 : auto.includes('a') ? -0.35 : 0; input.run = auto.includes('r'); }
