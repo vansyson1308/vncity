@@ -244,7 +244,7 @@ export class TrafficSim {
     this.frame = 1; this.rays = 2; this.corRoom = true; this.corRoute = false; this.jamT = -1; this.blind = false; this.cullT = 0.5; this.corW = 0.5; this.corCap = 0.5; this.warming = false;
     this.occluded = null; // hàm (x, z) → true nếu điểm đó khuất sau nhà so với camera (lớp vẽ gắn vào)
     this.stats = { spawned: 0, removed: 0, unstuck: 0, hits: 0 }; this.lastHit = null;
-    this._o = [0, 0, 0, 0];
+    this._o = [0, 0, 0, 0]; this._ux = 0; this._uz = 0;
   }
 
   // điểm trên cạnh e cách đầu mút xuất phát một đoạn d theo chiều đi dir; ghi vào out [x,z,tx,tz]
@@ -572,7 +572,7 @@ export class TrafficSim {
       if (a.pushT > 0) { a.pushT -= dt; target = Math.min(target, 2.4); if (a.pushT <= 0) a.pushB = null; }
       const gap = 1.4 + a.v * 0.8 + a.hl, sq = a.sq > 0 ? 0.3 : 0;
       // nửa bề dọc của thân xe a theo hướng phố, tính theo đúng hướng đầu xe (cho luật đoán trước xe cắt ngang)
-      const aLx = Math.sin(a.yaw), aLz = Math.cos(a.yaw), aT = a.hl * Math.abs(aLx * tx + aLz * tz) + a.r * Math.abs(aLz * tx - aLx * tz); let blocked = false, shift = 0, side = 0, sep = 0, lead = null, leadF = 1e9, lb = false, rb = false, blk = null;
+      const aLx = Math.sin(a.yaw), aLz = Math.cos(a.yaw), aT = a.hl * Math.abs(aLx * tx + aLz * tz) + a.r * Math.abs(aLz * tx - aLx * tz); let blocked = false, shift = 0, side = 0, sep = 0, sepX = 0, lead = null, leadF = 1e9, lb = false, rb = false, blk = null;
       const cx = Math.floor((a.x + tx * gap * 0.5) / 5), cz = Math.floor((a.z + tz * gap * 0.5) / 5);
       for (let gx = cx - 1; gx <= cx + 1; gx++) for (let gz = cz - 1; gz <= cz + 1; gz++) {
         const l = this.cellAt(gx * 65537 + gz); if (!l) continue;
@@ -623,7 +623,16 @@ export class TrafficSim {
             if (cosB > 0.6 && f < leadF) { lead = b; leadF = f; }
           } else if (f > -ov - 0.2 && f <= 0.2 + ov && Math.abs(s) < wsum + 0.3 && cosB > 0) { if (Math.abs(s) < wsum + 0.12) side += s > 0.01 ? -1 : s < -0.01 ? 1 : a.id < b.id ? -1 : 1; if (s > 0) rb = true; else lb = true; } // đi song song quá sát: dạt ra, không lách thêm về phía đó
           // hai thân xe cùng chiều đang lồng vào nhau (bị dồn khi nhập làn, khi xếp hàng): tách ngang ra ngay, xe nhẹ nhường xe nặng
-          if (cosB > 0.6 && Math.abs(f) < ov * 0.9 && Math.abs(s) < a.r + b.r) { const need = a.r + b.r - Math.abs(s), share = a.cls === b.cls ? 0.5 : (a.cls === 0 || a.cls === 3) && b.cls !== 0 && b.cls !== 3 ? 1 : b.cls === 0 || b.cls === 3 ? 0.1 : 0.5; sep += (s > 0.01 ? -1 : s < -0.01 ? 1 : a.id < b.id ? -1 : 1) * need * share; }
+          const share = a.cls === b.cls ? 0.5 : (a.cls === 0 || a.cls === 3) && b.cls !== 0 && b.cls !== 3 ? 1 : b.cls === 0 || b.cls === 3 ? 0.1 : 0.5;
+          if (cosB > 0.6 && Math.abs(f) < ov * 0.9 && Math.abs(s) < a.r + b.r) { const need = a.r + b.r - Math.abs(s); sep += (s > 0.01 ? -1 : s < -0.01 ? 1 : a.id < b.id ? -1 : 1) * need * share; }
+          // Hai thân xe cắt chéo hay đối đầu đã lồng vào nhau (xe cắt ngang lao vào lòng nút, dồn ngang lúc rẽ sang phố hẹp hơn): mỗi xe
+          // dạt theo phương ngang của chính nó phần độ lồng chiếu lên phương đó (trục tách ngắn nhất của hai hình chữ nhật). Xe cắt ngang
+          // thì phương ngang của xe này gần trùng phương dọc của xe kia, nên hai xe tự tách đúng hướng. Không huỷ bước tiến nào nên
+          // không gây tắc; chỉ lấy phần lồng quá 12 cm (khung va chạm xe máy rộng hơn hình vẽ chừng 10 cm mỗi bên).
+          else if (cosB <= 0.6 && dx * dx + dz * dz < (a.hl + b.hl + a.r + b.r) ** 2) {
+            const dp = this.overlap(a.x, a.z, a.yaw, a.r, a.hl, b);
+            if (dp > 0.12) { const ur = this._ux * rx + this._uz * rz; if (Math.abs(ur) > 0.25) sepX -= Math.sign(ur) * (dp - 0.12) * Math.abs(ur) * share * 2; }
+          }
         }
       }
       a.blk = blk; // xe đang chắn a (đọc bởi cycle() của các xe khác)
@@ -712,6 +721,8 @@ export class TrafficSim {
       // đi bộ chắn trước mũi hoặc đang co mình gỡ kẹt thì vẫn dắt ngang được (người lái chống chân lách qua)
       const latRate = a.v > 1.2 || pblock || a.sq > 0 ? 1 : a.v / 1.2;
       a.lat = damp(a.lat, clamp(a.latT + (lb || rb ? 0 : Math.sin(T * a.wobF + a.wob) * a.wobA), loE, hw), (!e.oneway && a.lat < 0.2 && a.over <= 0 ? 5 : 2.2) * latRate, dt);
+      // phần dạt ngang để tách thân xe lồng nhau không bao giờ đẩy xe về phía người chơi đang đứng sát bên
+      if (sepX !== 0) { const dx = px - a.x, dz = pz - a.z, pf = dx * tx + dz * tz, ps = dx * rx + dz * rz; if (!(Math.abs(player.y - a.y) < 2 && Math.abs(pf) < a.hl + 1 && Math.abs(ps) < a.r + pr + 1.2 && ps * sepX > 0)) sep += sepX; }
       if (sep !== 0) { const lim = e.oneway ? -hw : Math.max(-hw, -0.4); a.lat = clamp(a.lat + clamp(sep, -1.6 * dt, 1.6 * dt), Math.min(lim, a.lat), Math.max(hw, a.lat)); if ((sep < 0 && a.latT > a.lat) || (sep > 0 && a.latT < a.lat)) a.latT = a.lat; }
       a.v = damp(a.v, target, target < a.v ? 4.5 : a.cls === 3 ? 1 : 1.6, dt);
       a.s += a.v * dt;
@@ -734,13 +745,14 @@ export class TrafficSim {
     }
   }
   // Độ lồng (m) giữa hai thân xe hình chữ nhật (nửa ngang r, nửa dọc hl, trục dọc theo yaw), theo định lý trục tách; âm là còn hở.
+  // Trục tách ngắn nhất (hướng từ a sang b) ghi vào this._ux, this._uz.
   overlap(ax, az, ayaw, ar, ahl, b) {
     const sa = Math.sin(ayaw), ca = Math.cos(ayaw), sb = Math.sin(b.yaw), cb = Math.cos(b.yaw), dx = b.x - ax, dz = b.z - az; let best = 1e9;
     // bốn trục: dọc a (sa, ca), ngang a (ca, -sa), dọc b, ngang b
     for (let k = 0; k < 4; k++) {
       const ux = k === 0 ? sa : k === 1 ? ca : k === 2 ? sb : cb, uz = k === 0 ? ca : k === 1 ? -sa : k === 2 ? cb : -sb;
       const ra = ahl * Math.abs(sa * ux + ca * uz) + ar * Math.abs(ca * ux - sa * uz), rb = b.hl * Math.abs(sb * ux + cb * uz) + b.r * Math.abs(cb * ux - sb * uz);
-      const ov = ra + rb - Math.abs(dx * ux + dz * uz); if (ov < best) { best = ov; if (best <= 0) return best; }
+      const d = dx * ux + dz * uz, ov = ra + rb - Math.abs(d); if (ov < best) { best = ov; const sg = d < 0 ? -1 : 1; this._ux = ux * sg; this._uz = uz * sg; if (best <= 0) return best; }
     }
     return best;
   }

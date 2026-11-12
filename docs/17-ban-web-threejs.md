@@ -163,7 +163,11 @@ Các kỹ thuật chính:
    (cạnh, chiều), gồm các xe đang ở đầu cạnh và các xe sắp rẽ vào nó; xe không rẽ vào chỗ đang có xe, và trong các xe cùng rẽ
    vào một phố thì xe xa nút hơn nhường (lưới tìm xe lân cận chỉ thấy xe ngay trước mũi theo hướng đang chạy, không thấy xe
    sau góc rẽ); xe đứng yên trong hàng chờ không trượt ngang (xe đang chờ người đi bộ chắn trước mũi thì vẫn dắt ngang lách
-   qua); hai thân xe cùng chiều lỡ lồng vào nhau thì bị tách ngang ra ngay. Mỗi xe nhớ xe đang chắn mình; khi chuỗi "ai chắn
+   qua); hai thân xe lỡ lồng vào nhau thì bị tách ra ngay: cùng chiều thì tách ngang; cắt chéo hay đối đầu thì mỗi xe dạt theo
+   phương ngang của chính nó phần độ lồng chiếu lên phương đó (trục tách ngắn nhất của hai hình chữ nhật, SAT), xe nhẹ nhường xe
+   nặng, và không bao giờ bị đẩy về phía người chơi đứng sát bên; luật này không huỷ bước tiến nào nên không gây tắc (công cụ soát
+   của reviewer, 75 nút × 60 s, ba hạt giống: cặp lồng nhau quá 2 giây 1006/931/871 → 503/591/485, trong khung nhìn của camera
+   294/269/192 → 127/139/109, lưu lượng qua vạch gần như không đổi). Mỗi xe nhớ xe đang chắn mình; khi chuỗi "ai chắn
    ai" khép thành vòng (hai xe đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước), xe có số thứ tự nhỏ nhất
    trong vòng đi trước. Xe cắt ngang đang chạy tới từ bên hông được đoán trước tới 2 giây: nó sẽ vào vệt đường của mình trước lúc
    mình tới chỗ đó thì nhả ga như gặp xe đứng ở đúng chỗ nó cắt qua, mình tới trước thì đi. Đường bị cắt
