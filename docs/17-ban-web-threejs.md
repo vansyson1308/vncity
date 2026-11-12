@@ -156,6 +156,16 @@ Các kỹ thuật chính:
    xe (để không dồn ứ trước rào), xe còn sót tự chạy ra; rào chắn dựng ở 35 đầu phố (`world/walkstreet.js`); người đi bộ đi
    cả dưới lòng đường và đông gấp rưỡi; người chơi không chạy xe được sau rào; cuốc xe ôm không đón trả trong khu.
 
+20. **Nhà và đường khớp nhau ngay từ dữ liệu.** `tools/build_world.mjs` sửa hình nhà, đường trước khi ghi `hanoi.json`, để lưới nhà, va
+   chạm, bản đồ nhỏ và `places.json` dùng chung một hình: ngõ cụt đâm vào nhà bị cắt ngắn; phần nhà nằm trong lòng đường xe chạy bị
+   cắt đi (kể cả lối xuyên nhà, thành lối hở); trong khu 36 phố phường (đa giác `OLD_Q` trong `world/data.js`: Phùng Hưng, Hàng Đậu, đê,
+   Hàng Bông - Hàng Gai - Cầu Gỗ) lòng đường về 5,5 đến 7 m và mặt tiền được nối dài ra tới mép hè 1,5 đến 2,4 m, mỗi nhà lệch nhau vài
+   chục cm; ngõ hẹp dưới 4 m giữa hai dãy nhà mang cờ 64 (`F_FLUSH`), `gen/ground.js` vẽ thành một mặt bê tông liền từ tường tới tường,
+   không bó vỉa (đầu ngõ cắt phẳng, dải bê tông hai bên ngõ dừng cách mặt nhựa của phố 1,4 m để bó vỉa của phố rẽ vào miệng ngõ); cây
+   do bộ sinh trồng dọc phố (`gen/props.js`) bỏ đi nếu tán sẽ đâm vào tường nhà quanh gốc, vì hè phố cổ chỉ còn 1,5 đến 2,4 m; công
+   trình nhỏ không tên trên sân quảng trường Ba Đình và nhà máy học vẽ trong khu đã giải toả phía đông Hồ Gươm bị bỏ.
+   Nhà bị bỏ vẫn giữ chỗ trong mảng (ghi số 0) và không đoạn đường nào bị xoá, vì chỉ số nhà, chỉ số đường là hạt giống của bộ sinh.
+
 ## 5. Hiệu năng
 
 Ngân sách, được CI kiểm (`tools/gen_check.mjs`, `tools/smoke.mjs`):

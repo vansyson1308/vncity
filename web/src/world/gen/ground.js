@@ -222,17 +222,27 @@ export function genGround(ctx, cx, cz) {
   // Ngõ lát liền (cờ F_FLUSH, tools/build_world.mjs): ngõ hẹp giữa hai dãy nhà là một mặt bê tông liền từ tường tới tường, không hè,
   // không bó vỉa đá. Lòng ngõ vẫn nằm ở cao độ lòng đường (cao độ đi lại, va chạm, dòng xe không đổi) nhưng vẽ bằng bê tông và nới
   // 0,3 m mỗi bên, để mép chui dưới chân tường của hai dãy nhà (bề rộng ngõ trong dữ liệu là khoảng cách tường tới tường).
-  const byW = new Map(), footByW = new Map(), laneByW = new Map();
+  const byW = new Map(), footByW = new Map(), laneByW = new Map(), laneEnd = new Map();
+  const endKey = (p) => p.X * 65536 + p.Y;
   for (const r of roads) {
     const flush = r.veh && !r.elev && (r.flags & F_FLUSH) !== 0;
     const m = flush ? laneByW : r.veh || r.kind === K.pedestrian ? byW : footByW, k = Math.round(r.w * 5) + (flush ? 3 : 0);
     let l = m.get(k); if (!l) m.set(k, (l = []));
     // cầu nâng: chỉ khúc chân dốc còn sát đất mới là lòng đường; phần đã lên cao thì bên dưới là vỉa hè, mặt nước
     if (r.elev) for (const [s0, s1] of lowSpans(r, 0.45)) l.push(toPath(subPath(r, s0, s1))); else l.push(r.path);
+    if (flush) for (const e of [r.path[0], r.path[r.path.length - 1]]) { const q = laneEnd.get(endKey(e)); if (q) { q.n++; q.k = Math.max(q.k, k); } else laneEnd.set(endKey(e), { p: e, n: 1, k }); }
   }
   let car = [], lane = [];
   for (const [k, paths] of byW) car = union(car, offset(paths, k, true));
-  for (const [k, paths] of laneByW) lane = union(lane, offset(paths, k, true));
+  // Ngõ lát liền: đầu ngõ cắt phẳng. Đầu tròn ở chỗ ngõ gặp phố khoét một nửa vòng bê tông sang hè bên kia phố hẹp; ở cuối ngõ cụt thì
+  // đầu phẳng dừng trước tường. Chỗ hai ngõ lát liền gặp nhau thì đắp thêm một đĩa tròn cho kín góc.
+  for (const [k, paths] of laneByW) {
+    const co = new CL.ClipperOffset(2, 1.2); co.AddPaths(paths, CL.JoinType.jtRound, CL.EndType.etOpenButt);
+    const out = new CL.Paths(); co.Execute(out, k); lane = union(lane, out);
+  }
+  const joints = [...laneEnd.values()].filter((q) => q.n > 1).map((q) => { const o = []; for (let i = 0; i < 16; i++) o.push({ X: Math.round(q.p.X + Math.cos(i * 0.3927) * q.k), Y: Math.round(q.p.Y + Math.sin(i * 0.3927) * q.k) }); return o; });
+  if (joints.length) lane = union(lane, joints);
+  const street = car; // mặt nhựa của các phố (chưa gộp lòng ngõ)
   if (lane.length) { lane = diff(lane, car); car = union(car, lane); } // chỗ ngõ gặp phố: mặt nhựa của phố thắng
   let foot = [];
   for (const [k, paths] of footByW) foot = union(foot, offset(paths, k, true, 2));
@@ -252,7 +262,14 @@ export function genGround(ctx, cx, cz) {
   const inner = offset(block, -2); // viên bó vỉa rộng 20 cm tính cả mặt vát
   let curbTop = diff(block, inner);
   // lòng ngõ lát liền, và dải 1,2 m hai bên ngõ (bậc thềm trước cửa, chỗ tường lùi vào): cùng một mặt bê tông với lòng ngõ
-  const laneRoad = lane.length ? inter(asphalt, lane) : [], laneNear = laneRoad.length ? offset(laneRoad, 12) : [];
+  const laneRoad = lane.length ? inter(asphalt, lane) : [];
+  let laneNear = laneRoad.length ? offset(laneRoad, 12) : [];
+  // dải bê tông không lấn sang hè của phố mà ngõ đổ ra: trong 1,4 m quanh mặt nhựa của phố vẫn là bó vỉa, gạch lát của phố (bó vỉa rẽ vào
+  // miệng ngõ một đoạn rồi mới chuyển thành bậc bê tông), không thành một mũi bó vỉa nhọn hoắt dọc phố
+  if (laneNear.length) {
+    const mouths = []; for (const q of laneEnd.values()) if (q.n === 1) mouths.push(rectPath(q.p.X - q.k - 40, q.p.Y - q.k - 40, q.p.X + q.k + 40, q.p.Y + q.k + 40));
+    const st = mouths.length ? inter(street, mouths) : []; if (st.length) laneNear = diff(laneNear, offset(st, 14));
+  }
 
   // ----- cây cỏ, lối dạo, bồn hoa, đất bãi sông -----
   const greens = [...ctx.greenGrid.collect(X0, Z0, X1, Z1)].filter((g) => g.bb[0] < X1 && g.bb[2] > X0 && g.bb[1] < Z1 && g.bb[3] > Z0);
