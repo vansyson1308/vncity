@@ -1,8 +1,9 @@
 // Ô Quan Chưởng (Đông Hà Môn, 1749, sửa 1817): cửa ô cuối cùng còn lại của thành Thăng Long.
 // Cổng thành hai tầng, cả vọng lâu cao khoảng 10 m (art bible bảng 3.5: "2 tầng, khoảng 9 m", rộng khoảng 20 m; con số 9 m ở đó là
 // ước lượng). Khối gạch rộng 20 m, sâu 7 m, cao 7 m tới đỉnh lan can; ba cửa vòm thông suốt theo trục z (cửa giữa rộng 3,4 m cao
-// 3,3 m cho xe chạy qua, hai cửa phụ rộng 1,8 m cao 2,5 m), trên có vọng lâu mái ngói đầu đao cong cao chừng 3,2 m.
-// (Bản trước dựng khối gạch cao 9 m và vọng lâu 6,9 m, tổng 14,8 m: cao gấp rưỡi ngoài đời.)
+// 3,3 m cho xe chạy qua, hai cửa phụ rộng 1,8 m cao 2,5 m), trên có vọng lâu mái ngói đầu đao cong cao chừng 4,1 m
+// (thân tường ló khỏi lan can, đỉnh mái khoảng 10 m). Bản trước dựng khối gạch cao 9 m và vọng lâu 6,9 m, tổng 14,8 m: cao gấp rưỡi
+// ngoài đời. Các số đo này là ước lượng theo ảnh, chưa đối chiếu bản vẽ.
 // Trên cửa chính là khung biển 3 × 1 m đắp nổi ba chữ Hán 東河門 (Đông Hà Môn) bằng mảnh sứ xanh, viết từ phải sang trái;
 // tường bên trái cửa chính gắn bia đá của Tổng đốc Hoàng Diệu (1881). Lan can mặt thành trổ ô lục lăng, ô trám.
 // Gốc toạ độ ở tâm mặt bằng, mặt chính quay về +z. Mạch gạch do shader vẽ (MAT.brick), mô hình chỉ đặt màu nền.
@@ -182,10 +183,11 @@ export function build(g) {
   for (const sx of [-1, 1]) { g.push().rotY((sx * Math.PI) / 2); parapet(g, HD, HW, 5, 0.95); g.pop(); }
 
   // ----- vọng lâu: thân gạch trát vữa, hai tầng mái ngói cong -----
-  // Các cao độ dưới đây viết cho vọng lâu cao 6,9 m đặt trên mặt thành cũ (7,9 m); cả khối được ép theo chiều đứng còn 3,2 m và hạ
-  // xuống mặt thành mới, giữ nguyên mặt bằng và độ vươn của mái.
-  g.push().move(0, Y_DECK, 0).scale(1, 0.46, 1).move(0, -7.9, 0);
-  const PW = 3.1, PD = 2.0, yP = 7.9, yE1 = 10.5;
+  // Các cao độ dưới đây viết cho vọng lâu cao 6,9 m đặt trên mặt thành cũ (7,9 m). Hạ xuống mặt thành mới và ép theo chiều đứng
+  // còn khoảng 4 m, giữ nguyên mặt bằng và độ vươn của mái: thân tường (tới diềm mái dưới) ép ít (K_BODY) để vẫn ló khỏi lan can
+  // một đoạn khi đứng dưới phố nhìn lên, hai tầng mái ép nhiều hơn (K_ROOF). Đỉnh vọng lâu khoảng 10 m: số đo thật chưa kiểm chứng.
+  const PW = 3.1, PD = 2.0, yP = 7.9, yE1 = 10.5, K_BODY = 0.75, K_ROOF = 0.5;
+  g.push().move(0, Y_DECK, 0).scale(1, K_BODY, 1).move(0, -yP, 0);
   for (let f = 0; f < 4; f++) {
     g.push().rotY((f * Math.PI) / 2);
     const w = f % 2 ? PD : PW, d = f % 2 ? PW : PD;
@@ -198,6 +200,7 @@ export function build(g) {
     } else { g.mat(MAT.brick).color(0x6a5546); fanZ(g, archPts(0, yP + 0.8, 1.0, 0.6), d + 0.07); g.mat().color(0x17120f); fanZ(g, archPts(0, yP + 0.9, 0.74, 0.55), d + 0.13); }
     g.pop();
   }
+  g.pop().push().move(0, Y_DECK + (yE1 - yP) * K_BODY, 0).scale(1, K_ROOF, 1).move(0, -yE1, 0);
   curvedRoof(g, 4.55, 3.45, 2.2, 1.35, yE1, 1.25, 0.55, 2);
   // cổ diêm (tầng trên thấp) và mái trên
   const yU = yE1 + 1.1, yE2 = 12.35;
