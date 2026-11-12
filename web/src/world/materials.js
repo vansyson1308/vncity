@@ -97,11 +97,14 @@ export function buildMaterials(renderer, quality, atlas) {
             transformed.z += sw * (cos(uTime * 1.05 + wp.z * 0.33 + wp.x * 0.19) * 0.06 + sin(uTime * 2.7 + wp.z * 1.7) * 0.02) * uWind; } }`)
         .replace('#include <project_vertex>', `#include <project_vertex>\nvFx = aFx; vWPos = (modelMatrix * ${opts.instanced ? 'instanceMatrix * ' : ''}vec4(transformed, 1.0)).xyz; vWN = normalize(mat3(modelMatrix) * ${opts.instanced ? 'mat3(instanceMatrix) * ' : ''}objectNormal);`);
       sh.fragmentShader = sh.fragmentShader
-        .replace('#include <common>', `#include <common>\nvarying vec4 vFx; varying vec3 vWPos; varying vec3 vWN;\n${SKY_GLSL}\n${LAMP_GLSL}${det ? '\nvarying vec3 vOPos; varying vec3 vON; uniform sampler2D uNoise;\n' + DETAIL_GLSL : ''}`)
+        .replace('#include <common>', `#include <common>\nvarying vec4 vFx; varying vec3 vWPos; varying vec3 vWN;\n${SKY_GLSL}\n${LAMP_GLSL}${opts.cut ? BAYER_GLSL : ''}${det ? '\nvarying vec3 vOPos; varying vec3 vON; uniform sampler2D uNoise;\n' + DETAIL_GLSL : ''}`)
         .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>${opts.cut ? `
-          if (uCut.w > 0.0) { vec3 ab = uCut.xyz - cameraPosition; float ct = dot(vWPos - cameraPosition, ab) / dot(ab, ab);
-            if (ct > 0.04 && ct < 0.88) { float cd = length(vWPos - (cameraPosition + ab * ct));
-              if (1.0 - smoothstep(uCut.w * 0.5, uCut.w, cd) > hash12(gl_FragCoord.xy) * 0.94 + 0.03) discard; } }` : ''}`)
+          { vec3 cv = vWPos - cameraPosition; float leafy = step(0.4, vFx.y); // tán lá, cờ, bạt (vật đung đưa): lỗ nhìn rộng hơn
+            float vis = smoothstep(mix(${CUT.near[0]}, ${CUT.leafNear[0]}, leafy), mix(${CUT.near[1]}, ${CUT.leafNear[1]}, leafy), length(cv));
+            if (uCut.w > 0.0) { vec3 ab = uCut.xyz - cameraPosition; float ct = dot(cv, ab) / max(dot(ab, ab), 1e-4);
+              if (ct > 0.0 && ct < 0.92) { float cr = uCut.w * mix(1.0, ${CUT.leafWide}, leafy);
+                vis = min(vis, max(smoothstep(cr * 0.72, cr, length(cv - ab * ct)), smoothstep(0.8, 0.92, ct))); } }
+            if (vis < 0.995 && vis < hnBayer8(gl_FragCoord.xy) + 0.008) discard; }` : ''}`)
         .replace('#include <color_fragment>', `#include <color_fragment>${det ? '\n{ float mid = floor(vFx.w * 15.9375 + 0.5); if (mid > 0.5) diffuseColor.rgb = detailColor(mid, diffuseColor.rgb, vOPos, normalize(vON), uNoise); }' : ''}`)
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * vFx.x * (${opts.alwaysGlow ? '1.0' : 'uLit'}) * 2.6;${opts.flood ? `\ntotalEmissiveRadiance += diffuseColor.rgb * vec3(1.0, 0.8, 0.56) * uLit * ${opts.flood.toFixed(2)} * (1.0 - 0.45 * smoothstep(2.0, 30.0, vWPos.y)) * (0.75 + 0.25 * abs(normalize(vWN).y));` : ''}${opts.alphaTest ? '\ntotalEmissiveRadiance += diffuseColor.rgb * uSunCol * 0.05 * max(dot(normalize(vWN), -uSunDir) * 0.5 + 0.5, 0.0);' : ''}`)
         .replace('#include <opaque_fragment>', `
@@ -115,7 +118,7 @@ export function buildMaterials(renderer, quality, atlas) {
     };
     return mat;
   };
-  // cut: vật che giữa camera và nhân vật (cột cổng, thân cây, mái hiên) bị đục lỗ lấm tấm để vẫn thấy nhân vật
+  // cut: vật che khuất tầm nhìn tự mờ đi (xem CUT ở cuối tệp): vật áp sát ống kính, và vật chắn giữa camera với nhân vật
   M.prop = M.makeProp({ map: atlas, detail: true, cut: true });
   M.propSolid = M.makeProp({ map: atlas }); // cho xe của người chơi: không bao giờ bị đục lỗ
   // công trình biểu tượng: có chất liệu chi tiết, ban đêm được đèn pha hắt sáng như ngoài đời
@@ -171,6 +174,23 @@ export function buildMaterials(renderer, quality, atlas) {
   });
   return M;
 }
+
+// ----- Vật che khuất tầm nhìn -----
+// Camera góc ba không va chạm với cây, cột, biển (chỉ va chạm với nhà và tường), nên phải có cách nhìn xuyên những thứ đó.
+// Hai luật, cùng một mẫu chấm:
+//   1. ÁP SÁT ỐNG KÍNH: mọi điểm ảnh của đồ vật gần camera hơn near[0] mét thì biến mất hẳn, từ near[0] tới near[1] thì hiện dần.
+//      Tán lá (và mọi thứ đung đưa theo gió: cờ, bạt) dùng bán kính lớn hơn (leafNear) vì một chiếc lá cách ống kính một mét đã che
+//      nửa màn hình. Nhờ vậy đứng dưới rặng liễu hay để camera chui vào tán cây thì lá quanh ống kính tan đi gọn gàng, lá ở xa còn nguyên.
+//   2. CHẮN NHÂN VẬT: trong một ống trụ từ camera tới ngực nhân vật (bán kính uCut.w, với tán lá thì rộng gấp leafWide lần) vật che
+//      biến mất, mép ống hiện dần; gần tới nhân vật thì thôi (không cắt cái xe, cái ghế ngay cạnh người).
+// Mẫu chấm là ma trận Bayer 8 × 8 bám theo điểm ảnh màn hình: đều, mịn, 64 mức, đứng yên khi camera đứng yên và không sôi lên như
+// nhiễu trắng (bản trước dùng nhiễu trắng trên một vùng chuyển rộng: lá sát ống kính thành một màn hạt che kín màn hình).
+// Cả hai luật chỉ so khoảng cách và nội suy smoothstep có cạnh tăng dần, mẫu số luôn dương: an toàn trên mọi GPU.
+const CUT = { near: ['0.4', '0.95'], leafNear: ['1.1', '2.3'], leafWide: '2.4' };
+const BAYER_GLSL = /* glsl */`
+float hnB2(vec2 a) { a = mod(floor(a), 2.0); return fract(a.x * 0.5 + a.y * 0.75); }
+float hnBayer8(vec2 a) { return hnB2(a * 0.25) * 0.0625 + hnB2(a * 0.5) * 0.25 + hnB2(a); }
+`;
 
 // Lưới từ gói dữ liệu của worker (G.pack()).
 export function propGeometry(p) {

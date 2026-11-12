@@ -121,8 +121,10 @@ Các kỹ thuật chính:
    chỗ tới được và tính sẵn chỗ đứng thoáng cho chức năng đi nhanh.
 11. **Camera không vượt tường.** Tia từ đầu nhân vật tới vị trí camera (đã cộng độ lệch ngang) dừng trước mọi bức tường
    0,35 m; camera còn được đẩy như một vòng tròn 0,5 m để mặt cắt gần của ống kính không cắt vào nhà; bị dồn vào góc
-   thì áp sát đầu nhân vật và nhân vật được ẩn đi. Cột cổng, thân cây, mái hiên chắn giữa camera và nhân vật thì bị
-   đục lỗ lấm tấm ngay trong shader để vẫn thấy nhân vật.
+   thì áp sát đầu nhân vật và nhân vật được ẩn đi. Cột cổng, thân cây, mái hiên, tán lá chắn giữa camera và nhân vật thì
+   mờ đi ngay trong shader (mẫu chấm Bayer đều, bám theo màn hình) để vẫn thấy nhân vật; đồ vật và lá áp sát ống kính
+   cũng tan đi trong một bán kính nhỏ quanh camera, nên không bao giờ có một chiếc lá che kín màn hình
+   (`world/materials.js`, mục CUT).
 12. **Âm thanh tổng hợp.** Không tải tệp âm thanh nào: tiếng máy theo vòng tua và hộp số bốn cấp, gió, phanh, bước
    chân, nền phố ngày và đêm, nhạc ngũ cung tự sáng tác với ba âm sắc gợi đàn bầu, đàn tranh, sáo trúc
    (`audio/audio.js`, ghi công trong `CREDITS.md`).
