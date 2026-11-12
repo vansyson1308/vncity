@@ -474,20 +474,25 @@ export function facadeMaterial(tex, noise) {
         float fage = mod(floor(fflag / 2.0), 4.0) / 3.0;                 // tuổi nhà: 0 mới sơn .. 1 cũ kỹ (gen/buildings.js)
         float fmod = step(13.5, fst) * step(fst, 14.5);                  // cao ốc kính
         vec2 fuv = vFUv; float bay = floor(fuv.x), fl = floor(fuv.y);
+        // Đạo hàm lấy từ toạ độ liền mạch vFUv, không từ fuv: fuv bị lật trong gian (fflip), gấp lại ở tường trơn và dời gốc ở tường
+        // chắn mái, nên ngay mép gian hai điểm ảnh cạnh nhau lệch cả một ô ảnh; GPU tưởng ảnh bị nén cực mạnh, lấy mức mip thô nhất
+        // và vẽ thành một đường kẻ dọc (ngang) ở mỗi mép gian. Mọi lần lấy mẫu dưới đây dùng textureGrad với đạo hàm này.
+        vec2 gx = dFdx(vFUv), gy = dFdy(vFUv), wgx = dFdx(vWPos.xz), wgy = dFdy(vWPos.xz);
         bool isRoof = fst < 9.5;
         // Mỗi gian một vẻ dù chung một lớp vẽ: nửa số gian lật trái phải (cửa, cục nóng, ống nước đổi bên). Tường trơn có chữ phun sơn
         // (kiểu 12) và mái thì không lật. Trong lớp cửa hàng không còn chữ nào: bảng, biển thật là hình nổi của lưới gần.
         float fflip = (!isRoof && abs(fst - 12.0) > 0.5) ? step(0.5, fract(fseed * 0.6180339 + 0.31)) : 0.0;
-        if (fflip > 0.5) fuv.x = bay + 1.0 - fract(fuv.x);
+        vec2 tgx = gx, tgy = gy;
+        if (fflip > 0.5) { fuv.x = bay + 1.0 - fract(fuv.x); tgx.x = -tgx.x; tgy.x = -tgy.x; }
         float gnd = isRoof ? 0.0 : step(fuv.y, 1.0);
         float layer = floor((gnd > 0.5 ? vVar.y : vVar.x) + 0.5);
         if (!isRoof && fuv.y >= ffl) { layer = ${L.PARAPET}.0; fuv.y -= ffl; }
         // tường trơn: chữ phun sơn, mảng gạch lộ, chân tường ẩm chỉ có ở tầng trệt; các tầng trên chỉ lấy nửa trên (trơn) của lớp
-        else if (!isRoof && layer > ${L.BLANK - 0.5} && layer < ${L.BLANK + 1.5} && fuv.y >= 1.0) fuv.y = fl + 0.53 + fract(fuv.y) * 0.45;
+        else if (!isRoof && layer > ${L.BLANK - 0.5} && layer < ${L.BLANK + 1.5} && fuv.y >= 1.0) { fuv.y = fl + 0.53 + fract(fuv.y) * 0.45; tgx.y *= 0.45; tgy.y *= 0.45; }
         vec3 tint = PAL[int(vVar.z + 0.5)];
         // nắng và tone mapping làm bạc màu vôi: đẩy độ no màu lên để vàng ra vàng, xanh ra xanh như ngoài phố
         if (!isRoof) { float tl = dot(tint, vec3(0.3, 0.59, 0.11)); tint = max(vec3(tl) + (tint - vec3(tl)) * 1.85, vec3(0.0)) * 0.9; }
-        vec4 tx = texture(uFacade, vec3(fuv, layer));
+        vec4 tx = textureGrad(uFacade, vec3(fuv, layer), tgx, tgy);
         float shopL = step(${L.SHOP - 0.5}, layer) * step(layer, ${L.SHOP + L.N_SHOP - 0.5}) + step(${L.MOD_GND - 0.5}, layer) * step(layer, ${L.MOD_GND + 0.5});
         vec2 ff = fract(fuv);
         float mk = tx.a, fglass = mk * (1.0 - shopL), flit = mk * shopL;
@@ -507,8 +512,8 @@ export function facadeMaterial(tex, noise) {
         // liền kề không bao giờ có cùng một mảng; một phần nhà cũ không có mảng nào. Ở xa hoa văn gạch hoà về màu gạch trung bình.
         // (Mẫu nhiễu và đạo hàm lấy ngoài nhánh rẽ để mức mip luôn xác định trên mọi GPU.)
         float bsd = fract(fseed * 0.3183099 + 0.07);
-        float bn = texture(uNoise, vec2(fuv.x * 0.21 + fseed * 0.613, fuv.y * 0.17 + bsd * 3.7)).r * 0.75 + texture(uNoise, vec2(fuv.x * 0.83 - bsd, fuv.y * 0.71 + fseed * 0.37)).g * 0.25;
-        vec2 bq = vec2(fuv.x * 17.0, fuv.y * 44.0); float bfade = clamp(1.0 - fwidth(bq.y) * 1.2, 0.0, 1.0);
+        float bn = textureGrad(uNoise, vec2(fuv.x * 0.21 + fseed * 0.613, fuv.y * 0.17 + bsd * 3.7), tgx * vec2(0.21, 0.17), tgy * vec2(0.21, 0.17)).r * 0.75 + textureGrad(uNoise, vec2(fuv.x * 0.83 - bsd, fuv.y * 0.71 + fseed * 0.37), tgx * vec2(0.83, 0.71), tgy * vec2(0.83, 0.71)).g * 0.25;
+        vec2 bq = vec2(fuv.x * 17.0, fuv.y * 44.0); float bfade = clamp(1.0 - (abs(tgx.y) + abs(tgy.y)) * 44.0 * 1.2, 0.0, 1.0);
         if (!isRoof && fage > 0.6 && fst < 12.5) {
           float bthr = mix(0.63, 0.74, bsd) + 0.1 * smoothstep(1.4, 3.0, fuv.y);
           float bm = smoothstep(bthr, bthr + 0.012, bn) * plast * step(0.3, bsd);
@@ -520,10 +525,10 @@ export function facadeMaterial(tex, noise) {
         }
         // loang ố, rêu mốc: nhiễu tần số thấp theo toạ độ tường; nhà càng cũ càng loang, càng nhiều vệt nước mưa chảy dọc
         vec2 nuv = isRoof ? vWPos.xz * 0.035 : vec2(fuv.x * 0.27 + fseed * 0.37, fuv.y * 0.19 + fseed * 0.11);
-        vec3 ns = texture(uNoise, nuv).rgb;
+        vec3 ns = textureGrad(uNoise, nuv, isRoof ? wgx * 0.035 : tgx * vec2(0.27, 0.19), isRoof ? wgy * 0.035 : tgy * vec2(0.27, 0.19)).rgb;
         float wall = isRoof ? 0.0 : (1.0 - mk) * (1.0 - fsign);
         fcol *= mix(0.92 + 0.18 * ns.r, 0.66 + 0.52 * ns.r, isRoof ? 0.6 : 0.2 + 0.8 * fage) * mix(1.0, 0.72 + 0.28 * smoothstep(0.0, 0.22, fuv.y), gnd);
-        float rain = texture(uNoise, vec2(fuv.x * 1.9 + fseed * 0.71, fuv.y * 0.045 + fseed * 0.05)).g;
+        float rain = textureGrad(uNoise, vec2(fuv.x * 1.9 + fseed * 0.71, fuv.y * 0.045 + fseed * 0.05), tgx * vec2(1.9, 0.045), tgy * vec2(1.9, 0.045)).g;
         fcol *= 1.0 - wall * fage * 0.34 * smoothstep(0.52, 0.8, rain) * (1.0 - gnd * 0.6);
         fcol = mix(fcol, fcol * vec3(0.7, 0.76, 0.58), smoothstep(0.66 - 0.22 * fage, 0.92 - 0.1 * fage, ns.b) * (0.25 + 0.3 * fage) * (1.0 - fglass));
         vec3 gtint = mix(vec3(1.0), tint, fmod * step(layer, ${L.MOD + 0.5}));  // chỉ lớp toàn kính mới nhuộm màu kính theo toà nhà
