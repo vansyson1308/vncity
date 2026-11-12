@@ -254,7 +254,7 @@ export function decorate(ctx, env) {
     const y0 = fh * 0.775, y1 = y0 + Math.min(0.8, fh * 0.2);
     if (f.shop && f.sign) {
       const sc = SIGN_LIN[SIGNS[f.sign][2]], uv = signUV(f.sign), sw = Math.min(bw - 0.24, 4.6), d = 0.08 + hash(s, 1) * 0.1, lightbox = hash(s, 19) < 0.5;
-      g.rgb(sc[0] * 0.45, sc[1] * 0.45, sc[2] * 0.45).glow(0).box(-sw / 2, y0, 0, sw / 2, y1, d, 'xXyY');
+      g.rgb(sc[0] * 0.45, sc[1] * 0.45, sc[2] * 0.45).glow(0).box(-sw / 2, y0, 0, sw / 2, y1, d, 'xXy');
       g.rgb(1, 1, 1).glow(lightbox ? 0.42 : 0.2).quad([-sw / 2, y0, d], [sw / 2, y0, d], [sw / 2, y1, d], [-sw / 2, y1, d], uv).glow(0);
       // biển vẫy vuông góc mặt nhà, cùng chữ với biển ngang. Phố cổ: hộp đèn nhỏ nằm gọn trong dải biển tầng 1; nơi khác treo ở tầng hai, to hơn.
       if (hash(s, 5) < 0.3 && (isOld || f.floors > 1) && bw > 2.6) {
@@ -295,28 +295,28 @@ export function decorate(ctx, env) {
         let out = 0; // độ vươn của sàn ban công (0: không có sàn)
         if (up === L.UP_IRON || up === L.UP_ALU || up === L.UP_TILE || up === L.UP_OLD || up === L.UP_90S || up === L.UP_HOTEL) {
           out = up === L.UP_OLD ? 0.6 : 0.85;
-          g.rgb(0.55, 0.54, 0.5).box(-w2, y - 0.1, 0, w2, y, out, 'xXyYZ');
-          if (up === L.UP_TILE) g.rgb(tl[0] * 0.75, tl[1] * 0.75, tl[2] * 0.75).box(-w2, y, out - 0.1, w2, y + 0.82, out, full ? 'xXYzZ' : 'Z');
+          g.rgb(0.55, 0.54, 0.5).box(-w2, y - 0.1, 0, w2, y, out, 'xXyZ');
+          if (up === L.UP_TILE) g.rgb(tl[0] * 0.75, tl[1] * 0.75, tl[2] * 0.75).box(-w2, y, out - 0.1, w2, y + 0.82, out, full ? 'xXYZ' : 'Z');
           else if (up === L.UP_90S) { // lan can con tiện: tay vịn xây, hàng con tiện trắng
-            g.rgb(0.78, 0.76, 0.7).box(-w2, y + 0.7, out - 0.13, w2, y + 0.82, out, 'yYzZ');
-            if (full) for (let k = 0, nb = Math.max(3, Math.round(bw / 0.42)); k < nb; k++) { const px = -w2 + 0.1 + ((2 * w2 - 0.2) * k) / (nb - 1); g.box(px - 0.06, y, out - 0.1, px + 0.06, y + 0.7, out - 0.02, 'xXZ'); }
+            g.rgb(0.78, 0.76, 0.7).box(-w2, y + 0.7, out - 0.13, w2, y + 0.82, out, 'yYZ');
+            if (full) for (let k = 0, nb = Math.max(3, Math.round(bw / 0.6)); k < nb; k++) { const px = -w2 + 0.1 + ((2 * w2 - 0.2) * k) / (nb - 1); g.box(px - 0.07, y, out - 0.1, px + 0.07, y + 0.7, out - 0.02, 'Z'); }
             else g.box(-w2, y, out - 0.08, w2, y + 0.7, out - 0.04, 'Z');
           } else if (up === L.UP_HOTEL) { // lan can kính, tay vịn inox
-            g.rgb(0.16, 0.24, 0.26).gloss(0.9).box(-w2, y + 0.04, out - 0.03, w2, y + 0.78, out, 'zZ');
-            g.rgb(0.5, 0.52, 0.54).gloss(0.7).box(-w2, y + 0.78, out - 0.05, w2, y + 0.83, out + 0.01, 'yYzZ').gloss(0);
+            g.rgb(0.16, 0.24, 0.26).gloss(0.9).box(-w2, y + 0.04, out - 0.03, w2, y + 0.78, out, 'Z');
+            g.rgb(0.5, 0.52, 0.54).gloss(0.7).box(-w2, y + 0.78, out - 0.05, w2, y + 0.83, out + 0.01, 'yZ').gloss(0);
           } else { // lan can sắt đen, inox sáng, hoặc gỗ nâu
             if (up === L.UP_IRON) g.rgb(0.03, 0.035, 0.04); else if (up === L.UP_OLD) g.rgb(0.1, 0.055, 0.03); else g.rgb(0.5, 0.52, 0.54).gloss(0.7);
-            g.box(-w2, y + 0.78, out - 0.04, w2, y + 0.83, out, 'yYzZ').box(-w2, y + 0.38, out - 0.03, w2, y + 0.41, out, 'zZ');
-            for (let k = 0, nb = full ? Math.max(3, Math.round(bw / (up === L.UP_ALU ? 1.3 : 0.5))) : 2; k < nb; k++) { const px = -w2 + ((2 * w2 - 0.04) * k) / (nb - 1); g.box(px, y, out - 0.04, px + 0.04, y + 0.8, out, k === 0 || k === nb - 1 ? 'xXzZ' : 'zZ'); }
-            if (full) g.box(-w2, y + 0.78, 0.02, -w2 + 0.03, y + 0.83, out, 'xXY').box(w2 - 0.03, y + 0.78, 0.02, w2, y + 0.83, out, 'xXY');
+            g.box(-w2, y + 0.78, out - 0.04, w2, y + 0.83, out, 'yZ').box(-w2, y + 0.38, out - 0.03, w2, y + 0.41, out, 'Z');
+            for (let k = 0, nb = full ? Math.max(3, Math.round(bw / (up === L.UP_ALU ? 1.3 : 0.7))) : 2; k < nb; k++) { const px = -w2 + ((2 * w2 - 0.04) * k) / (nb - 1); g.box(px, y, out - 0.04, px + 0.04, y + 0.8, out, k === 0 ? 'xZ' : k === nb - 1 ? 'XZ' : 'Z'); }
+            if (full) g.box(-w2, y + 0.78, 0.02, -w2 + 0.03, y + 0.83, out, 'x').box(w2 - 0.03, y + 0.78, 0.02, w2, y + 0.83, out, 'X');
             g.gloss(0);
           }
         } else if (up === L.UP_CAGE) { // chuồng cọp: lồng sắt đua ra 0,7 m, mái tôn che
           out = 0.7; const ch = fh * 0.6;
-          g.rgb(0.25, 0.3, 0.33).box(-w2, y - 0.05, 0, w2, y, out, 'xXyYZ');
+          g.rgb(0.25, 0.3, 0.33).box(-w2, y - 0.05, 0, w2, y, out, 'xXyZ');
           g.rgb(0.3, 0.38, 0.46).quad([-w2 - 0.05, y + ch - 0.08, out + 0.12], [w2 + 0.05, y + ch - 0.08, out + 0.12], [w2 + 0.05, y + ch + 0.1, 0], [-w2 - 0.05, y + ch + 0.1, 0]).quad([w2 + 0.05, y + ch - 0.08, out + 0.12], [-w2 - 0.05, y + ch - 0.08, out + 0.12], [-w2 - 0.05, y + ch + 0.1, 0], [w2 + 0.05, y + ch + 0.1, 0]);
           g.rgb(0.2, 0.25, 0.28);
-          for (let k = 0, nb = full ? Math.max(4, Math.round(bw / 0.36)) : 3; k < nb; k++) { const px = -w2 + ((2 * w2 - 0.03) * k) / (nb - 1); g.box(px, y, out - 0.03, px + 0.03, y + ch, out, k === 0 || k === nb - 1 ? 'xXzZ' : 'Z'); }
+          for (let k = 0, nb = full ? Math.max(4, Math.round(bw / 0.45)) : 3; k < nb; k++) { const px = -w2 + ((2 * w2 - 0.03) * k) / (nb - 1); g.box(px, y, out - 0.03, px + 0.03, y + ch, out, k === 0 ? 'xZ' : k === nb - 1 ? 'XZ' : 'Z'); }
           g.box(-w2, y + ch * 0.5, out - 0.03, w2, y + ch * 0.5 + 0.03, out, 'Z');
           if (full) g.box(-w2, y + ch * 0.5, 0, -w2 + 0.03, y + ch * 0.5 + 0.03, out, 'x').box(w2 - 0.03, y + ch * 0.5, 0, w2, y + ch * 0.5 + 0.03, out, 'X');
         } else if (up === L.UP_WORN && full) { // mái che tôn trên cửa sổ
@@ -327,7 +327,7 @@ export function decorate(ctx, env) {
         // cục nóng điều hoà 0,8 × 0,55 × 0,3 m: nhà mới gần như nhà nào cũng có
         if (bw > 2.9 && hash(sb, 30) < (f.era === 2 ? 0.75 : f.era === 1 ? 0.5 : 0.24)) {
           const ax = (hash(sb, 40) < 0.5 ? -1 : 1) * (bw / 2 - 0.62), ay = out ? (up === L.UP_CAGE ? y + 0.02 : y + fh * 0.52) : y + fh * 0.1, az = out && up !== L.UP_CAGE ? 0.02 : 0.03;
-          g.rgb(0.74, 0.74, 0.71).box(ax - 0.4, ay, az, ax + 0.4, ay + 0.55, az + 0.3, 'xXyYZ');
+          g.rgb(0.74, 0.74, 0.71).box(ax - 0.4, ay, az, ax + 0.4, ay + 0.55, az + 0.3, 'xXyZ');
           g.rgb(0.16, 0.17, 0.18).quad([ax - 0.3, ay + 0.08, az + 0.305], [ax + 0.1, ay + 0.08, az + 0.305], [ax + 0.1, ay + 0.47, az + 0.305], [ax - 0.3, ay + 0.47, az + 0.305]);
         }
         if (!out) continue;
@@ -533,7 +533,7 @@ export function decorate(ctx, env) {
             slab(g, CURB, y0, 0.11, g === near);
             g.mat(MAT.none).rgb(IRON[0], IRON[1], IRON[2]); slab(g, CURB + H - 0.1, CURB + H - 0.04, 0.02, false); slab(g, y0 + 0.08, y0 + 0.13, 0.02, false);
           }
-          const nb = Math.max(1, Math.round((a1 - a0) / 0.42)), bw2 = 0.015;
+          const nb = Math.max(1, Math.round((a1 - a0) / 0.6)), bw2 = 0.018;
           for (let k = 0; k <= nb; k++) {
             const sb = a0 + ((a1 - a0) * k) / nb, x = ax + dx * sb - X0, z = az + dz * sb - Z0;
             near.quad([x - dx * bw2, y0, z - dz * bw2], [x + dx * bw2, y0, z + dz * bw2], [x + dx * bw2, CURB + H, z + dz * bw2], [x - dx * bw2, CURB + H, z - dz * bw2]).quad([x + dx * bw2, y0, z + dz * bw2], [x - dx * bw2, y0, z - dz * bw2], [x - dx * bw2, CURB + H, z - dz * bw2], [x + dx * bw2, CURB + H, z + dz * bw2]);
