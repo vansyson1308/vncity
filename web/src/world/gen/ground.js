@@ -94,6 +94,8 @@ function lakeRing(ctx) {
 // Ngoài vòng hồ, xét theo ô 32 m: trục phố chính ở phố cổ, khu phố Pháp, Ba Đình lát đá tự nhiên xanh xám; phố nhỏ và các khu
 // khác còn gạch block đỏ tự chèn hoặc gạch terrazzo cũ (đổi kiểu theo từng mảng 128 m, như các đợt lát hè khác nhau ngoài đời).
 function cellPaving(ctx, x, z) {
+  // Lăng, quảng trường Ba Đình, Phủ Chủ tịch: sân và lối đi giữa các ô cỏ lát đá sáng màu đồng nhất, không gạch block đỏ (QC vòng 2)
+  if (isSolemn(x, z)) return LAYER.granite;
   const zn = zoneAt(x, z), h = hash2(Math.floor(x / 128), Math.floor(z / 128), 7);
   const rd = ctx.nearestRoad(x, z, 40, (r) => r.veh && r.kind <= K.residential), main = rd && rd.r.kind <= K.tertiary;
   if (zn === ZONE.old || zn === ZONE.french || zn === ZONE.badinh) return main || h < 0.55 ? LAYER.paving : h < 0.8 ? LAYER.terrazzo : LAYER.brick;
@@ -301,7 +303,7 @@ export function genGround(ctx, cx, cz) {
   gb.fill(toEx(curbTop), CURB, LAYER.curb);
   for (const [layer, part] of pavingParts(ctx, paved, X0, Z0)) gb.fill(toEx(part), CURB, layer);
   gb.fill(toEx(grass), CURB, LAYER.grass);
-  if (pathP.length) gb.fill(toEx(pathP), CURB, LAYER.path);
+  if (pathP.length) gb.fill(toEx(pathP), CURB, isSolemn(X0 + CS / 2, Z0 + CS / 2) ? LAYER.granite : LAYER.path); // lối đi trong khu Ba Đình cùng đá với sân
   if (flower.length) gb.fill(toEx(flower), CURB + 0.12, LAYER.flower);
   if (dirt.length) gb.fill(toEx(dirt), CURB, LAYER.dirt);
   if (gravel.length) gb.fill(toEx(gravel), CURB + 0.01, LAYER.gravel);
@@ -358,9 +360,13 @@ export function genGround(ctx, cx, cz) {
   // cùng chiều màu TRẮNG đứt nét 3 m hở 6 m. Phố cổ rộng dưới 8 m không kẻ vạch dọc, chỉ có vạch sang đường ở ngã tư.
   // Vạch sang đường: các vạch trắng rộng 40 cm cách nhau 60 cm, dài 3 đến 4 m. Nút lớn có vạch dừng 40 cm cách vạch sang đường
   // 2,4 m, chỉ kẻ trên nửa đường của chiều xe đi tới (đi bên phải), và mũi tên chỉ hướng trên từng làn.
-  const inChunk = (x, z) => x >= X0 && x < X1 && z >= Z0 && z < Z1, zebras = [], o5 = [0, 0, 0, 0, 0];
-  for (const r of roads) {
-    if (!r.veh || r.kind > K.tertiary || r.w < 5.5 || r.len < 14) continue;
+  // Hai lượt: lượt đầu kẻ vạch sang đường, vạch dừng, mũi tên ở đầu đoạn và ghi lại chỗ các vạch sang đường (kể cả vạch thuộc ô bên
+  // cạnh); lượt sau kẻ vạch dọc, bỏ khúc nào rơi vào một vạch sang đường (vạch sang đường đặt sang đoạn nối tiếp khi đoạn sát nút quá
+  // ngắn, mà đoạn nối tiếp thì kẻ vạch dọc tới tận đầu đoạn: hai lớp sơn cùng mặt phẳng sẽ nhấp nháy).
+  const inChunk = (x, z) => x >= X0 && x < X1 && z >= Z0 && z < Z1, zebras = [], zr = [], o5 = [0, 0, 0, 0, 0, null];
+  const onZebra = (x, z, ux, uz, h) => { for (const q of zr) { const lx = (x - q[0]) * q[2] + (z - q[1]) * q[3], ly = -(x - q[0]) * q[3] + (z - q[1]) * q[2], c = Math.abs(ux * q[2] + uz * q[3]); if (Math.abs(lx) < q[4] + h * c + 0.3 && Math.abs(ly) < q[5] + h * (1 - c) + 0.3) return true; } return false; };
+  for (const pass of [0, 1]) for (const r of roads) {
+    if (!r.veh || r.kind > K.tertiary || r.w < 5.5) continue;
     const p = r.p, oneway = r.flags & F_ONEWAY ? (r.flags & F_REVERSE ? -1 : 1) : 0, el = !!r.elev, mb = el ? db : gb;
     const old = zoneAt(p[0], p[1]) === ZONE.old, lines = r.w >= 6.5 && !(old && r.w < 8);
     const n0 = ctx.nodes.get(ctx.nodeKey(p[0], p[1])), n1 = ctx.nodes.get(ctx.nodeKey(p[p.length - 2], p[p.length - 1]));
@@ -373,39 +379,63 @@ export function genGround(ctx, cx, cz) {
     } else if (lines) { const lanes = Math.max(1, Math.round(r.w / 3.4)); for (let l = 1; l < lanes; l++) offs.push([-r.w / 2 + (r.w * l) / lanes, LAYER.white, 3, 9]); }
     const s0 = j0 ? j0 + 9 : 0, s1 = r.len - (j1 ? j1 + 9 : 0);
     let d = 0;
-    for (let i = 0; i < p.length - 2 && offs.length; i += 2) {
+    for (let i = 0; i < p.length - 2 && offs.length && pass === 1; i += 2) {
       const ax = p[i], az = p[i + 1], bx = p[i + 2], bz = p[i + 3], L = Math.hypot(bx - ax, bz - az); if (L < 0.01) continue;
       const dx = (bx - ax) / L, dz = (bz - az) / L;
       for (const [o, layer, dash, period] of offs) {
         // vạch đứt giữ nhịp theo quãng đường tính từ đầu đoạn; vạch liền thì chia khúc ngay từ đầu mỗi cạnh để không hở ở chỗ gấp khúc
         for (let s = dash >= period ? 0 : Math.ceil((d + 1e-6) / period) * period - d; s < L; s += period) {
           const dd = d + s, len = Math.min(dash, L - s); if (len < 0.3 || dd < s0 || dd + len > s1 + 0.01) continue;
-          const h = len / 2, x = ax + dx * (s + h), z = az + dz * (s + h); if (!inChunk(x, z)) continue;
+          const h = len / 2, x = ax + dx * (s + h), z = az + dz * (s + h); if (!inChunk(x, z) || (!el && onZebra(x - dz * o, z + dx * o, dx, dz, h))) continue;
           const y0 = el ? roadY(r, dd) + 0.035 : PAINT_Y, y1 = el ? roadY(r, dd + 2 * h) + 0.035 : PAINT_Y;
           mb.slopeQuad(x - dz * o, z + dx * o, dx, dz, h, 0.075, y0, y1, layer);
         }
       }
       d += L;
     }
-    if (el) continue;
+    if (el || pass === 1) continue;
     // hai đầu đoạn: vạch sang đường, vạch dừng, mũi tên
     for (const [jr, end, node] of [[j0, 0, n0], [j1, 1, n1]]) {
-      if (!jr || r.len < 2 * jr + 16) continue;
-      const zl = r.w >= 12 ? 2 : 1.6, at = end ? r.len - jr - 1.2 - zl : jr + 1.2 + zl; // tâm vạch sang đường
-      alongAt(r, at, o5); const x = o5[0], z = o5[1], dx = o5[2], dz = o5[3]; if (!inChunk(x, z)) continue;
+      if (!jr) continue;
+      const zl = r.w >= 12 ? 2 : 1.6, at0 = jr + 1.2 + zl, at = end ? r.len - at0 : at0; // tâm vạch sang đường, cách tâm nút at0 mét
+      // Điểm cách tâm nút s mét theo nhánh này, kèm hướng của đoạn (chiều p0 → cuối) và đường nối tiếp (nếu có). Bản đồ cắt đường ở mọi
+      // chỗ có ngõ, lối đi cắt vào, nên đoạn sát nút nhiều khi chỉ dài vài mét (QC vòng 2: 49/75 nút có đèn không có vạch sang đường).
+      // Đoạn đủ dài thì lấy trên chính đoạn; không thì kéo thẳng theo hướng nhánh từ tâm nút, và chỉ nhận khi đầu kia của đoạn là nút
+      // nhỏ (không phải một nút giao lớn khác) và điểm đó nằm trên tim một đoạn đường xe nối tiếp cùng bề rộng, cùng hướng.
+      const far = end ? n0 : n1;
+      const P = (sd, out) => {
+        if (sd <= r.len - 0.5) { alongAt(r, end ? r.len - sd : sd, out); out[5] = null; return true; }
+        if (far && far.major >= 3) return false;
+        const i0 = end ? p.length - 2 : 0, x0 = p[i0], z0 = p[i0 + 1]; let ux = 0, uz = 0;
+        for (let k = 2; k < p.length; k += 2) { const j = end ? p.length - 2 - k : k; ux = p[j] - x0; uz = p[j + 1] - z0; if (ux * ux + uz * uz >= 25) break; }
+        const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul;
+        const x = x0 + ux * sd, z = z0 + uz * sd, q = ctx.nearestRoad(x, z, r.w / 2 + 4, (c) => c !== r && c.veh && !c.skip && !c.elev);
+        if (!q || q.d > 0.8 || Math.abs(q.r.w - r.w) > 1.6) return false;
+        const qp = q.r.p, sx = qp[q.seg + 2] - qp[q.seg], sz = qp[q.seg + 3] - qp[q.seg + 1], sl = Math.hypot(sx, sz) || 1;
+        if (Math.abs((sx * ux + sz * uz) / sl) < 0.94) return false;
+        out[0] = x; out[1] = z; out[2] = end ? -ux : ux; out[3] = end ? -uz : uz; out[5] = q.r; return true;
+      };
+      if (!P(at0, o5)) continue;
+      const x = o5[0], z = o5[1], dx = o5[2], dz = o5[3], cont = o5[5];
       // nút giao phức tạp (vòng xoay, nhiều nhánh sát nhau): nếu có lòng đường khác cắt qua chỗ định kẻ vạch, hoặc đã có một
       // vạch qua đường khác trong vòng 7 m, thì thôi không kẻ, kẻo các vạch chồng chéo lên nhau
-      const other = ctx.nearestRoad(x, z, r.w / 2 + 6, (q) => q !== r && q.veh && !q.skip && !q.elev);
+      // (miệng ngõ, phố nhỏ đổ vào đoạn này hay đoạn nối tiếp ở một nút nhỏ thì không tính: chỉ là chỗ rẽ vào, vạch kẻ ngang qua như ngoài phố)
+      const nodeK = end ? ctx.nodeKey(p[p.length - 2], p[p.length - 1]) : ctx.nodeKey(p[0], p[1]), ends = new Set();
+      for (const q of cont ? [r, cont] : [r]) for (const i of [0, q.p.length - 2]) { const k = ctx.nodeKey(q.p[i], q.p[i + 1]); if (k !== nodeK) ends.add(k); }
+      const mouth = (q) => { for (const i of [0, q.p.length - 2]) { const k = ctx.nodeKey(q.p[i], q.p[i + 1]); if (ends.has(k)) { const nd = ctx.nodes.get(k); return !nd || nd.major < 3; } } return false; };
+      const other = ctx.nearestRoad(x, z, r.w / 2 + 6, (q) => q !== r && q !== cont && q.veh && !q.skip && !q.elev && !mouth(q));
       if (other && other.d < other.r.w / 2 + 1.6) continue;
+      zr.push([x, z, dx, dz, zl, r.w / 2]);
+      if (!inChunk(x, z)) continue;
       if (zebras.some((q) => (q[0] - x) ** 2 + (q[1] - z) ** 2 < 49)) continue; zebras.push([x, z]);
       const nS = Math.max(2, Math.floor(r.w - 0.9) + 1);
       for (let k = 0; k < nS; k++) { const o = k - (nS - 1) / 2; gb.flatQuad(x - dz * o, z + dx * o, dx, dz, zl, 0.2, PAINT_Y, LAYER.white); }
       // vạch dừng và mũi tên: chỉ ở nút lớn, trên phần đường của chiều xe đang đi tới nút
       const toward = end ? 1 : -1; // chiều xe đi tới nút, tính theo chiều đoạn
       if (node.maxW < 9 || r.w < 7 || (oneway && oneway !== toward)) continue;
-      const sAt = at - toward * (zl + 2.4 + 0.2); alongAt(r, sAt, o5);
+      const sAt = at - toward * (zl + 2.4 + 0.2), sd = at0 + zl + 2.6; // vạch dừng cách tâm nút sd mét
       const half = oneway ? r.w / 2 - 0.25 : r.w / 4 - 0.12, oc = oneway ? 0 : (toward * r.w) / 4;
-      if (sAt > 4 && sAt < r.len - 4) gb.flatQuad(o5[0] - o5[3] * oc, o5[1] + o5[2] * oc, o5[2], o5[3], 0.2, half, PAINT_Y, LAYER.white);
+      if (sd > 4 && P(sd, o5)) gb.flatQuad(o5[0] - o5[3] * oc, o5[1] + o5[2] * oc, o5[2], o5[3], 0.2, half, PAINT_Y, LAYER.white);
       if (r.w < 10 || r.len < 2 * jr + 50) continue;
       const aAt = sAt - toward * 7.5; alongAt(r, aAt, o5);
       const nl = oneway ? Math.max(1, Math.round(r.w / 3.4)) : Math.max(1, Math.round(r.w / 7)), wl = (oneway ? r.w : r.w / 2) / nl;
