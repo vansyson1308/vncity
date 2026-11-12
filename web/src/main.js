@@ -145,7 +145,7 @@ async function boot() {
   traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera, sky.hours);
 
   // ----- trạng thái và sự kiện lối chơi -----
-  const G = { started: false, photo: false, t: 0, saveT: 0, slowT: 0, wasNight: sky.night > 0.5, crossT: 0, fps: 60, walk: false };
+  const G = { started: false, home: null, photo: false, t: 0, saveT: 0, slowT: 0, wasNight: sky.night > 0.5, crossT: 0, fps: 60, walk: false };
   const flag = (k) => { if (passport.flags[k]) return false; passport.flags[k] = 1; passport.save(); return true; };
   const counts = () => hud.setCounts(passport.visited.size, passport.items.length, passport.money);
   counts();
@@ -181,7 +181,7 @@ async function boot() {
     };
   };
   let warpTo = null;
-  const warp = (x, z, yaw) => { warpTo = [x, z, yaw]; chunks.update(x, z, true); };
+  const warp = (x, z, yaw) => { warpTo = [x, z, yaw]; chunks.update(x, z, true); G.home = null; }; // đi nhanh tới đâu là đóng dấu ở đó ngay
   const shareText = () => T('shareText', { n: passport.visited.size, t: passport.items.length });
   const share = async () => { const url = location.origin + location.pathname; try { if (navigator.share) await navigator.share({ title: document.title, text: shareText(), url }); else { await navigator.clipboard.writeText(`${shareText()} ${url}`); hud.toast(T('copied'), 3, '', '🔗'); } } catch { /* người dùng huỷ */ } };
   $('k-share').addEventListener('click', share); $('d-share').addEventListener('click', share);
@@ -219,7 +219,9 @@ async function boot() {
 
   // ----- màn hình bắt đầu -----
   $('loading').classList.add('hidden');
-  const begin = () => { G.started = true; $('start').classList.add('hidden'); hud.show(); input.enabled = true; audio.start(); canvas.focus(); if (!resumed && passport.visited.size === 0) setTimeout(() => hud.toast(T('g_first'), 8), 1200); };
+  // Điểm xuất phát (trước cổng đền Ngọc Sơn) nằm trong tầm đóng dấu của Tháp Bút: chỉ đóng dấu khi người chơi đã đi khỏi chỗ vào game
+  // vài bước (hay đã đi nhanh tới đâu đó), để lời dẫn "đi qua cổng đền lấy con dấu đầu tiên" không bị lời khen chen ngang ngay giây đầu.
+  const begin = () => { G.home = [player.pos.x, player.pos.z]; G.started = true; $('start').classList.add('hidden'); hud.show(); input.enabled = true; audio.start(); canvas.focus(); if (!resumed && passport.visited.size === 0) setTimeout(() => hud.toast(T('g_first'), 8), 1200); };
   if (resumed) { $('play').dataset.i18n = 'resume'; $('play').textContent = T('resume'); }
   if (params.has('shot')) begin(); else $('start').classList.remove('hidden');
   $('play').addEventListener('click', begin);
@@ -270,7 +272,8 @@ async function boot() {
     if (traffic.touch) { fares.bump(0.1 * traffic.touch); traffic.touch = 0; }
     for (const h of traffic.honks) { const dx = h[0] - player.pos.x, dz = h[1] - player.pos.z, d = Math.hypot(dx, dz); if (d < 60) audio.horn(Math.max(-1, Math.min(1, (dx * Math.cos(cam.yaw) - dz * Math.sin(cam.yaw)) / 20)), 0.26 / (1 + d * 0.12), h[2] >= 3); }
     traffic.honks.length = 0;
-    if (G.started && !G.photo) { passport.update(player.pos.x, player.pos.z); fares.update(dt, player); }
+    if (G.home && Math.hypot(player.pos.x - G.home[0], player.pos.z - G.home[1]) > 2.5) G.home = null;
+    if (G.started && !G.photo) { if (!G.home) passport.update(player.pos.x, player.pos.z); fares.update(dt, player); }
     cam.update(dt, player, frozen ? null : input);
     // camera áp sát đầu (bị dồn vào góc tường) thì ẩn nhân vật để không nhìn xuyên vào trong người
     { const near = cam.close < 0.8; player.root.visible = !near; player.helmet.visible = player.mode === 'bike' && !near;
