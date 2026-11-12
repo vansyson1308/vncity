@@ -1,6 +1,6 @@
 // Vật liệu dùng chung: mặt đất (texture mảng), đồ vật (màu đỉnh + bảng chữ biển hiệu), mặt nước.
 import * as THREE from 'three';
-import { SKY_GLSL, skyU } from '../engine/sky.js';
+import { SKY_GLSL, skyU, LAMP_GLSL, lampU } from '../engine/sky.js';
 import { arrayTexture, groundTextures, GROUND_SCALE, DECAL_LAYER, DECAL_GRID, noiseTexture, waterNormals, leafTexture } from './textures.js';
 import { facadeTexture, facadeMaterial } from './facades.js';
 import { DETAIL_GLSL } from './detail.js';
@@ -17,7 +17,7 @@ export function buildMaterials(renderer, quality, atlas) {
   const gt = groundTextures(quality.texSize), gtex = arrayTexture(gt.canvases, gt.masks, { aniso });
   M.ground = new THREE.MeshLambertMaterial({ color: 0xffffff });
   M.ground.onBeforeCompile = (sh) => {
-    Object.assign(sh.uniforms, skyU, { uGround: { value: gtex }, uNoise: { value: noise } });
+    Object.assign(sh.uniforms, skyU, lampU, { uGround: { value: gtex }, uNoise: { value: noise } });
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nattribute float aLayer; varying float vLayer; varying vec3 vWPos; varying vec3 vWN; varying vec3 vDec;')
       // đề can (lớp từ 32): thuộc tính pháp tuyến chở toạ độ trong ô đề can (x, z) và lớp nền (y); pháp tuyến thật luôn hướng lên
@@ -29,6 +29,7 @@ export function buildMaterials(renderer, quality, atlas) {
       .replace('#include <common>', `#include <common>
         precision highp sampler2DArray; uniform sampler2DArray uGround; uniform sampler2D uNoise; varying float vLayer; varying vec3 vWPos; varying vec3 vWN; varying vec3 vDec;
         ${SKY_GLSL}
+        ${LAMP_GLSL}
         const float GS[${GROUND_SCALE.length}] = float[${GROUND_SCALE.length}](${GROUND_SCALE.map((v) => v.toFixed(5)).join(',')});`)
       .replace('#include <map_fragment>', `
         float gl = floor(vLayer + 0.5), dcell = gl - 32.0;
@@ -68,6 +69,8 @@ export function buildMaterials(renderer, quality, atlas) {
           totalEmissiveRadiance += vec3(1.0, 0.66, 0.34) * gled * uLit;
         }`)
       .replace('#include <opaque_fragment>', `
+        // đèn phố hắt xuống: nhân độ sáng của mặt đất (vân đá, vạch sơn vẫn rõ); mặt cầu nâng chỉ nhận đèn trên cầu
+        if (uLit > 0.01) outgoingLight *= 1.0 + lampLight(vWPos, smoothstep(1.0, 2.2, vWPos.y));
         if (gwet > 0.01) { vec3 V = normalize(vWPos - cameraPosition); vec3 Rf = reflect(V, vec3(0.0, 1.0, 0.0));
           float fr = 0.04 + 0.96 * pow(clamp(1.0 + V.y, 0.0, 1.0), 5.0);
           outgoingLight = mix(outgoingLight * (1.0 - 0.35 * gwet), skyColor(Rf), fr * gwet * 0.7); }
@@ -83,7 +86,7 @@ export function buildMaterials(renderer, quality, atlas) {
     const mat = new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true, map: opts.map || null, side: opts.side || THREE.FrontSide, alphaTest: opts.alphaTest || 0 });
     if (opts.alphaTest && quality.msaa) mat.alphaToCoverage = true;
     mat.onBeforeCompile = (sh) => {
-      Object.assign(sh.uniforms, skyU, { uWind: { value: 1 }, uNoise: { value: noise } });
+      Object.assign(sh.uniforms, skyU, lampU, { uWind: { value: 1 }, uNoise: { value: noise } });
       const det = !!opts.detail && !opts.instanced; // chất liệu chi tiết (detail.js): chỉ cho lưới đứng yên
       sh.vertexShader = sh.vertexShader
         .replace('#include <common>', `#include <common>\nattribute vec4 aFx; varying vec4 vFx; varying vec3 vWPos; varying vec3 vWN; uniform float uTime; uniform float uWind;${det ? ' varying vec3 vOPos; varying vec3 vON;' : ''}${opts.instanced ? '\nattribute vec3 aTint; attribute vec3 aTint2;' : ''}`)
@@ -94,7 +97,7 @@ export function buildMaterials(renderer, quality, atlas) {
             transformed.z += sw * (cos(uTime * 1.05 + wp.z * 0.33 + wp.x * 0.19) * 0.06 + sin(uTime * 2.7 + wp.z * 1.7) * 0.02) * uWind; } }`)
         .replace('#include <project_vertex>', `#include <project_vertex>\nvFx = aFx; vWPos = (modelMatrix * ${opts.instanced ? 'instanceMatrix * ' : ''}vec4(transformed, 1.0)).xyz; vWN = normalize(mat3(modelMatrix) * ${opts.instanced ? 'mat3(instanceMatrix) * ' : ''}objectNormal);`);
       sh.fragmentShader = sh.fragmentShader
-        .replace('#include <common>', `#include <common>\nvarying vec4 vFx; varying vec3 vWPos; varying vec3 vWN;\n${SKY_GLSL}${det ? '\nvarying vec3 vOPos; varying vec3 vON; uniform sampler2D uNoise;\n' + DETAIL_GLSL : ''}`)
+        .replace('#include <common>', `#include <common>\nvarying vec4 vFx; varying vec3 vWPos; varying vec3 vWN;\n${SKY_GLSL}\n${LAMP_GLSL}${det ? '\nvarying vec3 vOPos; varying vec3 vON; uniform sampler2D uNoise;\n' + DETAIL_GLSL : ''}`)
         .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>${opts.cut ? `
           if (uCut.w > 0.0) { vec3 ab = uCut.xyz - cameraPosition; float ct = dot(vWPos - cameraPosition, ab) / dot(ab, ab);
             if (ct > 0.04 && ct < 0.88) { float cd = length(vWPos - (cameraPosition + ab * ct));
@@ -102,6 +105,9 @@ export function buildMaterials(renderer, quality, atlas) {
         .replace('#include <color_fragment>', `#include <color_fragment>${det ? '\n{ float mid = floor(vFx.w * 15.9375 + 0.5); if (mid > 0.5) diffuseColor.rgb = detailColor(mid, diffuseColor.rgb, vOPos, normalize(vON), uNoise); }' : ''}`)
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * vFx.x * (${opts.alwaysGlow ? '1.0' : 'uLit'}) * 2.6;${opts.flood ? `\ntotalEmissiveRadiance += diffuseColor.rgb * vec3(1.0, 0.8, 0.56) * uLit * ${opts.flood.toFixed(2)} * (1.0 - 0.45 * smoothstep(2.0, 30.0, vWPos.y)) * (0.75 + 0.25 * abs(normalize(vWN).y));` : ''}${opts.alphaTest ? '\ntotalEmissiveRadiance += diffuseColor.rgb * uSunCol * 0.05 * max(dot(normalize(vWN), -uSunDir) * 0.5 + 0.5, 0.0);' : ''}`)
         .replace('#include <opaque_fragment>', `
+          // đèn phố soi lên đồ vật gần mặt đất (xe đỗ, gốc cây, quầy hàng, tán cây thấp): chỉ phần khuếch tán, không nhân vào phần tự
+          // phát sáng (đèn lồng, biển hộp đèn); càng lên cao càng nhạt, mặt quay xuống đất gần như không nhận
+          if (uLit > 0.01) outgoingLight += (outgoingLight - totalEmissiveRadiance) * lampLight(vWPos, 0.0) * ((1.0 - 0.75 * smoothstep(2.0, 9.0, vWPos.y)) * (0.62 + 0.38 * clamp(vWN.y, -1.0, 1.0)));
           if (vFx.z > 0.02) { vec3 V = normalize(vWPos - cameraPosition); vec3 N = normalize(vWN); vec3 Rf = reflect(V, N);
             float fr = 0.05 + 0.95 * pow(clamp(1.0 - dot(-V, N), 0.0, 1.0), 4.0);
             outgoingLight += skyColor(Rf) * fr * vFx.z * 0.55 + uSunCol * pow(max(dot(Rf, uSunDir), 0.0), 40.0) * vFx.z * 0.25; }

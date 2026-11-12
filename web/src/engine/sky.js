@@ -41,6 +41,29 @@ vec3 skyColor(vec3 d) { return mix(skyBase(d), uGroundCol, (1.0 - smoothstep(-0.
 float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 `;
 
+// ----- Ánh đèn phố hắt xuống đất và đồ vật -----
+// Một "bản đồ ánh sáng" nhìn từ trên xuống quanh người chơi (world/chunks.js LightPools vẽ lại khi đèn quanh đó đổi): mỗi cột
+// đèn, mỗi cửa hàng sáng đèn CỘNG màu của nó vào bản đồ; vật liệu mặt đất và đồ vật đọc bản đồ theo toạ độ (x, z) rồi nhân độ sáng
+// của mình với (1 + đèn). Tổng đèn được nén mềm về LAMP_CAP nên dù bao nhiêu vệt sáng chồng lên nhau (phố đèn lồng Hàng Mã, Tạ
+// Hiện) mặt đường cũng chỉ sáng gấp vài lần (tối đa 1 + LAMP_CAP), giữ đúng sắc đèn, không bao giờ cháy trắng. (Cách cũ vẽ mỗi vệt sáng thành một tấm
+// trong suốt NHÂN vào khung hình: n vệt chồng nhau thì độ sáng nhân lên theo luỹ thừa n, tới hàng trăm lần, bloom kéo thành
+// quầng trắng hồng che cả phố.)
+// Kênh RGB: đèn dưới đất. Kênh A: đèn trên mặt cầu nâng (chỉ soi mặt cầu, không soi con phố bên dưới gầm cầu).
+export const LAMP_STORE = 16; // bản đồ 8 bit giữ (tổng đèn / LAMP_STORE)
+export const lampU = { uLampTex: { value: null }, uLampMap: { value: new THREE.Vector3(0, 0, 0) } }; // (tâm x, tâm z, 1 / bề rộng)
+export const LAMP_GLSL = /* glsl */`
+uniform sampler2D uLampTex; uniform vec3 uLampMap;
+const float LAMP_CAP = 9.0; // trần của phần đèn: mặt đường dưới chùm đèn dày nhất sáng gấp tối đa 1 + LAMP_CAP lần lúc không đèn
+// p: vị trí thế giới; deck: 1 nếu điểm nằm trên mặt cầu nâng. Trả về phần đèn (đã nén) để nhân: màu *= 1 + lampLight
+vec3 lampLight(vec3 p, float deck) {
+  vec2 q = (p.xz - uLampMap.xy) * uLampMap.z;
+  vec4 t = texture2D(uLampTex, q + 0.5);
+  float edge = 1.0 - smoothstep(0.4, 0.49, max(abs(q.x), abs(q.y)));
+  vec3 l = mix(t.rgb, t.a * vec3(1.0, 0.95, 0.75), deck) * (${LAMP_STORE.toFixed(1)} * edge * uLit);
+  return l / (1.0 + max(l.r, max(l.g, l.b)) / LAMP_CAP);
+}
+`;
+
 // ----- Sương kiểu Hà Nội cho MỌI vật liệu: thay bốn đoạn mã sương của three.js -----
 // 1) Hình dạng: exp(-(ρd)² - λρd). Phần bình phương che mép vùng dựng hình như cũ; phần tuyến tính λ thêm phối cảnh không khí
 //    ngay từ vài chục mét (phố xa bạc màu) mà không phải tăng mật độ.

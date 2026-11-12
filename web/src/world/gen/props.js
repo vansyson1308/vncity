@@ -123,8 +123,11 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
     for (let i = 0; i < p.length - 2; i += 2) {
       const ax = p[i], az = p[i + 1], bx = p[i + 2], bz = p[i + 3], L = Math.hypot(bx - ax, bz - az); if (L < 0.01) continue;
       const dx = (bx - ax) / L, dz = (bz - az) / L;
-      for (let s = Math.ceil((d + 1e-6) / gap) * gap - d + gap / 2; s < L; s += gap) {
-        const k = Math.round((d + s) / gap), side = major ? (k % 2 ? 1 : -1) : 1;
+      // cột đèn ở các mốc gap/2, 3·gap/2, ... tính theo chiều dài CỘNG DỒN của cả con đường. (Bản trước lấy "bội số gap kế tiếp
+      // của đoạn thẳng này rồi cộng nửa gap" nên mốc nào rơi vào một đoạn thẳng ngắn hơn nửa gap là bị bỏ: đường nhiều khúc gấp
+      // chỉ còn một phần ba số đèn, cả dãy phố tối om ban đêm.)
+      for (let s = Math.ceil((d - gap / 2 - 1e-6) / gap) * gap + gap / 2 - d; s < L; s += gap) {
+        const k = Math.floor((d + s) / gap), side = major ? (k % 2 ? 1 : -1) : 1;
         const o = (r.w / 2 + 0.55) * side, x = ax + dx * s - dz * o, z = az + dz * s + dx * o;
         if (!inChunk(x, z) || !free(x, z)) continue;
         // cần đèn vươn ra lòng đường: hướng từ cột về tim đường là side·(dz, -dx)
@@ -161,7 +164,7 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
     for (let i = 0; i < p.length - 2; i += 2) {
       const ax = p[i], az = p[i + 1], bx = p[i + 2], bz = p[i + 3], L = Math.hypot(bx - ax, bz - az); if (L < 0.01) continue;
       const dx = (bx - ax) / L, dz = (bz - az) / L;
-      for (let s = Math.ceil((d + 1e-6) / 26) * 26 - d + 13; s < L; s += 26) {
+      for (let s = Math.ceil((d - 13 - 1e-6) / 26) * 26 + 13 - d; s < L; s += 26) { // mốc 13, 39, 65 m... theo chiều dài cộng dồn (như đèn đường)
         const o = r.w / 2 + 0.5, x = ax + dx * s - dz * o, z = az + dz * s + dx * o;
         if (!inChunk(x, z) || !free(x, z) || !ctx.isGreen(x, z) || onRoad(x, z)) continue;
         parkLamp(near, x - X0, z - Z0, CURB); lamps.push(x, 3.6, z, 7);
