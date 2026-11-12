@@ -77,7 +77,7 @@ async function boot() {
   const player = new Player(scene, nav, humanGltf, mats, humanLod);
   const cam = new FollowCamera(camera, nav);
   const traffic = new Traffic(scene, world, nav, mats, humanFar, quality);
-  const crowd = new Crowd(scene, world, nav, humanLod, quality);
+  const crowd = new Crowd(scene, world, nav, humanLod, quality, humanFar, humanGltf);
   const passport = new Passport(scene, nav, places);
   const fares = new Fares(scene, nav, passport, crowd);
   const governor = new Governor(R, sky, quality, traffic, crowd, chunks);
@@ -112,7 +112,7 @@ async function boot() {
   if (params.has('zoom')) cam.zoom = +params.get('zoom');
 
   camera.position.set(player.pos.x - Math.sin(player.yaw) * 5, 3, player.pos.z - Math.cos(player.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
-  traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera);
+  traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera, sky.hours);
 
   // ----- trạng thái và sự kiện lối chơi -----
   const G = { started: false, photo: false, t: 0, saveT: 0, slowT: 0, wasNight: sky.night > 0.5, crossT: 0, fps: 60 };
@@ -223,7 +223,7 @@ async function boot() {
     const wasX = player.pos.x, wasZ = player.pos.z;
     player.update(dt, input, cam.yaw);
     traffic.update(dt, player, camera, sky.hours);
-    crowd.update(dt, player, camera);
+    crowd.update(dt, player, camera, sky.hours);
     if (traffic.touch) { fares.bump(0.1 * traffic.touch); traffic.touch = 0; }
     for (const h of traffic.honks) { const dx = h[0] - player.pos.x, dz = h[1] - player.pos.z, d = Math.hypot(dx, dz); if (d < 60) audio.horn(Math.max(-1, Math.min(1, (dx * Math.cos(cam.yaw) - dz * Math.sin(cam.yaw)) / 20)), 0.26 / (1 + d * 0.12), h[2] >= 3); }
     traffic.honks.length = 0;
