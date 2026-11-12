@@ -322,7 +322,7 @@ if (want('b1') || want('b2') || want('b4') || want('c1')) {
   }
   // C9: bảng Hộ chiếu và Bản đồ vừa khung 1140 × 670, không phải cuộn
   for (const [id, key] of [['book', null], ['map', 'map']]) {
-    const r = await page.evaluate(async ([id, key]) => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); g.hud.close(); await sleep(100); if (key) g.input.press(key); else g.hud.open(id); await sleep(700); const p = document.querySelector(`#${id} .paper`), b = p.getBoundingClientRect(); return { h: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: p.scrollHeight - p.clientHeight, vh: innerHeight }; }, [id, key]);
+    const r = await page.evaluate(async ([id, key]) => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); g.hud.close(); await sleep(100); if (key) g.input.press(key); else g.hud.open(id); for (let i = 0; i < 600 && g.hud.modal !== id; i++) await sleep(50); await sleep(400); const p = document.querySelector(`#${id} .paper`), b = p.getBoundingClientRect(); return { h: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: p.scrollHeight - p.clientHeight, vh: innerHeight }; }, [id, key]);
     console.log('c9', id, JSON.stringify(r));
     r.h > 200 && r.top >= 0 && r.bottom <= r.vh && r.scroll <= 1 ? ok(`C9: bảng ${id} cao ${r.h} px, vừa khung ${r.vh} px, không cuộn`) : fail(`C9: bảng ${id} không vừa khung: ${JSON.stringify(r)}`);
     await page.screenshot({ path: path.join(OUT, `c9_${id}.png`), timeout: SLOW });
