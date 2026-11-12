@@ -261,8 +261,8 @@ class Glare {
           if (kind < 1.5) {
             float tail = step(0.5, kind);
             vec3 lp = base + fwd * mix(front, -aL.y, tail) + vec3(0.0, mix(fract(hh), floor(hh) * 0.01, tail), 0.0);
-            float r = mix(0.2 + dist * 0.006, 0.12 + dist * 0.0035, tail);
-            inten = mix(smoothstep(-0.05, 0.55, facing), smoothstep(-0.1, 0.45, -facing) * 0.85, tail);
+            float r = mix(0.2 + dist * 0.006, 0.085 + dist * 0.004, tail);
+            inten = mix(smoothstep(-0.05, 0.55, facing), smoothstep(-0.1, 0.45, -facing) * (0.5 + 0.35 * smoothstep(4.0, 25.0, dist)), tail);
             mv = viewMatrix * vec4(lp, 1.0); mv.xy += c * r * step(0.004, inten); mv.z += min(0.6, dist * 0.25);
           } else {
             float len = 3.4 + front * 0.7, wid = (0.9 + front * 0.12) * (1.0 + two * 0.5), t = c.y * 0.5 + 0.5;

@@ -356,10 +356,10 @@ export function bicycle(g, opt = {}) {
   if (P.basket !== undefined) { // giỏ trước bằng nhựa/mây
     g.mat(P.basket).rgb(0.2, 0.17, 0.12).gloss(0.1).box(0.44, 0.8, -0.17, 0.7, 1.0, 0.17, 'xXyzZ').shade(0.6).quad([0.44, 0.83, 0.17], [0.7, 0.83, 0.17], [0.7, 0.83, -0.17], [0.44, 0.83, -0.17]).mat(0);
   }
-  if (P.tray !== undefined) { // mẹt lớn Ø 0,84 m buộc trên baga
-    g.mat(P.tray); tray(g, rx - 0.06, 0.735, 0, 0.42, 0.09, 8); g.mat(0);
-    if (P.flowers !== undefined) { g.mat(P.flowers); flowers(g, rx - 0.06, 0.8, 0, 0.4, 3); g.mat(0); }
-    if (P.fruit !== undefined) { g.mat(P.fruit); fruit(g, rx - 0.06, 0.79, 0, 0.4, 2); g.mat(0); }
+  if (P.tray !== undefined) { // mẹt lớn Ø 0,8 m buộc trên baga, lùi về sau lưng người đạp
+    g.mat(P.tray); tray(g, rx - 0.26, 0.735, 0, 0.4, 0.09, 8); g.mat(0);
+    if (P.flowers !== undefined) { g.mat(P.flowers); flowers(g, rx - 0.26, 0.8, 0, 0.38, 3); g.mat(0); }
+    if (P.fruit !== undefined) { g.mat(P.fruit); fruit(g, rx - 0.26, 0.79, 0, 0.38, 2); g.mat(0); }
   }
   g.gloss(0);
   return g;

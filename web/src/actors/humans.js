@@ -42,7 +42,9 @@ export function bakePose(gltf, clip, time, extraPose, opt = {}) {
     const geo = m.geometry, P = geo.attributes.position, UV = geo.attributes.uv, tex = texPixels(m.material.map), base = pos.length / 3, body = m.material.name === 'body';
     for (let i = 0; i < P.count; i++) {
       const restY = P.getY(i);
-      m.getVertexPosition(i, _v); _v.applyMatrix4(m.matrixWorld); pos.push(_v.x, _v.y, _v.z);
+      m.getVertexPosition(i, _v); _v.applyMatrix4(m.matrixWorld);
+      if (opt.sleeves && m.material.name === 'head' && UV && mouthUV(UV.getX(i), UV.getY(i))) _v.set(head[0], head[1] + 0.06, head[2] + 0.03); // lưỡi, răng: giấu vào trong đầu
+      pos.push(_v.x, _v.y, _v.z);
       let r = 0.6, g = 0.5, b = 0.45;
       if (tex && UV) { const x = Math.min(tex.w - 1, Math.max(0, Math.floor(UV.getX(i) * tex.w))), y = Math.min(tex.h - 1, Math.max(0, Math.floor(UV.getY(i) * tex.h))), o = (y * tex.w + x) * 4; r = s2l(tex.d[o] / 255); g = s2l(tex.d[o + 1] / 255); b = s2l(tex.d[o + 2] / 255); }
       const lum = 0.3 * r + 0.59 * g + 0.11 * b, sat = Math.max(r, g, b) - Math.min(r, g, b);
@@ -75,54 +77,104 @@ export function appendBaked(g, b) {
 
 // Nướng hoạt hình: mỗi hàng của texture là một khung hình, mỗi xương chiếm 4 điểm ảnh RGBA32F (ma trận 4×4).
 // Ma trận đã gộp sẵn bind → không gian mô hình nên shader chỉ việc nhân với vị trí gốc.
-export function bakeAnimation(gltf, clips, fps = 24) {
+// clips: mỗi phần tử là [tên đoạn, số khung] (đoạn có sẵn trong tệp mô hình) hoặc một tư thế / đoạn tự dựng:
+//   { name, frames, clip: đoạn nền (mặc định 'idle'), from: gltf khác chứa đoạn nền (cùng bộ xương), pose: (f, n) => [[xương, góc, trục]...]
+//     xoay thêm ở khung f, hold: [xương...] đưa về tư thế đứng yên trước khi xoay (tay không vung theo bước), lift: số hoặc (f, n) => số
+//     nâng/hạ cả người (ngồi ghế thấp thì hạ hông xuống) }.
+// opt.merge: gộp mọi mảnh thành MỘT lưới màu đỉnh (màu lấy từ ảnh tại từng đỉnh) cho mức chi tiết xa: một lệnh vẽ.
+// Mỗi đỉnh mang mã vùng aReg: 0 khác, 1 thân, 2 cánh tay, 3 bàn tay, 5 đùi, 6 ống chân, 7 bàn chân, 8 tóc, 9 da mặt cổ, 10 tóc đuôi gà
+// (mã liền nhau cho các vùng kề nhau để chỗ nội suy giữa hai vùng không nhảy sang vùng lạ).
+// vùng ảnh của khoang miệng (lưỡi, răng) trên ảnh đầu: góc trên trái
+const mouthUV = (u, v) => u < 0.195 && v < 0.42;
+const ANCHORS = ['Bip01_Head', 'Bip01_Neck', 'Bip01_Spine2', 'Bip01_Pelvis', 'Bip01_R_Hand', 'Bip01_L_Hand'];
+export function bakeAnimation(gltf, clips, opt = {}) {
   const H = prepare(gltf), mesh0 = H.meshes[0], nb = mesh0.skeleton.bones.length;
+  applyPose(H, gltf, 'idle', 0); const idleQ = {}; for (const n in H.bones) idleQ[n] = H.bones[n].quaternion.clone();
+  const specs = clips.map((c) => (Array.isArray(c) ? { name: c[0], frames: c[1], clip: c[0] } : c));
   const ranges = {}; let rows = 0;
-  for (const [name, frames] of clips) { ranges[name] = [rows, frames]; rows += frames; }
+  for (const c of specs) { ranges[c.name] = [rows, c.frames]; rows += c.frames; }
   const data = new Float32Array(rows * nb * 16), heads = new Float32Array(rows * 3), m = new THREE.Matrix4(), bm = new THREE.Matrix4();
+  const anchors = {}; for (const n of ANCHORS) anchors[n] = new Float32Array(rows * 3);
   let row = 0;
-  for (const [name, frames] of clips) {
-    const clip = gltf.animations.find((a) => a.name === name), dur = clip ? clip.duration : 1;
-    for (let f = 0; f < frames; f++) {
-      applyPose(H, gltf, name, frames > 1 ? (f / frames) * dur : 0);
-      const sk = mesh0.skeleton;
+  for (const c of specs) {
+    const src = c.from || gltf, base = c.clip || 'idle', clip = src.animations.find((a) => a.name === base), dur = clip ? clip.duration : 1;
+    for (let f = 0; f < c.frames; f++) {
+      applyPose(H, src, base, c.frames > 1 && clip && base !== 'idle' ? (f / c.frames) * dur : 0);
+      if (c.hold || c.pose) {
+        if (c.hold) for (const n of c.hold) if (H.bones[n]) H.bones[n].quaternion.copy(idleQ[n]);
+        if (c.pose) for (const [name, ang, ax] of c.pose(f, c.frames)) { const b = H.bones[name]; if (b) b.quaternion.multiply(_q.setFromAxisAngle(AXIS[ax] || _z, ang)); }
+        H.root.updateMatrixWorld(true); for (const sm of H.meshes) sm.skeleton.update();
+      }
+      const lift = typeof c.lift === 'function' ? c.lift(f, c.frames) : c.lift || 0, sk = mesh0.skeleton;
       for (let b = 0; b < nb; b++) {
         bm.fromArray(sk.boneMatrices, b * 16);
         m.copy(mesh0.matrixWorld).multiply(mesh0.bindMatrixInverse).multiply(bm).multiply(mesh0.bindMatrix);
+        m.elements[13] += lift;
         m.toArray(data, (row * nb + b) * 16);
       }
-      if (H.bones.Bip01_Head) { H.bones.Bip01_Head.getWorldPosition(_v); heads[row * 3] = _v.x; heads[row * 3 + 1] = _v.y; heads[row * 3 + 2] = _v.z; }
+      for (const n of ANCHORS) if (H.bones[n]) { H.bones[n].getWorldPosition(_v); anchors[n][row * 3] = _v.x; anchors[n][row * 3 + 1] = _v.y + lift; anchors[n][row * 3 + 2] = _v.z; }
+      heads[row * 3] = anchors.Bip01_Head[row * 3]; heads[row * 3 + 1] = anchors.Bip01_Head[row * 3 + 1]; heads[row * 3 + 2] = anchors.Bip01_Head[row * 3 + 2];
       row++;
     }
-    void fps;
   }
   const tex = new THREE.DataTexture(data, nb * 4, rows, THREE.RGBAFormat, THREE.FloatType);
   tex.minFilter = tex.magFilter = THREE.NearestFilter; tex.generateMipmaps = false; tex.needsUpdate = true;
-  // gộp các mảnh lưới theo vật liệu (thân, đầu, tóc) để mỗi vật liệu một lệnh vẽ
+  const boneIndex = {}; mesh0.skeleton.bones.forEach((b, i) => { boneIndex[b.name] = i; });
+  // gộp các mảnh lưới theo vật liệu (thân, đầu, tóc) để mỗi vật liệu một lệnh vẽ; opt.merge: gộp tất cả làm một
   const byMat = new Map();
-  for (const sm of H.meshes) { const k = sm.material.name || sm.material.uuid; let e = byMat.get(k); if (!e) byMat.set(k, (e = { material: sm.material, parts: [] })); e.parts.push(sm.geometry); }
+  for (const sm of H.meshes) { const k = opt.merge ? 'all' : sm.material.name || sm.material.uuid; let e = byMat.get(k); if (!e) byMat.set(k, (e = { material: sm.material, parts: [] })); e.parts.push(sm); }
   const groups = [];
   for (const e of byMat.values()) {
-    let nv = 0, ni = 0; for (const g of e.parts) { nv += g.attributes.position.count; ni += g.index.count; }
-    const pos = new Float32Array(nv * 3), nrm = new Float32Array(nv * 3), uv = new Float32Array(nv * 2), si = new Uint8Array(nv * 4), sw = new Float32Array(nv * 4), idx = new Uint16Array(ni); let vo = 0, io = 0;
-    for (const g of e.parts) {
-      const a = g.attributes, n = a.position.count;
+    let nv = 0, ni = 0; for (const sm of e.parts) { nv += sm.geometry.attributes.position.count; ni += sm.geometry.index.count; }
+    const pos = new Float32Array(nv * 3), nrm = new Float32Array(nv * 3), uv = new Float32Array(nv * 2), si = new Uint8Array(nv * 4), sw = new Float32Array(nv * 4), reg = new Float32Array(nv), col = opt.merge ? new Float32Array(nv * 3) : null, idx = new Uint16Array(ni); let vo = 0, io = 0;
+    const hide = [], hc = [0, 0, 0, 0]; // đỉnh trong khoang miệng (lưỡi, răng) và tâm khối mặt để giấu chúng vào
+    for (const sm of e.parts) {
+      const g = sm.geometry, a = g.attributes, n = a.position.count, kind = sm.material.name, tex2 = texPixels(sm.material.map);
       for (let i = 0; i < n; i++) {
         pos[(vo + i) * 3] = a.position.getX(i); pos[(vo + i) * 3 + 1] = a.position.getY(i); pos[(vo + i) * 3 + 2] = a.position.getZ(i);
         nrm[(vo + i) * 3] = a.normal.getX(i); nrm[(vo + i) * 3 + 1] = a.normal.getY(i); nrm[(vo + i) * 3 + 2] = a.normal.getZ(i);
         uv[(vo + i) * 2] = a.uv.getX(i); uv[(vo + i) * 2 + 1] = a.uv.getY(i);
         for (let k = 0; k < 4; k++) { si[(vo + i) * 4 + k] = a.skinIndex.getComponent(i, k); sw[(vo + i) * 4 + k] = a.skinWeight.getComponent(i, k); }
+        // màu tại đỉnh và mã vùng
+        let r = 0.6, gg = 0.5, b = 0.45;
+        if (tex2) { const x = Math.min(tex2.w - 1, Math.max(0, Math.floor(a.uv.getX(i) * tex2.w))), y = Math.min(tex2.h - 1, Math.max(0, Math.floor(a.uv.getY(i) * tex2.h))), o = (y * tex2.w + x) * 4; r = s2l(tex2.d[o] / 255); gg = s2l(tex2.d[o + 1] / 255); b = s2l(tex2.d[o + 2] / 255); }
+        const lum = 0.3 * r + 0.59 * gg + 0.11 * b, sat = Math.max(r, gg, b) - Math.min(r, gg, b), skin = r > b * 1.25 && sat > 0.05 && lum > 0.08, dark = lum < 0.09 && sat < 0.05;
+        let code = 0;
+        if (kind === 'hair') code = 10; else if (kind === 'head') code = lum < 0.07 ? 8 : 9;
+        else { const br = vertexRegion(sm, i); code = br === 1 ? 1 : br === 2 ? 2 : br === 3 ? 3 : br === 4 ? 5 : br === 5 ? 6 : br === 6 ? 7 : 0; }
+        if (opt.merge) { // mức xa: quyết định ngay loại vải ở từng đỉnh
+          if (code === 1) code = dark ? 1 : skin ? 9 : 5; // thân: áo tối màu, da cổ, hoặc cạp quần
+          else if (code === 2) code = dark ? 1 : 2; else if (code === 7) code = 0;
+          col[(vo + i) * 3] = r; col[(vo + i) * 3 + 1] = gg; col[(vo + i) * 3 + 2] = b;
+        }
+        reg[vo + i] = code;
+        if (kind === 'head') { if (mouthUV(a.uv.getX(i), a.uv.getY(i))) hide.push(vo + i); else if (a.skinWeight.getX(i) > 0.9 && code === 9) { hc[0] += pos[(vo + i) * 3]; hc[1] += pos[(vo + i) * 3 + 1]; hc[2] += pos[(vo + i) * 3 + 2]; hc[3]++; } }
       }
       for (let i = 0; i < g.index.count; i++) idx[io + i] = g.index.array[i] + vo;
       vo += n; io += g.index.count;
     }
+    // bản rút gọn làm môi hở, lưỡi và răng thò ra ngoài: thu các đỉnh trong khoang miệng về giữa khối mặt cho khuất
+    if (hc[3]) for (const i of hide) { pos[i * 3] = hc[0] / hc[3]; pos[i * 3 + 1] = hc[1] / hc[3]; pos[i * 3 + 2] = hc[2] / hc[3]; }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nrm, 3)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
-    geo.setAttribute('aSkinI', new THREE.BufferAttribute(si, 4)); geo.setAttribute('aSkinW', new THREE.BufferAttribute(sw, 4)); geo.setIndex(new THREE.BufferAttribute(idx, 1));
+    geo.setAttribute('aSkinI', new THREE.BufferAttribute(si, 4)); geo.setAttribute('aSkinW', new THREE.BufferAttribute(sw, 4)); geo.setAttribute('aReg', new THREE.BufferAttribute(reg, 1)); geo.setIndex(new THREE.BufferAttribute(idx, 1));
+    if (col) geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
     geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 1, 0), 1e5);
-    groups.push({ geo, map: e.material.map, name: e.material.name });
+    groups.push({ geo, map: e.material.map, name: opt.merge ? 'all' : e.material.name });
   }
-  return { tex, ranges, bones: nb, rows, heads, groups };
+  return { tex, ranges, bones: nb, rows, heads, groups, data, boneIndex, anchors };
+}
+
+// Gắn cứng một đồ vật dựng bằng G (toạ độ theo mô hình người ở hàng tư thế refRow) vào một xương: trả về vị trí, pháp tuyến đã đưa
+// về không gian gốc của xương đó, để shader skinning (một xương, trọng số 1) kéo đồ vật đi theo xương ở mọi khung hình.
+export function attachToBone(bake, g, bone, refRow) {
+  const bi = bake.boneIndex[bone] ?? 0, M = new THREE.Matrix4().fromArray(bake.data, (refRow * bake.bones + bi) * 16), inv = M.clone().invert(), n3 = new THREE.Matrix3().setFromMatrix4(inv);
+  const n = g.pos.length / 3, pos = new Float32Array(n * 3), nrm = new Float32Array(n * 3), v = new THREE.Vector3();
+  for (let i = 0; i < n; i++) {
+    v.set(g.pos[i * 3], g.pos[i * 3 + 1], g.pos[i * 3 + 2]).applyMatrix4(inv); pos[i * 3] = v.x; pos[i * 3 + 1] = v.y; pos[i * 3 + 2] = v.z;
+    v.set(g.nrm[i * 3], g.nrm[i * 3 + 1], g.nrm[i * 3 + 2]).applyMatrix3(n3).normalize(); nrm[i * 3] = v.x; nrm[i * 3 + 1] = v.y; nrm[i * 3 + 2] = v.z;
+  }
+  return { pos, nrm, bone: bi };
 }
 
 // Vật liệu Lambert có skinning từ texture hoạt hình, theo từng instance (aAnim.x = hàng khung hình).
