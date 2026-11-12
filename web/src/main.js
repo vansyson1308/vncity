@@ -147,7 +147,9 @@ async function boot() {
   if (Number.isFinite(pnum('camyaw', NaN))) { cam.yaw = pnum('camyaw', 0); cam.wasRiding = player.mode === 'bike'; } // góc camera đặt sẵn: không tự quay ra sau xe lúc vào game
   cam.zoom = pnum('zoom', cam.zoom, 0.55, 2.6);
 
-  camera.position.set(player.pos.x - Math.sin(player.yaw) * 5, 3, player.pos.z - Math.cos(player.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
+  // camera tạm để rải xe, người trước khung hình đầu: đặt đúng hướng camera thật sẽ nhìn (cam.yaw, kể cả khi đường dẫn có camyaw), vì
+  // dòng xe và đám đông dựa vào nó để không sinh ngay trước ống kính và để đặt tốp tập dưỡng sinh trong tầm mắt
+  camera.position.set(player.pos.x + Math.sin(cam.yaw) * 5, 3, player.pos.z + Math.cos(cam.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
   traffic.day = sky.day; crowd.walkOn = walkOn(sky.day, sky.hours);
   traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera, sky.hours);
 
@@ -282,7 +284,7 @@ async function boot() {
         if (pick) { p.x = pick[0]; p.z = pick[1]; yaw = Math.atan2(look[0] - p.x, look[1] - p.z); } }
       if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, yaw ?? player.yaw); cam.snap(player); warpTo = null;
       // tới nơi là phố đã đông sẵn như lúc vào game (không thì dòng xe chỉ sinh dần từ chỗ khuất mắt, con phố vắng tanh nửa phút đầu)
-      camera.position.set(player.pos.x - Math.sin(player.yaw) * 5, 3, player.pos.z - Math.cos(player.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
+      camera.position.set(player.pos.x + Math.sin(cam.yaw) * 5, 3, player.pos.z + Math.cos(cam.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
       traffic.agents.length = 0; traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera, sky.hours); }
     const wasX = player.pos.x, wasZ = player.pos.z;
     player.update(dt, input, cam.yaw);
