@@ -275,8 +275,16 @@ export function buildContext(world, landmarks = []) {
   const within = (b, a) => { let inn = 0; const n = b.p.length / 2; for (let k = 0; k < b.p.length; k += 2) if (pointInRing(b.p[k], b.p[k + 1], a.p) || nearRing(b.p[k], b.p[k + 1], a.p, 0.05)) inn++; return inn >= n * 0.9 && pointInRing(b.cx, b.cz, a.p); };
   // ovl: các toà chồng hẳn lên toà này (không chỉ chạm mép như hai nhà liền vách): có điểm của toà này, lùi vào trong 0,3 m, nằm
   // trong toà kia. Chỉ những toà như thế mới cần soát tường chung (ctx.coEdge), nên bộ sinh không phải tra lưới ở mọi bức tường.
-  const probe = (b, a) => { const r = b.p, n = r.length; for (let k = 0; k < n; k += 2) { const j = (k + 2) % n, x = (r[k] + r[j]) / 2, z = (r[k + 1] + r[j + 1]) / 2, ex = r[j] - r[k], ez = r[j + 1] - r[k + 1], l = Math.hypot(ex, ez) || 1;
-    for (const sg of [1, -1]) { const px = x - (ez / l) * 0.3 * sg, pz = z + (ex / l) * 0.3 * sg; if (pointInRing(px, pz, r) && pointInRing(px, pz, a.p)) return true; } } return false; };
+  // Điểm thử của mỗi toà (giữa từng cạnh, lùi vào 0,3 m, nằm trong chính toà đó) chỉ phụ thuộc toà đó nên tính một lần; với mỗi cặp
+  // chỉ còn thử điểm có nằm trong toà kia không (điểm ngoài hộp bao của toà kia thì bỏ qua ngay).
+  const probePts = (b) => {
+    if (b._pp) return b._pp;
+    const r = b.p, n = r.length, out = [];
+    for (let k = 0; k < n; k += 2) { const j = (k + 2) % n, x = (r[k] + r[j]) / 2, z = (r[k + 1] + r[j + 1]) / 2, ex = r[j] - r[k], ez = r[j + 1] - r[k + 1], l = Math.hypot(ex, ez) || 1;
+      for (let sg = 1; sg >= -1; sg -= 2) { const px = x - (ez / l) * 0.3 * sg, pz = z + (ex / l) * 0.3 * sg; if (pointInRing(px, pz, r)) out.push(px, pz); } }
+    return (b._pp = out);
+  };
+  const probe = (b, a) => { const P = probePts(b), q = a.bb; for (let k = 0; k < P.length; k += 2) { const px = P[k], pz = P[k + 1]; if (px >= q[0] && px <= q[2] && pz >= q[1] && pz <= q[3] && pointInRing(px, pz, a.p)) return true; } return false; };
   for (const b of buildings) {
     if (b.skip || b.cat === CAT.roof || !(b.height > 0)) continue;
     let host = null;
@@ -287,6 +295,7 @@ export function buildContext(world, landmarks = []) {
     });
     if (host && b.height <= host.height + 1.0) { b.skip = true; b.ghost = false; b.coveredBy = host.i; }
   }
+  for (const b of buildings) b._pp = undefined;
   // Toà khác (chưa bị bỏ, chồng lên self) có một cạnh ngoài trùng với cạnh của self qua điểm giữa cạnh (mx, mz) và phủ lên phía
   // trong của cạnh đó (điểm thử ix, iz cách cạnh vài chục cm vào trong self). Có nhiều toà thì lấy toà cao nhất.
   ctx.coEdge = (mx, mz, ix, iz, self) => {
