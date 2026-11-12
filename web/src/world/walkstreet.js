@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { G } from '../core/geo.js';
 import { propGeometry } from './materials.js';
+import { bandedPole } from '../models/street.js';
 
 // Một tấm rào thép di động rộng 2 m, cao 1,1 m: khung ống, song đứng, hai chân; mặt trước gắn dải phản quang trắng đỏ.
 function panel(g) {
@@ -16,7 +17,7 @@ function panel(g) {
 }
 // Biển "đường cấm" (hình tròn nền trắng viền đỏ) trên cột, đặt giữa cửa rào, quay mặt ra phía xe tới (+z).
 function sign(g) {
-  g.rgb(0.5, 0.5, 0.52).cyl(0, 0, 0, 0.035, 0.035, 2.25, 6, false);
+  bandedPole(g, 2.25, 0.035); // cột biển báo giao thông: khoang trắng đỏ (QCVN 41)
   g.rgb(0.2, 0.2, 0.22).cyl(0, 0, 0, 0.22, 0.18, 0.06, 8, true);
   const disc = (r, z, col) => { g.rgb(...col); const n = 16, c = g.v(0, 2.2, z, 0, 0, 1); let prev = null, first = null; for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2, v = g.v(Math.cos(a) * r, 2.2 + Math.sin(a) * r, z, 0, 0, 1); if (prev !== null) g.tri(c, prev, v); else first = v; prev = v; } g.tri(c, prev, first); };
   disc(0.36, 0.045, [0.62, 0.03, 0.03]); disc(0.27, 0.05, [0.82, 0.82, 0.8]);

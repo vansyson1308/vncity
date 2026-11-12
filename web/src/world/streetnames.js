@@ -39,6 +39,8 @@ export const SITE_TEXT = [
   ['ĐƯỜNG SẮT ĐÔ THỊ THÍ ĐIỂM THÀNH PHỐ HÀ NỘI', 'ĐOẠN NHỔN - GA HÀ NỘI'],
 ];
 export const WARN_TEXT = ['CẤM LẠI GẦN!', 'CÓ ĐIỆN NGUY HIỂM CHẾT NGƯỜI'];
+export const HNUM_CHARS = '0123456789/ABCDE'; // ký tự trên biển số nhà (trong ngõ ghi dạng 12/34; nhà tách thửa thêm chữ: 12A)
+export const HNUM_BLUE = 0x12408f;
 
 // Mã ghi vào kênh alpha của màu đỉnh (0..255) để shader của bảng đồ đạc biết cách tô (streetatlas.js):
 //   0: chữ trắng trên nền màu đỉnh;  INK_*: chữ màu khác;
@@ -48,16 +50,17 @@ export const SIG = { red: 1, amber: 2, green: 3, tens: 4, units: 5, pedStop: 6, 
 export const sigCode = (kind, grp, last8, off) => kind + (grp ? 8 : 0) + (last8 ? 16 : 0) + ((off & 3) << 5);
 
 const COLS = 20, cache = new WeakMap();
-// Bố cục bảng: các hàng đầu là biển tên (20 ô mỗi hàng, theo thứ tự tên đã sắp xếp), hai hàng cuối là các ô phụ.
+// Bố cục bảng: các hàng đầu là biển tên (20 ô mỗi hàng, theo thứ tự tên đã sắp xếp), bốn hàng cuối là các ô phụ: hai hàng đồ đạc
+// phố (chữ số đèn, biển xe buýt, khẩu hiệu), một hàng chữ số biển số nhà và bảng nhỏ treo cửa hàng, một hàng bảng thực đơn.
 // uv trả về dạng [u0, v0, u1, v1] (v hướng lên như texture của WebGL), đã thu vào trong để không lem sang ô bên.
 export function plateLayout(world) {
   let L = cache.get(world); if (L) return L;
   const set = new Set();
   for (const r of world.roads) { const n = world.names[r.name]; if (isPlateName(n)) set.add(n); }
   const names = [...set].sort(), index = new Map(names.map((n, i) => [n, i]));
-  const nameRows = Math.ceil(names.length / COLS), rows = nameRows + 2, cw = 1 / COLS, ch = 1 / rows;
+  const nameRows = Math.ceil(names.length / COLS), rows = nameRows + 4, cw = 1 / COLS, ch = 1 / rows;
   const rect = (x0, x1, row, padU = 0.012, padV = 0.03) => [(x0 + padU) * cw, 1 - (row + 1 - padV) * ch, (x1 - padU) * cw, 1 - (row + padV) * ch];
-  const E0 = nameRows, E1 = nameRows + 1;
+  const E0 = nameRows, E1 = nameRows + 1, E2 = nameRows + 2, E3 = nameRows + 3;
   L = {
     names, index, cols: COLS, rows, cw, ch,
     uv: (i) => rect(i % COLS, (i % COLS) + 1, Math.floor(i / COLS)),
@@ -68,6 +71,10 @@ export function plateLayout(world) {
     park: rect(5, 5.5, E0), sickle: rect(5.5, 6, E0),
     site: [rect(6, 10, E0), rect(10, 14, E0), rect(14, 18, E0)], warn: rect(18, 20, E0),
     banner: [rect(0, 5, E1), rect(5, 10, E1), rect(10, 15, E1), rect(15, 20, E1)],
+    // biển số nhà: 16 ký tự HNUM_CHARS, mỗi ký tự một ô hẹp cách nhau hnumStep theo u; hframe: viền trắng bo góc của biển
+    hnum: rect(0, 0.2, E2, 0.01, 0.05), hnumStep: 0.2 * cw, hframe: rect(3.3, 4.3, E2),
+    // bảng thực đơn và bảng nhỏ treo cửa (world/signs.js MENU_LIST): 20 ô đầu ở hàng cuối, các ô sau nối vào hàng số nhà
+    menu: (i) => (i < COLS ? rect(i, i + 1, E3) : rect(5 + i - COLS, 6 + i - COLS, E2)),
   };
   cache.set(world, L); return L;
 }
