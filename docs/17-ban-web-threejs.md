@@ -83,12 +83,28 @@ Các kỹ thuật chính:
 1. **Mặt đất bằng phép toán đa giác.** Mỗi đoạn đường được đệm theo bề rộng rồi gộp lại (Clipper); phần còn
    lại của ô là khối phố. Nhờ đó vỉa hè nâng 16 cm, bó vỉa, góc phố bo tròn và kè hồ đều là hình học thật. Bề
    rộng đường được thu theo khoảng trống thật giữa hai dãy nhà (`build_world.mjs`) nên đường không ăn vào mặt tiền.
-2. **Mặt tiền nhà ống trong một lệnh vẽ.** 40 lớp mặt đứng (một gian × một tầng: ban công sắt, cửa chớp,
+2. **Mặt tiền nhà ống trong một lệnh vẽ.** 47 lớp mặt đứng (một gian × một tầng: ban công sắt, cửa chớp,
    chuồng cọp, cửa cuốn, quán phở, biệt thự Pháp, tập thể...) vẽ bằng canvas, gói thành `sampler2DArray`. Worker
    chia tường mặt phố thành từng gian và chọn lớp, màu vôi, màu biển cho từng gian; shader chỉ việc vẽ theo.
-   Tường giáp nhà bên là tường trơn; khuất hẳn sau nhà cao hơn thì không sinh ra.
+   Tầng trệt cửa hàng có 15 lớp, chọn theo biển của gian (`shopLayer` trong `gen/buildings.js`): ngoài quán ăn, cà phê,
+   sảnh khách sạn, cửa kính, cửa cuốn, cửa gỗ nhà cổ còn bảy kiểu theo nghề: hàng vải quần áo (áo dài, sơ mi treo sào, cây
+   vải cuộn; cả giặt là), tranh thêu và đồ lưu niệm (tường treo kín khung tranh), hàng khô tạp hoá (gói nhỏ xếp kín kệ, lọ thuỷ
+   tinh, bao tải), hàng mã (đèn lồng treo kín trần, giấy đỏ vàng; cả đồ thờ), tiệm sửa xe (lốp treo tường, bảng dụng cụ),
+   tiệm cắt tóc (gương, ghế), hàng hoa cây cảnh. Lớp kệ hàng nhiều màu chỉ còn cho hiệu sách, văn phòng phẩm và vài nghề bày
+   hàng lên kệ; phòng khám, hiệu thuốc, tiệm vàng, đổi tiền luôn là cửa kính (trước đây gần như mọi cửa hàng, kể cả hàng lụa,
+   tiệm cắt tóc, sửa xe, đều bày một kiểu kệ như hiệu sách: QC vòng 2). Hàng bày được hoán kênh màu theo gian; hàng mã chỉ
+   ngả vàng cam hay đỏ thắm để vẫn giữ tông đỏ vàng.
+   Tường giáp nhà bên là tường trơn và luôn được dựng, từ mặt đất lên, kể cả khi khuất sau nhà cao hơn: mỗi toà là một khối
+   kín. Hai hình nhà liền vách trên bản đồ ít khi khít nhau từng đỉnh; trước đây tường chung bị bỏ nên qua khe vài chục cm
+   giữa hai lô ở mặt phố, đứng sát mặt tiền là nhìn xuyên cả dãy nhà (ban công, cục nóng điều hoà, tầng trên nhà cao hơn treo
+   giữa trời: QC vòng 2, phố Hàng Đào). Hai tường chung trùng nhau quay lưng vào nhau nên không nhấp nháy; số tam giác nhà mỗi
+   ô 853 → 950. Va chạm thì từ trước đã có ở mọi cạnh ngoài: phép loang trên toàn bản đồ (lưới 0,5 m, bán kính người 0,3 m,
+   xuất phát từ 23 873 đỉnh tim đường) đi được 6,66 km² và không lọt vào lòng nhà nào.
 3. **Hai mức chi tiết cho đồ vật.** Mỗi ô có lưới "gần" (cây đủ tán lá, biển hiệu nổi, ban công, dây điện, xe
-   đỗ) và lưới "xa" (cây một khối, cột đèn bốn cạnh). Xe trong dòng xe cũng có bản xa vài khối hộp.
+   đỗ) và lưới "xa" (cây một khối, cột đèn bốn cạnh). Xe trong dòng xe cũng có bản xa vài khối hộp. Biển số có chữ theo
+   kiểu biển Việt Nam (xe máy hai dòng "29-B1 / 123.45", ô tô biển dài một dòng ở mũi, biển ngắn hai dòng ở đuôi, xe buýt
+   biển vàng): xe của người chơi, ô tô, xe buýt vẽ từng ký tự bằng nét kiểu bảy đoạn; xe máy trong dòng xe và xe đỗ (hàng
+   trăm chiếc) chỉ có mỗi nhóm ký tự một vạch xám (`plateText` trong `models/vehicles.js`).
 4. **Ánh sáng không cần bản đồ môi trường.** Kính, mặt hồ, nước sơn xe tự tính phản chiếu trời từ cùng bộ
    uniform với vòm trời, nên đổi giờ không tốn khung hình nào để dựng cubemap.
 5. **Nền trước, chi tiết sau.** Ô ở xa chỉ có nền (mặt đất, nhà, đồ vật bản xa); lưới chi tiết chỉ được worker gửi khi
@@ -146,6 +162,11 @@ Các kỹ thuật chính:
      rải xong thì khớp đúng giờ shader (`prewarm(…, clockEnd)`).
    - *Hai nút có đèn nối nhau bằng quãng ngắn hơn 24 m* (không đủ chỗ cho vạch dừng và vài xe xếp hàng) gộp thành một nút
      chung pha; các nút phụ trên quãng nối thành lòng nút.
+   - *Vạch sang đường theo khoảng cách từ tâm nút*, không theo độ dài mẩu đường: mẩu sát nút ngắn hơn chỗ kẻ vạch thì vạch
+     nằm trên mẩu nối tiếp (kéo thẳng theo hướng nhánh từ tâm nút, chỉ nhận khi đầu kia của mẩu là nút nhỏ và chỗ đó nằm trên
+     tim một đoạn đường xe cùng bề rộng, cùng hướng); miệng ngõ, phố nhỏ đổ vào ngay chỗ kẻ vạch không làm mất vạch; vạch dọc
+     của mẩu nối tiếp tự chừa chỗ vạch sang đường. Trước đây 30/75 nút có đèn không có vạch sang đường nào; giờ cả 75 nút
+     đều có (118 → 323 vạch).
    - *Chia pha theo phương của nhánh, ít xung đột nhất*: thử mọi cách cắt vòng phương làm hai cung, phạt hai nhánh cùng pha
      mà cắt nhau và hai nhánh khác pha mà gần song song. Hai phố cắt nhau không bao giờ chung pha, hai nhánh chụm góc hẹp
      luôn chung pha (trước đây chia cứng ở ±45° quanh trục chính nên ngã năm có nhánh chạy trong khi nhánh sát bên đỏ).
@@ -176,11 +197,12 @@ Các kỹ thuật chính:
    ở mép bản đồ là lối ra: xe tới đó rời khỏi bản đồ chứ không quay đầu. Giờ cao điểm cả dòng xe chạy chậm lại; đi nhanh tới
    nơi nào thì dòng xe và người đi bộ ở đó được rải sẵn như lúc vào game.
 16. **Nhà ống theo từng lô.** Khối nhà liền dãy của OSM được cắt thành các lô rộng 2,9 đến 5,3 m, mỗi lô có số tầng, màu,
-   tuổi nhà và kiểu mái riêng (`gen/buildings.js`); 40 lớp mặt đứng; biển hiệu theo quy tắc phố cổ (dải tầng trệt, cao
+   tuổi nhà và kiểu mái riêng (`gen/buildings.js`); 47 lớp mặt đứng; biển hiệu theo quy tắc phố cổ (dải tầng trệt, cao
    không quá 0,8 m, có biển vẫy). Bảng `gen/heroes.js` đặt chiều cao, màu và một nét nhận diện cho 28 toà nhà có tên.
 17. **Không khí Hà Nội.** Trời mù trắng xám là mặc định, có bốn kiểu thời tiết (`?weather=mu|thu|he|nom`). Sương hoà mọi
    điểm ảnh ở xa vào đúng màu trời phía sau nó, ban đêm trời hửng nâu xám vì đèn thành phố nên cảnh xa không còn đen.
-   Mặt hè đổi theo khu (đá granite quanh Hồ Gươm, đá xanh xám ở phố chính, gạch đỏ hoặc terrazzo ở nơi khác), bó vỉa
+   Mặt hè đổi theo khu (đá granite quanh Hồ Gươm và khắp khu Lăng, quảng trường Ba Đình, Phủ Chủ tịch kể cả lối đi giữa các
+   ô cỏ; đá xanh xám ở phố chính, gạch đỏ hoặc terrazzo ở nơi khác), bó vỉa
    vát có rãnh và miệng thu nước, ô cây, nắp hố ga, vạch sơn mòn; vũng sáng dưới đèn làm sáng chất liệu mặt đất thay
    vì phủ trắng lên nó (`engine/sky.js`, `world/textures.js`, `gen/ground.js`, `gen/pits.js`). Cây đổi lá, ra hoa theo
    mùa của thời tiết (mặc định `mu` là đông: phượng, bằng lăng chỉ còn lá, bàng lá đỏ; `he` là hè: phượng đỏ, bằng lăng
@@ -194,7 +216,9 @@ Các kỹ thuật chính:
    xe (để không dồn ứ trước rào), xe còn sót tự chạy ra (bị người chơi hay chiếc xe
    người chơi dựng giữa phố chắn quá 8 giây thì quay đầu ra lối khác); rào chắn dựng ở 45 chỗ (`world/walkstreet.js`): đầu ngoài của
    mọi đoạn đóng chạm đường còn mở, và mọi chỗ phố đi bộ gặp một đường khác kể cả phố nhánh đóng theo; người đi bộ đi cả dưới lòng
-   đường và đông gấp rưỡi; xe của người chơi tới ranh phố đóng thì dừng như gặp rào (lời nhắc: xuống xe đi bộ vào), lỡ ở sẵn bên
+   đường và đông gấp rưỡi; quảng trường Đông Kinh Nghĩa Thục có thêm sáu tuyến đi bộ cắt ngang lòng quảng trường
+   (`actors/crowd.js` PLAZA_LINES: bản đồ không có lối nào trong lòng quảng trường nên trước đây người chỉ men theo mép), ngày
+   thường có người băng qua, đứng xem màn hình, tối phố đi bộ đông như phố đi bộ; xe của người chơi tới ranh phố đóng thì dừng như gặp rào (lời nhắc: xuống xe đi bộ vào), lỡ ở sẵn bên
    trong thì chỉ dắt ra được bằng tốc độ đi bộ, vào game bằng `?bike` giữa phố đóng thì không ngồi sẵn trên xe; cuốc xe ôm không đón
    trả trong khu (soát cả chỗ dừng xe thật, không chỉ toạ độ điểm đến). Bố trí lúc
    đóng phố (cạnh đóng, chiều cấm vào, chỗ rào) chỉ phụ thuộc mạng đường nên tính một lần lúc tải (`walkPlan`); bật, tắt lúc
@@ -240,11 +264,17 @@ thứ quyết định độ mượt và đo được khách quan. Nên chạy th
 
 - **Hộ chiếu**: 44 điểm chia năm trang (Hồ Gươm, Phố cổ, Khu phố Pháp, Ba Đình, Hồ Tây). Tới địa danh là đóng
   dấu và nhận 20k tiền mừng; đủ một trang thưởng 50k. Món ăn phải dừng lại bấm E và trả tiền (15k tới 45k).
+  Điểm chưa tới có cột sáng trong mờ dẫn đường từ xa (địa danh 32 m, món ăn 20 m): lại gần thì cột tan dần (dưới 30 m gần
+  như không còn, từ 110 m rõ hẳn) để không che mặt Lăng, Quốc hội...; ban đêm chỉ sáng hơn ban ngày một chút; tắt hẳn được
+  trong ⚙️ (Cột đánh dấu điểm đến, lưu `hn-beacons`).
 - **Xe máy** (F): ga, phanh, lái; Shift tăng ga; Space bóp còi. Xe ở xa thì Minh tự dắt lại.
 - **Xe ôm**: khách đứng vẫy ở vòng vàng, tạt vào bấm E để đón, chở tới vòng xanh. Tiền công theo quãng đường,
   thưởng theo độ êm. Ba hạng: xe ôm phố cổ (3 cuốc), xe ôm thạo đường (10), thổ địa Hà Nội (25).
 - **Giờ trong ngày** chạy liên tục (một giờ game dài sáu phút); N để nhảy tới sáng, trưa, chiều vàng, đêm.
-- **Bản đồ** (M): bấm vào điểm đã có dấu để đi nhanh. **Chụp ảnh** (P): ẩn giao diện, Enter để lưu ảnh.
+- **Bản đồ** (M): bấm vào điểm đã có dấu để đi nhanh. Chỗ đứng tính sẵn thường sát bậc thềm, nên tới nơi game lùi người
+  chơi ra tới 24 m kể từ mốc (theo hướng từ mốc về chỗ đứng, nếu đường lùi thông, chỗ mới không ở lòng đường xe chạy và sau
+  lưng còn 4,6 m thông cho camera) rồi quay mặt về địa danh: Nhà hát Lớn 20 m, Nhà thờ Lớn 12 m thay vì 4 m nhìn vào chân tường;
+  thẻ địa danh của chỗ cũ đóng lại. **Chụp ảnh** (P): ẩn giao diện, Enter để lưu ảnh.
 - **Song ngữ** Việt, Anh (L hoặc ⚙️). **Điện thoại**: nửa trái màn hình là cần điều khiển, nửa phải để nhìn.
 - Tiến độ, vị trí, giờ và cài đặt lưu trong trình duyệt. Không quảng cáo, không thu thập dữ liệu.
 
