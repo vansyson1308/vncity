@@ -265,6 +265,41 @@ export function buildContext(world, landmarks = []) {
     const k = Math.floor((b.cx - x0) / CS) * 1000 + Math.floor((b.cz - z0) / CS);
     let l = ctx.chunkBld.get(k); if (!l) ctx.chunkBld.set(k, (l = [])); l.push(b);
   }
+  // ----- nhà nằm lọt trong nhà khác -----
+  // Dữ liệu bản đồ hay vẽ một phần của toà nhà (khối đế, tầng mái, nhà phụ, sân trong có mái) thành một hình riêng nằm trong hình
+  // của toà chính, có cạnh trùng cạnh toà chính. Hai hình cùng dựng tường ở cạnh trùng thì hai mặt đứng nằm đúng một mặt phẳng và
+  // nhấp nháy (z-fighting, ví dụ mặt tiền Bưu điện Hà Nội). Nhà lọt hẳn trong một nhà lớn hơn mà không cao hơn nó quá 1 m thì bỏ:
+  // toà chính đã che hết, còn một hộp ló lên vài chục cm trên mái trông như lỗi. Nhà lọt trong mà cao hẳn hơn (tháp trên khối đế)
+  // thì giữ; tường ở cạnh trùng do ctx.coEdge dưới đây và gen/buildings.js xử lý.
+  const nearRing = (x, z, r, tol) => { for (let k = 0, n = r.length; k < n; k += 2) { const j = (k + 2) % n; if (segDist2(x, z, r[k], r[k + 1], r[j], r[j + 1]) < tol * tol) return true; } return false; };
+  const within = (b, a) => { let inn = 0; const n = b.p.length / 2; for (let k = 0; k < b.p.length; k += 2) if (pointInRing(b.p[k], b.p[k + 1], a.p) || nearRing(b.p[k], b.p[k + 1], a.p, 0.05)) inn++; return inn >= n * 0.9 && pointInRing(b.cx, b.cz, a.p); };
+  // ovl: các toà chồng hẳn lên toà này (không chỉ chạm mép như hai nhà liền vách): có điểm của toà này, lùi vào trong 0,3 m, nằm
+  // trong toà kia. Chỉ những toà như thế mới cần soát tường chung (ctx.coEdge), nên bộ sinh không phải tra lưới ở mọi bức tường.
+  const probe = (b, a) => { const r = b.p, n = r.length; for (let k = 0; k < n; k += 2) { const j = (k + 2) % n, x = (r[k] + r[j]) / 2, z = (r[k + 1] + r[j + 1]) / 2, ex = r[j] - r[k], ez = r[j + 1] - r[k + 1], l = Math.hypot(ex, ez) || 1;
+    for (const sg of [1, -1]) { const px = x - (ez / l) * 0.3 * sg, pz = z + (ex / l) * 0.3 * sg; if (pointInRing(px, pz, r) && pointInRing(px, pz, a.p)) return true; } } return false; };
+  for (const b of buildings) {
+    if (b.skip || b.cat === CAT.roof || !(b.height > 0)) continue;
+    let host = null;
+    ctx.bldGrid.query(b.bb[0], b.bb[1], b.bb[2], b.bb[3], (a) => {
+      if (a === b || a.skip || a.cat === CAT.roof || a.bb[0] > b.bb[2] - 0.2 || a.bb[2] < b.bb[0] + 0.2 || a.bb[1] > b.bb[3] - 0.2 || a.bb[3] < b.bb[1] + 0.2) return;
+      if (!b.hero && !host && a.area > b.area && !(b.bb[0] < a.bb[0] - 0.1 || b.bb[1] < a.bb[1] - 0.1 || b.bb[2] > a.bb[2] + 0.1 || b.bb[3] > a.bb[3] + 0.1) && within(b, a)) host = a;
+      if ((probe(b, a) || probe(a, b)) && !(b.ovl && b.ovl.includes(a))) (b.ovl || (b.ovl = [])).push(a);
+    });
+    if (host && b.height <= host.height + 1.0) { b.skip = true; b.ghost = false; b.coveredBy = host.i; }
+  }
+  // Toà khác (chưa bị bỏ, chồng lên self) có một cạnh ngoài trùng với cạnh của self qua điểm giữa cạnh (mx, mz) và phủ lên phía
+  // trong của cạnh đó (điểm thử ix, iz cách cạnh vài chục cm vào trong self). Có nhiều toà thì lấy toà cao nhất.
+  ctx.coEdge = (mx, mz, ix, iz, self) => {
+    if (!self.ovl) return null;
+    let hit = null;
+    for (const b of self.ovl) {
+      if (b.skip || (hit && hit.height >= b.height)) continue;
+      if (ix < b.bb[0] || ix > b.bb[2] || iz < b.bb[1] || iz > b.bb[3] || !pointInRing(ix, iz, b.p) || !nearRing(mx, mz, b.p, 0.03)) continue;
+      hit = b;
+    }
+    return hit;
+  };
+
   // Toà nhà chứa điểm (x,z), bỏ qua toà `self`.
   ctx.buildingAt = (x, z, self) => {
     let hit = null;

@@ -249,6 +249,7 @@ export function genBuildings(ctx, cx, cz) {
   const list = ctx.chunkBld.get(cx * 1000 + cz) || [];
   for (const b of list) {
     if (b.ghost) { for (let k = 0, n = b.p.length; k < n; k += 2) col.push(b.p[k], b.p[k + 1], b.p[(k + 2) % n], b.p[(k + 3) % n], 12); continue; }
+    if (b.skip) continue; // nhà nằm lọt trong một toà lớn hơn (gen/context.js): toà kia đã che hết
     // công sở, trường học, nhà có tên mà bản đồ xếp chung loại với nhà ở: mặt đứng công sở, không chia lô, không cửa hàng
     const civ = b.cat === CAT.roof ? 0 : civicOf(ctx, b), h = b.height, st = civ === 1 && b.style === ST.TUBE ? ST.PUBLIC : b.style, seed = b.seed, fl = b.floors, hero = b.hero || null, zone = b.zone;
     if (b.cat === CAT.roof) { canopy(bb, b); continue; }
@@ -276,6 +277,10 @@ export function genBuildings(ctx, cx, cz) {
         let y0 = 0;
         const nb = ri === 0 ? ctx.buildingAt(mx + nx * 0.9, mz + nz * 0.9, b) : null;
         if (nb && !nb.skip) { if (nb.height >= h - 0.3) continue; y0 = nb.height; }
+        // cạnh này trùng cạnh ngoài của một toà khác chồng lên toà này (khối đế và tháp vẽ thành hai hình): chỉ một toà dựng bức tường
+        // chung, kẻo hai mặt đứng cùng một mặt phẳng nhấp nháy. Toà cao hơn dựng trọn bức tường (có cửa sổ từ mặt đất lên), toà thấp hơn
+        // (hoặc cao bằng mà có số thứ tự lớn hơn) nhường hẳn cạnh đó.
+        if (ri === 0) { const ov = ctx.coEdge(mx, mz, mx - nx * 0.3, mz - nz * 0.3, b); if (ov && (ov.height > h + 0.05 || (Math.abs(ov.height - h) <= 0.05 && ov.i < b.i))) continue; }
         let style = st, shop = false, road = null, street = false;
         if (y0 > 0 || Lw < 1.9) style = ST.BLANK;
         else if (ri > 0) style = ST.ALLEY;
@@ -351,8 +356,11 @@ export function genBuildings(ctx, cx, cz) {
           // khối lô nhô lên: hai tường hồi (chỉ phần cao hơn lô bên cạnh), tường sau, mái
           const depth = lot.d, ix = -nx * depth, iz = -nz * depth, fxB = [ST.BLANK, fseed, f, lot.age << 1], vaB = [L.BLANK + (hash(bs, 57) < 0.7 ? 0 : 1), L.BLANK, lot.tint, 0], ud = depth / 4;
           const rise = lot.tile ? Math.min(1.9, depth * 0.24) : 0;
-          for (const [e, px, pz, tx, tz] of [[0, x0, z0, -dx / Lw, -dz / Lw], [1, x1, z1, dx / Lw, dz / Lw]]) {
+          for (const [e, ex0, ez0, tx, tz] of [[0, x0, z0, -dx / Lw, -dz / Lw], [1, x1, z1, dx / Lw, dz / Lw]]) {
             const o = lots[j + (e ? 1 : -1)], lo = Math.max(h, o && o.H > h ? o.top : 0), od = o && o.H > h ? o.d : 0;
+            // đầu lô sát góc nhà: tường hồi nằm đúng mặt phẳng mặt tiền của cạnh bên kia góc (nhà góc phố hai mặt tiền) và nhấp nháy với
+            // nó; lùi tường hồi vào trong 4 cm để nó nằm sau mặt tiền kia, phần nhô trên mái cạnh kia vẫn hiện như cũ
+            const ci = o ? 0 : 0.04, px = ex0 - tx * ci, pz = ez0 - tz * ci;
             if (top > lo + 0.05) bb.wall(px, pz, px + ix, pz + iz, lo, top, tx, tz, 0, ud, lo / lot.fh, f + lot.par / lot.fh, fxB, vaB);
             // lô bên cạnh nông hơn: phần tường hồi phía sau nó lộ ra từ nền chung trở lên
             if (lo > h + 0.05 && depth > od + 0.2) bb.wall(px - nx * od, pz - nz * od, px + ix, pz + iz, h, Math.min(lo, top), tx, tz, od / 4, ud, h / lot.fh, Math.min(lo, top) / lot.fh, fxB, vaB);
@@ -434,6 +442,15 @@ function hipRing(b) {
   // vòng trong phải cùng chiều và các cạnh không đảo hướng
   let a2 = 0; for (let k = 0; k < n; k++) { const j = (k + 1) % n; a2 += q[k * 2] * q[j * 2 + 1] - q[j * 2] * q[k * 2 + 1]; if ((q[j * 2] - q[k * 2]) * (p[j * 2] - p[k * 2]) + (q[j * 2 + 1] - q[k * 2 + 1]) * (p[j * 2 + 1] - p[k * 2 + 1]) <= 0) return null; }
   if (a2 * sg <= 0) return null;
+  // mặt bằng lõm (chữ L, chữ U nhiều khúc): vòng trong lùi vào có thể tự cắt, mái trên cùng khi đó thành các tam giác đè lên nhau
+  // (nhấp nháy, thủng mái); thôi không dựng mái bốn mái, nhà dùng mái bằng
+  const cr = (ax, az, bx, bz, cx, cz) => (bx - ax) * (cz - az) - (bz - az) * (cx - ax);
+  for (let i = 0; i < n; i++) for (let j = i + 2; j < n; j++) {
+    if (i === 0 && j === n - 1) continue;
+    const i1 = i + 1, j1 = (j + 1) % n, ax = q[i * 2], az = q[i * 2 + 1], bx = q[i1 * 2], bz = q[i1 * 2 + 1], cx = q[j * 2], cz = q[j * 2 + 1], dx = q[j1 * 2], dz = q[j1 * 2 + 1];
+    const d1 = cr(cx, cz, dx, dz, ax, az), d2 = cr(cx, cz, dx, dz, bx, bz), d3 = cr(ax, az, bx, bz, cx, cz), d4 = cr(ax, az, bx, bz, dx, dz);
+    if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) return null;
+  }
   return { q, d, rise: d * 0.7 };
 }
 function hipRoof(bb, b, hip, tint, slate) {
