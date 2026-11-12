@@ -234,11 +234,13 @@ export function buildContext(world, landmarks = []) {
     if (b.h > 0 && !b.lv) floors = Math.max(1, Math.round(b.h / fh));
     b.solemn = isSolemn(b.cx, b.cz);
     if (b.solemn && (style === ST.TUBE || style === ST.APART || style === ST.MODERN)) { style = ST.FRENCH; fh = 3.8; floors = Math.min(floors, 3); h = b.h > 0 ? Math.min(b.h, 14) : floors * fh + 0.4; }
-    // Khu trang nghiêm: công trình nhỏ không tên, bản đồ không ghi số tầng (bốt gác, nhà phụ trong khuôn viên) dựng thấp một tầng, kín đáo;
-    // trước đây mặt bằng 20 m² cũng thành "biệt thự Pháp" ba tầng. Nhà dưới 140 m² không quá hai tầng.
+    // Khu trang nghiêm: công trình nhỏ không tên, bản đồ không ghi số tầng (bốt gác, nhà phụ: dưới 30 m², hoặc dưới 60 m² nằm trên thảm cỏ,
+    // trong vườn) dựng thấp một tầng, kín đáo; trước đây mặt bằng 20 m² cũng thành "biệt thự Pháp" ba tầng. Nhà nhỏ trong vườn (dưới 140 m²,
+    // như nhà sàn) và nhà mặt bằng dưới 60 m² không quá hai tầng.
     if (b.solemn && !hero && !b.lv && !(b.h > 0) && (b.cat === CAT.house || b.cat === CAT.small)) {
-      if (b.name < 0 && b.area < 60) { style = ST.SMALL; fh = 3; floors = 1; h = 3.2; }
-      else if (b.area < 140 && floors > 2) { floors = 2; h = floors * fh + 0.4; }
+      const garden = b.area < 140 && !!ctx.isGreen(b.cx, b.cz);
+      if (b.name < 0 && (b.area < 30 || (b.area < 60 && garden))) { style = ST.SMALL; fh = 3; floors = 1; h = 3.2; }
+      else if ((garden || b.area < 60) && floors > 2) { floors = 2; h = floors * fh + 0.4; } // mặt bằng dưới 60 m² mà cao ba, bốn tầng thì thành tháp
     }
     if (b.cat === CAT.house && floors >= 9) style = ST.MODERN;       // nhà cao tầng gắn thẻ building=yes
     if (style === ST.MODERN && floors < 6 && b.area < 400) style = ST.TUBE; // khách sạn, cửa hàng trong nhà ống

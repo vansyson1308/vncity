@@ -151,13 +151,16 @@ if (fs.existsSync(ML)) {
     const c = centroid(ring);
     // khu vực trang nghiêm (Lăng, quảng trường Ba Đình, Phủ Chủ tịch): không thêm nhà suy đoán, chỉ giữ nhà OSM đã kiểm chứng
     if (SOLEMN.some((s) => (c[0] / 10 - s[0]) ** 2 + (c[1] / 10 - s[1]) ** 2 < s[2] * s[2])) continue;
-    // khu đất đã giải toả phía đông Hồ Gươm: nhà máy học vẽ từ ảnh cũ là nhà đã phá dỡ (bản đồ OSM đã xoá các nhà đó)
-    if (pip(c[0], c[1], CLEARED_EAST)) { cleared++; continue; }
     // trùng nhà đã có: tâm hoặc quá nửa số đỉnh nằm trong một nhà khác
     if (hit(c[0], c[1]) || ring.filter((p) => hit(p[0], p[1])).length * 2 > ring.length) continue;
     const n0 = buildings.length;
     addBuilding({ building: 'yes', height: it.h ? String(it.h) : undefined }, ring);
-    if (buildings.length > n0) { buildings[n0].ml = 1; put(buildings[n0].p); added++; }
+    if (buildings.length > n0) {
+      buildings[n0].ml = 1; put(buildings[n0].p); added++;
+      // khu đất đã giải toả phía đông Hồ Gươm: nhà máy học vẽ từ ảnh cũ là nhà đã phá dỡ (bản đồ OSM đã xoá các nhà đó). Bỏ, nhưng giữ chỗ
+      // trong mảng để chỉ số các nhà sau nó không đổi.
+      if (pip(c[0], c[1], CLEARED_EAST)) { buildings[n0].dead = true; cleared++; }
+    }
   }
   console.log('Nhà ML thêm từ Overture:', added, '/', ml.items.length, '; bỏ', cleared, 'nhà trong khu giải toả phía đông Hồ Gươm');
 }
@@ -302,7 +305,7 @@ const keepShape = new Set();
 {
   const named = new Set([...SITES.map((s) => s.name), ...HEROES.flatMap((h) => h.name || [])].filter(Boolean));
   for (const b of buildings) if (b.n >= 0 && named.has(names[b.n])) keepShape.add(b);
-  for (const h of HEROES) if (h.at) { let best = null, bd = ((h.r || 25) * 10) ** 2; for (const b of buildings) { const c = centroid(b.p), d = (c[0] - h.at[0] * 10) ** 2 + (c[1] - h.at[1] * 10) ** 2; if (d < bd) { bd = d; best = b; } } if (best) keepShape.add(best); }
+  for (const h of HEROES) if (h.at) { let best = null, bd = ((h.r || 25) * 10) ** 2; for (const b of buildings) { if (b.dead) continue; const c = centroid(b.p), d = (c[0] - h.at[0] * 10) ** 2 + (c[1] - h.at[1] * 10) ** 2; if (d < bd) { bd = d; best = b; } } if (best) keepShape.add(best); }
 }
 
 // ----- 1. Quảng trường Ba Đình -----
@@ -315,7 +318,7 @@ const keepShape = new Set();
   const lang = SITES.find((q) => q.id === 'lang_bac').at.map((v) => v * 10), nearLang = (c) => Math.hypot(c[0] - lang[0], c[1] - lang[1]) < 1500; // sân trước Lăng: trong 150 m
   let n = 0;
   for (const b of buildings) {
-    if (b.n >= 0 || CAT[b.c] === 'small' || isRoof(b) || b.a > 150 || keepShape.has(b)) continue;
+    if (b.dead || b.n >= 0 || CAT[b.c] === 'small' || isRoof(b) || b.a > 150 || keepShape.has(b)) continue;
     const c = centroid(b.p); if (!inS(c)) continue;
     if (lawns.some((g) => pip(c[0], c[1], g.p) || lineD(c, g.p, true) < 150) || (nearLang(c) && parade.some((r) => lineD(c, r.p, false) < 320))) { b.dead = true; n++; console.log('  bỏ công trình nhỏ trên quảng trường Ba Đình:', (c[0] / 10).toFixed(0), (c[1] / 10).toFixed(0), b.a.toFixed(0) + ' m²'); }
   }
@@ -545,9 +548,9 @@ const F_FLUSH = 64;
     // mảnh quá nhỏ hoặc quá mỏng thì bỏ
     const parts = ex.filter((e) => exArea(e) >= 1000 && cOffset([e.outer], -5).length).sort((p, q) => exArea(q) - exArea(p));
     lost += before - parts.reduce((s, e) => s + exArea(e), 0);
-    if (!parts.length || !setShape(b, parts[0], 1.5)) { b.dead = true; dropped++; continue; }
+    if (!parts.length || !setShape(b, parts[0], 0.5)) { b.dead = true; dropped++; continue; }
     cut++;
-    for (const e of parts.slice(1)) { const nb = { ...b, n: -1, p: [], holes: [] }; if (setShape(nb, e, 1.5)) { extra.push(nb); split++; } }
+    for (const e of parts.slice(1)) { const nb = { ...b, n: -1, p: [], holes: [] }; if (setShape(nb, e, 0.5)) { extra.push(nb); split++; } }
   }
   for (const nb of extra) buildings.push(nb);
   console.log('Nhà đè lên lòng đường xe chạy: cắt', cut, 'nhà, bỏ hẳn', dropped, 'nhà, tách thêm', split, 'mảnh; diện tích cắt đi', (lost / 100).toFixed(0), 'm²');
@@ -559,7 +562,8 @@ const F_FLUSH = 64;
 // từ đường mặt tiền mong muốn (mép hè) vào trong: gặp mặt nhà nào trước thì nhà đó được nối dài ra tới đường mặt tiền, đúng trong
 // phần bề ngang của nó. Mỗi nhà lệch nhau vài chục cm cho so le. Không kéo qua đường khác, lối đi bộ, tường rào, mảng xanh;
 // không kéo nhà công cộng, đền chùa, công trình có tên trong bảng; phần nối không chồng lên nhà khác.
-//   phố:        hè 1,6 đến 2,2 m, kéo tối đa 6 m (trục Hàng Gai - Hàng Bông - Cầu Gỗ: hè 2,0 đến 2,4 m, kéo tối đa 9 m)
+//   phố:        hè 1,6 đến 2,2 m, kéo tối đa 6 m (trục Hàng Gai - Hàng Bông - Cầu Gỗ: hè 2,0 đến 2,4 m, kéo tối đa 9 m;
+//               trục Hàng Đào - Hàng Ngang - Hàng Đường - Đồng Xuân: hè 1,5 đến 2,0 m)
 //   phố hẹp:    (lòng dưới 4,5 m, như Tạ Hiện) hè 1,2 đến 1,5 m, kéo tối đa 4 m
 //   ngõ lát liền: tường ra đúng mép ngõ, kéo tối đa 2 m
 {
@@ -569,6 +573,7 @@ const F_FLUSH = 64;
     if (k === 'service' || OLD_KEEP.test(nm)) return null; // lối vào sân, bãi xe; phố bao quanh và phố lớn (hè rộng) giữ nguyên
     if (r.w < 45) return { off: r.w / 2 + 12, jit: 3, max: 40 };
     if (/^Phố (Hàng Gai|Hàng Bông|Cầu Gỗ)$/.test(nm)) return { off: r.w / 2 + 20, jit: 4, max: 90 }; // dãy nhà mặt phố Hàng Gai phía bắc vẽ thụt tới 8 m
+    if (OLD_AXIS.test(nm)) return { off: r.w / 2 + 15, jit: 5, max: 60 }; // trục Hàng Đào - Đồng Xuân: lòng 7 m, lộ giới khoảng 10 m, hè 1,5 đến 2 m
     return { off: r.w / 2 + 16, jit: 6, max: 60 };
   };
   const ZB = [-9000, -14200, 5500, 1000]; // khung bao khu phố cổ, nới 100 m (dm)
@@ -581,14 +586,14 @@ const F_FLUSH = 64;
   for (const b of buildings) if (!b.dead && !isRoof(b) && inZB(b.bb)) eput(b);
   // tia từ O theo véc-tơ N, tham số tau trong [t0, t1]: mặt nhà gặp đầu tiên
   const rayHit = (ox, oz, nx, nz, t0, t1) => {
-    let bt = t1, bb = null;
+    let bt = t1, be = null;
     cellsOf(ox + nx * t0, oz + nz * t0, ox + nx * t1, oz + nz * t1, (k) => { const l = egrid.get(k); if (!l) return; for (const e of l) {
       if (e[4].dead || ver.get(e[4]) !== e[5]) continue;
       const ex = e[2] - e[0], ez = e[3] - e[1], den = nx * ez - nz * ex; if (Math.abs(den) < 1e-9) continue;
       const t = ((e[0] - ox) * ez - (e[1] - oz) * ex) / den, u = ((e[0] - ox) * nz - (e[1] - oz) * nx) / den;
-      if (u >= 0 && u <= 1 && t >= t0 && t < bt) { bt = t; bb = e[4]; }
+      if (u >= 0 && u <= 1 && t >= t0 && t < bt) { bt = t; be = e; }
     } });
-    return bb ? { tau: bt, b: bb } : null;
+    return be ? { tau: bt, b: be[4], e: be } : null;
   };
   // vật cản: mọi đường khác (xe chạy lẫn đi bộ), tường rào
   const sgrid = new Map();
@@ -630,7 +635,7 @@ const F_FLUSH = 64;
         const conv = -((Ne[0] - Ns[0]) * dir[i][0] + (Ne[1] - Ns[1]) * dir[i][1]), lim = conv > 1e-6 ? (0.9 * L) / conv : 1e9;
         const C = (u) => [P[i][0] + (P[i + 1][0] - P[i][0]) * u, P[i][1] + (P[i + 1][1] - P[i][1]) * u], N = (u) => [Ns[0] + (Ne[0] - Ns[0]) * u, Ns[1] + (Ne[1] - Ns[1]) * u];
         for (let k = 0; k < nc; k++) {
-          const u0 = k / nc, u1 = (k + 1) / nc, c = C((u0 + u1) / 2), n = N((u0 + u1) / 2), cell = { a0: C(u0), a1: C(u1), n0: N(u0), n1: N(u1), lim, b: null, tau: 0 };
+          const u0 = k / nc, u1 = (k + 1) / nc, c = C((u0 + u1) / 2), n = N((u0 + u1) / 2), cell = { a0: C(u0), a1: C(u1), n0: N(u0), n1: N(u1), d: dir[i], ns: nrm[i], lim, b: null, tau: 0, e: null };
           cells.push(cell);
           if (!inOldQ(c[0], c[1])) continue;
           const ox = c[0] + n[0] * sp.off, oz = c[1] + n[1] * sp.off;
@@ -638,7 +643,7 @@ const F_FLUSH = 64;
           const h = rayHit(c[0], c[1], n[0], n[1], sp.off, sp.off + sp.jit + sp.max); if (!h || !pullable(h.b)) continue;
           const hx = c[0] + n[0] * h.tau, hz = c[1] + n[1] * h.tau;
           if (blocked(ox, oz, hx, hz, r) || onSoft((ox + hx) / 2, (oz + hz) / 2)) continue;
-          cell.b = h.b; cell.tau = h.tau;
+          cell.b = h.b; cell.tau = h.tau; cell.e = h.e;
         }
       }
       // bỏ các vệt quá hẹp (dưới 0,75 m) và vệt nhìn xuyên khe giữa hai nhà tới một nhà ở sâu phía sau
@@ -659,10 +664,23 @@ const F_FLUSH = 64;
           let e = q; while (e + 1 < use.length && use[e + 1] === use[e] + 1) e++;
           const front = [], back = [];
           for (let k = q; k <= e + 1; k++) { // các mép ô: mép k nằm giữa ô k-1 và ô k của vệt
-            const a = k <= e ? cells[use[k]] : null, p = k > q ? cells[use[k - 1]] : null, c = a || p, o = a ? c.a0 : c.a1, n = a ? c.n0 : c.n1;
-            const D = Math.min(Math.max(a ? a.tau : 0, p ? p.tau : 0) + 4, Math.min(a ? a.lim : 1e9, p ? p.lim : 1e9));
-            if (D <= T + 1) { front.length = 0; back.length = 0; break; }
-            front.push({ X: Math.round(o[0] + n[0] * T), Y: Math.round(o[1] + n[1] * T) }); back.push({ X: Math.round(o[0] + n[0] * D), Y: Math.round(o[1] + n[1] * D) });
+            const a = k <= e ? cells[use[k]] : null, p = k > q ? cells[use[k - 1]] : null, c = a || p, n = a ? c.n0 : c.n1; let o = a ? c.a0 : c.a1;
+            let D = Math.min(Math.max(a ? a.tau : 0, p ? p.tau : 0) + 4, Math.min(a ? a.lim : 1e9, p ? p.lim : 1e9));
+            // hai đầu vệt: dời mép cho đi qua đúng góc nhà (đầu mút của cạnh mặt tiền gặp ở ô cuối), để mép bên của phần nối trùng với
+            // tường bên của nhà, và hai nhà liền kề chung một góc thì hai phần nối cũng giáp nhau khít, không hở, không chồng
+            // Mép sau ở đầu vệt dừng ĐÚNG tại góc nhà (không thò sâu thêm): phần nối không sinh ra đỉnh mới nào nằm trên tường chung, vì toạ độ
+            // làm tròn tới dm nên một đỉnh mới trên bức tường dài 40 m sẽ kéo lệch cả bức tường vài cm sang nhà bên.
+            let corner = null;
+            if (!a || !p) {
+              const ed = c.e, sg = a ? -1 : 1, pa = (ed[0] - o[0]) * c.d[0] + (ed[1] - o[1]) * c.d[1], pb = (ed[2] - o[0]) * c.d[0] + (ed[3] - o[1]) * c.d[1];
+              const V = pa * sg > pb * sg ? [ed[0], ed[1]] : [ed[2], ed[3]], tv = (V[0] - o[0]) * c.ns[0] + (V[1] - o[1]) * c.ns[1], o2 = [V[0] - n[0] * tv, V[1] - n[1] * tv];
+              if (tv > T + 1 && tv <= c.lim && Math.hypot(o2[0] - o[0], o2[1] - o[1]) <= STEP * 1.3) { o = o2; corner = V; }
+            }
+            if (!corner && D <= T + 1) { front.length = 0; back.length = 0; break; }
+            // mép trước (đường mặt tiền) chỉ lấy điểm ở hai đầu vệt và chỗ tim đường gấp khúc: giữa hai điểm đó là một đoạn thẳng tuyệt đối,
+            // không thành bậc thang 1 dm do làm tròn toạ độ; mép sau nằm trong lòng nhà nên điểm nào cũng được
+            if (!a || !p || a.d !== p.d) front.push({ X: Math.round(o[0] + n[0] * T), Y: Math.round(o[1] + n[1] * T) });
+            back.push(corner ? { X: corner[0], Y: corner[1] } : { X: Math.round(o[0] + n[0] * D), Y: Math.round(o[1] + n[1] * D) });
           }
           if (front.length > 1) { const poly = [...front, ...back.reverse()]; if (!ClipperLib.Clipper.Orientation(poly)) poly.reverse(); quads.push(poly); }
           q = e + 1;
@@ -678,7 +696,7 @@ const F_FLUSH = 64;
         const before = b.a * 100, ex = cExec(CT.ctUnion, bPaths(b), exPaths(strip), FT.pftEvenOdd, FT.pftNonZero).sort((p, q) => exArea(q) - exArea(p));
         if (!ex.length || exArea(ex[0]) < before + 50) continue;
         const keep = { p: b.p, holes: b.holes, a: b.a };
-        if (!setShape(b, ex[0], 1)) { Object.assign(b, keep); gput(b); continue; }
+        if (!setShape(b, ex[0], 0.12)) { Object.assign(b, keep); gput(b); continue; } // dung sai 1,2 cm: chỉ bỏ điểm thẳng hàng, không nắn tường chung với nhà bên
         eput(b); grown += b.a * 100 - before; if (!touched.has(b)) { touched.add(b); nB++; }
       }
     }
