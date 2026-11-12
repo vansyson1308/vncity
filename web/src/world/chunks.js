@@ -1,7 +1,7 @@
 // Quản lý các ô phố 128 m: yêu cầu worker dựng ô gần người chơi (gần trước, xa sau), gỡ ô đã xa,
 // đổi bản chi tiết/bản xa của đồ vật theo khoảng cách. Luồng chính chỉ việc nạp mảng vào GPU.
 import * as THREE from 'three';
-import { CS, CURB, ZONE, zoneAt } from './data.js';
+import { CS, CURB } from './data.js';
 import { propGeometry } from './materials.js';
 
 export class Chunks {
@@ -133,6 +133,8 @@ export class Chunks {
     return [n, total];
   }
 }
+
+import { ZONE, zoneAt } from './data.js'; // (để riêng ở đây cho phần vệt sáng, tránh đụng dòng import đầu tệp)
 
 // Vệt sáng dưới chân đèn đường và trước cửa hàng: một InstancedMesh, chỉ hiện khi trời tối.
 // Rẻ hơn rất nhiều so với đặt đèn điểm thật (mỗi đèn điểm làm mọi điểm ảnh phải tính thêm một nguồn sáng).

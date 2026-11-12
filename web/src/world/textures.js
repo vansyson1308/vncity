@@ -139,12 +139,12 @@ export function groundTextures(S = 512) {
     const n = 24, u = S / n; // 24 ô 10 cm = 2,4 m; hoa văn xương cá lặp mỗi 4 ô
     const brick = (x, y, w, h) => {
       const r = R(), v = R() * 22;
-      g.fillStyle = r < 0.8 ? `rgb(${150 + v},${78 + v * 0.6},${62 + v * 0.5})` : r < 0.92 ? grey(128 + v, 0, -2, -6) : `rgb(${176 + v},${150 + v},${104 + v})`;
+      g.fillStyle = r < 0.88 ? `rgb(${132 + v},${80 + v * 0.6},${68 + v * 0.5})` : r < 0.97 ? grey(118 + v, 2, -2, -6) : `rgb(${158 + v},${138 + v},${104 + v})`;
       for (const ox of [0, -S, S]) for (const oy of [0, -S, S]) g.fillRect(x * u + ox + 0.8 * k, y * u + oy + 0.8 * k, w * u - 1.6 * k, h * u - 1.6 * k);
     };
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) { const d = (((x - y) % 4) + 4) % 4; if (d === 0) brick(x, y, 2, 1); else if (d === 3) brick(x, y, 1, 2); }
-    speckle(g, S, R, 3000, ['#7d4a3c', '#b98672', '#5e4a42'], 0.4 * k, 1.2 * k, 0.4);
-    speckle(g, S, R, 14, ['#4e4640'], 10 * k, 34 * k, 0.2);
+    speckle(g, S, R, 3400, ['#7d4a3c', '#a88272', '#5e4a42', '#8a8078'], 0.4 * k, 1.2 * k, 0.45);
+    speckle(g, S, R, 22, ['#4e4640', '#6a625a'], 10 * k, 34 * k, 0.24); // bụi đất, vết ố
   });
   // 14 gạch terrazzo cũ 40×40 cm: xám kem lốm đốm hạt đá, có viên thay mới lệch màu, viên nứt góc
   mk('#a19d92', (g) => {
