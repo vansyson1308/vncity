@@ -195,7 +195,7 @@ export class TrafficSim {
     this.day = 3; this.walk = false; this.gates = []; this.noEntry = null;
     this.agents = []; this.grid = new Map(); this.near = []; this.nearW = 0; this.nearT = 0; this.honks = []; this.density = 1; this.seq = 1; this.time = 0;
     this.mix = mixAt(ZONE.old, 12); this.zone = ZONE.old; this.hours = 12;
-    this.touch = 0; // số lần xe người chơi chạm xe khác (cho lối chơi)
+    this.touch = 0; this.flow = 1; // touch: số lần xe người chơi chạm xe khác (cho lối chơi)
     this.frame = 1; this.rays = 2; this.corRoom = true; this.corRoute = false; this.jamT = -1; this.blind = false; this.cullT = 0.5; this.corW = 0.5; this.corCap = 0.5; this.warming = false;
     this.occluded = null; // hàm (x, z) → true nếu điểm đó khuất sau nhà so với camera (lớp vẽ gắn vào)
     this.stats = { spawned: 0, removed: 0, unstuck: 0, hits: 0 }; this.lastHit = null;
@@ -253,6 +253,8 @@ export class TrafficSim {
       else { const d = Math.hypot(e.cx - px, e.cz - pz); e.wn = e.len * lanes * (d < 60 ? 1 : Math.max(0.06, 1 - (d - 60) / 130)); tot += e.wn; e.wt = 0; }
     }
     this.nearW = tot; this.corW = ctot; this.hours = hours; this.density = densityAt(hours); this.corRoute = !!start && start.route;
+    // giờ cao điểm cả dòng xe chạy chậm lại (15 đến 30 km/h theo docs/18 mục 4), đêm vắng thì chạy đúng tốc độ của phố
+    this.flow = 1 - 0.25 * clamp((this.density - 0.5) * 2, 0, 1);
     this.corCap = cap * this.density * (shut ? 0.4 : 1); // phố người chơi đứng bị rào chắn ngang phía trước: xe tới đó phải rẽ hết, không dồn xe vào nhiều
     this.zone = zoneAt(px, pz); this.mix = mixAt(this.zone, hours);
   }
@@ -462,7 +464,7 @@ export class TrafficSim {
       const e = a.e; this.sample(e, a.s, a.dir, o);
       a.y = e.r.elev ? roadY(e.r, a.dir > 0 ? a.s : e.len - a.s) : 0;
       const tx = o[2], tz = o[3], rx = -tz, rz = tx, bike = a.cls === 0;
-      let target = a.vown || e.vb * a.pace; const free = target;
+      let target = a.vown || e.vb * a.pace * this.flow; const free = target;
       // gần nút giao thì chậm lại (đi thẳng qua nút vắng thì gần như không giảm)
       const rem = e.len - a.s; if (rem < 9) target = Math.min(target, a.vj + rem * 0.45);
       // đèn đỏ: dừng trước vạch (xe đã qua vạch thì đi nốt cho thoát nút)
@@ -477,7 +479,7 @@ export class TrafficSim {
         else if (dl > -1.2) { red = true; target = Math.min(target, Math.max(0, dl * 1.2)); }
         // đã lỡ qua vạch dừng (qua lúc đèn vàng, hoặc từ ngõ rẽ ra ngay sát nút) mà đèn đã đỏ: còn kịp thì dừng trước vạch sang đường
         // và đứng yên đó tới khi đèn xanh; không kịp nữa thì đi nốt cho thoát nút
-        else if (st === 1 && (a.hold || rs - a.hl - a.sg.stop + 1 > a.v * 0.25 + 0.45)) { red = true; target = 0; a.hold = true; }
+        else if (st === 1 && (a.hold || rs - a.hl - a.sg.stop + 1.4 > a.v * 0.25 + 0.15)) { red = true; target = 0; a.hold = true; }
       }
       if (a.pushT > 0) { a.pushT -= dt; target = Math.min(target, 2.4); if (a.pushT <= 0) a.pushB = null; }
       const gap = 1.4 + a.v * 0.8 + a.hl, sq = a.sq > 0 ? 0.3 : 0; let blocked = false, shift = 0, side = 0, lead = null, leadF = 1e9, lb = false, rb = false;
