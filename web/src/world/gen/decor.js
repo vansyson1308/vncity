@@ -131,7 +131,7 @@ function drawHero(ctx, g, b, X0, Z0, lo) {
   }
   if (F.sign && !lo) { const e = mainEdge(b, F.sign.dir); if (e) textPanel(g, e, X0, Z0, Math.min(H - 1.6, 6.2), Math.min(e.len - 1, 11), F.sign.text); }
   if (F.emblem) { // quốc huy: đĩa tròn màu đồng giữa mặt chính (không vẽ chi tiết)
-    const e = mainEdge(b, F.emblem.dir); if (e) { g.push().move(e.mx + e.nx * 0.3 - X0, H * 0.72, e.mz + e.nz * 0.3 - Z0).rotY(Math.atan2(e.nx, e.nz)).rotX(Math.PI / 2); g.rgb(0.62, 0.42, 0.12).gloss(0.5).disc(0, 0, 0, F.emblem.r, lo ? 8 : 20, 1).gloss(0); g.rgb(0.75, 0.1, 0.06).disc(0, 0.03, 0, F.emblem.r * 0.72, lo ? 8 : 20, 1); g.pop(); }
+    const e = mainEdge(b, F.emblem.dir); if (e) { g.push().move(e.mx + e.nx * 0.3 - X0, H * 0.72, e.mz + e.nz * 0.3 - Z0).rotY(Math.atan2(e.nx, e.nz)).rotX(Math.PI / 2); g.rgb(0.62, 0.42, 0.12).gloss(0.5).disc(0, 0, 0, F.emblem.r, lo ? 8 : 20, 1).gloss(0); g.rgb(0.42, 0.27, 0.08).disc(0, 0.03, 0, F.emblem.r * 0.74, lo ? 8 : 20, 1); g.pop(); }
   }
   const archOn = (e, w, h, col) => { // ô cửa vòm tối trên mặt tường
     g.push().move(e.mx + e.nx * 0.06 - X0, CURB, e.mz + e.nz * 0.06 - Z0).rotY(Math.atan2(e.nx, e.nz));

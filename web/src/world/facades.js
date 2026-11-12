@@ -494,7 +494,7 @@ export function facadeMaterial(tex, noise) {
         else if (!isRoof && layer > ${L.BLANK - 0.5} && layer < ${L.BLANK + 1.5} && fuv.y >= 1.0) fuv.y = fl + 0.53 + fract(fuv.y) * 0.45;
         vec3 tint = PAL[int(vVar.z + 0.5)];
         // nắng và tone mapping làm bạc màu vôi: đẩy độ no màu lên để vàng ra vàng, xanh ra xanh như ngoài phố
-        if (!isRoof) { float tl = dot(tint, vec3(0.3, 0.59, 0.11)); tint = max(vec3(tl) + (tint - vec3(tl)) * 1.6, vec3(0.0)) * 0.94; }
+        if (!isRoof) { float tl = dot(tint, vec3(0.3, 0.59, 0.11)); tint = max(vec3(tl) + (tint - vec3(tl)) * 1.85, vec3(0.0)) * 0.9; }
         vec4 tx = texture(uFacade, vec3(fuv, layer));
         float shopL = step(${L.SHOP - 0.5}, layer) * step(layer, ${L.SHOP + L.N_SHOP - 0.5}) + step(${L.MOD_GND - 0.5}, layer) * step(layer, ${L.MOD_GND + 0.5});
         vec2 ff = fract(fuv);

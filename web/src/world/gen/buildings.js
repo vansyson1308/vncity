@@ -67,7 +67,9 @@ export function tubeLook(zone, floors, seed) {
   if (!old && era === 0 && hash(seed, 47) < 0.55) era = 1; // ngoài phố cổ ít nhà cổ hơn
   const up = floors >= 5 && era === 2 && hash(seed, 48) < 0.5 ? L.UP_HOTEL : choose(UP_BY_ERA[era], hash(seed, 42));
   // màu vôi: phố cổ theo bảng màu quy chế; khu khác vẫn dùng bảng chung nhiều màu hơn
-  const tint = old || hash(seed, 49) < 0.5 ? pick(era === 0 && hash(seed, 50) < 0.3 ? P.old : TINT_BY_ERA[era], hash(seed, 43)) : pick(P.tube, hash(seed, 43));
+  // nhà mới không phải nhà nào cũng sơn trắng: một phần vẫn vàng kem, xanh ngọc như cả phố
+  const range = era === 0 ? (hash(seed, 50) < 0.3 ? P.old : P.lime) : era === 2 && hash(seed, 50) < 0.5 ? P.pastel : TINT_BY_ERA[era];
+  const tint = old || hash(seed, 49) < 0.45 ? pick(range, hash(seed, 43)) : pick(P.tube, hash(seed, 43));
   const age = era === 0 ? 2 + (hash(seed, 52) < 0.6 ? 1 : 0) : era === 1 ? 1 + (hash(seed, 52) < 0.45 ? 1 : 0) : hash(seed, 52) < 0.35 ? 1 : 0;
   return { era, up, tint, age };
 }
@@ -181,12 +183,15 @@ export function genBuildings(ctx, cx, cz) {
         }
         const lots = [];
         for (let j = 0; j < bays; j++) {
-          const bs = b.i * 97 + k * 13 + (row ? j : 0), lot = { bs, t0: cuts[j], t1: cuts[j + 1], f: fl, fh: h / fl, H: h, par, tile: false, look: look0, tint: bTint, age: age0 };
+          const bs = b.i * 97 + k * 13 + (row ? j : 0), lot = { bs, t0: cuts[j], t1: cuts[j + 1], f: fl, fh: h / fl, H: h, par, tile: false, look: look0, tint: bTint, age: age0, d: 0 };
           if (row) {
-            let f = depth ? lotFloors(zone, hash(bs, 44)) : fl; const fh = 3.05 + hash(bs, 54) * 0.6;
+            // chiều sâu khối lô: không vượt nửa bề dày của dãy nhà tại chính lô đó (mặt bằng gấp khúc thì mỗi lô một khác)
+            let d = depth; if (d) for (const t of [lot.t0 + 0.02, (lot.t0 + lot.t1) / 2, lot.t1 - 0.02]) d = Math.min(d, rayDepth(ring, ax + dx * t, az + dz * t, -nx, -nz) * 0.5);
+            if (d < 2.6) d = 0; lot.d = d;
+            let f = d ? lotFloors(zone, hash(bs, 44)) : fl; const fh = 3.05 + hash(bs, 54) * 0.6;
             if (f * fh < h + 0.6) { f = fl; } else { lot.f = f; lot.fh = fh; lot.H = f * fh; }
             lot.look = tubeLook(zone, f, bs); lot.age = lot.look.age;
-            lot.tile = lot.H > h && lot.look.era === 0 && f <= 3 && depth >= 4 && hash(bs, 55) < 0.8;
+            lot.tile = lot.H > h && lot.look.era === 0 && f <= 3 && d >= 4 && hash(bs, 55) < 0.8;
             lot.par = lot.tile ? 0 : lot.H > h ? 0.45 + hash(bs, 56) * 0.6 : par;
           }
           if (row) lot.tint = lot.look.tint;
@@ -198,19 +203,21 @@ export function genBuildings(ctx, cx, cz) {
           const sign = shop ? signFor(ctx, road, bs + j * 7) : 0;
           if (hero && hero.up !== undefined) ly = [hero.up, hero.gnd !== undefined ? hero.gnd : hero.up];
           else if (style === ST.TUBE) ly = [lot.look.up, shop ? shopLayer(lot.look.era, sign, bs + j * 7) : L.DOOR];
-          else ly = layersFor(style, shop, hash(row ? bs : b.i, 41), hash(bs + j * 7, 42));
+          else { ly = layersFor(style, shop, hash(row ? bs : b.i, 41), hash(bs + j * 7, 42)); if (shop && style === ST.FRENCH) ly[1] = shopLayer(2, sign, bs + j * 7); }
           const x0 = ax + dx * lot.t0, z0 = az + dz * lot.t0, x1 = ax + dx * lot.t1, z1 = az + dz * lot.t1, fseed = (seed + j * 37 + k * 5) & 255;
           const fx = [style, fseed, f, (shop ? FLAG_SHOP : 0) | (lot.age << 1)];
           bb.wall(x0, z0, x1, z1, 0, top, nx, nz, 0, 1, 0, f + lot.par / lot.fh, fx, [ly[0], ly[1], lot.tint, sign ? SIGNS[sign][2] : 0]);
           if (street) fronts.push({ b, x0, z0, x1, z1, nx, nz, w: (Lw * (lot.t1 - lot.t0)), h: lot.H, fh: lot.fh, floors: f, style, shop, up: ly[0], gnd: ly[1], sign, tint: lot.tint, road, seed: bs + j * 7, era: lot.look ? lot.look.era : -1, tile: lot.tile || pitched, zone, hero });
           if (lot.H <= h) continue;
           // khối lô nhô lên: hai tường hồi (chỉ phần cao hơn lô bên cạnh), tường sau, mái
-          const ix = -nx * depth, iz = -nz * depth, fxB = [ST.BLANK, fseed, f, lot.age << 1], vaB = [L.BLANK + (hash(bs, 57) < 0.7 ? 0 : 1), L.BLANK, lot.tint, 0], ud = depth / 4;
+          const depth = lot.d, ix = -nx * depth, iz = -nz * depth, fxB = [ST.BLANK, fseed, f, lot.age << 1], vaB = [L.BLANK + (hash(bs, 57) < 0.7 ? 0 : 1), L.BLANK, lot.tint, 0], ud = depth / 4;
           const rise = lot.tile ? Math.min(1.9, depth * 0.24) : 0;
           for (const [e, px, pz, tx, tz] of [[0, x0, z0, -dx / Lw, -dz / Lw], [1, x1, z1, dx / Lw, dz / Lw]]) {
-            const o = lots[j + (e ? 1 : -1)], lo = Math.max(h, o ? o.top : 0);
+            const o = lots[j + (e ? 1 : -1)], lo = Math.max(h, o && o.H > h ? o.top : 0), od = o && o.H > h ? o.d : 0;
             if (top > lo + 0.05) bb.wall(px, pz, px + ix, pz + iz, lo, top, tx, tz, 0, ud, lo / lot.fh, f + lot.par / lot.fh, fxB, vaB);
-            if (rise && (!o || o.H + (o.tile ? Math.min(1.9, depth * 0.24) : o.par) < lot.H + rise - 0.2)) bb.triWall([px, lot.H, pz], [px + ix, lot.H, pz + iz], [px + ix / 2, lot.H + rise, pz + iz / 2], tx, tz, [[0, f - 0.4], [ud, f - 0.4], [ud / 2, f - 0.1]], fxB, vaB);
+            // lô bên cạnh nông hơn: phần tường hồi phía sau nó lộ ra từ nền chung trở lên
+            if (lo > h + 0.05 && depth > od + 0.2) bb.wall(px - nx * od, pz - nz * od, px + ix, pz + iz, h, Math.min(lo, top), tx, tz, od / 4, ud, h / lot.fh, Math.min(lo, top) / lot.fh, fxB, vaB);
+            if (rise && (!o || o.H + (o.tile ? Math.min(1.9, o.d * 0.24) : o.par) < lot.H + rise - 0.2)) bb.triWall([px, lot.H, pz], [px + ix, lot.H, pz + iz], [px + ix / 2, lot.H + rise, pz + iz / 2], tx, tz, [[0, f - 0.4], [ud, f - 0.4], [ud / 2, f - 0.1]], fxB, vaB);
           }
           bb.wall(x0 + ix, z0 + iz, x1 + ix, z1 + iz, h, top, -nx, -nz, 0, (Lw * (lot.t1 - lot.t0)) / 4, h / lot.fh, f + lot.par / lot.fh, fxB, vaB);
           if (lot.tile) {
