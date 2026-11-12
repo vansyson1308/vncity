@@ -46,22 +46,27 @@ export class Minimap {
     g.fillText('B', h + Math.sin(camYaw) * (h - 20), h - Math.cos(camYaw) * (h - 20));
   }
 
-  // Bản đồ lớn: trả về hàm đổi toạ độ điểm bấm → toạ độ thế giới.
+  // Bản đồ lớn (gọi khi bảng đã mở, để biết cỡ hiển thị thật): trả về hàm đổi toạ độ điểm bấm → toạ độ thế giới; thuộc tính hit của
+  // hàm là bán kính bắt điểm tính bằng mét. Mốc, mũi tên và bán kính bắt điểm có cỡ tính theo điểm ảnh MÀN HÌNH (mốc 5,5 đến 9 px,
+  // bắt điểm trong vòng 20 px) nên trên điện thoại, nơi cả bản đồ chỉ rộng hơn 300 px, mốc không teo lại thành chấm và vẫn chạm trúng.
   drawBig(canvas, player, passport, fares) {
     const b = this.world.bounds, W = b.x1 - b.x0, H = b.z1 - b.z0, px = Math.min(1400, Math.round(innerWidth * 1.4));
     canvas.width = px; canvas.height = Math.round((px * H) / W); const g = canvas.getContext('2d'), s = px / W;
+    const shown = canvas.getBoundingClientRect().width || px / 1.5, k = px / shown, R = Math.max(5.5, Math.min(9, shown / 75)) * k;
     g.fillStyle = MAP_COLORS.bg; g.fillRect(0, 0, canvas.width, canvas.height);
     if (this.bitmap) g.drawImage(this.bitmap, 0, 0, canvas.width, canvas.height);
     g.textAlign = 'center'; g.textBaseline = 'middle';
     for (const it of passport.items) {
       const x = (it.x - b.x0) * s, y = (it.z - b.z0) * s, ok = passport.visited.has(it.id);
-      g.beginPath(); g.arc(x, y, 13, 0, 7); g.fillStyle = ok ? '#f7f1e3' : 'rgba(29,35,48,0.85)'; g.fill(); g.lineWidth = 3; g.strokeStyle = KIND_COL[it.kind]; g.stroke();
-      g.font = ok ? '16px sans-serif' : '800 15px "Be Vietnam Pro", sans-serif'; g.fillStyle = '#fff'; g.fillText(ok ? it.icon : '?', x, y + 1);
+      g.beginPath(); g.arc(x, y, R, 0, 7); g.fillStyle = ok ? '#f7f1e3' : 'rgba(29,35,48,0.85)'; g.fill(); g.lineWidth = R * 0.23; g.strokeStyle = KIND_COL[it.kind]; g.stroke();
+      g.font = ok ? `${Math.round(R * 1.23)}px sans-serif` : `800 ${Math.round(R * 1.15)}px "Be Vietnam Pro", sans-serif`; g.fillStyle = '#fff'; g.fillText(ok ? it.icon : '?', x, y + R * 0.08);
     }
-    if (fares.state === 'offer') { g.beginPath(); g.arc((fares.cust.x - b.x0) * s, (fares.cust.z - b.z0) * s, 9, 0, 7); g.fillStyle = '#ffd23a'; g.fill(); }
-    if (fares.state === 'ride') { g.beginPath(); g.arc((fares.dest.x - b.x0) * s, (fares.dest.z - b.z0) * s, 10, 0, 7); g.fillStyle = '#3ae07a'; g.fill(); g.strokeStyle = '#fff'; g.stroke(); }
-    const x = (player.pos.x - b.x0) * s, y = (player.pos.z - b.z0) * s;
-    g.save(); g.translate(x, y); g.rotate(Math.PI - player.yaw); g.fillStyle = '#ffd23a'; g.strokeStyle = '#1d2330'; g.lineWidth = 3; g.beginPath(); g.moveTo(0, -14); g.lineTo(9, 10); g.lineTo(0, 5); g.lineTo(-9, 10); g.closePath(); g.fill(); g.stroke(); g.restore();
-    return (cx, cy) => { const r = canvas.getBoundingClientRect(); return [((cx - r.left) / r.width) * W + b.x0, ((cy - r.top) / r.height) * H + b.z0]; };
+    if (fares.state === 'offer') { g.beginPath(); g.arc((fares.cust.x - b.x0) * s, (fares.cust.z - b.z0) * s, R * 0.7, 0, 7); g.fillStyle = '#ffd23a'; g.fill(); }
+    if (fares.state === 'ride') { g.beginPath(); g.arc((fares.dest.x - b.x0) * s, (fares.dest.z - b.z0) * s, R * 0.77, 0, 7); g.fillStyle = '#3ae07a'; g.fill(); g.lineWidth = R * 0.23; g.strokeStyle = '#fff'; g.stroke(); }
+    const x = (player.pos.x - b.x0) * s, y = (player.pos.z - b.z0) * s, a = R / 13;
+    g.save(); g.translate(x, y); g.rotate(Math.PI - player.yaw); g.scale(a, a); g.fillStyle = '#ffd23a'; g.strokeStyle = '#1d2330'; g.lineWidth = 3; g.beginPath(); g.moveTo(0, -14); g.lineTo(9, 10); g.lineTo(0, 5); g.lineTo(-9, 10); g.closePath(); g.fill(); g.stroke(); g.restore();
+    const toWorld = (cx, cy) => { const r = canvas.getBoundingClientRect(); return [((cx - r.left) / r.width) * W + b.x0, ((cy - r.top) / r.height) * H + b.z0]; };
+    toWorld.hit = Math.max(70, (20 * k) / s);
+    return toWorld;
   }
 }
