@@ -363,7 +363,8 @@ export function genGround(ctx, cx, cz) {
   // Hai lượt: lượt đầu kẻ vạch sang đường, vạch dừng, mũi tên ở đầu đoạn và ghi lại chỗ các vạch sang đường (kể cả vạch thuộc ô bên
   // cạnh); lượt sau kẻ vạch dọc, bỏ khúc nào rơi vào một vạch sang đường (vạch sang đường đặt sang đoạn nối tiếp khi đoạn sát nút quá
   // ngắn, mà đoạn nối tiếp thì kẻ vạch dọc tới tận đầu đoạn: hai lớp sơn cùng mặt phẳng sẽ nhấp nháy).
-  const inChunk = (x, z) => x >= X0 && x < X1 && z >= Z0 && z < Z1, zebras = [], zr = [], o5 = [0, 0, 0, 0, 0, null];
+  // (vạch chỉ kẻ trong bản đồ, cách mép 2 m: mặt đất ngoài mép bản đồ không có, vạch thò ra đó lơ lửng)
+  const inChunk = (x, z) => x >= X0 && x < X1 && z >= Z0 && z < Z1 && x > B.x0 + 2 && x < B.x1 - 2 && z > B.z0 + 2 && z < B.z1 - 2, zebras = [], zr = [], o5 = [0, 0, 0, 0, 0, null];
   const onZebra = (x, z, ux, uz, h) => { for (const q of zr) { const lx = (x - q[0]) * q[2] + (z - q[1]) * q[3], ly = -(x - q[0]) * q[3] + (z - q[1]) * q[2], c = Math.abs(ux * q[2] + uz * q[3]); if (Math.abs(lx) < q[4] + h * c + 0.3 && Math.abs(ly) < q[5] + h * (1 - c) + 0.3) return true; } return false; };
   for (const pass of [0, 1]) for (const r of roads) {
     if (!r.veh || r.kind > K.tertiary || r.w < 5.5) continue;
@@ -438,14 +439,18 @@ export function genGround(ctx, cx, cz) {
       zr.push([x, z, dx, dz, zl, r.w / 2]);
       if (!inChunk(x, z)) continue;
       if (zebras.some((q) => (q[0] - x) ** 2 + (q[1] - z) ** 2 < 49)) continue; zebras.push([x, z]);
-      const nS = Math.max(2, Math.floor(r.w - 0.9) + 1);
+      const cw = cont ? Math.min(r.w, cont.w) : r.w; // vạch đặt sang mẩu nối tiếp: không rộng hơn lòng đường hẹp hơn
+      const nS = Math.max(2, Math.floor(cw - 0.9) + 1);
       for (let k = 0; k < nS; k++) { const o = k - (nS - 1) / 2; gb.flatQuad(x - dz * o, z + dx * o, dx, dz, zl, 0.2, PAINT_Y, LAYER.white); }
       // vạch dừng và mũi tên: chỉ ở nút lớn, trên phần đường của chiều xe đang đi tới nút
       const toward = end ? 1 : -1; // chiều xe đi tới nút, tính theo chiều đoạn
       if (node.maxW < 9 || r.w < 7 || (oneway && oneway !== toward)) continue;
       const sAt = at - toward * (zl + 2.4 + 0.2), sd = at0 + zl + 2.6; // vạch dừng cách tâm nút sd mét
-      const half = oneway ? r.w / 2 - 0.25 : r.w / 4 - 0.12, oc = oneway ? 0 : (toward * r.w) / 4;
-      if (sd > 4 && P(sd, o5)) gb.flatQuad(o5[0] - o5[3] * oc, o5[1] + o5[2] * oc, o5[2], o5[3], 0.2, half, PAINT_Y, LAYER.white);
+      if (sd > 4 && P(sd, o5)) {
+        const sw = o5[5] ? Math.min(r.w, o5[5].w) : r.w, half = oneway ? sw / 2 - 0.25 : sw / 4 - 0.12, oc = oneway ? 0 : (toward * sw) / 4;
+        gb.flatQuad(o5[0] - o5[3] * oc, o5[1] + o5[2] * oc, o5[2], o5[3], 0.2, half, PAINT_Y, LAYER.white);
+        zr.push([o5[0] - o5[3] * oc, o5[1] + o5[2] * oc, o5[2], o5[3], 0.2, half + 0.1]); // vạch vàng tim đường cũng tránh vạch dừng
+      }
       if (r.w < 10 || r.len < 2 * jr + 50) continue;
       const aAt = sAt - toward * 7.5; alongAt(r, aAt, o5);
       const nl = oneway ? Math.max(1, Math.round(r.w / 3.4)) : Math.max(1, Math.round(r.w / 7)), wl = (oneway ? r.w : r.w / 2) / nl;

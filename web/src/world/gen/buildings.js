@@ -294,9 +294,14 @@ export function genBuildings(ctx, cx, cz) {
         // cạnh này trùng cạnh ngoài của một toà khác chồng lên toà này (khối đế và tháp vẽ thành hai hình): chỉ một toà dựng bức tường
         // chung, kẻo hai mặt đứng cùng một mặt phẳng nhấp nháy. Toà cao hơn dựng trọn bức tường (có cửa sổ từ mặt đất lên), toà thấp hơn
         // (hoặc cao bằng mà có số thứ tự lớn hơn) nhường hẳn cạnh đó.
-        if (ri === 0) { const ov = ctx.coEdge(mx, mz, mx - nx * 0.3, mz - nz * 0.3, b); if (ov && (ov.height > h + 0.05 || (Math.abs(ov.height - h) <= 0.05 && ov.i < b.i))) continue; }
+        // Toà kia phải phủ trọn cạnh (thử cả hai điểm cách đầu cạnh 12%): cạnh của nó lệch vài cm và ngắn hơn thì nhường hẳn là để
+        // hở một khe (reviewer vòng 3, nhà #7071); khi đó vẫn dựng tường, lùi vào trong 3 cm để không trùng mặt phẳng với tường toà kia.
+        let inset = 0;
+        if (ri === 0) { const ov = ctx.coEdge(mx, mz, mx - nx * 0.3, mz - nz * 0.3, b); if (ov && (ov.height > h + 0.05 || (Math.abs(ov.height - h) <= 0.05 && ov.i < b.i))) {
+          const at = (t) => ctx.coEdge(ax + dx * t, az + dz * t, ax + dx * t - nx * 0.3, az + dz * t - nz * 0.3, b) === ov;
+          if (at(0.12) && at(0.88)) continue; inset = 0.03; } }
         let style = st, shop = false, road = null, street = false;
-        if (party || Lw < 1.9) style = ST.BLANK;
+        if (party || Lw < 1.9 || inset) style = ST.BLANK;
         else if (ri > 0) style = ST.ALLEY;
         else {
           const rd = ctx.nearestRoad(mx + nx * 2, mz + nz * 2, 15, notDeck);
@@ -312,7 +317,7 @@ export function genBuildings(ctx, cx, cz) {
         const par = hero && hero.parapet !== undefined ? hero.parapet : st === ST.TEMPLE || pitched || hip ? 0 : 0.9;
         if (style === ST.BLANK) {
           const u = Lw / 4, ly = layersFor(ST.BLANK, false, hash(b.i, 35), 0);
-          bb.wall(ax, az, bx, bz, y0, h + par, nx, nz, uoff, uoff + u, (y0 / h) * fl, fl + (par / h) * fl, [style, seed, fl, age0 << 1], [ly[0], ly[1], bTint, 0]);
+          bb.wall(ax - nx * inset, az - nz * inset, bx - nx * inset, bz - nz * inset, y0, h + par, nx, nz, uoff, uoff + u, (y0 / h) * fl, fl + (par / h) * fl, [style, seed, fl, age0 << 1], [ly[0], ly[1], bTint, 0]);
           uoff += u; continue;
         }
         // ----- chia gian. Dãy nhà gộp: gian rộng hẹp không đều (2,9 đến 5,3 m) -----
