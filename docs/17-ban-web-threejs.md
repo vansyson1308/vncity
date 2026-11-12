@@ -104,7 +104,8 @@ Các kỹ thuật chính:
    đỗ) và lưới "xa" (cây một khối, cột đèn bốn cạnh). Xe trong dòng xe cũng có bản xa vài khối hộp. Biển số có chữ theo
    kiểu biển Việt Nam (xe máy hai dòng "29-B1 / 123.45", ô tô biển dài một dòng ở mũi, biển ngắn hai dòng ở đuôi, xe buýt
    biển vàng): xe của người chơi, ô tô, xe buýt vẽ từng ký tự bằng nét kiểu bảy đoạn; xe máy trong dòng xe và xe đỗ (hàng
-   trăm chiếc) chỉ có mỗi nhóm ký tự một vạch xám (`plateText` trong `models/vehicles.js`).
+   trăm chiếc) chỉ có mỗi nhóm ký tự một vạch xám (`plateText` trong `models/vehicles.js`); ô tô, buýt trong dòng xe vì thế
+   nặng hơn khoảng 150 tam giác mỗi chiếc (ô tô 394 → 548), không đáng kể với tối đa 14 ô tô.
 4. **Ánh sáng không cần bản đồ môi trường.** Kính, mặt hồ, nước sơn xe tự tính phản chiếu trời từ cùng bộ
    uniform với vòm trời, nên đổi giờ không tốn khung hình nào để dựng cubemap.
 5. **Nền trước, chi tiết sau.** Ô ở xa chỉ có nền (mặt đất, nhà, đồ vật bản xa); lưới chi tiết chỉ được worker gửi khi
@@ -193,7 +194,9 @@ Các kỹ thuật chính:
    đây ở mọi tốc độ chỉ cách xe trước chừng 0,7 m nên xe trước phanh gấp là đâm vào đuôi): cùng ba hạt giống, cặp lồng nhau
    503/591/485 → 413/484/347, trong khung nhìn 127/139/109 → 90/71/103. Mỗi xe nhớ xe đang chắn mình; khi chuỗi "ai chắn
    ai" khép thành vòng (hai xe đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước), xe có số thứ tự nhỏ nhất
-   trong vòng đi trước. Xe cắt ngang đang chạy tới từ bên hông được đoán trước tới 2 giây: nó sẽ vào vệt đường của mình trước lúc
+   trong vòng đi trước. Cờ "đang chờ đèn đỏ" (không tính là kẹt) được truyền dọc hàng xe nhưng phải lần về được một xe đang thật sự
+   chờ đèn (`redD`: số xe tính từ xe đó); hai xe là "xe trước" của nhau ở chỗ nhập làn chéo từng giữ cờ đỏ cho nhau mãi nên luật gỡ
+   kẹt không chạy. Xe ma quay đầu (bị người chơi chắn quá 8 giây trong phố đóng) xoay đầu tối đa 0,8 rad/s, đi chậm trong 4 giây. Xe cắt ngang đang chạy tới từ bên hông được đoán trước tới 2 giây: nó sẽ vào vệt đường của mình trước lúc
    mình tới chỗ đó thì nhả ga như gặp xe đứng ở đúng chỗ nó cắt qua, mình tới trước thì đi. Đường bị cắt
    ở mép bản đồ là lối ra: xe tới đó rời khỏi bản đồ chứ không quay đầu. Giờ cao điểm cả dòng xe chạy chậm lại; đi nhanh tới
    nơi nào thì dòng xe và người đi bộ ở đó được rải sẵn như lúc vào game.
@@ -217,7 +220,10 @@ Các kỹ thuật chính:
    xe (để không dồn ứ trước rào), xe còn sót tự chạy ra (bị người chơi hay chiếc xe
    người chơi dựng giữa phố chắn quá 8 giây thì quay đầu ra lối khác); rào chắn dựng ở 45 chỗ (`world/walkstreet.js`): đầu ngoài của
    mọi đoạn đóng chạm đường còn mở, và mọi chỗ phố đi bộ gặp một đường khác kể cả phố nhánh đóng theo; người đi bộ đi cả dưới lòng
-   đường và đông gấp rưỡi; quảng trường Đông Kinh Nghĩa Thục có thêm sáu tuyến đi bộ cắt ngang lòng quảng trường
+   đường và đông gấp rưỡi; rào đặt cách nút ít nhất nửa bề rộng đường mở lớn nhất ở nút cộng 1,5 m (tối thiểu 4,5 m), nên rào không
+   bao giờ đứng trên làn phố mở; xe của người chơi chỉ bị coi là "sau rào" khi qua đúng vạch rào (trong bề ngang rào), hoặc khi
+   ở trên một đoạn đóng mà không nằm trên lòng đường mở nào (`behindGate` trong `main.js`; trước đây chỉ hỏi "tim đường gần nhất là
+   đoạn đóng", xe đi ngang miệng phố đóng ở nút giao bị chặn đứng: 62/112 vệt chạy thử → 0/112, mọi vệt đi vào vẫn dừng ở vạch rào); quảng trường Đông Kinh Nghĩa Thục có thêm sáu tuyến đi bộ cắt ngang lòng quảng trường
    (`actors/crowd.js` PLAZA_LINES: bản đồ không có lối nào trong lòng quảng trường nên trước đây người chỉ men theo mép), ngày
    thường có người băng qua, đứng xem màn hình, tối phố đi bộ đông như phố đi bộ; xe của người chơi tới ranh phố đóng thì dừng như gặp rào (lời nhắc: xuống xe đi bộ vào), lỡ ở sẵn bên
    trong thì chỉ dắt ra được bằng tốc độ đi bộ, vào game bằng `?bike` giữa phố đóng thì không ngồi sẵn trên xe; cuốc xe ôm không đón
