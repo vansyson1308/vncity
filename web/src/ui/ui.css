@@ -55,7 +55,8 @@ button { font: inherit; cursor: pointer; border: 0; -webkit-tap-highlight-color:
   padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
 #hud button, #card { pointer-events: auto; }
 #hud.photo > *:not(#bubble):not(#photobar) { display: none !important; }
-#photobar { display: none; position: absolute; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%); box-sizing: border-box; max-width: calc(100% - 24px); align-items: center; gap: 10px; background: rgba(29,35,48,.82); color: #fff; padding: 6px 8px 6px 16px; border-radius: 26px; font-size: 13.5px; font-weight: 600; line-height: 1.3; }
+/* thanh chụp ảnh: rộng theo chữ (width: max-content) chứ không co theo nửa khung còn lại sau left: 50%, chỉ xuống dòng khi khung hẹp thật */
+#photobar { display: none; position: absolute; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%); box-sizing: border-box; width: max-content; max-width: calc(100% - 24px); align-items: center; gap: 10px; background: rgba(29,35,48,.82); color: #fff; padding: 6px 8px 6px 16px; border-radius: 26px; font-size: 13.5px; font-weight: 600; line-height: 1.3; }
 #hud.photo #photobar { display: flex; } #photobar .round { box-shadow: none; }
 .chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(247,241,227,.94); color: var(--dark); padding: 6px 12px; border-radius: 999px; font-size: 14px; white-space: nowrap; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
 .round { flex: none; width: 40px; height: 40px; padding: 0; border-radius: 50%; background: rgba(247,241,227,.94); font-size: 18px; box-shadow: 0 2px 10px rgba(0,0,0,.3); } .round.big { width: 62px; height: 62px; font-size: 26px; } .round.on { background: var(--gold); }
@@ -90,7 +91,7 @@ button { font: inherit; cursor: pointer; border: 0; -webkit-tap-highlight-color:
    một nửa trở lên), có dấu … và lời mời "đọc thêm"; bấm E hoặc chạm thì mở đủ. Lời giới thiệu vừa đủ chỗ thì hiện trọn, không có lời mời. */
 #card { --clamp: 5; }
 #card #c-desc { display: -webkit-box; -webkit-line-clamp: var(--clamp); -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; } #card.open #c-desc { display: block; overflow: visible; }
-.kind { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; color: var(--ink); font-weight: 800; margin: 0; } .next { color: #1f6fb5; font-weight: 600; } #c-close { float: right; width: 28px; height: 28px; padding: 0; margin: -4px -4px 6px 8px; border-radius: 50%; } #c-hint { clear: both; }
+.kind { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; color: var(--ink); font-weight: 800; margin: 0; } #c-kind span { white-space: nowrap; } .next { color: #1f6fb5; font-weight: 600; } #c-close { float: right; width: 28px; height: 28px; padding: 0; margin: -4px -4px 6px 8px; border-radius: 50%; } #c-hint { clear: both; }
 /* nút đóng và con dấu "ĐÃ ĐẾN" thả nổi ở góc phải: dòng loại và tên địa danh tự chảy quanh, không bị đè lên */
 .stampmark { float: right; margin: 0 4px 8px 14px; border: 3px solid var(--ink); color: var(--ink); font-weight: 800; padding: 3px 10px; border-radius: 8px; transform: rotate(8deg); opacity: .88; font-size: 14px; letter-spacing: .06em; white-space: nowrap; animation: stamp .45s cubic-bezier(.2,1.6,.3,1); }
 @keyframes stamp { 0% { transform: rotate(8deg) scale(3); opacity: 0; } 60% { transform: rotate(8deg) scale(.9); opacity: 1; } 100% { transform: rotate(8deg) scale(1); opacity: .88; } }
@@ -114,7 +115,7 @@ button { font: inherit; cursor: pointer; border: 0; -webkit-tap-highlight-color:
 /* cách chia "rộng": thẻ nằm bên phải bản đồ nhỏ, tên phố nằm dưới thẻ; cột phải rộng bằng hai cột trái để cột giữa đúng tâm màn hình */
 @media (min-width: 1800px) and (min-height: 520px) {
   #hud-body { grid-template-columns: 186px 400px minmax(0, 1fr) 598px; grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "map card toast right" "map card . right" "map card prompt right"; }
-  #card { width: 400px; margin-bottom: 42px; max-height: calc(100% - 42px); --clamp: 4; } #prompt { margin-bottom: calc(26vh - 12px); }
+  #card { width: 400px; margin-bottom: 42px; max-height: calc(100% - 42px); --clamp: 4; } #prompt { margin-bottom: calc(26vh - 12px); } #fare { width: 280px; }
 }
 /* màn hình nhỏ (thấp hoặc hẹp): mọi khối gọn lại; tên phố nằm trên bản đồ nhỏ, được xuống dòng */
 @media (max-width: 899px), (max-height: 519px) {
@@ -156,14 +157,14 @@ button { font: inherit; cursor: pointer; border: 0; -webkit-tap-highlight-color:
 .rank { margin: 8px 0 4px; font-weight: 600; } .rank b { color: var(--ink); }
 .page { margin-top: 12px; } .page h3 { margin: 0 0 6px; font-size: 15px; display: flex; justify-content: space-between; } .page h3 span { color: var(--muted); font-weight: 600; }
 .stamps { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-.st { display: flex; gap: 8px; align-items: center; padding: 7px 9px; border-radius: 10px; background: rgba(29,35,48,.06); font-size: 13px; line-height: 1.2; } .st i { font-style: normal; font-size: 20px; filter: grayscale(1) opacity(.45); } .st.ok { background: rgba(179,18,31,.1); outline: 1.5px dashed rgba(179,18,31,.5); } .st.ok i { filter: none; } .st:not(.ok) span { color: var(--muted); }
+.st { display: flex; gap: 8px; align-items: center; padding: 7px 9px; border-radius: 10px; background: rgba(29,35,48,.06); font-size: 13px; line-height: 1.2; } .st i { font-style: normal; font-size: 20px; filter: grayscale(1) opacity(.45); } .st.ok { background: rgba(179,18,31,.1); outline: 1.5px dashed rgba(179,18,31,.5); } .st.ok i { filter: none; } .st:not(.ok) span { color: var(--muted); } .st span { min-width: 0; overflow-wrap: break-word; }
 .setrow { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; gap: 12px; } .seg { flex: none; display: flex; background: rgba(29,35,48,.1); border-radius: 999px; padding: 3px; } .seg button { background: none; padding: 6px 13px; border-radius: 999px; font-weight: 600; color: var(--dark); white-space: nowrap; } .seg button.on { background: var(--ink); color: #fff; }
 .cert { text-align: center; } .cert h2 { color: var(--ink); font-size: 30px; margin: 4px 0 10px; } .cert .row { justify-content: center; }
 @media (max-height: 820px) {
   .modal { padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); } .modal .paper { padding-top: 12px; padding-bottom: 12px; }
   #book .page { margin-top: 6px; } #book .page h3 { margin-bottom: 3px; font-size: 13px; } #book .rank { margin: 4px 0 2px; font-size: 13px; }
   #book .stamps { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 4px; }
-  #book .st { padding: 3px 6px; font-size: 11.5px; gap: 5px; border-radius: 7px; } #book .st i { font-size: 15px; } #book .st span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #book .st { padding: 3px 6px; font-size: 11.5px; gap: 5px; border-radius: 7px; } #book .st i { font-size: 15px; } /* tên dấu đã đóng xuống dòng chứ không bị cắt bằng dấu …: đây là nơi duy nhất người chơi xem lại tên đầy đủ */
   #book .row { margin-top: 6px; }
 }
 /* khung thấp: bảng Bản đồ xếp ngang (bản đồ bên trái cao hết khung, chữ bên phải) để bản đồ to nhất có thể; bảng Cài đặt gọn lại */

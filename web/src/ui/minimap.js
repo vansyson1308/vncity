@@ -2,6 +2,7 @@
 // được vẽ lại bằng nét vẽ để luôn sắc nét khi phóng to.
 import { K } from '../world/data.js';
 import { MAP_COLORS } from '../world/gen/mapdraw.js';
+import { T } from './i18n.js';
 
 const KIND_COL = { landmark: '#35a7ff', food: '#ff8a2a', culture: '#ff5fa2' };
 export class Minimap {
@@ -39,11 +40,11 @@ export class Minimap {
       g.beginPath(); g.arc(px + dx, pz + dz, (m.big ? 7 : 5) / s * (edge ? 0.8 : 1), 0, 7); g.fillStyle = m.color || KIND_COL[m.kind] || '#fff'; g.fill(); g.lineWidth = 2 / s; g.strokeStyle = '#fff'; g.stroke();
     }
     g.restore();
-    // mũi tên người chơi và chữ B (bắc)
+    // mũi tên người chơi và chữ chỉ hướng bắc (B ở bản tiếng Việt, N ở bản tiếng Anh; vẽ lại mỗi khung nên đổi theo ngôn ngữ ngay)
     g.save(); g.translate(h, h); g.rotate(camYaw + Math.PI - player.yaw);
     g.fillStyle = '#ffd23a'; g.strokeStyle = '#1d2330'; g.lineWidth = 3; g.beginPath(); g.moveTo(0, -17); g.lineTo(11, 13); g.lineTo(0, 6); g.lineTo(-11, 13); g.closePath(); g.fill(); g.stroke(); g.restore();
     g.fillStyle = '#fff'; g.font = '800 22px "Be Vietnam Pro", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.fillText('B', h + Math.sin(camYaw) * (h - 20), h - Math.cos(camYaw) * (h - 20));
+    g.fillText(T('north1'), h + Math.sin(camYaw) * (h - 20), h - Math.cos(camYaw) * (h - 20));
   }
 
   // Bản đồ lớn (gọi khi bảng đã mở, để biết cỡ hiển thị thật): trả về hàm đổi toạ độ điểm bấm → toạ độ thế giới; thuộc tính hit của

@@ -66,7 +66,9 @@ export class Hud {
   // chữ trên thẻ theo ngôn ngữ đang chọn (gọi lại khi đổi ngôn ngữ); dòng nào trống thì ẩn hẳn
   drawCard() {
     const it = this.cardItem, next = this.cardNext, L = lang(), put = (id, text) => { const e = $(id); e.textContent = text; e.classList.toggle('hidden', !text); };
-    $('c-kind').textContent = `${it.icon} ${T('kind_' + it.kind)} · ${T('page_' + it.page)}`; $('c-name').textContent = it.name[L] || it.name.vi; put('c-desc', it.desc?.[L] || it.desc?.vi || '');
+    // dòng loại · trang: hai cụm không tự ngắt giữa chừng, nên chỗ chật thì xuống dòng sau dấu ·, không tách đôi tên "Hồ / Gươm"
+    const kind = $('c-kind'), k1 = document.createElement('span'), k2 = document.createElement('span'); k1.textContent = `${it.icon} ${T('kind_' + it.kind)} ·`; k2.textContent = T('page_' + it.page); kind.replaceChildren(k1, ' ', k2);
+    $('c-name').textContent = it.name[L] || it.name.vi; put('c-desc', it.desc?.[L] || it.desc?.vi || '');
     put('c-extra', [it.year ? `${T('built')} ${it.year}` : '', it.street || ''].filter(Boolean).join(' · '));
     put('c-next', next ? `${T('nearby')} ${next.it.icon} ${next.it.name[L] || next.it.name.vi}, ${dist(next.d)} ${T('toward')} ${compassWord(next.it.x - it.x, next.it.z - it.z)}` : '');
     $('stampmark').textContent = T('stamped'); $('c-hint').textContent = this.touch ? T('readTouch') : T('read');
