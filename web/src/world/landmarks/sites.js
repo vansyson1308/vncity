@@ -86,7 +86,13 @@ export function siteCollision(s, pos) {
 export function freeSpot(nav, x0, z0, tg = null) {
   const b = nav.b, m = 10, onDeck = (x, z) => nav.decks.length > 0 && !!nav.deckAt(x, z, 0.3);
   const free = (x, z) => x > b.x0 + m && x < b.x1 - m && z > b.z0 + m && z < b.z1 - m && (!nav.isWater(x, z) || onDeck(x, z)) && nav.clearAt(x, z, 0.6) && !!nav.nearestRoad(x, z, 45, (r) => !r.bridge) && !nav.inSolid(x, z);
-  const sees = (x, z) => { const dx = tg.x - x, dz = tg.z - z, d = Math.hypot(dx, dz) || 1, need = Math.min(d - 10, 45); return need <= 0 || nav.raycast(x, z, dx / d, dz / d, need, 1.6) >= need - 0.01; };
+  // nhìn thông: tia từ chỗ đứng, và hai tia lệch ngang 4 m xuất phát từ chỗ camera (sau lưng 4 m), để khung hình không bị một góc nhà
+  // ngay cạnh che mất nửa công trình
+  const sees = (x, z) => {
+    const dx = tg.x - x, dz = tg.z - z, d = Math.hypot(dx, dz) || 1, ux = dx / d, uz = dz / d, need = Math.min(d - 10, 45); if (need <= 0) return true;
+    for (const o of [0, -4, 4]) { const b = o ? 4 : 0, L = need + b; if (nav.raycast(x - ux * b - uz * o, z - uz * b + ux * o, ux, uz, L, 1.6) < L - 0.01) return false; }
+    return true;
+  };
   let first = null;
   for (let r = 2; r <= 120 && !(first && (!tg || r > first[2] + 40)); r += 2) for (let k = 0, n = Math.max(8, Math.round(r * 1.6)); k < n; k++) {
     const a = (k / n) * Math.PI * 2, x = x0 + Math.sin(a) * r, z = z0 + Math.cos(a) * r; if (!free(x, z)) continue;
