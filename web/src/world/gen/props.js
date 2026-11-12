@@ -7,6 +7,7 @@ import { decorate } from './decor.js';
 import { furnish } from './furniture.js';
 import { WHITE_UV } from '../signs.js';
 import { plateLayout } from '../streetnames.js';
+import { treePit } from './pits.js';
 
 // Loài cây theo từng phố có tên (docs/18, mục 6): [mẫu tên phố, [[loài, tỉ lệ cộng dồn], ...]].
 // Phan Đình Phùng xử lý riêng trong kindFor (sấu ở đoạn tây, nhội từ Cửa Bắc về Hàng Đậu).
@@ -45,6 +46,7 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
   const addTree = (x, z, kind, seed, lime = hash(seed, 12) < 0.2) => {
     for (const p of placed) if ((p[0] - x) ** 2 + (p[1] - z) ** 2 < 16) return;
     placed.push([x, z]); occ.push([x, z, 0.55]); treeList.push([x, z, kind, seed]);
+    treePit(near, ctx, x, z, X0, Z0, seed); // ô cây trên vỉa hè (gen/pits.js)
     // ô nào quá nhiều cây (rừng, công viên) thì từ cây thứ 56 dùng luôn bản một khối để giữ số tam giác
     if (placed.length <= 56) tree(near, x - X0, z - Z0, seed, kind, 0, CURB, leaf, lime ? 1 : 0); else tree(near, x - X0, z - Z0, seed, kind, 1, CURB, null, lime ? 1 : 0);
     tree(far, x - X0, z - Z0, seed, kind, 1, CURB, null, lime ? 1 : 0);
