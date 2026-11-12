@@ -74,7 +74,8 @@ export class FollowCamera {
     // sát tường thì thu mặt cắt gần của ống kính lại để không cắt vào nhà
     const near = this.close < 1.3 || tight ? 0.08 : 0.3;
     if (near !== c.near) { c.near = near; c.updateProjectionMatrix(); }
-    if (this.shake > 0.001) { c.position.x += (Math.random() - 0.5) * this.shake; c.position.y += (Math.random() - 0.5) * this.shake; this.shake *= Math.exp(-dt * 9); }
+    // rung khi va chạm: kẹp lại độ cao sau khi rung (rung mạnh từng đẩy camera xuống còn 0,12 m trên chân nhân vật một khung hình)
+    if (this.shake > 0.001) { c.position.x += (Math.random() - 0.5) * this.shake; c.position.y = Math.max(player.y + 0.35, c.position.y + (Math.random() - 0.5) * this.shake); this.shake *= Math.exp(-dt * 9); }
     if (this.close < 0.5) c.lookAt(c.position.x - dx * 4, c.position.y - dy * 4 + 0.1, c.position.z - dz * 4); else c.lookAt(tx + rx * side, ty + 0.1, tz + rz * side);
     const fov = 58 + clamp(speed - 3, 0, 14) * 0.85;
     if (Math.abs(fov - this.fov) > 0.05) { this.fov = damp(this.fov, fov, 3, dt); c.fov = this.fov; c.updateProjectionMatrix(); }
