@@ -20,17 +20,22 @@ export class Passport {
     this.visited = new Set(); this.money = 50000; this.rides = 0; this.flags = {};
     if (fresh) { try { const old = localStorage.getItem(SAVE); if (progressOf(old) > 0 && progressOf(old) >= progressOf(localStorage.getItem(BAK))) localStorage.setItem(BAK, old); localStorage.removeItem(SAVE); } catch { /* bộ nhớ bị chặn */ } } else this.load();
     this.onStamp = null; this.onPage = null; this.pending = null; // pending: món ăn đang đứng cạnh, chờ bấm E để ăn
-    // cột sáng: một InstancedMesh hình trụ trong suốt, màu theo loại
+    // cột sáng: một InstancedMesh hình trụ trong suốt, màu theo loại. Cột dẫn đường từ xa; lại gần thì tan dần (dưới 30 m gần như
+    // không còn, từ 110 m trở ra rõ hẳn) để không che mặt công trình người chơi đang đi tới. Ban đêm chỉ sáng hơn ban ngày một chút,
+    // không thành cột đèn chiếu lên trời. Tắt hẳn được trong Cài đặt (beaconsOn).
     const geo = new THREE.CylinderGeometry(1.1, 1.6, 1, 12, 1, true); geo.translate(0, 0.5, 0);
     const mat = new THREE.ShaderMaterial({
       uniforms: { uTime: skyU.uTime, uNight: skyU.uNight }, transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, fog: false,
-      vertexShader: 'attribute vec3 aCol; varying vec3 vC; varying float vY; void main(){ vC = aCol; vY = position.y; gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0); }',
-      fragmentShader: 'uniform float uTime, uNight; varying vec3 vC; varying float vY; void main(){ float a = pow(clamp(1.0 - vY, 0.0, 1.0), 2.2) * (0.5 + 0.12 * sin(uTime * 2.5 + vY * 9.0)); gl_FragColor = vec4(vC * (0.55 + uNight * 0.5), a * (0.4 + uNight * 0.35)); }',
+      vertexShader: 'attribute vec3 aCol; varying vec3 vC; varying float vY, vF; void main(){ vC = aCol; vY = position.y; vec4 o = modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0); vF = smoothstep(30.0, 110.0, distance(o.xz, cameraPosition.xz)); gl_Position = projectionMatrix * viewMatrix * modelMatrix * instanceMatrix * vec4(position, 1.0); }',
+      fragmentShader: 'uniform float uTime, uNight; varying vec3 vC; varying float vY, vF; void main(){ float a = pow(clamp(1.0 - vY, 0.0, 1.0), 2.2) * (0.5 + 0.12 * sin(uTime * 2.5 + vY * 9.0)) * vF; gl_FragColor = vec4(vC * (0.55 + uNight * 0.15), a * (0.4 + uNight * 0.08)); }',
     });
     const n = this.items.length; this.beacons = new THREE.InstancedMesh(geo, mat, n); this.beacons.frustumCulled = false; this.beacons.renderOrder = 6;
     this.col = new THREE.InstancedBufferAttribute(new Float32Array(n * 3), 3); geo.setAttribute('aCol', this.col);
     scene.add(this.beacons); this._m = new THREE.Matrix4(); this.refresh();
+    let on = true; try { on = localStorage.getItem('hn-beacons') !== '0'; } catch { /* */ } this.beacons.visible = on;
   }
+  get beaconsOn() { return this.beacons.visible; }
+  setBeacons(v) { this.beacons.visible = !!v; try { localStorage.setItem('hn-beacons', v ? '1' : '0'); } catch { /* */ } }
   load() {
     try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); if (s) { this.visited = new Set((s.visited || []).filter((id) => this.byId.has(id))); if (typeof s.money === 'number' && Number.isFinite(s.money)) this.money = Math.max(0, Math.round(s.money)); if (Number.isInteger(s.rides) && s.rides > 0) this.rides = s.rides; if (s.flags && typeof s.flags === 'object' && !Array.isArray(s.flags)) this.flags = s.flags; } } catch { /* bộ nhớ bị chặn: chơi không lưu */ }
   }
@@ -47,7 +52,7 @@ export class Passport {
     let n = 0; const m = this._m, c = new THREE.Color();
     for (const it of this.items) {
       if (this.visited.has(it.id)) continue;
-      const h = it.kind === 'food' ? 26 : 46; m.makeScale(it.kind === 'food' ? 0.8 : 1.3, h, it.kind === 'food' ? 0.8 : 1.3); m.setPosition(it.x, 0.1, it.z); this.beacons.setMatrixAt(n, m);
+      const h = it.kind === 'food' ? 20 : 32; m.makeScale(it.kind === 'food' ? 0.8 : 1.3, h, it.kind === 'food' ? 0.8 : 1.3); m.setPosition(it.x, 0.1, it.z); this.beacons.setMatrixAt(n, m);
       c.setHex(COLORS[it.kind] || COLORS.landmark); this.col.setXYZ(n, c.r, c.g, c.b); n++;
     }
     this.beacons.count = n; this.beacons.instanceMatrix.needsUpdate = true; this.col.needsUpdate = true;

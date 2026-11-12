@@ -128,9 +128,9 @@ export class Hud {
     }
     this.open('book');
   }
-  openSettings(quality, audio, perf, bak = null) {
+  openSettings(quality, audio, perf, bak = null, beacons = true) {
     const mark = (id, attr, val) => document.querySelectorAll(`#${id} button`).forEach((b) => b.classList.toggle('on', b.dataset[attr] === String(val)));
-    mark('s-quality', 'q', quality); mark('s-sound', 'v', audio.enabled ? 1 : 0); mark('s-music', 'v', audio.music ? 1 : 0); mark('s-lang', 'l', lang());
+    mark('s-quality', 'q', quality); mark('s-sound', 'v', audio.enabled ? 1 : 0); mark('s-music', 'v', audio.music ? 1 : 0); mark('s-beacons', 'v', beacons ? 1 : 0); mark('s-lang', 'l', lang());
     // tiến độ cũ bị ?fresh cất đi: hiện nút khôi phục
     $('s-restore-row').classList.toggle('hidden', !bak); if (bak) $('s-restore').textContent = T('restore', { s: count(bak.stamps, 'stampn') });
     $('s-perf').textContent = perf; this.open('settings');

@@ -184,11 +184,12 @@ async function boot() {
       // chỗ đứng thoáng cạnh địa danh đã tính sẵn và kiểm tra bằng va chạm thật (tools/build_places.mjs, reach_check.mjs);
       // tới nơi thì quay mặt về địa danh
       const [tx, tz] = best.s || [best.x, best.z], far = Math.hypot(best.x - tx, best.z - tz) > 1.5;
-      hud.close(); warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined); hud.toast(() => `${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
+      hud.close(); warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined, far ? [best.x, best.z] : null); hud.toast(() => `${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
     };
   };
   let warpTo = null;
-  const warp = (x, z, yaw) => { warpTo = [x, z, yaw]; chunks.update(x, z, true); G.home = null; }; // đi nhanh tới đâu là đóng dấu ở đó ngay
+  // look: [x, z] của địa danh cần nhìn thấy khi tới nơi (đi nhanh bằng bản đồ)
+  const warp = (x, z, yaw, look = null) => { warpTo = [x, z, yaw, look]; chunks.update(x, z, true); G.home = null; }; // đi nhanh tới đâu là đóng dấu ở đó ngay
   const shareText = () => T('shareText', { n: passport.visited.size, t: passport.items.length });
   const share = async () => { const url = location.origin + location.pathname; try { if (navigator.share) await navigator.share({ title: document.title, text: shareText(), url }); else { await navigator.clipboard.writeText(`${shareText()} ${url}`); hud.toast(T('copied'), 3, '', '🔗'); } } catch { /* người dùng huỷ */ } };
   $('k-share').addEventListener('click', share); $('d-share').addEventListener('click', share);
@@ -200,6 +201,7 @@ async function boot() {
   }));
   document.querySelectorAll('#s-sound button').forEach((b) => b.addEventListener('click', () => { audio.start(); audio.setEnabled(b.dataset.v === '1'); settings(); }));
   document.querySelectorAll('#s-music button').forEach((b) => b.addEventListener('click', () => { audio.start(); audio.setMusic(b.dataset.v === '1'); settings(); }));
+  document.querySelectorAll('#s-beacons button').forEach((b) => b.addEventListener('click', () => { passport.setBeacons(b.dataset.v === '1'); settings(); }));
   document.querySelectorAll('#s-lang button').forEach((b) => b.addEventListener('click', () => { setLang(b.dataset.l); settings(); }));
   // số khung hình hiển thị là số đo lúc đang chơi (trước khi mở bảng: khi bảng mở, cảnh 3D tạm dừng vẽ)
   $('s-restore').addEventListener('click', () => {
@@ -208,7 +210,7 @@ async function boot() {
     // tải lại không có ?fresh (có thì bản vừa khôi phục lại bị cất đi) và không đè vị trí đã lưu trong bản khôi phục
     removeEventListener('pagehide', savePos); const u = new URL(location.href); u.searchParams.delete('fresh'); location.href = u;
   });
-  const settings = () => hud.openSettings(quality.name, audio, G.fpsPlay ? T('perf', { f: Math.round(G.fpsPlay), d: Math.round((R.dpr / (window.devicePixelRatio || 1)) * 100) }) : T('perf_wait'), Passport.backup());
+  const settings = () => hud.openSettings(quality.name, audio, G.fpsPlay ? T('perf', { f: Math.round(G.fpsPlay), d: Math.round((R.dpr / (window.devicePixelRatio || 1)) * 100) }) : T('perf_wait'), Passport.backup(), passport.beaconsOn);
   // đổi ngôn ngữ: mọi chữ đang hiện trên màn hình đổi theo ngay
   const setLang = (l) => { const from = lang(); setLangRaw(l); if (from !== lang()) { hud.relang(from); sugT = 0; } };
   const savePos = () => { passport.flags.pos = [+player.pos.x.toFixed(1), +player.pos.z.toFixed(1), +player.yaw.toFixed(2)]; passport.flags.hours = +sky.hours.toFixed(2); passport.flags.day = sky.day; passport.save(); };
@@ -267,7 +269,13 @@ async function boot() {
 
     const frozen = !G.started || !!hud.modal;
     if (frozen) { input.move.x = input.move.y = 0; }
-    if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }; if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, warpTo[2] ?? player.yaw); cam.snap(player); warpTo = null;
+    if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }, look = warpTo[3]; let yaw = warpTo[2];
+      // Chỗ đứng tính sẵn sát địa danh (vài mét, cạnh bậc thềm): camera sau lưng chỉ thấy chân tường (QC vòng 2: Nhà hát Lớn, Nhà thờ Lớn).
+      // Lùi ra tới 24 m kể từ mốc, theo hướng từ mốc về chỗ đứng, nếu đường lùi thông (không vướng tường, rào, mặt nước) và chỗ mới không
+      // ở lòng đường xe chạy; không được thì đứng chỗ cũ. Rồi quay mặt về địa danh.
+      if (look) { const ux = p.x - look[0], uz = p.z - look[1], d0 = Math.hypot(ux, uz) || 1;
+        for (let d = 24; d > d0 + 1; d -= 2) { const cx = look[0] + (ux / d0) * d, cz = look[1] + (uz / d0) * d; if (nav.freeStep(p.x, p.z, cx, cz, 0.4) && !nav.onRoad(cx, cz)) { p.x = cx; p.z = cz; yaw = Math.atan2(look[0] - cx, look[1] - cz); break; } } }
+      if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, yaw ?? player.yaw); cam.snap(player); warpTo = null;
       // tới nơi là phố đã đông sẵn như lúc vào game (không thì dòng xe chỉ sinh dần từ chỗ khuất mắt, con phố vắng tanh nửa phút đầu)
       camera.position.set(player.pos.x - Math.sin(player.yaw) * 5, 3, player.pos.z - Math.cos(player.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
       traffic.agents.length = 0; traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera, sky.hours); }
