@@ -343,7 +343,8 @@ export class TrafficSim {
       if (a.vown && type === VT.bicycle && Math.random() < 0.4 && e.zone === ZONE.old) { a.vendor = Math.random() < 0.6 ? 1 : 2; a.vown = 1.7 + Math.random() * 0.5; } // xe đạp bán hoa, bán quả: đạp thong thả sát lề
       dress(a, e.zone, this.hours);
       this.lane(a); a.lat = a.latT; a.x -= o[3] * a.lat; a.z += o[2] * a.lat;
-      // chỗ đó đã có xe khác thì thôi (tránh chồng lên nhau lúc sinh)
+      // chỗ đó đã có xe khác thì thôi (tránh chồng lên nhau lúc sinh); độ cao tính ngay để xe sinh trên cầu so được với xe đang trên cầu
+      a.y = e.r.elev ? roadY(e.r, dir > 0 ? s : e.len - s) : 0;
       if (this.clash(a)) continue;
       this.plan(a); this.agents.push(a); this.put(a); this.stats.spawned++;
       // xích lô hay đi thành đoàn: thêm một, hai chiếc nối đuôi
@@ -363,7 +364,7 @@ export class TrafficSim {
   follow(lead, back) {
     const o = this._o; this.sample(lead.e, lead.s - back, lead.dir, o);
     const a = this.make(lead.type, lead.e, lead.dir, lead.s - back, o, false);
-    a.lat = a.latT = lead.lat; a.pref = lead.pref; a.vown = lead.vown; a.honk = 9; a.x = o[0] - o[3] * a.lat; a.z = o[1] + o[2] * a.lat;
+    a.lat = a.latT = lead.lat; a.pref = lead.pref; a.vown = lead.vown; a.honk = 9; a.x = o[0] - o[3] * a.lat; a.z = o[1] + o[2] * a.lat; a.y = lead.y;
     if (this.clash(a, lead)) return;
     dress(a, a.e.zone, this.hours); this.plan(a); this.agents.push(a); this.put(a);
   }
