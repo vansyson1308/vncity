@@ -147,9 +147,41 @@ export function motorbike(g, kind = 'wave', detail = 1, opt = {}) {
     const px = sc ? -0.955 : -0.9, py = sc ? 0.5 : 0.62;
     if (detail) g.quad([px, py, 0.07], [px, py, -0.07], [px - 0.075, py - 0.2, -0.1], [px - 0.075, py - 0.2, 0.1]).quad([px, py, -0.07], [px, py, 0.07], [px - 0.075, py - 0.2, 0.1], [px - 0.075, py - 0.2, -0.1]);
     g.rgb(0.8, 0.8, 0.75).gloss(0).quad([px - 0.08, py - 0.19, -0.095], [px - 0.08, py - 0.19, 0.095], [px - 0.03, py - 0.055, 0.095], [px - 0.03, py - 0.055, -0.095]);
+    // chữ trên biển: hai dòng kiểu "29-B1 / 123.45" (mã tỉnh, sê-ri, số thứ tự), nổi 2 mm trước mặt biển. u ngang (trái → phải khi
+    // nhìn từ sau xe, tức +z), v dọc theo mặt biển nghiêng từ mép dưới lên mép trên.
+    const P = (u, v) => [px - 0.08 + 0.05 * v - 0.938 * 0.002, py - 0.19 + 0.135 * v + 0.347 * 0.002, -0.095 + 0.19 * u];
+    plateText(g, P, detail ? [[0.14, 0.86, 0.56, 0.86, '29-B1'], [0.08, 0.92, 0.14, 0.44, '123.45']] : [[0.14, 0.86, 0.6, 0.82, '29-B1'], [0.08, 0.92, 0.18, 0.4, '123.45']], detail);
   }
   g.gloss(0);
   return g;
+}
+
+// Chữ trên biển số: P(u, v) là điểm trên mặt biển (u ngang trái → phải, v từ dưới lên, cả hai từ 0 tới 1, đã đẩy nổi trước mặt biển).
+// rows: [u0, u1, v0, v1, chuỗi]. Bản chi tiết vẽ từng ký tự bằng nét kiểu bảy đoạn (đủ để đọc ra chữ số ở tầm vài mét); bản rút gọn
+// (dòng xe, xe đỗ: hàng trăm chiếc) chỉ còn mỗi nhóm ký tự một vạch xám, từ xa vẫn ra một biển có chữ mà chỉ thêm vài tam giác.
+const SEG = { 0: 'abcdef', 1: 'bc', 2: 'abged', 3: 'abgcd', 4: 'fgbc', 5: 'afgcd', 6: 'afgedc', 7: 'abc', 8: 'abcdefg', 9: 'abcdfg', A: 'abcefg', B: 'abcdefg', H: 'bcefg', K: 'bcefg', F: 'aefg', '-': 'g' };
+function plateText(g, P, rows, detail) {
+  const q = (u0, v0, u1, v1) => g.quad(P(u0, v0), P(u1, v0), P(u1, v1), P(u0, v1));
+  for (const [u0, u1, v0, v1, s] of rows) {
+    const n = s.length, cw = (u1 - u0) / n;
+    if (!detail) { g.rgb(0.32, 0.32, 0.33); let a = 0; for (let i = 0; i <= n; i++) if (i === n || s[i] === '-' || s[i] === '.') { if (i > a) q(u0 + a * cw + cw * 0.1, v0 + (v1 - v0) * 0.1, u0 + i * cw - cw * 0.1, v1 - (v1 - v0) * 0.1); a = i + 1; } continue; }
+    g.rgb(0.05, 0.05, 0.06);
+    for (let i = 0; i < n; i++) {
+      const c = s[i], x0 = u0 + i * cw + cw * 0.14, x1 = u0 + (i + 1) * cw - cw * 0.14, tw = (x1 - x0) * 0.24, th = (v1 - v0) * 0.13, ym = (v0 + v1) / 2;
+      if (c === '.') { q((x0 + x1) / 2 - tw / 2, v0, (x0 + x1) / 2 + tw / 2, v0 + th); continue; }
+      for (const sg of SEG[c] || '') {
+        if (sg === 'a') q(x0, v1 - th, x1, v1); else if (sg === 'd') q(x0, v0, x1, v0 + th); else if (sg === 'g') q(x0, ym - th / 2, x1, ym + th / 2);
+        else if (sg === 'f') q(x0, ym, x0 + tw, v1); else if (sg === 'e') q(x0, v0, x0 + tw, ym); else if (sg === 'b') q(x1 - tw, ym, x1, v1); else q(x1 - tw, v0, x1, ym);
+      }
+    }
+  }
+}
+
+// Chữ cho biển số vẽ bằng panel(g, a, b, f0, f1, t0, t1, ...) trên một cạnh hình chiếu cạnh, nổi off mét. up: cạnh đi từ dưới lên
+// (mũi xe: nhìn thẳng vào biển thì +z ở bên trái); không thì cạnh đi từ trên xuống (đuôi xe: +z ở bên phải).
+function edgePlate(g, a, b, f0, f1, t0, t1, off, up, rows) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, ox = (dy / l) * off, oy = (-dx / l) * off;
+  plateText(g, (u, v) => { const t = up ? t0 + (t1 - t0) * v : t1 + (t0 - t1) * v, f = up ? f1 + (f0 - f1) * u : f0 + (f1 - f0) * u; return [a[0] + dx * t + ox, a[1] + dy * t + oy, (a[2] + (b[2] - a[2]) * t) * f]; }, rows, 1);
 }
 
 // Mặt nạ đổi màu thứ ba trong dòng xe (kênh alpha của màu đỉnh): 1 = màu sơn thân (aTint), 0,5 = màu áo / màu phụ (aTint2),
@@ -235,6 +267,10 @@ export function car(g, taxi = false, opt = {}) {
   // biển số: xe thường nền trắng, xe kinh doanh vận tải (taxi) nền vàng; trong dòng xe màu biển theo từng xe
   fleet ? g.rgb(0.9, 0.9, 0.86, M3) : taxi ? g.rgb(0.95, 0.68, 0.03) : g.rgb(0.9, 0.9, 0.86); g.gloss(0.2);
   panel(g, nose[2], nose[3], -0.34, 0.34, 0.22, 0.75, 0.02); panel(g, tail[2], tail[3], -0.24, 0.24, 0.08, 0.5, 0.02);
+  // chữ biển số: biển dài một dòng ở mũi xe ("30K-123.45"), biển ngắn hai dòng ở đuôi xe. Cạnh mũi xe đi từ dưới lên, cạnh đuôi xe đi
+  // từ trên xuống, nên v (từ dưới lên) và u (trái sang phải khi nhìn thẳng vào biển) đổi chiều theo cạnh.
+  edgePlate(g, nose[2], nose[3], -0.34, 0.34, 0.22, 0.75, 0.023, true, [[0.05, 0.95, 0.2, 0.8, '30K-123.45']]);
+  edgePlate(g, tail[2], tail[3], -0.24, 0.24, 0.08, 0.5, 0.023, false, [[0.26, 0.74, 0.56, 0.88, '30K'], [0.08, 0.92, 0.12, 0.44, '123.45']]);
   if (taxi || opt.roofPart) roofSign(g, H, opt.roofPart || 0);
   g.glow(0).gloss(0);
   return g;
@@ -294,6 +330,7 @@ export function bus(g, opt = {}) {
   g.rgb(0.85, 0.83, 0.74).glow(0.8).gloss(1); for (const s of [-1, 1]) panel(g, sk[2], sk[3], s > 0 ? 0.5 : -0.86, s > 0 ? 0.86 : -0.5, 0.17, 0.6, 0.015);
   g.rgb(0.8, 0.03, 0.02).glow(0.7); for (const s of [-1, 1]) panel(g, sk[4], sk[5], s > 0 ? 0.7 : -0.9, s > 0 ? 0.9 : -0.7, 0.2, 0.8, 0.015);
   g.rgb(0.95, 0.68, 0.03).glow(0).gloss(0.2); panel(g, sk[1], sk[2], -0.2, 0.2, 0.22, 0.78, 0.015); panel(g, sk[5], sk[6], -0.2, 0.2, 0.22, 0.78, 0.015);
+  edgePlate(g, sk[1], sk[2], -0.2, 0.2, 0.22, 0.78, 0.018, true, [[0.05, 0.95, 0.25, 0.75, '29B-123.45']]); edgePlate(g, sk[5], sk[6], -0.2, 0.2, 0.22, 0.78, 0.018, false, [[0.05, 0.95, 0.25, 0.75, '29B-123.45']]);
   g.rgb(1, 0.5, 0.04).glow(1); panel(g, up[2], up[3], -0.74, 0.32, 0.3, 0.7, 0.025); panel(g, up[2], up[3], 0.44, 0.74, 0.24, 0.76, 0.025);
   g.glow(0).gloss(0);
   return g;
