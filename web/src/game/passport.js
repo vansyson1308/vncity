@@ -3,26 +3,29 @@
 import * as THREE from 'three';
 import { skyU } from '../engine/sky.js';
 
-const SAVE = 'hn-save-v2';
+const SAVE = 'hn-save-v2', BAK = 'hn-save-v2-bak'; // BAK: bản lưu bị ?fresh thay thế, để người chơi khôi phục trong Cài đặt
+// mức tiến độ của một bản lưu (số dấu + số cuốc), 0 nếu trống hay hỏng
+const progressOf = (json) => { try { const s = JSON.parse(json || 'null'); return s ? (Array.isArray(s.visited) ? s.visited.length : 0) + (Number.isInteger(s.rides) ? s.rides : 0) : 0; } catch { return 0; } };
 const COLORS = { landmark: 0x35a7ff, food: 0xff8a2a, culture: 0xff5fa2 };
 export const REWARD = { landmark: 20000, culture: 20000, page: 50000 };
 
 export class Passport {
-  // fresh: bắt đầu từ trạng thái trắng (tham số ?fresh của các công cụ thử và QC): không nạp tiến độ đã lưu và xoá luôn bản lưu cũ;
-  // sau đó game lưu bình thường, lần tải sau không có ?fresh sẽ nạp lại tiến độ mới.
+  // fresh: bắt đầu từ trạng thái trắng (tham số ?fresh của các công cụ thử và QC): không nạp tiến độ đã lưu và bỏ bản lưu cũ;
+  // sau đó game lưu bình thường, lần tải sau không có ?fresh sẽ nạp lại tiến độ mới. Người chơi lỡ mở một đường dẫn có ?fresh
+  // không mất trắng: bản lưu cũ được cất sang BAK trước khi bỏ (giữ bản nhiều tiến độ hơn nếu BAK đã có), khôi phục trong Cài đặt.
   constructor(scene, nav, places, fresh = false) {
     this.nav = nav; this.pages = places.pages;
     this.items = places.items.map((p) => ({ ...p, radius: p.kind === 'food' ? 7 : p.type === 'lake' || p.type === 'park' ? 26 : 16 }));
     this.byId = new Map(this.items.map((i) => [i.id, i]));
     this.visited = new Set(); this.money = 50000; this.rides = 0; this.flags = {};
-    if (fresh) { try { localStorage.removeItem(SAVE); } catch { /* bộ nhớ bị chặn */ } } else this.load();
+    if (fresh) { try { const old = localStorage.getItem(SAVE); if (progressOf(old) > 0 && progressOf(old) >= progressOf(localStorage.getItem(BAK))) localStorage.setItem(BAK, old); localStorage.removeItem(SAVE); } catch { /* bộ nhớ bị chặn */ } } else this.load();
     this.onStamp = null; this.onPage = null; this.pending = null; // pending: món ăn đang đứng cạnh, chờ bấm E để ăn
     // cột sáng: một InstancedMesh hình trụ trong suốt, màu theo loại
     const geo = new THREE.CylinderGeometry(1.1, 1.6, 1, 12, 1, true); geo.translate(0, 0.5, 0);
     const mat = new THREE.ShaderMaterial({
       uniforms: { uTime: skyU.uTime, uNight: skyU.uNight }, transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, fog: false,
       vertexShader: 'attribute vec3 aCol; varying vec3 vC; varying float vY; void main(){ vC = aCol; vY = position.y; gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0); }',
-      fragmentShader: 'uniform float uTime, uNight; varying vec3 vC; varying float vY; void main(){ float a = pow(1.0 - vY, 2.2) * (0.5 + 0.12 * sin(uTime * 2.5 + vY * 9.0)); gl_FragColor = vec4(vC * (0.55 + uNight * 0.5), a * (0.4 + uNight * 0.35)); }',
+      fragmentShader: 'uniform float uTime, uNight; varying vec3 vC; varying float vY; void main(){ float a = pow(clamp(1.0 - vY, 0.0, 1.0), 2.2) * (0.5 + 0.12 * sin(uTime * 2.5 + vY * 9.0)); gl_FragColor = vec4(vC * (0.55 + uNight * 0.5), a * (0.4 + uNight * 0.35)); }',
     });
     const n = this.items.length; this.beacons = new THREE.InstancedMesh(geo, mat, n); this.beacons.frustumCulled = false; this.beacons.renderOrder = 6;
     this.col = new THREE.InstancedBufferAttribute(new Float32Array(n * 3), 3); geo.setAttribute('aCol', this.col);
@@ -32,6 +35,10 @@ export class Passport {
     try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); if (s) { this.visited = new Set((s.visited || []).filter((id) => this.byId.has(id))); if (typeof s.money === 'number' && Number.isFinite(s.money)) this.money = Math.max(0, Math.round(s.money)); if (Number.isInteger(s.rides) && s.rides > 0) this.rides = s.rides; if (s.flags && typeof s.flags === 'object' && !Array.isArray(s.flags)) this.flags = s.flags; } } catch { /* bộ nhớ bị chặn: chơi không lưu */ }
   }
   save() { try { localStorage.setItem(SAVE, JSON.stringify({ visited: [...this.visited], money: this.money, rides: this.rides, flags: this.flags })); } catch { /* */ } }
+  // bản lưu dự phòng (do ?fresh cất đi): số dấu đã đóng, hoặc null nếu không có
+  static backup() { try { const s = JSON.parse(localStorage.getItem(BAK) || 'null'); return s && Array.isArray(s.visited) ? { stamps: s.visited.length, rides: Number.isInteger(s.rides) ? s.rides : 0 } : null; } catch { return null; } }
+  // đưa bản dự phòng về làm bản lưu chính (gọi xong thì tải lại trang không có ?fresh)
+  static restore() { try { const b = localStorage.getItem(BAK); if (!b) return false; localStorage.setItem(SAVE, b); localStorage.removeItem(BAK); return true; } catch { return false; } }
   reset() { this.visited.clear(); this.money = 50000; this.rides = 0; this.flags = {}; this.save(); this.refresh(); }
 
   // Đặt mốc vào chỗ đi tới được (không nằm trong nhà hay giữa hồ), gọi sau khi biết va chạm quanh đó.

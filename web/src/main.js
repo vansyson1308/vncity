@@ -22,7 +22,7 @@ import { Passport } from './game/passport.js';
 import { Fares } from './game/fares.js';
 import { Hud, $ } from './ui/hud.js';
 import { Minimap } from './ui/minimap.js';
-import { T, lang, setLang as setLangRaw, money, pick, both } from './ui/i18n.js';
+import { T, lang, setLang as setLangRaw, money, pick, both, count } from './ui/i18n.js';
 import { Audio } from './audio/audio.js';
 import { Governor } from './engine/governor.js';
 import { walkOn, isWalkRoad } from './world/walkzone.js';
@@ -35,6 +35,8 @@ import '@fontsource/be-vietnam-pro/latin-600.css';
 import '@fontsource/be-vietnam-pro/latin-800.css';
 
 const params = new URLSearchParams(location.search);
+// tham số số trên đường dẫn: thiếu, rỗng hay không phải số (at=abc, h=x) thì dùng giá trị mặc định, có thì kẹp vào khoảng hợp lệ
+const pnum = (k, d, lo = -Infinity, hi = Infinity) => { const t = params.get(k), v = t === null || t.trim() === '' ? NaN : Number(t); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
 const quality = pickQuality(params);
 const canvas = $('game');
 const progress = (f, text) => { $('bar').style.width = `${Math.round(f * 100)}%`; if (text) $('loadtext').textContent = text; };
@@ -48,8 +50,8 @@ async function boot() {
   R.setup(scene, camera);
   const sky = new Sky(scene, camera, quality);
   sky.speed = 1 / 360; // một giờ game dài sáu phút thật: từ chiều vàng tới lúc phố lên đèn mất chừng tám phút
-  const fixedTime = params.has('h'); if (fixedTime) sky.setHours(+params.get('h'));
-  if (params.has('day')) sky.day = Math.max(0, Math.min(6, Math.floor(+params.get('day')) || 0)); // thứ trong tuần: 0 = thứ Hai ... 6 = Chủ nhật
+  const fixedTime = Number.isFinite(pnum('h', NaN)); if (fixedTime) sky.setHours(pnum('h', 17.5));
+  if (params.has('day')) sky.day = Math.floor(pnum('day', 0, 0, 6)); // thứ trong tuần: 0 = thứ Hai ... 6 = Chủ nhật
   const input = new Input(canvas), audio = new Audio(), hud = new Hud(input);
   input.onFirstGesture = () => audio.start();
   input.onIme = () => hud.toast(T('ime_hint'), 10); // bộ gõ tiếng Việt nuốt phím: báo một lần
@@ -106,14 +108,15 @@ async function boot() {
   const sp = passport.flags.pos, wb = world.bounds;
   const saved = Array.isArray(sp) && num(sp[0]) && num(sp[1]) && sp[0] > wb.x0 + 8 && sp[0] < wb.x1 - 8 && sp[1] > wb.z0 + 8 && sp[1] < wb.z1 - 8 ? [sp[0], sp[1], num(sp[2]) ? sp[2] : 0] : null;
   if (saved && passport.visited.size > 0 && !params.has('fresh')) { [sx, sz, syaw] = saved; resumed = true; const fh = passport.flags.hours; if (!fixedTime && num(fh) && fh > 0 && fh < 24) sky.setHours(fh); const fd = passport.flags.day; if (!params.has('day') && Number.isInteger(fd) && fd >= 0 && fd <= 6) sky.day = fd; }
-  if (params.get('at')) { [sx, sz] = params.get('at').split(',').map(Number); resumed = false; }
+  const at = (params.get('at') || '').split(',').map((t) => (t.trim() === '' ? NaN : Number(t)));
+  if (at.length >= 2 && num(at[0]) && num(at[1]) && at[0] > wb.x0 + 8 && at[0] < wb.x1 - 8 && at[1] > wb.z0 + 8 && at[1] < wb.z1 - 8) { [sx, sz] = at; resumed = false; }
   if (params.get('street')) {
     const name = params.get('street'), rs = world.roads.filter((r) => world.names[r.name] === name).sort((a, b) => b.len - a.len);
-    if (rs.length) { const r = rs[Math.min(rs.length - 1, +(params.get('n') || 0))], p = r.p, i = Math.floor((p.length / 2 - 1) * +(params.get('along') || 0.5)) * 2, j = Math.min(i + 2, p.length - 2); sx = p[i]; sz = p[i + 1]; syaw = Math.atan2(p[j] - p[Math.max(0, j - 2)], p[j + 1] - p[Math.max(1, j - 1)]) + (params.has('rev') ? Math.PI : 0); }
+    if (rs.length) { const r = rs[Math.floor(pnum('n', 0, 0, rs.length - 1))], p = r.p, i = Math.floor((p.length / 2 - 1) * pnum('along', 0.5, 0, 1)) * 2, j = Math.min(i + 2, p.length - 2); sx = p[i]; sz = p[i + 1]; syaw = Math.atan2(p[j] - p[Math.max(0, j - 2)], p[j + 1] - p[Math.max(1, j - 1)]) + (params.has('rev') ? Math.PI : 0); }
   }
   if (params.get('site') && site(params.get('site'))) { // đứng trước mặt một công trình, nhìn vào nó (để chụp ảnh kiểm tra)
-    const s = site(params.get('site')), d = +(params.get('back') || 45); sx = s.x + Math.sin(s.yaw) * d; sz = s.z + Math.cos(s.yaw) * d; syaw = s.yaw + Math.PI; resumed = false; }
-  if (params.has('yaw')) syaw = +params.get('yaw');
+    const s = site(params.get('site')), d = pnum('back', 45, 1, 600); sx = s.x + Math.sin(s.yaw) * d; sz = s.z + Math.cos(s.yaw) * d; syaw = s.yaw + Math.PI; resumed = false; }
+  const yawSet = Number.isFinite(pnum('yaw', NaN)); if (yawSet) syaw = pnum('yaw', 0);
   chunks.update(sx, sz, true);
   await new Promise((res) => { const t = setInterval(() => { chunks.update(sx, sz); const [miss, tot] = chunks.missingNear(sx, sz, 150); progress(0.45 + 0.55 * (1 - miss / tot)); if (miss === 0) { clearInterval(t); res(); } }, 50); });
   const onDeck = (x, z) => !!nav.elevatedAt(x, z, Infinity) && nav.eY > 0.7; // điểm nằm trên mặt cầu: không đẩy theo tường nhà dưới đất
@@ -126,15 +129,15 @@ async function boot() {
     // và quay mặt về phía nó
     else if (!resumed && (params.get('at') || params.get('street') || params.get('site')) && (wet(sx, sz) || nav.inSolid(sx, sz))) {
       const tg = params.get('site') ? site(params.get('site')) : null, to = freeSpot(nav, sx, sz, tg);
-      if (to) { [sx, sz] = to; if (tg && !params.has('yaw')) syaw = Math.atan2(tg.x - sx, tg.z - sz); }
+      if (to) { [sx, sz] = to; if (tg && !yawSet) syaw = Math.atan2(tg.x - sx, tg.z - sz); }
     }
     const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z;
   }
   player.teleport(sx, sz, syaw);
   if (params.has('bike')) player.toggleBike();
-  cam.snap(player); cam.pitch = +(params.get('pitch') || 0.16);
-  if (params.has('camyaw')) { cam.yaw = +params.get('camyaw'); cam.wasRiding = player.mode === 'bike'; } // góc camera đặt sẵn: không tự quay ra sau xe lúc vào game
-  if (params.has('zoom')) cam.zoom = +params.get('zoom');
+  cam.snap(player); cam.pitch = pnum('pitch', 0.16, -0.35, 1.25);
+  if (Number.isFinite(pnum('camyaw', NaN))) { cam.yaw = pnum('camyaw', 0); cam.wasRiding = player.mode === 'bike'; } // góc camera đặt sẵn: không tự quay ra sau xe lúc vào game
+  cam.zoom = pnum('zoom', cam.zoom, 0.55, 2.6);
 
   camera.position.set(player.pos.x - Math.sin(player.yaw) * 5, 3, player.pos.z - Math.cos(player.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
   traffic.day = sky.day; crowd.walkOn = walkOn(sky.day, sky.hours);
@@ -191,7 +194,13 @@ async function boot() {
   document.querySelectorAll('#s-music button').forEach((b) => b.addEventListener('click', () => { audio.start(); audio.setMusic(b.dataset.v === '1'); settings(); }));
   document.querySelectorAll('#s-lang button').forEach((b) => b.addEventListener('click', () => { setLang(b.dataset.l); settings(); }));
   // số khung hình hiển thị là số đo lúc đang chơi (trước khi mở bảng: khi bảng mở, cảnh 3D tạm dừng vẽ)
-  const settings = () => hud.openSettings(quality.name, audio, G.fpsPlay ? T('perf', { f: Math.round(G.fpsPlay), d: Math.round((R.dpr / (window.devicePixelRatio || 1)) * 100) }) : T('perf_wait'));
+  $('s-restore').addEventListener('click', () => {
+    const b = Passport.backup(); if (!b || !window.confirm(T('restore_confirm', { s: count(b.stamps, 'stampn'), r: count(b.rides, 'rides') }))) return;
+    if (!Passport.restore()) return;
+    // tải lại không có ?fresh (có thì bản vừa khôi phục lại bị cất đi) và không đè vị trí đã lưu trong bản khôi phục
+    removeEventListener('pagehide', savePos); const u = new URL(location.href); u.searchParams.delete('fresh'); location.href = u;
+  });
+  const settings = () => hud.openSettings(quality.name, audio, G.fpsPlay ? T('perf', { f: Math.round(G.fpsPlay), d: Math.round((R.dpr / (window.devicePixelRatio || 1)) * 100) }) : T('perf_wait'), Passport.backup());
   // đổi ngôn ngữ: mọi chữ đang hiện trên màn hình đổi theo ngay
   const setLang = (l) => { const from = lang(); setLangRaw(l); if (from !== lang()) { hud.relang(from); sugT = 0; } };
   const savePos = () => { passport.flags.pos = [+player.pos.x.toFixed(1), +player.pos.z.toFixed(1), +player.yaw.toFixed(2)]; passport.flags.hours = +sky.hours.toFixed(2); passport.flags.day = sky.day; passport.save(); };

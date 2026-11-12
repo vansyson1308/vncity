@@ -22,7 +22,7 @@ const FinalShader = {
     void main(){
       vec3 c = texture2D(tDiffuse, vUv).rgb * uTint;
       c = hnAces(c);
-      float l = dot(c, vec3(0.2126, 0.7152, 0.0722)); c = mix(vec3(l), c, uSat);
+      float l = dot(c, vec3(0.2126, 0.7152, 0.0722)); c = max(mix(vec3(l), c, uSat), 0.0); // tăng bão hoà có thể đẩy kênh màu xuống dưới 0: pow ở dưới sẽ ra NaN
       vec2 q = vUv - 0.5; c *= 1.0 - uVignette * smoothstep(0.25, 0.95, dot(q, q) * 2.2);
       c = mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
       // nhiễu hạt rất nhẹ để xoá dải màu trên nền trời
@@ -53,7 +53,7 @@ export class Renderer {
     r.toneMapping = THREE.ACESFilmicToneMapping; r.outputColorSpace = THREE.SRGBColorSpace;
     r.info.autoReset = false;
     this.maxDpr = Math.min(window.devicePixelRatio || 1, quality.dpr); this.dpr = this.maxDpr; this.minDpr = Math.min(quality.minDpr, this.maxDpr);
-    this.fixedDpr = params.has('shot') || params.has('dpr'); if (params.has('dpr')) this.dpr = +params.get('dpr');
+    const dp = params.has('dpr') ? Number(params.get('dpr')) : NaN, dpOk = Number.isFinite(dp) && dp > 0; this.fixedDpr = params.has('shot') || dpOk; if (dpOk) this.dpr = Math.min(3, Math.max(0.25, dp));
     this.frame = 0; this.avg = 16; this.cool = 0;
     this.scene = null; this.camera = null;
   }

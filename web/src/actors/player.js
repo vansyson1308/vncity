@@ -66,7 +66,10 @@ export class Player {
 
   teleport(x, z, yaw = this.yaw, onDeck = true) {
     // onDeck: đặt lên mặt cầu nếu điểm đó có cầu (đi nhanh tới một điểm trên cầu); mặc định đặt xuống đất
+    if (!Number.isFinite(x) || !Number.isFinite(z)) return; // toạ độ hỏng thì đứng yên chỗ cũ
+    if (!Number.isFinite(yaw)) yaw = Number.isFinite(this.yaw) ? this.yaw : 0;
     this.pos.x = x; this.pos.z = z; this.yaw = yaw; this.speed = 0; this.vx = this.vz = 0; this.phi = 0; this.curv = 0; this.lean = 0; this.y = this.nav.groundY(x, z, onDeck ? Infinity : 0);
+    this._good = { x, z, y: this.y, yaw }; // trạng thái tốt để quay về nếu số hỏng lọt vào sau này
     // dựng xe cạnh người: bên trái nếu trống, không thì phía khác; không bao giờ đặt xe sang bên kia một bức tường hay xuống nước
     if (this.mode === 'walk') { this.beside(x, z, yaw, 1.1, 0.4); this.bikePos.x = this._col.x; this.bikePos.z = this._col.z; this.bikePos.yaw = yaw; this.bikePos.y = undefined; }
     this.sync(0);
