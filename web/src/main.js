@@ -39,7 +39,6 @@ const quality = pickQuality(params);
 const canvas = $('game');
 const progress = (f, text) => { $('bar').style.width = `${Math.round(f * 100)}%`; if (text) $('loadtext').textContent = text; };
 setLangRaw(params.get('lang') || (() => { try { return localStorage.getItem('hn-lang'); } catch { return null; } })() || ((navigator.language || 'vi').startsWith('vi') ? 'vi' : 'en'));
-$('lang').textContent = lang() === 'vi' ? 'English' : 'Tiếng Việt';
 
 async function boot() {
   progress(0.05, T('loading'));
@@ -82,7 +81,7 @@ async function boot() {
   const cam = new FollowCamera(camera, nav);
   const traffic = new Traffic(scene, world, nav, mats, humanFar, quality);
   const crowd = new Crowd(scene, world, nav, humanLod, quality, humanFar, humanGltf);
-  const passport = new Passport(scene, nav, places);
+  const passport = new Passport(scene, nav, places, params.has('fresh')); // ?fresh: không nạp tiến độ đã lưu, xoá bản lưu cũ ngay lúc tải
   const fares = new Fares(scene, nav, passport, crowd);
   const governor = new Governor(R, sky, quality, traffic, crowd, chunks);
   // vị trí các điểm đóng dấu đã được neo vào mô hình và vào chỗ tới được ngay trong places.json (tools/build_places.mjs)
@@ -146,11 +145,11 @@ async function boot() {
     else if (n === 3 && flag('g_stamp3')) hud.toast(T('g_stamp3'), 6);
     if (passport.complete) setTimeout(() => { hud.open('done'); audio.bell(); }, 2500);
   };
-  passport.onPage = (pg) => { setTimeout(() => { hud.toast(T('g_page', { p: T('page_' + pg), m: money(50000) }), 6); audio.coin(); counts(); }, 1800); };
+  passport.onPage = (pg) => { setTimeout(() => { hud.toast(() => T('g_page', { p: T('page_' + pg), m: money(50000) }), 6); audio.coin(); counts(); }, 1800); };
   fares.onEvent = (ev, f, res) => {
     if (ev === 'offer') { if (flag('g_fare')) hud.toast(T('g_fare'), 7); }
-    else if (ev === 'pickup') { audio.click(); hud.toast(`${T('fare_to')} ${f.dest.place.name[lang()] || f.dest.place.name.vi}!`, 4, f.name(lang()), f.cust.face); }
-    else if (ev === 'drop') { audio.coin(); counts(); hud.toast(`${'★'.repeat(res.stars)}${'☆'.repeat(5 - res.stars)} ${res.comment} ${money(res.base)}${res.tip ? ' + ' + money(res.tip) : ''}`, 6, '', '💵'); }
+    else if (ev === 'pickup') { audio.click(); const to = f.dest.place.name, who = { vi: f.name('vi'), en: f.name('en') }; hud.toast(() => `${T('fare_to')} ${to[lang()] || to.vi}!`, 4, () => who[lang()] || who.vi, f.cust.face); } // lời nhắn "sống": đổi ngôn ngữ thì chữ đang hiện đổi theo
+    else if (ev === 'drop') { audio.coin(); counts(); const ci = Math.max(0, [].concat(T('c' + res.stars)).indexOf(res.comment)), said = () => { const cs = [].concat(T('c' + res.stars)); return cs[Math.min(ci, cs.length - 1)]; }; hud.toast(() => `${'★'.repeat(res.stars)}${'☆'.repeat(5 - res.stars)} ${said()} ${money(res.base)}${res.tip ? ' + ' + money(res.tip) : ''}`, 6, '', '💵'); }
   };
   player.onCrash = (v) => { hud.bubble(pick('crash')); audio.thud(Math.min(0.6, 0.2 + v * 0.04)); cam.shake = Math.min(0.5, v * 0.05); fares.bump(Math.min(0.5, 0.12 + v * 0.03)); }; // v: vận tốc đâm vuông góc vào tường (m/s)
   player.onCurb = () => { audio.thud(0.12); fares.bump(0.025); };
@@ -158,15 +157,15 @@ async function boot() {
 
   // ----- hộp thoại -----
   const openMap = () => {
-    const toWorld = minimap.drawBig($('bigmap'), player, passport, fares); hud.open('map');
+    hud.open('map'); const toWorld = minimap.drawBig($('bigmap'), player, passport, fares); // mở bảng trước: bản đồ vẽ mốc theo cỡ hiển thị thật
     $('bigmap').onclick = (e) => {
-      const [wx, wz] = toWorld(e.clientX, e.clientY); let best = null, bd = 70;
+      const [wx, wz] = toWorld(e.clientX, e.clientY); let best = null, bd = toWorld.hit;
       for (const it of passport.items) { if (!passport.visited.has(it.id)) continue; const d = Math.hypot(it.x - wx, it.z - wz); if (d < bd) { bd = d; best = it; } }
       if (!best || fares.state === 'ride') return;
       // chỗ đứng thoáng cạnh địa danh đã tính sẵn và kiểm tra bằng va chạm thật (tools/build_places.mjs, reach_check.mjs);
       // tới nơi thì quay mặt về địa danh
       const [tx, tz] = best.s || [best.x, best.z], far = Math.hypot(best.x - tx, best.z - tz) > 1.5;
-      hud.close(); warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined); hud.toast(`${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
+      hud.close(); warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined); hud.toast(() => `${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
     };
   };
   let warpTo = null;
@@ -178,7 +177,7 @@ async function boot() {
   document.querySelectorAll('#s-quality button').forEach((b) => b.addEventListener('click', () => {
     if (b.dataset.q === quality.name) return; // bấm lại mức đang dùng: không làm gì, không tải lại
     if (!window.confirm(T('q_confirm', { q: T('q_' + b.dataset.q) }))) return;
-    try { localStorage.setItem('hn-quality', b.dataset.q); } catch { /* */ } savePos(); const u = new URL(location.href); u.searchParams.delete('q'); location.href = u;
+    try { localStorage.setItem('hn-quality', b.dataset.q); } catch { /* */ } savePos(); const u = new URL(location.href); u.searchParams.delete('q'); u.searchParams.delete('fresh'); location.href = u; // bỏ ?fresh: tải lại không được xoá tiến độ vừa lưu
   }));
   document.querySelectorAll('#s-sound button').forEach((b) => b.addEventListener('click', () => { audio.start(); audio.setEnabled(b.dataset.v === '1'); settings(); }));
   document.querySelectorAll('#s-music button').forEach((b) => b.addEventListener('click', () => { audio.start(); audio.setMusic(b.dataset.v === '1'); settings(); }));
@@ -191,7 +190,7 @@ async function boot() {
   addEventListener('pagehide', savePos);
   // card đồ hoạ bị ngắt giữa chừng (máy ngủ, driver khởi động lại): giữ vị trí, báo cho người chơi, có lại thì tải lại trang
   canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); savePos(); hud.toast(T('gl_lost'), 30, '', '⚠️', true); });
-  canvas.addEventListener('webglcontextrestored', () => location.reload());
+  canvas.addEventListener('webglcontextrestored', () => { const u = new URL(location.href); if (!u.searchParams.has('fresh')) return location.reload(); u.searchParams.delete('fresh'); location.replace(u); });
   const TIMES = [6.3, 12, 17.2, 20.5], TNAME = ['time_morning', 'time_noon', 'time_golden', 'time_night'];
   const nextTime = () => { const i = TIMES.findIndex((h) => h > sky.hours + 0.3), k = i < 0 ? 0 : i; sky.setHours(TIMES[k], true); hud.toast(T(TNAME[k]), 2.5, '', k === 3 ? '🌙' : k === 2 ? '🌇' : k === 0 ? '🌅' : '☀️', true); G.wasNight = sky.night > 0.5; };
   const capture = () => {
@@ -203,9 +202,10 @@ async function boot() {
   // ----- màn hình bắt đầu -----
   $('loading').classList.add('hidden');
   const begin = () => { G.started = true; $('start').classList.add('hidden'); hud.show(); input.enabled = true; audio.start(); canvas.focus(); if (!resumed && passport.visited.size === 0) setTimeout(() => hud.toast(T('g_first'), 8), 1200); };
-  if (params.has('shot')) begin(); else { $('start').classList.remove('hidden'); if (resumed) $('play').textContent = T('resume'); }
+  if (resumed) { $('play').dataset.i18n = 'resume'; $('play').textContent = T('resume'); }
+  if (params.has('shot')) begin(); else $('start').classList.remove('hidden');
   $('play').addEventListener('click', begin);
-  $('lang').addEventListener('click', () => { setLang(lang() === 'vi' ? 'en' : 'vi'); $('lang').textContent = lang() === 'vi' ? 'English' : 'Tiếng Việt'; if (resumed) $('play').textContent = T('resume'); });
+  $('lang').addEventListener('click', () => setLang(lang() === 'vi' ? 'en' : 'vi'));
 
   // ----- vòng lặp -----
   const dbg = params.has('debug') ? Object.assign(document.body.appendChild(document.createElement('div')), { style: 'position:fixed;left:8px;bottom:8px;color:#fff;font:12px monospace;text-shadow:0 1px 2px #000;z-index:50;white-space:pre' }) : null;

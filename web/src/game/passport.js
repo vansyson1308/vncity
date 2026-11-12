@@ -8,12 +8,14 @@ const COLORS = { landmark: 0x35a7ff, food: 0xff8a2a, culture: 0xff5fa2 };
 export const REWARD = { landmark: 20000, culture: 20000, page: 50000 };
 
 export class Passport {
-  constructor(scene, nav, places) {
+  // fresh: bắt đầu từ trạng thái trắng (tham số ?fresh của các công cụ thử và QC): không nạp tiến độ đã lưu và xoá luôn bản lưu cũ;
+  // sau đó game lưu bình thường, lần tải sau không có ?fresh sẽ nạp lại tiến độ mới.
+  constructor(scene, nav, places, fresh = false) {
     this.nav = nav; this.pages = places.pages;
     this.items = places.items.map((p) => ({ ...p, radius: p.kind === 'food' ? 7 : p.type === 'lake' || p.type === 'park' ? 26 : 16 }));
     this.byId = new Map(this.items.map((i) => [i.id, i]));
     this.visited = new Set(); this.money = 50000; this.rides = 0; this.flags = {};
-    this.load();
+    if (fresh) { try { localStorage.removeItem(SAVE); } catch { /* bộ nhớ bị chặn */ } } else this.load();
     this.onStamp = null; this.onPage = null; this.pending = null; // pending: món ăn đang đứng cạnh, chờ bấm E để ăn
     // cột sáng: một InstancedMesh hình trụ trong suốt, màu theo loại
     const geo = new THREE.CylinderGeometry(1.1, 1.6, 1, 12, 1, true); geo.translate(0, 0.5, 0);

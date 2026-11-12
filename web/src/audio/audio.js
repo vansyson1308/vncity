@@ -6,7 +6,12 @@
 //   - Nhạc nền tự sáng tác: thang ngũ cung, ba âm sắc gợi đàn bầu (luyến, rung), đàn tranh (gảy, láy), sáo trúc (hơi thổi);
 //     ban ngày điệu Bắc tươi sáng, ban đêm điệu Nam trầm và chậm hơn. Giai điệu sinh ngẫu nhiên theo câu nhạc bốn nhịp
 //     nên không lặp lại, không dùng giai điệu của bài hát nào.
-// Hai công tắc trong Cài đặt: "Âm thanh" (hiệu ứng và nền phố) và "Nhạc nền"; cả hai được lưu trong localStorage.
+// Hai công tắc độc lập trong Cài đặt, cả hai được lưu trong localStorage:
+//   "Hiệu ứng âm thanh" (enabled): tiếng xe, bước chân, còi, nền phố. Mọi nguồn loại này đều đi qua nút âm lượng this.sfx.
+//   "Nhạc nền" (music): ba nhạc cụ và tiếng vang đều đi qua nút âm lượng this.musicGain.
+// Tắt công tắc nào thì nút âm lượng của nhánh đó về 0, nên không tiếng nào của nhánh đó ra loa. Nút tổng this.master luôn để 1 vì
+// nó chung cho cả hai nhánh (tắt hiệu ứng thì nhạc vẫn phải nghe được); nó chỉ là điểm gom trước bộ nén, không phải công tắc.
+// Khi tắt hiệu ứng, các tiếng ngắn (còi, bước chân, đóng dấu) cũng không được tạo ra nữa, khỏi tốn máy.
 // Trình duyệt chỉ cho phát tiếng sau thao tác đầu tiên của người chơi: unlock() được gọi lại ở mỗi lần bấm, chạm, gõ phím
 // cho tới khi AudioContext thật sự chạy.
 
@@ -77,12 +82,12 @@ export class Audio {
   // ----- viên gạch cơ bản -----
   env(g, t, a, d, peak) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
   tone(freq, dur, type = 'sine', vol = 0.2, pan = 0, slide = 0, dest = this.sfx, at = 0) {
-    const c = this.ctx; if (!c) return; const t = c.currentTime + at, o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.setValueAtTime(freq, t); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(20, freq + slide), t + dur);
+    const c = this.ctx; if (!c || (!this.enabled && dest === this.sfx)) return; const t = c.currentTime + at, o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.setValueAtTime(freq, t); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(20, freq + slide), t + dur);
     this.env(g, t, 0.008, dur, vol); let out = g; if (pan && c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(p); out = p; }
     o.connect(g); out.connect(dest); o.start(t); o.stop(t + dur + 0.05);
   }
   noise(dur, freq, q, vol, type = 'bandpass', at = 0, pan = 0) {
-    const c = this.ctx; if (!c) return; const t = c.currentTime + at, s = c.createBufferSource(); s.buffer = this.white; const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q; const g = c.createGain(); this.env(g, t, 0.004, dur, vol);
+    const c = this.ctx; if (!c || !this.enabled) return; const t = c.currentTime + at, s = c.createBufferSource(); s.buffer = this.white; const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q; const g = c.createGain(); this.env(g, t, 0.004, dur, vol);
     let out = g; if (pan && c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = pan; g.connect(p); out = p; }
     s.connect(f).connect(g); out.connect(this.sfx); s.start(t, Math.random() * 0.5, dur + 0.1);
   }
@@ -182,9 +187,9 @@ export class Audio {
     if (this.hornT <= 0) { this.hornT = (night > 0.5 ? 14 : 4) + Math.random() * (night > 0.5 ? 20 : 9); if (busy > 0.1 || night < 0.5) this.horn(Math.random() * 2 - 1, 0.035 + Math.random() * 0.03, Math.random() < 0.25); }
     this.bellT -= dt; // chuông hàng rong: chỉ ban ngày, ở phố có người
     if (this.bellT <= 0) { this.bellT = 25 + Math.random() * 40; if (night < 0.4 && busy > 0.15) this.vendorBell(Math.random() * 2 - 1); }
-    // nhạc nền: đặt lịch từng câu, sớm hơn nửa giây để không hụt nhịp khi khung hình giật
+    // nhạc nền: đặt lịch từng câu, sớm hơn nửa giây để không hụt nhịp khi khung hình giật. Đang tắt nhạc thì không soạn câu mới và giữ
+    // nguyên mốc M.next (lúc câu đang dở kết thúc): bật lại giữa chừng thì câu mới chỉ vào sau khi câu cũ đã hết, hai câu không chồng nhau.
     const M = this.mus;
     if (this.music) { if (M.next < t) M.next = t + 0.3; if (M.next - t < 0.6) { M.night = night > 0.5; M.next = this.compose(M.next, M.night, !!s.calm) + (Math.random() < 0.3 ? 2.5 : 0.6); M.bar++; } }
-    else M.next = t + 1;
   }
 }

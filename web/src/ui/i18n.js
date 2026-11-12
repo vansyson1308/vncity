@@ -8,11 +8,11 @@ const S = {
     t_move: 'nửa trái: di chuyển', t_look: 'nửa phải: nhìn quanh',
     play: 'Bắt đầu dạo phố', resume: 'Dạo tiếp', credit: 'Bản đồ © OpenStreetMap (ODbL) và Overture Maps. Nhân vật: Microsoft Rocketbox (MIT). Không quảng cáo, không thu thập dữ liệu.',
     map: 'Bản đồ Hà Nội', maphelp: 'Bấm vào một điểm đã có dấu để xe ôm chở tới ngay. Điểm chưa đến hiện dấu hỏi.', book: 'Hộ chiếu Hà Nội', reset: 'Xoá dấu, chơi lại', share: 'Chia sẻ hộ chiếu', continue: 'Đi tiếp',
-    settings: 'Cài đặt', s_quality: 'Chất lượng hình', s_sound: 'Âm thanh', s_music: 'Nhạc nền', s_lang: 'Ngôn ngữ', q_low: 'Nhẹ', q_medium: 'Vừa', q_high: 'Đẹp', on: 'Bật', off: 'Tắt',
+    settings: 'Cài đặt', s_quality: 'Chất lượng hình', s_sound: 'Hiệu ứng âm thanh', s_music: 'Nhạc nền', s_lang: 'Ngôn ngữ', q_low: 'Nhẹ', q_medium: 'Vừa', q_high: 'Đẹp', on: 'Bật', off: 'Tắt',
     certk: 'Chứng nhận', cert: 'Người Hà Nội danh dự', certp: 'Bạn đã đi khắp Hồ Gươm, phố cổ, khu phố Pháp, Ba Đình và Hồ Tây, đóng đủ dấu hộ chiếu. Hà Nội ngoài đời còn đẹp hơn thế: hẹn bạn ở Bờ Hồ!',
     stamped: 'ĐÃ ĐẾN', built: 'Xây năm', kind_landmark: 'Địa danh', kind_food: 'Món ngon', kind_culture: 'Văn hoá', nearby: 'Gần đây:', read: 'E · đọc thêm', readTouch: 'Chạm để đọc thêm',
     page_hoguom: 'Hồ Gươm', page_phoco: 'Phố cổ', page_phophap: 'Khu phố Pháp', page_badinh: 'Ba Đình', page_hotay: 'Hồ Tây', pageDone: 'Đủ dấu trang {p}! Thưởng {m}.',
-    dir_n: 'bắc', dir_ne: 'đông bắc', dir_e: 'đông', dir_se: 'đông nam', dir_s: 'nam', dir_sw: 'tây nam', dir_w: 'tây', dir_nw: 'tây bắc', toward: 'về phía',
+    dir_n: 'bắc', dir_ne: 'đông bắc', dir_e: 'đông', dir_se: 'đông nam', dir_s: 'nam', dir_sw: 'tây nam', dir_w: 'tây', dir_nw: 'tây bắc', toward: 'về phía', north1: 'B',
     p_mount: 'Lên xe', p_dismount: 'Xuống xe', p_pick: 'Đón khách', p_eat: 'Ăn {d} ({m})', p_read: 'Đọc thêm',
     guide: 'Chú Thắng', g_first: 'Qua cổng đền Ngọc Sơn đóng con dấu đầu tiên đi cháu: Tháp Bút ngay trước mặt, rồi ra cầu Thê Húc.', g_bike: 'Giỏi! Giờ bấm F lên xe, làm một vòng quanh hồ. Cứ đi đều tay, xe khác tự tránh.',
     ime_hint: 'Bộ gõ tiếng Việt đang bật nên phím W A S D có thể không ăn. Tắt bộ gõ (chuyển sang chế độ E) hoặc dùng bốn phím mũi tên.',
@@ -27,7 +27,7 @@ const S = {
     c5: ['Êm quá, cảm ơn anh!', 'Đi với anh như ngồi xích lô.', 'Năm sao luôn!'], c4: ['Cũng được, cảm ơn anh.', 'Đường đông mà anh đi khéo đấy.'], c2: ['Đâm quệt thế này em sợ lắm, lần sau anh đi cẩn thận nhé.', 'Tới nơi rồi, may quá. Anh chạy ẩu quá.'], c3: ['Hơi xóc, nhưng tới nơi là được.', 'Lần sau đi chậm chút anh nhé.'],
     rank: 'Hạng xe ôm', rank0: 'Xe ôm tập sự', rank1: 'Xe ôm phố cổ', rank2: 'Xe ôm thạo đường', rank3: 'Thổ địa Hà Nội', rides: 'cuốc',
     time_morning: 'Sáng sớm', time_noon: 'Giữa trưa', time_golden: 'Chiều vàng', time_night: 'Phố đêm',
-    photo: 'Đã lưu ảnh. Bấm P hoặc chạm để tiếp tục.', photoHint: 'Kéo để chọn góc · Enter hoặc chạm 📷 để chụp · Esc để thoát',
+    photo: 'Đã lưu ảnh. Bấm P hoặc chạm để tiếp tục.', photoHint: 'Kéo để chọn góc · Enter hoặc bấm 📷 để chụp · Esc để thoát', photoHintT: 'Kéo để chọn góc · chạm 📷 để chụp · ✕ để thoát',
     shareText: 'Mình đã đóng {n}/{t} dấu hộ chiếu ở Hà Nội Dạo Phố.', copied: 'Đã chép đường dẫn.', xeom: 'Xe ôm chở tới', perf: 'Khung hình: {f}/giây · độ phân giải {d}%',
     money: (v) => `${Math.round(v / 1000)}k`, km: 'km', m: 'm', quality: 'Đổi chất lượng sẽ tải lại trang.', q_confirm: 'Đổi chất lượng hình sang mức "{q}"? Game sẽ tải lại, vị trí và các dấu đã đóng vẫn được giữ.', perf_wait: 'Khung hình: đang đo…', credits_audio: 'Âm thanh và nhạc nền do game tự tổng hợp, không dùng bản ghi của ai. Chi tiết trong CREDITS.md.',
   },
@@ -39,11 +39,11 @@ const S = {
     t_move: 'left half: move', t_look: 'right half: look around',
     play: 'Start exploring', resume: 'Keep exploring', credit: 'Map © OpenStreetMap (ODbL) and Overture Maps. Character: Microsoft Rocketbox (MIT). No ads, no tracking.',
     map: 'Map of Hanoi', maphelp: 'Tap a stamped place and a xe ôm takes you there. Unvisited places show a question mark.', book: 'Hanoi passport', reset: 'Clear stamps, start over', share: 'Share passport', continue: 'Keep going',
-    settings: 'Settings', s_quality: 'Graphics', s_sound: 'Sound', s_music: 'Music', s_lang: 'Language', q_low: 'Light', q_medium: 'Medium', q_high: 'Pretty', on: 'On', off: 'Off',
+    settings: 'Settings', s_quality: 'Graphics', s_sound: 'Sound effects', s_music: 'Music', s_lang: 'Language', q_low: 'Light', q_medium: 'Medium', q_high: 'Pretty', on: 'On', off: 'Off',
     certk: 'Certificate', cert: 'Honorary Hanoian', certp: 'You went all over Hoàn Kiếm lake, the Old Quarter, the French Quarter, Ba Đình and West Lake and filled your passport. The real Hanoi is even better: see you by the lake!',
     stamped: 'VISITED', built: 'Built', kind_landmark: 'Landmark', kind_food: 'Street food', kind_culture: 'Culture', nearby: 'Nearby:', read: 'E · read more', readTouch: 'Tap to read more',
     page_hoguom: 'Hoàn Kiếm lake', page_phoco: 'Old Quarter', page_phophap: 'French Quarter', page_badinh: 'Ba Đình', page_hotay: 'West Lake', pageDone: '{p} page complete! Bonus {m}.',
-    dir_n: 'north', dir_ne: 'north-east', dir_e: 'east', dir_se: 'south-east', dir_s: 'south', dir_sw: 'south-west', dir_w: 'west', dir_nw: 'north-west', toward: 'to the',
+    dir_n: 'north', dir_ne: 'north-east', dir_e: 'east', dir_se: 'south-east', dir_s: 'south', dir_sw: 'south-west', dir_w: 'west', dir_nw: 'north-west', toward: 'to the', north1: 'N',
     p_mount: 'Get on', p_dismount: 'Get off', p_pick: 'Pick up', p_eat: 'Eat {d} ({m})', p_read: 'Read more',
     guide: 'Uncle Thắng', g_first: 'Walk through the temple gate for your first stamp, kid: the Pen Tower is right ahead, then Thê Húc bridge.', g_bike: 'Nice! Now press F for the bike and do a lap of the lake. Keep it steady, the others flow around you.',
     ime_hint: 'A Vietnamese input method is on, so W A S D may not respond. Switch it off or use the arrow keys.',
@@ -58,7 +58,7 @@ const S = {
     c5: ['So smooth, thank you!', 'Like riding a cyclo.', 'Five stars!'], c4: ['Fine ride, thanks.', 'Busy streets, well handled.'], c2: ['That was scary. Please ride more carefully.', 'We made it, somehow. Too reckless.'], c3: ['A bit bumpy, but we made it.', 'Slower next time, please.'],
     rank: 'Xe ôm rank', rank0: 'Trainee xe ôm', rank1: 'Old Quarter xe ôm', rank2: 'Street-smart xe ôm', rank3: 'Hanoi insider', rides: 'rides', rides1: 'ride',
     time_morning: 'Early morning', time_noon: 'Midday', time_golden: 'Golden hour', time_night: 'Night streets',
-    photo: 'Photo saved. Press P or tap to continue.', photoHint: 'Drag to frame · Enter or tap 📷 to shoot · Esc to leave',
+    photo: 'Photo saved. Press P or tap to continue.', photoHint: 'Drag to frame · Enter or click 📷 to shoot · Esc to leave', photoHintT: 'Drag to frame · tap 📷 to shoot · ✕ to leave',
     shareText: 'I have {n}/{t} passport stamps in Hanoi Stroll.', copied: 'Link copied.', xeom: 'Xe ôm ride to', perf: 'Frame rate: {f}/s · resolution {d}%',
     money: (v) => `${Math.round(v / 1000)}k₫`, km: 'km', m: 'm', quality: 'Changing quality reloads the page.', q_confirm: 'Switch graphics to "{q}"? The game will reload; your position and stamps are kept.', perf_wait: 'Frame rate: measuring…', credits_audio: 'All sound and music is synthesised by the game itself; no recordings are used. See CREDITS.md.',
   },
@@ -83,6 +83,7 @@ export function setLang(l) {
   cur = S[l] ? l : 'vi';
   document.documentElement.lang = cur;
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = T(el.dataset.i18n); });
+  const other = document.getElementById('lang'); if (other) other.textContent = cur === 'vi' ? 'English' : 'Tiếng Việt'; // nút ở màn hình bắt đầu ghi tên ngôn ngữ còn lại
   document.title = cur === 'vi' ? 'Hà Nội Dạo Phố' : 'Hanoi Stroll';
   try { localStorage.setItem('hn-lang', cur); } catch { /* chế độ riêng tư */ }
 }
