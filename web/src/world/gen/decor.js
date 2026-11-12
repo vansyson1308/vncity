@@ -62,10 +62,11 @@ function tieredRoof(g, x, y, z, r, tiers, col, seg, yaw) {
 }
 // Chữ lớn gắn trên mặt nhà (ô chữ TEXT0 + i trong bảng chữ)
 function textPanel(g, e, X0, Z0, y, w, i, out = 0.25) {
-  const uv = signUV(TEXT0 + i), h = w / 6, x = e.mx + e.nx * out - X0, z = e.mz + e.nz * out - Z0, hx = e.tx * w / 2, hz = e.tz * w / 2;
-  const a = [x - hx, y, z - hz], b2 = [x + hx, y, z + hz];
-  // chiều chữ: nhìn từ ngoài vào, trái sang phải
-  const flip = e.tx * e.nz - e.tz * e.nx > 0, l = flip ? b2 : a, r = flip ? a : b2;
+  // Chữ đọc từ trái sang phải với người đứng ngoài nhìn vào: hướng "bên phải" của người đó là (nz, -nx). Tứ giác đi từ trái sang phải
+  // rồi lên trên thì pháp tuyến quay ra ngoài (n). (Bản trước chọn chiều theo hướng cạnh nên cả bốn tấm chữ đều quay mặt vào trong
+  // tường và bị loại mặt sau: không ai thấy chữ.)
+  const uv = signUV(TEXT0 + i), h = w / 6, x = e.mx + e.nx * out - X0, z = e.mz + e.nz * out - Z0, hx = e.nz * w / 2, hz = -e.nx * w / 2;
+  const l = [x - hx, y, z - hz], r = [x + hx, y, z + hz];
   g.rgb(1, 1, 1).glow(0.25).quad(l, r, [r[0], y + h, r[2]], [l[0], y + h, l[2]], uv).glow(0);
 }
 function drawHero(ctx, g, b, X0, Z0, lo) {
@@ -84,12 +85,12 @@ function drawHero(ctx, g, b, X0, Z0, lo) {
   }
   if (F.dome) domeAt(g, cx, H, cz, F.dome.r, F.dome.col, lo, 0.55);
   if (F.cone) { // mái tôn hình nón của tháp nước: mái thoải nên đứng dưới phố chỉ thấy vành mái đua ra, mặt dưới mái đua và chóp thông hơi trên đỉnh
-    const c = F.cone.col, seg = lo ? 12 : 24, r = R + 1.0, hc = F.cone.h, yv = H + hc * 0.74;
+    const c = F.cone.col, seg = lo ? 12 : 24, r = R + 0.8, hc = F.cone.h, yv = H + hc * 0.8; // mái chính tới khoảng 24,7 m, chóp thông hơi tới 25,6 m (art bible: đỉnh mái khoảng 25 m)
     g.rgb(c[0] * 0.55, c[1] * 0.55, c[2] * 0.55).disc(cx, H + 0.02, cz, r, seg, -1);                              // mặt dưới mái đua
     g.rgb(c[0] * 0.8, c[1] * 0.8, c[2] * 0.8).cyl(cx, H, cz, r, r, 0.42, seg, false);                           // diềm mái
-    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, H + 0.42, cz, r, 1.5, hc * 0.74 - 0.42, seg, false).gloss(0);   // mái nón
-    g.rgb(c[0] * 0.7, c[1] * 0.7, c[2] * 0.7).cyl(cx, yv, cz, 1.5, 1.5, hc * 0.12, lo ? 6 : 10, false);         // cổ chóp thông hơi
-    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, yv + hc * 0.12, cz, 1.9, 0.06, hc * 0.14, lo ? 6 : 10, false).gloss(0);
+    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, H + 0.42, cz, r, 1.5, hc * 0.8 - 0.42, seg, false).gloss(0);    // mái nón
+    g.rgb(c[0] * 0.7, c[1] * 0.7, c[2] * 0.7).cyl(cx, yv, cz, 1.5, 1.5, hc * 0.09, lo ? 6 : 10, false);         // cổ chóp thông hơi
+    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, yv + hc * 0.09, cz, 1.9, 0.06, hc * 0.11, lo ? 6 : 10, false).gloss(0);
     g.rgb(0.2, 0.2, 0.2).cyl(cx, H + hc - 0.1, cz, 0.12, 0.04, 1.1, 4, false);
   }
   if (F.drum) { // phòng họp tròn nhô lên giữa khối vuông: thân loe dần lên trên, ốp kim loại màu đồng, băng kính sáng đèn ban đêm, mái phẳng
@@ -101,26 +102,33 @@ function drawHero(ctx, g, b, X0, Z0, lo) {
   }
   if (F.assembly) { // Nhà Quốc hội: khối vuông ốp đá be vàng. Lam đá đứng chạy suốt chiều cao trước lớp kính, băng đá ở chân và ở mái;
     // giữa mặt chính (quay ra quảng trường) là cổng lớn lùi vào giữa hai trụ đá, có mái sảnh, mảng đá giữa cổng mang quốc huy đồng.
-    const A = F.assembly, S = A.col, e0 = mainEdge(b, A.dir), yP = CURB + 1.4, yT = H - 4.4, yC = H + (hero.parapet || 0) + 0.15, step = lo ? 4 : 2, fw = lo ? 0.6 : 0.3, PW = A.portal / 2;
+    // Lam dày 0,9 m, sâu 1,3 m, cách nhau 2,6 m để từ xa vẫn đọc ra hàng cột đá chứ không phải nẹp mảnh trên tường kính.
+    const A = F.assembly, S = A.col, e0 = mainEdge(b, A.dir), yP = CURB + 1.4, yT = H - 4.4, yC = H + (hero.parapet || 0) + 0.15, step = lo ? 5.2 : 2.6, fw = lo ? 0.6 : 0.45, fd = 1.3, PW = A.portal / 2;
     let area = 0; for (let k = 0; k < n; k += 2) { const j = (k + 2) % n; area += p[k] * p[j + 1] - p[j] * p[k + 1]; }
     const sg = area > 0 ? 1 : -1;
     for (let k = 0; k < n; k += 2) {
       const x0 = p[k], z0 = p[k + 1], dx = p[(k + 2) % n] - x0, dz = p[(k + 3) % n] - z0, l = Math.hypot(dx, dz); if (l < 4) continue;
       const nx = (dz / l) * sg, nz = (-dx / l) * sg, mx = x0 + dx / 2, mz = z0 + dz / 2, hw = l / 2, main = !!e0 && Math.abs(mx - e0.mx) + Math.abs(mz - e0.mz) < 0.5;
       g.push().move(mx - X0, 0, mz - Z0).rotY(Math.atan2(nx, nz)); // +z cục bộ hướng ra ngoài mặt nhà
-      g.mat(MAT.stone).rgb(S[0] * 0.78, S[1] * 0.78, S[2] * 0.78).box(-hw - 0.95, CURB, -0.3, hw + 0.95, yP, 0.95, 'xXYZ');   // bệ đá
-      g.rgb(S[0], S[1], S[2]).box(-hw - 1, yT, -0.3, hw + 1, yC, 1, 'xXyYZ');                                               // băng đá mái
+      // lớp kính màu đồng sau hàng lam (che lưới cửa sổ văn phòng của mặt đứng): ban ngày tối màu, ánh trời; ban đêm sáng vàng ấm đều từ
+      // trong ra (art bible mục 7: "sáng từ trong qua kính"); bốn dải sàn sẫm màu chia năm tầng
+      g.mat().rgb(0.08, 0.06, 0.035).gloss(0.5).glow(0.55).quad([-hw, yP, 0.12], [hw, yP, 0.12], [hw, yT, 0.12], [-hw, yT, 0.12]).gloss(0).glow(0);
+      g.rgb(S[0] * 0.45, S[1] * 0.45, S[2] * 0.45); for (let f = 1; f < 5; f++) { const y = yP + ((yT - yP) * f) / 5; g.quad([-hw, y - 0.35, 0.16], [hw, y - 0.35, 0.16], [hw, y + 0.35, 0.16], [-hw, y + 0.35, 0.16]); }
+      g.mat(MAT.stone).rgb(S[0] * 0.78, S[1] * 0.78, S[2] * 0.78).box(-hw - 0.95, CURB, -0.3, hw + 0.95, yP, fd + 0.05, 'xXYZ');   // bệ đá
+      g.rgb(S[0], S[1], S[2]).box(-hw - 1, yT, -0.3, hw + 1, yC, fd + 0.1, 'xXyYZ');                                             // băng đá mái
       const m = Math.max(1, Math.round(l / step));
-      for (let i = 0; i <= m; i++) { const x = -hw + (l * i) / m; if (main && Math.abs(x) < PW + 0.4) continue; g.box(x - fw, yP, 0, x + fw, yT, 0.9, 'xXZ'); }
+      for (let i = 0; i <= m; i++) { const x = -hw + (l * i) / m; if (main && Math.abs(x) < PW + 0.4) continue; g.box(x - fw, yP, 0, x + fw, yT, fd, 'xXZ'); }
       if (main) {
-        for (const s of [-1, 1]) g.box(s * PW - (s < 0 ? 2.4 : 0), CURB, 0, s * PW + (s > 0 ? 2.4 : 0), yT, 1.5, 'xXZ');     // hai trụ đá hai bên cổng
-        g.box(-5.2, 8.1, 0, 5.2, yT, 0.7, 'xXZ');                                                                           // mảng đá giữa cổng
+        const re = A.emblem, ye = yT - 1.3 - re, pw = re + 2.2;
+        for (const s of [-1, 1]) g.box(s * PW - (s < 0 ? 2.4 : 0), CURB, 0, s * PW + (s > 0 ? 2.4 : 0), yT, fd + 0.6, 'xXZ'); // hai trụ đá hai bên cổng
+        g.box(-pw, 8.1, 0, pw, yT, 0.7, 'xXZ');                                                                             // mảng đá giữa cổng
         g.mat().rgb(0.4, 0.27, 0.13).gloss(0.4).box(-PW, 7.4, 0, PW, 8.1, 3.6, 'xXyYZ').gloss(0);                           // mái sảnh màu đồng
         if (!lo) { g.rgb(S[0] * 0.9, S[1] * 0.9, S[2] * 0.9).mat(MAT.stone); for (const x of [-9.6, -5.2, 5.2, 9.6]) g.box(x - 0.35, CURB, 2.7, x + 0.35, 7.4, 3.4, 'xXzZ'); g.mat(); }
-        // quốc huy: đĩa đồng tròn có vành, ngôi sao năm cánh phía trên, nửa bánh răng phía dưới (cách điệu, không vẽ chi tiết)
-        const re = A.emblem, sgm = lo ? 10 : 24; g.push().move(0, 8.1 + (yT - 8.1) * 0.56, 0.74).rotX(Math.PI / 2);
-        g.mat().rgb(0.6, 0.4, 0.1).gloss(0.5).glow(0.12).disc(0, 0, 0, re, sgm, 1); g.rgb(0.34, 0.17, 0.05).disc(0, 0.03, 0, re * 0.86, sgm, 1);
-        g.rgb(0.9, 0.66, 0.16); const c0 = g.v(0, 0.06, -re * 0.2, 0, 1, 0), s0 = g.count;
+        // quốc huy: đĩa đồng tròn có vành, ngôi sao năm cánh phía trên, nửa bánh răng phía dưới (cách điệu, không vẽ chi tiết), đặt cao
+        // ngay dưới băng đá mái; ban đêm có đèn rọi
+        const sgm = lo ? 10 : 24; g.push().move(0, ye, 0.74).rotX(Math.PI / 2);
+        g.mat().rgb(0.6, 0.4, 0.1).gloss(0.5).glow(0.28).disc(0, 0, 0, re, sgm, 1); g.rgb(0.34, 0.17, 0.05).glow(0.12).disc(0, 0.03, 0, re * 0.86, sgm, 1);
+        g.rgb(0.9, 0.66, 0.16).glow(0.3); const c0 = g.v(0, 0.06, -re * 0.2, 0, 1, 0), s0 = g.count;
         for (let i = 0; i <= 10; i++) { const a = -Math.PI / 2 + (i / 10) * Math.PI * 2, rr = re * (i % 2 ? 0.17 : 0.42); g.v(Math.cos(a) * rr, 0.06, -re * 0.2 + Math.sin(a) * rr, 0, 1, 0); }
         for (let i = 0; i < 10; i++) g.tri(c0, s0 + i + 1, s0 + i);
         if (!lo) g.rgb(0.75, 0.52, 0.12).box(-re * 0.34, 0.03, re * 0.42, re * 0.34, 0.06, re * 0.62, 'Y');
@@ -191,11 +199,12 @@ function drawHero(ctx, g, b, X0, Z0, lo) {
     g.pop().pop();
   };
   if (F.arch) for (const d of F.arch.dirs) { const e = mainEdge(b, d); if (e) archOn(e, F.arch.w, F.arch.h, [0.03, 0.03, 0.035]); }
-  if (F.gate) { // cổng vòm nhà tù: khối cổng nhô ra, ô cửa vòm tối, chữ phía trên
+  if (F.gate) { // cổng vòm nhà tù: khối cổng nhô ra, ô cửa vòm tối, chữ ngay trên đỉnh vòm (thấp hơn tán cây vỉa hè), gờ mái cổng
     const e = mainEdge(b, F.gate.dir); if (e) {
-      g.push().move(e.mx - X0, CURB, e.mz - Z0).rotY(Math.atan2(e.nx, e.nz)); g.rgb(0.6, 0.55, 0.42).mat(MAT.stone).box(-3.4, 0, 0, 3.4, 8.2, 0.7, 'xXYZ').mat(); g.pop();
+      g.push().move(e.mx - X0, CURB, e.mz - Z0).rotY(Math.atan2(e.nx, e.nz)); g.rgb(0.6, 0.55, 0.42).mat(MAT.stone).box(-3.4, 0, 0, 3.4, 8.2, 0.7, 'xXYZ');
+      g.rgb(0.5, 0.46, 0.36).box(-3.6, 7.6, 0, 3.6, 8.0, 0.95, 'xXyYZ').mat(); g.pop();
       const e2 = { ...e, mx: e.mx + e.nx * 0.7, mz: e.mz + e.nz * 0.7 }; archOn(e2, 2.6, 4.4, [0.04, 0.03, 0.03]);
-      if (!lo) textPanel(g, e2, X0, Z0, 5.6, 5.6, F.gate.text, 0.05);
+      if (!lo) textPanel(g, e2, X0, Z0, 4.65, 5.6, F.gate.text, 0.05);
     }
   }
   if (F.ledges) { g.rgb(0.42, 0.34, 0.28).mat(MAT.brick); for (const y of F.ledges) g.box(b.bb[0] - 0.22 - X0, y, b.bb[1] - 0.22 - Z0, b.bb[2] + 0.22 - X0, y + 0.3, b.bb[3] + 0.22 - Z0, 'xXyYzZ'); g.box(b.cx - 0.9 - X0, H, b.cz - 0.9 - Z0, b.cx + 0.9 - X0, H + 1.5, b.cz + 0.9 - Z0, 'xXYzZ').mat(); }
