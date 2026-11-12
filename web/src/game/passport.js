@@ -10,6 +10,7 @@ const COLORS = { landmark: 0x35a7ff, food: 0xff8a2a, culture: 0xff5fa2 };
 export const REWARD = { landmark: 20000, culture: 20000, page: 50000 };
 
 export class Passport {
+  static frozen = false;
   // fresh: bắt đầu từ trạng thái trắng (tham số ?fresh của các công cụ thử và QC): không nạp tiến độ đã lưu và bỏ bản lưu cũ;
   // sau đó game lưu bình thường, lần tải sau không có ?fresh sẽ nạp lại tiến độ mới. Người chơi lỡ mở một đường dẫn có ?fresh
   // không mất trắng: bản lưu cũ được cất sang BAK trước khi bỏ (giữ bản nhiều tiến độ hơn nếu BAK đã có), khôi phục trong Cài đặt.
@@ -39,11 +40,13 @@ export class Passport {
   load() {
     try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); if (s) { this.visited = new Set((s.visited || []).filter((id) => this.byId.has(id))); if (typeof s.money === 'number' && Number.isFinite(s.money)) this.money = Math.max(0, Math.round(s.money)); if (Number.isInteger(s.rides) && s.rides > 0) this.rides = s.rides; if (s.flags && typeof s.flags === 'object' && !Array.isArray(s.flags)) this.flags = s.flags; } } catch { /* bộ nhớ bị chặn: chơi không lưu */ }
   }
-  save() { try { localStorage.setItem(SAVE, JSON.stringify({ visited: [...this.visited], money: this.money, rides: this.rides, flags: this.flags })); } catch { /* */ } }
+  // Passport.frozen: đã khôi phục bản dự phòng và đang tải lại trang: không ghi gì nữa, kẻo lượt lưu định kỳ hay pagehide ghi đè bản vừa
+  // khôi phục (bản dự phòng đã xoá) bằng tiến độ của phiên ?fresh (reviewer vòng 3)
+  save() { if (Passport.frozen) return; try { localStorage.setItem(SAVE, JSON.stringify({ visited: [...this.visited], money: this.money, rides: this.rides, flags: this.flags })); } catch { /* */ } }
   // bản lưu dự phòng (do ?fresh cất đi): số dấu đã đóng, hoặc null nếu không có
   static backup() { try { const s = JSON.parse(localStorage.getItem(BAK) || 'null'); return s && Array.isArray(s.visited) ? { stamps: s.visited.length, rides: Number.isInteger(s.rides) ? s.rides : 0 } : null; } catch { return null; } }
   // đưa bản dự phòng về làm bản lưu chính (gọi xong thì tải lại trang không có ?fresh)
-  static restore() { try { const b = localStorage.getItem(BAK); if (!b) return false; localStorage.setItem(SAVE, b); localStorage.removeItem(BAK); return true; } catch { return false; } }
+  static restore() { try { const b = localStorage.getItem(BAK); if (!b) return false; Passport.frozen = true; localStorage.setItem(SAVE, b); localStorage.removeItem(BAK); return true; } catch { return false; } }
   reset() { this.visited.clear(); this.money = 50000; this.rides = 0; this.flags = {}; this.save(); this.refresh(); }
 
   // Đặt mốc vào chỗ đi tới được (không nằm trong nhà hay giữa hồ), gọi sau khi biết va chạm quanh đó.
