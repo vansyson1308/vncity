@@ -153,7 +153,10 @@ Các kỹ thuật chính:
    xe có số thứ tự nhỏ hơn lách qua sau 1,2 giây. Để xe không nằm đè lên nhau: mỗi khung hình lập "sổ nhập làn" cho từng
    (cạnh, chiều), gồm các xe đang ở đầu cạnh và các xe sắp rẽ vào nó; xe không rẽ vào chỗ đang có xe, và trong các xe cùng rẽ
    vào một phố thì xe xa nút hơn nhường (lưới tìm xe lân cận chỉ thấy xe ngay trước mũi theo hướng đang chạy, không thấy xe
-   sau góc rẽ); xe đứng yên không trượt ngang; hai thân xe cùng chiều lỡ lồng vào nhau thì bị tách ngang ra ngay. Đường bị cắt
+   sau góc rẽ); xe đứng yên trong hàng chờ không trượt ngang (xe đang chờ người đi bộ chắn trước mũi thì vẫn dắt ngang lách
+   qua); hai thân xe cùng chiều lỡ lồng vào nhau thì bị tách ngang ra ngay. Mỗi xe nhớ xe đang chắn mình; khi chuỗi "ai chắn
+   ai" khép thành vòng (hai xe đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước), xe có số thứ tự nhỏ nhất
+   trong vòng đi trước. Đường bị cắt
    ở mép bản đồ là lối ra: xe tới đó rời khỏi bản đồ chứ không quay đầu. Giờ cao điểm cả dòng xe chạy chậm lại; đi nhanh tới
    nơi nào thì dòng xe và người đi bộ ở đó được rải sẵn như lúc vào game.
 16. **Nhà ống theo từng lô.** Khối nhà liền dãy của OSM được cắt thành các lô rộng 2,9 đến 5,3 m, mỗi lô có số tầng, màu,

@@ -324,7 +324,7 @@ export class TrafficSim {
     const T = TYPES[type], Z = 1e-9;
     return { id: this.seq++, e, dir, s, type, cls: T.cls, taxi, v: T.vmax ? T.vmax * 0.8 : 3 + Math.random() * 3, x: o[0], z: o[1], yaw: Math.atan2(o[2], o[3]), lean: Z, lat: Z, latT: Z, y: Z,
       pace: (0.78 + Math.random() * 0.4) * (T.vmul || 1), vown: T.vmax ? T.vmax * (0.8 + Math.random() * 0.3) : 0, pref: 0.25 + Math.random() * 0.7, r: T.r, hl: T.hl, wait: Z, honk: Math.random() * 4, stuck: Z, sq: -Z, slowT: Z, over: -Z, hitT: -Z,
-      wob: Math.random() * 6.28, wobF: 0.5 + Math.random() * 0.7, wobA: T.cls === 0 ? 0.15 + Math.random() * 0.3 : T.cls === 3 ? 0.08 : 0.04, ne: null, nd: 1, vj: 3.2, sg: null, sgG: 0, sgX: 0, sgL: 0, hold: false, pushT: -Z, pushB: null, ghost: false, gT: 0, red: false, vendor: 0,
+      wob: Math.random() * 6.28, wobF: 0.5 + Math.random() * 0.7, wobA: T.cls === 0 ? 0.15 + Math.random() * 0.3 : T.cls === 3 ? 0.08 : 0.04, ne: null, nd: 1, vj: 3.2, sg: null, sgG: 0, sgX: 0, sgL: 0, hold: false, pushT: -Z, pushB: null, blk: null, ghost: false, gT: 0, red: false, vendor: 0,
       bits: 0, pill: 0, pbits: 0, hail: false, tint: WHITE, tint2: WHITE, tint3: WHITE, ptint2: WHITE, ptint3: WHITE };
   }
   follow(lead, back) {
@@ -509,7 +509,7 @@ export class TrafficSim {
         else if (st === 1 && (a.hold || rs - a.hl - a.sg.stop + 1.4 > a.v * 0.25 + 0.15)) { red = true; target = 0; a.hold = true; }
       }
       if (a.pushT > 0) { a.pushT -= dt; target = Math.min(target, 2.4); if (a.pushT <= 0) a.pushB = null; }
-      const gap = 1.4 + a.v * 0.8 + a.hl, sq = a.sq > 0 ? 0.3 : 0; let blocked = false, shift = 0, side = 0, sep = 0, lead = null, leadF = 1e9, lb = false, rb = false;
+      const gap = 1.4 + a.v * 0.8 + a.hl, sq = a.sq > 0 ? 0.3 : 0; let blocked = false, shift = 0, side = 0, sep = 0, lead = null, leadF = 1e9, lb = false, rb = false, blk = null;
       const cx = Math.floor((a.x + tx * gap * 0.5) / 5), cz = Math.floor((a.z + tz * gap * 0.5) / 5);
       for (let gx = cx - 1; gx <= cx + 1; gx++) for (let gz = cz - 1; gz <= cz + 1; gz++) {
         const l = this.cellAt(gx * 65537 + gz); if (!l) continue;
@@ -536,7 +536,10 @@ export class TrafficSim {
             // xe cắt ngang hoặc đi ngược đang chắn nhau: xe có số thứ tự nhỏ hơn được lách qua trước (không đứng nhìn nhau mãi)
             if (cosB < 0.6 && room > 0.15 && (a.id < b.id || b.v < 0.3 && a.sq > 0)) t2 = Math.max(t2, 1.5);
             if (a.sq > 0 && room > 0.1) t2 = Math.max(t2, 0.9);
-            if (t2 < target) { target = t2; if (this.trace) { a.blk = b; a.blc = cosB; } }
+            // vòng chờ nhau (hai xe cùng hướng đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước; hoặc vòng dài hơn):
+            // xe có số thứ tự nhỏ nhất trong vòng bỏ qua xe chắn để đi trước, các xe còn lại chờ như thường
+            if (b.v < 0.3 && a.stuck > 0.8 && this.cycle(a, b)) continue;
+            if (t2 < target) { target = t2; blk = b; if (this.trace) a.blc = cosB; }
             blocked = true;
             shift += (s > 0.06 ? -1 : s < -0.06 ? 1 : a.latT > 0 ? -1 : 1) * (bike ? 1 : 0.4); // lách sang bên trống (ô tô lách ít hơn)
             if (cosB > 0.6 && f < leadF) { lead = b; leadF = f; }
@@ -545,6 +548,7 @@ export class TrafficSim {
           if (cosB > 0.6 && Math.abs(f) < ov * 0.9 && Math.abs(s) < a.r + b.r) { const need = a.r + b.r - Math.abs(s), share = a.cls === b.cls ? 0.5 : (a.cls === 0 || a.cls === 3) && b.cls !== 0 && b.cls !== 3 ? 1 : b.cls === 0 || b.cls === 3 ? 0.1 : 0.5; sep += (s > 0.01 ? -1 : s < -0.01 ? 1 : a.id < b.id ? -1 : 1) * need * share; }
         }
       }
+      a.blk = blk; // xe đang chắn a (đọc bởi cycle() của các xe khác)
       // Nhập làn ở cuối cạnh: (1) chỗ sắp rẽ vào đang có xe thì coi xe đó là xe trước mặt, tính theo quãng đường dọc lối rẽ;
       // (2) xe khác cũng sắp rẽ vào cùng phố mà gần nút hơn (hoặc ngang nhau mà số thứ tự nhỏ hơn) và sẽ chiếm cùng vệt thì nhường nó.
       // Vệt của mỗi xe trên phố mới tính bằng entryLat.
@@ -552,15 +556,17 @@ export class TrafficSim {
         const ne = a.ne, c4 = ne.i * 4 + (a.nd > 0 ? 1 : 0), la = this.entryLat(a, ne);
         const H = this.mlistAt(c4);
         if (H !== null) for (let i = 0; i < H.n; i++) { const b = H.a[i], pf = rem + b.s; if (b === a || pf > gap + b.hl || Math.abs(la - b.lat) >= a.r + b.r + 0.1) continue;
-          const t2 = Math.max(0, b.v + (pf - a.hl - b.hl - 0.45) * 1.2 - 0.3); if (t2 < target) target = t2; blocked = true; }
+          if (b.v < 0.3 && a.stuck > 0.8 && this.cycle(a, b)) continue;
+          const t2 = Math.max(0, b.v + (pf - a.hl - b.hl - 0.45) * 1.2 - 0.3); if (t2 < target) { target = t2; a.blk = b; } blocked = true; }
         const I = this.mlistAt(c4 + 2);
         if (I !== null) for (let i = 0; i < I.n; i++) { const b = I.a[i]; if (b === a) continue; const rb2 = b.e.len - b.s, d = rem - rb2; if (d < 0 || (d < 1e-3 && b.id > a.id) || d > a.hl + b.hl + 0.5 + a.v * 0.4) continue;
           if (Math.abs(la - this.entryLat(b, ne)) >= a.r + b.r + 0.1) continue;
           // xe kia cùng cạnh và đang ở ngay trước mũi thì luật bám đuôi thường đã lo; ở đây lo trường hợp chạy song song hoặc tới từ cạnh khác
-          const t2 = Math.max(0, b.v + (d - a.hl - b.hl - 0.3) * 1.2 - 0.3); if (t2 < target) target = t2; blocked = true; }
+          if (b.v < 0.3 && a.stuck > 0.8 && this.cycle(a, b)) continue;
+          const t2 = Math.max(0, b.v + (d - a.hl - b.hl - 0.3) * 1.2 - 0.3); if (t2 < target) { target = t2; a.blk = b; } blocked = true; }
       }
       // không chui vào lòng nút khi xe ngay phía trước còn nằm chắn trong đó: chờ ở vạch tới khi nó chạy thoát
-      if (atLine < 99 && lead !== null && lead.v < 1.2 && leadF > atLine + a.hl + 0.5) target = Math.min(target, Math.max(0, atLine * 1.2));
+      if (atLine < 99 && lead !== null && lead.v < 1.2 && leadF > atLine + a.hl + 0.5 && !(a.stuck > 0.8 && this.cycle(a, lead))) { const t2 = Math.max(0, atLine * 1.2); if (t2 < target) { target = t2; a.blk = lead; } }
       // xe trước chậm hẳn (xích lô, xe đạp, xe buýt đang rù rì): tìm cách vượt, ô tô chỉ lấn sang phần đường ngược chiều khi thoáng
       // (trên đường hai chiều: chỉ khi phần đường ngược chiều thoáng và không ở sát nút giao; trong lòng nút mà lấn trái là hai dòng
       // ngược chiều đâm đầu vào nhau rồi khoá cứng)
@@ -624,8 +630,10 @@ export class TrafficSim {
       // có xe chạy song song sát bên thì không trôi thêm về phía đó (kẻo đè lên nhau lúc xếp hàng chờ đèn)
       if (lb && a.latT < a.lat) a.latT = a.lat; if (rb && a.latT > a.lat) a.latT = a.lat;
       // đang ở phần đường ngược chiều của đường hai chiều (vừa rẽ vào, vừa vượt xong): về bên phải nhanh hơn
-      // xe đứng yên thì không trượt ngang (xe thật không trôi ngang lúc dừng; trôi là chui vào sườn xe bên cạnh trong hàng chờ)
-      a.lat = damp(a.lat, clamp(a.latT + (lb || rb ? 0 : Math.sin(T * a.wobF + a.wob) * a.wobA), loE, hw), (!e.oneway && a.lat < 0.2 && a.over <= 0 ? 5 : 2.2) * Math.min(1, a.v / 1.2), dt);
+      // xe đứng yên trong hàng chờ thì không trượt ngang (trôi ngang lúc dừng là chui vào sườn xe bên cạnh); riêng xe đang chờ người
+      // đi bộ chắn trước mũi hoặc đang co mình gỡ kẹt thì vẫn dắt ngang được (người lái chống chân lách qua)
+      const latRate = a.v > 1.2 || pblock || a.sq > 0 ? 1 : a.v / 1.2;
+      a.lat = damp(a.lat, clamp(a.latT + (lb || rb ? 0 : Math.sin(T * a.wobF + a.wob) * a.wobA), loE, hw), (!e.oneway && a.lat < 0.2 && a.over <= 0 ? 5 : 2.2) * latRate, dt);
       if (sep !== 0) { const lim = e.oneway ? -hw : Math.max(-hw, -0.4); a.lat = clamp(a.lat + clamp(sep, -1.6 * dt, 1.6 * dt), Math.min(lim, a.lat), Math.max(hw, a.lat)); if ((sep < 0 && a.latT > a.lat) || (sep > 0 && a.latT < a.lat)) a.latT = a.lat; }
       a.v = damp(a.v, target, target < a.v ? 4.5 : a.cls === 3 ? 1 : 1.6, dt);
       a.s += a.v * dt;
@@ -644,6 +652,12 @@ export class TrafficSim {
         const turn = Math.atan2(Math.sin(dy), Math.cos(dy)); a.lean = damp(a.lean, bike || a.type === VT.bicycle ? clamp(-turn * a.v * 0.9, -0.45, 0.45) : 0, 5, dt);
       } else a.lean = damp(a.lean, 0, 5, dt);
     }
+  }
+  // b đang chắn a; theo chuỗi "ai chắn ai" từ b có quay về a không (tối đa 6 bước). Có thì trả true nếu a có số thứ tự nhỏ nhất vòng.
+  cycle(a, b) {
+    let q = b, min = a.id;
+    for (let k = 0; k < 6 && q; k++) { if (q === a) return a.id === min; if (q.id < min) min = q.id; if (q.v >= 0.3) return false; q = q.blk; }
+    return false;
   }
   // Xe b có đang nằm chắn ngay trước mũi xe a không (trong hành lang a sắp đi qua, tính thân xe b theo chiều dài của nó).
   facing(a, b) {
