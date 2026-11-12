@@ -27,7 +27,7 @@ export class Passport {
     scene.add(this.beacons); this._m = new THREE.Matrix4(); this.refresh();
   }
   load() {
-    try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); if (s) { this.visited = new Set((s.visited || []).filter((id) => this.byId.has(id))); this.money = s.money ?? this.money; this.rides = s.rides || 0; this.flags = s.flags || {}; } } catch { /* bộ nhớ bị chặn: chơi không lưu */ }
+    try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); if (s) { this.visited = new Set((s.visited || []).filter((id) => this.byId.has(id))); if (typeof s.money === 'number' && Number.isFinite(s.money)) this.money = Math.max(0, Math.round(s.money)); if (Number.isInteger(s.rides) && s.rides > 0) this.rides = s.rides; if (s.flags && typeof s.flags === 'object' && !Array.isArray(s.flags)) this.flags = s.flags; } } catch { /* bộ nhớ bị chặn: chơi không lưu */ }
   }
   save() { try { localStorage.setItem(SAVE, JSON.stringify({ visited: [...this.visited], money: this.money, rides: this.rides, flags: this.flags })); } catch { /* */ } }
   reset() { this.visited.clear(); this.money = 50000; this.rides = 0; this.flags = {}; this.save(); this.refresh(); }

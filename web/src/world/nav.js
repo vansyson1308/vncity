@@ -169,6 +169,48 @@ export class Nav {
     return ok;
   }
 
+  // Bước thẳng từ (x0,z0) tới (x1,z1) có thông không: không cắt bức tường hay bờ nước nào, chỗ tới không phải mặt nước và đủ
+  // rộng cho vòng tròn bán kính r. Dùng khi đặt người xuống cạnh xe, dựng xe cạnh người: `collide` chỉ đẩy ra khỏi đoạn tường
+  // gần nhất nên một điểm đã lọt sang bên kia tường sẽ bị đẩy sâu thêm vào lòng nhà.
+  freeStep(x0, z0, x1, z1, r) {
+    if (!(Number.isFinite(x1) && Number.isFinite(z1))) return false;
+    if (this.isWater(x1, z1) && !(this.decks.length && this.deckAt(x1, z1, 0.6))) return false;
+    const b = this.b, m = 6; if (x1 < b.x0 + m || x1 > b.x1 - m || z1 < b.z0 + m || z1 > b.z1 - m) return false;
+    let ok = true; const dx = x1 - x0, dz = z1 - z0, r2 = r * r;
+    this.eachSeg((x0 + x1) / 2, (z0 + z1) / 2, Math.hypot(dx, dz) / 2 + r + 0.1, (s, i) => {
+      if (!ok) return;
+      const ax = s[i], az = s[i + 1], ex = s[i + 2] - ax, ez = s[i + 3] - az, den = dx * ez - dz * ex;
+      if (Math.abs(den) > 1e-9) { const t = ((ax - x0) * ez - (az - z0) * ex) / den, u = ((ax - x0) * dz - (az - z0) * dx) / den; if (t >= 0 && t <= 1 && u >= 0 && u <= 1) { ok = false; return; } }
+      if (segDist2(x1, z1, ax, az, s[i + 2], s[i + 3]) < r2) ok = false;
+    });
+    return ok;
+  }
+
+  // Chỗ đứng trống cạnh điểm (x,z) của một vật quay mặt hướng yaw: thử bên trái, bên phải, chéo sau, phía sau, chéo trước, phía
+  // trước, mỗi phía ở khoảng cách d rồi 0,7 d. Không có chỗ nào thông thì trả về chính (x,z). Kết quả ở out {x,z}.
+  besideFree(x, z, yaw, d, r, out) {
+    const c = Math.cos(yaw), s = Math.sin(yaw), q = Math.SQRT1_2;
+    for (const k of [1, 0.7]) for (const [lx, lz] of [[c, -s], [-c, s], [(c - s) * q, (-s - c) * q], [(-c - s) * q, (s - c) * q], [-s, -c], [(c + s) * q, (c - s) * q], [(s - c) * q, (s + c) * q], [s, c]]) {
+      const px = x + lx * d * k, pz = z + lz * d * k;
+      if (this.freeStep(x, z, px, pz, r)) { out.x = px; out.z = pz; return true; }
+    }
+    out.x = x; out.z = z; return false;
+  }
+
+  // Điểm (x,z) có nằm trong lòng một khối đặc (nhà, khối giữ chỗ của công trình) không: đếm chẵn lẻ số lần bốn tia dọc trục cắt
+  // các bức tường cao từ 2,5 m của những ô đã nạp (tường nhà là vòng khép kín, xếp trọn vào một ô); cần ít nhất ba tia lẻ.
+  // Duyệt hết mọi đoạn tường nên chỉ gọi khi cần (lúc khôi phục vị trí đã lưu), không gọi mỗi khung hình.
+  inSolid(x, z) {
+    let px = 0, nx = 0, pz = 0, nz = 0;
+    for (const c of this.chunks.values()) { const s = c.segs; for (let i = 0; i < s.length; i += 5) {
+      if (!(s[i + 4] >= 2.5)) continue;
+      const ax = s[i], az = s[i + 1], bx = s[i + 2], bz = s[i + 3];
+      if ((az > z) !== (bz > z)) { const xi = ax + ((z - az) * (bx - ax)) / (bz - az); if (xi > x) px++; else nx++; }
+      if ((ax > x) !== (bx > x)) { const zi = az + ((x - ax) * (bz - az)) / (bx - ax); if (zi > z) pz++; else nz++; }
+    } }
+    return (px & 1) + (nx & 1) + (pz & 1) + (nz & 1) >= 3;
+  }
+
   // Tia từ (x,z) theo hướng ngang (dx,dz) dài tối đa max. Tia ở độ cao y tại gốc và lên/xuống ky mét mỗi mét ngang;
   // chỉ tính bức tường cao hơn tia ngay tại chỗ tia cắt tường. Trả về khoảng cách chạm đầu tiên.
   raycast(x, z, dx, dz, max, y = 0, ky = 0) {

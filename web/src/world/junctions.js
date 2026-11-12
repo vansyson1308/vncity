@@ -15,9 +15,30 @@ export function signalState(t, grp, off) {
   const tl = (((t + off * SIGNAL.shift + grp * (SIGNAL.cycle / 2)) % SIGNAL.cycle) + SIGNAL.cycle) % SIGNAL.cycle;
   return tl < SIGNAL.green ? 3 : tl < SIGNAL.green + SIGNAL.amber ? 2 : 1;
 }
-// Nhóm pha của một xe đang chạy theo hướng (tx,tz) vào nút có đèn sig.
-export const signalGroup = (sig, tx, tz) => (Math.abs(tx * sig.ax + tz * sig.az) >= 0.707 ? 0 : 1);
-// Dòng xe (actors/trafficsim.js) dùng đúng bảng signalNode, signalGroup và signalState này với đồng hồ của shader vẽ đèn.
+// Nhóm pha của một xe đang chạy theo hướng (tx,tz) vào nút có đèn sig: phương của hướng đi (góc lấy theo chu kỳ 180°) rơi vào
+// khoảng [lo, hi) của nhóm 0 thì thuộc nhóm 0. Khoảng này do build() chọn theo các nhánh thật của nút (xem splitPhases).
+export const signalGroup = (sig, tx, tz) => { let t = Math.atan2(tz, tx) % Math.PI; if (t < 0) t += Math.PI; return (sig.lo <= sig.hi ? t >= sig.lo && t < sig.hi : t >= sig.lo || t < sig.hi) ? 0 : 1; };
+// Chia các nhánh của một nút thành hai nhóm pha theo phương của nhánh. Chia cứng ở ±45° quanh trục chính thì hai nhánh chụm nhau
+// một góc hẹp (ngã năm, đường chéo) có thể rơi vào hai nhóm khác nhau: xe ở nhánh này chạy trong khi đèn của nhánh sát bên đang
+// đỏ. Ở đây thử mọi cách cắt vòng phương (chu kỳ 180°) làm hai cung và chọn cách ít xung đột nhất: hai nhánh cùng nhóm mà cắt nhau
+// (phạt sin² góc lệch, nặng gấp đôi) và hai nhánh khác nhóm mà gần song song (phạt cos² góc lệch); cặp có nhánh chỉ cho xe đi ra
+// tính nhẹ hơn. Nhờ vậy hai phố cắt nhau gần vuông góc không chung pha, còn các nhánh gần phương nhau thì chung pha.
+function splitPhases(sig, arms) {
+  const mod = (a) => { let t = a % Math.PI; if (t < 0) t += Math.PI; return t; };
+  const axis = mod(Math.atan2(sig.az, sig.ax)); sig.lo = mod(axis - Math.PI / 4); sig.hi = mod(axis + Math.PI / 4);
+  const A = arms.map((a) => ({ t: mod(Math.atan2(a.dz, a.dx)), w: a.inbound ? 1 : 0.55 })).sort((p, q) => p.t - q.t), n = A.length;
+  if (n < 2) return;
+  const inArc = (t, lo, hi) => (lo <= hi ? t >= lo && t < hi : t >= lo || t < hi);
+  let best = null, bs = Infinity;
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+    const gi = A[i + 1].t - A[i].t, gj = j + 1 < n ? A[j + 1].t - A[j].t : A[0].t + Math.PI - A[j].t; if (gi < 1e-3 || gj < 1e-3) continue;
+    let cost = 0; // cụm trong: A[i+1..j], cụm ngoài: phần còn lại
+    for (let p = 0; p < n; p++) for (let q = p + 1; q < n; q++) { const d = A[q].t - A[p].t, same = (p > i && p <= j) === (q > i && q <= j), sn = Math.sin(d); cost += A[p].w * A[q].w * (same ? 2 * sn * sn : 1 - sn * sn); }
+    if (cost < bs - 1e-9) { bs = cost; best = [mod(A[i].t + gi / 2), mod(A[j].t + gj / 2)]; }
+  }
+  if (!best) return;
+  if (inArc(axis, best[0], best[1])) { sig.lo = best[0]; sig.hi = best[1]; } else { sig.lo = best[1]; sig.hi = best[0]; }
+}
 
 const cache = new WeakMap();
 export function junctionsOf(world) { let J = cache.get(world); if (!J) cache.set(world, (J = build(world))); return J; }
@@ -110,20 +131,55 @@ function build(world) {
   const prim = [], signalNode = new Map();
   for (const n of cands) {
     let host = null, bd = 900; for (const s of prim) { const d = (s.x - n.x) ** 2 + (s.z - n.z) ** 2; if (d < bd) { bd = d; host = s; } }
-    if (host) host.members.push(n); else prim.push({ x: n.x, z: n.z, k: n.k, members: [n] });
+    if (host) host.members.push(n); else prim.push({ x: n.x, z: n.z, k: n.k, members: [n], inner: [] });
+  }
+  // Hai nút có đèn nối với nhau bằng một quãng đường ngắn hơn chỗ cần cho vạch dừng và vài xe xếp hàng (dưới 24 m, đi thẳng hoặc
+  // qua vài nút phụ) thì không thể có vạch dừng riêng ở giữa: gộp thành một nút giao chung pha, quãng nối thành lòng nút.
+  {
+    const owner = new Map(); for (const s of prim) for (const n of s.members) owner.set(n.k, s);
+    const other = (a) => { const p = a.r.p, j = a.e ? 0 : p.length - 2; return nodeKey(p[j], p[j + 1]); };
+    for (let again = true; again;) {
+      again = false;
+      scan: for (const s of prim) {
+        if (s.dead) continue;
+        for (const n0 of s.members) {
+          const stack = [[n0, 0, []]], seen = new Set([n0.k]);
+          while (stack.length) {
+            const [n, d, path] = stack.pop();
+            for (const a of n.arms) {
+              if (!a.veh) continue; const d2 = d + a.r.len; if (d2 >= 24) continue;
+              const k = other(a); if (seen.has(k)) continue; seen.add(k);
+              const o = owner.get(k), nn = nodes.get(k); if (!nn || nn.high) continue;
+              if (o === s) { // hai nút con của cùng một nút giao nối nhau qua vài nút phụ: các nút phụ đó nằm trong lòng nút
+                for (const m of path) if (!s.inner.includes(m)) { s.inner.push(m); owner.set(m.k, s); again = true; }
+                if (again) continue scan; continue;
+              }
+              if (o) { // gộp o vào s (s đứng trước trong danh sách nên rộng hơn hoặc bằng)
+                for (const m of o.members) { s.members.push(m); owner.set(m.k, s); }
+                for (const m of [...o.inner, ...path]) if (!s.inner.includes(m)) { s.inner.push(m); owner.set(m.k, s); }
+                o.dead = true; again = true; continue scan;
+              }
+              stack.push([nn, d2, [...path, nn]]);
+            }
+          }
+        }
+      }
+    }
   }
   for (const s of prim) {
-    const keys = new Set(s.members.map((n) => n.k)), n0 = s.members[0];
+    if (s.dead) continue;
+    const all = [...s.members, ...s.inner], keys = new Set(all.map((n) => n.k)), n0 = s.members[0];
     let wide = null; for (const a of n0.arms) if (a.veh && a.kind <= K.tertiary && (!wide || a.w > wide.w)) wide = a;
-    const sig = { x: s.x, z: s.z, k: s.k, ax: wide.dx, az: wide.dz, off: Math.floor(hash(s.k, 9) * 4), big: n0.sw >= 9.5, last8: false, stop: 0, arms: [], keys: [...keys] };
+    const sig = { x: s.x, z: s.z, k: s.k, ax: wide.dx, az: wide.dz, lo: 0, hi: 0, off: Math.floor(hash(s.k, 9) * 4), big: n0.sw >= 9.5, last8: false, stop: 0, arms: [], keys: [...keys] };
     let maxW = 0; const nm = new Set();
-    for (const n of s.members) for (const a of n.arms) {
+    for (const n of all) for (const a of n.arms) {
       const p = a.r.p, j = a.e ? 0 : p.length - 2; // đầu kia của đoạn đường
       if (keys.has(nodeKey(p[j], p[j + 1]))) continue; // đoạn nối bên trong nút giao
       if (!a.veh || a.kind > K.residential || (a.kind === K.residential && a.w < 5)) continue;
-      const grp = signalGroup(sig, a.dx, a.dz); maxW = Math.max(maxW, a.w); if (a.name) nm.add(a.name);
-      sig.arms.push({ x: n.x, z: n.z, r: a.r, e: a.e, dx: a.dx, dz: a.dz, w: a.w, kind: a.kind, ow: a.ow, inbound: a.inbound, grp, stop: 0 });
+      maxW = Math.max(maxW, a.w); if (a.name) nm.add(a.name);
+      sig.arms.push({ x: n.x, z: n.z, r: a.r, e: a.e, dx: a.dx, dz: a.dz, w: a.w, kind: a.kind, ow: a.ow, inbound: a.inbound, grp: 0, stop: 0 });
     }
+    splitPhases(sig, sig.arms); for (const a of sig.arms) a.grp = signalGroup(sig, a.dx, a.dz);
     // cột đèn đứng ngay sau vạch sang đường (gen/ground.js kẻ vạch cách tim nút max(5, 0,55 × bề rộng lớn nhất) + 2,6 m, rộng 2,8 m)
     sig.stop = Math.max(5, maxW * 0.55) + 5.0; for (const a of sig.arms) a.stop = sig.stop; // sig.stop: quãng từ tim nút tới chân cột đèn
     // sig.line: quãng từ tim nút tới chỗ mũi xe dừng khi đèn đỏ, ngay trước vạch dừng sơn trên mặt đường. gen/ground.js kẻ vạch sang
@@ -134,5 +190,5 @@ function build(world) {
     if (sig.arms.filter((a) => a.inbound).length < 2) continue;
     bucket(s.x, s.z).signals.push(sig); for (const k of keys) signalNode.set(k, sig);
   }
-  return { nodes, byChunk, signalNode, signals: prim.length };
+  return { nodes, byChunk, signalNode, signals: new Set(signalNode.values()).size };
 }

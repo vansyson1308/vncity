@@ -102,8 +102,11 @@ async function boot() {
   let sx = 124, sz = -211, syaw = -1.67, resumed = false;
   const gate = site('ngoc_son_gate'); // bắt đầu trước cổng đền Ngọc Sơn
   if (gate) { sx = gate.x + Math.sin(gate.yaw) * 7; sz = gate.z + Math.cos(gate.yaw) * 7; syaw = gate.yaw + Math.PI; }
-  const saved = passport.flags.pos;
-  if (saved && passport.visited.size > 0 && !params.has('fresh')) { [sx, sz, syaw] = saved; resumed = true; if (!fixedTime && passport.flags.hours) sky.setHours(passport.flags.hours); if (!params.has('day') && Number.isInteger(passport.flags.day)) sky.day = passport.flags.day; }
+  // vị trí đã lưu chỉ dùng khi là ba số hữu hạn nằm trong bản đồ (bản lưu hỏng hay bị sửa tay không được làm game dừng lúc tải)
+  const num = (v) => typeof v === 'number' && Number.isFinite(v);
+  const sp = passport.flags.pos, wb = world.bounds;
+  const saved = Array.isArray(sp) && num(sp[0]) && num(sp[1]) && sp[0] > wb.x0 + 8 && sp[0] < wb.x1 - 8 && sp[1] > wb.z0 + 8 && sp[1] < wb.z1 - 8 ? [sp[0], sp[1], num(sp[2]) ? sp[2] : 0] : null;
+  if (saved && passport.visited.size > 0 && !params.has('fresh')) { [sx, sz, syaw] = saved; resumed = true; const fh = passport.flags.hours; if (!fixedTime && num(fh) && fh > 0 && fh < 24) sky.setHours(fh); const fd = passport.flags.day; if (!params.has('day') && Number.isInteger(fd) && fd >= 0 && fd <= 6) sky.day = fd; }
   if (params.get('at')) { [sx, sz] = params.get('at').split(',').map(Number); resumed = false; }
   if (params.get('street')) {
     const name = params.get('street'), rs = world.roads.filter((r) => world.names[r.name] === name).sort((a, b) => b.len - a.len);
@@ -115,7 +118,11 @@ async function boot() {
   chunks.update(sx, sz, true);
   await new Promise((res) => { const t = setInterval(() => { chunks.update(sx, sz); const [miss, tot] = chunks.missingNear(sx, sz, 150); progress(0.45 + 0.55 * (1 - miss / tot)); if (miss === 0) { clearInterval(t); res(); } }, 50); });
   const onDeck = (x, z) => !!nav.elevatedAt(x, z, Infinity) && nav.eY > 0.7; // điểm nằm trên mặt cầu: không đẩy theo tường nhà dưới đất
-  if (!onDeck(sx, sz)) { const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z; }
+  if (!onDeck(sx, sz)) {
+    // bản lưu cũ có thể nằm trong lòng một ngôi nhà hay trên mặt hồ (lỗi xuống xe sát tường của bản trước): đưa ra chỗ trống gần nhất
+    if (resumed && (nav.inSolid(sx, sz) || nav.isWater(sx, sz))) [sx, sz] = nav.nearestFree(sx, sz, (x, z) => nav.inSolid(x, z) || !nav.clearAt(x, z, 0.45));
+    const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z;
+  }
   player.teleport(sx, sz, syaw);
   if (params.has('bike')) player.toggleBike();
   cam.snap(player); cam.pitch = +(params.get('pitch') || 0.16);

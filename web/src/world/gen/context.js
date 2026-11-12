@@ -46,6 +46,7 @@ class Grid {
   collect(x0, z0, x1, z1) { const s = new Set(); this.query(x0, z0, x1, z1, (v) => s.add(v)); return s; }
 }
 
+const MAX_H = 112; // trong khung bản đồ không có toà nào cao quá khoảng 110 m (docs/18, mục 3.5)
 const FLOORS = {
   [ZONE.old]: [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6], // art bible 3.1: 2 tầng 25%, 3 tầng 30%, 4 tầng 25%, 5-6 tầng 20%
   [ZONE.french]: [2, 3, 3, 4, 4, 5], [ZONE.badinh]: [2, 2, 3, 3, 4], [ZONE.city]: [3, 4, 4, 5, 5, 6], [ZONE.bank]: [2, 3, 3, 4],
@@ -209,6 +210,9 @@ export function buildContext(world, landmarks = []) {
     }
     if (b.lv > 0) floors = b.lv;
     let h = b.h > 0 ? b.h : floors * fh + (style === ST.TEMPLE ? 0 : 0.4);
+    // nhà cao tầng: chiều cao ghi trong dữ liệu mà vượt 3,9 m mỗi tầng là ghi sai (hai toà ở Yên Phụ ghi 147 m cho 33 tầng):
+    // tính lại theo số tầng (3,3 m mỗi tầng, cộng 4 m khối đế)
+    if (b.lv >= 12 && b.h > b.lv * 3.9) h = b.lv * 3.3 + 4;
     if (b.h > 0 && !b.lv) floors = Math.max(1, Math.round(b.h / fh));
     b.solemn = isSolemn(b.cx, b.cz);
     if (b.solemn && (style === ST.TUBE || style === ST.APART || style === ST.MODERN)) { style = ST.FRENCH; fh = 3.8; floors = Math.min(floors, 3); h = b.h > 0 ? Math.min(b.h, 14) : floors * fh + 0.4; }
@@ -220,7 +224,7 @@ export function buildContext(world, landmarks = []) {
       if (hero.h) h = hero.h; else if (hero.floors) h = hero.floors * (hero.fh || fh) + 0.4;
       b.hero = hero;
     }
-    b.style = style; b.floors = Math.max(1, Math.min(floors, 80)); b.height = Math.min(h, 260);
+    b.style = style; b.floors = Math.max(1, Math.min(floors, 80)); b.height = Math.min(h, MAX_H);
     // mái: nhà ống phố cổ hay lợp ngói dốc, nhà mới mái bằng hoặc tôn
     const r3 = hash(b.i, 3);
     const leafy = b.zone === ZONE.french || b.zone === ZONE.badinh, rowTube = style === ST.TUBE && b.area > 140;

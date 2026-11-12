@@ -67,7 +67,8 @@ export class Player {
   teleport(x, z, yaw = this.yaw, onDeck = true) {
     // onDeck: đặt lên mặt cầu nếu điểm đó có cầu (đi nhanh tới một điểm trên cầu); mặc định đặt xuống đất
     this.pos.x = x; this.pos.z = z; this.yaw = yaw; this.speed = 0; this.vx = this.vz = 0; this.phi = 0; this.curv = 0; this.lean = 0; this.y = this.nav.groundY(x, z, onDeck ? Infinity : 0);
-    if (this.mode === 'walk') { this.bikePos.x = x + Math.cos(yaw) * 1.1; this.bikePos.z = z - Math.sin(yaw) * 1.1; this.bikePos.yaw = yaw; this.bikePos.y = undefined; }
+    // dựng xe cạnh người: bên trái nếu trống, không thì phía khác; không bao giờ đặt xe sang bên kia một bức tường hay xuống nước
+    if (this.mode === 'walk') { this.beside(x, z, yaw, 1.1, 0.4); this.bikePos.x = this._col.x; this.bikePos.z = this._col.z; this.bikePos.yaw = yaw; this.bikePos.y = undefined; }
     this.sync(0);
   }
 
@@ -75,15 +76,26 @@ export class Player {
     if (this.mode === 'bike') {
       if (Math.abs(this.speed) > 3) return 'fast';
       this.mode = 'walk'; this.bikePos.x = this.pos.x; this.bikePos.z = this.pos.z; this.bikePos.y = this.y; this.bikePos.yaw = this.yaw; this.speed = 0;
-      // bước xuống bên trái xe
-      const p = this._col; p.x = this.pos.x + Math.cos(this.yaw) * 0.75; p.z = this.pos.z - Math.sin(this.yaw) * 0.75; this.nav.collide(p, 0.3, false, this.y); this.pos.x = p.x; this.pos.z = p.z;
+      // bước xuống bên trái xe; bên trái là tường hay mép nước thì xuống phía còn trống, hết chỗ thì đứng tại chỗ xe
+      const p = this.beside(this.pos.x, this.pos.z, this.yaw, 0.75, 0.3); this.pos.x = p.x; this.pos.z = p.z;
       this.helmet.visible = false; return 'off';
     }
     if (this.noRide && this.noRide(this.pos.x, this.pos.z)) return 'forbidden';
-    // xe ở xa thì Minh dắt xe lại: đặt xe ngay chỗ đang đứng
+    // xe ở xa, hoặc bị tường hay mép nước ngăn cách, thì Minh dắt xe lại: đặt xe ngay chỗ đang đứng
     this.mode = 'bike'; this.speed = 0; this.lean = 0; this.phi = 0; this.curv = 0; this.pitch = 0; this.helmet.visible = true;
-    if (Math.hypot(this.bikePos.x - this.pos.x, this.bikePos.z - this.pos.z) < 4) { this.pos.x = this.bikePos.x; this.pos.z = this.bikePos.z; this.yaw = this.bikePos.yaw; }
+    const bp = this.bikePos;
+    if (Math.hypot(bp.x - this.pos.x, bp.z - this.pos.z) < 4 && (this.onHigh(this.pos.x, this.pos.z) || this.nav.freeStep(this.pos.x, this.pos.z, bp.x, bp.z, 0.3))) { this.pos.x = bp.x; this.pos.z = bp.z; this.yaw = bp.yaw; }
     return 'on';
+  }
+
+  // đang ở trên mặt cầu nâng: tường nhà dưới gầm cầu không tính, lan can cầu do `collide` giữ
+  onHigh(x, z) { const n = this.nav; return n.hasElev && this.y > 0.7 && !!n.elevatedAt(x, z, this.y, 3) && n.eY > 0.7; }
+
+  // Chỗ trống cạnh điểm (x,z) hướng yaw, cách d mét, cho vòng tròn bán kính r (kết quả ở this._col).
+  beside(x, z, yaw, d, r) {
+    const p = this._col;
+    if (this.onHigh(x, z)) { p.x = x + Math.cos(yaw) * d; p.z = z - Math.sin(yaw) * d; this.nav.collide(p, r, false, this.y); return p; }
+    this.nav.besideFree(x, z, yaw, d, r, p); return p;
   }
 
   update(dt, input, camYaw) {
