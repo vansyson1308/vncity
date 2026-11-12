@@ -34,6 +34,33 @@ const area = (r) => { let a = 0; for (let i = 0; i < r.length; i++) { const p = 
 const centroid = (r) => { let x = 0, z = 0; for (const p of r) { x += p[0]; z += p[1]; } return [x / r.length, z / r.length]; };
 const closeRing = (pts) => { const r = pts.slice(); if (r.length > 1 && r[0][0] === r[r.length - 1][0] && r[0][1] === r[r.length - 1][1]) r.pop(); return r; };
 const dedupe = (pts) => pts.filter((p, i) => i === 0 || p[0] !== pts[i - 1][0] || p[1] !== pts[i - 1][1]);
+// vòng tự cắt: có hai cạnh không kề nhau cắt chéo qua nhau (toạ độ nguyên nên phép thử hướng là chính xác)
+const orient = (p, q, r) => Math.sign((q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]));
+const crossAt = (r) => { // cặp cạnh (i, j) đầu tiên cắt chéo nhau và giao điểm (làm tròn), hoặc null
+  const n = r.length;
+  for (let i = 0; i < n; i++) {
+    const a = r[i], b = r[(i + 1) % n];
+    for (let j = i + 2; j < n; j++) {
+      if (i === 0 && j === n - 1) continue; const c = r[j], d = r[(j + 1) % n];
+      if (orient(a, b, c) * orient(a, b, d) < 0 && orient(c, d, a) * orient(c, d, b) < 0) {
+        const den = (b[0] - a[0]) * (d[1] - c[1]) - (b[1] - a[1]) * (d[0] - c[0]), t = ((c[0] - a[0]) * (d[1] - c[1]) - (c[1] - a[1]) * (d[0] - c[0])) / den;
+        return [i, j, [Math.round(a[0] + (b[0] - a[0]) * t), Math.round(a[1] + (b[1] - a[1]) * t)]];
+      }
+    }
+  }
+  return null;
+};
+const selfX = (r) => crossAt(r) !== null;
+// gỡ vòng tự cắt bằng cách cắt bỏ vòng con nhỏ hơn ở chỗ hai cạnh cắt nhau (thường là một cái gai hay nút thắt vài chục cm)
+const untangle = (r0) => {
+  let r = r0;
+  for (let it = 0; it < 12; it++) {
+    const h = crossAt(r); if (!h) return r;
+    const [i, j, P] = h, A = [P, ...r.slice(i + 1, j + 1)], Bq = [P, ...r.slice(j + 1), ...r.slice(0, i + 1)];
+    r = closeRing(dedupe(Math.abs(area(A)) > Math.abs(area(Bq)) ? A : Bq)); if (r.length < 3) return null;
+  }
+  return selfX(r) ? null : r;
+};
 
 // Bỏ điểm gần như thẳng hàng (Douglas-Peucker) để giảm dung lượng; tol tính bằng dm.
 function simplify(pts, tol, closed = false) {
@@ -293,7 +320,8 @@ const bAt = (x, z, except = null) => { const l = bgrid.get(Math.floor(x / BCELL)
 const bNear = (bb) => { const s = new Set(); for (let x = Math.floor(bb[0] / BCELL); x <= Math.floor(bb[2] / BCELL); x++) for (let z = Math.floor(bb[1] / BCELL); z <= Math.floor(bb[3] / BCELL); z++) for (const b of bgrid.get(x * 100003 + z) || []) if (!b.dead && b.bb[0] <= bb[2] && b.bb[2] >= bb[0] && b.bb[1] <= bb[3] && b.bb[3] >= bb[1]) s.add(b); return s; };
 // Gán hình mới (một ExPolygon của Clipper) cho nhà b.
 const setShape = (b, e, tol = 1) => {
-  const ring = (r) => { let q = closeRing(dedupe(fromC(r))); q = simplify([...q, q[0]], tol, true).slice(0, -1); return q; };
+  // bỏ đỉnh thừa có thể làm một vòng mảnh, gấp khúc tự cắt (cạnh này vắt qua cạnh kia): khi đó giữ nguyên vòng Clipper trả về
+  const ring = (r) => { const q = closeRing(dedupe(fromC(r))), s2 = simplify([...q, q[0]], tol, true).slice(0, -1); return s2.length >= 3 && selfX(s2) && !selfX(q) ? q : s2; };
   const o = ring(e.outer); if (o.length < 3) return false; if (area(o) < 0) o.reverse();
   b.p = o; b.holes = e.holes.map(ring).filter((h) => h.length >= 3 && Math.abs(area(h)) >= 400);
   b.a = (Math.abs(area(o)) - b.holes.reduce((s, h) => s + Math.abs(area(h)), 0)) / 100; gput(b); return true;
@@ -717,6 +745,19 @@ const F_FLUSH = 64;
     for (let s = 0; s <= L; s += 10) { const q = ptAt(r.p, s), b = bAt(q[0], q[1]); if (b && !keepShape.has(b)) run++; if ((!b || s + 10 > L) && run) { if (run >= 2) { n++; len += run; } run = 0; } }
   }
   console.log('Kiểm lại: tim đường xe chạy nằm trong nhà:', n, 'đoạn, tổng', len, 'm');
+}
+
+// ---------- soát lần cuối: không ghi ra vòng nhà tự cắt (bộ sinh dựng tường, mái, chia ô theo vòng; vòng tự cắt cho mặt chồng mặt) ----------
+{
+  let fixed = 0, left = 0;
+  for (const b of buildings) {
+    if (b.dead || !selfX(b.p)) continue;
+    const parts = ClipperLib.Clipper.SimplifyPolygon(toC(b.p), FT.pftNonZero).map((q) => closeRing(dedupe(fromC(q)))).filter((q) => q.length >= 3).sort((p, q) => Math.abs(area(q)) - Math.abs(area(p)));
+    // Clipper không thấy những chỗ cắt nằm sát một đỉnh (dưới 1 dm): khi đó gỡ trực tiếp
+    const o = parts.length && !selfX(parts[0]) ? parts[0] : untangle(b.p);
+    if (o) { if (area(o) < 0) o.reverse(); b.p = o; fixed++; } else left++;
+  }
+  console.log('Vòng nhà tự cắt sửa ở bước cuối:', fixed, left ? `, còn ${left} vòng chưa sửa được` : '');
 }
 
 // ---------- ghi ----------
