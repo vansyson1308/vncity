@@ -44,6 +44,7 @@ if (errs.length) { console.log('lỗi trang:', [...new Set(errs)].slice(0, 3).jo
 const cols = Math.min(6, shots.length), tw = 320, th = Math.round((tw * H) / W), rows = Math.ceil(shots.length / cols);
 const sheet = await browser.newPage({ viewport: { width: cols * tw, height: rows * th } });
 await sheet.setContent(`<body style="margin:0;background:#000;display:grid;grid-template-columns:repeat(${cols},${tw}px)">${shots.map(([h, f]) => `<div style="position:relative;width:${tw}px;height:${th}px"><img src="data:image/png;base64,${fs.readFileSync(f).toString('base64')}" style="width:100%;height:100%;display:block"><b style="position:absolute;right:4px;bottom:2px;font:bold 15px sans-serif;color:#fff;text-shadow:0 0 3px #000,0 0 3px #000">${Math.floor(h)}:${String(Math.round((h % 1) * 60)).padStart(2, '0')}</b></div>`).join('')}</body>`);
-await sheet.screenshot({ path: path.join(out, 'sheet.png') });
+// máy đang bận thì lệnh chụp trang ghép có thể hụt: thử lại vài lần, không vì thế mà bỏ kết quả đo ở trên
+for (let i = 0; i < 4; i++) { try { await sheet.waitForTimeout(800); await sheet.screenshot({ path: path.join(out, 'sheet.png'), timeout: 120000 }); break; } catch (e) { if (i === 3) console.log('không ghép được bảng:', e.message.split('\n')[0]); } }
 await browser.close(); await server.close();
 process.exit(bad ? 1 : 0);
