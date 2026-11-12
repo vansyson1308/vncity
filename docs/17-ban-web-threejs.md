@@ -148,7 +148,9 @@ Các kỹ thuật chính:
    điểm ảnh ở xa vào đúng màu trời phía sau nó, ban đêm trời hửng nâu xám vì đèn thành phố nên cảnh xa không còn đen.
    Mặt hè đổi theo khu (đá granite quanh Hồ Gươm, đá xanh xám ở phố chính, gạch đỏ hoặc terrazzo ở nơi khác), bó vỉa
    vát có rãnh và miệng thu nước, ô cây, nắp hố ga, vạch sơn mòn; vũng sáng dưới đèn làm sáng chất liệu mặt đất thay
-   vì phủ trắng lên nó (`engine/sky.js`, `world/textures.js`, `gen/ground.js`, `gen/pits.js`).
+   vì phủ trắng lên nó (`engine/sky.js`, `world/textures.js`, `gen/ground.js`, `gen/pits.js`). Cây đổi lá, ra hoa theo
+   mùa của thời tiết (mặc định `mu` là đông: phượng, bằng lăng chỉ còn lá, bàng lá đỏ; `he` là hè: phượng đỏ, bằng lăng
+   tím); cây sát mép nước ngả tán ra mặt hồ, gốc vẫn trên bờ (`models/street.js` SEASON, `gen/props.js`).
 18. **Cầu Chương Dương đúng mặt cắt.** Bộ dựng bản đồ nắn ba tuyến của cầu thành lòng ô tô 10,4 m ở giữa và hai làn xe
    máy 3,4 m hai bên, chừa khe 0,4 m cho hai mặt phẳng dàn thép (`landmarks/cau_chuong_duong.js`); trụ cầu đứng đúng
    đầu mỗi nhịp dàn. Người chơi không đi xuyên dàn được vì hai mặt cầu không liền nhau.
