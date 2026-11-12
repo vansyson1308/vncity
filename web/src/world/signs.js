@@ -84,8 +84,8 @@ export const SIGN_KIND = SIGNS.map((s) => { if (!s) return 'G'; for (const k in 
 
 
 // Bảng chữ 2048² chia 4 cột × 24 hàng (ô 512 × 85 điểm ảnh, tỉ lệ 6:1 khớp dải biển ngang trên cửa):
-//   ô 0 trắng (mọi hình không có chữ), ô 1..N biển ngang, từ BLADE0 mỗi ô chứa 4 biển vẫy nhỏ (mỗi biển ngang một biển vẫy cùng chữ),
-//   ô LED_CELL là hình trên màn hình LED quảng trường, ô cuối là cờ đỏ sao vàng.
+//   ô 0 trắng (mọi hình không có chữ), ô 1..N biển ngang, từ BLADE0 mỗi ô chứa 5 biển vẫy nhỏ (mỗi biển ngang một biển vẫy cùng chữ),
+//   4 ô TEXT0.. là chữ trên công trình có tên, ô LED_CELL là hình trên màn hình LED quảng trường, ô cuối là cờ đỏ sao vàng.
 // Trả về [u0, v0, u1, v1] đã thu vào trong để không lem màu.
 export const ATLAS = { cols: 4, rows: 24, size: 2048 };
 export function signUV(i) {
@@ -95,8 +95,10 @@ export function signUV(i) {
 export const WHITE_UV = [0.5 / ATLAS.cols, 1 - 0.5 / ATLAS.rows];
 export const FLAG_CELL = ATLAS.cols * ATLAS.rows - 1; // ô cuối: cờ đỏ sao vàng
 export const LED_CELL = FLAG_CELL - 1;
-export const BLADE0 = SIGNS.length, BLADE_PER = 4;
-if (BLADE0 + Math.ceil((SIGNS.length - 1) / BLADE_PER) > LED_CELL) throw new Error('signs: bảng chữ hết chỗ');
+export const BLADE0 = SIGNS.length, BLADE_PER = 5;
+// 4 ô ngay trước ô LED: chữ gắn trên công trình có tên (gen/heroes.js HERO_TEXT)
+export const TEXT0 = LED_CELL - 4;
+if (BLADE0 + Math.ceil((SIGNS.length - 1) / BLADE_PER) > TEXT0) throw new Error('signs: bảng chữ hết chỗ');
 // Ô của biển vẫy đi kèm biển ngang thứ i.
 export function bladeUV(i) {
   const k = i - 1, cell = BLADE0 + Math.floor(k / BLADE_PER), sub = k % BLADE_PER, uv = signUV(cell), w = (uv[2] - uv[0]) / BLADE_PER, pu = 2 / ATLAS.size;

@@ -309,7 +309,7 @@ export function facadeLayers(S = 512) {
   });
   add(22, (p) => {
     p.rect(0, 0, 512, 512, '#a9a79e'); p.noise(0, 0, 512, 512, 2600, ['#98968d', '#b9b7ae', '#8a887f'], 0.8, 2.6, 0.5); p.noise(0, 0, 512, 512, 18, ['#8f8d84', '#7f7d74'], 20, 70, 0.25);
-    const bx = 70, by = 150; p.rect(bx, by, 190, 150, '#9a5a44');
+    const bx = 70, by = 290; p.rect(bx, by, 190, 150, '#9a5a44');
     for (let j = 0; j < 150; j += 15) { p.rect(bx, by + j, 190, 2, '#c9c0b0'); for (let i = (j / 15) % 2 ? 0 : 19; i < 190; i += 38) p.rect(bx + i, by + j, 2, 15, '#c9c0b0'); }
     for (let i = 0; i < 7; i++) p.streak(p.R() * 512, 0, 200 + p.R() * 300, 12 + p.R() * 22, 0.16);
     p.rect(380, 0, 10, 512, '#7d827d'); p.grad(0, 400, 512, 112, 'rgba(50,70,40,0)', 'rgba(50,70,40,0.3)');
@@ -424,7 +424,7 @@ export function facadeLayers(S = 512) {
     const g = p.g, k = p.k, R = p.R;
     for (let j = -1; j < 16; j++) for (let i = -1; i < 16; i++) {
       const x = (i + (j % 2 ? 0.5 : 0)) * 32, y = j * 32, v = R();
-      g.fillStyle = `rgb(${128 + v * 50},${62 + v * 24},${42 + v * 18})`; g.beginPath(); g.moveTo(x * k, y * k); g.lineTo((x + 32) * k, y * k); g.lineTo((x + 32) * k, (y + 22) * k); g.quadraticCurveTo((x + 16) * k, (y + 42) * k, x * k, (y + 22) * k); g.fill();
+      g.fillStyle = `rgb(${114 + v * 44},${60 + v * 22},${44 + v * 16})`; g.beginPath(); g.moveTo(x * k, y * k); g.lineTo((x + 32) * k, y * k); g.lineTo((x + 32) * k, (y + 22) * k); g.quadraticCurveTo((x + 16) * k, (y + 42) * k, x * k, (y + 22) * k); g.fill();
       g.strokeStyle = 'rgba(40,18,12,0.55)'; g.lineWidth = 1.6 * k; g.stroke();
     }
     p.noise(0, 0, 512, 512, 60, ['#4a4a30', '#3a3a2a', '#5a4a36', '#2f2a24'], 14, 54, 0.28);
@@ -440,6 +440,11 @@ export function facadeLayers(S = 512) {
     p.rect(0, y - 4, 512, 14, '#cfcabd').rect(0, y + 10, 512, 4, 'rgba(0,0,0,0.25)');
     for (let i = 0; i < 9; i++) p.streak(p.R() * 512, y + 12, 60 + p.R() * 70, 10 + p.R() * 16, 0.2);
     p.rect(0, 0, 512, y - 4, '#8a8a84');
+  });
+  add(91, (p) => { // đá xẻ khối lớn, mạch vữa: tường thành, lễ đài, nhà tù, chân công sở (L.STONE)
+    p.rect(0, 0, 512, 512, '#dcd9d0'); p.noise(0, 0, 512, 512, 2200, ['#c9c6bc', '#e8e5dc', '#b9b6ac'], 0.8, 2.4, 0.45); p.noise(0, 0, 512, 512, 16, ['#b0ada2', '#a5a297'], 20, 64, 0.2);
+    for (let j = 0; j < 512; j += 64) { p.rect(0, j, 512, 3, 'rgba(60,58,50,0.4)'); for (let i = (j / 64) % 2 ? 0 : 64; i < 512; i += 128) p.rect(i, j, 3, 64, 'rgba(60,58,50,0.36)'); }
+    for (let i = 0; i < 6; i++) p.streak(p.R() * 512, 0, 200 + p.R() * 300, 12 + p.R() * 20, 0.14);
   });
   if (out.length !== L.COUNT) throw new Error(`facades: ${out.length} lớp, cần ${L.COUNT}`);
   return { canvases: out, masks };
@@ -485,6 +490,8 @@ export function facadeMaterial(tex, noise) {
         float gnd = isRoof ? 0.0 : step(fuv.y, 1.0);
         float layer = floor((gnd > 0.5 ? vVar.y : vVar.x) + 0.5);
         if (!isRoof && fuv.y >= ffl) { layer = ${L.PARAPET}.0; fuv.y -= ffl; }
+        // tường trơn: chữ phun sơn, mảng gạch lộ, chân tường ẩm chỉ có ở tầng trệt; các tầng trên chỉ lấy nửa trên (trơn) của lớp
+        else if (!isRoof && layer > ${L.BLANK - 0.5} && layer < ${L.BLANK + 1.5} && fuv.y >= 1.0) fuv.y = fl + 0.53 + fract(fuv.y) * 0.45;
         vec3 tint = PAL[int(vVar.z + 0.5)];
         // nắng và tone mapping làm bạc màu vôi: đẩy độ no màu lên để vàng ra vàng, xanh ra xanh như ngoài phố
         if (!isRoof) { float tl = dot(tint, vec3(0.3, 0.59, 0.11)); tint = max(vec3(tl) + (tint - vec3(tl)) * 1.6, vec3(0.0)) * 0.94; }
@@ -505,7 +512,7 @@ export function facadeMaterial(tex, noise) {
         float rain = texture(uNoise, vec2(fuv.x * 1.9 + fseed * 0.71, fuv.y * 0.045 + fseed * 0.05)).g;
         fcol *= 1.0 - wall * fage * 0.34 * smoothstep(0.52, 0.8, rain) * (1.0 - gnd * 0.6);
         fcol = mix(fcol, fcol * vec3(0.7, 0.76, 0.58), smoothstep(0.66 - 0.22 * fage, 0.92 - 0.1 * fage, ns.b) * (0.25 + 0.3 * fage) * (1.0 - fglass));
-        vec3 gtint = mix(vec3(1.0), tint, fmod);
+        vec3 gtint = mix(vec3(1.0), tint, fmod * step(layer, ${L.MOD + 0.5}));  // chỉ lớp toàn kính mới nhuộm màu kính theo toà nhà
         fcol = mix(fcol, vec3(0.02, 0.035, 0.05) * mix(vec3(1.0), gtint * 1.5, 0.85), fglass * 0.5);
         diffuseColor.rgb *= fcol;`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>

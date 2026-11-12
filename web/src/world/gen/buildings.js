@@ -120,12 +120,13 @@ const notDeck = (r) => !r.elev; // mặt tiền không quay ra cầu, dốc cầ
 // Trả về { mesh, col (đoạn va chạm [ax,az,bx,bz,cao]), fronts (các gian mặt phố), roofs (mái bằng để đặt bồn nước, tum thang) }
 export function genBuildings(ctx, cx, cz) {
   const B = ctx.world.bounds, X0 = B.x0 + cx * CS, Z0 = B.z0 + cz * CS;
-  const bb = new BB(X0, Z0), col = [], fronts = [], roofs = [];
+  const bb = new BB(X0, Z0), col = [], fronts = [], roofs = [], heroes = [];
   const list = ctx.chunkBld.get(cx * 1000 + cz) || [];
   for (const b of list) {
     if (b.ghost) { for (let k = 0, n = b.p.length; k < n; k += 2) col.push(b.p[k], b.p[k + 1], b.p[(k + 2) % n], b.p[(k + 3) % n], 12); continue; }
     const h = b.height, st = b.style, seed = b.seed, fl = b.floors, hero = b.hero || null, zone = b.zone;
     if (b.cat === CAT.roof) { canopy(bb, b); continue; }
+    if (hero) heroes.push(b);
     const rings = [b.p, ...b.holes];
     const pitched = b.roof === ST.ROOF_TILE && b.p.length === 8 && !b.holes.length && st === ST.TUBE && !hero;
     const hip = !pitched && b.roof === ST.ROOF_TILE && !b.holes.length ? hipRing(b) : null;
@@ -228,7 +229,7 @@ export function genBuildings(ctx, cx, cz) {
     // ----- mái -----
     const roofTint = hero && hero.roofTint !== undefined ? hero.roofTint : rk === ST.ROOF_TIN ? pick(P.tin, hash(b.i, 51)) : pick(P.roof, hash(b.i, 51));
     if (pitched) gable(bb, b);
-    else if (hip) hipRoof(bb, b, hip, roofTint);
+    else if (hip) hipRoof(bb, b, hip, roofTint, hero && hero.slate);
     else {
       const flat = [], holes = [];
       for (let k = 0; k < b.p.length; k++) flat.push(b.p[k]);
@@ -237,20 +238,41 @@ export function genBuildings(ctx, cx, cz) {
       const va = [L.ROOF + rk, 0, roofTint, 0];
       for (let k = 0; k < flat.length; k += 2) bb.v(flat[k], h, flat[k + 1], 0, 1, 0, flat[k] / 4, flat[k + 1] / 4, fx, va);
       for (let k = 0; k < t.length; k += 3) bb.idx.push(s + t[k], s + t[k + 2], s + t[k + 1]);
+      if (hero && hero.towers) for (const t of hero.towers) tower(bb, b, t);
       if (rk === ST.ROOF_FLAT && (st === ST.TUBE || st === ST.APART) && !row && b.area > 28 && b.area < 420) {
         const p = b.p, ex = p[2] - p[0], ez = p[3] - p[1], el = Math.hypot(ex, ez) || 1;
         roofs.push({ x: b.cx, z: b.cz, y: h, w: Math.min(el, 8), d: Math.min(b.area / el, 10), ex: ex / el, ez: ez / el, seed: b.i, tint: bTint });
       }
     }
   }
-  return { mesh: bb.pack(), col: new Float32Array(col), fronts, roofs };
+  return { mesh: bb.pack(), col: new Float32Array(col), fronts, roofs, heroes };
+}
+
+// Hướng cạnh dài nhất của mặt bằng (véc-tơ đơn vị): trục chính để đặt khối tháp, mái nhiều tầng.
+export function mainAxis(b) {
+  const p = b.p, n = p.length; let best = 0, ux = 1, uz = 0;
+  for (let k = 0; k < n; k += 2) { const dx = p[(k + 2) % n] - p[k], dz = p[(k + 3) % n] - p[k + 1], l = Math.hypot(dx, dz); if (l > best) { best = l; ux = dx / l; uz = dz / l; } }
+  return [ux, uz];
+}
+// Khối tháp chữ nhật mọc trên khối đế của một công trình có tên (gen/heroes.js `towers`): bốn mặt kính theo lớp mặt đứng, mái bằng.
+function tower(bb, b, t) {
+  const [ux, uz] = mainAxis(b), cx = t.at ? t.at[0] : b.cx, cz = t.at ? t.at[1] : b.cz, hw = t.w / 2, hd = t.d / 2, fh = t.fh || 3.5, y0 = b.height, y1 = t.floors * fh, par = 1.6;
+  const c = [[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]].map(([a, d]) => [cx + ux * a - uz * d, cz + uz * a + ux * d]);
+  const fx = [ST.MODERN, b.seed, t.floors, 0], va = [t.up, t.up, t.wall, 0];
+  for (let k = 0; k < 4; k++) {
+    const a = c[k], e = c[(k + 1) % 4], dx = e[0] - a[0], dz = e[1] - a[1], Lw = Math.hypot(dx, dz);
+    let nx = dz / Lw, nz = -dx / Lw; if ((a[0] + e[0] - 2 * cx) * nx + (a[1] + e[1] - 2 * cz) * nz < 0) { nx = -nx; nz = -nz; }
+    bb.wall(a[0], a[1], e[0], e[1], y0, y1 + par, nx, nz, k * 31, k * 31 + Math.max(1, Math.round(Lw / 4)), y0 / fh, t.floors + par / fh, fx, va);
+  }
+  const q = c.map((v) => [v[0], y1, v[1]]);
+  bb.quadUp(q, q.map((v) => [v[0] / 4, v[2] / 4]), [ST.ROOF_FLAT, b.seed, 0, 0], [L.ROOF + ST.ROOF_FLAT, 0, pick(P.roof, 0.5), 0]);
 }
 
 // ----- mái ngói bốn mái (mái hông) cho biệt thự, công sở kiểu Pháp có mặt bằng bất kỳ -----
 // Thu vòng tường vào trong một khoảng d (góc ghép kiểu mộng xiên) rồi nối mép tường với vòng trong bằng các mặt dốc;
 // trên cùng là mảng ngói phẳng nhỏ, đứng dưới phố không thấy. Trả về null nếu hình quá mảnh hoặc quá nhiều đỉnh.
 function hipRing(b) {
-  const p = b.p, n = p.length / 2; if (n < 3 || n > 16 || b.area < 40) return null;
+  const p = b.p, n = p.length / 2; if (n < 3 || n > 40 || b.area < 40) return null;
   let area = 0; for (let k = 0; k < n; k++) { const j = (k + 1) % n; area += p[k * 2] * p[j * 2 + 1] - p[j * 2] * p[k * 2 + 1]; }
   const sg = area > 0 ? 1 : -1, d = Math.min(3.4, Math.sqrt(b.area) * 0.2), q = [];
   for (let k = 0; k < n; k++) {
@@ -267,8 +289,8 @@ function hipRing(b) {
   if (a2 * sg <= 0) return null;
   return { q, d, rise: d * 0.7 };
 }
-function hipRoof(bb, b, hip, tint) {
-  const p = b.p, n = p.length / 2, { q, rise } = hip, h = b.height, fx = [ST.ROOF_TILE, b.seed, 0, 0], va = [L.ROOF + ST.ROOF_TILE, 0, tint, 0], sl = Math.hypot(hip.d, rise) / 2.2;
+function hipRoof(bb, b, hip, tint, slate) {
+  const p = b.p, n = p.length / 2, { q, rise } = hip, h = b.height, kind = slate ? ST.ROOF_FLAT : ST.ROOF_TILE, fx = [kind, b.seed, 0, 0], va = [L.ROOF + kind, 0, tint, 0], sl = Math.hypot(hip.d, rise) / 2.2;
   for (let k = 0; k < n; k++) {
     const j = (k + 1) % n, len = Math.hypot(p[j * 2] - p[k * 2], p[j * 2 + 1] - p[k * 2 + 1]) / 2.2, off = (len - Math.hypot(q[j * 2] - q[k * 2], q[j * 2 + 1] - q[k * 2 + 1]) / 2.2) / 2;
     bb.quadUp([[p[k * 2], h, p[k * 2 + 1]], [p[j * 2], h, p[j * 2 + 1]], [q[j * 2], h + rise, q[j * 2 + 1]], [q[k * 2], h + rise, q[k * 2 + 1]]], [[0, 0], [len, 0], [len - off, sl], [off, sl]], fx, va);
