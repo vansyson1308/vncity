@@ -196,7 +196,9 @@ Các kỹ thuật chính:
    ai" khép thành vòng (hai xe đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước), xe có số thứ tự nhỏ nhất
    trong vòng đi trước. Cờ "đang chờ đèn đỏ" (không tính là kẹt) được truyền dọc hàng xe nhưng phải lần về được một xe đang thật sự
    chờ đèn (`redD`: số xe tính từ xe đó); hai xe là "xe trước" của nhau ở chỗ nhập làn chéo từng giữ cờ đỏ cho nhau mãi nên luật gỡ
-   kẹt không chạy. Xe ma quay đầu (bị người chơi chắn quá 8 giây trong phố đóng) xoay đầu tối đa 0,8 rad/s, đi chậm trong 4 giây. Xe cắt ngang đang chạy tới từ bên hông được đoán trước tới 2 giây: nó sẽ vào vệt đường của mình trước lúc
+   kẹt không chạy: trong vòng như thế `redD` tăng mỗi khung hình, quá 40 thì luật vòng chờ nhau chạy ngay (xe số nhỏ nhất đi trước),
+   không qua bộ đếm kẹt và các luật lách vốn để thân xe lồng vào nhau (đồng hồ game, 75 nút × 60 s, hai hạt giống có vòng như thế:
+   xe đứng quá 15 s trong lòng nút 42 → 20, lâu nhất 51,9 → 32,4 s; cặp lồng nhau trong khung nhìn 220 → 237; ba hạt khác không đổi). Xe ma quay đầu (bị người chơi chắn quá 8 giây trong phố đóng) xoay đầu tối đa 0,8 rad/s, đi chậm trong 4 giây. Xe cắt ngang đang chạy tới từ bên hông được đoán trước tới 2 giây: nó sẽ vào vệt đường của mình trước lúc
    mình tới chỗ đó thì nhả ga như gặp xe đứng ở đúng chỗ nó cắt qua, mình tới trước thì đi. Đường bị cắt
    ở mép bản đồ là lối ra: xe tới đó rời khỏi bản đồ chứ không quay đầu. Giờ cao điểm cả dòng xe chạy chậm lại; đi nhanh tới
    nơi nào thì dòng xe và người đi bộ ở đó được rải sẵn như lúc vào game.
