@@ -2,7 +2,7 @@
 import { G } from '../../core/geo.js';
 import { hash, hash2, pointInRing } from '../../core/util.js';
 import { CS, CURB, K, ZONE, zoneAt, roadY, alongAt } from '../data.js';
-import { tree, streetLamp, parkLamp } from '../../models/street.js';
+import { tree, streetLamp, parkLamp, TREES } from '../../models/street.js';
 import { decorate } from './decor.js';
 import { furnish } from './furniture.js';
 import { WHITE_UV } from '../signs.js';
@@ -41,7 +41,14 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
   const lamps = []; // [x,y,z, bán kính vệt sáng] toạ độ thế giới
   const occ = [], treeList = [], lampPts = []; // chỗ đã có vật [x, z, bán kính]; cây [x, z, loài, hạt giống]; cột đèn đường
   const inChunk = (x, z) => x >= X0 && x < X1 && z >= Z0 && z < Z1;
-  const free = (x, z) => !ctx.buildingAt(x, z) && !ctx.isWater(x, z);
+  const free = (x, z) => !ctx.buildingAt(x, z) && !ctx.isWater(x, z) && !ctx.keepOut(x, z); // keepOut: thềm, bậc của công trình dựng tay (gen/context.js)
+  // Tán cây trồng dọc phố không được đâm vào tường nhà (cao quá 3,6 m) quanh gốc: hè phố cổ chỉ còn 1,5 đến 2,4 m nên gốc cây đặt cách
+  // bó vỉa 1,25 m là sát tường; chỗ đó không trồng (phố cổ vốn cây thưa, nhiều đoạn không có cây: docs/18 mục 6).
+  const roomFor = (x, z, kind) => {
+    const rad = Math.max(1.6, (TREES[kind] || TREES.sau).r[0] * 0.8);
+    for (let a = 0; a < 8; a++) { const b = ctx.buildingAt(x + Math.cos(a * 0.7854) * rad, z + Math.sin(a * 0.7854) * rad); if (b && b.height > 3.6) return false; }
+    return true;
+  };
   const onRoad = (x, z, pad = 0.4) => { const r = ctx.nearestRoad(x, z, 14, (q) => q.veh || q.kind === K.pedestrian); return r && r.d < r.r.w / 2 + pad; };
 
   // ----- cây -----
@@ -67,7 +74,7 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
   // lime: gốc quét vôi trắng (cây dọc phố gần như cây nào cũng quét, cây trong công viên thì ít)
   const addTree = (x, z, kind, seed, lime = hash(seed, 12) < 0.2) => {
     for (const p of placed) if ((p[0] - x) ** 2 + (p[1] - z) ** 2 < 16) return;
-    placed.push([x, z]); occ.push([x, z, 0.55]); treeList.push([x, z, kind, seed]);
+    placed.push([x, z]); occ.push([x, z, 0.55]); treeList.push([x, z, kind, seed]); if (opt.mark) opt.mark('tree', x, z);
     treePit(near, ctx, x, z, X0, Z0, seed); // ô cây trên vỉa hè (gen/pits.js)
     const tilt = lakeTilt(x, z, kind, seed);
     // ô nào quá nhiều cây (rừng, công viên) thì quá FULL_TREES cây dùng luôn bản một khối để giữ số tam giác
@@ -118,6 +125,7 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
           if (!inChunk(x, z) || !free(x, z) || onRoad(x, z)) continue;
           let kind = kindFor(x, z, r.i * 13 + (leafy && !name ? 0 : Math.round(dd / 40)), name);
           if (yagi) { const h = hash(seed, 6); if (h < 0.1) continue; if (h < 0.24) kind = 'non'; } // chỗ cây đổ còn trống, hoặc cây non trồng dặm
+          if (!roomFor(x, z, kind)) continue;
           addTree(x, z, kind, seed, hash(seed, 12) < 0.88);
         }
       }

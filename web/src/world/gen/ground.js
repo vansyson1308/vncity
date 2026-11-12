@@ -4,7 +4,7 @@
 // Chi tiết nhỏ không tốn hình học riêng: chất liệu là các lớp của một texture mảng, đề can là tứ giác trong cùng lưới.
 import earcut from 'earcut';
 import { CL, clip, union, inter, diff, offset, toEx, rectPath, toPath } from './context.js';
-import { CS, CURB, WATER_Y, K, ZONE, zoneAt, isSolemn, F_ONEWAY, F_REVERSE, roadY, lowSpans, subPath, alongAt, LB_TRUSS_X, CD_TRUSS_S, CD_SPAN } from '../data.js';
+import { CS, CURB, WATER_Y, K, ZONE, zoneAt, isSolemn, F_ONEWAY, F_REVERSE, F_FLUSH, roadY, lowSpans, subPath, alongAt, LB_TRUSS_X, CD_TRUSS_S, CD_SPAN } from '../data.js';
 import { hash2 } from '../../core/util.js';
 
 // Lớp chất liệu: phải khớp thứ tự vẽ trong world/textures.js (groundTextures).
@@ -219,15 +219,31 @@ export function genGround(ctx, cx, cz) {
   const roads = [...ctx.roadGrid.collect(X0 - M, Z0 - M, X1 + M, Z1 + M)].filter((r) => !r.skip);
 
   // ----- lòng đường -----
-  const byW = new Map(), footByW = new Map();
+  // Ngõ lát liền (cờ F_FLUSH, tools/build_world.mjs): ngõ hẹp giữa hai dãy nhà là một mặt bê tông liền từ tường tới tường, không hè,
+  // không bó vỉa đá. Lòng ngõ vẫn nằm ở cao độ lòng đường (cao độ đi lại, va chạm, dòng xe không đổi) nhưng vẽ bằng bê tông và nới
+  // 0,3 m mỗi bên, để mép chui dưới chân tường của hai dãy nhà (bề rộng ngõ trong dữ liệu là khoảng cách tường tới tường).
+  const byW = new Map(), footByW = new Map(), laneByW = new Map(), laneEnd = new Map();
+  const endKey = (p) => p.X * 65536 + p.Y;
   for (const r of roads) {
-    const m = r.veh || r.kind === K.pedestrian ? byW : footByW, k = Math.round(r.w * 5);
+    const flush = r.veh && !r.elev && (r.flags & F_FLUSH) !== 0;
+    const m = flush ? laneByW : r.veh || r.kind === K.pedestrian ? byW : footByW, k = Math.round(r.w * 5) + (flush ? 3 : 0);
     let l = m.get(k); if (!l) m.set(k, (l = []));
     // cầu nâng: chỉ khúc chân dốc còn sát đất mới là lòng đường; phần đã lên cao thì bên dưới là vỉa hè, mặt nước
     if (r.elev) for (const [s0, s1] of lowSpans(r, 0.45)) l.push(toPath(subPath(r, s0, s1))); else l.push(r.path);
+    if (flush) for (const e of [r.path[0], r.path[r.path.length - 1]]) { const q = laneEnd.get(endKey(e)); if (q) { q.n++; q.k = Math.max(q.k, k); } else laneEnd.set(endKey(e), { p: e, n: 1, k }); }
   }
-  let car = [];
+  let car = [], lane = [];
   for (const [k, paths] of byW) car = union(car, offset(paths, k, true));
+  // Ngõ lát liền: đầu ngõ cắt phẳng. Đầu tròn ở chỗ ngõ gặp phố khoét một nửa vòng bê tông sang hè bên kia phố hẹp; ở cuối ngõ cụt thì
+  // đầu phẳng dừng trước tường. Chỗ hai ngõ lát liền gặp nhau thì đắp thêm một đĩa tròn cho kín góc.
+  for (const [k, paths] of laneByW) {
+    const co = new CL.ClipperOffset(2, 1.2); co.AddPaths(paths, CL.JoinType.jtRound, CL.EndType.etOpenButt);
+    const out = new CL.Paths(); co.Execute(out, k); lane = union(lane, out);
+  }
+  const joints = [...laneEnd.values()].filter((q) => q.n > 1).map((q) => { const o = []; for (let i = 0; i < 16; i++) o.push({ X: Math.round(q.p.X + Math.cos(i * 0.3927) * q.k), Y: Math.round(q.p.Y + Math.sin(i * 0.3927) * q.k) }); return o; });
+  if (joints.length) lane = union(lane, joints);
+  const street = car; // mặt nhựa của các phố (chưa gộp lòng ngõ)
+  if (lane.length) { lane = diff(lane, car); car = union(car, lane); } // chỗ ngõ gặp phố: mặt nhựa của phố thắng
   let foot = [];
   for (const [k, paths] of footByW) foot = union(foot, offset(paths, k, true, 2));
 
@@ -244,13 +260,24 @@ export function genGround(ctx, cx, cz) {
   const asphalt = wat.length ? inter(car, land) : inter(car, R);
   const block = diff(land, car);
   const inner = offset(block, -2); // viên bó vỉa rộng 20 cm tính cả mặt vát
-  const curbTop = diff(block, inner);
+  let curbTop = diff(block, inner);
+  // lòng ngõ lát liền, và dải 1,2 m hai bên ngõ (bậc thềm trước cửa, chỗ tường lùi vào): cùng một mặt bê tông với lòng ngõ
+  const laneRoad = lane.length ? inter(asphalt, lane) : [];
+  let laneNear = laneRoad.length ? offset(laneRoad, 12) : [];
+  // dải bê tông không lấn sang hè của phố mà ngõ đổ ra: trong 1,4 m quanh mặt nhựa của phố vẫn là bó vỉa, gạch lát của phố (bó vỉa rẽ vào
+  // miệng ngõ một đoạn rồi mới chuyển thành bậc bê tông), không thành một mũi bó vỉa nhọn hoắt dọc phố
+  if (laneNear.length) {
+    const mouths = []; for (const q of laneEnd.values()) if (q.n === 1) mouths.push(rectPath(q.p.X - q.k - 40, q.p.Y - q.k - 40, q.p.X + q.k + 40, q.p.Y + q.k + 40));
+    const st = mouths.length ? inter(street, mouths) : []; if (st.length) laneNear = diff(laneNear, offset(st, 14));
+  }
 
   // ----- cây cỏ, lối dạo, bồn hoa, đất bãi sông -----
   const greens = [...ctx.greenGrid.collect(X0, Z0, X1, Z1)].filter((g) => g.bb[0] < X1 && g.bb[2] > X0 && g.bb[1] < Z1 && g.bb[3] > Z0);
   let gAll = [], gFlower = [];
   for (const g of greens) { if (g.k === 2) gFlower = union(gFlower, g.paths); gAll = union(gAll, g.paths); }
   let grass = inter(inner, gAll), paved = gAll.length ? diff(inner, gAll) : inner;
+  let laneSide = [];
+  if (laneNear.length) { laneSide = union(inter(paved, laneNear), inter(curbTop, laneNear)); paved = diff(paved, laneNear); curbTop = diff(curbTop, laneNear); }
   const pathP = inter(foot, grass); if (pathP.length) grass = diff(grass, foot);
   const flower = inter(grass, gFlower); if (flower.length) grass = diff(grass, gFlower);
   // ô 32 m ở bãi sông mà quanh đó không có nhà: đất phù sa, cỏ dại (đường đi qua vẫn là nhựa)
@@ -268,7 +295,9 @@ export function genGround(ctx, cx, cz) {
   let gravel = [];
   if (rails.length) { const ru = offset(rails.map((r) => toPath(r.p)), 17, true, 2); gravel = inter(ru, inner); paved = diff(paved, ru); grass = diff(grass, ru); }
 
-  gb.fill(toEx(asphalt), 0, LAYER.asphalt);
+  gb.fill(toEx(laneRoad.length ? diff(asphalt, lane) : asphalt), 0, LAYER.asphalt);
+  if (laneRoad.length) gb.fill(toEx(laneRoad), 0, LAYER.gutter);
+  if (laneSide.length) gb.fill(toEx(laneSide), CURB, LAYER.gutter);
   gb.fill(toEx(curbTop), CURB, LAYER.curb);
   for (const [layer, part] of pavingParts(ctx, paved, X0, Z0)) gb.fill(toEx(part), CURB, layer);
   gb.fill(toEx(grass), CURB, LAYER.grass);
@@ -282,6 +311,9 @@ export function genGround(ctx, cx, cz) {
   // sáng màu hơn mặt nhựa, cứ chừng 30 m có một cửa thu nước song gang. Va chạm không đổi: mép hè vẫn ở đúng cạnh khối phố.
   const shore = []; // đoạn bờ nước [ax,az,bx,bz] cho va chạm
   const onBorder = (a, b) => (a.X === b.X && (a.X === dX0 || a.X === dX1)) || (a.Y === b.Y && (a.Y === dZ0 || a.Y === dZ1));
+  // điểm nằm trên lòng ngõ lát liền: lọc theo hộp bao trước (mép khối phố của cả ô đều đi qua đây)
+  const laneBox = laneRoad.map((q) => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const p of q) { if (p.X < x0) x0 = p.X; if (p.X > x1) x1 = p.X; if (p.Y < y0) y0 = p.Y; if (p.Y > y1) y1 = p.Y; } return { q, x0, y0, x1, y1, s: CL.Clipper.Orientation(q) ? 1 : -1 }; });
+  const onLane = (x, z) => { const X = Math.round(x * 10), Y = Math.round(z * 10), pt = { X, Y }; let n = 0; for (const b of laneBox) if (X >= b.x0 && X <= b.x1 && Y >= b.y0 && Y <= b.y1 && CL.Clipper.PointInPolygon(pt, b.q)) n += b.s; return n > 0; };
   for (const e of toEx(block)) {
     const rings = [[e.outer, false], ...e.holes.map((h) => [h, true])];
     for (const [ring, isHole] of rings) {
@@ -304,6 +336,8 @@ export function genGround(ctx, cx, cz) {
           } else gb.wall(ax, az, bx, bz, WATER_Y - 0.7, CURB, nx, nz, LAYER.stone);
           continue;
         }
+        // mép ngõ lát liền: không có viên bó vỉa đá, rãnh biên, cửa thu nước; chỉ là bậc thềm bê tông vát thoải (thường khuất dưới chân tường)
+        if (laneRoad.length && onLane((ax + bx) / 2 + nx * 0.15, (az + bz) / 2 + nz * 0.15)) { gb.quad([ax + nx * 0.2, 0, az + nz * 0.2], [bx + nx * 0.2, 0, bz + nz * 0.2], [bx, CURB, bz], [ax, CURB, az], nx * 0.62, 0.78, nz * 0.62, LAYER.gutter); continue; }
         gb.quad([ax + nx * BEV, 0, az + nz * BEV], [bx + nx * BEV, 0, bz + nz * BEV], [bx, CURB, bz], [ax, CURB, az], nx * 0.85, 0.53, nz * 0.85, LAYER.curb);
         gb.quad([ax + nx * BEV, 0.004, az + nz * BEV], [bx + nx * BEV, 0.004, bz + nz * BEV], [bx + nx * GUT, 0.013, bz + nz * GUT], [ax + nx * GUT, 0.013, az + nz * GUT], 0, 1, 0, LAYER.gutter);
         run += L;
@@ -389,14 +423,15 @@ export function genGround(ctx, cx, cz) {
   const freePave = (x, z, pad) => !nearRoad(x, z, pad) && !ctx.buildingAt(x, z) && !ctx.isGreen(x, z) && !ctx.isWater(x, z);
   for (const r of roads) {
     if (!r.veh || r.elev || r.bridge || r.kind > K.service || r.w < 3.4 || r.len < 12) continue;
-    const seed = r.i * 31 + 7, H = (k) => hash2(seed, k, 11);
+    const seed = r.i * 31 + 7, H = (k) => hash2(seed, k, 11), conc = (r.flags & F_FLUSH) !== 0, road = conc ? LAYER.gutter : LAYER.asphalt; // ngõ lát liền: nền bê tông
     let k = 0;
     for (let s = 5 + H(0) * 12; s < r.len - 5; k++) {
       const t = H(k * 5 + 1), side = H(k * 5 + 2) < 0.5 ? -1 : 1; alongAt(r, s, o5);
       const dx = o5[2], dz = o5[3], at = (o) => [o5[0] - dz * o, o5[1] + dx * o];
       if (t < 0.34) { // nắp hố ga: gang tròn Ø 65 cm, đôi khi là nắp vuông hai cánh, nằm lệch tim đường
         const o = side * Math.min(r.w / 2 - 0.9, r.w * (0.12 + H(k * 5 + 3) * 0.2)), [x, z] = at(o);
-        if (inChunk(x, z) && onAsphalt(x, z, 0.6)) { if (H(k * 5 + 4) < 0.72) gb.decal(DECAL.manhole, x, z, dx, dz, 0.33, 0.33, DECAL_Y, DECAL_Y, LAYER.asphalt); else gb.decal(DECAL.cover, x, z, dx, dz, 0.4, 0.4, DECAL_Y, DECAL_Y, LAYER.asphalt); }
+        if (inChunk(x, z) && onAsphalt(x, z, 0.6)) { if (H(k * 5 + 4) < 0.72) gb.decal(DECAL.manhole, x, z, dx, dz, 0.33, 0.33, DECAL_Y, DECAL_Y, road); else gb.decal(DECAL.cover, x, z, dx, dz, 0.4, 0.4, DECAL_Y, DECAL_Y, road); }
+      } else if (conc) { // mặt bê tông: không có miếng vá nhựa, vệt dầu, nắp bể cáp trên hè
       } else if (t < 0.8) { // miếng vá: dải đào rãnh cáp chạy dọc hoặc cắt ngang đường, hoặc mảng vá ổ gà
         const across = H(k * 5 + 3) < 0.22 && r.w < 9, hl = across ? r.w / 2 - 0.5 : 1 + H(k * 5 + 4) * 3.2, hw = across ? 0.35 + H(k * 5 + 4) * 0.3 : 0.4 + H(k * 5 + 3) * 0.7;
         const o = across ? 0 : side * Math.max(0, Math.min(r.w / 2 - hw - 0.55, r.w * (0.1 + H(k * 5 + 2) * 0.28))), [x, z] = at(o);
