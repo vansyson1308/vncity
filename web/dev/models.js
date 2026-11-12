@@ -16,6 +16,13 @@ export const REGISTRY = {
   ecart: (g) => ecart(g),
   trees: (g, { lf }) => { ['xacu', 'sau', 'bang', 'banglang', 'phuong', 'lieu', 'hoasua'].forEach((k, i) => { tree(g, i * 9 - 27, 0, 100 + i * 7, k, 0, 0, lf); tree(g, i * 9 - 27, 14, 100 + i * 7, k, 1); }); },
   lamps: (g) => { streetLamp(g, -3, 0, 0, true); streetLamp(g, 0, 0, 0, false); parkLamp(g, 3, 0); },
+  // cây theo mùa (models/street.js SEASON): mỗi mô hình một mùa, hàng trước bản gần, hàng sau bản xa.
+  // mu = đông (mặc định của game), nom = xuân, he = hè, thu = thu. Hoa phượng, bằng lăng chỉ được có ở trees_he.
+  ...Object.fromEntries(['mu', 'nom', 'he', 'thu'].map((ss) => ['trees_' + ss, (g, { lf }) => { ['banglang', 'phuong', 'bang', 'comnguoi', 'hoasua', 'locvung', 'sau', 'xacu', 'lieu'].forEach((k, i) => { tree(g, i * 10 - 40, 0, 500 + i * 7, k, 0, 0, lf, 1, ss); tree(g, i * 10 - 40, 16, 500 + i * 7, k, 1, 0, null, 1, ss); }); }])),
+  // sấu (trái) và xà cừ (phải) đứng cạnh nhau: phải phân biệt được ngay ở dáng tán, màu lá, vỏ thân; hàng sau là bản xa
+  sauxacu: (g, { lf }) => { [['sau', 41], ['sau', 77], ['xacu', 41], ['xacu', 77]].forEach(([k, sd], i) => { tree(g, i * 12 - 18, 0, sd, k, 0, 0, lf, 1); tree(g, i * 12 - 18, 20, sd, k, 1, 0, null, 1); }); },
+  // cây ven hồ nghiêng thân ra mặt nước (+z): lộc vừng, đa, liễu, phượng; hàng sau là bản xa
+  lake: (g, { lf }) => { [['locvung', 4.4], ['locvung', 3.2], ['da', 2.2], ['lieu', 1.6], ['phuong', 1.5]].forEach(([k, t], i) => { tree(g, i * 11 - 22, 0, 700 + i * 7, k, 0, 0, lf, 0, 'mu', [0, t]); tree(g, i * 11 - 22, -16, 700 + i * 7, k, 1, 0, null, 0, 'mu', [0, t]); }); },
   // cây theo phố thêm ở đợt 3: nhội, xà cừ cổ thụ, cơm nguội vàng, đa, lộc vừng, cây non có cọc chống
   trees2: (g, { lf }) => { ['nhoi', 'xacuco', 'comnguoi', 'da', 'locvung', 'non'].forEach((k, i) => { tree(g, i * 13 - 32, 0, 300 + i * 7, k, 0, 0, lf, 1); tree(g, i * 13 - 32, 18, 300 + i * 7, k, 1, 0, null, 1); }); },
   // đồ đạc đường phố (src/world/gen/furniture.js). Phần có chữ, có đèn nằm ở lưới riêng dùng bảng đồ đạc; ở xưởng vẽ gộp chung
@@ -49,7 +56,7 @@ export const REGISTRY = {
   },
 };
 // ngân sách tam giác cho từng loại (công trình mặc định 8.000)
-export const BUDGET = { bike: 6000, car: 3000, hatch: 3000, bicycle: 2500, ecart: 2500, bus: 2500, cyclo: 2500, trees: 40000, trees2: 40000, lamps: 1500, mats: 2000, furniture: 6000 };
+export const BUDGET = { bike: 6000, car: 3000, hatch: 3000, bicycle: 2500, ecart: 2500, bus: 2500, cyclo: 2500, trees: 40000, trees2: 40000, trees_mu: 40000, trees_nom: 40000, trees_he: 40000, trees_thu: 40000, sauxacu: 40000, lake: 40000, lamps: 1500, mats: 2000, furniture: 6000 };
 export const LANDMARKS = [...new Set(SITES.map((s) => s.id))];
 export const ALL = [...LANDMARKS.map((id) => 'lm:' + id), ...Object.keys(REGISTRY)];
 
@@ -59,4 +66,4 @@ export async function buildModel(name, g, lf, load) {
   await REGISTRY[name](g, { lf });
 }
 // xe cộ vẽ bằng instancing nên không gắn chất liệu chi tiết; cây và đèn chủ yếu là tán lá, kim loại sơn
-export const PLAIN_OK = new Set(['bike', 'car', 'hatch', 'bicycle', 'ecart', 'bus', 'cyclo', 'trees', 'trees2', 'lamps', 'furniture']);
+export const PLAIN_OK = new Set(['bike', 'car', 'hatch', 'bicycle', 'ecart', 'bus', 'cyclo', 'trees', 'trees2', 'trees_mu', 'trees_nom', 'trees_he', 'trees_thu', 'sauxacu', 'lake', 'lamps', 'furniture']);

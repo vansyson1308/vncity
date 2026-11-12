@@ -18,6 +18,7 @@ self.onmessage = async (e) => {
       const world = decodeWorld(W);
       const sites = resolveSites(world);
       ctx = buildContext(world, sites);
+      ctx.season = m.season || 'mu'; // mùa của cây (lá, hoa) theo thời tiết: gen/props.js, models/street.js SEASON
       self.postMessage({ type: 'ready', buildings: world.buildings.length, sites });
       if (m.mapPpm) { const bmp = drawMap(world, m.mapPpm); self.postMessage({ type: 'map', bitmap: bmp, ppm: m.mapPpm }, [bmp]); }
     } else if (m.type === 'chunk') {

@@ -66,7 +66,7 @@ async function boot() {
   const mats = buildMaterials(R.r, quality, atlas);
   mats.street = await streetMaterial(mats, R.r, world, quality); // biển tên phố, đèn tín hiệu, băng rôn
   const chunks = new Chunks(scene, world, mats, nav, quality);
-  const pools = new LightPools(scene);
+  const pools = new LightPools(R.r, quality);
   chunks.onLamps = (l) => pools.set(l);
   const minimap = new Minimap($('minimap'), world, nav);
   chunks.onMap = (bmp, ppm) => minimap.setBitmap(bmp, ppm);
@@ -259,7 +259,7 @@ async function boot() {
     if (warpTo) chunks.update(warpTo[0], warpTo[1]); else chunks.update(player.pos.x, player.pos.z);
     sky.update(fixedTime || frozen ? 0 : dt, player.root.position); if (fixedTime || frozen) skyU.uTime.value += dt;
     mats.water.uniforms.uHemi.value.copy(sky.hemi.color).multiplyScalar(sky.hemi.intensity * 0.5);
-    pools.update(skyU.uLit.value);
+    pools.update(skyU.uLit.value, player.pos.x, player.pos.z);
 
     // ----- giao diện -----
     if (G.started) {

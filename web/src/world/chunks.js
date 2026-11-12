@@ -1,8 +1,9 @@
 // Quản lý các ô phố 128 m: yêu cầu worker dựng ô gần người chơi (gần trước, xa sau), gỡ ô đã xa,
 // đổi bản chi tiết/bản xa của đồ vật theo khoảng cách. Luồng chính chỉ việc nạp mảng vào GPU.
 import * as THREE from 'three';
-import { CS, CURB } from './data.js';
+import { CS } from './data.js';
 import { propGeometry } from './materials.js';
+import { lampU, LAMP_STORE, WEATHER } from '../engine/sky.js';
 
 export class Chunks {
   constructor(scene, world, mats, nav, quality) {
@@ -15,9 +16,12 @@ export class Chunks {
     this.worker.onmessage = (e) => this.onMessage(e.data);
     this.worker.onerror = (e) => this.onError && this.onError(e.message || 'worker');
     this.last = { x: 1e9, z: 1e9 }; this.want = [];
+    // mùa của cây đi theo thời tiết của game (tham số ?weather=, mặc định "mu" = mùa đông): worker tô lá, hoa theo mùa này
+    let w = 'mu'; try { w = new URLSearchParams(location.search).get('weather') || w; } catch { /* node */ }
+    this.season = WEATHER[w] ? w : 'mu';
   }
   init(url, landmarks, mapPpm) {
-    return new Promise((res, rej) => { this._ready = res; this._fail = rej; this.worker.postMessage({ type: 'init', url, landmarks, mapPpm }); });
+    return new Promise((res, rej) => { this._ready = res; this._fail = rej; this.worker.postMessage({ type: 'init', url, landmarks, mapPpm, season: this.season }); });
   }
   onMessage(m) {
     if (m.type === 'ready') this._ready(m);
@@ -137,52 +141,65 @@ export class Chunks {
 
 import { ZONE, zoneAt } from './data.js'; // (để riêng ở đây cho phần vệt sáng, tránh đụng dòng import đầu tệp)
 
-// Vệt sáng dưới chân đèn đường và trước cửa hàng: một InstancedMesh, chỉ hiện khi trời tối.
-// Rẻ hơn rất nhiều so với đặt đèn điểm thật (mỗi đèn điểm làm mọi điểm ảnh phải tính thêm một nguồn sáng).
-// Vệt sáng NHÂN độ sáng của mặt đất bên dưới (trộn màu: nền × (1 + đèn)) chứ không cộng một màu phẳng lên trên, nên vân đá lát,
-// vạch sơn, miếng vá vẫn rõ dưới đèn và mặt nhựa sẫm không bị phủ một lớp sương trắng.
+// Ánh đèn phố hắt xuống mặt đất và đồ vật: bản đồ ánh sáng nhìn từ trên xuống (xem LAMP_GLSL trong engine/sky.js).
+// Mỗi nguồn sáng [x, y, z, bán kính] do bộ sinh đồ vật ghi lại (props.js, decor.js) là một tấm vuông vẽ CỘNG màu vào một
+// texture 8 bit phủ ±LAMP_HALF mét quanh người chơi; chỉ vẽ lại khi danh sách đèn đổi (nạp, gỡ ô phố) hoặc người chơi đã đi xa
+// tâm bản đồ. Rẻ hơn rất nhiều so với đèn điểm thật (mỗi đèn điểm làm mọi điểm ảnh phải tính thêm một nguồn sáng) và cũng rẻ hơn
+// cách cũ (hàng nghìn tấm trong suốt vẽ chồng lên mặt đường mỗi khung hình).
+// Vật liệu NHÂN độ sáng của chính nó với (1 + đèn) nên vân đá lát, vạch sơn, miếng vá vẫn rõ dưới đèn; tổng đèn được nén mềm
+// (LAMP_CAP) nên chỗ nhiều đèn chồng nhau không cháy.
 // Màu theo loại đèn (art bible mục 7): trục chính dùng LED trắng trung tính, phố nhỏ và phố cổ còn đèn sodium vàng cam,
 // đèn vườn quanh hồ vàng ấm, tuýp LED cửa hàng trắng lạnh hắt ra vỉa hè, phố đèn lồng thì đỏ cam.
 // Loại đèn suy từ bán kính vệt sáng mà bộ sinh đồ vật ghi trong danh sách [x, y, z, bán kính] (props.js, decor.js).
-const POOL = { led: [4.0, 3.8, 3.0], sodium: [5.4, 2.9, 0.8], park: [4.2, 2.9, 1.5], shop: [2.6, 2.3, 1.8], lantern: [4.2, 0.9, 0.35] };
+const POOL = { led: [4.0, 3.8, 3.0], sodium: [5.4, 2.9, 0.8], park: [4.2, 2.9, 1.5], shop: [2.6, 2.3, 1.8], lantern: [3.0, 1.2, 0.45] };
 const poolKind = (x, z, r) => (r >= 11 ? (zoneAt(x, z) === ZONE.old ? POOL.sodium : POOL.led) : r >= 8 ? POOL.sodium : r >= 6.5 ? POOL.park : r >= 5.5 ? POOL.lantern : POOL.shop);
+const LAMP_HALF = 400, LAMP_SNAP = 16, LAMP_MOVE = 56; // nửa bề rộng bản đồ (m); tâm bắt vào lưới 16 m; đi xa tâm quá 56 m thì vẽ lại
 export class LightPools {
-  constructor(scene, max = 6000) {
-    // Hình vệt sáng tính bằng công thức (không cần texture): sáng ở tâm, tắt dần ra rìa; ở xa mờ dần theo đúng hệ số sương của cảnh.
+  constructor(renderer, quality, max = 6000) {
+    this.r = renderer; this.max = max; this.n = 0; this.dirty = false; this.cx = 1e9; this.cz = 1e9;
+    const size = quality && quality.name === 'low' ? 512 : 1024;
+    this.rt = new THREE.WebGLRenderTarget(size, size, { depthBuffer: false, type: THREE.UnsignedByteType, format: THREE.RGBAFormat, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, generateMipmaps: false });
+    lampU.uLampTex.value = this.rt.texture;
+    const geo = new THREE.InstancedBufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], 3)); geo.setIndex([0, 1, 2, 0, 2, 3]);
+    this.aPool = new THREE.InstancedBufferAttribute(new Float32Array(max * 4), 4); this.aTint = new THREE.InstancedBufferAttribute(new Float32Array(max * 3), 3);
+    geo.setAttribute('aPool', this.aPool); geo.setAttribute('aTint', this.aTint); geo.instanceCount = 0;
+    // Hình vệt sáng tính bằng công thức (không cần texture): sáng nhất dưới chân đèn, toả rộng và tắt êm ở rìa để hai đèn liền nhau
+    // nối được vệt sáng. Cộng cả bốn kênh (RGB: đèn dưới đất; A: đèn trên mặt cầu nâng).
     this.mat = new THREE.ShaderMaterial({
-      uniforms: { uOpacity: { value: 0 }, uDirect: { value: 0 }, fogColor: { value: new THREE.Color() }, fogDensity: { value: 0.001 } },
-      transparent: true, depthWrite: false, fog: true, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4,
-      blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.DstColorFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor,
+      uniforms: { uMap: { value: new THREE.Vector3(0, 0, 1) } }, depthTest: false, depthWrite: false, fog: false, toneMapped: false, side: THREE.DoubleSide,
+      blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.OneFactor, blendDstAlpha: THREE.OneFactor,
       vertexShader: /* glsl */`
-        uniform float fogDensity; varying vec2 vP; varying vec3 vTint;
+        attribute vec4 aPool; attribute vec3 aTint; uniform vec3 uMap; varying vec2 vP; varying vec4 vTint;
         void main(){
-          vP = position.xz; vec4 mv = modelViewMatrix * instanceMatrix * vec4(position, 1.0);
-          float fx = fogDensity * -mv.z; vTint = instanceColor * exp(-fx * fx - fx * 0.3);
-          gl_Position = projectionMatrix * mv; }`,
+          vP = position.xy; vTint = vec4(aTint * (1.0 - aPool.w), aPool.w) * ${(1 / LAMP_STORE).toFixed(4)};
+          gl_Position = vec4((aPool.xy + position.xy * aPool.z - uMap.xy) * (uMap.z * 2.0), 0.0, 1.0); }`,
       fragmentShader: /* glsl */`
-        uniform float uOpacity, uDirect; varying vec2 vP; varying vec3 vTint;
-        void main(){
-          float k = max(1.0 - dot(vP, vP), 0.0); k *= sqrt(k); // sáng nhất dưới chân đèn, toả rộng và tắt êm ở rìa để hai đèn liền nhau nối được vệt sáng
-          vec3 gain = vTint * (k * uOpacity);
-          // vẽ thẳng ra màn hình (mức chất lượng thấp, không hậu kỳ): nền đã mã hoá sRGB nên hệ số nhân phải nén lại tương ứng
-          if (uDirect > 0.5) gain = pow(1.0 + max(gain, vec3(0.0)), vec3(0.4545)) - 1.0;
-          gl_FragColor = vec4(gain, 1.0);
-        }`,
+        varying vec2 vP; varying vec4 vTint;
+        void main(){ float k = max(1.0 - dot(vP, vP), 0.0); gl_FragColor = vTint * (k * sqrt(k)); }`,
     });
-    const geo = new THREE.PlaneGeometry(2, 2); geo.rotateX(-Math.PI / 2);
-    this.mesh = new THREE.InstancedMesh(geo, this.mat, max); this.mesh.count = 0; this.mesh.frustumCulled = false; this.mesh.renderOrder = 5; this.max = max;
-    this.mesh.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(max * 3), 3);
-    this.mesh.onBeforeRender = (renderer) => { this.mat.uniforms.uDirect.value = renderer.getRenderTarget() ? 0 : 1; };
-    scene.add(this.mesh);
-    this._m = new THREE.Matrix4();
+    this.mesh = new THREE.Mesh(geo, this.mat); this.mesh.frustumCulled = false;
+    this.scene = new THREE.Scene(); this.scene.add(this.mesh); this.cam = new THREE.Camera(); this._c = new THREE.Color();
   }
   set(lists) {
-    let n = 0; const m = this._m, col = this.mesh.instanceColor.array;
+    let n = 0; const P = this.aPool.array, T = this.aTint.array;
     for (const l of lists) for (let i = 0; i < l.length && n < this.max; i += 4) {
-      const r = l[i + 3] * 1.4, c = poolKind(l[i], l[i + 2], l[i + 3]); m.makeScale(r, 1, r); m.setPosition(l[i], l[i + 1] < 0 ? 0.06 - l[i + 1] : CURB + 0.03, l[i + 2]); // ngang mặt hè: sáng cả vỉa hè lẫn lòng đường bên dưới
-      col[n * 3] = c[0]; col[n * 3 + 1] = c[1]; col[n * 3 + 2] = c[2]; this.mesh.setMatrixAt(n++, m);
+      const c = poolKind(l[i], l[i + 2], l[i + 3]);
+      P[n * 4] = l[i]; P[n * 4 + 1] = l[i + 2]; P[n * 4 + 2] = l[i + 3] * 1.4; P[n * 4 + 3] = l[i + 1] < 0 ? 1 : 0; // cao độ âm: đèn trên mặt cầu nâng
+      T[n * 3] = c[0]; T[n * 3 + 1] = c[1]; T[n * 3 + 2] = c[2]; n++;
     }
-    this.mesh.count = n; this.mesh.instanceMatrix.needsUpdate = true; this.mesh.instanceColor.needsUpdate = true;
+    this.n = n; this.mesh.geometry.instanceCount = n; this.aPool.needsUpdate = true; this.aTint.needsUpdate = true; this.dirty = true;
   }
-  update(lit) { this.mat.uniforms.uOpacity.value = lit; this.mesh.visible = lit > 0.02; }
+  // Gọi mỗi khung hình: lit = độ bật đèn 0..1 (uLit), (px, pz) = chỗ người chơi. Chỉ vẽ lại bản đồ khi cần.
+  update(lit, px, pz) {
+    if (lit <= 0.01 || !Number.isFinite(px) || !Number.isFinite(pz)) return;
+    if (!this.dirty && Math.abs(px - this.cx) < LAMP_MOVE && Math.abs(pz - this.cz) < LAMP_MOVE) return;
+    const r = this.r, cx = Math.round(px / LAMP_SNAP) * LAMP_SNAP, cz = Math.round(pz / LAMP_SNAP) * LAMP_SNAP, inv = 1 / (LAMP_HALF * 2);
+    this.cx = cx; this.cz = cz; this.dirty = false; this.mat.uniforms.uMap.value.set(cx, cz, inv);
+    const prev = r.getRenderTarget(), col = r.getClearColor(this._c), alpha = r.getClearAlpha(), auto = r.autoClear, shadow = r.shadowMap.needsUpdate;
+    r.shadowMap.needsUpdate = false; // không để lần vẽ phụ này "tiêu" mất lượt cập nhật bóng đổ của cảnh chính
+    r.setRenderTarget(this.rt); r.setClearColor(0x000000, 0); r.autoClear = true; r.render(this.scene, this.cam);
+    r.setRenderTarget(prev); r.setClearColor(col, alpha); r.autoClear = auto; r.shadowMap.needsUpdate = shadow;
+    lampU.uLampMap.value.set(cx, cz, inv);
+  }
 }

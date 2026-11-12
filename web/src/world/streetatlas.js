@@ -109,7 +109,7 @@ export async function streetAtlas(renderer, world, quality) {
 // Vật liệu của lưới biển tên phố, đèn tín hiệu: vật liệu đồ vật chuẩn (mats.makeProp) cộng thêm phần đọc bảng một kênh.
 export async function streetMaterial(mats, renderer, world, quality) {
   const tex = await streetAtlas(renderer, world, quality), L = plateLayout(world), f = (v) => v.toFixed(6);
-  const mat = mats.makeProp({ map: tex }), base = mat.onBeforeCompile;
+  const mat = mats.makeProp({ map: tex, cut: true }), base = mat.onBeforeCompile; // cut: biển, hộp đèn áp sát ống kính hay chắn nhân vật thì mờ đi như mọi đồ vật khác
   mat.onBeforeCompile = (sh, r) => {
     base(sh, r);
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying float vSig;').replace('#include <color_vertex>', '#include <color_vertex>\nvSig = color.a;');

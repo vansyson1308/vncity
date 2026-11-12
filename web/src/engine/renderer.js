@@ -6,6 +6,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 
+const BLOOM_MAX = 6; // trần độ sáng (trước phơi sáng) của một điểm ảnh khi làm nguồn bloom
 const FinalShader = {
   uniforms: { tDiffuse: { value: null }, uExposure: { value: 1 }, uVignette: { value: 0.32 }, uSat: { value: 1.08 }, uTint: { value: new THREE.Vector3(1, 1, 1) } },
   vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
@@ -66,6 +67,16 @@ export class Renderer {
       this.composer = new EffectComposer(r, rt);
       this.composer.addPass(new RenderPass(scene, camera));
       this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x / 2, size.y / 2), 0.2, 0.55, 1.0);
+      // Bloom của three.js lấy nguyên giá trị HDR của điểm ảnh vượt ngưỡng: chỉ cần vài điểm ảnh sáng gấp trăm lần (một chỗ cộng
+      // dồn ánh sáng quá tay) là quầng sáng loang trắng cả màn hình. Chặn nguồn bloom ở BLOOM_MAX: đèn vẫn có quầng, nhưng không
+      // nguồn sáng nào tự nó nhuộm trắng được khung hình. (max với 0 để một điểm ảnh âm hay hỏng không lan ra thành mảng đen.)
+      this.bloom.materialHighPassFilter.fragmentShader = /* glsl */`
+        uniform sampler2D tDiffuse; uniform vec3 defaultColor; uniform float defaultOpacity, luminosityThreshold, smoothWidth; varying vec2 vUv;
+        void main(){
+          vec4 texel = texture2D(tDiffuse, vUv); texel.rgb = clamp(texel.rgb, vec3(0.0), vec3(${BLOOM_MAX.toFixed(1)}));
+          float v = dot(texel.rgb, vec3(0.2126, 0.7152, 0.0722));
+          gl_FragColor = mix(vec4(defaultColor, defaultOpacity), texel, smoothstep(luminosityThreshold, luminosityThreshold + smoothWidth, v));
+        }`;
       this.composer.addPass(this.bloom);
       this.final = new ShaderPass(FinalShader); this.composer.addPass(this.final);
     }

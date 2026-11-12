@@ -20,7 +20,7 @@ Bản 1 (tháng 10/2026) giật và "không giống Hà Nội". Nguyên nhân v�
 |---|---|
 | Tải 21 MB mô hình, ảnh từ repo khác (craft-anything) | Không tải ảnh nào. Mọi chất liệu, nhà, cây, xe, công trình đều dựng thủ tục khi chạy. Tổng tải khoảng 2,6 MB (bản đồ 0,7 MB nén, mã 0,3 MB, ba bản mô hình người 1,6 MB) |
 | Dựng 15.000 nhà trên luồng chính lúc tải, đứng hình vài giây | Thành phố chia ô 128 m. Một Web Worker sinh lưới cho từng ô quanh người chơi (gần trước, xa sau), luồng chính chỉ nạp mảng vào GPU. Vòng lặp vẽ không bao giờ dừng để tính hình học |
-| Bóng 4096² vẽ lại toàn cảnh mỗi khung hình, 12 đèn điểm ban đêm, hậu kỳ toàn màn hình ở tỉ lệ điểm ảnh 1,75 | Bóng 2048² chỉ phủ 75 m quanh người chơi, cập nhật cách khung. Đèn đêm là phát sáng + vệt sáng cộng màu (một lệnh vẽ), không có đèn điểm. Độ phân giải động giữ 60 khung hình/giây, kèm bộ điều tiết giảm dần mật độ cảnh khi máy yếu |
+| Bóng 4096² vẽ lại toàn cảnh mỗi khung hình, 12 đèn điểm ban đêm, hậu kỳ toàn màn hình ở tỉ lệ điểm ảnh 1,75 | Bóng 2048² chỉ phủ 75 m quanh người chơi, cập nhật cách khung. Đèn đêm là phát sáng + một bản đồ ánh sáng nhìn từ trên xuống (mọi cột đèn, cửa hàng cộng vào một texture quanh người chơi; mặt đất và đồ vật nhân độ sáng với nó, tổng được nén mềm nên không cháy), không có đèn điểm. Độ phân giải động giữ 60 khung hình/giây, kèm bộ điều tiết giảm dần mật độ cảnh khi máy yếu |
 | Mỗi xe máy, mỗi người là một lưới có xương riêng | Mỗi loại xe một `InstancedMesh` (người lái nướng sẵn vào lưới xe). Người đi bộ dùng skinning trên GPU từ texture hoạt hình, ba lệnh vẽ cho cả đám đông |
 | Chỉ có quận Hoàn Kiếm, mặt tiền là ảnh dán lặp quanh khối nhà, 4 công trình có mô hình | 12 km² trung tâm: Hồ Gươm, 36 phố phường, khu phố Pháp, Ba Đình, Văn Miếu, mép nam Hồ Tây, đầu cầu Long Biên. 29.637 toà nhà đúng vị trí, mặt tiền chia gian theo kiểu nhà ống, biển hiệu theo đúng nghề của từng phố, 15 công trình dựng tay |
 | Mặt đất phẳng, đường là dải vẽ đè lên nền | Lòng đường thấp hơn vỉa hè 16 cm, có bó vỉa đá, góc phố bo tròn, kè hồ, vạch sơn, vạch sang đường |
@@ -121,8 +121,10 @@ Các kỹ thuật chính:
    chỗ tới được và tính sẵn chỗ đứng thoáng cho chức năng đi nhanh.
 11. **Camera không vượt tường.** Tia từ đầu nhân vật tới vị trí camera (đã cộng độ lệch ngang) dừng trước mọi bức tường
    0,35 m; camera còn được đẩy như một vòng tròn 0,5 m để mặt cắt gần của ống kính không cắt vào nhà; bị dồn vào góc
-   thì áp sát đầu nhân vật và nhân vật được ẩn đi. Cột cổng, thân cây, mái hiên chắn giữa camera và nhân vật thì bị
-   đục lỗ lấm tấm ngay trong shader để vẫn thấy nhân vật.
+   thì áp sát đầu nhân vật và nhân vật được ẩn đi. Cột cổng, thân cây, mái hiên, tán lá chắn giữa camera và nhân vật thì
+   mờ đi ngay trong shader (mẫu chấm Bayer đều, bám theo màn hình) để vẫn thấy nhân vật; đồ vật và lá áp sát ống kính
+   cũng tan đi trong một bán kính nhỏ quanh camera, nên không bao giờ có một chiếc lá che kín màn hình
+   (`world/materials.js`, mục CUT).
 12. **Âm thanh tổng hợp.** Không tải tệp âm thanh nào: tiếng máy theo vòng tua và hộp số bốn cấp, gió, phanh, bước
    chân, nền phố ngày và đêm, nhạc ngũ cung tự sáng tác với ba âm sắc gợi đàn bầu, đàn tranh, sáo trúc
    (`audio/audio.js`, ghi công trong `CREDITS.md`).
@@ -166,7 +168,9 @@ Các kỹ thuật chính:
    điểm ảnh ở xa vào đúng màu trời phía sau nó, ban đêm trời hửng nâu xám vì đèn thành phố nên cảnh xa không còn đen.
    Mặt hè đổi theo khu (đá granite quanh Hồ Gươm, đá xanh xám ở phố chính, gạch đỏ hoặc terrazzo ở nơi khác), bó vỉa
    vát có rãnh và miệng thu nước, ô cây, nắp hố ga, vạch sơn mòn; vũng sáng dưới đèn làm sáng chất liệu mặt đất thay
-   vì phủ trắng lên nó (`engine/sky.js`, `world/textures.js`, `gen/ground.js`, `gen/pits.js`).
+   vì phủ trắng lên nó (`engine/sky.js`, `world/textures.js`, `gen/ground.js`, `gen/pits.js`). Cây đổi lá, ra hoa theo
+   mùa của thời tiết (mặc định `mu` là đông: phượng, bằng lăng chỉ còn lá, bàng lá đỏ; `he` là hè: phượng đỏ, bằng lăng
+   tím); cây sát mép nước ngả tán ra mặt hồ, gốc vẫn trên bờ (`models/street.js` SEASON, `gen/props.js`).
 18. **Cầu Chương Dương đúng mặt cắt.** Bộ dựng bản đồ nắn ba tuyến của cầu thành lòng ô tô 10,4 m ở giữa và hai làn xe
    máy 3,4 m hai bên, chừa khe 0,4 m cho hai mặt phẳng dàn thép (`landmarks/cau_chuong_duong.js`); trụ cầu đứng đúng
    đầu mỗi nhịp dàn. Người chơi không đi xuyên dàn được vì hai mặt cầu không liền nhau.
