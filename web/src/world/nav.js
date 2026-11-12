@@ -186,11 +186,12 @@ export class Nav {
     return ok;
   }
 
-  // Chỗ đứng trống cạnh điểm (x,z) của một vật quay mặt hướng yaw: thử bên trái, bên phải, chéo sau, phía sau, chéo trước, phía
-  // trước, mỗi phía ở khoảng cách d rồi 0,7 d. Không có chỗ nào thông thì trả về chính (x,z). Kết quả ở out {x,z}.
+  // Chỗ đứng trống cạnh điểm (x,z) của một vật quay mặt hướng yaw: thử bên trái, bên phải, chéo trước, phía trước, rồi mới tới chéo
+  // sau, phía sau (phía sau là chỗ camera đứng: dựng xe ở đó thì camera chui vào xe), mỗi phía ở khoảng cách d rồi 0,7 d. Không có
+  // chỗ nào thông thì trả về chính (x,z). Kết quả ở out {x,z}.
   besideFree(x, z, yaw, d, r, out) {
     const c = Math.cos(yaw), s = Math.sin(yaw), q = Math.SQRT1_2;
-    for (const k of [1, 0.7]) for (const [lx, lz] of [[c, -s], [-c, s], [(c - s) * q, (-s - c) * q], [(-c - s) * q, (s - c) * q], [-s, -c], [(c + s) * q, (c - s) * q], [(s - c) * q, (s + c) * q], [s, c]]) {
+    for (const k of [1, 0.7]) for (const [lx, lz] of [[c, -s], [-c, s], [(c + s) * q, (c - s) * q], [(s - c) * q, (s + c) * q], [s, c], [(c - s) * q, (-s - c) * q], [(-c - s) * q, (s - c) * q], [-s, -c]]) {
       const px = x + lx * d * k, pz = z + lz * d * k;
       if (this.freeStep(x, z, px, pz, r)) { out.x = px; out.z = pz; return true; }
     }

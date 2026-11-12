@@ -101,9 +101,9 @@ export function buildMaterials(renderer, quality, atlas) {
         .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>${opts.cut ? `
           { vec3 cv = vWPos - cameraPosition; float leafy = step(0.4, vFx.y); // tán lá, cờ, bạt (vật đung đưa): lỗ nhìn rộng hơn
             float vis = smoothstep(mix(${CUT.near[0]}, ${CUT.leafNear[0]}, leafy), mix(${CUT.near[1]}, ${CUT.leafNear[1]}, leafy), length(cv));
-            if (uCut.w > 0.0) { vec3 ab = uCut.xyz - cameraPosition; float ct = dot(cv, ab) / max(dot(ab, ab), 1e-4);
+${opts.cut === 'near' ? '' : `            if (uCut.w > 0.0) { vec3 ab = uCut.xyz - cameraPosition; float ct = dot(cv, ab) / max(dot(ab, ab), 1e-4);
               if (ct > 0.0 && ct < 0.92) { float cr = uCut.w * mix(1.0, ${CUT.leafWide}, leafy);
-                vis = min(vis, max(smoothstep(cr * 0.72, cr, length(cv - ab * ct)), smoothstep(0.8, 0.92, ct))); } }
+                vis = min(vis, max(smoothstep(cr * 0.72, cr, length(cv - ab * ct)), smoothstep(0.8, 0.92, ct))); } }`}
             if (vis < 0.995 && vis < hnBayer8(gl_FragCoord.xy) + 0.008) discard; }` : ''}`)
         .replace('#include <color_fragment>', `#include <color_fragment>${det ? '\n{ float mid = floor(vFx.w * 15.9375 + 0.5); if (mid > 0.5) diffuseColor.rgb = detailColor(mid, diffuseColor.rgb, vOPos, normalize(vON), uNoise); }' : ''}`)
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * vFx.x * (${opts.alwaysGlow ? '1.0' : 'uLit'}) * 2.6;${opts.flood ? `\ntotalEmissiveRadiance += diffuseColor.rgb * vec3(1.0, 0.8, 0.56) * uLit * ${opts.flood.toFixed(2)} * (1.0 - 0.45 * smoothstep(2.0, 30.0, vWPos.y)) * (0.75 + 0.25 * abs(normalize(vWN).y));` : ''}${opts.alphaTest ? '\ntotalEmissiveRadiance += diffuseColor.rgb * uSunCol * 0.05 * max(dot(normalize(vWN), -uSunDir) * 0.5 + 0.5, 0.0);' : ''}`)
@@ -120,7 +120,9 @@ export function buildMaterials(renderer, quality, atlas) {
   };
   // cut: vật che khuất tầm nhìn tự mờ đi (xem CUT ở cuối tệp): vật áp sát ống kính, và vật chắn giữa camera với nhân vật
   M.prop = M.makeProp({ map: atlas, detail: true, cut: true });
-  M.propSolid = M.makeProp({ map: atlas }); // cho xe của người chơi: không bao giờ bị đục lỗ
+  // xe của người chơi: không bị đục lỗ khi chắn giữa camera và nhân vật (lúc đi xe, chiếc xe luôn nằm trên đường nhìn đó), chỉ mờ đi
+  // khi áp sát ống kính (đi bộ lùi qua chiếc xe đang dựng, camera bị ép sát tường lúc đi xe) để không bao giờ thành một khung hình đen
+  M.propSolid = M.makeProp({ map: atlas, cut: 'near' });
   // công trình biểu tượng: có chất liệu chi tiết, ban đêm được đèn pha hắt sáng như ngoài đời
   M.landmark = M.makeProp({ side: THREE.DoubleSide, detail: true, flood: 0.34, cut: true });
   // tán lá: thẻ lá trong suốt cắt theo alpha, hai mặt, đung đưa theo gió
@@ -177,7 +179,7 @@ export function buildMaterials(renderer, quality, atlas) {
 
 // ----- Vật che khuất tầm nhìn -----
 // Camera góc ba không va chạm với cây, cột, biển (chỉ va chạm với nhà và tường), nên phải có cách nhìn xuyên những thứ đó.
-// Hai luật, cùng một mẫu chấm:
+// Hai luật, cùng một mẫu chấm (cut: 'near' chỉ dùng luật 1):
 //   1. ÁP SÁT ỐNG KÍNH: mọi điểm ảnh của đồ vật gần camera hơn near[0] mét thì biến mất hẳn, từ near[0] tới near[1] thì hiện dần.
 //      Tán lá (và mọi thứ đung đưa theo gió: cờ, bạt) dùng bán kính lớn hơn (leafNear) vì một chiếc lá cách ống kính một mét đã che
 //      nửa màn hình. Nhờ vậy đứng dưới rặng liễu hay để camera chui vào tán cây thì lá quanh ống kính tan đi gọn gàng, lá ở xa còn nguyên.
