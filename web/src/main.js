@@ -189,7 +189,8 @@ async function boot() {
   };
   let warpTo = null;
   // look: [x, z] của địa danh cần nhìn thấy khi tới nơi (đi nhanh bằng bản đồ)
-  const warp = (x, z, yaw, look = null) => { warpTo = [x, z, yaw, look]; chunks.update(x, z, true); G.home = null; }; // đi nhanh tới đâu là đóng dấu ở đó ngay
+  // thẻ địa danh đang mở thuộc chỗ cũ ("Gần đây: ... 45 m về phía tây" sai ngay khi tới nơi khác): đóng lại
+  const warp = (x, z, yaw, look = null) => { warpTo = [x, z, yaw, look]; chunks.update(x, z, true); G.home = null; hud.hideCard(); }; // đi nhanh tới đâu là đóng dấu ở đó ngay
   const shareText = () => T('shareText', { n: passport.visited.size, t: passport.items.length });
   const share = async () => { const url = location.origin + location.pathname; try { if (navigator.share) await navigator.share({ title: document.title, text: shareText(), url }); else { await navigator.clipboard.writeText(`${shareText()} ${url}`); hud.toast(T('copied'), 3, '', '🔗'); } } catch { /* người dùng huỷ */ } };
   $('k-share').addEventListener('click', share); $('d-share').addEventListener('click', share);
@@ -273,8 +274,12 @@ async function boot() {
       // Chỗ đứng tính sẵn sát địa danh (vài mét, cạnh bậc thềm): camera sau lưng chỉ thấy chân tường (QC vòng 2: Nhà hát Lớn, Nhà thờ Lớn).
       // Lùi ra tới 24 m kể từ mốc, theo hướng từ mốc về chỗ đứng, nếu đường lùi thông (không vướng tường, rào, mặt nước) và chỗ mới không
       // ở lòng đường xe chạy; không được thì đứng chỗ cũ. Rồi quay mặt về địa danh.
-      if (look) { const ux = p.x - look[0], uz = p.z - look[1], d0 = Math.hypot(ux, uz) || 1;
-        for (let d = 24; d > d0 + 1; d -= 2) { const cx = look[0] + (ux / d0) * d, cz = look[1] + (uz / d0) * d; if (nav.freeStep(p.x, p.z, cx, cz, 0.4) && !nav.onRoad(cx, cz)) { p.x = cx; p.z = cz; yaw = Math.atan2(look[0] - cx, look[1] - cz); break; } } }
+      // Chỗ mới phải còn 4,6 m thông phía sau lưng cho camera (không thì camera bị tường ép sát lưng, lại chỉ thấy chân công trình);
+      // không chỗ nào đủ thì lấy chỗ xa nhất đi tới được.
+      if (look) { const ux = p.x - look[0], uz = p.z - look[1], d0 = Math.hypot(ux, uz) || 1, vx = ux / d0, vz = uz / d0; let pick = null;
+        for (let d = 24; d > d0 + 1; d -= 2) { const cx = look[0] + vx * d, cz = look[1] + vz * d; if (!nav.freeStep(p.x, p.z, cx, cz, 0.4) || nav.onRoad(cx, cz)) continue;
+          if (!pick) pick = [cx, cz]; if (nav.freeStep(cx, cz, cx + vx * 4.6, cz + vz * 4.6, 0.3)) { pick = [cx, cz]; break; } }
+        if (pick) { p.x = pick[0]; p.z = pick[1]; yaw = Math.atan2(look[0] - p.x, look[1] - p.z); } }
       if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, yaw ?? player.yaw); cam.snap(player); warpTo = null;
       // tới nơi là phố đã đông sẵn như lúc vào game (không thì dòng xe chỉ sinh dần từ chỗ khuất mắt, con phố vắng tanh nửa phút đầu)
       camera.position.set(player.pos.x - Math.sin(player.yaw) * 5, 3, player.pos.z - Math.cos(player.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
