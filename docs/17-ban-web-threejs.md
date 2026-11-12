@@ -83,7 +83,7 @@ Các kỹ thuật chính:
 1. **Mặt đất bằng phép toán đa giác.** Mỗi đoạn đường được đệm theo bề rộng rồi gộp lại (Clipper); phần còn
    lại của ô là khối phố. Nhờ đó vỉa hè nâng 16 cm, bó vỉa, góc phố bo tròn và kè hồ đều là hình học thật. Bề
    rộng đường được thu theo khoảng trống thật giữa hai dãy nhà (`build_world.mjs`) nên đường không ăn vào mặt tiền.
-2. **Mặt tiền nhà ống trong một lệnh vẽ.** 30 lớp mặt đứng (một gian × một tầng: ban công sắt, cửa chớp,
+2. **Mặt tiền nhà ống trong một lệnh vẽ.** 40 lớp mặt đứng (một gian × một tầng: ban công sắt, cửa chớp,
    chuồng cọp, cửa cuốn, quán phở, biệt thự Pháp, tập thể...) vẽ bằng canvas, gói thành `sampler2DArray`. Worker
    chia tường mặt phố thành từng gian và chọn lớp, màu vôi, màu biển cho từng gian; shader chỉ việc vẽ theo.
    Tường giáp nhà bên là tường trơn; khuất hẳn sau nhà cao hơn thì không sinh ra.
@@ -126,6 +126,30 @@ Các kỹ thuật chính:
 12. **Âm thanh tổng hợp.** Không tải tệp âm thanh nào: tiếng máy theo vòng tua và hộp số bốn cấp, gió, phanh, bước
    chân, nền phố ngày và đêm, nhạc ngũ cung tự sáng tác với ba âm sắc gợi đàn bầu, đàn tranh, sáo trúc
    (`audio/audio.js`, ghi công trong `CREDITS.md`).
+13. **Biển tên phố bằng tên thật.** Cả 761 tên đường trong bản đồ được vẽ một lần lúc khởi động vào một atlas một kênh
+   (4096², mức Nhẹ 2048²); vị trí từng ô tính từ danh sách tên đã sắp xếp nên worker và luồng chính luôn ra cùng kết
+   quả mà không phải truyền gì cho nhau (`world/streetnames.js`, `streetatlas.js`). Mỗi ô phố chi tiết có thêm đúng một
+   lưới cho biển tên, đèn tín hiệu và các bảng chữ của đồ đạc phố (`gen/furniture.js`).
+14. **Một nguồn sự thật cho đèn tín hiệu.** `world/junctions.js` tính một lần nút nào có đèn, nhánh nào thuộc pha nào và
+   chu kỳ (xanh 23, vàng 3, đỏ 30 giây). Shader vẽ bóng đèn và số đếm ngược, còn dòng xe (`actors/trafficsim.js`) hỏi
+   đúng hàm đó với cùng đồng hồ, nên xe dừng khi người chơi thấy đèn đỏ. Nhánh vào nút quá ngắn thì xe dừng từ đoạn
+   đường trước đó.
+15. **Dòng xe tách ba lớp.** `trafficsim.js` là mô phỏng thuần (chạy được trong Node, có bài thử bằng số
+   `tools/traffic_check.mjs`: cơ cấu xe theo khu và giờ, tốc độ, số xe kẹt, xe đè lên nhau, xe né người qua đường);
+   `fleet.js` vẽ bằng instancing (mỗi loại xe và mỗi mức chi tiết một lệnh vẽ, quầng đèn đêm của mọi xe chung một lệnh
+   vẽ); `traffic.js` nối hai bên. Đường mang thêm hai cờ lấy từ thẻ OSM: cấm ô tô (ngõ nhỏ, cầu Long Biên, làn xe máy
+   cầu Chương Dương) và cấm xe máy (lòng giữa cầu Chương Dương).
+16. **Nhà ống theo từng lô.** Khối nhà liền dãy của OSM được cắt thành các lô rộng 2,9 đến 5,3 m, mỗi lô có số tầng, màu,
+   tuổi nhà và kiểu mái riêng (`gen/buildings.js`); 40 lớp mặt đứng; biển hiệu theo quy tắc phố cổ (dải tầng trệt, cao
+   không quá 0,8 m, có biển vẫy). Bảng `gen/heroes.js` đặt chiều cao, màu và một nét nhận diện cho 28 toà nhà có tên.
+17. **Không khí Hà Nội.** Trời mù trắng xám là mặc định, có bốn kiểu thời tiết (`?weather=mu|thu|he|nom`). Sương hoà mọi
+   điểm ảnh ở xa vào đúng màu trời phía sau nó, ban đêm trời hửng nâu xám vì đèn thành phố nên cảnh xa không còn đen.
+   Mặt hè đổi theo khu (đá granite quanh Hồ Gươm, đá xanh xám ở phố chính, gạch đỏ hoặc terrazzo ở nơi khác), bó vỉa
+   vát có rãnh và miệng thu nước, ô cây, nắp hố ga, vạch sơn mòn; vũng sáng dưới đèn làm sáng chất liệu mặt đất thay
+   vì phủ trắng lên nó (`engine/sky.js`, `world/textures.js`, `gen/ground.js`, `gen/pits.js`).
+18. **Cầu Chương Dương đúng mặt cắt.** Bộ dựng bản đồ nắn ba tuyến của cầu thành lòng ô tô 10,4 m ở giữa và hai làn xe
+   máy 3,4 m hai bên, chừa khe 0,4 m cho hai mặt phẳng dàn thép (`landmarks/cau_chuong_duong.js`); trụ cầu đứng đúng
+   đầu mỗi nhịp dàn. Người chơi không đi xuyên dàn được vì hai mặt cầu không liền nhau.
 
 ## 5. Hiệu năng
 
@@ -174,6 +198,7 @@ npm run build      # ra web/dist
 node tools/smoke.mjs   # kiểm thử khói trong Chromium (đặt CHROME_PATH nếu Playwright không có sẵn trình duyệt)
 npm run lint           # biến chưa khai báo, khai báo trùng
 npm run physics        # 25 phép thử vật lý so với số đo ngoài đời
+node tools/traffic_check.mjs   # dòng xe bằng số: cơ cấu, tốc độ, kẹt, xe đè lên nhau, né người qua đường
 npm run reach          # cả 44 điểm hộ chiếu có lối đi tới
 node tools/accept.mjs  # nghiệm thu trên trình duyệt: đi bộ qua cầu Thê Húc, xoay camera sát tường, đi nhanh 44 điểm,
                        # khách ngồi sau, HUD 1140 × 670, âm thanh và hai công tắc, các lỗi nhẹ (chạy lâu, không nằm trong CI)
@@ -190,7 +215,9 @@ npm run assets                         # sau khi đổi viewer/assets/walker.glb
 
 Tham số đường dẫn để chụp ảnh và dò lỗi: `?q=low|medium|high`, `?h=17.2` (cố định giờ), `?street=Phố Hàng Mã`,
 `?at=x,z` (mét, gốc ở Hồ Gươm, x hướng đông, z hướng nam), `?yaw=`, `?bike`, `?lang=en`, `?fresh` (bỏ vị trí đã
-lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình).
+lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình), `?site=id` (đứng trước một công trình),
+`?weather=mu|thu|he|nom`. `node tools/shot.mjs out.png "h=17.2&street=Phố Hàng Đào"` chụp ảnh trong game không cần build;
+`node tools/hours.mjs` chụp 24 giờ tại một chỗ để soát màu trời.
 
 ### Xưởng vẽ: công cụ dựng và soát mô hình
 
@@ -220,8 +247,8 @@ node tools/studio.mjs --shots out/ lm:thap_rua # chụp bảng 6 góc: 3/4, chí
 | `engine/` | renderer + hậu kỳ + độ phân giải động, bầu trời và giờ trong ngày, camera góc ba, điều khiển (bàn phím, chuột, cảm ứng, tay cầm), bộ điều tiết |
 | `world/` | giải mã bản đồ và cao độ cầu (`data.js`), worker và các bộ sinh `gen/`, chất liệu vẽ thủ tục, chất liệu chi tiết (`detail.js`), mặt đứng, biển hiệu, quản lý ô phố, va chạm |
 | `world/landmarks/` | 15 công trình dựng tay (14 đặt theo `sites.js`, cầu Long Biên dựng dọc tuyến cầu) |
-| `models/` | cây, đèn, xe máy, ô tô, xe buýt, xích lô |
-| `actors/` | Minh, dòng xe, người đi bộ, nướng hoạt hình |
+| `models/` | cây, đèn, đồ đạc phố (cột biển, đèn tín hiệu, tủ điện, nhà chờ, rào công trường), xe máy, ô tô, xe buýt, xe đạp, xích lô, xe điện du lịch |
+| `actors/` | Minh, dòng xe (`trafficsim.js`, `fleet.js`, `traffic.js`), người đi bộ theo vai (`crowd.js`, `cast.js`), nướng hoạt hình |
 | `game/` | hộ chiếu, cuốc xe ôm |
 | `ui/`, `audio/` | giao diện DOM, bản đồ, chữ song ngữ; âm thanh tổng hợp bằng WebAudio |
 | `../dev/`, `../tools/studio.mjs` | xưởng vẽ: trang soi mô hình, bộ soát lỗi, danh mục mô hình |
@@ -233,8 +260,9 @@ node tools/studio.mjs --shots out/ lm:thap_rua # chụp bảng 6 góc: 3/4, chí
   chi tiết của từng ngôi nhà.
 - Mọi người đi bộ và người lái xe dùng chung một mô hình (khác màu áo, chiều cao, nón); chưa có nữ, trẻ em,
   người già riêng.
-- Cầu đã có độ cao thật nhưng kết cấu còn giản lược: cầu Chương Dương chưa có dàn thép, trụ cầu là trụ tường đơn
-  giản đặt đều; mặt cầu Long Biên là bản đặc chứ chưa phải sàn thép hở; dốc cầu gãy góc nhẹ ở đỉnh dốc. Cầu cạn đường
+- Cầu đã có độ cao thật nhưng kết cấu còn giản lược: dàn thép Chương Dương dựng theo ước lượng (nhịp 89 m, cao 10 m,
+  chưa đối chiếu bản vẽ), trụ cầu là trụ tường đơn giản; mặt cầu Long Biên là bản đặc chứ chưa phải sàn thép hở; dốc
+  cầu gãy góc nhẹ ở đỉnh dốc. Cầu cạn đường
   sắt qua phố Phùng Hưng (ngoài đoạn dẫn lên cầu Long Biên) chưa dựng. Người đi bộ chưa lên cầu. Bản đồ dừng ở giữa
   sông: chạy hết cầu là gặp mép bản đồ.
 - Chưa có giọng nói, tiếng rao thật; mọi âm thanh và nhạc nền là tổng hợp (không tìm được bản thu nào vừa hợp vừa có
