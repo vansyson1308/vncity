@@ -41,6 +41,7 @@ class Pen {
     const k = this.k, g = this.g, gr = g.createLinearGradient(0, y * k, 0, (y + len) * k);
     gr.addColorStop(0, `rgba(60,58,48,${a})`); gr.addColorStop(1, 'rgba(60,58,48,0)'); g.fillStyle = gr; g.fillRect((x - w / 2) * k, y * k, w * k, len * k); return this;
   }
+  disc(x, y, r, col) { const k = this.k, g = this.g; g.fillStyle = col; g.beginPath(); g.arc(x * k, y * k, r * k, 0, 7); g.fill(); return this; }
   text(s, x, y, size, col, font = 'bold', align = 'center') { const g = this.g; g.font = `${font} ${size * this.k}px "Be Vietnam Pro", Arial, sans-serif`; g.textAlign = align; g.textBaseline = 'middle'; g.fillStyle = col; g.fillText(s, x * this.k, y * this.k); return this; }
 
   // ----- cấu kiện -----
@@ -278,6 +279,101 @@ export function facadeLayers(S = 512) {
     for (const x of [36, 93, 363, 420]) p.rect(x, 142, 56, 350, WOOD2, 0).rect(x, 142, 3, 350, 'rgba(0,0,0,0.4)').rect(x + 53, 142, 3, 350, 'rgba(0,0,0,0.3)').rect(x + 10, 166, 36, 136, 'rgba(0,0,0,0.17)').rect(x + 10, 322, 36, 150, 'rgba(0,0,0,0.14)');
     p.rect(36, 478, 440, 14, '#3a2a1c', 0); p.dirtBase().step();
   });
+  // Bốn kiểu tầng trệt theo nghề (QC vòng 2: hàng lụa, áo dài, tranh thêu, hàng mã đều bày một kiểu kệ nhiều màu như hiệu sách).
+  // Chọn theo biển của gian ở gen/buildings.js shopLayer; ba lớp đầu cũng được hoán kênh màu theo gian như lớp hàng bày (shader dưới).
+  add(101, (p) => { // L.S_CLOTH hàng vải, quần áo, lụa, áo dài, may đo: áo dài treo sào, sơ mi treo móc, cây vải cuộn dựng góc, quầy gấp vải
+    shopBase(p); p.rollBox(122);
+    p.grad(36, 152, 440, 340, '#ece2cc', '#b3a385'); p.rect(36, 152, 440, 340, 'rgba(0,0,0,0)', M_LIT);
+    p.rect(60, 162, 392, 6, '#fff6d8', M_LIT);
+    const silk = ['#b8323a', '#d9a03a', '#2f5c8a', '#3f7a5a', '#e9dcc0', '#c97a9a', '#6a4a8a', '#f4f1e8', '#1f2a36', '#8a2a2a', '#4a8a8a'], C = () => silk[(p.R() * silk.length) | 0];
+    p.rect(46, 188, 196, 4, '#6a6a66', M_LIT); // sào áo dài: thân áo ôm, hai tà dài
+    for (let i = 0; i < 8; i++) { const x = 52 + i * 24, c = C(), l = 150 + p.R() * 60; p.rect(x + 9, 192, 3, 6, '#4a4a46').rect(x + 2, 198, 17, 34, c).rect(x, 232, 9, l - 34, c).rect(x + 12, 232, 9, l - 34, c).rect(x + 9, 232, 3, 40, 'rgba(0,0,0,0.25)'); }
+    p.rect(250, 206, 104, 4, '#6a6a66', M_LIT); // sào sơ mi, áo phông
+    for (let i = 0; i < 5; i++) { const x = 254 + i * 20, c = C(); p.rect(x + 7, 210, 3, 5, '#4a4a46').rect(x - 3, 215, 24, 12, c).rect(x + 1, 227, 16, 56, c).rect(x + 8, 215, 2, 68, 'rgba(0,0,0,0.18)'); }
+    for (let i = 0; i < 5; i++) { const x = 370 + i * 20, top = 230 + p.R() * 40, c = C(); p.rect(x, top, 16, 420 - top, c).rect(x + 3, top, 3, 420 - top, 'rgba(255,255,255,0.22)').rect(x + 12, top, 3, 420 - top, 'rgba(0,0,0,0.2)'); }
+    p.rect(250, 400, 216, 92, '#7a5a3a').rect(250, 400, 216, 6, '#9a7a52'); // quầy, các chồng vải gấp
+    for (let i = 0; i < 6; i++) { let y = 400; for (let k = 0; k < 3; k++) { const hh = 8 + p.R() * 6; y -= hh; p.rect(262 + i * 34, y, 28, hh - 1, C()); } }
+    p.grad(36, 152, 440, 90, 'rgba(190,215,230,0.18)', 'rgba(190,215,230,0)'); p.step();
+  });
+  add(102, (p) => { // L.S_ART tranh thêu, phòng tranh, đồ lưu niệm, ảnh viện: tường treo kín khung tranh, đèn rọi, bàn bày đồ lưu niệm
+    shopBase(p); p.rollBox(122);
+    p.grad(36, 152, 440, 340, '#efe4cf', '#c2b291'); p.rect(36, 152, 440, 340, 'rgba(0,0,0,0)', M_LIT);
+    const sky = ['#c9d9e0', '#e8d2a8', '#d9a07a', '#b8c8d0'], land = ['#4a7a4a', '#2f5c6a', '#6a8a3a', '#8a5a3a', '#3a4a6a'], frame = ['#b08a3a', '#6a4a2a', '#2a1e16', '#c9a050'];
+    const pic = (x, y, w, h) => {
+      p.rect(x - 4, y - 4, w + 8, h + 8, frame[(p.R() * 4) | 0]); const s = p.R();
+      if (s < 0.6) { const hz = y + h * (0.35 + p.R() * 0.3); p.rect(x, y, w, hz - y, sky[(p.R() * 4) | 0]).rect(x, hz, w, y + h - hz, land[(p.R() * 5) | 0]); if (p.R() < 0.6) p.rect(x + w * (0.2 + p.R() * 0.5), hz - h * 0.12, Math.max(3, w * 0.12), h * 0.18, '#3a2a1e'); } // phong cảnh: trời, đồng, mái nhà
+      else if (s < 0.85) p.rect(x, y, w, h, '#efe9dc').disc(x + w / 2, y + h / 2, Math.min(w, h) * 0.24, ['#c94a6a', '#3a6a4a', '#b8323a'][(p.R() * 3) | 0]); // sen, hoa trên nền lụa
+      else p.rect(x, y, w, h, '#1e1a16').rect(x + w * 0.15, y + h * 0.2, w * 0.7, h * 0.6, '#b08a3a'); // tranh sơn mài
+    };
+    let x = 50; while (x < 320) { const w = 40 + p.R() * 50, h = 30 + p.R() * 40; pic(x, 178 + p.R() * 10, w, h); x += w + 16; }
+    x = 50; while (x < 320) { const w = 34 + p.R() * 56, h = 40 + p.R() * 46; pic(x, 266 + p.R() * 10, w, h); x += w + 16; }
+    pic(352, 178, 110, 150);
+    for (let i = 0; i < 5; i++) p.rect(70 + i * 80, 156, 10, 6, '#fff3c8');
+    p.rect(50, 410, 412, 82, '#6a4a2e').rect(50, 410, 412, 6, '#8a6a42');
+    for (let i = 0; i < 12; i++) { const hh = 10 + p.R() * 26; p.rect(60 + i * 33, 410 - hh, 14 + p.R() * 16, hh, ['#b8323a', '#d9a03a', '#3f7a5a', '#2f5c8a', '#e9dcc0', '#8a5a3a'][(p.R() * 6) | 0]); }
+    p.grad(36, 152, 440, 90, 'rgba(190,215,230,0.18)', 'rgba(190,215,230,0)'); p.step();
+  });
+  add(103, (p) => { // L.S_STORE hàng khô, tạp hoá, bánh kẹo, ô mai, chè, thuốc bắc: kệ gỗ xếp kín gói nhỏ, hàng lọ thuỷ tinh trên quầy, bao tải xắn miệng
+    shopBase(p); p.rollBox(122);
+    p.grad(36, 152, 440, 340, '#4a3e2e', '#1e1912'); p.rect(36, 152, 440, 340, 'rgba(0,0,0,0)', M_LIT);
+    p.rect(80, 164, 352, 6, '#fff6d8');
+    const pk = ['#c9a050', '#b8323a', '#e0c890', '#8a5a2a', '#d9a03a', '#3f7a5a', '#e9e3d0', '#a8442e', '#6a4a2a'];
+    for (let r = 0; r < 3; r++) { const y = 216 + r * 46; p.rect(46, y, 420, 4, '#6a4e32'); let x = 50; while (x < 456) { const w = 8 + p.R() * 18, h = 14 + p.R() * 22; if (x + w > 462) break; p.rect(x, y - h, w, h, pk[(p.R() * pk.length) | 0]); x += w + 2 + p.R() * 3; } }
+    p.rect(46, 392, 420, 100, '#5a4430').rect(46, 392, 420, 6, '#7a5e40');
+    for (let i = 0; i < 9; i++) { const x = 58 + i * 45; p.rect(x, 352, 30, 40, 'rgba(210,225,230,0.55)').rect(x + 3, 364, 24, 28, ['#c97a3a', '#6a3a2a', '#d9b46a', '#4a6a3a', '#a8442e', '#e0c890'][(p.R() * 6) | 0]).rect(x + 2, 346, 26, 7, '#c9c2b0').rect(x + 5, 356, 3, 30, 'rgba(255,255,255,0.45)'); }
+    for (let i = 0; i < 4; i++) { const x = 70 + i * 100; p.rect(x, 430, 60, 62, '#c9b48a').rect(x - 3, 424, 66, 10, '#b8a37a').rect(x + 6, 432, 48, 10, ['#e8dcc0', '#8a5a2a', '#d9c060', '#4a3a2a'][(p.R() * 4) | 0]); }
+    p.step();
+  });
+  add(104, (p) => { // L.S_PAPER hàng mã, đèn lồng, đồ trang trí, đồ chơi, hương nến: đèn lồng treo kín trần, giấy đỏ vàng chồng trên kệ (giữ màu đỏ vàng, không hoán)
+    shopBase(p); p.rollBox(122);
+    p.grad(36, 152, 440, 340, '#5a2a1a', '#24100a'); p.rect(36, 152, 440, 340, 'rgba(0,0,0,0)', M_LIT);
+    const red = ['#d8281e', '#e8b02a', '#c21a2a', '#f0d060', '#e05a1a', '#b8323a', '#f2e6c8'];
+    for (let r = 0; r < 3; r++) for (let i = 0; i < 9 - (r % 2); i++) {
+      const x = 62 + i * 48 + (r % 2) * 24, y = 186 + r * 52 + p.R() * 6, rr = 15 + p.R() * 6, c = red[(p.R() * 6) | 0];
+      p.line(x, 152, x, y - rr, '#2a1a10', 1.5).disc(x, y, rr, c).rect(x - rr * 0.45, y - rr - 3, rr * 0.9, 5, '#c9a040').rect(x - rr * 0.45, y + rr - 2, rr * 0.9, 5, '#c9a040').rect(x - 1, y - rr + 2, 2, rr * 2 - 4, 'rgba(0,0,0,0.25)').rect(x - 1, y + rr + 3, 2, 12, c);
+    }
+    p.rect(46, 360, 420, 4, '#6a3a22');
+    for (let i = 0; i < 14; i++) { const h = 12 + p.R() * 30; p.rect(50 + i * 29.5, 360 - h, 25, h, red[(p.R() * red.length) | 0]).rect(50 + i * 29.5, 360 - h, 25, 3, '#f0d060'); }
+    p.rect(46, 420, 420, 72, '#4a2a18');
+    for (let i = 0; i < 10; i++) { const h = 16 + p.R() * 40; p.rect(56 + i * 41, 420 - h, 34, h, red[(p.R() * red.length) | 0]).rect(60 + i * 41, 420 - h + 6, 26, 4, '#f0d060'); }
+    p.step();
+  });
+  add(105, (p) => { // L.S_GARAGE sửa xe máy, rửa xe, kim khí: lòng tiệm tối, lốp treo kín tường, bảng dụng cụ, can dầu, xe máy dựng chân chống
+    shopBase(p); p.rollBox(122);
+    p.grad(36, 152, 440, 340, '#3a3a38', '#161614'); p.rect(36, 152, 440, 340, 'rgba(0,0,0,0)', M_LIT);
+    p.rect(90, 162, 330, 6, '#f2f6ff');
+    for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) { const x = 70 + i * 46 + r * 23, y = 212 + r * 62; p.disc(x, y, 22, '#121212').disc(x, y, 12, '#2a2a2a').disc(x, y, 6, '#6a6a6a'); }
+    p.rect(360, 180, 100, 120, '#5a5e60'); for (let i = 0; i < 6; i++) p.rect(368 + i * 15, 190 + (i % 2) * 8, 4, 50 + (i % 3) * 14, '#b8bcc0');
+    for (let i = 0; i < 5; i++) p.rect(370 + i * 18, 270, 12, 22, ['#c8372d', '#e0a020', '#2f6fb0'][i % 3]);
+    for (let i = 0; i < 6; i++) p.rect(60 + i * 30, 440, 22, 30, ['#c8372d', '#e0a020', '#2f6fb0', '#3a7a3a'][(p.R() * 4) | 0]).rect(64 + i * 30, 434, 8, 6, '#2a2a2a');
+    p.disc(262, 452, 34, '#0e0e0e').disc(262, 452, 14, '#888888').disc(392, 452, 34, '#0e0e0e').disc(392, 452, 14, '#888888');
+    p.rect(270, 400, 110, 26, '#8a1a1a').rect(300, 384, 60, 18, '#1a1a1a').rect(372, 372, 8, 40, '#555555').rect(360, 368, 40, 6, '#333333');
+    p.rect(36, 478, 440, 14, '#2a2a28'); p.dirtBase().step();
+  });
+  add(106, (p) => { // L.S_SALON cắt tóc: gương lớn ốp tường, kệ chai lọ dưới gương, ghế cắt tóc bọc da đen, đèn trắng
+    shopBase(p); p.rollBox(122);
+    p.grad(36, 152, 440, 340, '#e8ecef', '#b9c2c8'); p.rect(36, 152, 440, 340, 'rgba(0,0,0,0)', M_LIT);
+    p.rect(70, 160, 372, 6, '#ffffff');
+    for (let i = 0; i < 3; i++) {
+      const x = 60 + i * 136;
+      p.rect(x - 4, 186, 124, 4, '#e9edef').rect(x, 190, 116, 150, '#9fb3bf').grad(x + 6, 196, 104, 138, 'rgba(255,255,255,0.45)', 'rgba(150,170,185,0.2)');
+      p.rect(x + 20, 346, 76, 8, '#d8dde0'); for (let k = 0; k < 4; k++) p.rect(x + 26 + k * 16, 330, 8, 16, ['#2f6fb0', '#c8372d', '#e9e3d0', '#3a7a3a'][k]);
+      p.rect(x + 24, 360, 68, 24, '#1a1a1c').rect(x + 30, 380, 56, 46, '#1a1a1c').rect(x + 52, 426, 12, 40, '#7a7d80').rect(x + 34, 466, 48, 8, '#5a5d60');
+    }
+    p.rect(36, 478, 440, 14, '#d9dcd6'); p.step();
+  });
+  add(107, (p) => { // L.S_FLORA hoa tươi, cây cảnh: cây lá to phía sau, ba bậc xô hoa nhiều màu phía trước
+    shopBase(p); p.rollBox(122);
+    p.grad(36, 152, 440, 340, '#e9e6dc', '#bdb7a4'); p.rect(36, 152, 440, 340, 'rgba(0,0,0,0)', M_LIT);
+    p.rect(70, 162, 372, 6, '#fff6d8');
+    const fl = ['#d8281e', '#f0c020', '#f4f1e8', '#d86a9a', '#8a3ab0', '#f08a3a', '#c21a4a'], lf = ['#2f6a2a', '#3f7a32', '#24561f', '#4a8a3a'];
+    for (let i = 0; i < 7; i++) { const x = 60 + i * 62; p.rect(x + 18, 300, 8, 60, '#5a4a2a'); for (let k = 0; k < 7; k++) p.disc(x + 22 + (p.R() - 0.5) * 44, 230 + p.R() * 70, 14 + p.R() * 10, lf[(p.R() * 4) | 0]); p.rect(x + 6, 350, 34, 24, '#8a4a2a'); }
+    for (let r = 0; r < 3; r++) {
+      const y = 392 + r * 34; p.rect(46, y + 22, 420, 6, '#6a5a3a');
+      for (let i = 0; i < 12; i++) { const x = 54 + i * 34 + (r % 2) * 10; if (x > 440) break; const c = fl[(p.R() * fl.length) | 0]; p.rect(x, y + 4, 22, 18, ['#2f5c8a', '#7a7a7a', '#c8372d'][(p.R() * 3) | 0]); for (let k = 0; k < 5; k++) p.disc(x + 4 + p.R() * 14, y - 4 + p.R() * 10, 5 + p.R() * 3, k < 2 ? lf[(p.R() * 4) | 0] : c); }
+    }
+    p.step();
+  });
   // ---- cửa nhà trong ngõ (L.DOOR) ----
   add(16, (p) => {
     p.plaster('#e2ded2');
@@ -504,7 +600,9 @@ export function facadeMaterial(tex, noise) {
         // (lớp hàng bày và lớp tủ kính: món hàng có màu được hoán kênh màu theo gian, nên kệ hàng hai nhà liền nhau không cùng một bảng màu)
         if (shopL > 0.5 && fsign < 0.5) {
           float gh = fract(fseed * 0.7548777 + 0.11), gp = fract(fseed * 0.5698403 + 0.37);
-          if (sat > 0.25 && mk > 0.5 && (abs(layer - ${L.S_OPEN}.0) < 0.5 || abs(layer - ${L.S_GLASS}.0) < 0.5)) fcol = gp < 0.34 ? fcol : gp < 0.67 ? fcol.gbr : fcol.brg;
+          if (sat > 0.25 && mk > 0.5 && (abs(layer - ${L.S_OPEN}.0) < 0.5 || abs(layer - ${L.S_GLASS}.0) < 0.5 || (layer > ${L.S_CLOTH - 0.5} && layer < ${L.S_STORE + 0.5}))) fcol = gp < 0.34 ? fcol : gp < 0.67 ? fcol.gbr : fcol.brg;
+          // hàng mã giữ tông đỏ vàng (đổi kênh thì thành đèn lồng xanh lá), chỉ ngả gian này vàng cam hơn, gian kia đỏ thắm hơn
+          if (sat > 0.25 && mk > 0.5 && abs(layer - ${L.S_PAPER}.0) < 0.5) fcol.g = gp < 0.34 ? fcol.g : gp < 0.67 ? mix(fcol.g, fcol.r * 0.72, 0.55) : fcol.g * 0.55;
           vec3 gt = gh < 0.25 ? vec3(1.0, 0.86, 0.7) : gh < 0.5 ? vec3(0.78, 0.92, 1.0) : gh < 0.75 ? vec3(1.0, 0.76, 0.76) : vec3(0.86, 1.0, 0.8); fcol *= mix(vec3(1.0), gt, mk * 0.75);
         }
         fcol = mix(fcol, tx.rgb * SIGNC[int(vVar.w + 0.5)] * 1.5, fsign);

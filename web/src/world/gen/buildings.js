@@ -2,7 +2,7 @@
 // kiểu cửa, màu vôi, biển hiệu của từng gian; shader (world/facades.js) chỉ việc vẽ theo.
 // Thuộc tính đỉnh: uv = (gian, tầng), fx = [kiểu, hạt giống, số tầng, cờ], var = [lớp tầng trên, lớp tầng trệt, màu vôi, màu biển].
 // Cờ: bit 0 có cửa hàng, bit 1-2 tuổi nhà (0 mới sơn .. 3 cũ kỹ, shader vẽ loang mốc theo đó).
-// Tường giáp nhà bên cạnh là tường trơn; khuất hẳn sau nhà cao hơn thì bỏ, không vẽ.
+// Tường giáp nhà bên cạnh là tường trơn, vẫn dựng từ mặt đất kể cả khi khuất sau nhà cao hơn: mỗi toà là một khối kín.
 // Dãy nhà ống mà bản đồ vẽ gộp thành một hình lớn được cắt lại thành từng "lô" theo mặt phố: mỗi lô một số tầng, một màu vôi,
 // một tuổi nhà, nhô khối riêng lên trên nền chung nên hai nhà cạnh nhau hiếm khi cao bằng nhau (art bible, dấu hiệu 2).
 import earcut from 'earcut';
@@ -73,14 +73,24 @@ export function tubeLook(zone, floors, seed) {
   const age = era === 0 ? 2 + (hash(seed, 52) < 0.6 ? 1 : 0) : era === 1 ? 1 + (hash(seed, 52) < 0.45 ? 1 : 0) : hash(seed, 52) < 0.35 ? 1 : 0;
   return { era, up, tint, age };
 }
-// Tầng trệt cửa hàng khớp với biển: quán ăn, cà phê, sảnh khách sạn, cửa kính, hay hàng bày ra cửa; một phần đang đóng cửa.
+// Tầng trệt cửa hàng khớp với biển: quán ăn, cà phê, sảnh khách sạn, cửa kính, hàng bày ra cửa, hay kiểu riêng của nghề (hàng vải,
+// tranh, hàng khô, hàng mã); một phần đang đóng cửa. Nhà cổ thì một phần vẫn là cửa gỗ bức bàn dù bán gì.
+const TRADE_LAYER = new Map();
+for (const [ly, list] of [[L.S_CLOTH, ['QUẦN ÁO', 'THỜI TRANG', 'MAY ĐO', 'ÁO DÀI', 'LỤA TƠ TẰM', 'VẢI', 'CHĂN GA GỐI', 'LEN · SỢI', 'PHỤ LIỆU MAY', 'GIẶT LÀ']],
+  [L.S_ART, ['TRANH THÊU', 'PHÒNG TRANH', 'TRANH DÂN GIAN', 'ĐỒ LƯU NIỆM', 'ẢNH VIỆN', 'KHẮC DẤU']],
+  [L.S_STORE, ['TẠP HOÁ', 'BÁNH KẸO', 'Ô MAI', 'MẮM · MUỐI', 'CHÈ THÁI NGUYÊN', 'BÁNH CỐM', 'DƯỢC LIỆU', 'THUỐC BẮC', 'ĐÔNG Y']],
+  [L.S_PAPER, ['VÀNG MÃ', 'HƯƠNG · NẾN', 'ĐÈN LỒNG', 'ĐỒ TRANG TRÍ', 'ĐỒ CHƠI', 'ĐỒ THỜ']],
+  [L.S_GARAGE, ['SỬA XE MÁY', 'RỬA XE', 'KIM KHÍ', 'ĐỒ THIẾC', 'SƠN · VÔI']], [L.S_SALON, ['CẮT TÓC']], [L.S_FLORA, ['HOA TƯƠI', 'CÂY CẢNH']]]) for (const t of list) TRADE_LAYER.set(t, ly);
+// cửa kính mà không bày hàng ra kệ (phòng khám, hiệu thuốc, tiệm vàng, đổi tiền): không bao giờ là lớp kệ hàng mở
+const GLASS_ONLY = new Set(['NHA KHOA', 'HIỆU THUỐC', 'NGOẠI TỆ', 'VÀNG BẠC', 'ĐỒ BẠC']);
 function shopLayer(era, sign, seed) {
-  const r = hash(seed, 53), kind = SIGN_KIND[sign] || 'G';
+  const r = hash(seed, 53), kind = SIGN_KIND[sign] || 'G', trade = SIGNS[sign] ? TRADE_LAYER.get(SIGNS[sign][0]) : undefined;
   if (r < 0.07) return L.S_ROLL; if (r < 0.12) return L.S_FOLD;
   if (kind === 'F') return era === 0 && r < 0.4 ? L.S_WOOD : L.S_EAT;
   if (kind === 'C') return L.S_CAFE;
   if (kind === 'H') return L.S_LOBBY;
-  if (kind === 'B') return era === 0 ? (r < 0.55 ? L.S_WOOD : L.S_OPEN) : r < 0.82 ? L.S_GLASS : L.S_OPEN;
+  if (trade !== undefined) return era === 0 && r < 0.35 ? L.S_WOOD : trade;
+  if (kind === 'B') { const open = GLASS_ONLY.has(SIGNS[sign][0]) ? L.S_GLASS : L.S_OPEN; return era === 0 ? (r < 0.55 ? L.S_WOOD : open) : r < 0.82 ? L.S_GLASS : open; }
   return era === 0 ? (r < 0.6 ? L.S_WOOD : L.S_OPEN) : era === 2 && r < 0.4 ? L.S_GLASS : L.S_OPEN;
 }
 
@@ -274,15 +284,18 @@ export function genBuildings(ctx, cx, cz) {
         const dx = bx - ax, dz = bz - az, Lw = Math.hypot(dx, dz); if (Lw < 0.05) continue;
         if (ri === 0) col.push(ax, az, bx, bz, h);
         const nx = (dz / Lw) * dir, nz = (-dx / Lw) * dir, mx = (ax + bx) / 2, mz = (az + bz) / 2;
-        let y0 = 0;
+        // Cạnh giáp nhà bên cạnh vẫn dựng tường (tường trơn, từ mặt đất lên): hai hình nhà liền vách trên bản đồ ít khi khít nhau từng
+        // đỉnh, giữa hai lô ở mặt phố hay hở một khe vài chục cm. Bỏ tường chung (như trước) thì đứng sát mặt tiền nhìn qua khe đó thấy
+        // xuyên cả dãy nhà: ban công, cục nóng điều hoà, tầng trên của nhà cao hơn treo giữa trời (QC vòng 2, phố Hàng Đào). Dựng cả hai
+        // phía thì mỗi toà là một khối kín; hai tường chung trùng nhau quay lưng vào nhau nên không nhấp nháy (mặt sau không vẽ).
         const nb = ri === 0 ? ctx.buildingAt(mx + nx * 0.9, mz + nz * 0.9, b) : null;
-        if (nb && !nb.skip) { if (nb.height >= h - 0.3) continue; y0 = nb.height; }
+        const party = !!(nb && !nb.skip), y0 = 0;
         // cạnh này trùng cạnh ngoài của một toà khác chồng lên toà này (khối đế và tháp vẽ thành hai hình): chỉ một toà dựng bức tường
         // chung, kẻo hai mặt đứng cùng một mặt phẳng nhấp nháy. Toà cao hơn dựng trọn bức tường (có cửa sổ từ mặt đất lên), toà thấp hơn
         // (hoặc cao bằng mà có số thứ tự lớn hơn) nhường hẳn cạnh đó.
         if (ri === 0) { const ov = ctx.coEdge(mx, mz, mx - nx * 0.3, mz - nz * 0.3, b); if (ov && (ov.height > h + 0.05 || (Math.abs(ov.height - h) <= 0.05 && ov.i < b.i))) continue; }
         let style = st, shop = false, road = null, street = false;
-        if (y0 > 0 || Lw < 1.9) style = ST.BLANK;
+        if (party || Lw < 1.9) style = ST.BLANK;
         else if (ri > 0) style = ST.ALLEY;
         else {
           const rd = ctx.nearestRoad(mx + nx * 2, mz + nz * 2, 15, notDeck);

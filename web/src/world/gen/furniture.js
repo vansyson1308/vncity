@@ -330,7 +330,7 @@ export function furnish(ctx, env) {
     if (f.num && bw > 1.6) { pg.push().move(side * (bw / 2 - 0.19), 2.0, 0.035); numPlate(f.num, 0, f.suf); pg.pop(); mark('hnum', mx, mz); }
     if (f.shop && f.sign) {
       const title = SIGNS[f.sign][0], mi = MENU_OF[f.sign], gnd = f.gnd;
-      if (mi >= 0 && (gnd === LY.S_EAT || gnd === LY.S_CAFE || gnd === LY.S_WOOD || gnd === LY.S_OPEN) && bw > 2.4 && hash(s, 81) < 0.85 && fresh(mi, mx, mz)) {
+      if (mi >= 0 && (gnd === LY.S_EAT || gnd === LY.S_CAFE || gnd === LY.S_WOOD || gnd === LY.S_OPEN || gnd === LY.S_STORE || gnd === LY.S_FLORA) && bw > 2.4 && hash(s, 81) < 0.85 && fresh(mi, mx, mz)) {
         // bảng thực đơn đúng món của biển hiệu, treo ở mép cửa phía không có biển số nhà: bảng trắng chữ đỏ, bảng đen viết phấn, bảng vàng chữ đỏ
         const st = Math.floor(hash(s, 82) * 3), w = 0.64 + hash(s, 88) * 0.1, h = w * 0.7, cx = -side * (bw / 2 - 0.24 - w / 2), y0 = 1.2 + hash(s, 89) * 0.3;
         signPlate(pg, cx - w / 2, y0, w, h, L.menu(mi), st === 0 ? 0xf1ece0 : st === 1 ? 0x1c3328 : 0xe7b420, { back: false, z: 0.045, code: st === 1 ? (hash(s, 84) < 0.5 ? 0 : INK_YELLOW) : INK_RED, glow: 0.14, gloss: 0.05 });
@@ -338,7 +338,7 @@ export function furnish(ctx, env) {
         signPlate(pg, -side * (bw / 2 - 0.75), 1.42, 0.4, 0.46, L.menu(BOARD0 + BOARD.room), 0x1e2b34, { back: false, z: 0.045, glow: 0.3, gloss: 0.2 }); // hộp đèn "CÒN PHÒNG"
       } else if (gnd === LY.S_ROLL && hash(s, 86) < 0.3 && fresh(BOARD0 + BOARD.rent, mx, mz)) {
         signPlate(pg, (hash(s, 90) - 0.5) * bw * 0.4 - 0.31, 1.15 + hash(s, 91) * 0.3, 0.62, 0.38, L.menu(BOARD0 + BOARD.rent), 0xf0eee6, { back: false, z: 0.03, code: INK_RED, glow: 0, gloss: 0 }); // tờ giấy dán trên cửa cuốn
-      } else if (gnd === LY.S_GLASS && SALE.includes(title) && hash(s, 87) < 0.4 && fresh(BOARD0 + BOARD.sale, mx, mz)) {
+      } else if ((gnd === LY.S_GLASS || gnd === LY.S_CLOTH) && SALE.includes(title) && hash(s, 87) < 0.4 && fresh(BOARD0 + BOARD.sale, mx, mz)) {
         signPlate(pg, side * bw * 0.16 - 0.24, 1.72, 0.48, 0.3, L.menu(BOARD0 + BOARD.sale), 0xb81f1a, { back: false, z: 0.04, glow: 0.18, gloss: 0.1 });
       }
     }
