@@ -5,7 +5,8 @@
 // trong kênh alpha của màu đỉnh; cùng mã đó điều khiển bóng đèn tín hiệu và số đếm ngược chạy theo uTime, không cần một
 // dòng JavaScript nào mỗi khung hình.
 import * as THREE from 'three';
-import { plateLayout, plateText, BANNERS, SITE_TEXT, WARN_TEXT } from './streetnames.js';
+import { plateLayout, plateText, BANNERS, SITE_TEXT, WARN_TEXT, HNUM_CHARS } from './streetnames.js';
+import { MENU_LIST } from './signs.js';
 import { SIGNAL } from './junctions.js';
 
 const FONT = '"Be Vietnam Pro", Arial, sans-serif';
@@ -91,6 +92,11 @@ export async function streetAtlas(renderer, world, quality) {
   L.site.forEach((uv, i) => add(uv, (x, y, w, h) => { const [a, b] = SITE_TEXT[i]; if (b) { fitText(g, a, x + w / 2, y + h * 0.47, h * 0.38, 800, w * 0.96); fitText(g, b, x + w / 2, y + h * 0.9, h * 0.34, 800, w * 0.96); } else fitText(g, a, x + w / 2, y + h * 0.74, h * 0.62, 800, w * 0.96); }));
   add(L.warn, (x, y, w, h) => { fitText(g, WARN_TEXT[0], x + w / 2, y + h * 0.44, h * 0.42, 800, w * 0.94); fitText(g, WARN_TEXT[1], x + w / 2, y + h * 0.9, h * 0.36, 800, w * 0.96); });
   L.banner.forEach((uv, i) => add(uv, (x, y, w, h) => fitText(g, BANNERS[i], x + w / 2, y + h * 0.74, h * 0.6, 800, w * 0.95)));
+  // biển số nhà: chữ số đậm, và khung viền trắng bo góc
+  for (let d = 0; d < HNUM_CHARS.length; d++) add([L.hnum[0] + d * L.hnumStep, L.hnum[1], L.hnum[2] + d * L.hnumStep, L.hnum[3]], (x, y, w, h) => fitText(g, HNUM_CHARS[d], x + w / 2, y + h * 0.86, h * 1.02, 800, w * 0.96, 0.5));
+  add(L.hframe, (x, y, w, h) => { const m = h * 0.09, r = h * 0.13; g.lineWidth = Math.max(1.5, h * 0.05); g.beginPath(); if (g.roundRect) g.roundRect(x + m, y + m, w - 2 * m, h - 2 * m, r); else g.rect(x + m, y + m, w - 2 * m, h - 2 * m); g.stroke(); });
+  // bảng thực đơn (ba dòng) và bảng nhỏ treo cửa (hai dòng)
+  MENU_LIST.forEach((lines, i) => add(L.menu(i), (x, y, w, h) => { const n = lines.length; lines.forEach((t, j) => fitText(g, t, x + w / 2, y + h * (n === 3 ? 0.31 + j * 0.3 : 0.44 + j * 0.42), h * (n === 3 ? 0.25 : 0.36), 800, w * 0.94)); }));
 
   for (let row = 0; row < L.rows; row++) {
     const y0 = Math.floor((row * S) / L.rows), y1 = Math.min(S, Math.floor(((row + 1) * S) / L.rows));

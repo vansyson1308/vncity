@@ -1,6 +1,7 @@
 // Đồ đạc đường phố và biển báo của Hà Nội 2026 (docs/18, mục 1, 2, 8): biển tên phố thật ở các góc phố và đầu ngõ, đèn
 // tín hiệu có đồng hồ đếm ngược, ô đỗ xe máy kẻ vạch trên vỉa hè, tủ điện và trạm biến áp, điểm dừng xe buýt, loa phường,
-// phướn và cờ, băng rôn đỏ ngang phố, rào tôn công trường ga ngầm, ban thờ gốc cây.
+// phướn và cờ, băng rôn đỏ ngang phố, rào tôn công trường ga ngầm, ban thờ gốc cây, biển số nhà, bảng thực đơn ở cửa quán,
+// biển cấm đi ngược chiều ở đầu ra các phố một chiều.
 // Chạy trong worker, sau gen/decor.js. Hình không có chữ gộp vào lưới "gần" (near); mọi thứ có chữ hoặc đèn đổi pha vào
 // lưới pg, vẽ bằng "bảng đồ đạc" (streetnames.js, streetatlas.js): thêm đúng một lệnh vẽ cho mỗi ô phố ở gần.
 // Vật đặt trên vỉa hè không cản lối đi: hoặc mảnh và sát bó vỉa, sát tường (không va chạm), hoặc chỉ đặt ở vỉa hè đủ rộng
@@ -9,10 +10,11 @@ import { G } from '../../core/geo.js';
 import { hash, segDist2 } from '../../core/util.js';
 import { CURB, K, ZONE, zoneAt, isSolemn, F_ONEWAY, F_REVERSE, alongAt } from '../data.js';
 import { junctionsOf, nodeKey } from '../junctions.js';
-import { plateLayout, PLATE_W, PLATE_H, PLATE_BLUE, INK_YELLOW, INK_DARK, sigCode } from '../streetnames.js';
-import { signUV, FLAG_CELL } from '../signs.js';
+import { plateLayout, PLATE_W, PLATE_H, PLATE_BLUE, INK_YELLOW, INK_DARK, INK_RED, HNUM_CHARS, HNUM_BLUE, sigCode } from '../streetnames.js';
+import { signUV, FLAG_CELL, SIGNS, MENU_OF, BOARD0, BOARD } from '../signs.js';
+import { L as LY } from '../layers.js';
 import { motorbike } from '../../models/vehicles.js';
-import { TREES, namePole, signPlate, signalMast, signalPost, signalFar, cabinet, kiosk, busSign, busShelter, parkSign, speakers, pennants, houseFlag, hoardingPanel, crane, excavator, siteCabin, treeShrine } from '../../models/street.js';
+import { TREES, namePole, signPlate, signalMast, signalPost, signalFar, cabinet, kiosk, busSign, busShelter, parkSign, speakers, pennants, houseFlag, hoardingPanel, crane, excavator, siteCabin, treeShrine, noEntrySign } from '../../models/street.js';
 
 const BIKE_TINT = [[0.55, 0.03, 0.03], [0.02, 0.02, 0.025], [0.75, 0.75, 0.73], [0.05, 0.12, 0.4], [0.35, 0.36, 0.38], [0.08, 0.08, 0.09], [0.6, 0.6, 0.62], [0.02, 0.2, 0.12], [0.02, 0.25, 0.3]];
 let BIKES = null;
@@ -303,6 +305,66 @@ export function furnish(ctx, env) {
     const rd = ctx.nearestRoad(x, z, 14, (q) => q.veh); if (!rd || rd.d < 0.5) continue;
     const T = TREES[kind], tr = T.trunk * (0.8 + hash(seed, 3) * 0.5) * 1.12;
     near.push().move(x - X0, CURB, z - Z0).rotY(Math.atan2(rd.px - x, rd.pz - z)); treeShrine(near, tr); near.pop(); mark('incense', x, z);
+  }
+
+  // ===================== 9. biển số nhà (art bible mục 2.2), bảng thực đơn và bảng nhỏ ở cửa hàng =====================
+  // Biển số nhà: nền xanh lam sẫm, viền và chữ số trắng, 20 × 15 cm (ba, bốn ký tự thì rộng hơn; phóng 10% cho dễ đọc), gắn cạnh cửa
+  // ở độ cao 2 m. Số lấy theo vị trí của nhà dọc phố (world/signs.js houseNumber): một bên lẻ, một bên chẵn, tăng dần.
+  // Vẽ trong hệ cục bộ: tâm biển ở gốc, mặt quay về +z. pre: số ngõ, biển ghi dạng "12/34".
+  const numPlate = (num, pre) => {
+    const txt = pre ? `${pre}/${num}` : `${num}`, n = txt.length, W2 = (0.22 + Math.max(0, n - 2) * 0.052) / 2, H2 = 0.0825, gw = Math.min(0.062, (2 * W2 - 0.05) / n), gh = 0.112;
+    pg.color(HNUM_BLUE, 0).gloss(0.3).glow(0.05).quad([-W2, -H2, 0], [W2, -H2, 0], [W2, H2, 0], [-W2, H2, 0], L.hframe);
+    for (let i = 0; i < n; i++) {
+      const u = Math.max(0, HNUM_CHARS.indexOf(txt[i])) * L.hnumStep, x0 = (i - n / 2) * gw;
+      pg.quad([x0, -gh / 2, 0.003], [x0 + gw, -gh / 2, 0.003], [x0 + gw, gh / 2, 0.003], [x0, gh / 2, 0.003], [L.hnum[0] + u, L.hnum[1], L.hnum[2] + u, L.hnum[3]]);
+    }
+    pg.gloss(0).glow(0);
+  };
+  const SALE = ['QUẦN ÁO', 'THỜI TRANG', 'GIÀY DÉP', 'TÚI XÁCH', 'ÁO DÀI'];
+  for (const f of bld.fronts) {
+    const mx = (f.x0 + f.x1) / 2, mz = (f.z0 + f.z1) / 2, s = f.seed, bw = f.w, side = hash(s, 83) < 0.5 ? -1 : 1;
+    if (!f.num && !(f.shop && f.sign)) continue;
+    pg.push().move(mx - X0, CURB, mz - Z0).rotY(Math.atan2(f.nx, f.nz)); // +z cục bộ = hướng ra phố, +x = dọc tường
+    if (f.num && bw > 1.6) { pg.push().move(side * (bw / 2 - 0.19), 2.0, 0.035); numPlate(f.num, 0); pg.pop(); mark('hnum', mx, mz); }
+    if (f.shop && f.sign) {
+      const title = SIGNS[f.sign][0], mi = MENU_OF[f.sign], gnd = f.gnd;
+      if (mi >= 0 && (gnd === LY.S_EAT || gnd === LY.S_CAFE || gnd === LY.S_WOOD || gnd === LY.S_OPEN) && bw > 2.4 && hash(s, 81) < 0.85) {
+        // bảng thực đơn đúng món của biển hiệu, treo ở mép cửa phía không có biển số nhà: bảng trắng chữ đỏ, bảng đen viết phấn, bảng vàng chữ đỏ
+        const st = Math.floor(hash(s, 82) * 3), w = 0.64 + hash(s, 88) * 0.1, h = w * 0.7, cx = -side * (bw / 2 - 0.24 - w / 2), y0 = 1.2 + hash(s, 89) * 0.3;
+        signPlate(pg, cx - w / 2, y0, w, h, L.menu(mi), st === 0 ? 0xf1ece0 : st === 1 ? 0x1c3328 : 0xe7b420, { back: false, z: 0.045, code: st === 1 ? (hash(s, 84) < 0.5 ? 0 : INK_YELLOW) : INK_RED, glow: 0.14, gloss: 0.05 });
+      } else if ((title === 'NHÀ NGHỈ' || title === 'KHÁCH SẠN') && gnd === LY.S_LOBBY && hash(s, 85) < 0.55) {
+        signPlate(pg, -side * (bw / 2 - 0.75), 1.42, 0.4, 0.46, L.menu(BOARD0 + BOARD.room), 0x1e2b34, { back: false, z: 0.045, glow: 0.3, gloss: 0.2 }); // hộp đèn "CÒN PHÒNG"
+      } else if (gnd === LY.S_ROLL && hash(s, 86) < 0.3) {
+        signPlate(pg, (hash(s, 90) - 0.5) * bw * 0.4 - 0.31, 1.15 + hash(s, 91) * 0.3, 0.62, 0.38, L.menu(BOARD0 + BOARD.rent), 0xf0eee6, { back: false, z: 0.03, code: INK_RED, glow: 0, gloss: 0 }); // tờ giấy dán trên cửa cuốn
+      } else if (gnd === LY.S_GLASS && SALE.includes(title) && hash(s, 87) < 0.4) {
+        signPlate(pg, side * bw * 0.16 - 0.24, 1.72, 0.48, 0.3, L.menu(BOARD0 + BOARD.sale), 0xb81f1a, { back: false, z: 0.04, glow: 0.18, gloss: 0.1 });
+      }
+    }
+    pg.pop();
+  }
+  // nhà trong ngõ: biển số dạng "số ngõ/số nhà" (ngõ mang số trong tên thì lấy số đó; ngõ có tên riêng thì chỉ ghi số nhà)
+  let nDoor = 0;
+  for (const d of bld.doors) {
+    if (nDoor >= 150) break; // ô quá dày ngõ ngách: thôi không gắn thêm để giữ ngân sách tam giác
+    const nm = d.named ? W.names[d.road.name] : null, m = nm && /^(Ngõ|Ngách|Hẻm) (\d{1,3})(?!\d)/.exec(nm), pre = m ? +m[2] : d.named ? 0 : 3 + 2 * Math.floor(hash(d.road.i, 91) * 80);
+    const sd = hash(Math.round(d.x * 7) * 31 + Math.round(d.z * 7), 92) < 0.5 ? -1 : 1;
+    pg.push().move(d.x - X0, CURB, d.z - Z0).rotY(Math.atan2(d.nx, d.nz)).move(sd * Math.min(d.w / 2 - 0.3, 1.0), 1.95, 0.035); numPlate(d.num, pre); pg.pop(); nDoor++;
+  }
+
+  // ===================== 10. biển cấm đi ngược chiều (P.102) ở đầu ra của phố một chiều =====================
+  // Art bible mục 2.4: biển này có ở gần như mọi đầu phố một chiều. Nhánh một chiều mà xe chạy VÀO nút thì từ nút không được đi vào
+  // nhánh đó: cắm biển ở miệng nhánh, bên phải của người định đi vào, mặt biển quay về phía nút. Cột sơn khoang trắng đỏ.
+  for (const n of J.nodes.values()) {
+    if (!inChunk(n.x, n.z) || n.high || n.arms.length < 3 || isSolemn(n.x, n.z)) continue;
+    for (const a of n.arms) {
+      if (!a.veh || !a.ow || !a.inbound || a.kind > K.residential || a.r.len < 14 || a.r.elev) continue;
+      let mw = 0; for (const q of n.arms) if (q !== a) mw = Math.max(mw, q.w);
+      for (const sd of [1, -1]) {
+        const d0 = mw / 2 + 2.4, o = (a.w / 2 + 0.45) * sd, px = n.x + a.dx * d0 - a.dz * o, pz = n.z + a.dz * d0 + a.dx * o;
+        if (!free(px, pz) || onRoad(px, pz, 0.15) || !clear(px, pz, 0.35)) continue;
+        noEntrySign(near, px - X0, pz - Z0, CURB, Math.atan2(-a.dx, -a.dz)); hold(px, pz, 0.3); mark('noentry', px, pz, -a.dx, -a.dz, 0.7); break;
+      }
+    }
   }
 
   if (walls.length) { const old = extra.walls || new Float32Array(0), w = new Float32Array(old.length + walls.length); w.set(old); w.set(walls, old.length); extra.walls = w; }

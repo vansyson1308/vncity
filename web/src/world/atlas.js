@@ -1,6 +1,7 @@
 // Bảng chữ biển hiệu: một canvas 2048² chia 4×24 ô (xem bố cục trong world/signs.js). Ô 0 để trắng cho mọi hình không có chữ.
+// Màn hình LED quảng trường không còn nằm ở đây: nó dựng bằng hình khối màu trong gen/decor.js.
 import * as THREE from 'three';
-import { SIGNS, SIGN_COLORS, ATLAS, FLAG_CELL, LED_CELL, BLADE0, BLADE_PER, TEXT0, bladeLines } from './signs.js';
+import { SIGNS, SIGN_COLORS, ATLAS, FLAG_CELL, BLADE0, BLADE_PER, BLADE_N, TEXT0, bladeLines } from './signs.js';
 import { HERO_TEXT } from './gen/heroes.js';
 
 const hex = (h) => '#' + h.toString(16).padStart(6, '0');
@@ -24,29 +25,22 @@ export function drawSignAtlas(c) {
     g.fillStyle = fg; g.fillText(s[0], x + cw / 2, y + ch * 0.4);
     fit(s[1], 600, 16, 10, cw - 36);
     g.fillStyle = light ? '#333' : ci === 12 ? '#f2d27a' : 'rgba(255,255,255,0.92)'; g.fillText(s[1], x + cw / 2, y + ch * 0.8);
-    // biển vẫy đi kèm: hộp đèn nhỏ, chữ lớn ngắt hai dòng
-    const k = i - 1, cell = BLADE0 + Math.floor(k / BLADE_PER), bw = cw / BLADE_PER, bx = (cell % ATLAS.cols) * cw + (k % BLADE_PER) * bw, by = Math.floor(cell / ATLAS.cols) * ch, lines = bladeLines(s[0]);
+    // biển vẫy đi kèm (BLADE_N biển đầu): hộp đèn đứng 64 × 85 điểm ảnh, chữ lớn mỗi từ một dòng
+    if (i > BLADE_N) return;
+    const k = i - 1, cell = BLADE0 + Math.floor(k / BLADE_PER), bw = cw / BLADE_PER, bx = (cell % ATLAS.cols) * cw + (k % BLADE_PER) * bw, by = Math.floor(cell / ATLAS.cols) * ch, lines = bladeLines(s[0]), n = lines.length;
     g.fillStyle = hex(SIGN_COLORS[ci]); g.fillRect(bx, by, bw, ch + 1);
-    g.strokeStyle = light ? 'rgba(120,20,20,0.85)' : 'rgba(255,240,200,0.9)'; g.lineWidth = 2; g.strokeRect(bx + 4, by + 4, bw - 8, ch - 8);
+    g.strokeStyle = light ? 'rgba(120,20,20,0.85)' : 'rgba(255,240,200,0.9)'; g.lineWidth = 1.5; g.strokeRect(bx + 3, by + 3, bw - 6, ch - 6);
     g.fillStyle = fg;
-    lines.forEach((t, j) => { fit(t, 800, lines.length === 1 ? 30 : 27, 12, bw - 14); g.fillText(t, bx + bw / 2, by + ch * (lines.length === 1 ? 0.52 : j ? 0.72 : 0.32)); });
+    lines.forEach((t, j) => { // chữ dài thì ép hẹp trước (tới 60%) rồi mới giảm cỡ, để hộp đèn nhỏ vẫn đọc được
+      const size = n === 3 ? 19 : 22, maxW = bw - 11; g.font = `800 ${size}px ${FONT}`; const sx = Math.max(0.6, Math.min(1, maxW / g.measureText(t).width));
+      fit(t, 800, size, 8, maxW / sx); g.save(); g.translate(bx + bw / 2, by + ch * (n === 1 ? 0.52 : n === 2 ? 0.34 + j * 0.34 : 0.25 + j * 0.26)); g.scale(sx, 1); g.fillText(t, 0, 0); g.restore();
+    });
   });
   HERO_TEXT.forEach((t, i) => { // chữ nổi trên công trình có tên: nền kem, chữ đỏ sẫm
     const x = ((TEXT0 + i) % ATLAS.cols) * cw, y = Math.floor((TEXT0 + i) / ATLAS.cols) * ch;
     g.fillStyle = '#efe6cf'; g.fillRect(x, y, cw, ch + 1); g.strokeStyle = 'rgba(110,30,25,0.8)'; g.lineWidth = 3; g.strokeRect(x + 5, y + 5, cw - 10, ch - 10);
     fit(t, 800, 50, 24, cw - 40); g.fillStyle = '#8e1b16'; g.fillText(t, x + cw / 2, y + ch * 0.53);
   });
-  { // màn hình LED quảng trường Đông Kinh Nghĩa Thục: nền đỏ, sao vàng, chữ vàng (ô 6:1 căng lên màn hình 16:9 nên vẽ nén chiều dọc)
-    const x = (LED_CELL % ATLAS.cols) * cw, y = Math.floor(LED_CELL / ATLAS.cols) * ch, k = ch / 288;
-    const gr = g.createLinearGradient(x, 0, x + cw, 0); gr.addColorStop(0, '#b3121f'); gr.addColorStop(0.5, '#e02a1f'); gr.addColorStop(1, '#b3121f'); g.fillStyle = gr; g.fillRect(x, y, cw, ch + 1);
-    g.save(); g.translate(x, y); g.scale(1, k);
-    g.fillStyle = '#ffe14a'; g.beginPath();
-    for (let j = 0; j < 10; j++) { const a = -Math.PI / 2 + (j * Math.PI) / 5, rr = j % 2 ? 21 : 55; g.lineTo(256 + Math.cos(a) * rr, 76 + Math.sin(a) * rr); }
-    g.closePath(); g.fill();
-    g.font = `800 76px ${FONT}`; g.fillText('HÀ NỘI', 256, 178);
-    g.font = `700 34px ${FONT}`; g.fillText('THÀNH PHỐ VÌ HOÀ BÌNH', 256, 248);
-    g.restore();
-  }
   { // cờ đỏ sao vàng (ô 6:1 căng lên lá cờ 3:2)
     const x = (FLAG_CELL % ATLAS.cols) * cw, y = Math.floor(FLAG_CELL / ATLAS.cols) * ch;
     g.fillStyle = '#da251d'; g.fillRect(x, y, cw, ch + 1); g.fillStyle = '#ffff00';

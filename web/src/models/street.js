@@ -328,11 +328,28 @@ export function busShelter(g, x, z, y, yaw) {
   for (const [sx, f] of [[2.285, 'X'], [2.135, 'x']]) g.rgb(0.75, 0.82, 0.86).glow(0.55).box(sx - 0.002, 0.4, -0.6, sx + 0.002, 2.05, 0.38, f).rgb(0.75, 0.1, 0.08).box(sx - 0.004, 1.62, -0.6, sx + 0.004, 2.05, 0.38, f).glow(0);
   g.pop();
 }
-// Biển "P" nơi đỗ xe: cột thép, biển vuông 0,6 m nền xanh dương chữ P trắng; mặt biển quay về +z.
+// Cột biển báo giao thông (QCVN 41): thép tròn Ø 8 cm sơn khoang trắng đỏ, mỗi khoang 27,5 cm. Gốc ở chân cột.
+// (Cột biển tên phố, cột biển xe buýt thì sơn một màu: xem namePole, busSign.)
+export function bandedPole(g, h, r = 0.04) {
+  const n = Math.round(h / 0.275), dh = h / n;
+  g.gloss(0.25);
+  for (let i = 0; i < n; i++) { if (i % 2) g.rgb(0.62, 0.035, 0.03); else g.rgb(0.8, 0.8, 0.77); g.cyl(0, i * dh, 0, r, r, dh, 5, i === n - 1); }
+  g.gloss(0);
+}
+// Biển cấm đi ngược chiều (P.102): đĩa tròn Ø 70 cm nền đỏ, vạch ngang trắng, mép dưới cao 2 m, cột khoang trắng đỏ. Mặt biển quay về +z.
+export function noEntrySign(g, x, z, y, yaw) {
+  g.push().move(x, y, z).rotY(yaw).glow(0).mat();
+  bandedPole(g, 2.72);
+  g.rgb(0.66, 0.02, 0.02).gloss(0.3); faceDisc(g, 0, 2.35, 0.05, 0.35, 14);
+  g.rgb(0.86, 0.86, 0.83).box(-0.25, 2.29, 0.052, 0.25, 2.41, 0.056, 'Z');
+  g.push().rotY(Math.PI).rgb(0.42, 0.43, 0.44).gloss(0.2); faceDisc(g, 0, 2.35, -0.042, 0.35, 10); g.pop();
+  g.gloss(0).pop();
+}
+// Biển "P" nơi đỗ xe: cột khoang trắng đỏ, biển vuông 0,6 m nền xanh dương chữ P trắng; mặt biển quay về +z.
 export function parkSign(g, pg, x, z, y, yaw, uv) {
   g.push().move(x, y, z).rotY(yaw).glow(0).mat(); pg.push(); pg.m = g.m.slice();
-  g.rgb(0.33, 0.35, 0.37).gloss(0.4).cyl(0, 0, 0, 0.038, 0.034, 2.75, 5, true).gloss(0);
-  signPlate(pg, -0.3, 2.1, 0.6, 0.6, uv, 0x1558b0, { z: 0.042 });
+  bandedPole(g, 2.75);
+  signPlate(pg, -0.3, 2.1, 0.6, 0.6, uv, 0x1558b0, { z: 0.046 });
   g.pop(); pg.pop();
 }
 
