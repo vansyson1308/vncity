@@ -162,7 +162,10 @@ export class Crowd {
     if (!this.spots.length) return 0;
     // ưu tiên chỗ gần người chơi (trong 130 m), không có thì mới lấy chỗ xa hơn bên kia hồ
     let sp = null, cnt = 0; const lim = Math.random() < 0.75 ? 130 : 240;
-    for (const q of this.spots) { if (q.used) continue; const d = Math.hypot(q.x - px, q.z - pz); if (d > lim || d < (this.warming ? 8 : 16)) continue; if (Math.random() * ++cnt < 1) sp = q; }
+    // lúc rải người ban đầu (vào game, đi nhanh tới nơi) chỗ tập nằm trong tầm mắt được chọn trước gấp bốn: ra tới bờ hồ lúc rạng sáng
+    // là thấy ngay các tốp tập, không phải quay camera tìm
+    for (const q of this.spots) { if (q.used) continue; const d = Math.hypot(q.x - px, q.z - pz); if (d > lim || d < (this.warming ? 8 : 16)) continue;
+      const w = this.warming && cam && d < 90 && (q.x - cam.x) * cam.fx + (q.z - cam.z) * cam.fz > 0.5 * Math.hypot(q.x - cam.x, q.z - cam.z) ? 4 : 1; cnt += w; if (Math.random() * cnt < w) sp = q; }
     if (!sp || this.visible(sp.x, sp.z, px, pz, cam, 60)) return 0;
     const n = Math.min(room, 4 + Math.floor(Math.random() * 6)), cols = n > 6 ? 4 : 3, clip = Math.random() < 0.65 ? CLIP.taichi : CLIP.swing, phase = Math.random(), yaw = Math.atan2(sp.nx, sp.nz), tx = -sp.nz, tz = sp.nx; let made = 0;
     for (let k = 0; k < n; k++) {
