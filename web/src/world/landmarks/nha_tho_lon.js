@@ -4,6 +4,7 @@
 // tường rêu mốc (MAT.mossy), gờ bê tông, mái ngói đất nung sẫm. Gốc toạ độ ở tâm mặt bằng, mặt tiền quay về +z.
 import { hash } from '../../core/util.js';
 import { MAT } from '../../core/geo.js';
+import { floodlit } from './lighting.js';
 
 const lin = (h) => { const f = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)); return [f(((h >> 16) & 255) / 255), f(((h >> 8) & 255) / 255), f((h & 255) / 255)]; };
 const STONE = lin(0x767472), TRIM = 0x807e79, ROOF = 0x57403a, GLASS = 0x18233c, DOOR = 0x2b1d15;
@@ -283,5 +284,7 @@ export function build(g) {
     g.mat(MAT.tile).color(ROOF).shade(0.8 + 0.4 * hash(1030, i)); g.tri3(p0, p1, [0, Y_RIDGE, ZAP]); g.mat(MAT.plaster);
   }
   cross(g, 0, Y_RIDGE + 0.1, ZAP, 1.8);
+  // đèn pha trắng ấm rọi mặt tiền và hai tháp chuông (art bible mục 7); thân nhà thờ phía sau chỉ hửng nhẹ
+  floodlit(g, 0, g.count, (x, y, z, nx, ny, nz) => (ny > 0.5 ? 0.03 : nz > 0.5 ? 0.2 : z > ZT - 1 ? 0.12 : 0.05));
   g.mat().color(0xffffff).gloss(0).glow(0).sway(0);
 }

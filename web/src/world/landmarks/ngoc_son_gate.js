@@ -8,6 +8,7 @@
 // nên để thành ô đắp nổi trơn có viền son, tuyệt đối không vẽ nét giả chữ.
 import { hash, lerp } from '../../core/util.js';
 import { MAT } from '../../core/geo.js';
+import { floodlit } from './lighting.js';
 
 const s2l = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 const lin = (h) => [s2l(((h >> 16) & 255) / 255), s2l(((h >> 8) & 255) / 255), s2l((h & 255) / 255)];
@@ -535,7 +536,10 @@ export function build(g) {
   }
   g.mat();
   outerGate(g);
+  // Tháp Bút nằm trong chuỗi chiếu sáng trang trí quanh hồ (art bible mục 7): đèn hắt từ chân núi Độc Tôn lên, dịu dần về ngọn bút
+  const pen0 = g.count;
   g.push().move(PEN_TOWER.x, 0, PEN_TOWER.z); penTower(g); g.pop();
+  floodlit(g, pen0, g.count, (x, y) => 0.11 * (1 - 0.6 * Math.min(1, Math.max(0, y / 12))));
   g.push().move(0, 0, INK_GATE_Z); inkGate(g); g.pop();
 
   g.color(0xffffff).gloss(0).glow(0).sway(0).mat();

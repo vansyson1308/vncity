@@ -1,6 +1,8 @@
 // Ô Quan Chưởng (Đông Hà Môn, 1749, sửa 1817): cửa ô cuối cùng còn lại của thành Thăng Long.
-// Khối gạch rộng 20 m, sâu 7 m, cao 9 m tới đỉnh lan can; ba cửa vòm thông suốt theo trục z
-// (cửa giữa rộng 3,4 m cao 4 m cho xe chạy qua, hai cửa phụ rộng 1,8 m), trên có vọng lâu mái ngói đầu đao cong.
+// Cổng thành hai tầng, cả vọng lâu cao khoảng 10 m (art bible bảng 3.5: "2 tầng, khoảng 9 m", rộng khoảng 20 m; con số 9 m ở đó là
+// ước lượng). Khối gạch rộng 20 m, sâu 7 m, cao 7 m tới đỉnh lan can; ba cửa vòm thông suốt theo trục z (cửa giữa rộng 3,4 m cao
+// 3,3 m cho xe chạy qua, hai cửa phụ rộng 1,8 m cao 2,5 m), trên có vọng lâu mái ngói đầu đao cong cao chừng 3,2 m.
+// (Bản trước dựng khối gạch cao 9 m và vọng lâu 6,9 m, tổng 14,8 m: cao gấp rưỡi ngoài đời.)
 // Trên cửa chính là khung biển 3 × 1 m đắp nổi ba chữ Hán 東河門 (Đông Hà Môn) bằng mảnh sứ xanh, viết từ phải sang trái;
 // tường bên trái cửa chính gắn bia đá của Tổng đốc Hoàng Diệu (1881). Lan can mặt thành trổ ô lục lăng, ô trám.
 // Gốc toạ độ ở tâm mặt bằng, mặt chính quay về +z. Mạch gạch do shader vẽ (MAT.brick), mô hình chỉ đặt màu nền.
@@ -10,8 +12,8 @@ const lin = (h) => { const f = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 
 const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
 const BRICK = lin(0x6c4c3e), SOOT = lin(0x38302c), PLASTER = lin(0x9d927f), MOSS = lin(0x4a4a33);
 const TILE = 0x5e3a2e, WOOD = 0x3a2a20, LIME = 0xb3ac9c, BLUE = 0x2a5688;
-const HW = 10, HD = 3.5, Y_DECK = 7.9, Y_TOP = 9;
-const ARCHES = [{ cx: -5.7, w: 1.8, hs: 1.8 }, { cx: 0, w: 3.4, hs: 2.3 }, { cx: 5.7, w: 1.8, hs: 1.8 }];
+const HW = 10, HD = 3.5, Y_DECK = 5.9, Y_TOP = 7;
+const ARCHES = [{ cx: -5.7, w: 1.8, hs: 1.6 }, { cx: 0, w: 3.4, hs: 1.6 }, { cx: 5.7, w: 1.8, hs: 1.6 }];
 
 // Màu nền gạch cũ theo chiều cao: chân tường rêu ẩm, sát gờ đỉnh sẫm muội nước mưa (chuyển sắc mượt, không loang ô).
 function brickCol(g, y, k0 = 1, top = Y_DECK) {
@@ -151,15 +153,15 @@ export function build(g) {
     g.box(ARCHES[0].cx + 1.2, 0, HD, -2.1, 0.45, HD + 0.14, 'YZxX'); g.box(2.1, 0, HD, ARCHES[2].cx - 1.2, 0.45, HD + 0.14, 'YZxX');
     g.mat(MAT.brick).color(0x70503f); g.box(-HW - 0.15, Y_DECK - 0.55, HD, HW + 0.15, Y_DECK - 0.3, HD + 0.16, 'YZy'); g.color(0x7c5c4a); g.box(-HW - 0.25, Y_DECK - 0.3, HD, HW + 0.25, Y_DECK, HD + 0.28, 'YZy');
     // khung biển trên cửa chính: nền vữa bạc, ba chữ 東河門 đắp sứ xanh, đọc từ phải sang trái
-    g.mat(MAT.plaster).color(0x6a5a4d); g.box(-1.75, 5.05, HD, 1.75, 6.45, HD + 0.14, 'xXYZy');
-    g.color(0xb0a58e); g.quad([-1.55, 5.22, HD + 0.17], [1.55, 5.22, HD + 0.17], [1.55, 6.28, HD + 0.17], [-1.55, 6.28, HD + 0.17]);
+    g.mat(MAT.plaster).color(0x6a5a4d); g.box(-1.75, 3.85, HD, 1.75, 5.25, HD + 0.14, 'xXYZy');
+    g.color(0xb0a58e); g.quad([-1.55, 4.02, HD + 0.17], [1.55, 4.02, HD + 0.17], [1.55, 5.08, HD + 0.17], [-1.55, 5.08, HD + 0.17]);
     g.mat().gloss(0.3).color(BLUE);
-    ['mon', 'ha', 'dong'].forEach((k, i) => han(g, HAN[k], -1.35 + i * 0.98, 5.38, 0.74, 0.74, HD + 0.2));
+    ['mon', 'ha', 'dong'].forEach((k, i) => han(g, HAN[k], -1.35 + i * 0.98, 4.18, 0.74, 0.74, HD + 0.2));
     g.gloss(0);
     // ô đắp trơn trên hai cửa nhỏ
     for (const sx of [-1, 1]) {
-      g.mat(MAT.plaster).color(0x64503f); g.box(sx * 5.7 - 1.15, 4.3, HD, sx * 5.7 + 1.15, 5.5, HD + 0.1, 'xXYZy');
-      g.color(0x8a7a66); g.quad([sx * 5.7 - 0.98, 4.46, HD + 0.13], [sx * 5.7 + 0.98, 4.46, HD + 0.13], [sx * 5.7 + 0.98, 5.34, HD + 0.13], [sx * 5.7 - 0.98, 5.34, HD + 0.13]);
+      g.mat(MAT.plaster).color(0x64503f); g.box(sx * 5.7 - 1.15, 3.1, HD, sx * 5.7 + 1.15, 4.3, HD + 0.1, 'xXYZy');
+      g.color(0x8a7a66); g.quad([sx * 5.7 - 0.98, 3.26, HD + 0.13], [sx * 5.7 + 0.98, 3.26, HD + 0.13], [sx * 5.7 + 0.98, 4.14, HD + 0.13], [sx * 5.7 - 0.98, 4.14, HD + 0.13]);
     }
     // bia đá cấm lính gác sách nhiễu dân (Hoàng Diệu, 1881) gắn bên trái cửa chính, mặt trước
     if (dir > 0) { g.mat(MAT.plaster).color(0x4c4a46); g.box(-3.15, 1.3, HD, -2.35, 2.5, HD + 0.1, 'xXYZy'); g.mat(MAT.lacquer).color(0x6c6a64); g.quad([-3.05, 1.4, HD + 0.13], [-2.45, 1.4, HD + 0.13], [-2.45, 2.4, HD + 0.13], [-3.05, 2.4, HD + 0.13]); }
@@ -180,7 +182,10 @@ export function build(g) {
   for (const sx of [-1, 1]) { g.push().rotY((sx * Math.PI) / 2); parapet(g, HD, HW, 5, 0.95); g.pop(); }
 
   // ----- vọng lâu: thân gạch trát vữa, hai tầng mái ngói cong -----
-  const PW = 3.1, PD = 2.0, yP = Y_DECK, yE1 = 10.5;
+  // Các cao độ dưới đây viết cho vọng lâu cao 6,9 m đặt trên mặt thành cũ (7,9 m); cả khối được ép theo chiều đứng còn 3,2 m và hạ
+  // xuống mặt thành mới, giữ nguyên mặt bằng và độ vươn của mái.
+  g.push().move(0, Y_DECK, 0).scale(1, 0.46, 1).move(0, -7.9, 0);
+  const PW = 3.1, PD = 2.0, yP = 7.9, yE1 = 10.5;
   for (let f = 0; f < 4; f++) {
     g.push().rotY((f * Math.PI) / 2);
     const w = f % 2 ? PD : PW, d = f % 2 ? PW : PD;
@@ -204,12 +209,12 @@ export function build(g) {
   g.mat(MAT.plaster).color(LIME).shade(0.85); g.box(-1.45, yR - 0.08, -0.13, 1.45, yR + 0.3, 0.13);
   for (const sx of [-1, 1]) { g.box(sx * 1.45 - 0.16, yR + 0.1, -0.15, sx * 1.45 + 0.16, yR + 0.62, 0.15); g.tube([sx * 1.45, yR + 0.6, 0], [sx * 1.2, yR + 0.95, 0], 0.1, 4, 0.02); }
   g.color(LIME).shade(0.95); g.push().move(0, yR + 0.3, 0); g.cyl(0, 0, 0, 0.26, 0.16, 0.2, 6, false); g.ball(0, 0.42, 0, 0.24, 6, 4); g.pop();
-  g.mat();
+  g.mat().pop();
 
   // ----- cột cờ và cờ đỏ sao vàng -----
   const fx = 7.2, fz = 0, fy = Y_DECK;
-  g.color(0x6b665c); g.cube(fx, fy, fz, 0.5, 0.3, 0.5); g.color(0x8a8f92); g.cyl(fx, fy + 0.3, fz, 0.05, 0.035, 6.0, 6, true);
-  const y0 = fy + 4.9, fw = 1.8, fh = 1.2;
+  g.color(0x6b665c); g.cube(fx, fy, fz, 0.5, 0.3, 0.5); g.color(0x8a8f92); g.cyl(fx, fy + 0.3, fz, 0.05, 0.035, 3.9, 6, true);
+  const y0 = fy + 2.85, fw = 1.8, fh = 1.2;
   g.color(0xd01f1f);
   for (const s of [1, -1]) {
     const b = g.count;

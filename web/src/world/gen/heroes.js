@@ -14,7 +14,7 @@ import { HC } from '../signs.js';
 export const HERO_TEXT = ['BƯU ĐIỆN HÀ NỘI', 'GA LONG BIÊN', 'CHỢ HÀNG DA', 'MAISON CENTRALE'];
 export const HEROES = [
   // ----- quanh Hồ Gươm, khu phố Pháp -----
-  { name: 'Tràng Tiền Plaza', style: ST.PUBLIC, floors: 6, h: 30, wall: HC.cream, up: L.FR_UP, gnd: L.MOD_GND, parapet: 1.2, roof: ST.ROOF_FLAT, roofTint: HC.slate, age: 0, feat: { domes: { n: 3, r: 4.2, col: [0.3, 0.32, 0.35] } } },
+  { name: 'Tràng Tiền Plaza', style: ST.PUBLIC, floors: 6, h: 30, wall: HC.cream, up: L.FR_UP, gnd: L.MOD_GND, parapet: 1.2, roof: ST.ROOF_FLAT, roofTint: HC.slate, age: 0, feat: { domes: { n: 3, r: 4.2, col: [0.3, 0.32, 0.35] }, bulbs: { ys: [5.0, 30.95] } } },
   { name: 'Tòa nhà trung tâm Bưu điện Hà Nội', style: ST.PUBLIC, floors: 5, h: 25, wall: HC.paleYellow, up: L.RIB, gnd: L.PUB_GND, parapet: 1, roof: ST.ROOF_FLAT, age: 1, feat: { clock: { dir: [-1, 0], text: 0 } } },
   { at: [403, 363], label: 'Sofitel Legend Metropole', style: ST.FRENCH, floors: 4, fh: 3.9, wall: HC.white, up: L.FR_UP, gnd: L.FR_GND, roof: ST.ROOF_TILE, slate: true, roofTint: HC.slate, age: 0, feat: { canopy: { col: [0.03, 0.03, 0.035] } } },
   { name: 'Ngân hàng Nhà nước Việt Nam', style: ST.PUBLIC, floors: 3, h: 20, wall: HC.washed, up: L.RIB, gnd: L.STONE, parapet: 1.4, roof: ST.ROOF_FLAT, age: 1, feat: { tiered: { tiers: 2, r: 9, col: [0.2, 0.21, 0.23] } } },
@@ -41,7 +41,10 @@ export const HEROES = [
   { name: 'Cửa Bắc', style: ST.PUBLIC, floors: 2, h: 8.7, wall: HC.brick, up: L.STONE, gnd: L.STONE, parapet: 0.7, roof: ST.ROOF_FLAT, age: 3, feat: { arch: { dirs: [[0, 1], [0, -1]], w: 3.4, h: 5.2 }, pavilion: { w: 6, d: 4 } } },
   // ----- Ba Đình -----
   { name: 'Phủ Chủ Tịch', style: ST.FRENCH, floors: 3, fh: 4.6, wall: HC.ochre, up: L.FR_UP, gnd: L.FR_GND, roof: ST.ROOF_TILE, slate: true, roofTint: HC.slate, age: 0 },
-  { name: 'Nhà Quốc hội', style: ST.PUBLIC, floors: 5, h: 39, wall: HC.stone, up: L.RIB, gnd: L.RIB, parapet: 1.5, roof: ST.ROOF_FLAT, age: 0, feat: { drum: { r: 24, h: 7, col: [0.5, 0.36, 0.2] }, emblem: { dir: [-1, 0], r: 2.4 } } },
+  // Nhà Quốc hội (art bible bảng 3.5: vuông 102 m, cao 39 m, đá be sáng, kính, kim loại màu đồng): tường là lớp kính ánh đồng, phía trước là
+  // hàng lam đá be vàng cao suốt mặt đứng, băng đá chân và mái, cổng chính có quốc huy nhìn ra quảng trường (phía tây), phòng họp tròn nhô
+  // lên giữa mái. Bề rộng cổng, cỡ quốc huy, bước lam là ước lượng, chưa đối chiếu bản vẽ.
+  { name: 'Nhà Quốc hội', style: ST.PUBLIC, floors: 5, h: 39, wall: HC.glassBronze, up: L.MOD, gnd: L.MOD, parapet: 1.5, roof: ST.ROOF_FLAT, age: 0, feat: { drum: { r: 26, h: 8, col: [0.5, 0.36, 0.2] }, assembly: { dir: [-1, 0], col: [0.69, 0.56, 0.33], portal: 26, emblem: 2.6 } } },
   { name: 'Bảo tàng Hồ Chí Minh', style: ST.PUBLIC, floors: 3, h: 20, wall: HC.white, up: L.RIB, gnd: L.STONE, parapet: 0, roof: ST.ROOF_FLAT, age: 0, feat: { flare: { h: 6.5, out: 3.2, col: [0.86, 0.85, 0.82] } } },
   { name: 'Bộ Ngoại giao', style: ST.PUBLIC, floors: 3, fh: 4.5, wall: HC.ochre, up: L.PUB_UP, gnd: L.PUB_GND, roof: ST.ROOF_TILE, age: 1, feat: { tiered: { tiers: 2, r: 7, col: [0.32, 0.1, 0.06] } } },
   // hai lễ đài hai bên Lăng: khối đá granite thấp, không phải nhà nhiều tầng

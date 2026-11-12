@@ -83,12 +83,51 @@ function drawHero(ctx, g, b, X0, Z0, lo) {
     }
   }
   if (F.dome) domeAt(g, cx, H, cz, F.dome.r, F.dome.col, lo, 0.55);
-  if (F.cone) { g.rgb(F.cone.col[0], F.cone.col[1], F.cone.col[2]).gloss(0.25).cyl(cx, H, cz, R + 0.7, 0.25, F.cone.h, lo ? 8 : 16, false).gloss(0); g.rgb(0.2, 0.2, 0.2).cyl(cx, H + F.cone.h - 0.1, cz, 0.18, 0.05, 1.2, 4, false); }
-  if (F.drum) { // trống tròn phòng họp nhô lên giữa khối vuông: thân ốp đồng, băng kính, mái phẳng
-    const c = F.drum.col, seg = lo ? 12 : 28;
-    g.rgb(c[0], c[1], c[2]).gloss(0.4).cyl(cx, H, cz, F.drum.r, F.drum.r, F.drum.h * 0.45, seg, false);
-    g.rgb(0.05, 0.09, 0.12).gloss(0.8).cyl(cx, H + F.drum.h * 0.45, cz, F.drum.r * 0.99, F.drum.r * 0.99, F.drum.h * 0.3, seg, false);
-    g.rgb(c[0], c[1], c[2]).gloss(0.4).cyl(cx, H + F.drum.h * 0.75, cz, F.drum.r * 1.04, F.drum.r * 1.04, F.drum.h * 0.25, seg, true).gloss(0);
+  if (F.cone) { // mái tôn hình nón của tháp nước: mái thoải nên đứng dưới phố chỉ thấy vành mái đua ra, mặt dưới mái đua và chóp thông hơi trên đỉnh
+    const c = F.cone.col, seg = lo ? 12 : 24, r = R + 1.0, hc = F.cone.h, yv = H + hc * 0.74;
+    g.rgb(c[0] * 0.55, c[1] * 0.55, c[2] * 0.55).disc(cx, H + 0.02, cz, r, seg, -1);                              // mặt dưới mái đua
+    g.rgb(c[0] * 0.8, c[1] * 0.8, c[2] * 0.8).cyl(cx, H, cz, r, r, 0.42, seg, false);                           // diềm mái
+    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, H + 0.42, cz, r, 1.5, hc * 0.74 - 0.42, seg, false).gloss(0);   // mái nón
+    g.rgb(c[0] * 0.7, c[1] * 0.7, c[2] * 0.7).cyl(cx, yv, cz, 1.5, 1.5, hc * 0.12, lo ? 6 : 10, false);         // cổ chóp thông hơi
+    g.rgb(c[0], c[1], c[2]).gloss(0.25).cyl(cx, yv + hc * 0.12, cz, 1.9, 0.06, hc * 0.14, lo ? 6 : 10, false).gloss(0);
+    g.rgb(0.2, 0.2, 0.2).cyl(cx, H + hc - 0.1, cz, 0.12, 0.04, 1.1, 4, false);
+  }
+  if (F.drum) { // phòng họp tròn nhô lên giữa khối vuông: thân loe dần lên trên, ốp kim loại màu đồng, băng kính sáng đèn ban đêm, mái phẳng
+    const c = F.drum.col, seg = lo ? 16 : 32, r = F.drum.r, hd = F.drum.h;
+    g.rgb(c[0], c[1], c[2]).gloss(0.4).cyl(cx, H, cz, r * 0.94, r * 0.965, hd * 0.4, seg, false);
+    g.rgb(0.3, 0.29, 0.26).gloss(0.8).glow(0.3).cyl(cx, H + hd * 0.4, cz, r * 0.96, r * 0.98, hd * 0.3, seg, false).glow(0);
+    g.rgb(c[0], c[1], c[2]).gloss(0.4).cyl(cx, H + hd * 0.7, cz, r * 0.985, r * 1.03, hd * 0.3, seg, true).gloss(0);
+    if (!lo) { g.rgb(c[0] * 0.7, c[1] * 0.7, c[2] * 0.7); for (let i = 0; i < 32; i++) { const a = ((i + 0.5) / 32) * Math.PI * 2, ca = Math.cos(a), sa = Math.sin(a); g.tube([cx + ca * r * 0.965, H + hd * 0.4, cz + sa * r * 0.965], [cx + ca * r * 0.985, H + hd * 0.7, cz + sa * r * 0.985], 0.16, 3); } } // đố đứng chia băng kính
+  }
+  if (F.assembly) { // Nhà Quốc hội: khối vuông ốp đá be vàng. Lam đá đứng chạy suốt chiều cao trước lớp kính, băng đá ở chân và ở mái;
+    // giữa mặt chính (quay ra quảng trường) là cổng lớn lùi vào giữa hai trụ đá, có mái sảnh, mảng đá giữa cổng mang quốc huy đồng.
+    const A = F.assembly, S = A.col, e0 = mainEdge(b, A.dir), yP = CURB + 1.4, yT = H - 4.4, yC = H + (hero.parapet || 0) + 0.15, step = lo ? 4 : 2, fw = lo ? 0.6 : 0.3, PW = A.portal / 2;
+    let area = 0; for (let k = 0; k < n; k += 2) { const j = (k + 2) % n; area += p[k] * p[j + 1] - p[j] * p[k + 1]; }
+    const sg = area > 0 ? 1 : -1;
+    for (let k = 0; k < n; k += 2) {
+      const x0 = p[k], z0 = p[k + 1], dx = p[(k + 2) % n] - x0, dz = p[(k + 3) % n] - z0, l = Math.hypot(dx, dz); if (l < 4) continue;
+      const nx = (dz / l) * sg, nz = (-dx / l) * sg, mx = x0 + dx / 2, mz = z0 + dz / 2, hw = l / 2, main = !!e0 && Math.abs(mx - e0.mx) + Math.abs(mz - e0.mz) < 0.5;
+      g.push().move(mx - X0, 0, mz - Z0).rotY(Math.atan2(nx, nz)); // +z cục bộ hướng ra ngoài mặt nhà
+      g.mat(MAT.stone).rgb(S[0] * 0.78, S[1] * 0.78, S[2] * 0.78).box(-hw - 0.95, CURB, -0.3, hw + 0.95, yP, 0.95, 'xXYZ');   // bệ đá
+      g.rgb(S[0], S[1], S[2]).box(-hw - 1, yT, -0.3, hw + 1, yC, 1, 'xXyYZ');                                               // băng đá mái
+      const m = Math.max(1, Math.round(l / step));
+      for (let i = 0; i <= m; i++) { const x = -hw + (l * i) / m; if (main && Math.abs(x) < PW + 0.4) continue; g.box(x - fw, yP, 0, x + fw, yT, 0.9, 'xXZ'); }
+      if (main) {
+        for (const s of [-1, 1]) g.box(s * PW - (s < 0 ? 2.4 : 0), CURB, 0, s * PW + (s > 0 ? 2.4 : 0), yT, 1.5, 'xXZ');     // hai trụ đá hai bên cổng
+        g.box(-5.2, 8.1, 0, 5.2, yT, 0.7, 'xXZ');                                                                           // mảng đá giữa cổng
+        g.mat().rgb(0.4, 0.27, 0.13).gloss(0.4).box(-PW, 7.4, 0, PW, 8.1, 3.6, 'xXyYZ').gloss(0);                           // mái sảnh màu đồng
+        if (!lo) { g.rgb(S[0] * 0.9, S[1] * 0.9, S[2] * 0.9).mat(MAT.stone); for (const x of [-9.6, -5.2, 5.2, 9.6]) g.box(x - 0.35, CURB, 2.7, x + 0.35, 7.4, 3.4, 'xXzZ'); g.mat(); }
+        // quốc huy: đĩa đồng tròn có vành, ngôi sao năm cánh phía trên, nửa bánh răng phía dưới (cách điệu, không vẽ chi tiết)
+        const re = A.emblem, sgm = lo ? 10 : 24; g.push().move(0, 8.1 + (yT - 8.1) * 0.56, 0.74).rotX(Math.PI / 2);
+        g.mat().rgb(0.6, 0.4, 0.1).gloss(0.5).glow(0.12).disc(0, 0, 0, re, sgm, 1); g.rgb(0.34, 0.17, 0.05).disc(0, 0.03, 0, re * 0.86, sgm, 1);
+        g.rgb(0.9, 0.66, 0.16); const c0 = g.v(0, 0.06, -re * 0.2, 0, 1, 0), s0 = g.count;
+        for (let i = 0; i <= 10; i++) { const a = -Math.PI / 2 + (i / 10) * Math.PI * 2, rr = re * (i % 2 ? 0.17 : 0.42); g.v(Math.cos(a) * rr, 0.06, -re * 0.2 + Math.sin(a) * rr, 0, 1, 0); }
+        for (let i = 0; i < 10; i++) g.tri(c0, s0 + i + 1, s0 + i);
+        if (!lo) g.rgb(0.75, 0.52, 0.12).box(-re * 0.34, 0.03, re * 0.42, re * 0.34, 0.06, re * 0.62, 'Y');
+        g.gloss(0).glow(0).pop();
+      }
+      g.mat().pop();
+    }
   }
   if (F.tiered) { const t = F.tiered; tieredRoof(g, (t.at ? t.at[0] - X0 : cx), H - (t.at ? 1.5 : 0), (t.at ? t.at[1] - Z0 : cz), t.r, t.tiers, t.col, t.oct ? 8 : 4, yaw); }
   if (F.crown) { // băng màu chạy quanh đỉnh tháp (biển hiệu trên nóc, không vẽ logo)
@@ -98,6 +137,17 @@ function drawHero(ctx, g, b, X0, Z0, lo) {
     for (let k = 0; k < n; k += 2) {
       const x0 = p[k], z0 = p[k + 1], x1 = p[(k + 2) % n], z1 = p[(k + 3) % n], l = Math.hypot(x1 - x0, z1 - z0); if (l < 1.5) continue;
       const ox = ((z1 - z0) / l) * sg * 0.22, oz = (-(x1 - x0) / l) * sg * 0.22, a = [x0 + ox - X0, y0, z0 + oz - Z0], e = [x1 + ox - X0, y0, z1 + oz - Z0];
+      const q = [a, e, [e[0], y1, e[2]], [a[0], y1, a[2]]]; if (sg > 0) g.quad(q[1], q[0], q[3], q[2]); else g.quad(q[0], q[1], q[2], q[3]);
+    }
+    g.glow(0);
+  }
+  if (F.bulbs) { // viền bóng đèn vàng chạy quanh mép mái và gờ tầng (art bible: Tràng Tiền Plaza đêm viền đèn vàng): ban ngày là nẹp sáng màu mảnh
+    let area = 0; for (let k = 0; k < n; k += 2) { const j = (k + 2) % n; area += p[k] * p[j + 1] - p[j] * p[k + 1]; }
+    const sg = area > 0 ? 1 : -1;
+    g.rgb(0.88, 0.72, 0.42).glow(0.5);
+    for (const y0 of F.bulbs.ys) for (let k = 0; k < n; k += 2) {
+      const x0 = p[k], z0 = p[k + 1], x1 = p[(k + 2) % n], z1 = p[(k + 3) % n], l = Math.hypot(x1 - x0, z1 - z0); if (l < 1.5) continue;
+      const ox = ((z1 - z0) / l) * sg * 0.1, oz = (-(x1 - x0) / l) * sg * 0.1, a = [x0 + ox - X0, y0, z0 + oz - Z0], e = [x1 + ox - X0, y0, z1 + oz - Z0], y1 = y0 + (lo ? 0.3 : 0.18);
       const q = [a, e, [e[0], y1, e[2]], [a[0], y1, a[2]]]; if (sg > 0) g.quad(q[1], q[0], q[3], q[2]); else g.quad(q[0], q[1], q[2], q[3]);
     }
     g.glow(0);
@@ -127,13 +177,11 @@ function drawHero(ctx, g, b, X0, Z0, lo) {
         g.pop();
       }
       g.pop();
-      if (!lo && F.clock.text !== undefined) textPanel(g, e, X0, Z0, H - 1.9, Math.min(e.len - 2, 15), F.clock.text);
+      // chữ tên nhà trên mép mái mặt chính: có ở cả bản xa (một tứ giác), vì mặt nhìn ra hồ chủ yếu được ngắm từ bên kia đường, bên kia hồ
+      if (F.clock.text !== undefined) textPanel(g, e, X0, Z0, H - 2.3, Math.min(e.len - 2, 19), F.clock.text);
     }
   }
   if (F.sign && !lo) { const e = mainEdge(b, F.sign.dir); if (e) textPanel(g, e, X0, Z0, Math.min(H - 1.6, 6.2), Math.min(e.len - 1, 11), F.sign.text); }
-  if (F.emblem) { // quốc huy: đĩa tròn màu đồng giữa mặt chính (không vẽ chi tiết)
-    const e = mainEdge(b, F.emblem.dir); if (e) { g.push().move(e.mx + e.nx * 0.3 - X0, H * 0.72, e.mz + e.nz * 0.3 - Z0).rotY(Math.atan2(e.nx, e.nz)).rotX(Math.PI / 2); g.rgb(0.62, 0.42, 0.12).gloss(0.5).disc(0, 0, 0, F.emblem.r, lo ? 8 : 20, 1).gloss(0); g.rgb(0.42, 0.27, 0.08).disc(0, 0.03, 0, F.emblem.r * 0.74, lo ? 8 : 20, 1); g.pop(); }
-  }
   const archOn = (e, w, h, col) => { // ô cửa vòm tối trên mặt tường
     g.push().move(e.mx + e.nx * 0.06 - X0, CURB, e.mz + e.nz * 0.06 - Z0).rotY(Math.atan2(e.nx, e.nz));
     g.rgb(col[0], col[1], col[2]).quad([-w / 2, 0, 0], [w / 2, 0, 0], [w / 2, h - w / 2, 0], [-w / 2, h - w / 2, 0]);
@@ -483,7 +531,10 @@ export function decorate(ctx, env) {
   const insideSide = (x, z, ux, uz) => { const a = ctx.nearestRoad(x + ux * 3, z + uz * 3, 40, pub), b = ctx.nearestRoad(x - ux * 3, z - uz * 3, 40, pub), da = a ? a.d : 99, db = b ? b.d : 99; return Math.abs(da - db) < 1.5 ? 0 : da > db ? 1 : -1; };
   for (const w of ctx.wallGrid.collect(X0, Z0, env.X1, env.Z1)) {
     const p = w.p, zw = zoneAt(p[0], p[1]), formal = zw === ZONE.badinh || zw === ZONE.french; // khu cơ quan, biệt thự: tường vàng cao 2,1 m có mũ và trụ
-    const H = w.k === 3 ? 4.2 : w.k === 1 ? (formal ? 2.0 : 1.7) : w.k === 2 ? 1.1 : formal ? 2.1 : 2.3, th = w.k === 2 ? 0.4 : w.k === 1 ? 0.03 : 0.14;
+    // hai đoạn tường hai bên đầu cầu Thê Húc phía bờ (nối cánh cổng Đài Nghiên ra mép nước): tường lửng quét vôi trắng ngà như cổng đền,
+    // không phải tường rào vàng cao quá đầu người
+    const lowLime = w.k === 0 && ctx.landmarks.some((l) => l.id === 'cau_the_huc' && Math.hypot((p[0] + p[p.length - 2]) / 2 - l.x, (p[1] + p[p.length - 1]) / 2 - l.z) < 16);
+    const H = lowLime ? 1.05 : w.k === 3 ? 4.2 : w.k === 1 ? (formal ? 2.0 : 1.7) : w.k === 2 ? 1.1 : formal ? 2.1 : 2.3, th = w.k === 2 ? 0.4 : w.k === 1 ? 0.03 : lowLime ? 0.2 : 0.14;
     const IRON = zw === ZONE.badinh ? [0.035, 0.085, 0.05] : [0.03, 0.035, 0.04];
     for (let i = 0; i < p.length - 2; i += 2) {
       const ax = p[i], az = p[i + 1], bx = p[i + 2], bz = p[i + 3], Ls = Math.hypot(bx - ax, bz - az); if (Ls < 0.3) continue;
@@ -513,7 +564,7 @@ export function decorate(ctx, env) {
       const paint = (g) => {
         // tường rào xây: vữa vôi vàng (Ba Đình, khu phố Pháp vàng đậm hơn); tường thành: đá rêu phong; hàng rào sắt xanh rêu; bờ giậu để trơn
         g.mat(w.k === 0 ? MAT.plaster : w.k === 3 ? MAT.mossy : MAT.none);
-        if (w.k === 2) g.rgb(0.1, 0.22, 0.07); else if (w.k === 1) g.rgb(IRON[0], IRON[1], IRON[2]); else if (w.k === 3) g.rgb(0.42, 0.4, 0.36); else if (formal) g.rgb(0.66, 0.45, 0.16); else g.rgb(0.62, 0.48, 0.2);
+        if (lowLime) g.rgb(0.72, 0.66, 0.53); else if (w.k === 2) g.rgb(0.1, 0.22, 0.07); else if (w.k === 1) g.rgb(IRON[0], IRON[1], IRON[2]); else if (w.k === 3) g.rgb(0.42, 0.4, 0.36); else if (formal) g.rgb(0.66, 0.45, 0.16); else g.rgb(0.62, 0.48, 0.2);
       };
       for (const [a0, a1] of pieces) {
         const pax = ax + dx * a0, paz = az + dz * a0, pbx = ax + dx * a1, pbz = az + dz * a1, mx = (pax + pbx) / 2, mz = (paz + pbz) / 2; if (!inChunk(mx, mz)) continue;
@@ -543,7 +594,7 @@ export function decorate(ctx, env) {
         } else {
           for (const g of [near, far]) { paint(g); slab(g, CURB, CURB + H, th, w.k === 2 || (g === near && w.k === 3)); }
           if (w.k === 0) { // mũ tường và trụ đỡ cách quãng (tường rào cơ quan, biệt thự)
-            if (formal) near.rgb(0.8, 0.76, 0.66); else near.rgb(0.45, 0.36, 0.17);
+            if (lowLime) near.mat(MAT.stone).rgb(0.36, 0.34, 0.28); else if (formal) near.rgb(0.8, 0.76, 0.66); else near.rgb(0.45, 0.36, 0.17);
             slab(near, CURB + H, CURB + H + 0.09, th + 0.045, true);
             if (formal) {
               paint(near); const np = Math.floor((a1 - a0) / 3.8), ang = Math.atan2(-dz, dx);

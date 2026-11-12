@@ -77,3 +77,21 @@ export function siteCollision(s, pos) {
   if (s.open) return new Float32Array(0);
   const f = modelFootprint(pos); return f ? siteSolids({ ...s, solid: [f] }) : new Float32Array(0);
 }
+
+// Chỗ đứng thay thế khi điểm đặt người chơi (x, z) rơi xuống nước hay vào lòng nhà (tham số at/street/site của đường dẫn: dùng để chụp
+// ảnh kiểm tra, người chơi dán lại đường dẫn cũng dùng được). Dò từng vòng quanh điểm đó, lấy chỗ gần nhất không dưới nước, không trong
+// lòng khối đặc, đủ rộng cho một người và có đường, lối đi trong vòng 45 m (để không rơi lên gò đảo giữa hồ). tg: công trình cần nhìn
+// {x, z} (tham số site): trong 40 m kể từ chỗ trống đầu tiên, ưu tiên chỗ còn nhìn thông tới công trình. nav: world/nav.js, các ô quanh
+// điểm đặt đã nạp va chạm. Trả về [x, z], hoặc null nếu trong 120 m không có chỗ nào.
+export function freeSpot(nav, x0, z0, tg = null) {
+  const b = nav.b, m = 10, onDeck = (x, z) => nav.decks.length > 0 && !!nav.deckAt(x, z, 0.3);
+  const free = (x, z) => x > b.x0 + m && x < b.x1 - m && z > b.z0 + m && z < b.z1 - m && (!nav.isWater(x, z) || onDeck(x, z)) && nav.clearAt(x, z, 0.6) && !!nav.nearestRoad(x, z, 45, (r) => !r.bridge) && !nav.inSolid(x, z);
+  const sees = (x, z) => { const dx = tg.x - x, dz = tg.z - z, d = Math.hypot(dx, dz) || 1, need = Math.min(d - 10, 45); return need <= 0 || nav.raycast(x, z, dx / d, dz / d, need, 1.6) >= need - 0.01; };
+  let first = null;
+  for (let r = 2; r <= 120 && !(first && (!tg || r > first[2] + 40)); r += 2) for (let k = 0, n = Math.max(8, Math.round(r * 1.6)); k < n; k++) {
+    const a = (k / n) * Math.PI * 2, x = x0 + Math.sin(a) * r, z = z0 + Math.cos(a) * r; if (!free(x, z)) continue;
+    if (!tg || sees(x, z)) return [x, z];
+    if (!first) first = [x, z, r];
+  }
+  return first ? [first[0], first[1]] : null;
+}
