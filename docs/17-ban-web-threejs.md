@@ -132,13 +132,30 @@ Các kỹ thuật chính:
    lưới cho biển tên, đèn tín hiệu và các bảng chữ của đồ đạc phố (`gen/furniture.js`).
 14. **Một nguồn sự thật cho đèn tín hiệu.** `world/junctions.js` tính một lần nút nào có đèn, nhánh nào thuộc pha nào và
    chu kỳ (xanh 23, vàng 3, đỏ 30 giây). Shader vẽ bóng đèn và số đếm ngược, còn dòng xe (`actors/trafficsim.js`) hỏi
-   đúng hàm đó với cùng đồng hồ, nên xe dừng khi người chơi thấy đèn đỏ. Nhánh vào nút quá ngắn thì xe dừng từ đoạn
-   đường trước đó.
+   đúng hàm đó với cùng đồng hồ, nên xe dừng khi người chơi thấy đèn đỏ. Ba điều giữ cho việc đó đúng ở mọi nút:
+   - *Vạch dừng là một chỗ trên mặt đường*, không phải thuộc tính của một cạnh đồ thị. Bản đồ cắt đường quanh nút giao thành
+     nhiều mẩu ngắn, nên dòng xe lập sẵn bảng `ahead`: với mỗi (cạnh, chiều) trong tầm 18 m sau vạch dừng, chạy hết cạnh rồi
+     còn bao nhiêu mét nữa tới nút và vào theo pha nào. Xe ở đâu cũng tính quãng tới vạch theo cùng một cách. Xe lỡ qua vạch
+     lúc đèn vừa đỏ mà còn kịp thì dừng trước vạch sang đường và đứng đó; không kịp thì đi nốt cho thoát nút.
+   - *Hai nút có đèn nối nhau bằng quãng ngắn hơn 24 m* (không đủ chỗ cho vạch dừng và vài xe xếp hàng) gộp thành một nút
+     chung pha; các nút phụ trên quãng nối thành lòng nút.
+   - *Chia pha theo phương của nhánh, ít xung đột nhất*: thử mọi cách cắt vòng phương làm hai cung, phạt hai nhánh cùng pha
+     mà cắt nhau và hai nhánh khác pha mà gần song song. Hai phố cắt nhau không bao giờ chung pha, hai nhánh chụm góc hẹp
+     luôn chung pha (trước đây chia cứng ở ±45° quanh trục chính nên ngã năm có nhánh chạy trong khi nhánh sát bên đỏ).
 15. **Dòng xe tách ba lớp.** `trafficsim.js` là mô phỏng thuần (chạy được trong Node, có bài thử bằng số
    `tools/traffic_check.mjs`: cơ cấu xe theo khu và giờ, tốc độ, số xe kẹt, xe đè lên nhau, xe né người qua đường);
    `fleet.js` vẽ bằng instancing (mỗi loại xe và mỗi mức chi tiết một lệnh vẽ, quầng đèn đêm của mọi xe chung một lệnh
    vẽ); `traffic.js` nối hai bên. Đường mang thêm hai cờ lấy từ thẻ OSM: cấm ô tô (ngõ nhỏ, cầu Long Biên, làn xe máy
-   cầu Chương Dương) và cấm xe máy (lòng giữa cầu Chương Dương).
+   cầu Chương Dương) và cấm xe máy (lòng giữa cầu Chương Dương). Để nút giao không khoá cứng: xe không rẽ vào và không được
+   sinh ra trên các "chiều chạy vô nghĩa" (mẩu đường hai chiều chỉ dẫn tới đường một chiều ngược lại, ngõ cụt ngắn hơn 60 m);
+   trên đường hai chiều chỉ lấn sang phần đường ngược chiều khi bên đó thoáng và không ở sát nút; xe chạy chậm không vào nút
+   khi không kịp qua trước lúc dòng cắt ngang được đi, hoặc khi xe ngay trước còn nằm trong nút; hai xe đứng chắn mũi nhau thì
+   xe có số thứ tự nhỏ hơn lách qua sau 1,2 giây. Để xe không nằm đè lên nhau: mỗi khung hình lập "sổ nhập làn" cho từng
+   (cạnh, chiều), gồm các xe đang ở đầu cạnh và các xe sắp rẽ vào nó; xe không rẽ vào chỗ đang có xe, và trong các xe cùng rẽ
+   vào một phố thì xe xa nút hơn nhường (lưới tìm xe lân cận chỉ thấy xe ngay trước mũi theo hướng đang chạy, không thấy xe
+   sau góc rẽ); xe đứng yên không trượt ngang; hai thân xe cùng chiều lỡ lồng vào nhau thì bị tách ngang ra ngay. Đường bị cắt
+   ở mép bản đồ là lối ra: xe tới đó rời khỏi bản đồ chứ không quay đầu. Giờ cao điểm cả dòng xe chạy chậm lại; đi nhanh tới
+   nơi nào thì dòng xe và người đi bộ ở đó được rải sẵn như lúc vào game.
 16. **Nhà ống theo từng lô.** Khối nhà liền dãy của OSM được cắt thành các lô rộng 2,9 đến 5,3 m, mỗi lô có số tầng, màu,
    tuổi nhà và kiểu mái riêng (`gen/buildings.js`); 40 lớp mặt đứng; biển hiệu theo quy tắc phố cổ (dải tầng trệt, cao
    không quá 0,8 m, có biển vẫy). Bảng `gen/heroes.js` đặt chiều cao, màu và một nét nhận diện cho 28 toà nhà có tên.
