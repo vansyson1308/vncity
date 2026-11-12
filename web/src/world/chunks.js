@@ -80,7 +80,7 @@ export class Chunks {
     const mk = (pack, mat) => { const mesh = new THREE.Mesh(propGeometry(pack), mat); mesh.position.set(c.X0, 0, c.Z0); mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.castShadow = true; this.group.add(mesh); c.meshes.push(mesh); return mesh; };
     if (m.near.idx.length) { c.near = mk(m.near, this.mats.prop); c.near.receiveShadow = true; }
     if (m.leaf && m.leaf.idx.length) c.leaf = mk(m.leaf, this.mats.leaf);
-    if (m.plate && m.plate.idx.length && this.mats.street) c.plate = mk(m.plate, this.mats.street); // biển tên phố, đèn tín hiệu (bảng chữ riêng)
+    if (m.plate && m.plate.idx.length && this.mats.street) { c.plate = mk(m.plate, this.mats.street); c.plate.castShadow = false; } // biển tên phố, đèn tín hiệu (bảng chữ riêng)
     c.detail = true; c.detailPending = false; c.lod = -1;
   }
   attachDetail(m) { const c = this.loaded.get(m.cx * 1000 + m.cz); if (!c || c.detail) return; this.addDetail(c, m); this.applyLod(c, this.last.x, this.last.z); }

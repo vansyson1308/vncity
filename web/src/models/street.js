@@ -16,7 +16,7 @@ export const TREES = {
   banglang: { h: [4.5, 6], r: [2.0, 2.8], trunk: 0.17, col: [0.204, 0.425, 0.119], blobs: 4, squash: 0.8, flower: [0.42, 0.2, 0.5], bark: [0.25, 0.2, 0.15] }, // bằng lăng tím
   phuong: { h: [6, 8], r: [3.2, 4.4], trunk: 0.26, col: [0.221, 0.459, 0.102], blobs: 5, squash: 0.5, flower: [0.72, 0.1, 0.04], bark: [0.2, 0.17, 0.135] },    // phượng đỏ
   lieu: { h: [4.5, 6], r: [2.2, 2.8], trunk: 0.18, col: [0.340, 0.561, 0.153], blobs: 5, squash: 1.5, droop: true, bark: [0.11, 0.085, 0.06] }, // liễu rủ ven hồ
-  hoasua: { h: [6.5, 9], r: [2.4, 3.2], trunk: 0.22, col: [0.153, 0.340, 0.119], blobs: 5, squash: 1.0, flower: [0.62, 0.68, 0.5], bark: [0.19, 0.17, 0.145] }, // hoa sữa: tán cao thành tầng, cuối thu nở chùm hoa trắng xanh
+  hoasua: { h: [6.5, 9], r: [2.4, 3.2], trunk: 0.22, col: [0.153, 0.340, 0.119], blobs: 5, squash: 1.0, flower: [0.4, 0.47, 0.3], bark: [0.19, 0.17, 0.145] }, // hoa sữa: tán cao thành tầng, cuối thu nở chùm hoa trắng xanh
   // --- theo từng phố (docs/18, mục 6) ---
   nhoi: { h: [8, 11], r: [3.4, 4.6], trunk: 0.3, col: [0.11, 0.3, 0.075], blobs: 6, squash: 0.8, bark: [0.2, 0.15, 0.11] },               // nhội (Phan Đình Phùng đoạn đông, Trần Hưng Đạo): cao, tán tròn dày
   xacuco: { h: [13, 17], r: [5.6, 7.2], trunk: 0.52, col: [0.13, 0.3, 0.085], blobs: 7, squash: 0.7, bark: [0.17, 0.135, 0.1] },          // xà cừ cổ thụ phố Hoàng Diệu: thân Ø hơn 1 m, tán trùm cả lòng đường
@@ -382,7 +382,7 @@ export function hoardingPanel(g, a, b, h, nx, nz, col, art, seed) {
   if (art) { // tấm trang trí: dải sóng nước và mặt trời (hoặc búp sen) vẽ phẳng
     const L = Math.hypot(b[0] - a[0], b[1] - a[1]), ux = (b[0] - a[0]) / L, uz = (b[1] - a[1]) / L, e = 0.012, P = (s, y) => [a[0] + ux * s + nx * (t + e), y, a[1] + uz * s + nz * (t + e)];
     g.rgb(0.1, 0.36, 0.6).quad(P(0, 0.2), P(L, 0.2), P(L, 0.75 + hash(seed, 2) * 0.2), P(0, 0.6 + hash(seed, 1) * 0.3));
-    if (art === 1) { g.rgb(0.95, 0.6, 0.05); const cx = L * (0.3 + hash(seed, 3) * 0.4), cy = 1.45; for (let i = 0; i < 6; i++) { const p = (i / 6) * 6.283, q = ((i + 1) / 6) * 6.283; g.tri3(P(cx, cy), P(cx + Math.cos(p) * 0.34, cy + Math.sin(p) * 0.34), P(cx + Math.cos(q) * 0.34, cy + Math.sin(q) * 0.34)); } }
+    if (art === 1) { g.rgb(0.95, 0.6, 0.05); const cx = L * (0.3 + hash(seed, 3) * 0.4), cy = 1.45; for (let i = 0; i < 10; i++) { const p = (i / 10) * 6.2832, q = ((i + 1) / 10) * 6.2832; g.tri3(P(cx, cy), P(cx + Math.cos(p) * 0.34, cy + Math.sin(p) * 0.34), P(cx + Math.cos(q) * 0.34, cy + Math.sin(q) * 0.34)); } }
     else { g.rgb(0.85, 0.35, 0.5); const cx = L * 0.5; g.tri3(P(cx - 0.3, 0.95), P(cx + 0.3, 0.95), P(cx, 1.75)).tri3(P(cx - 0.62, 1.0), P(cx - 0.1, 0.95), P(cx - 0.4, 1.5)).tri3(P(cx + 0.1, 0.95), P(cx + 0.62, 1.0), P(cx + 0.4, 1.5)); }
   }
 }

@@ -17,6 +17,12 @@ export function signalState(t, grp, off) {
 }
 // Nhóm pha của một xe đang chạy theo hướng (tx,tz) vào nút có đèn sig.
 export const signalGroup = (sig, tx, tz) => (Math.abs(tx * sig.ax + tz * sig.az) >= 0.707 ? 0 : 1);
+// Để dòng xe dừng đèn đỏ (chưa nối: actors/traffic.js thuộc nhóm khác). Khoá nút ở đây trùng với khoá nút của Traffic:
+//   const sig = junctionsOf(world).signalNode.get(a.dir > 0 ? e.n1 : e.n0);        // nút cuối cạnh đang chạy
+//   if (sig && signalState(skyU.uTime.value, signalGroup(sig, tx, tz), sig.off) !== 3) {
+//     const rem = e.len - a.s;                                                      // sig.stop: quãng từ tim nút tới vạch dừng
+//     if (rem > sig.stop - 1 && rem < sig.stop + 30) target = Math.min(target, Math.max(0, (rem - sig.stop) * 0.8)); }
+// Cạnh ngắn hơn sig.stop (đường bị cắt thành nhiều đoạn ngắn) thì phải xét nút có đèn ở cuối cạnh kế tiếp.
 
 const cache = new WeakMap();
 export function junctionsOf(world) { let J = cache.get(world); if (!J) cache.set(world, (J = build(world))); return J; }

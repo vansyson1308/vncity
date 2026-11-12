@@ -123,7 +123,7 @@ export function furnish(ctx, env) {
     if (!ar.inbound) continue;
     const rx = ar.dz, rz = -ar.dx; // bên phải của xe đang chạy vào nút
     let px = 0, pz = 0, ok = false;
-    for (const [st, off] of [[ar.stop, 0.55], [ar.stop + 1.5, 0.55], [ar.stop, 0.3], [ar.stop + 3, 0.5]]) {
+    for (const [st, off] of [[ar.stop, 0.55], [ar.stop + 1.5, 0.55], [ar.stop, 0.3], [ar.stop + 3, 0.5], [ar.stop + 5, 0.5], [ar.stop + 7.5, 0.5]]) { // lùi dần ra xa nút nếu chỗ đó vướng
       px = ar.x + ar.dx * st + rx * (ar.w / 2 + off); pz = ar.z + ar.dz * st + rz * (ar.w / 2 + off);
       if (free(px, pz) && !onRoad(px, pz, 0.15) && clear(px, pz, 0.3)) { ok = true; break; }
     }
