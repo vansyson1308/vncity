@@ -3,6 +3,7 @@ import ClipperLib from 'clipper-lib';
 import { hash, pointInRing, segDist2 } from '../../core/util.js';
 import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn, roadY } from '../data.js';
 import { sitePaths } from '../landmarks/sites.js';
+import { resolveHeroes } from './heroes.js';
 
 export const CL = ClipperLib;
 const PT = CL.PolyType, CT = CL.ClipType, FT = CL.PolyFillType;
@@ -46,7 +47,8 @@ class Grid {
 }
 
 const FLOORS = {
-  [ZONE.old]: [2, 3, 3, 3, 4, 4, 5], [ZONE.french]: [2, 3, 3, 4, 4, 5], [ZONE.badinh]: [2, 2, 3, 3, 4], [ZONE.city]: [3, 4, 4, 5, 5, 6], [ZONE.bank]: [2, 3, 3, 4],
+  [ZONE.old]: [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6], // art bible 3.1: 2 tầng 25%, 3 tầng 30%, 4 tầng 25%, 5-6 tầng 20%
+  [ZONE.french]: [2, 3, 3, 4, 4, 5], [ZONE.badinh]: [2, 2, 3, 3, 4], [ZONE.city]: [3, 4, 4, 5, 5, 6], [ZONE.bank]: [2, 3, 3, 4],
 };
 
 // Khoảng cách nhỏ nhất giữa hai đoạn thẳng 2D (0 nếu cắt nhau).
@@ -167,8 +169,12 @@ export function buildContext(world, landmarks = []) {
   ctx.bldGrid = new Grid(32);
   ctx.chunkBld = new Map();
   const { x0, z0 } = world.bounds;
+  // công trình có tên (bảng gen/heroes.js): ghi đè số tầng, màu, kiểu mặt đứng; nhà đã phá dỡ thì bỏ hẳn
+  const heroes = resolveHeroes(world); ctx.heroes = heroes; ctx.plazas = [];
   for (const b of buildings) {
     b.zone = zoneAt(b.cx, b.cz);
+    const hero = heroes.get(b) || null;
+    if (hero && hero.gone) { b.skip = true; b.ghost = false; b.height = 0; ctx.plazas.push({ b, hero }); continue; }
     // công trình có mô hình dựng tay thì bỏ khối nhà OSM tương ứng
     const lm = landmarks.find((l) => (l.names && l.names.includes(world.names[b.name])) || (l.clear && Math.hypot(b.cx - l.x, b.cz - l.z) < l.clear));
     b.skip = !!lm; b.ghost = lm && !lm.open;
@@ -195,6 +201,8 @@ export function buildContext(world, landmarks = []) {
         if (b.area < 22) floors = Math.min(floors, 2); else if (b.area > 260) floors = Math.min(Math.max(floors, 3), 5);
         const colonial = b.zone === ZONE.french ? 0.42 : b.zone === ZONE.badinh ? 0.55 : b.zone === ZONE.old ? 0.08 : 0.05;
         style = r2 < colonial ? ST.FRENCH : ST.TUBE; if (style === ST.FRENCH) { fh = 3.8; floors = Math.min(floors, 4); }
+        // nhà ống: mỗi nhà một chiều cao tầng; dãy nhà vẽ gộp thì nền chung chỉ 2 tầng, từng lô nhô cao riêng (gen/buildings.js)
+        else { fh = 3.05 + hash(b.i, 8) * 0.6; if (b.area > 140) floors = 2; }
       }
     }
     if (b.lv > 0) floors = b.lv;
@@ -204,13 +212,23 @@ export function buildContext(world, landmarks = []) {
     if (b.solemn && (style === ST.TUBE || style === ST.APART || style === ST.MODERN)) { style = ST.FRENCH; fh = 3.8; floors = Math.min(floors, 3); h = b.h > 0 ? Math.min(b.h, 14) : floors * fh + 0.4; }
     if (b.cat === CAT.house && floors >= 9) style = ST.MODERN;       // nhà cao tầng gắn thẻ building=yes
     if (style === ST.MODERN && floors < 6 && b.area < 400) style = ST.TUBE; // khách sạn, cửa hàng trong nhà ống
+    if (hero) { // bảng công trình có tên
+      if (hero.style !== undefined) style = hero.style;
+      if (hero.floors) floors = hero.floors;
+      if (hero.h) h = hero.h; else if (hero.floors) h = hero.floors * (hero.fh || fh) + 0.4;
+      b.hero = hero;
+    }
     b.style = style; b.floors = Math.max(1, Math.min(floors, 80)); b.height = Math.min(h, 260);
     // mái: nhà ống phố cổ hay lợp ngói dốc, nhà mới mái bằng hoặc tôn
     const r3 = hash(b.i, 3);
+    const leafy = b.zone === ZONE.french || b.zone === ZONE.badinh, rowTube = style === ST.TUBE && b.area > 140;
     b.roof = style === ST.TEMPLE || style === ST.CHURCH ? ST.ROOF_TILE
       : style === ST.MARKET || b.cat === CAT.roof ? ST.ROOF_TIN
-      : (style === ST.TUBE || style === ST.FRENCH) && b.floors <= 4 && r3 < (b.zone === ZONE.old ? 0.4 : b.zone === ZONE.french || b.zone === ZONE.badinh ? 0.5 : 0.15) ? ST.ROOF_TILE
+      : style === ST.FRENCH && b.floors <= 4 && r3 < (leafy ? 0.88 : 0.6) ? ST.ROOF_TILE       // biệt thự Pháp: mái ngói đỏ bốn mái
+      : style === ST.PUBLIC && leafy && b.floors <= 4 && b.area < 3000 && r3 < 0.62 ? ST.ROOF_TILE // công sở, trường học thời Pháp
+      : style === ST.TUBE && !rowTube && b.floors <= 4 && r3 < (b.zone === ZONE.old ? 0.4 : leafy ? 0.5 : 0.15) ? ST.ROOF_TILE
       : r3 > 0.86 ? ST.ROOF_TIN : ST.ROOF_FLAT;
+    if (hero && hero.roof !== undefined) b.roof = hero.roof;
     ctx.bldGrid.addBox(...b.bb, b);
     const k = Math.floor((b.cx - x0) / CS) * 1000 + Math.floor((b.cz - z0) / CS);
     let l = ctx.chunkBld.get(k); if (!l) ctx.chunkBld.set(k, (l = [])); l.push(b);
