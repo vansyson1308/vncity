@@ -31,7 +31,7 @@ export class Chunks {
     const key = m.cx * 1000 + m.cz; this.pending.delete(key);
     if (this.loaded.has(key)) return;
     const b = this.world.bounds, X0 = b.x0 + m.cx * CS, Z0 = b.z0 + m.cz * CS, M = this.mats;
-    const c = { key, cx: m.cx, cz: m.cz, x: X0 + CS / 2, z: Z0 + CS / 2, meshes: [], lamps: m.lamps, near: null, far: null, leaf: null, lod: -1, detail: false, detailPending: false };
+    const c = { key, cx: m.cx, cz: m.cz, x: X0 + CS / 2, z: Z0 + CS / 2, meshes: [], lamps: m.lamps, near: null, far: null, leaf: null, plate: null, lod: -1, detail: false, detailPending: false };
     const place = (mesh, order = 0) => { mesh.position.set(X0, 0, Z0); mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.renderOrder = order; this.group.add(mesh); c.meshes.push(mesh); return mesh; };
     const top = Math.max(m.bld.top || 0, 12);
     const sphere = (h, pad) => new THREE.Sphere(new THREE.Vector3(CS / 2, h / 2, CS / 2), Math.hypot(CS * 0.71 + pad, h / 2));
@@ -80,11 +80,12 @@ export class Chunks {
     const mk = (pack, mat) => { const mesh = new THREE.Mesh(propGeometry(pack), mat); mesh.position.set(c.X0, 0, c.Z0); mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.castShadow = true; this.group.add(mesh); c.meshes.push(mesh); return mesh; };
     if (m.near.idx.length) { c.near = mk(m.near, this.mats.prop); c.near.receiveShadow = true; }
     if (m.leaf && m.leaf.idx.length) c.leaf = mk(m.leaf, this.mats.leaf);
+    if (m.plate && m.plate.idx.length && this.mats.street) { c.plate = mk(m.plate, this.mats.street); c.plate.castShadow = false; } // biển tên phố, đèn tín hiệu (bảng chữ riêng)
     c.detail = true; c.detailPending = false; c.lod = -1;
   }
   attachDetail(m) { const c = this.loaded.get(m.cx * 1000 + m.cz); if (!c || c.detail) return; this.addDetail(c, m); this.applyLod(c, this.last.x, this.last.z); }
   dropDetail(c) {
-    for (const k of ['near', 'leaf']) { const mesh = c[k]; if (!mesh) continue; this.group.remove(mesh); mesh.geometry.dispose(); c.meshes.splice(c.meshes.indexOf(mesh), 1); c[k] = null; }
+    for (const k of ['near', 'leaf', 'plate']) { const mesh = c[k]; if (!mesh) continue; this.group.remove(mesh); mesh.geometry.dispose(); c.meshes.splice(c.meshes.indexOf(mesh), 1); c[k] = null; }
     c.detail = false;
   }
 
@@ -95,7 +96,7 @@ export class Chunks {
     // chưa có chi tiết thì cứ để bản xa hiện, có rồi mới đổi (không bao giờ trống cây)
     const show = lod === 0 && c.detail ? 0 : 1;
     if (show === c.lod) return; c.lod = show;
-    if (c.near) c.near.visible = show === 0; if (c.leaf) c.leaf.visible = show === 0; if (c.far) c.far.visible = show === 1;
+    if (c.near) c.near.visible = show === 0; if (c.leaf) c.leaf.visible = show === 0; if (c.plate) c.plate.visible = show === 0; if (c.far) c.far.visible = show === 1;
   }
 
   unload(c) {
