@@ -311,7 +311,9 @@ export function genGround(ctx, cx, cz) {
   // sáng màu hơn mặt nhựa, cứ chừng 30 m có một cửa thu nước song gang. Va chạm không đổi: mép hè vẫn ở đúng cạnh khối phố.
   const shore = []; // đoạn bờ nước [ax,az,bx,bz] cho va chạm
   const onBorder = (a, b) => (a.X === b.X && (a.X === dX0 || a.X === dX1)) || (a.Y === b.Y && (a.Y === dZ0 || a.Y === dZ1));
-  const onLane = (x, z) => { const pt = { X: Math.round(x * 10), Y: Math.round(z * 10) }; let n = 0; for (const q of laneRoad) if (CL.Clipper.PointInPolygon(pt, q)) n += CL.Clipper.Orientation(q) ? 1 : -1; return n > 0; };
+  // điểm nằm trên lòng ngõ lát liền: lọc theo hộp bao trước (mép khối phố của cả ô đều đi qua đây)
+  const laneBox = laneRoad.map((q) => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const p of q) { if (p.X < x0) x0 = p.X; if (p.X > x1) x1 = p.X; if (p.Y < y0) y0 = p.Y; if (p.Y > y1) y1 = p.Y; } return { q, x0, y0, x1, y1, s: CL.Clipper.Orientation(q) ? 1 : -1 }; });
+  const onLane = (x, z) => { const X = Math.round(x * 10), Y = Math.round(z * 10), pt = { X, Y }; let n = 0; for (const b of laneBox) if (X >= b.x0 && X <= b.x1 && Y >= b.y0 && Y <= b.y1 && CL.Clipper.PointInPolygon(pt, b.q)) n += b.s; return n > 0; };
   for (const e of toEx(block)) {
     const rings = [[e.outer, false], ...e.holes.map((h) => [h, true])];
     for (const [ring, isHole] of rings) {
