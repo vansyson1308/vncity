@@ -41,7 +41,7 @@ export function buildMaterials(renderer, quality, atlas) {
         // mặt cứng ngoài phố: nhựa, đá lát, bó vỉa, gạch, rãnh biên
         float ghard = step(bl, 2.5) + step(10.5, bl) * step(bl, 14.5) + step(15.5, bl) * step(bl, 16.5);
         if (bl < 0.5) { // mặt nhựa: mảng mới thảm lại sẫm màu (mép rõ như miếng vá lớn), chỗ cũ bạc màu ngả nâu vì nắng bụi
-          gtx.rgb *= 1.0 - 0.16 * smoothstep(0.5, 0.53, gn2.r * 0.6 + gn.g * 0.4);
+          gtx.rgb *= 1.0 - 0.11 * smoothstep(0.49, 0.54, gn2.r * 0.6 + gn.g * 0.4);
           gtx.rgb = mix(gtx.rgb, gtx.rgb * vec3(1.13, 1.1, 1.04), smoothstep(0.35, 0.7, gn.r));
         }
         gtx.rgb *= mix(gvar, 1.0, step(5.5, bl) * step(bl, 7.5) * 0.6);

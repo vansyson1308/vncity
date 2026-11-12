@@ -69,6 +69,12 @@ THREE.ShaderChunk.fog_fragment = /* glsl */`
     #ifdef HN_SKY
       float fogFactor = 1.0 - exp(-fogX * fogX - fogX * uAir.x);
       vec3 fogTint = hazeColor(normalize(vFogDir));
+      // three.js pha sương SAU bước ánh xạ tông và mã hoá màu. Khi vẽ thẳng ra màn hình (mức Nhẹ, không hậu kỳ) màu mù phải đi
+      // qua đúng hai bước đó như vòm trời, nếu không vật ở xa sẽ tan vào một màu tối hơn trời (ban đêm thành đen).
+      #ifdef TONE_MAPPING
+        fogTint = toneMapping(fogTint);
+      #endif
+      fogTint = linearToOutputTexel(vec4(fogTint, 1.0)).rgb;
     #else
       float fogFactor = 1.0 - exp(-fogX * fogX - fogX * 0.3);
       vec3 fogTint = fogColor;
@@ -164,16 +170,18 @@ export class Sky {
             cc = mix(cc, uHorizon * (0.72 + 0.3 * lit), uNight);
             c = mix(c, cc, cl * smoothstep(0.01, 0.16, d.y) * uAir.w);
           }
-          // phố xa ngoài tầm dựng hình: một dải mái nhà mờ trong mù sát chân trời, ban đêm lấm tấm đèn
-          vec2 hd = normalize(d.xz + vec2(1e-5, 0.0));
-          float sk = 0.004 + 0.016 * vnoise(hd * 11.0 + 3.0) + 0.012 * vnoise(hd * 37.0 + 9.0);
-          float band = smoothstep(sk, sk - 0.005, d.y) * smoothstep(-0.03, -0.004, d.y);
-          c = mix(c, c * mix(0.86, 0.8, uNight), band);
-          vec2 lc = vec2(floor(hd.x * 420.0) + floor(hd.y * 420.0) * 57.0, floor(d.y * 700.0));
-          float lh = hash12(lc);
-          float lamp = step(0.86, lh) * smoothstep(sk + 0.004, sk - 0.004, d.y) * smoothstep(-0.012, -0.002, d.y) * (0.35 + 0.65 * vnoise(hd * 23.0 + 5.0));
-          vec3 lcol = mix(vec3(1.0, 0.62, 0.3), vec3(0.85, 0.92, 1.0), step(0.93, lh));
-          c += lcol * lamp * (0.35 + 0.25 * sin(uTime * 0.9 + lh * 70.0)) * 0.5 * uLit;
+          // phố xa ngoài tầm dựng hình: một dải mái nhà mờ trong mù sát chân trời, ban đêm lấm tấm đèn (chỉ tính trong dải hẹp đó)
+          if (d.y > -0.035 && d.y < 0.04) {
+            vec2 hd = normalize(d.xz + vec2(1e-5, 0.0));
+            float sk = 0.004 + 0.016 * vnoise(hd * 11.0 + 3.0) + 0.012 * vnoise(hd * 37.0 + 9.0);
+            float band = smoothstep(sk, sk - 0.005, d.y) * smoothstep(-0.03, -0.004, d.y);
+            c = mix(c, c * mix(0.86, 0.8, uNight), band);
+            vec2 lc = vec2(floor(hd.x * 420.0) + floor(hd.y * 420.0) * 57.0, floor(d.y * 700.0));
+            float lh = hash12(lc);
+            float lamp = step(0.86, lh) * smoothstep(sk + 0.004, sk - 0.004, d.y) * smoothstep(-0.012, -0.002, d.y) * (0.35 + 0.65 * vnoise(hd * 23.0 + 5.0));
+            vec3 lcol = mix(vec3(1.0, 0.62, 0.3), vec3(0.85, 0.92, 1.0), step(0.93, lh));
+            c += lcol * lamp * (0.35 + 0.25 * sin(uTime * 0.9 + lh * 70.0)) * 0.5 * uLit;
+          }
           gl_FragColor = vec4(c, 1.0);
           #include <tonemapping_fragment>
           #include <colorspace_fragment>
