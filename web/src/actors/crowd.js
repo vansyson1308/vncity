@@ -42,7 +42,8 @@ export class Crowd {
   constructor(scene, world, nav, humanLod, quality, humanFar, humanFull) {
     this.nav = nav; this.world = world; this.max = quality.crowd; // max: số người vẽ đủ chi tiết; tổng số người gấp 3,2 lần (người ở xa là lưới 630 tam giác)
     const total = Math.round(quality.crowd * 3.2) + 2;
-    this.cast = new Cast(scene, humanLod, humanFar || humanLod, humanFull || humanLod, quality, { near: quality.crowd + 2, far: total, kit: total });
+    const cap = Math.round(total * 1.5); // tối phố đi bộ quanh hồ đông gấp rưỡi ngày thường
+    this.cast = new Cast(scene, humanLod, humanFar || humanLod, humanFull || humanLod, quality, { near: quality.crowd + 2, far: cap, kit: cap });
     this.nearR2 = (quality.name === 'high' ? 22 : quality.name === 'low' ? 11 : 16) ** 2;
     this.bake = this.cast.bake; this.idleRow = this.cast.rows.idle[0];
     // các tuyến đi bộ: vỉa hè hai bên phố và lối dạo
@@ -70,6 +71,7 @@ export class Crowd {
     this.guest = null; // khách xe ôm đang đứng vẫy
     this.people = []; this.near = []; this.nearT = 0; this.time = 0; this.frame = 0; this.mix = crowdMix(ZONE.old, 12, false); this.lake = false; this.hours = 12; this.seatMiss = 0; this.gymMiss = 0; this.seatOff = -1; this.gymOff = -1;
     this._o = [0, 0, 0, 0]; this._pt = { x: 0, z: 0 }; this._cam = { x: 0, z: 0, fx: 0, fz: 1 };
+    this.walkOn = false; // phố đi bộ đang mở (lớp ngoài gán): trên các phố đó người đi cả dưới lòng đường
   }
   lakeNear(x, z, pad) { for (const w of this.lakes) if (x > w.bb[0] - pad && x < w.bb[2] + pad && z > w.bb[1] - pad && z < w.bb[3] + pad) return true; return false; }
 
@@ -108,14 +110,14 @@ export class Crowd {
     const w = this.mix.w; let tot = 0; for (let i = 0; i < 7; i++) tot += w[i]; let rr = Math.random() * tot, kind = 0; for (let i = 0; i < 7; i++) { rr -= w[i]; if (rr <= 0) { kind = i; break; } }
     if (kind === KIND.jogger && !path.shore) kind = KIND.local;
     if ((kind === KIND.vendor || kind === KIND.sweeper) && path.foot) kind = KIND.local;
-    const side = Math.random() < 0.5 ? -1 : 1, kerb = kind === KIND.vendor || kind === KIND.sweeper;
-    const lat = path.foot ? (Math.random() - 0.5) * Math.max(0.4, path.r.w - 0.8) : side * (path.r.w / 2 + (kerb ? 0.42 + Math.random() * 0.15 : 0.75 + Math.random() * 0.9));
+    const side = Math.random() < 0.5 ? -1 : 1, kerb = kind === KIND.vendor || kind === KIND.sweeper, mall = this.walkOn && !!path.r.walk && !kerb;
+    const lat = path.foot || mall ? (Math.random() - 0.5) * Math.max(0.4, path.r.w - 0.8) : side * (path.r.w / 2 + (kerb ? 0.42 + Math.random() * 0.15 : 0.75 + Math.random() * 0.9));
     const x = o[0] - o[3] * lat, z = o[1] + o[2] * lat, d = Math.hypot(x - px, z - pz);
     if (d < (this.warming ? 6 : 14) || d > 95) return false;
     if (cam && !this.warming && d < 45 && (x - cam.x) * cam.fx + (z - cam.z) * cam.fz > 0 && Math.random() < 0.8) return false;
     const pt = this._pt; pt.x = x; pt.z = z; if (this.nav.collide(pt, 0.3) || this.nav.isWater(x, z)) return false;
     const a = this.person(kind, x, z, Math.random() * 6.28);
-    a.path = path; a.s = s; a.dir = Math.random() < 0.5 ? 1 : -1; a.lat = lat;
+    a.path = path; a.s = s; a.dir = Math.random() < 0.5 ? 1 : -1; a.lat = lat; a.mall = mall;
     if (kind === KIND.local && !path.foot && Math.random() < 0.16) { a.kind = KIND.idle; a.stat = true; a.v = 0; } // đứng chờ, đứng xem hàng
     else { a.clip = kind === KIND.vendor ? CLIP.carry : kind === KIND.jogger ? CLIP.jog : CLIP.walk; a.v = kind === KIND.vendor ? 0.85 + Math.random() * 0.25 : kind === KIND.sweeper ? 0.5 + Math.random() * 0.2 : kind === KIND.jogger ? 2.3 + Math.random() * 0.7 : kind === KIND.tourist ? 0.8 + Math.random() * 0.3 : kind === KIND.student ? 1.1 + Math.random() * 0.4 : 0.9 + Math.random() * 0.5; }
     this.dress(a); this.people.push(a); return true;
@@ -176,7 +178,7 @@ export class Crowd {
       this.nearT = 1.5; this.near.length = 0;
       const zone = zoneAt(px, pz); this.lake = this.lakeNear(px, pz, 150); this.mix = crowdMix(zone, hours, this.lake);
       const shoreBoost = this.lake && (hours < 7.6 || hours >= 17) ? 2.2 : 1;
-      for (const path of this.paths) { const b = path.r.bb; if (b[0] < px + 95 && b[2] > px - 95 && b[1] < pz + 95 && b[3] > pz - 95) { const n = Math.max(1, Math.round((path.len / 40) * (path.foot ? 2.5 * (path.shore ? shoreBoost : 1) : path.zone === ZONE.old ? 2 : path.r.kind >= K.residential ? 0.6 : 1))); for (let i = 0; i < n; i++) this.near.push(path); } }
+      for (const path of this.paths) { const b = path.r.bb; if (b[0] < px + 95 && b[2] > px - 95 && b[1] < pz + 95 && b[3] > pz - 95) { const n = Math.max(1, Math.round((path.len / 40) * (path.foot ? 2.5 * (path.shore ? shoreBoost : 1) : path.zone === ZONE.old ? 2 : path.r.kind >= K.residential ? 0.6 : 1))); for (let i = 0, m = this.walkOn && path.r.walk ? n * 5 : n; i < m; i++) this.near.push(path); } }
     }
     // huỷ người đã ra xa; tốp tập thể dục tan khi hết giờ (lúc khuất mắt)
     let seated = 0, gym = 0;
@@ -189,7 +191,7 @@ export class Crowd {
     // sinh thêm cho đủ số theo giờ
     // Phần ngồi quán và phần tập thể dục có suất riêng (không bị người đi bộ chiếm hết chỗ); quanh đây không có quán, không có bờ hồ
     // thì sau vài chục lần thử hụt, suất đó trả lại cho người đi bộ trong 20 giây.
-    const total = Math.round(this.max * 3.2), N = Math.max(4, Math.round(total * this.mix.f));
+    const total = Math.round(this.max * 3.2 * (this.walkOn && this.lake ? 1.5 : 1)), N = Math.max(4, Math.round(total * this.mix.f)); // tối phố đi bộ quanh hồ đông hơn hẳn
     const seatQ = T0 < this.seatOff ? 0 : Math.round(N * this.mix.seat), gymQ = T0 < this.gymOff ? 0 : Math.round(N * this.mix.gym), walkQ = N - Math.max(0, seatQ - seated) - Math.max(0, gymQ - gym);
     for (let k = 0; k < (this.warming ? 6 : 3); k++) {
       if (gym < gymQ && P.length < total) { const m = this.spawnGroup(px, pz, cam, Math.min(total - P.length, gymQ - gym + 3)); gym += m; if (m) this.gymMiss = 0; else if (++this.gymMiss > 30) { this.gymMiss = 0; this.gymOff = T0 + 20; } }
@@ -207,6 +209,8 @@ export class Crowd {
         let v = a.v; if (a.pause > 0) { a.pause -= dt; v = 0; }
         // nhường đường: người chơi đứng chắn phía trước thì bước chậm và né sang bên
         if (pd2 < 1.7) { const fx = Math.sin(a.yaw), fz = Math.cos(a.yaw), ahead = dx * fx + dz * fz; if (ahead > 0) { v *= 0.3; a.lat += ((dx * fz - dz * fx) > 0 ? -1 : 1) * dt * 0.8; } }
+        // hết giờ phố đi bộ: người còn đang ở giữa lòng đường tạt dần vào vỉa hè
+        if (a.mall && !this.walkOn) { const want = (a.lat < 0 ? -1 : 1) * (a.path.r.w / 2 + 0.9), d = want - a.lat; if (Math.abs(d) < 0.05) a.mall = false; else a.lat += clamp(d, -dt * 1.1, dt * 1.1); }
         a.s += v * dt * a.dir; a.dist += v * dt;
         if (a.s < 0 || a.s > a.path.len) { a.dir = -a.dir; a.s = clamp(a.s, 0, a.path.len); a.lat = -a.lat; }
         this.at(a.path, a.s, o);

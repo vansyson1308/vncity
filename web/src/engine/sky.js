@@ -119,6 +119,7 @@ export class Sky {
   constructor(scene, camera, quality) {
     this.scene = scene; this.camera = camera;
     this.hours = 17.2; this.speed = 1 / 60; // một phút game mỗi giây thật
+    this.day = 3; // thứ trong tuần: 0 = thứ Hai ... 6 = Chủ nhật. Game mở đầu vào chiều thứ Năm; tối thứ Sáu tới Chủ nhật có phố đi bộ
     this.exposure = 1; this.night = 0; this.elevation = 0;
     scene.fog = new THREE.FogExp2(0xc6d2da, 0.0016);
     this.fogDensity = quality.fog;
@@ -247,11 +248,12 @@ export class Sky {
     this.exposure = lerp(a.exp, b.exp, t);
   }
 
-  setHours(h) { this.hours = ((h % 24) + 24) % 24; this.apply(); }
+  // nextDay: tua tới giờ h sắp tới (giờ nhỏ hơn giờ hiện tại nghĩa là sang ngày hôm sau)
+  setHours(h, nextDay = false) { const v = ((h % 24) + 24) % 24; if (nextDay && v < this.hours) this.day = (this.day + 1) % 7; this.hours = v; this.apply(); }
 
   update(dt, focus) {
     skyU.uTime.value += dt;
-    this.hours = (this.hours + dt * this.speed) % 24;
+    { const h = this.hours + dt * this.speed; if (h >= 24) this.day = (this.day + 1) % 7; this.hours = h % 24; }
     this.acc = (this.acc || 0) + dt;
     if (this.acc > 0.5) { this.acc = 0; this.apply(); }
     const cam = this.camera;

@@ -4,14 +4,15 @@
 //   a3  đi nhanh lần lượt tới cả 44 điểm: không kẹt trong vật thể, không đen màn hình
 //   d1  hướng đi theo phím ở 4 góc camera, camera hồi phục sau khi sát tường, thông báo khi không có WebGL2
 //   b1  (gồm cả B2, B4, C3, C5 đến C10) khách ngồi sau, HUD ở 1140 × 670, âm thanh và hai công tắc, các lỗi nhẹ
+//   w1  phố đi bộ tối cuối tuần: rào, không xe, không lên xe được, người đi dưới lòng đường, đồng hồ có thứ
 // Dùng: node tools/accept.mjs [a1] [a2] [a3] [thư mục ảnh]     (CHROME_PATH để chỉ định trình duyệt)
 import { chromium } from 'playwright';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const args = process.argv.slice(2), want = (k) => !args.some((a) => /^[a-d]\d+$/.test(a)) || args.includes(k);
-const DIST = path.resolve('dist'), OUT = path.resolve(args.find((a) => !/^[a-d]\d+$/.test(a)) || 'shots');
+const args = process.argv.slice(2), want = (k) => !args.some((a) => /^[a-dw]\d+$/.test(a)) || args.includes(k);
+const DIST = path.resolve('dist'), OUT = path.resolve(args.find((a) => !/^[a-dw]\d+$/.test(a)) || 'shots');
 fs.mkdirSync(OUT, { recursive: true });
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary', '.woff2': 'font/woff2', '.woff': 'font/woff', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg' };
 const server = http.createServer((req, res) => {
@@ -324,6 +325,54 @@ if (want('b1') || want('b2') || want('b4') || want('c1')) {
     await page.screenshot({ path: path.join(OUT, `c9_${id}.png`), timeout: SLOW });
   }
   await page.evaluate(() => { window.__game.hud.close(); });
+  await page.close();
+}
+// ---------------- W1: phố đi bộ quanh Hồ Gươm tối cuối tuần ----------------
+if (want('w1')) {
+  // tối thứ Bảy, đứng giữa phố Đinh Tiên Hoàng: phố đã đóng, có rào, không xe, không lên xe được, người đi dưới lòng đường
+  // (open() luôn cố định giờ ở 10:00 bằng tham số h; giờ của từng phép thử đặt lại bằng sky.setHours ngay sau khi vào game)
+  let page = await open('w1', '&day=5&street=Ph%E1%BB%91%20%C4%90inh%20Ti%C3%AAn%20Ho%C3%A0ng&along=0.45');
+  const sat = await page.evaluate(async () => {
+    const g = window.__game, P = g.player, T = g.traffic, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true; g.sky.setHours(20.2);
+    // xe đang chạy trong khu lúc đóng phố phải tự ra hết (chờ tối đa 80 giây), người đi bộ dần tràn xuống lòng đường
+    for (let k = 0; k < 320; k++) { await sleep(250); if (k > 24 && T.walk && T.agents.every((a) => a.x > 1e8 || !a.e.closed) && g.crowd.people.filter((a) => a.mall).length >= 3) break; }
+    const mesh = g.scene.getObjectByName('walkstreet'), inZone = T.agents.filter((a) => a.x < 1e8 && a.e.closed).length;
+    const near = T.agents.filter((a) => a.x < 1e8 && Math.hypot(a.x - P.pos.x, a.z - P.pos.z) < 60).length;
+    if (P.mode === 'bike') P.toggleBike(); const mount = P.toggleBike(); if (P.mode === 'bike') P.toggleBike();
+    const onRoad = g.crowd.people.filter((a) => a.mall).length;
+    const out = { walk: T.walk, gates: T.gates.length, mesh: !!mesh && mesh.visible, inZone, near, mount, onRoad, clock: document.getElementById('clock').textContent.trim(), noRide: P.noRide(P.pos.x, P.pos.z) };
+    window.__norender = false; return out;
+  });
+  console.log('w1 sat', JSON.stringify(sat));
+  sat.walk && sat.gates >= 20 && sat.mesh ? ok(`W1: tối thứ Bảy phố đi bộ đang đóng, ${sat.gates} cửa rào được dựng`) : fail('W1: tối thứ Bảy không thấy phố đi bộ: ' + JSON.stringify(sat));
+  sat.inZone === 0 && sat.near === 0 ? ok('W1: không còn xe nào trong phố đi bộ') : fail(`W1: còn ${sat.inZone} xe trong phố đã đóng, ${sat.near} xe trong 60 m quanh người chơi`);
+  sat.mount === 'forbidden' && sat.noRide ? ok('W1: trong phố đi bộ không lên xe được') : fail('W1: vẫn lên xe được trong phố đi bộ: ' + JSON.stringify(sat));
+  sat.onRoad >= 3 ? ok(`W1: ${sat.onRoad} người đang đi dưới lòng đường`) : fail('W1: không có người đi dưới lòng đường của phố đi bộ: ' + sat.onRoad);
+  /T7|Sat/.test(sat.clock) ? ok(`W1: đồng hồ ghi thứ trong tuần ("${sat.clock}")`) : fail('W1: đồng hồ không ghi thứ: ' + sat.clock);
+  await page.screenshot({ path: path.join(OUT, 'w1_sat.png'), timeout: SLOW });
+  await page.close();
+  // tối thứ Năm cùng chỗ, cùng giờ: phố thông xe bình thường, không rào, lên xe được
+  page = await open('w1', '&day=3&street=Ph%E1%BB%91%20%C4%90inh%20Ti%C3%AAn%20Ho%C3%A0ng&along=0.45');
+  const thu = await page.evaluate(async () => {
+    const g = window.__game, P = g.player, T = g.traffic, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true; g.sky.setHours(20.2); await sleep(4000);
+    const mesh = g.scene.getObjectByName('walkstreet'); if (P.mode === 'bike') P.toggleBike(); const mount = P.toggleBike();
+    const out = { walk: T.walk, mesh: !!mesh && mesh.visible, near: T.agents.filter((a) => a.x < 1e8 && Math.hypot(a.x - P.pos.x, a.z - P.pos.z) < 90).length, mount, onRoad: g.crowd.people.filter((a) => a.mall).length };
+    if (P.mode === 'bike') P.toggleBike(); window.__norender = false; return out;
+  });
+  console.log('w1 thu', JSON.stringify(thu));
+  !thu.walk && !thu.mesh && thu.near >= 3 && thu.mount === 'on' && thu.onRoad === 0 ? ok(`W1: tối thứ Năm phố thông xe bình thường (${thu.near} xe quanh đó), không rào`) : fail('W1: tối thứ Năm phố không bình thường: ' + JSON.stringify(thu));
+  // chuyển giờ: 18:59 thứ Sáu, chờ qua 19:00 thì phố đóng, có lời báo, xe còn sót chạy ra hết; tua giờ sang hôm sau thì thứ tăng lên
+  const tr = await page.evaluate(async () => {
+    const g = window.__game, T = g.traffic, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true;
+    // trang thử cố định giờ, nên tự đẩy đồng hồ từng nấc nhỏ (mỗi 250 ms thêm 0,3 phút game) như thời gian đang trôi
+    g.sky.day = 4; g.sky.setHours(18.98); const t0 = performance.now(); let onAt = -1;
+    while (performance.now() - t0 < 110000) { await sleep(250); g.sky.setHours(g.sky.hours + 0.005); if (onAt < 0 && T.walk) onAt = g.sky.hours; if (onAt >= 0 && g.sky.hours > onAt + 0.05 && T.agents.every((a) => a.x > 1e8 || !a.e.closed)) break; }
+    const left = T.agents.filter((a) => a.x < 1e8 && a.e.closed).length, d0 = g.sky.day; g.sky.setHours(8, true); const d1 = g.sky.day; g.sky.setHours(9, true);
+    const out = { onAt, left, hours: g.sky.hours, d0, d1, d2: g.sky.day, walkMorning: false }; await sleep(800); out.walkMorning = T.walk; window.__norender = false; return out;
+  });
+  console.log('w1 tr', JSON.stringify(tr));
+  tr.onAt >= 19 && tr.onAt < 19.03 && tr.left === 0 ? ok(`W1: đúng 19:00 thứ Sáu phố đóng lại, xe còn sót chạy ra hết`) : fail('W1: chuyển giờ sang phố đi bộ không đúng: ' + JSON.stringify(tr));
+  tr.d0 === 4 && tr.d1 === 5 && tr.d2 === 5 && !tr.walkMorning ? ok('W1: tua giờ qua nửa đêm thì sang thứ Bảy, buổi sáng phố thông xe lại') : fail('W1: thứ trong tuần không tăng đúng khi tua giờ: ' + JSON.stringify(tr));
   await page.close();
 }
 await browser.close(); server.close();

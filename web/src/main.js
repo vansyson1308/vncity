@@ -25,6 +25,8 @@ import { Minimap } from './ui/minimap.js';
 import { T, lang, setLang as setLangRaw, money, pick, both } from './ui/i18n.js';
 import { Audio } from './audio/audio.js';
 import { Governor } from './engine/governor.js';
+import { walkOn, isWalkRoad } from './world/walkzone.js';
+import { WalkStreet } from './world/walkstreet.js';
 import '@fontsource/be-vietnam-pro/vietnamese-400.css';
 import '@fontsource/be-vietnam-pro/vietnamese-600.css';
 import '@fontsource/be-vietnam-pro/vietnamese-800.css';
@@ -48,6 +50,7 @@ async function boot() {
   const sky = new Sky(scene, camera, quality);
   sky.speed = 1 / 360; // một giờ game dài sáu phút thật: từ chiều vàng tới lúc phố lên đèn mất chừng tám phút
   const fixedTime = params.has('h'); if (fixedTime) sky.setHours(+params.get('h'));
+  if (params.has('day')) sky.day = Math.max(0, Math.min(6, Math.floor(+params.get('day')) || 0)); // thứ trong tuần: 0 = thứ Hai ... 6 = Chủ nhật
   const input = new Input(canvas), audio = new Audio(), hud = new Hud(input);
   input.onFirstGesture = () => audio.start();
   input.onIme = () => hud.toast(T('ime_hint'), 10); // bộ gõ tiếng Việt nuốt phím: báo một lần
@@ -86,14 +89,21 @@ async function boot() {
   passport.refresh();
   // khu vực trang nghiêm: không chạy xe
   const solemn = passport.items.filter((i) => i.solemn).map((i) => ({ x: i.x, z: i.z, r: i.id === 'quang_truong_ba_dinh' ? 150 : 100 }));
-  player.noRide = (x, z) => solemn.some((s) => (x - s.x) ** 2 + (z - s.z) ** 2 < s.r * s.r);
+  // phố đi bộ tối cuối tuần (world/walkzone.js): trong giờ đóng phố, các đoạn đường sau rào cũng là khu không chạy xe
+  for (const r of world.roads) r.walk = isWalkRoad(world.names, r);
+  const walkStreet = new WalkStreet(scene, mats);
+  const behindGate = (x, z) => { const h = nav.nearestRoad(x, z, 16, (rd) => rd.veh); return !!h && !!h.r.shut; };
+  const inSolemn = (x, z) => solemn.some((s) => (x - s.x) ** 2 + (z - s.z) ** 2 < s.r * s.r);
+  player.noRide = (x, z) => inSolemn(x, z) || (traffic.walk && behindGate(x, z));
+  // cuốc xe ôm không đón, không trả trong phố đi bộ khi phố đang đóng hoặc sắp đóng trong 45 phút tới
+  fares.avoid = (x, z) => { if (!walkOn(sky.day, sky.hours) && !walkOn(sky.day, sky.hours + 0.75)) return false; const h = nav.nearestRoad(x, z, 30, (rd) => rd.veh); return !!h && !!h.r.walk; };
 
   // ----- điểm xuất phát: bờ hồ, trước cổng đền Ngọc Sơn, nhìn về cầu Thê Húc lúc chiều vàng -----
   let sx = 124, sz = -211, syaw = -1.67, resumed = false;
   const gate = site('ngoc_son_gate'); // bắt đầu trước cổng đền Ngọc Sơn
   if (gate) { sx = gate.x + Math.sin(gate.yaw) * 7; sz = gate.z + Math.cos(gate.yaw) * 7; syaw = gate.yaw + Math.PI; }
   const saved = passport.flags.pos;
-  if (saved && passport.visited.size > 0 && !params.has('fresh')) { [sx, sz, syaw] = saved; resumed = true; if (!fixedTime && passport.flags.hours) sky.setHours(passport.flags.hours); }
+  if (saved && passport.visited.size > 0 && !params.has('fresh')) { [sx, sz, syaw] = saved; resumed = true; if (!fixedTime && passport.flags.hours) sky.setHours(passport.flags.hours); if (!params.has('day') && Number.isInteger(passport.flags.day)) sky.day = passport.flags.day; }
   if (params.get('at')) { [sx, sz] = params.get('at').split(',').map(Number); resumed = false; }
   if (params.get('street')) {
     const name = params.get('street'), rs = world.roads.filter((r) => world.names[r.name] === name).sort((a, b) => b.len - a.len);
@@ -113,10 +123,11 @@ async function boot() {
   if (params.has('zoom')) cam.zoom = +params.get('zoom');
 
   camera.position.set(player.pos.x - Math.sin(player.yaw) * 5, 3, player.pos.z - Math.cos(player.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
+  traffic.day = sky.day; crowd.walkOn = walkOn(sky.day, sky.hours);
   traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera, sky.hours);
 
   // ----- trạng thái và sự kiện lối chơi -----
-  const G = { started: false, photo: false, t: 0, saveT: 0, slowT: 0, wasNight: sky.night > 0.5, crossT: 0, fps: 60 };
+  const G = { started: false, photo: false, t: 0, saveT: 0, slowT: 0, wasNight: sky.night > 0.5, crossT: 0, fps: 60, walk: false };
   const flag = (k) => { if (passport.flags[k]) return false; passport.flags[k] = 1; passport.save(); return true; };
   const counts = () => hud.setCounts(passport.visited.size, passport.items.length, passport.money);
   counts();
@@ -169,13 +180,13 @@ async function boot() {
   const settings = () => hud.openSettings(quality.name, audio, G.fpsPlay ? T('perf', { f: Math.round(G.fpsPlay), d: Math.round((R.dpr / (window.devicePixelRatio || 1)) * 100) }) : T('perf_wait'));
   // đổi ngôn ngữ: mọi chữ đang hiện trên màn hình đổi theo ngay
   const setLang = (l) => { const from = lang(); setLangRaw(l); if (from !== lang()) { hud.relang(from); sugT = 0; } };
-  const savePos = () => { passport.flags.pos = [+player.pos.x.toFixed(1), +player.pos.z.toFixed(1), +player.yaw.toFixed(2)]; passport.flags.hours = +sky.hours.toFixed(2); passport.save(); };
+  const savePos = () => { passport.flags.pos = [+player.pos.x.toFixed(1), +player.pos.z.toFixed(1), +player.yaw.toFixed(2)]; passport.flags.hours = +sky.hours.toFixed(2); passport.flags.day = sky.day; passport.save(); };
   addEventListener('pagehide', savePos);
   // card đồ hoạ bị ngắt giữa chừng (máy ngủ, driver khởi động lại): giữ vị trí, báo cho người chơi, có lại thì tải lại trang
   canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); savePos(); hud.toast(T('gl_lost'), 30, '', '⚠️', true); });
   canvas.addEventListener('webglcontextrestored', () => location.reload());
   const TIMES = [6.3, 12, 17.2, 20.5], TNAME = ['time_morning', 'time_noon', 'time_golden', 'time_night'];
-  const nextTime = () => { const i = TIMES.findIndex((h) => h > sky.hours + 0.3), k = i < 0 ? 0 : i; sky.setHours(TIMES[k]); hud.toast(T(TNAME[k]), 2.5, '', k === 3 ? '🌙' : k === 2 ? '🌇' : k === 0 ? '🌅' : '☀️', true); G.wasNight = sky.night > 0.5; };
+  const nextTime = () => { const i = TIMES.findIndex((h) => h > sky.hours + 0.3), k = i < 0 ? 0 : i; sky.setHours(TIMES[k], true); hud.toast(T(TNAME[k]), 2.5, '', k === 3 ? '🌙' : k === 2 ? '🌇' : k === 0 ? '🌅' : '☀️', true); G.wasNight = sky.night > 0.5; };
   const capture = () => {
     R.render(16, sky.exposure, sky.night);
     canvas.toBlob((blob) => { if (!blob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ha-noi-dao-pho-${Date.now()}.png`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); }, 'image/png');
@@ -209,7 +220,7 @@ async function boot() {
       if (input.take('lang')) setLang(lang() === 'vi' ? 'en' : 'vi');
       if (input.take('photo')) { if (!G.photo) { G.photo = true; $('hud').classList.add('photo'); hud.bubble('📷'); } else capture(); }
       if (G.photo && input.take('interact')) capture();
-      if (input.take('mount')) { const r = player.toggleBike(); if (r === 'fast') hud.toast(T('g_fast'), 3); else if (r === 'forbidden') hud.toast(T('g_solemn'), 4); else audio.click(); }
+      if (input.take('mount')) { const r = player.toggleBike(); if (r === 'fast') hud.toast(T('g_fast'), 3); else if (r === 'forbidden') hud.toast(T(inSolemn(player.pos.x, player.pos.z) ? 'g_solemn' : 'g_walk'), 4); else audio.click(); }
       if (input.take('horn') && player.mode === 'bike' && !player.inNoRide) { audio.horn(0, 0.3); traffic.scare(player.pos.x, player.pos.z, Math.sin(player.yaw), Math.cos(player.yaw)); }
       if (input.take('interact')) {
         if (fares.prompt) fares.pickup(player);
@@ -223,7 +234,8 @@ async function boot() {
     if (warpTo && chunks.missingNear(warpTo[0], warpTo[1], 100)[0] === 0) { const p = { x: warpTo[0], z: warpTo[1] }; if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, warpTo[2] ?? player.yaw); cam.snap(player); warpTo = null; }
     const wasX = player.pos.x, wasZ = player.pos.z;
     player.update(dt, input, cam.yaw);
-    traffic.update(dt, player, camera, sky.hours);
+    traffic.day = sky.day; traffic.update(dt, player, camera, sky.hours);
+    if (traffic.walk !== G.walk) { G.walk = traffic.walk; crowd.walkOn = G.walk; walkStreet.set(G.walk, traffic.gates); if (G.walk && G.started && !fixedTime) hud.toast(T('g_walk_on'), 10); } // phố đi bộ vừa đóng hoặc mở: dựng hoặc cất rào
     crowd.update(dt, player, camera, sky.hours);
     if (traffic.touch) { fares.bump(0.1 * traffic.touch); traffic.touch = 0; }
     for (const h of traffic.honks) { const dx = h[0] - player.pos.x, dz = h[1] - player.pos.z, d = Math.hypot(dx, dz); if (d < 60) audio.horn(Math.max(-1, Math.min(1, (dx * Math.cos(cam.yaw) - dz * Math.sin(cam.yaw)) / 20)), 0.26 / (1 + d * 0.12), h[2] >= 3); }
@@ -248,10 +260,10 @@ async function boot() {
         if (fares.state === 'ride') sugs = [{ x: fares.dest.x, z: fares.dest.z, d: fares.left || 0, icon: '🏁', name: fares.dest.place.name, kind: 'fare', color: '#3ae07a', big: true }, ...sugs.slice(0, 2)];
         else if (fares.state === 'offer') sugs = [...sugs.slice(0, 2), { x: fares.cust.x, z: fares.cust.z, d: Math.hypot(fares.cust.x - player.pos.x, fares.cust.z - player.pos.z), icon: '🙋', name: both('fare_wait'), kind: 'fare', color: '#ffd23a', big: true }];
         const rd = nav.nearestRoad(player.pos.x, player.pos.z, 14); hud.setStreet(rd && rd.r.name >= 0 ? world.names[rd.r.name] : '');
-        hud.setClock(sky.hours); hud.fare(fares, fares.cust ? fares.name(lang()) : ''); counts();
+        hud.setClock(sky.hours, sky.day); hud.fare(fares, fares.cust ? fares.name(lang()) : ''); counts();
         // lời nhắc theo tình huống
         const night = sky.night > 0.5; if (night && !G.wasNight && flag('g_night')) hud.toast(T('g_night'), 6); G.wasNight = night;
-        if (player.inNoRide && G.t - G.slowT > 20) { G.slowT = G.t; hud.toast(T('g_solemn'), 5); }
+        if (player.inNoRide && G.t - G.slowT > 20) { G.slowT = G.t; hud.toast(T(inSolemn(player.pos.x, player.pos.z) ? 'g_solemn' : 'g_walk'), 5); }
         if (player.mode === 'walk' && nav.onRoad(player.pos.x, player.pos.z) && traffic.countNear(player.pos.x, player.pos.z, 14) >= 3 && flag('g_cross')) hud.toast(T('g_cross'), 7);
         if (passport.visited.size >= 2 && passport.money >= 45000 && ![...passport.visited].some((id) => passport.byId.get(id).kind === 'food') && flag('g_food')) hud.toast(T('g_food'), 6);
         const b = world.bounds; if ((player.pos.x < b.x0 + 12 || player.pos.x > b.x1 - 12 || player.pos.z < b.z0 + 12 || player.pos.z > b.z1 - 12) && G.t - (G.edgeT || -99) > 12) { G.edgeT = G.t; hud.toast(T('g_edge'), 4); }

@@ -24,7 +24,7 @@ export class Hud {
   close() { if (!this.modal) return false; $(this.modal).classList.add('hidden'); const m = this.modal; this.modal = null; this.input.enabled = true; this.onClose && this.onClose(m); return true; }
 
   setCounts(v, t, m) { $('count').textContent = `${v}/${t}`; $('money').textContent = money(m); }
-  setClock(h) { const hh = Math.floor(h), mm = Math.floor((h - hh) * 60); $('clock-time').textContent = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`; $('clock-icon').textContent = h < 5.5 || h >= 19 ? '🌙' : h < 8 ? '🌅' : h < 16.5 ? '☀️' : '🌇'; }
+  setClock(h, day) { const hh = Math.floor(h), mm = Math.floor((h - hh) * 60); if (day !== undefined) $('clock-day').textContent = T('day' + day); $('clock-time').textContent = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`; $('clock-icon').textContent = h < 5.5 || h >= 19 ? '🌙' : h < 8 ? '🌅' : h < 16.5 ? '☀️' : '🌇'; }
   setStreet(name) { if (name !== this._street) { this._street = name; $('street').textContent = name || ''; } }
   setSpeed(kmh) { $('speedo').classList.toggle('hidden', kmh === null); if (kmh !== null) $('kmh').textContent = Math.round(kmh); }
 

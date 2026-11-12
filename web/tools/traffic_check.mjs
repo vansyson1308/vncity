@@ -18,19 +18,21 @@ new Nav(world); // gắn cờ veh/skip cho đường
 const q = QUALITY[process.argv.slice(2).find((a) => !a.startsWith('--')) || 'medium'];
 const street = (name, along = 0.5) => { const rs = world.roads.filter((r) => world.names[r.name] === name).sort((a, b) => b.len - a.len), r = rs[0], p = r.p, i = Math.floor((p.length / 2 - 1) * along) * 2, j = Math.min(i + 2, p.length - 2); return { x: p[i], z: p[i + 1], yaw: Math.atan2(p[j] - p[Math.max(0, j - 2)], p[j + 1] - p[Math.max(1, j - 1)]), w: r.w }; };
 const SCENES = [['Phố Hàng Đào 17:12', street('Phố Hàng Đào'), 17.2], ['Phố Đinh Tiên Hoàng 20:30', street('Phố Đinh Tiên Hoàng'), 20.5], ['Hồ Gươm 6:12', { x: 60, z: -120, yaw: 0, w: 7 }, 6.2],
-  ['Phố Tràng Tiền 8:00', street('Phố Tràng Tiền'), 8], ['Phố Lý Thường Kiệt 17:30', street('Phố Lý Thường Kiệt'), 17.5], ['Phố Hàng Bạc 11:00', street('Phố Hàng Bạc'), 11], ['Đường Điện Biên Phủ 9:00', street('Đường Điện Biên Phủ'), 9], ['Phố Hàng Mã 2:00', street('Phố Hàng Mã'), 2]];
+  ['Phố Tràng Tiền 8:00', street('Phố Tràng Tiền'), 8], ['Phố Lý Thường Kiệt 17:30', street('Phố Lý Thường Kiệt'), 17.5], ['Phố Hàng Bạc 11:00', street('Phố Hàng Bạc'), 11], ['Đường Điện Biên Phủ 9:00', street('Đường Điện Biên Phủ'), 9], ['Phố Hàng Mã 2:00', street('Phố Hàng Mã'), 2],
+  // tối thứ Bảy: phố đi bộ quanh Hồ Gươm. Đứng ở hai phố còn thông xe sát khu đi bộ, và đứng giữa phố Đinh Tiên Hoàng (đã đóng)
+  ['Phố Hai Bà Trưng 20:00 thứ Bảy', street('Phố Hai Bà Trưng'), 20, 5], ['Phố Hàng Gai 20:00 thứ Bảy', street('Phố Hàng Gai'), 20, 5], ['Phố Đinh Tiên Hoàng 20:30 thứ Bảy', street('Phố Đinh Tiên Hoàng'), 20.5, 5]];
 const CLS = ['xe máy', 'ô tô', 'buýt', 'xe chậm'], NAME = Object.keys(VT), only = process.argv.find((a) => a.startsWith('--only='));
 let bad = 0;
 const check = (ok, msg) => { if (!ok) { bad++; console.log('   ✗ ' + msg); } };
-for (const [name, at, hours] of SCENES) {
+for (const [name, at, hours, day = 3] of SCENES) {
   if (only && !name.includes(only.slice(7))) continue;
-  const sim = new TrafficSim(world, q), player = { pos: { x: at.x, z: at.z }, y: 0, yaw: at.yaw, speed: 0, mode: 'walk', passenger: false, wobble: 0 };
+  const sim = new TrafficSim(world, q); sim.day = day; const player = { pos: { x: at.x, z: at.z }, y: 0, yaw: at.yaw, speed: 0, mode: 'walk', passenger: false, wobble: 0 };
   const cam = { x: at.x - Math.sin(at.yaw) * 5, z: at.z - Math.cos(at.yaw) * 5, fx: Math.sin(at.yaw), fz: Math.cos(at.yaw) };
   sim.prewarm(player, cam, hours);
   const dt = 1 / 30, steps = 90 * 30, cnt = [0, 0, 0, 0], spd = [0, 0, 0, 0], byType = new Array(TYPES.length).fill(0); let near60 = 0, near30 = 0, simMs = 0, overlap = 0, offroad = 0, stopped = 0, samples = 0, hail = 0, pill = 0, taxi = 0, ev = 0, t0 = performance.now();
   const u0 = sim.stats.unstuck, r0 = sim.stats.removed, h0 = sim.stats.hits, hitLog = [];
   // nửa sau bài thử: người chơi bước đều qua lại ngang đường (1,4 m/s), đếm số khung hình bị xe chạm vào
-  let touchFrames = 0, crossFrames = 0, stop1 = 0, tot1 = 0, atRed = 0, linePass = 0, redPass = 0, uturn60 = 0; const track = new Map(), o4 = [0, 0, 0, 0]; const rx = Math.cos(at.yaw), rz = -Math.sin(at.yaw), half = at.w / 2 + 1; let side = -half, dirS = 1;
+  let touchFrames = 0, crossFrames = 0, stop1 = 0, tot1 = 0, atRed = 0, linePass = 0, redPass = 0, uturn60 = 0, inWalk = 0; const track = new Map(), o4 = [0, 0, 0, 0]; const rx = Math.cos(at.yaw), rz = -Math.sin(at.yaw), half = at.w / 2 + 1; let side = -half, dirS = 1;
   for (let i = 0; i < steps; i++) {
     const crossing = i > steps / 2;
     if (crossing) { side += dirS * 1.4 * dt; if (Math.abs(side) > half) dirS = -dirS; const bx = player.pos.x, bz = player.pos.z; player.pos.x = at.x + rx * side; player.pos.z = at.z + rz * side; player.yaw = Math.atan2(rx * dirS, rz * dirS); player.speed = 1.4;
@@ -57,7 +59,7 @@ for (const [name, at, hours] of SCENES) {
     const A = sim.agents;
     for (const a of A) {
       if (a.x > 1e8) continue;
-      cnt[a.cls]++; spd[a.cls] += a.v; byType[a.type]++; if (a.v < 0.3 && !a.red) stopped++; if (a.red) atRed++; if (!crossing) { tot1++; if (a.v < 0.3 && !a.red) stop1++; }
+      cnt[a.cls]++; spd[a.cls] += a.v; byType[a.type]++; if (a.e.closed) inWalk++; if (a.v < 0.3 && !a.red) stopped++; if (a.red) atRed++; if (!crossing) { tot1++; if (a.v < 0.3 && !a.red) stop1++; }
       if ((a.x - at.x) ** 2 + (a.z - at.z) ** 2 < 3600) near60++; if ((a.x - at.x) ** 2 + (a.z - at.z) ** 2 < 900) near30++;
       if (Math.abs(a.lat) > a.e.w / 2 - a.r + 0.05) offroad++;
       if (a.hail) hail++; if (a.pill) pill++; if (a.taxi) { taxi++; if (a.type === VT.hatch) ev++; }
@@ -73,6 +75,7 @@ for (const [name, at, hours] of SCENES) {
   console.log(`   co mình gỡ kẹt ${sim.stats.unstuck - u0} lần, huỷ ${sim.stats.removed - r0} xe, đè lên nhau (tâm cách dưới 36 cm) ${overlap} lần, lấn mép ${offroad} lần; người chơi bước qua đường ${(crossFrames * dt * 1.4 / (2 * half)).toFixed(0)} lượt: bị xe đang chạy tông ${sim.stats.hits - h0} lần (chạm ${touchFrames}/${crossFrames} khung hình); ${(ms * 1000).toFixed(0)} µs/bước`);
   console.log(`   đèn tín hiệu: ${linePass} lượt qua vạch dừng, ${redPass} lượt lúc đèn đã đỏ; quay đầu tại chỗ trong 60 m quanh người chơi: ${uturn60} lần`);
   check(redPass <= Math.max(2, linePass * 0.02), `xe vượt đèn đỏ ${redPass}/${linePass} lượt`);
+  if (day !== 3) { console.log(`   phố đi bộ: ${sim.walk ? 'đang đóng' : 'KHÔNG đóng'}, ${sim.gates.length} rào, số lượt đếm thấy xe trong phố đã đóng: ${inWalk}`); check(sim.walk && sim.gates.length >= 20, 'phố đi bộ không được bật'); check(inWalk === 0, `còn xe chạy trong phố đi bộ (${inWalk} lượt đếm)`); }
   check(uturn60 <= 6, `xe quay đầu tại chỗ ngay gần người chơi ${uturn60} lần (nút cụt giả trong đồ thị đường?)`);
   check(offroad === 0, 'có xe lấn ra ngoài lòng đường');
   check(overlap <= 150, `xe đè lên nhau ${overlap} lần (hàng chờ đèn đỏ dồn lên nhau?)`);
