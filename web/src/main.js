@@ -97,8 +97,9 @@ async function boot() {
   const behindGate = (x, z) => { const h = nav.nearestRoad(x, z, 16, (rd) => rd.veh); return !!h && !!h.r.shut; };
   const inSolemn = (x, z) => solemn.some((s) => (x - s.x) ** 2 + (z - s.z) ** 2 < s.r * s.r);
   player.noRide = (x, z) => inSolemn(x, z) || (traffic.walk && behindGate(x, z));
+  player.noEnter = (x, z) => traffic.walk && behindGate(x, z);
   // cuốc xe ôm không đón, không trả trong phố đi bộ khi phố đang đóng hoặc sắp đóng trong 45 phút tới
-  fares.avoid = (x, z) => { if (!walkOn(sky.day, sky.hours) && !walkOn(sky.day, sky.hours + 0.75)) return false; const h = nav.nearestRoad(x, z, 30, (rd) => rd.veh); return !!h && !!h.r.walk; };
+  fares.avoid = (x, z) => { if (!walkOn(sky.day, sky.hours) && !walkOn(sky.day, sky.hours + 0.75)) return false; const h = nav.nearestRoad(x, z, 30, (rd) => rd.veh); return !!h && (!!h.r.walk || !!h.r.shut); }; // shut: cả những đoạn đóng theo vì chỉ dẫn vào phố đi bộ
 
   // ----- điểm xuất phát: bờ hồ, trước cổng đền Ngọc Sơn, nhìn về cầu Thê Húc lúc chiều vàng -----
   let sx = 124, sz = -211, syaw = -1.67, resumed = false;
@@ -135,6 +136,8 @@ async function boot() {
     const p = { x: sx, z: sz }; nav.collide(p, 0.4); sx = p.x; sz = p.z;
   }
   player.teleport(sx, sz, syaw);
+  // trạng thái phố đi bộ phải có trước khi lên xe theo ?bike: vào game giữa phố đang đóng thì không ngồi sẵn trên xe
+  traffic.day = sky.day; traffic.setWalk(walkOn(sky.day, sky.hours));
   if (params.has('bike')) player.toggleBike();
   cam.snap(player); cam.pitch = pnum('pitch', 0.16, -0.35, 1.25);
   if (Number.isFinite(pnum('camyaw', NaN))) { cam.yaw = pnum('camyaw', 0); cam.wasRiding = player.mode === 'bike'; } // góc camera đặt sẵn: không tự quay ra sau xe lúc vào game
@@ -296,6 +299,7 @@ async function boot() {
         hud.setClock(sky.hours, sky.day); hud.fare(fares, fares.cust ? fares.name(lang()) : ''); counts();
         // lời nhắc theo tình huống
         const night = sky.night > 0.5; if (night && !G.wasNight && flag('g_night')) hud.toast(T('g_night'), 6); G.wasNight = night;
+        if (player.barred) { player.barred = false; if (G.t - G.slowT > 8) { G.slowT = G.t; hud.toast(T('g_walk_stop'), 5); } }
         if (player.inNoRide && G.t - G.slowT > 20) { G.slowT = G.t; hud.toast(T(inSolemn(player.pos.x, player.pos.z) ? 'g_solemn' : 'g_walk'), 5); }
         if (player.mode === 'walk' && nav.onRoad(player.pos.x, player.pos.z) && traffic.countNear(player.pos.x, player.pos.z, 14) >= 3 && flag('g_cross')) hud.toast(T('g_cross'), 7);
         if (passport.visited.size >= 2 && passport.money >= 45000 && ![...passport.visited].some((id) => passport.byId.get(id).kind === 'food') && flag('g_food')) hud.toast(T('g_food'), 6);

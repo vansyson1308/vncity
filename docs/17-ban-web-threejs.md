@@ -191,8 +191,12 @@ Các kỹ thuật chính:
 19. **Phố đi bộ tối cuối tuần.** Game có thứ trong tuần (mở đầu là chiều thứ Năm, đồng hồ ghi thứ; tua giờ qua nửa đêm thì
    sang ngày mới). Từ 19 giờ tới nửa đêm thứ Sáu, thứ Bảy, Chủ nhật, vòng quanh Hồ Gươm, các phố nhỏ phía đông hồ và trục chợ
    đêm Hàng Đào - Đồng Xuân đóng lại (`world/walkzone.js`): dòng xe không vào, chiều chạy nào chỉ dẫn tới rào cũng không nhận
-   xe (để không dồn ứ trước rào), xe còn sót tự chạy ra; rào chắn dựng ở 35 đầu phố (`world/walkstreet.js`); người đi bộ đi
-   cả dưới lòng đường và đông gấp rưỡi; người chơi không chạy xe được sau rào; cuốc xe ôm không đón trả trong khu. Bố trí lúc
+   xe (để không dồn ứ trước rào), xe còn sót tự chạy ra (bị người chơi hay chiếc xe
+   người chơi dựng giữa phố chắn quá 8 giây thì quay đầu ra lối khác); rào chắn dựng ở 45 chỗ (`world/walkstreet.js`): đầu ngoài của
+   mọi đoạn đóng chạm đường còn mở, và mọi chỗ phố đi bộ gặp một đường khác kể cả phố nhánh đóng theo; người đi bộ đi cả dưới lòng
+   đường và đông gấp rưỡi; xe của người chơi tới ranh phố đóng thì dừng như gặp rào (lời nhắc: xuống xe đi bộ vào), lỡ ở sẵn bên
+   trong thì chỉ dắt ra được bằng tốc độ đi bộ, vào game bằng `?bike` giữa phố đóng thì không ngồi sẵn trên xe; cuốc xe ôm không đón
+   trả trong khu (soát cả chỗ dừng xe thật, không chỉ toạ độ điểm đến). Bố trí lúc
    đóng phố (cạnh đóng, chiều cấm vào, chỗ rào) chỉ phụ thuộc mạng đường nên tính một lần lúc tải (`walkPlan`); bật, tắt lúc
    chơi chỉ còn gán lại (0,2 ms thay vì khựng 50 đến 140 ms lúc 19 giờ).
 

@@ -32,6 +32,7 @@ export class Player {
     this.mode = 'walk'; this.lean = 0; this.steer = 0; this.wobble = 0; this.bump = 0; this.passenger = false;
     this.onCrash = null; this.onStep = null; this.onCurb = null; this.stepPhase = 0;
     this.noRide = null; // hàm (x,z) → true nếu khu vực cấm xe
+    this.noEnter = null; this.barred = false; // noEnter(x,z): khu xe không được chạy vào (phố đi bộ đang đóng): tới ranh là xe dừng như gặp rào
 
     this.root = new THREE.Group(); this.root.rotation.order = 'YXZ'; scene.add(this.root);
     this.model = gltf.scene; this.root.add(this.model);
@@ -162,6 +163,9 @@ export class Player {
         const tx = -this.nav.nz, tz = this.nav.nx, side = Math.sin(this.yaw) * tx + Math.cos(this.yaw) * tz >= 0 ? 1 : -1;
         this.yaw = dampAngle(this.yaw, Math.atan2(tx * side, tz * side), 6 * into, dt);
       }
+      // phố đi bộ đang đóng: xe đang ở ngoài thì dừng ở ranh như gặp rào (muốn vào thì xuống xe đi bộ); xe lỡ ở sẵn bên trong lúc
+      // phố đóng thì vẫn dắt ra được (giới hạn tốc độ của noRide ở dưới)
+      if (this.noEnter && this.noEnter(p.x, p.z) && !this.noEnter(this.pos.x, this.pos.z)) { v = 0; this.barred = true; break; }
       this.pos.x = p.x; this.pos.z = p.z;
     }
     if (hitN > 0) { this.wobble = Math.min(1, hitN / 6); this.phi *= 0.3; this.onCrash && this.onCrash(hitN); }

@@ -357,7 +357,7 @@ export class TrafficSim {
     const T = TYPES[type], Z = 1e-9;
     return { id: this.seq++, e, dir, s, type, cls: T.cls, taxi, v: T.vmax ? T.vmax * 0.8 : 3 + Math.random() * 3, x: o[0], z: o[1], yaw: Math.atan2(o[2], o[3]), lean: Z, lat: Z, latT: Z, y: Z,
       pace: (0.78 + Math.random() * 0.4) * (T.vmul || 1), vown: T.vmax ? T.vmax * (0.8 + Math.random() * 0.3) : 0, pref: 0.25 + Math.random() * 0.7, r: T.r, hl: T.hl, wait: Z, honk: Math.random() * 4, stuck: Z, sq: -Z, slowT: Z, over: -Z, hitT: -Z,
-      wob: Math.random() * 6.28, wobF: 0.5 + Math.random() * 0.7, wobA: T.cls === 0 ? 0.15 + Math.random() * 0.3 : T.cls === 3 ? 0.08 : 0.04, ne: null, nd: 1, vj: 3.2, sg: null, sgG: 0, sgX: 0, sgL: 0, sgS: 0, hold: false, pushT: -Z, pushB: null, blk: null, ghost: false, gT: 0, red: false, vendor: 0,
+      wob: Math.random() * 6.28, wobF: 0.5 + Math.random() * 0.7, wobA: T.cls === 0 ? 0.15 + Math.random() * 0.3 : T.cls === 3 ? 0.08 : 0.04, ne: null, nd: 1, vj: 3.2, sg: null, sgG: 0, sgX: 0, sgL: 0, sgS: 0, hold: false, pbT: Z, pushT: -Z, pushB: null, blk: null, ghost: false, gT: 0, red: false, vendor: 0,
       bits: 0, pill: 0, pbits: 0, hail: false, tint: WHITE, tint2: WHITE, tint3: WHITE, ptint2: WHITE, ptint3: WHITE };
   }
   follow(lead, back) {
@@ -454,11 +454,22 @@ export class TrafficSim {
     const dead = this.deadDirs(), no = new Set(); for (const c of dead) if (!natural.has(c)) no.add(c);
     const okDir = (e, d) => !e.oneway || e.oneway === d;
     for (const e of this.edges) { if (e.closed) continue; let live = 0; for (const d of [1, -1]) if (okDir(e, d) && !no.has(e.i * 2 + (d > 0 ? 1 : 0))) live++; if (!live) e.closed = true; }
+    // Rào: ở mỗi đầu cạnh đóng chạm một đường còn mở (xe dừng ở đó), và ở mỗi chỗ phố đi bộ gặp một đường không thuộc phố đi bộ dù
+    // đường đó cũng đóng theo (phố nhánh chỉ dẫn vào phố đi bộ: rào ở đầu ngoài của nó cho xe dừng, rào ở chỗ nó gặp phố đi bộ cho người
+    // đi bộ thấy ranh phố). Đoạn nối nằm lọt giữa hai phố đi bộ (hai đầu đều chạm phố đi bộ) không phải lối vào, không dựng rào.
+    const touchesWalk = (n, f) => this.nodes.get(n).some((g) => g !== f && g.walk);
+    const inner = (f) => touchesWalk(f.n0, f) && touchesWalk(f.n1, f);
     const gates = [], closed = new Uint8Array(this.edges.length);
     for (const e of this.edges) {
       if (!e.closed) continue;
       closed[e.i] = 1;
-      for (const [n, dir] of [[e.n0, 1], [e.n1, -1]]) { if (!this.nodes.get(n).some((f) => !f.closed)) continue; this.sample(e, Math.min(4.5, e.len * 0.4), dir, o); gates.push({ x: o[0], z: o[1], tx: o[2], tz: o[3], w: e.w }); }
+      for (const [n, dir] of [[e.n0, 1], [e.n1, -1]]) {
+        const open = this.nodes.get(n).some((f) => !f.closed), edge = e.walk && this.nodes.get(n).some((f) => f !== e && !f.walk && !inner(f));
+        if (!open && !edge) continue;
+        this.sample(e, Math.min(4.5, e.len * 0.4), dir, o);
+        if (gates.some((g) => (g.x - o[0]) ** 2 + (g.z - o[1]) ** 2 < 4)) continue; // hai cạnh gặp nhau ở cùng một chỗ: một rào là đủ
+        gates.push({ x: o[0], z: o[1], tx: o[2], tz: o[3], w: e.w });
+      }
     }
     this.edges.forEach((e, i) => { e.closed = was[i]; });
     return (this._walkPlan = { closed, no, gates });
@@ -701,6 +712,10 @@ export class TrafficSim {
       }
       if (a.wait > 1.1 && a.honk <= 0 && !a.red && a.type !== VT.bicycle && a.type !== VT.cyclo) { this.honks.push([a.x, a.z, a.cls === 0 ? 0 : 3]); a.honk = 2.5 + Math.random() * 3; a.wait = 0; }
       if (!blocked) a.wait = Math.max(0, a.wait - dt);
+      // Xe còn sót trong phố đi bộ vừa đóng (ghost) mà bị người chơi, hay chiếc xe máy người chơi dựng giữa lòng phố, chắn lối quá 8 giây:
+      // quay đầu dắt xe ra lối khác (trong phố đã đóng thì chiều một chiều không còn nghĩa) thay vì đứng chờ mãi giữa phố đi bộ.
+      if (pblock && target < 0.6) a.pbT += dt; else a.pbT = Math.max(0, a.pbT - dt);
+      if (a.ghost && a.pbT > 8) { a.pbT = 0; a.dir = -a.dir; a.s = Math.max(0, e.len - a.s); a.lat = -a.lat; this.lane(a); this.plan(a); }
       // kẹt: sau 3 giây thì co mình lách qua khe hẹp; kẹt cứng quá 7 giây ở chỗ người chơi không nhìn thấy thì cho xe biến mất để gỡ nút thắt
       a.red = (red && a.v < 1.5) || (lead !== null && lead.red && lead.v < 0.8); // đang chờ đèn đỏ (kể cả xếp hàng sau xe chờ đèn) thì không tính là kẹt
       if (blocked && a.v < 0.4 && !a.red) a.stuck += dt; else a.stuck = Math.max(0, a.stuck - dt * 3);
