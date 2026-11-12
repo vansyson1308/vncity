@@ -177,14 +177,20 @@ function build(world) {
       if (keys.has(nodeKey(p[j], p[j + 1]))) continue; // đoạn nối bên trong nút giao
       if (!a.veh || a.kind > K.residential || (a.kind === K.residential && a.w < 5)) continue;
       maxW = Math.max(maxW, a.w); if (a.name) nm.add(a.name);
-      sig.arms.push({ x: n.x, z: n.z, r: a.r, e: a.e, dx: a.dx, dz: a.dz, w: a.w, kind: a.kind, ow: a.ow, inbound: a.inbound, grp: 0, stop: 0 });
+      // nw: bề rộng lớn nhất của các đường xe chạy gặp nhau ở chính nút con n (đúng như gen/ground.js lấy để kẻ vạch ở đầu đoạn này)
+      let nw = 0; for (const q of n.arms) if (q.veh) nw = Math.max(nw, q.w);
+      sig.arms.push({ x: n.x, z: n.z, r: a.r, e: a.e, dx: a.dx, dz: a.dz, w: a.w, kind: a.kind, ow: a.ow, inbound: a.inbound, grp: 0, stop: 0, line: 0, nw });
     }
     splitPhases(sig, sig.arms); for (const a of sig.arms) a.grp = signalGroup(sig, a.dx, a.dz);
     // cột đèn đứng ngay sau vạch sang đường (gen/ground.js kẻ vạch cách tim nút max(5, 0,55 × bề rộng lớn nhất) + 2,6 m, rộng 2,8 m)
-    sig.stop = Math.max(5, maxW * 0.55) + 5.0; for (const a of sig.arms) a.stop = sig.stop; // sig.stop: quãng từ tim nút tới chân cột đèn
+    sig.stop = Math.max(5, maxW * 0.55) + 5.0; // sig.stop: quãng từ tim nút tới chân cột đèn
     // sig.line: quãng từ tim nút tới chỗ mũi xe dừng khi đèn đỏ, ngay trước vạch dừng sơn trên mặt đường. gen/ground.js kẻ vạch sang
     // đường từ jr + 1,2 tới jr + 1,2 + 2·zl rồi vạch dừng ở jr + 3,8 + 2·zl (jr = max(5; 0,55 × bề rộng lớn nhất), zl = 1,6 m, phố từ 12 m là 2 m).
     sig.line = Math.max(5, maxW * 0.55) + 3.8 + 2 * (maxW >= 12 ? 2 : 1.6) + 0.4;
+    // Từng nhánh: ground.js kẻ vạch theo nút con mà nhánh đó chạm vào (jr theo bề rộng lớn nhất ở nút con đó) và theo bề rộng của
+    // chính đoạn đường (zl), tính từ đúng nút con đó. Ở nút gộp (nhiều nút con) hai số chung ở trên lệch với vạch sơn tới vài mét,
+    // nên cột đèn (a.stop) và chỗ xe dừng (a.line) lấy theo nhánh.
+    for (const a of sig.arms) { const jr = Math.max(5, a.nw * 0.55); a.stop = jr + 5.0; a.line = jr + 3.8 + 2 * (a.w >= 12 ? 2 : 1.6) + 0.4; }
     // thí điểm từ 11/2025: các nút trên trục Trần Hưng Đạo và nút Hùng Vương - Trần Phú chỉ hiện 8 giây cuối
     sig.last8 = nm.has('Phố Trần Hưng Đạo') || (nm.has('Đường Hùng Vương') && nm.has('Phố Trần Phú'));
     if (sig.arms.filter((a) => a.inbound).length < 2) continue;

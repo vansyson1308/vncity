@@ -47,7 +47,8 @@ for (const [name, at, hours, day = 3] of SCENES) {
       if (h.e !== a.e) { h.e = a.e; h.dir = a.dir; h.rem = undefined; } else if (h.dir !== a.dir) { h.dir = a.dir; h.rem = undefined; if ((a.x - at.x) ** 2 + (a.z - at.z) ** 2 < 3600) uturn60++; }
       const node = a.dir > 0 ? a.e.n1 : a.e.n0, start = a.dir > 0 ? a.e.n0 : a.e.n1, sg = sim.sig.get(node);
       if (!sg || sim.sig.get(start) === sg) { h.rem = undefined; continue; }
-      const thr = sg.line + a.hl - 1.5, rem = a.e.len - a.s;
+      // vạch dừng của đúng nhánh này (nút gộp: mỗi nhánh kẻ vạch theo nút con của nó), nhánh không có cột đèn thì theo số chung của nút
+      const arm = sg.arms.find((m) => m.r === a.e.r && m.e === (a.dir > 0 ? 1 : 0)), thr = (arm ? arm.line : sg.line) + a.hl - 1.5, rem = a.e.len - a.s;
       if (h.rem !== undefined && h.rem > thr && rem <= thr) {
         sim.sample(a.e, a.e.len, a.dir, o4); const g = signalGroup(sg, o4[2], o4[3]); linePass++;
         if (signalState(sim.time, g, sg.off) === 1 && signalState(sim.time - 1.5, g, sg.off) === 1) redPass++;

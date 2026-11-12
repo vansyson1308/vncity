@@ -138,7 +138,12 @@ Các kỹ thuật chính:
    - *Vạch dừng là một chỗ trên mặt đường*, không phải thuộc tính của một cạnh đồ thị. Bản đồ cắt đường quanh nút giao thành
      nhiều mẩu ngắn, nên dòng xe lập sẵn bảng `ahead`: với mỗi (cạnh, chiều) trong tầm 18 m sau vạch dừng, chạy hết cạnh rồi
      còn bao nhiêu mét nữa tới nút và vào theo pha nào. Xe ở đâu cũng tính quãng tới vạch theo cùng một cách. Xe lỡ qua vạch
-     lúc đèn vừa đỏ mà còn kịp thì dừng trước vạch sang đường và đứng đó; không kịp thì đi nốt cho thoát nút.
+     lúc đèn vừa đỏ mà còn kịp thì dừng trước vạch sang đường và đứng đó; không kịp thì đi nốt cho thoát nút. Chỗ dừng và
+     chân cột đèn tính theo từng nhánh (`arm.line`, `arm.stop`), đúng công thức `gen/ground.js` kẻ vạch ở đầu đoạn đó: theo bề
+     rộng lớn nhất ở chính nút con mà nhánh chạm vào và bề rộng của chính đoạn đường. Ở nút gộp, một số chung cho cả nút lệch
+     với vạch sơn tới 6 m.
+   - *Đèn không nhảy pha lúc vào game*: lúc rải xe ban đầu (27,2 s mô phỏng) đồng hồ đèn chạy lùi từ đồng hồ shader sao cho
+     rải xong thì khớp đúng giờ shader (`prewarm(…, clockEnd)`).
    - *Hai nút có đèn nối nhau bằng quãng ngắn hơn 24 m* (không đủ chỗ cho vạch dừng và vài xe xếp hàng) gộp thành một nút
      chung pha; các nút phụ trên quãng nối thành lòng nút.
    - *Chia pha theo phương của nhánh, ít xung đột nhất*: thử mọi cách cắt vòng phương làm hai cung, phạt hai nhánh cùng pha
@@ -149,7 +154,9 @@ Các kỹ thuật chính:
    `fleet.js` vẽ bằng instancing (mỗi loại xe và mỗi mức chi tiết một lệnh vẽ, quầng đèn đêm của mọi xe chung một lệnh
    vẽ); `traffic.js` nối hai bên. Đường mang thêm hai cờ lấy từ thẻ OSM: cấm ô tô (ngõ nhỏ, cầu Long Biên, làn xe máy
    cầu Chương Dương) và cấm xe máy (lòng giữa cầu Chương Dương). Để nút giao không khoá cứng: xe không rẽ vào và không được
-   sinh ra trên các "chiều chạy vô nghĩa" (mẩu đường hai chiều chỉ dẫn tới đường một chiều ngược lại, ngõ cụt ngắn hơn 60 m);
+   sinh ra trên các "chiều chạy vô nghĩa" (mẩu đường hai chiều chỉ dẫn tới đường một chiều ngược lại, ngõ cụt ngắn hơn 60 m),
+   tính riêng cho từng nhóm xe (`badC`: lối đi tiếp phải hợp với chính loại xe đó, nên ô tô, buýt, xích lô không chạy vào một
+   đường một chiều mà cuối đường chỉ còn ngõ xe máy rồi biến mất ở đó);
    trên đường hai chiều chỉ lấn sang phần đường ngược chiều khi bên đó thoáng và không ở sát nút; xe chạy chậm không vào nút
    khi không kịp qua trước lúc dòng cắt ngang được đi, hoặc khi xe ngay trước còn nằm trong nút; hai xe đứng chắn mũi nhau thì
    xe có số thứ tự nhỏ hơn lách qua sau 1,2 giây. Để xe không nằm đè lên nhau: mỗi khung hình lập "sổ nhập làn" cho từng
@@ -158,7 +165,8 @@ Các kỹ thuật chính:
    sau góc rẽ); xe đứng yên trong hàng chờ không trượt ngang (xe đang chờ người đi bộ chắn trước mũi thì vẫn dắt ngang lách
    qua); hai thân xe cùng chiều lỡ lồng vào nhau thì bị tách ngang ra ngay. Mỗi xe nhớ xe đang chắn mình; khi chuỗi "ai chắn
    ai" khép thành vòng (hai xe đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước), xe có số thứ tự nhỏ nhất
-   trong vòng đi trước. Đường bị cắt
+   trong vòng đi trước. Xe cắt ngang đang chạy tới từ bên hông được đoán trước tới 2 giây: nó sẽ vào vệt đường của mình trước lúc
+   mình tới chỗ đó thì nhả ga như gặp xe đứng ở đúng chỗ nó cắt qua, mình tới trước thì đi. Đường bị cắt
    ở mép bản đồ là lối ra: xe tới đó rời khỏi bản đồ chứ không quay đầu. Giờ cao điểm cả dòng xe chạy chậm lại; đi nhanh tới
    nơi nào thì dòng xe và người đi bộ ở đó được rải sẵn như lúc vào game.
 16. **Nhà ống theo từng lô.** Khối nhà liền dãy của OSM được cắt thành các lô rộng 2,9 đến 5,3 m, mỗi lô có số tầng, màu,
@@ -178,7 +186,9 @@ Các kỹ thuật chính:
    sang ngày mới). Từ 19 giờ tới nửa đêm thứ Sáu, thứ Bảy, Chủ nhật, vòng quanh Hồ Gươm, các phố nhỏ phía đông hồ và trục chợ
    đêm Hàng Đào - Đồng Xuân đóng lại (`world/walkzone.js`): dòng xe không vào, chiều chạy nào chỉ dẫn tới rào cũng không nhận
    xe (để không dồn ứ trước rào), xe còn sót tự chạy ra; rào chắn dựng ở 35 đầu phố (`world/walkstreet.js`); người đi bộ đi
-   cả dưới lòng đường và đông gấp rưỡi; người chơi không chạy xe được sau rào; cuốc xe ôm không đón trả trong khu.
+   cả dưới lòng đường và đông gấp rưỡi; người chơi không chạy xe được sau rào; cuốc xe ôm không đón trả trong khu. Bố trí lúc
+   đóng phố (cạnh đóng, chiều cấm vào, chỗ rào) chỉ phụ thuộc mạng đường nên tính một lần lúc tải (`walkPlan`); bật, tắt lúc
+   chơi chỉ còn gán lại (0,2 ms thay vì khựng 50 đến 140 ms lúc 19 giờ).
 
 20. **Nhà và đường khớp nhau ngay từ dữ liệu.** `tools/build_world.mjs` sửa hình nhà, đường trước khi ghi `hanoi.json`, để lưới nhà, va
    chạm, bản đồ nhỏ và `places.json` dùng chung một hình: ngõ cụt đâm vào nhà bị cắt ngắn; phần nhà nằm trong lòng đường xe chạy bị
@@ -189,6 +199,8 @@ Các kỹ thuật chính:
    do bộ sinh trồng dọc phố (`gen/props.js`) bỏ đi nếu tán sẽ đâm vào tường nhà quanh gốc, vì hè phố cổ chỉ còn 1,5 đến 2,4 m; công
    trình nhỏ không tên trên sân quảng trường Ba Đình và nhà máy học vẽ trong khu đã giải toả phía đông Hồ Gươm bị bỏ.
    Nhà bị bỏ vẫn giữ chỗ trong mảng (ghi số 0) và không đoạn đường nào bị xoá, vì chỉ số nhà, chỉ số đường là hạt giống của bộ sinh.
+   Bước cuối soát mọi vòng nhà: vòng tự cắt (do làm gọn đỉnh hay nối mặt tiền) được gỡ trước khi ghi (Clipper; chỗ cắt sát một
+   đỉnh mà Clipper không thấy thì cắt bỏ vòng con nhỏ hơn), vì tường, mái và lô nhà dựng theo vòng sẽ ra mặt chồng mặt.
 
 ## 5. Hiệu năng
 
@@ -253,10 +265,11 @@ npm run assets                         # sau khi đổi viewer/assets/walker.glb
 ```
 
 Tham số đường dẫn để chụp ảnh và dò lỗi: `?q=low|medium|high`, `?h=17.2` (cố định giờ), `?street=Phố Hàng Mã`,
-`?at=x,z` (mét, gốc ở Hồ Gươm, x hướng đông, z hướng nam), `?yaw=`, `?bike`, `?lang=en`, `?fresh` (bỏ vị trí đã
-lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình), `?site=id` (đứng trước một công trình),
+`?at=x,z` (mét, gốc ở Hồ Gươm, x hướng đông, z hướng nam), `?yaw=`, `?bike`, `?lang=en`, `?fresh` (vào trắng: không nạp
+tiến độ; bản lưu cũ được cất sang `hn-save-v2-bak` và bảng Cài đặt có nút khôi phục), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình), `?site=id` (đứng trước một công trình),
 `?weather=mu|thu|he|nom`, `?day=0..6` (thứ trong tuần, 0 là thứ Hai; `?day=5&h=20` là tối thứ Bảy có phố đi bộ). `node tools/shot.mjs out.png "h=17.2&street=Phố Hàng Đào"` chụp ảnh trong game không cần build;
-`node tools/hours.mjs` chụp 24 giờ tại một chỗ để soát màu trời.
+`node tools/hours.mjs` chụp 24 giờ tại một chỗ để soát màu trời. Tham số số thiếu, rỗng hay không phải số thì dùng giá trị mặc
+định, có thì kẹp vào khoảng hợp lệ (`pnum` trong `main.js`): đường dẫn hỏng không làm toạ độ thành NaN.
 
 ### Xưởng vẽ: công cụ dựng và soát mô hình
 

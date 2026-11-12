@@ -82,6 +82,7 @@ async function boot() {
   const player = new Player(scene, nav, humanGltf, mats, humanLod);
   const cam = new FollowCamera(camera, nav);
   const traffic = new Traffic(scene, world, nav, mats, humanFar, quality);
+  traffic.walkPlan(); // tính sẵn bố trí phố đi bộ lúc đang tải (tính lúc phố đóng thì game khựng một nhịp)
   const crowd = new Crowd(scene, world, nav, humanLod, quality, humanFar, humanGltf);
   const passport = new Passport(scene, nav, places, params.has('fresh')); // ?fresh: không nạp tiến độ đã lưu, xoá bản lưu cũ ngay lúc tải
   const fares = new Fares(scene, nav, passport, crowd);

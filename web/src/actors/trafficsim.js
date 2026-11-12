@@ -20,6 +20,8 @@ export const TYPES = [
   { r: 0.95, hl: 2.2, vmul: 0.92, mass: 1350, cls: 1 }, { r: 0.95, hl: 2.0, vmul: 0.92, mass: 1400, cls: 1 }, { r: 1.3, hl: 5.3, vmul: 0.75, mass: 11000, cls: 2 },
   { r: 0.38, hl: 0.9, vmax: 3.6, mass: 85, cls: 3 }, { r: 0.6, hl: 1.3, vmax: 3.0, mass: 240, cls: 3 }, { r: 0.8, hl: 2.25, vmax: 4.0, mass: 1300, cls: 3 },
 ];
+// nhóm xe có cùng luật được đi trên cạnh nào (fit): xe máy, ô tô, buýt, xe đạp, xích lô, xe điện du lịch; FITK: loại xe → nhóm
+const FIT_GROUPS = [0, 3, 5, 6, 7, 8], FITK = [0, 0, 0, 1, 1, 2, 3, 4, 5];
 // bit bộ phận hiện/ẩn theo từng xe (khớp mã bộ phận trong actors/fleet.js) và bit kiểu áo
 export const BIT = { box: 1, mask: 2, maskDark: 4, hood: 8, exhaust: 16, sleeve: 256, roof: 1, basket: 1, tray: 2, flowers: 4, fruit: 8, nonla: 16, cap: 32, guest: 1, row2: 1, row3: 2 };
 
@@ -158,6 +160,37 @@ export class TrafficSim {
       this.dead = dead; this.exits = new Set();
       for (const e of this.edges) for (const d of [1, -1]) { const n = d > 0 ? e.n1 : e.n0; if (this.nodes.get(n).length !== 1) continue; const i = d > 0 ? e.p.length - 2 : 0, x = e.p[i], z = e.p[i + 1]; if (x < b.x0 + 40 || x > b.x1 - 40 || z < b.z0 + 40 || z > b.z1 - 40) this.exits.add(n); }
     }
+    // Chiều cụt theo từng nhóm xe: như bad/dead ở trên nhưng lối đi tiếp phải hợp với chính loại xe đó (fit > 0: bề rộng, biển cấm
+    // ô tô hay xe máy, trục xích lô). Không có bảng này thì ô tô chạy vào một đường một chiều mà cuối đường chỉ còn ngõ xe máy sẽ tới
+    // đó không đi đâu được (bị xoá ngay trước mắt người chơi), trên đường hai chiều thì quay đầu giữa nút.
+    // badC[k], deadC[k]: nhóm xe k = FITK[loại xe]. Ở nút không còn lối hợp loại xe: đường hai chiều coi như ngõ cụt (quay đầu được,
+    // dài từ 60 m thì vẫn được chạy vào), đường một chiều thì cụt hẳn (trừ khi ra mép bản đồ).
+    this.badC = []; this.deadC = [];
+    {
+      const code = (e, d) => e.i * 2 + (d > 0 ? 1 : 0), N = this.edges.length * 2;
+      for (const type of FIT_GROUPS) {
+        const ok = (e, d) => (!e.oneway || e.oneway === d) && this.fit(type, e, true) > 0;
+        // đếm lối đi tiếp hợp lệ của từng (cạnh, chiều); chiều nào hết lối thì cụt, rồi lan ngược về các chiều dẫn tới nó
+        const cnt = new Int32Array(N), pred = new Map(), dead = new Set(), queue = [];
+        for (const e of this.edges) for (const d of [1, -1]) {
+          if (!ok(e, d)) continue; const c = code(e, d), n = d > 0 ? e.n1 : e.n0;
+          for (const f of this.nodes.get(n)) { if (f === e) continue; const df = f.n0 === n ? 1 : -1; if (!ok(f, df)) continue; cnt[c]++; const q = code(f, df); let l = pred.get(q); if (!l) pred.set(q, (l = [])); l.push(c); }
+          if (cnt[c] === 0) { dead.add(c); queue.push(c); }
+        }
+        while (queue.length) { const t = queue.pop(), l = pred.get(t); if (l) for (const c of l) if (!dead.has(c) && --cnt[c] === 0) { dead.add(c); queue.push(c); } }
+        const info = new Map();
+        const visit = (e, d, depth) => {
+          const c = code(e, d), got = info.get(c); if (got) return got; const r = { exit: false, len: -1 }; info.set(c, r); if (depth > 60) return r;
+          const n = d > 0 ? e.n1 : e.n0, list = this.nodes.get(n); let any = false, best = -1;
+          for (const f of list) { if (f === e) continue; const df = f.n0 === n ? 1 : -1; if (!ok(f, df)) continue; any = true; const q = visit(f, df, depth + 1); if (q.exit) r.exit = true; if (q.len > best) best = q.len; }
+          if (!any) { if (this.exits.has(n)) r.exit = true; else if (!e.oneway) r.len = e.len; }
+          else if (best >= 0) r.len = e.len + best;
+          return r;
+        };
+        const bad = new Set(); for (const c of dead) { const e = this.edges[c >> 1], r = visit(e, c & 1 ? 1 : -1, 0); if (!r.exit && r.len < 60) bad.add(c); }
+        this.badC.push(bad); this.deadC.push(dead);
+      }
+    }
     // ----- đèn tín hiệu: dùng đúng các nút có cột đèn vẽ ngoài phố và đúng chu kỳ của chúng (world/junctions.js), để xe dừng khi
     // người chơi thấy đèn đỏ và chạy khi thấy đèn xanh. Không có đèn thì hai dòng xe dày cắt nhau sẽ khoá cứng nút; có đèn thì xe
     // dồn hàng trước vạch dừng rồi ùa đi như ngoài phố. clock: đồng hồ của shader vẽ đèn (lớp vẽ gán mỗi khung hình);
@@ -176,13 +209,14 @@ export class TrafficSim {
       for (const [n, sg] of this.sig) { let m = members.get(sg); if (!m) members.set(sg, (m = new Set())); m.add(n); }
       // đầu mút của cạnh e ở phía xuất phát (end = 0) hoặc phía tới (end = 1) khi đi theo chiều d
       const tip = (e, d, end) => { const i = (d > 0) === (end === 1) ? e.p.length - 2 : 0; return [e.p[i], e.p[i + 1]]; };
-      const walk = (e, d, sg, X, grp) => {
+      // L: quãng từ nút tới chỗ mũi xe dừng (vạch dừng sơn của đúng nhánh này); S: quãng từ nút tới chân cột đèn của nhánh
+      const walk = (e, d, sg, X, grp, L, S) => {
         const c = code(e, d), old = this.ahead.get(c); if (old && old.X <= X) return;
-        this.ahead.set(c, { sg, X, grp });
-        const up = d > 0 ? e.n0 : e.n1, X2 = X + e.len; if (X2 >= sg.line + SEE || this.sig.has(up)) return;
+        this.ahead.set(c, { sg, X, grp, L, S });
+        const up = d > 0 ? e.n0 : e.n1, X2 = X + e.len; if (X2 >= L + SEE || this.sig.has(up)) return;
         const [sx, sz] = tip(e, d, 0);
         // hai cạnh gặp nhau ở một nút đã gộp có thể cách nhau một mẩu đường ngắn (dưới 4 m) không thành cạnh: cộng cả mẩu đó
-        for (const f of this.nodes.get(up) || []) { if (f === e || f.n0 === f.n1) continue; const df = f.n1 === up ? 1 : -1; if (f.oneway && f.oneway !== df) continue; const [fx, fz] = tip(f, df, 1); walk(f, df, sg, X2 + Math.hypot(fx - sx, fz - sz), grp); }
+        for (const f of this.nodes.get(up) || []) { if (f === e || f.n0 === f.n1) continue; const df = f.n1 === up ? 1 : -1; if (f.oneway && f.oneway !== df) continue; const [fx, fz] = tip(f, df, 1); walk(f, df, sg, X2 + Math.hypot(fx - sx, fz - sz), grp, L, S); }
       };
       const JN = junctionsOf(world).nodes;
       for (const [n, sg] of this.sig) {
@@ -196,7 +230,7 @@ export class TrafficSim {
           let grp; if (arm) grp = arm.grp; else { this.sample(e, Math.max(0, e.len - 5), d, o); const ax = o[0], az = o[1]; this.sample(e, e.len, d, o); const L = Math.hypot(o[0] - ax, o[1] - az) || 1; grp = signalGroup(sg, (o[0] - ax) / L, (o[1] - az) / L); }
           // cạnh kết thúc cách nút có đèn một mẩu đường ngắn đã gộp: quãng tới nút tính tới đúng chỗ đặt nút
           let X0 = 0; if (!arm) { const [ex, ez] = tip(e, d, 1); X0 = 1e9; for (const k of sg.keys) { const q = JN.get(k); if (q) X0 = Math.min(X0, Math.hypot(q.x - ex, q.z - ez)); } if (!(X0 < 8)) X0 = 0; }
-          walk(e, d, sg, X0, grp);
+          walk(e, d, sg, X0, grp, arm ? arm.line : sg.line, arm ? arm.stop : sg.stop);
         }
       }
     }
@@ -291,13 +325,13 @@ export class TrafficSim {
       let f = this.fit(type, e);
       if (cls === 3 && type !== VT.bicycle && !e.route) { if (tries < 3) continue; type = VT.bicycle; f = this.fit(type, e); } // không gần trục xích lô: chỉ còn xe đạp
       if (!f || (cls === 1 && (e.w < 6.5 || e.kind > K.tertiary)) || (cls === 2 && e.kind > K.secondary)) continue;
-      const dir = e.oneway ? e.oneway : Math.random() < 0.5 ? 1 : -1, s = Math.random() * e.len; if (this.barred(e, dir) || this.bad.has(e.i * 2 + (dir > 0 ? 1 : 0))) continue;
+      const dir = e.oneway ? e.oneway : Math.random() < 0.5 ? 1 : -1, s = Math.random() * e.len; if (this.barred(e, dir) || this.bad.has(e.i * 2 + (dir > 0 ? 1 : 0)) || this.badC[FITK[type]].has(e.i * 2 + (dir > 0 ? 1 : 0))) continue;
       this.sample(e, s, dir, o);
       const d = Math.hypot(o[0] - px, o[1] - pz); if (d < (this.warming ? 10 : 30) || d > 225) continue;
       // tầm sinh phải nằm trong tầm giữ xe (xem chỗ huỷ xe ở step): ngoài hành lang là 200 m phía trước, 150 m phía sau ống kính
       if (!e.cor && d > (cam && (o[0] - cam.x) * cam.fx + (o[1] - cam.z) * cam.fz > 0 ? 190 : 142)) continue;
       // không sinh xe ở quãng từ vạch dừng (kèm chỗ xếp hàng) vào tới nút có đèn: xe hiện ra ở đó sẽ băng qua nút lúc đèn đỏ
-      { const ah = this.ahead.get(e.i * 2 + (dir > 0 ? 1 : 0)); if (ah && e.len - s + ah.X < ah.sg.line + 2.5 + QUEUE) continue; }
+      { const ah = this.ahead.get(e.i * 2 + (dir > 0 ? 1 : 0)); if (ah && e.len - s + ah.X < ah.L + 2.5 + QUEUE) continue; }
       // xe sinh trên hành lang nên là xe sắp chạy ngang qua người chơi, ít khi là xe đang chạy ra xa
       if (cor && !this.warming && d > 40 && (px - o[0]) * o[2] + (pz - o[1]) * o[3] < 0 && Math.random() < 0.75) continue;
       // không hiện ra ngay trước mắt: phải ở xa, ngoài góc nhìn, hoặc khuất sau dãy nhà
@@ -310,8 +344,7 @@ export class TrafficSim {
       dress(a, e.zone, this.hours);
       this.lane(a); a.lat = a.latT; a.x -= o[3] * a.lat; a.z += o[2] * a.lat;
       // chỗ đó đã có xe khác thì thôi (tránh chồng lên nhau lúc sinh)
-      let clash = false; const l = this.cellAt(Math.floor(a.x / 5) * 65537 + Math.floor(a.z / 5)); if (l) for (let i = 0; i < l.n; i++) { const b = l.a[i]; if ((b.x - a.x) ** 2 + (b.z - a.z) ** 2 < (a.hl + b.hl + 0.6) ** 2) { clash = true; break; } }
-      if (clash) continue;
+      if (this.clash(a)) continue;
       this.plan(a); this.agents.push(a); this.put(a); this.stats.spawned++;
       // xích lô hay đi thành đoàn: thêm một, hai chiếc nối đuôi
       if (type === VT.cyclo && !this.warming && Math.random() < 0.5 && s > 9) this.follow(a, 4.2);
@@ -324,14 +357,25 @@ export class TrafficSim {
     const T = TYPES[type], Z = 1e-9;
     return { id: this.seq++, e, dir, s, type, cls: T.cls, taxi, v: T.vmax ? T.vmax * 0.8 : 3 + Math.random() * 3, x: o[0], z: o[1], yaw: Math.atan2(o[2], o[3]), lean: Z, lat: Z, latT: Z, y: Z,
       pace: (0.78 + Math.random() * 0.4) * (T.vmul || 1), vown: T.vmax ? T.vmax * (0.8 + Math.random() * 0.3) : 0, pref: 0.25 + Math.random() * 0.7, r: T.r, hl: T.hl, wait: Z, honk: Math.random() * 4, stuck: Z, sq: -Z, slowT: Z, over: -Z, hitT: -Z,
-      wob: Math.random() * 6.28, wobF: 0.5 + Math.random() * 0.7, wobA: T.cls === 0 ? 0.15 + Math.random() * 0.3 : T.cls === 3 ? 0.08 : 0.04, ne: null, nd: 1, vj: 3.2, sg: null, sgG: 0, sgX: 0, sgL: 0, hold: false, pushT: -Z, pushB: null, blk: null, ghost: false, gT: 0, red: false, vendor: 0,
+      wob: Math.random() * 6.28, wobF: 0.5 + Math.random() * 0.7, wobA: T.cls === 0 ? 0.15 + Math.random() * 0.3 : T.cls === 3 ? 0.08 : 0.04, ne: null, nd: 1, vj: 3.2, sg: null, sgG: 0, sgX: 0, sgL: 0, sgS: 0, hold: false, pushT: -Z, pushB: null, blk: null, ghost: false, gT: 0, red: false, vendor: 0,
       bits: 0, pill: 0, pbits: 0, hail: false, tint: WHITE, tint2: WHITE, tint3: WHITE, ptint2: WHITE, ptint3: WHITE };
   }
   follow(lead, back) {
     const o = this._o; this.sample(lead.e, lead.s - back, lead.dir, o);
     const a = this.make(lead.type, lead.e, lead.dir, lead.s - back, o, false);
     a.lat = a.latT = lead.lat; a.pref = lead.pref; a.vown = lead.vown; a.honk = 9; a.x = o[0] - o[3] * a.lat; a.z = o[1] + o[2] * a.lat;
+    if (this.clash(a, lead)) return;
     dress(a, a.e.zone, this.hours); this.plan(a); this.agents.push(a); this.put(a);
+  }
+  // xe a (vừa tạo, chưa vào danh sách) có chồng lên xe nào đang có không: tâm quá gần, hoặc thân xe (nới thêm một chút) lồng vào thân
+  // xe kia. Xét 5 × 5 ô lưới quanh xe để không sót xe buýt dài có tâm ở xa. skip: xe được phép đứng sát (xe dẫn đoàn).
+  clash(a, skip = null) {
+    const cx = Math.floor(a.x / 5), cz = Math.floor(a.z / 5);
+    for (let gx = cx - 2; gx <= cx + 2; gx++) for (let gz = cz - 2; gz <= cz + 2; gz++) {
+      const l = this.cellAt(gx * 65537 + gz); if (!l) continue;
+      for (let i = 0; i < l.n; i++) { const b = l.a[i]; if (b === skip || b.x > 1e8 || Math.abs(b.y - a.y) >= 2) continue; if ((b.x - a.x) ** 2 + (b.z - a.z) ** 2 < (a.hl + b.hl + 0.6) ** 2 || this.overlap(a.x, a.z, a.yaw, a.r + 0.15, a.hl + 0.3, b) > 0) return true; }
+    }
+    return false;
   }
   // lưới 5 m: các ô được giữ lại giữa các khung hình (đỡ cấp phát), ô nào chưa ghi trong khung hình này thì coi như rỗng
   cell(k) { let l = this.grid.get(k); if (!l) this.grid.set(k, (l = { f: this.frame, n: 0, a: [] })); else if (l.f !== this.frame) { l.n = 0; l.f = this.frame; } return l; }
@@ -354,11 +398,12 @@ export class TrafficSim {
     const node = a.dir > 0 ? a.e.n1 : a.e.n0, list = this.nodes.get(node) || [], o = this._o;
     this.sample(a.e, a.e.len, a.dir, o); const tx = o[2], tz = o[3];
     let best = null, bd = 1, bdot = 1, tot = 0, n = 0;
-    const committed = this.dead.has(a.e.i * 2 + (a.dir > 0 ? 1 : 0)); // đang ở trong một ngõ cụt: chạy nốt tới cuối
+    const cc = a.e.i * 2 + (a.dir > 0 ? 1 : 0), committed = this.dead.has(cc); // đang ở trong một ngõ cụt: chạy nốt tới cuối
+    const fk = FITK[a.type], badC = this.badC[fk], inC = this.deadC[fk].has(cc); // như trên nhưng chỉ tính lối hợp loại xe này
     for (const e of list) {
       if (e === a.e) continue;
       const dir = e.n0 === node ? 1 : -1; if (e.oneway && e.oneway !== dir) continue;
-      if (this.bad.has(e.i * 2 + (dir > 0 ? 1 : 0)) && !committed) continue;
+      const ec = e.i * 2 + (dir > 0 ? 1 : 0); if ((this.bad.has(ec) && !committed) || (badC.has(ec) && !inC)) continue;
       const shut = e.closed || this.barred(e, dir); if (shut && !a.ghost) continue;
       const f = this.fit(a.type, e, a.ghost) * (shut ? 0.05 : 1); if (!f) continue; // xe đang ra khỏi phố đi bộ: ưu tiên rẽ ra phố còn mở
       this.sample(e, 0, dir, o); const dot = o[2] * tx + o[3] * tz; n++;
@@ -368,7 +413,7 @@ export class TrafficSim {
     a.ne = best; a.nd = bd;
     // Đèn tín hiệu phía trước (bảng ahead ở hàm dựng): xe dừng sao cho mũi xe ở ngay trước vạch dừng. sgX: quãng từ cuối cạnh đang đi
     // tới nút có đèn; sgL: quãng từ tâm xe tới tim nút lúc dừng. Xe đã qua vạch rồi (kể cả xe rẽ từ ngõ ra ngay sát nút) thì đi nốt.
-    { const ah = this.ahead.get(a.e.i * 2 + (a.dir > 0 ? 1 : 0)); if (ah) { a.sg = ah.sg; a.sgG = ah.grp; a.sgX = ah.X; a.sgL = ah.sg.line + a.hl; } else { a.sg = null; a.sgG = 0; a.sgX = 0; a.sgL = 0; } }
+    { const ah = this.ahead.get(a.e.i * 2 + (a.dir > 0 ? 1 : 0)); if (ah) { a.sg = ah.sg; a.sgG = ah.grp; a.sgX = ah.X; a.sgL = ah.L + a.hl; a.sgS = ah.S; } else { a.sg = null; a.sgG = 0; a.sgX = 0; a.sgL = 0; a.sgS = 0; } }
     a.vj = !best ? 2 : list.length <= 2 && bdot > 0.8 ? 99 : 3 + 3.6 * Math.max(0, bdot) * (n > 1 ? 1 : 1.4);
   }
   // Các "chiều cụt": cặp (cạnh, chiều) mà xe chạy hết cạnh theo chiều đó thì không còn lối đi tiếp (mọi cạnh ở nút cuối đều đóng,
@@ -390,23 +435,33 @@ export class TrafficSim {
   // phố thì không cụt) cũng không nhận xe, để không có xe chạy tới trước rào rồi quay đầu hay dồn ứ ở đó; cạnh cụt cả hai chiều
   // thì coi như đóng hẳn. Ngõ cụt thật và đường ra khỏi bản đồ vẫn như cũ. Xe đang ở trong khu được chạy nốt ra ngoài.
   setWalk(on) {
-    this.walk = on; this.gates = []; this.noEntry = null; const o = this._o;
-    for (const e of this.edges) e.closed = false;
-    if (on) {
-      const natural = this.deadDirs();
-      for (const e of this.edges) e.closed = e.walk;
-      const dead = this.deadDirs(), no = new Set(); for (const c of dead) if (!natural.has(c)) no.add(c);
-      const okDir = (e, d) => !e.oneway || e.oneway === d;
-      for (const e of this.edges) { if (e.closed) continue; let live = 0; for (const d of [1, -1]) if (okDir(e, d) && !no.has(e.i * 2 + (d > 0 ? 1 : 0))) live++; if (!live) e.closed = true; }
-      this.noEntry = no;
-      for (const e of this.edges) {
-        if (!e.closed) continue;
-        for (const [n, dir] of [[e.n0, 1], [e.n1, -1]]) { if (!this.nodes.get(n).some((f) => !f.closed)) continue; this.sample(e, Math.min(4.5, e.len * 0.4), dir, o); this.gates.push({ x: o[0], z: o[1], tx: o[2], tz: o[3], w: e.w }); }
-      }
-    }
+    const P = on ? this.walkPlan() : null;
+    this.walk = on; this.gates = P ? P.gates : []; this.noEntry = P ? P.no : null;
+    for (const e of this.edges) e.closed = P !== null && P.closed[e.i] === 1;
     for (const e of this.edges) e.r.shut = e.closed; // cho lớp ngoài: đoạn đường này đang nằm sau rào (người chơi không chạy xe vào được)
     for (const a of this.agents) { a.ghost = on && (a.e.closed || this.barred(a.e, a.dir)); a.gT = 0; if (a.ne && !a.ghost && (a.ne.closed || this.barred(a.ne, a.nd))) this.plan(a); }
     this.nearT = 0;
+  }
+  // Bố trí lúc phố đi bộ đóng (cạnh đóng, chiều cấm vào, chỗ đặt rào) chỉ phụ thuộc mạng đường nên tính một lần rồi dùng lại:
+  // tính mất 50–140 ms (dò hai lượt hướng cụt trên cả mạng đường), để tới lúc 19:00 cuối tuần mới tính là game khựng một nhịp.
+  // main.js gọi sẵn lúc đang tải.
+  walkPlan() {
+    if (this._walkPlan) return this._walkPlan;
+    const o = this._o, was = this.edges.map((e) => e.closed);
+    for (const e of this.edges) e.closed = false;
+    const natural = this.deadDirs();
+    for (const e of this.edges) e.closed = e.walk;
+    const dead = this.deadDirs(), no = new Set(); for (const c of dead) if (!natural.has(c)) no.add(c);
+    const okDir = (e, d) => !e.oneway || e.oneway === d;
+    for (const e of this.edges) { if (e.closed) continue; let live = 0; for (const d of [1, -1]) if (okDir(e, d) && !no.has(e.i * 2 + (d > 0 ? 1 : 0))) live++; if (!live) e.closed = true; }
+    const gates = [], closed = new Uint8Array(this.edges.length);
+    for (const e of this.edges) {
+      if (!e.closed) continue;
+      closed[e.i] = 1;
+      for (const [n, dir] of [[e.n0, 1], [e.n1, -1]]) { if (!this.nodes.get(n).some((f) => !f.closed)) continue; this.sample(e, Math.min(4.5, e.len * 0.4), dir, o); gates.push({ x: o[0], z: o[1], tx: o[2], tz: o[3], w: e.w }); }
+    }
+    this.edges.forEach((e, i) => { e.closed = was[i]; });
+    return (this._walkPlan = { closed, no, gates });
   }
   // chiều chạy dir trên cạnh e đang bị cấm vào vì dẫn tới rào phố đi bộ
   barred(e, dir) { return this.noEntry !== null && this.noEntry.has(e.i * 2 + (dir > 0 ? 1 : 0)); }
@@ -425,10 +480,16 @@ export class TrafficSim {
   // Chạy trước vài chục giây mô phỏng (không vẽ) để lúc vào game phố đã đông xe sẵn.
   // Hai chặng: (1) rải xe nhanh khắp nơi; (2) 20 giây chạy thật theo đúng luật lúc chơi (dồn xe về con phố người chơi đứng, đèn tín hiệu,
   // xe ra khỏi vùng thì sinh xe mới chạy tới) nhưng chưa cần giấu chỗ xe hiện ra, để khung hình đầu tiên đã là dòng xe ổn định.
-  prewarm(player, cam, hours) {
-    const p0x = player.pos.x, p0z = player.pos.z;
-    this.blind = true; this.warming = true; for (let i = 0; i < 60; i++) this.step(0.12, player, cam, hours);
-    this.warming = false; for (let i = 0; i < 200; i++) this.step(0.1, player, cam, hours);
+  // clockEnd: giờ của đồng hồ đèn ngoài (đồng hồ shader trong game) lúc rải xe xong. Có thì đồng hồ đèn chạy suốt quãng rải xe
+  // (27,2 s) và dừng đúng ở clockEnd: bước đầu tiên sau đó đèn nối tiếp liền mạch, không nhảy pha (xe đã được cho đi vào nút
+  // không bỗng gặp đèn đỏ ngay giữa lòng nút). Không có thì dùng đồng hồ riêng của mô phỏng như cũ.
+  prewarm(player, cam, hours, clockEnd = null) {
+    const p0x = player.pos.x, p0z = player.pos.z, ext = Number.isFinite(clockEnd);
+    if (ext) this.clock = clockEnd - (60 * 0.12 + 200 * 0.1);
+    const run = (dt) => { this.step(dt, player, cam, hours); if (ext) this.clock += dt; };
+    this.blind = true; this.warming = true; for (let i = 0; i < 60; i++) run(0.12);
+    this.warming = false; for (let i = 0; i < 200; i++) run(0.1);
+    if (ext) this.clock = clockEnd;
     this.blind = false; this.honks.length = 0; this.touch = 0; player.pos.x = p0x; player.pos.z = p0z;
   }
 
@@ -506,10 +567,12 @@ export class TrafficSim {
         else if (dl > -1.2) { red = true; target = Math.min(target, Math.max(0, dl * 1.2)); }
         // đã lỡ qua vạch dừng (qua lúc đèn vàng, hoặc từ ngõ rẽ ra ngay sát nút) mà đèn đã đỏ: còn kịp thì dừng trước vạch sang đường
         // và đứng yên đó tới khi đèn xanh; không kịp nữa thì đi nốt cho thoát nút
-        else if (st === 1 && (a.hold || rs - a.hl - a.sg.stop + 1.4 > a.v * 0.25 + 0.15)) { red = true; target = 0; a.hold = true; }
+        else if (st === 1 && (a.hold || rs - a.hl - a.sgS + 1.4 > a.v * 0.25 + 0.15)) { red = true; target = 0; a.hold = true; }
       }
       if (a.pushT > 0) { a.pushT -= dt; target = Math.min(target, 2.4); if (a.pushT <= 0) a.pushB = null; }
-      const gap = 1.4 + a.v * 0.8 + a.hl, sq = a.sq > 0 ? 0.3 : 0; let blocked = false, shift = 0, side = 0, sep = 0, lead = null, leadF = 1e9, lb = false, rb = false, blk = null;
+      const gap = 1.4 + a.v * 0.8 + a.hl, sq = a.sq > 0 ? 0.3 : 0;
+      // nửa bề dọc của thân xe a theo hướng phố, tính theo đúng hướng đầu xe (cho luật đoán trước xe cắt ngang)
+      const aLx = Math.sin(a.yaw), aLz = Math.cos(a.yaw), aT = a.hl * Math.abs(aLx * tx + aLz * tz) + a.r * Math.abs(aLz * tx - aLx * tz); let blocked = false, shift = 0, side = 0, sep = 0, lead = null, leadF = 1e9, lb = false, rb = false, blk = null;
       const cx = Math.floor((a.x + tx * gap * 0.5) / 5), cz = Math.floor((a.z + tz * gap * 0.5) / 5);
       for (let gx = cx - 1; gx <= cx + 1; gx++) for (let gz = cz - 1; gz <= cz + 1; gz++) {
         const l = this.cellAt(gx * 65537 + gz); if (!l) continue;
@@ -522,6 +585,21 @@ export class TrafficSim {
           const cross = cosB > -0.6 && cosB < 0.6;
           // xe cắt chéo: thân xe kia chìa về phía mình thêm một khúc bằng nửa chiều dài nhân với độ chéo (không chỉ nửa bề ngang)
           const bext = cross ? b.r + b.hl * Math.abs(cosB) : 0;
+          // Xe cắt ngang đang chạy tới từ bên hông, chưa vào trước mũi: đoán trước tới 2 giây theo vận tốc hiện tại của hai xe. Nó sẽ
+          // vào vệt đường của a trước lúc a tới chỗ đó (và chưa ra khỏi vệt khi a tới) thì a nhả ga như gặp một xe đứng ở đúng chỗ nó
+          // sẽ cắt qua; a tới trước thì a đi (xe kia tự tính cùng cách và nhường). Không có luật này thì xe chỉ thấy xe cắt ngang khi
+          // nó đã lọt vào trước mũi, lúc đó không còn kịp phanh nên hai thân xe lồng vào nhau giữa lòng nút.
+          if (cross && b.v > 0.4 && a.v > 0.4 && f > 0 && Math.abs(s) >= wsum) {
+            const bLx = Math.sin(b.yaw), bLz = Math.cos(b.yaw), vbs = b.v * (bLx * rx + bLz * rz);
+            if (s * vbs < 0) { // đang tiến lại gần vệt của a
+              const t1 = (Math.abs(s) - wsum) / Math.abs(vbs), t2c = (Math.abs(s) + wsum) / Math.abs(vbs);
+              if (t1 < 2) {
+                const bT = b.hl * Math.abs(bLx * tx + bLz * tz) + b.r * Math.abs(bLz * tx - bLx * tz); // phần thân b chìa theo hướng phố
+                const L = aT + bT + 0.3, fr = f + b.v * cosB * t1, ua = (fr - L) / a.v; // fr: chỗ dọc phố của b lúc nó vào vệt; ua: lúc mũi a tới đó
+                if (fr > L && ua > t1 - 0.25 && ua < t2c + 0.25) { const tt = Math.max(0, (fr - L - 0.45) * 1.2 - 0.3); if (tt < target) { target = tt; blk = b; } }
+              }
+            }
+          }
           if (f > 0.2 && f < (cross ? a.hl + bext + 1 + a.v * 0.45 : gap + b.hl) && Math.abs(s) < wsum) {
             // Gỡ thế khoá: hai xe cắt ngang hoặc đối đầu đứng chắn mũi nhau thì không xe nào tự thoát được. Xe có số thứ tự nhỏ hơn
             // lách qua trước (coi như xe kia né mũi cho qua) sau 1,2 giây; kẹt quá 9 giây sau một xe đứng chắn ngang thì xe nào cũng
@@ -646,12 +724,25 @@ export class TrafficSim {
       // hướng đầu xe: theo hướng đang trôi nhưng không lệch khỏi hướng phố quá góc đánh lái của loại xe đó
       // (xe bò chậm mà dạt ngang thì không được quay ngang ra giữa đường); gần như đứng yên thì giữ nguyên hướng
       if (mvx * mvx + mvz * mvz > (0.25 * dt) ** 2) {
-        const ty = Math.atan2(o[2], o[3]), lim = a.cls === 0 ? 0.65 : a.cls === 2 ? 0.22 : a.cls === 1 ? 0.32 : 0.5;
+        // xe bò chậm mà dạt ngang (xếp hàng, lách khe) thì người lái chống chân dắt xe sang, đầu xe gần như vẫn thẳng theo phố: góc
+        // lệch tối đa giảm theo tốc độ (quay đầu 37° lúc đứng gần như yên là chúi mũi sang sườn xe bên cạnh)
+        const ty = Math.atan2(o[2], o[3]), lim = (a.cls === 0 ? 0.65 : a.cls === 2 ? 0.22 : a.cls === 1 ? 0.32 : 0.5) * clamp(a.v / 4, 0.2, 1);
         let dev = Math.atan2(mvx, mvz) - ty; dev = Math.atan2(Math.sin(dev), Math.cos(dev));
         const ny = ty + clamp(dev, -lim, lim), dy = ny - a.yaw; a.yaw = dampAngle(a.yaw, ny, a.cls === 0 ? 9 : 5, dt);
         const turn = Math.atan2(Math.sin(dy), Math.cos(dy)); a.lean = damp(a.lean, bike || a.type === VT.bicycle ? clamp(-turn * a.v * 0.9, -0.45, 0.45) : 0, 5, dt);
       } else a.lean = damp(a.lean, 0, 5, dt);
     }
+  }
+  // Độ lồng (m) giữa hai thân xe hình chữ nhật (nửa ngang r, nửa dọc hl, trục dọc theo yaw), theo định lý trục tách; âm là còn hở.
+  overlap(ax, az, ayaw, ar, ahl, b) {
+    const sa = Math.sin(ayaw), ca = Math.cos(ayaw), sb = Math.sin(b.yaw), cb = Math.cos(b.yaw), dx = b.x - ax, dz = b.z - az; let best = 1e9;
+    // bốn trục: dọc a (sa, ca), ngang a (ca, -sa), dọc b, ngang b
+    for (let k = 0; k < 4; k++) {
+      const ux = k === 0 ? sa : k === 1 ? ca : k === 2 ? sb : cb, uz = k === 0 ? ca : k === 1 ? -sa : k === 2 ? cb : -sb;
+      const ra = ahl * Math.abs(sa * ux + ca * uz) + ar * Math.abs(ca * ux - sa * uz), rb = b.hl * Math.abs(sb * ux + cb * uz) + b.r * Math.abs(cb * ux - sb * uz);
+      const ov = ra + rb - Math.abs(dx * ux + dz * uz); if (ov < best) { best = ov; if (best <= 0) return best; }
+    }
+    return best;
   }
   // b đang chắn a; theo chuỗi "ai chắn ai" từ b có quay về a không (tối đa 6 bước). Có thì trả true nếu a có số thứ tự nhỏ nhất vòng.
   cycle(a, b) {
