@@ -47,6 +47,13 @@ class Grid {
 }
 
 const MAX_H = 112; // trong khung bản đồ không có toà nào cao quá khoảng 110 m (docs/18, mục 3.5)
+// Mặt bằng mô hình của các công trình dựng tay kín (hộp bao trong toạ độ mô hình [x0, z0, x1, z1], mét, đo bằng tools/studio.mjs).
+// Mô hình có thềm, bậc tam cấp, sân rộng hơn khối nhà trong dữ liệu bản đồ: trong phạm vi này không trồng cây, không đặt đồ đạc phố.
+// Tháp Rùa không ghi ở đây (gò đảo có cây thật); công trình hở (cổng, cầu) tính theo các khối đặc `solid` trong landmarks/sites.js.
+const LM_FOOT = {
+  ly_thai_to: [-6.1, -6.1, 6.1, 6.8], nha_tho_lon: [-11.3, -32.6, 11.3, 33.8], nha_hat_lon: [-15.4, -43.9, 15.4, 43.5], cho_dong_xuan: [-36.8, -37.8, 36.8, 30.6],
+  ga_ha_noi: [-50.5, -11.5, 50.5, 14.4], lang_bac: [-41.2, -20.6, 41.2, 23.9], cot_co: [-21.3, -21.3, 21.3, 26.1], thap_tran_quoc: [-3.1, -2.7, 3.1, 2.7],
+};
 const FLOORS = {
   [ZONE.old]: [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6], // art bible 3.1: 2 tầng 25%, 3 tầng 30%, 4 tầng 25%, 5-6 tầng 20%
   [ZONE.french]: [2, 3, 3, 4, 4, 5], [ZONE.badinh]: [2, 2, 3, 3, 4], [ZONE.city]: [3, 4, 4, 5, 5, 6], [ZONE.bank]: [2, 3, 3, 4],
@@ -169,6 +176,17 @@ export function buildContext(world, landmarks = []) {
     }
     return false;
   };
+  // Điểm (x,z) nằm trong phạm vi một công trình dựng tay (thềm Lăng, bậc Nhà hát Lớn, trụ cổng...): chỗ không được trồng cây, đặt đồ.
+  const lmBox = [];
+  for (const l of landmarks) {
+    const c = Math.cos(l.yaw), sn = Math.sin(l.yaw);
+    for (const [q, pad] of l.solid ? l.solid.map((q) => [q, 0.5]) : !l.open && LM_FOOT[l.id] ? [[LM_FOOT[l.id], 1]] : [])
+      lmBox.push({ x: l.x, z: l.z, c, sn, x0: q[0] - pad, z0: q[1] - pad, x1: q[2] + pad, z1: q[3] + pad, r2: (Math.max(-q[0], q[2]) + pad) ** 2 + (Math.max(-q[1], q[3]) + pad) ** 2 });
+  }
+  ctx.keepOut = (x, z) => {
+    for (const q of lmBox) { const dx = x - q.x, dz = z - q.z; if (dx * dx + dz * dz > q.r2) continue; const lx = dx * q.c - dz * q.sn, lz = dx * q.sn + dz * q.c; if (lx > q.x0 && lx < q.x1 && lz > q.z0 && lz < q.z1) return true; }
+    return false;
+  };
   ctx.bldGrid = new Grid(32);
   ctx.chunkBld = new Map();
   const { x0, z0 } = world.bounds;
@@ -216,6 +234,12 @@ export function buildContext(world, landmarks = []) {
     if (b.h > 0 && !b.lv) floors = Math.max(1, Math.round(b.h / fh));
     b.solemn = isSolemn(b.cx, b.cz);
     if (b.solemn && (style === ST.TUBE || style === ST.APART || style === ST.MODERN)) { style = ST.FRENCH; fh = 3.8; floors = Math.min(floors, 3); h = b.h > 0 ? Math.min(b.h, 14) : floors * fh + 0.4; }
+    // Khu trang nghiêm: công trình nhỏ không tên, bản đồ không ghi số tầng (bốt gác, nhà phụ trong khuôn viên) dựng thấp một tầng, kín đáo;
+    // trước đây mặt bằng 20 m² cũng thành "biệt thự Pháp" ba tầng. Nhà dưới 140 m² không quá hai tầng.
+    if (b.solemn && !hero && !b.lv && !(b.h > 0) && (b.cat === CAT.house || b.cat === CAT.small)) {
+      if (b.name < 0 && b.area < 60) { style = ST.SMALL; fh = 3; floors = 1; h = 3.2; }
+      else if (b.area < 140 && floors > 2) { floors = 2; h = floors * fh + 0.4; }
+    }
     if (b.cat === CAT.house && floors >= 9) style = ST.MODERN;       // nhà cao tầng gắn thẻ building=yes
     if (style === ST.MODERN && floors < 6 && b.area < 400) style = ST.TUBE; // khách sạn, cửa hàng trong nhà ống
     if (hero) { // bảng công trình có tên

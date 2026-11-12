@@ -37,7 +37,7 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
   const lamps = []; // [x,y,z, bán kính vệt sáng] toạ độ thế giới
   const occ = [], treeList = [], lampPts = []; // chỗ đã có vật [x, z, bán kính]; cây [x, z, loài, hạt giống]; cột đèn đường
   const inChunk = (x, z) => x >= X0 && x < X1 && z >= Z0 && z < Z1;
-  const free = (x, z) => !ctx.buildingAt(x, z) && !ctx.isWater(x, z);
+  const free = (x, z) => !ctx.buildingAt(x, z) && !ctx.isWater(x, z) && !ctx.keepOut(x, z); // keepOut: thềm, bậc của công trình dựng tay (gen/context.js)
   const onRoad = (x, z, pad = 0.4) => { const r = ctx.nearestRoad(x, z, 14, (q) => q.veh || q.kind === K.pedestrian); return r && r.d < r.r.w / 2 + pad; };
 
   // ----- cây -----

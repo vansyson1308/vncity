@@ -252,6 +252,8 @@ export function decorate(ctx, env) {
     // ô quá dày nhà (xóm ngoài đê): khi lưới gần đã nặng thì bớt đồ lặt vặt, rồi bỏ hẳn ban công nổi, để giữ ngân sách tam giác
     const load = near.idx.length / 3, lite = load > 46000, bare = load > 58000;
     const open = f.gnd >= L.SHOP && f.gnd < L.SHOP + L.N_SHOP && f.gnd !== L.S_ROLL && f.gnd !== L.S_FOLD;
+    // bề rộng hè trước gian này (m): mái hiên không vươn quá mép hè, hè hẹp thì xe dựng dọc sát tường
+    const rdF = f.shop ? ctx.nearestRoad(mx + f.nx * 2, mz + f.nz * 2, 15, (q) => !q.elev) : null, walk = rdF ? rdF.d + 2 - rdF.r.w / 2 : 9;
     // dải biển trên cửa tầng 1: mép dưới 0,775 tầng, cao không quá 0,8 m (quy chế phố cổ, art bible 3.1)
     const y0 = fh * 0.775, y1 = y0 + Math.min(0.8, fh * 0.2);
     if (f.shop && f.sign) {
@@ -270,8 +272,8 @@ export function decorate(ctx, env) {
       if (open && hash(s, 8) < 0.75) { const lx = mx + f.nx * 1.6, lz = mz + f.nz * 1.6; let ok = true; for (let q = 0; q < shopPools.length; q += 2) if ((shopPools[q] - lx) ** 2 + (shopPools[q + 1] - lz) ** 2 < 64) { ok = false; break; } if (ok) { shopPools.push(lx, lz); lamps.push(lx, 3, lz, 5.2); } }
     }
     // mái hiên bạt: 40% cửa hàng. Loại nhỏ gắn ngay dưới biển, loại lớn gắn ở mép sàn tầng hai vươn 2-3 m; bạt trơn hoặc kẻ sọc
-    if (f.shop && f.sign && hash(s, 2) < 0.42 && f.gnd !== L.S_ROLL && !bare) {
-      const c = AWNING[Math.floor(hash(s, 3) * AWNING.length)], aw = bw - 0.16, big = hash(s, 20) < 0.25, out = (big ? 1.9 : 1.3) + hash(s, 4) * 0.9;
+    if (f.shop && f.sign && hash(s, 2) < 0.42 && f.gnd !== L.S_ROLL && !bare && walk > 0.9) {
+      const c = AWNING[Math.floor(hash(s, 3) * AWNING.length)], aw = bw - 0.16, big = hash(s, 20) < 0.25, out = Math.min((big ? 1.9 : 1.3) + hash(s, 4) * 0.9, walk - 0.12);
       const ya = big ? fh * 0.99 : y0 - 0.03, yb = big ? ya - out * 0.3 : Math.max(2.12, ya - out * 0.2), n = hash(s, 21) < 0.32 && !lite ? Math.max(4, Math.round(aw / 0.55)) : 1;
       for (let i = 0; i < n; i++) {
         const xa = -aw / 2 + (aw * i) / n, xb = -aw / 2 + (aw * (i + 1)) / n, w = i % 2 ? 0.8 : 0;
@@ -363,8 +365,15 @@ export function decorate(ctx, env) {
     }
     // xe máy dựng trên vỉa hè trước cửa hàng
     if (f.shop && hash(s, 11) < 0.42 && env.nBikes < 34) {
-      const rd = ctx.nearestRoad(mx + f.nx * 2, mz + f.nz * 2, 15, (q) => !q.elev);
-      if (rd && rd.d + 2 - rd.r.w / 2 > 2.5) {
+      const rd = rdF;
+      if (rd && walk <= 2.5 && walk > 1.5 && bw > 2.3) { // hè hẹp (phố cổ): một, hai xe dựng dọc sát tường, chừa lối đi phía ngoài
+        const n = bw > 4.4 && hash(s, 12) < 0.5 ? 2 : 1, B = bikes(), flip = hash(s, 16) < 0.5 ? Math.PI : 0;
+        for (let i = 0; i < n; i++) {
+          g.push().move((i - (n - 1) / 2) * 2.05 + (hash(s, 13) - 0.5) * Math.max(0, bw - n * 2.05), 0, 0.5 + hash(s + i, 14) * 0.1).rotY(flip + (hash(s + i, 15) - 0.5) * 0.16).rotX(flip ? -0.16 : 0.16);
+          g.add(B[Math.floor(hash(s + i, 17) * B.length)], BIKE_TINT[Math.floor(hash(s + i, 18) * BIKE_TINT.length)]); g.pop(); env.nBikes++;
+        }
+      }
+      if (rd && walk > 2.5) {
         const n = 1 + Math.floor(hash(s, 12) * Math.min(4, bw / 0.8)), B = bikes();
         for (let i = 0; i < n; i++) {
           const bx = (i - (n - 1) / 2) * 0.72 + (hash(s, 13) - 0.5) * 0.6;
