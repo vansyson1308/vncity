@@ -148,7 +148,7 @@ export function furnish(ctx, env) {
     const dx = bx - ax, dz = bz - az, l = Math.hypot(dx, dz) || 1, hx = (-dz / l) * w / 2, hz = (dx / l) * w / 2, y = CURB + 0.012;
     near.quad([ax - X0 + hx, y, az - Z0 + hz], [bx - X0 + hx, y, bz - Z0 + hz], [bx - X0 - hx, y, bz - Z0 - hz], [ax - X0 - hx, y, az - Z0 - hz]);
   };
-  let nBikes = 0;
+  let nBikes = 0; // xe dựng trong ô đỗ: tối đa 14 chiếc mỗi ô phố (mỗi chiếc 200 tam giác), cộng với xe trước cửa hàng của decor.js
   for (const r of roads) {
     if (!r.veh || r.kind > K.residential || r.w < 4.5 || r.len < 18) continue;
     const p = r.p, zn = zoneAt(p[0], p[1]);
@@ -200,7 +200,7 @@ export function furnish(ctx, env) {
           mark('bay', A[0], A[1], tx, tz, half * 2); mark('bay', D[0], D[1], tx, tz, half * 2);
           hold(...at(1.3, -1.2), 1.2); hold(...at(1.3, 1.2), 1.2);
           // xe dựng trong ô: cả hàng quay đầu cùng một hướng (vào tường hoặc ra đường)
-          const cnt = Math.min(6, 2 + Math.floor(hash(seed, 4) * 5), 22 - nBikes), out = hash(seed, 5) < 0.4 ? -1 : 1, B = bikes(), slot0 = Math.floor(hash(seed, 6) * (7 - cnt));
+          const cnt = Math.min(6, 2 + Math.floor(hash(seed, 4) * 5), 14 - nBikes), out = hash(seed, 5) < 0.4 ? -1 : 1, B = bikes(), slot0 = Math.floor(hash(seed, 6) * (7 - cnt));
           for (let i = 0; i < cnt; i++) {
             const [bx, bz] = at(1.3 + (hash(seed + i, 7) - 0.5) * 0.12, (slot0 + i - 2.5) * 0.72);
             near.push().move(bx - X0, CURB, bz - Z0).rotY(Math.atan2(-nz * out, nx * out) + (hash(seed + i, 8) - 0.5) * 0.14).rotX(0.16);

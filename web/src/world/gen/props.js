@@ -127,7 +127,7 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
         if (!inChunk(x, z) || !free(x, z)) continue;
         // cần đèn vươn ra lòng đường: hướng từ cột về tim đường là side·(dz, -dx)
         const head = streetLamp(near, x - X0, z - Z0, Math.atan2(dx * side, dz * side), major, CURB);
-        occ.push([x, z, 0.3]); lampPts.push([x, z, dx, dz, major ? 1 : 0, r, side]);
+        occ.push([x, z, 0.3]); lampPts.push([x, z, dx, dz, major ? 1 : 0, r, side]); if (opt.mark) opt.mark('lamp', x, z, major ? 1 : 0);
         lamps.push(x + head[0], head[1] + CURB, z + head[2], major ? 13 : 9);
         far.push().move(x - X0, CURB, z - Z0).rgb(0.2, 0.22, 0.23).cyl(0, 0, 0, 0.1, 0.06, major ? 8.6 : 5.6, 4, false);
         far.rgb(1, 0.86, 0.6).glow(1).cube(head[0], head[1] + 0.12, head[2], 0.5, 0.12, 0.3).glow(0).pop();

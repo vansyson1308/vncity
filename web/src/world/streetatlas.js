@@ -126,7 +126,7 @@ export async function streetMaterial(mats, renderer, world, quality) {
             float rem = st > 2.5 ? ${f(SIGNAL.green)} - tl : ${f(SIGNAL.cycle)} - tl;
             if (sgKind < 3.5) { // bóng đèn: sáng khi đúng pha, tắt thì chỉ còn màu kính sẫm
               float on = 1.0 - step(0.5, abs(st - sgKind));
-              sgEmit = diffuseColor.rgb * on * 1.7; diffuseColor.rgb *= mix(0.07, 1.0, on);
+              sgEmit = diffuseColor.rgb * on * 1.2; diffuseColor.rgb *= mix(0.07, 1.0, on);
             } else if (sgKind < 5.5) { // hai chữ số đếm ngược: đỏ khi đèn đỏ, xanh khi đèn xanh, tắt khi đèn vàng
               float n = min(ceil(rem), 99.0), show = step(st, 1.5) + step(2.5, st);
               if (last8 > 0.5 && n > 8.0) show = 0.0; // thí điểm chỉ hiện 8 giây cuối

@@ -192,12 +192,11 @@ function quadRot(g, p0, p1, p2, p3, uv) {
 // Đĩa tròn đứng, mặt quay về +z (bóng đèn, bông hoa vẽ trên tủ điện).
 function faceDisc(g, x, y, z, r, seg = 8) { g.push().move(x, y, z).rotX(Math.PI / 2).disc(0, 0, 0, r, seg, 1).pop(); }
 
-// Cột biển tên phố: thép tròn Ø 10 cm, đỉnh cao 2,6 m, hai đai kẹp biển. Biển gắn sau bằng signPlate.
+// Cột biển tên phố: thép tròn Ø 10 cm, đỉnh cao 2,6 m. Biển gắn sau bằng signPlate.
 export function namePole(g, x, z, y = 0) {
   g.push().move(x, y, z).glow(0).mat();
-  g.rgb(0.3, 0.3, 0.29).gloss(0).cyl(0, 0, 0, 0.1, 0.085, 0.06, 6, true);
-  g.rgb(0.33, 0.35, 0.37).gloss(0.4).cyl(0, 0.06, 0, 0.052, 0.048, 2.56, 6, false).cyl(0, 2.62, 0, 0.06, 0.02, 0.05, 6, true);
-  g.rgb(0.2, 0.21, 0.22).cyl(0, 2.2, 0, 0.062, 0.062, 0.05, 6, false).cyl(0, 2.47, 0, 0.062, 0.062, 0.05, 6, false);
+  g.rgb(0.3, 0.3, 0.29).gloss(0).cyl(0, 0, 0, 0.1, 0.085, 0.06, 5, true);
+  g.rgb(0.33, 0.35, 0.37).gloss(0.4).cyl(0, 0.06, 0, 0.052, 0.048, 2.58, 6, true);
   g.gloss(0).pop();
 }
 
@@ -343,7 +342,11 @@ export function speakers(g, x, z, y, yaw, h) {
   g.push().move(x, y + h, z).rotY(yaw).glow(0).mat().rgb(0.2, 0.21, 0.22).gloss(0.2);
   g.box(-0.3, -0.03, 0.05, 0.3, 0.03, 0.11).box(-0.03, -0.03, 0, 0.03, 0.03, 0.11);
   g.rgb(0.5, 0.52, 0.52).gloss(0.3);
-  for (const s of [-1, 1]) g.tube([s * 0.1, 0.02, 0.2], [s * 0.2, 0.04, 0.2], 0.085, 6).tube([s * 0.2, 0.04, 0.2], [s * 0.6, 0.09, 0.2], 0.06, 7, 0.21).rgb(0.1, 0.1, 0.1).tube([s * 0.56, 0.085, 0.2], [s * 0.3, 0.05, 0.2], 0.19, 7, 0.03).rgb(0.5, 0.52, 0.52);
+  for (const s of [-1, 1]) {
+    g.rgb(0.5, 0.52, 0.52).tube([s * 0.1, 0.02, 0.2], [s * 0.2, 0.04, 0.2], 0.085, 6).tube([s * 0.2, 0.04, 0.2], [s * 0.62, 0.09, 0.2], 0.06, 8, 0.23);
+    // miệng loa nhìn chính diện: vành xám, lòng loa tối, củ loa ở giữa
+    g.push().move(s * 0.612, 0.089, 0.2).rotZ(-s * Math.PI / 2).disc(0, 0, 0, 0.235, 8, 1).rgb(0.06, 0.06, 0.065).disc(0, 0.008, 0, 0.185, 8, 1).rgb(0.42, 0.44, 0.44).disc(0, 0.016, 0, 0.055, 6, 1).pop();
+  }
   g.gloss(0).pop();
 }
 // Đôi phướn dọc 0,8 × 2,5 m treo hai bên cột đèn: cờ đỏ sao vàng và cờ đỏ búa liềm. Cột ở gốc; trục x cục bộ dọc phố.
