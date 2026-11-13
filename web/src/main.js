@@ -202,10 +202,12 @@ async function boot() {
       const [wx, wz] = toWorld(e.clientX, e.clientY); let best = null, bd = toWorld.hit;
       for (const it of passport.items) { if (!passport.visited.has(it.id)) continue; const d = Math.hypot(it.x - wx, it.z - wz); if (d < bd) { bd = d; best = it; } }
       if (!best || fares.state === 'ride') return;
-      // chỗ đứng thoáng cạnh địa danh đã tính sẵn và kiểm tra bằng va chạm thật (tools/build_places.mjs, reach_check.mjs);
-      // tới nơi thì quay mặt về địa danh
-      const [tx, tz] = best.s || [best.x, best.z], far = Math.hypot(best.x - tx, best.z - tz) > 1.5;
-      hud.close(); warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined, far ? [best.x, best.z] : null); hud.toast(() => `${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵');
+      // chỗ đứng ngắm đã tính sẵn bằng va chạm thật (tools/views.mjs): ngoài lòng đường xe chạy, camera sau lưng có chỗ, nhìn thấy
+      // công trình; tới nơi thì quay mặt theo hướng đã tính. Bản places.json cũ không có v: đứng chỗ s, quay về điểm đóng dấu.
+      hud.close();
+      if (best.v) warp(best.v[0], best.v[1], best.v[2], null);
+      else { const [tx, tz] = best.s || [best.x, best.z], far = Math.hypot(best.x - tx, best.z - tz) > 1.5; warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined, far ? [best.x, best.z] : null); }
+      hud.toast(() => `${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵', false, 'travel');
     };
   };
   let warpTo = null;

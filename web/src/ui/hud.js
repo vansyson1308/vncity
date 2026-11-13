@@ -78,11 +78,14 @@ export class Hud {
 
   // lời nhắn ngắn, không chặn màn hình; who: tên người nói (mặc định chú Thắng). text và who nhận chuỗi hoặc hàm trả về chuỗi (chữ "sống").
   // now: thông báo thay ngay cho cái đang hiện và xoá hàng chờ (đổi buổi trong ngày: chỉ thông báo mới nhất còn đúng)
-  toast(text, secs = 5, who = GUIDE, face = '🧓', now = false) {
+  // tag: loại thông báo; thông báo mới cùng loại thay ngay cho cái cũ đang hiện và bỏ cái cũ còn trong hàng chờ (đi nhanh hai lần liền
+  // từng hiện "Xe ôm chở tới" tên điểm trước: QC vòng 3)
+  toast(text, secs = 5, who = GUIDE, face = '🧓', now = false, tag = null) {
     const shown = say(text);
+    if (tag) this.queue = this.queue.filter((q) => q[5] !== tag);
     if (now) this.queue.length = 0;
-    else if (this.toastT > 0.4 && this._toastText !== shown) { if (this.queue.length < 3) this.queue.push([text, secs, who, face]); return; }
-    this._toastSrc = [text, who]; this._toastText = shown; this._toastWho = say(who); $('toast-face').textContent = face; this.drawToast();
+    else if (this.toastT > 0.4 && this._toastText !== shown && !(tag && this._toastTag === tag)) { if (this.queue.length < 3) this.queue.push([text, secs, who, face, false, tag]); return; }
+    this._toastTag = tag; this._toastSrc = [text, who]; this._toastText = shown; this._toastWho = say(who); $('toast-face').textContent = face; this.drawToast();
     const t = $('toast'); t.classList.remove('hidden'); replay(t.firstElementChild); this.toastT = secs;
   }
   drawToast() { $('toast-who').textContent = this._toastWho ? this._toastWho + ':' : ''; $('toast-text').textContent = this._toastText; }

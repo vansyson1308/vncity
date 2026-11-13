@@ -97,13 +97,13 @@ if (want('b')) {
   }
   R.check('b1: đi nhanh tới cả 44 điểm: tới đúng chỗ, nhận dấu (món ăn: hiện lời mời), không trong nhà, không dưới nước, camera không trong khối đặc và cách đầu trên 0,8 m, bước được ≥ 2,5 m theo ≥ 3/8 hướng', bad.length === 0, bad.length ? `${bad.length}/44 hỏng: ${JSON.stringify(bad.slice(0, 5))}` : `ít hướng đi được nhất: ${Math.min(...rows.map((r) => r.huongDiDuoc))}/8 (${rows.filter((r) => r.huongDiDuoc < 5).map((r) => r.id + ' ' + r.huongDiDuoc).join(', ') || 'mọi điểm ≥ 5'})`);
   // bấm chuột thật lên bản đồ lớn vào một điểm đã có dấu ở xa: phải đi nhanh tới đó
-  const far = await page.evaluate(() => { const g = window.__game, P = g.player.pos; const v = g.passport.items.filter((i) => g.passport.visited.has(i.id)).sort((a, b) => Math.hypot(b.x - P.x, b.z - P.z) - Math.hypot(a.x - P.x, a.z - P.z))[0]; return v ? { id: v.id, x: v.x, z: v.z, s: v.s } : null; });
+  const far = await page.evaluate(() => { const g = window.__game, P = g.player.pos; const v = g.passport.items.filter((i) => g.passport.visited.has(i.id)).sort((a, b) => Math.hypot(b.x - P.x, b.z - P.z) - Math.hypot(a.x - P.x, a.z - P.z))[0]; return v ? { id: v.id, x: v.x, z: v.z, s: v.v || v.s } : null; }); // v: chỗ đứng ngắm khi đi nhanh bằng bản đồ (tools/views.mjs)
   if (far) {
     await page.keyboard.press('KeyM'); await page.evaluate(() => window.__qa.step(3));
     const click = await page.evaluate((f) => { const c = document.getElementById('bigmap'), r = c.getBoundingClientRect(), b = window.__game.world.bounds; c.scrollIntoView({ block: 'nearest', inline: 'nearest' }); return { x: r.left + ((f.x - b.x0) / (b.x1 - b.x0)) * r.width, y: r.top + ((f.z - b.z0) / (b.z1 - b.z0)) * r.height, rect: [r.left, r.top, r.width, r.height], modal: window.__game.hud.modal }; }, far);
     await page.mouse.click(click.x, click.y);
     const res = await page.evaluate(async (f) => { const g = window.__game, Q = window.__qa; const started = g.warping; let n = 0; for (; n < 8000; n++) { Q.step(1); if (!g.warping) break; await Q.sleep(4); } Q.step(10); return { started, modal: g.hud.modal, d: Math.hypot(g.player.pos.x - f.s[0], g.player.pos.z - f.s[1]) }; }, far);
-    R.check('b2: bấm chuột thật lên bản đồ lớn vào một điểm đã có dấu: bảng đóng lại và người chơi được đưa tới chỗ đứng của điểm đó', click.modal === 'map' && res.started && res.modal === null && res.d < 1.5, `điểm ${far.id}, bấm tại (${fx(click.x, 0)}, ${fx(click.y, 0)}), bắt đầu đi nhanh: ${res.started}, cách chỗ đứng ${fx(res.d)} m`);
+    R.check('b2: bấm chuột thật lên bản đồ lớn vào một điểm đã có dấu: bảng đóng lại và người chơi được đưa tới chỗ đứng ngắm của điểm đó (v)', click.modal === 'map' && res.started && res.modal === null && res.d < 1.5, `điểm ${far.id}, bấm tại (${fx(click.x, 0)}, ${fx(click.y, 0)}), bắt đầu đi nhanh: ${res.started}, cách chỗ đứng ${fx(res.d)} m`);
   }
 }
 
