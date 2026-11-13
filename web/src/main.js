@@ -164,7 +164,7 @@ async function boot() {
   // trạng thái phố đi bộ phải có trước khi lên xe theo ?bike: vào game giữa phố đang đóng thì không ngồi sẵn trên xe
   traffic.day = sky.day; traffic.setWalk(walkOn(sky.day, sky.hours));
   if (params.has('bike')) player.toggleBike();
-  cam.snap(player); cam.pitch = pnum('pitch', 0.16, -0.35, 1.25);
+  const PITCH0 = pnum('pitch', 0.16, -0.35, 1.25); cam.snap(player); cam.pitch = PITCH0;
   if (Number.isFinite(pnum('camyaw', NaN))) { cam.yaw = pnum('camyaw', 0); cam.wasRiding = player.mode === 'bike'; } // góc camera đặt sẵn: không tự quay ra sau xe lúc vào game
   cam.zoom = pnum('zoom', cam.zoom, 0.55, 2.6);
 
@@ -207,15 +207,16 @@ async function boot() {
       // chỗ đứng ngắm đã tính sẵn bằng va chạm thật (tools/views.mjs): ngoài lòng đường xe chạy, camera sau lưng có chỗ, nhìn thấy
       // công trình; tới nơi thì quay mặt theo hướng đã tính. Bản places.json cũ không có v: đứng chỗ s, quay về điểm đóng dấu.
       hud.close();
-      if (best.v) warp(best.v[0], best.v[1], best.v[2], null);
+      if (best.v) warp(best.v[0], best.v[1], best.v[2], null, best.v[3]); // v[3]: độ ngẩng camera khi tới (tháp chuông, tháp đồng hồ cao hơn khung hình mặc định)
       else { const [tx, tz] = best.s || [best.x, best.z], far = Math.hypot(best.x - tx, best.z - tz) > 1.5; warp(tx, tz, far ? Math.atan2(best.x - tx, best.z - tz) : undefined, far ? [best.x, best.z] : null); }
       hud.toast(() => `${T('xeom')} ${best.name[lang()] || best.name.vi}`, 3, '', '🛵', false, 'travel');
     };
   };
   let warpTo = null;
-  // look: [x, z] của địa danh cần nhìn thấy khi tới nơi (đi nhanh bằng bản đồ)
+  // look: [x, z] của địa danh cần nhìn thấy khi tới nơi (đi nhanh bằng bản đồ); pitch: độ ngẩng camera khi tới. Tới nơi camera về sau lưng
+  // (cam.snap) và về độ ngẩng mặc định, trừ chỗ có độ ngẩng riêng: không thì độ ngẩng của Bưu điện (ngước nhìn tháp) dính sang chỗ sau.
   // thẻ địa danh đang mở thuộc chỗ cũ ("Gần đây: ... 45 m về phía tây" sai ngay khi tới nơi khác): đóng lại
-  const warp = (x, z, yaw, look = null) => { warpTo = [x, z, yaw, look]; chunks.update(x, z, true); G.home = null; hud.hideCard(); }; // đi nhanh tới đâu là đóng dấu ở đó ngay
+  const warp = (x, z, yaw, look = null, pitch) => { warpTo = [x, z, yaw, look, pitch]; chunks.update(x, z, true); G.home = null; hud.hideCard(); }; // đi nhanh tới đâu là đóng dấu ở đó ngay
   const shareText = () => T('shareText', { n: passport.visited.size, t: passport.items.length });
   const share = async () => { const url = location.origin + location.pathname; try { if (navigator.share) await navigator.share({ title: document.title, text: shareText(), url }); else { await navigator.clipboard.writeText(`${shareText()} ${url}`); hud.toast(T('copied'), 3, '', '🔗'); } } catch { /* người dùng huỷ */ } };
   $('k-share').addEventListener('click', share); $('d-share').addEventListener('click', share);
@@ -305,7 +306,7 @@ async function boot() {
         for (let d = 24; d > d0 + 1; d -= 2) { const cx = look[0] + vx * d, cz = look[1] + vz * d; if (!nav.freeStep(p.x, p.z, cx, cz, 0.4) || nav.onRoad(cx, cz)) continue;
           if (!pick) pick = [cx, cz]; if (nav.freeStep(cx, cz, cx + vx * 4.6, cz + vz * 4.6, 0.3)) { pick = [cx, cz]; break; } }
         if (pick) { p.x = pick[0]; p.z = pick[1]; yaw = Math.atan2(look[0] - p.x, look[1] - p.z); } }
-      if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, yaw ?? player.yaw); cam.snap(player); warpTo = null;
+      if (!onDeck(p.x, p.z)) nav.collide(p, 0.4); player.teleport(p.x, p.z, yaw ?? player.yaw); cam.snap(player); cam.pitch = Number.isFinite(warpTo[4]) ? warpTo[4] : PITCH0; warpTo = null;
       // tới nơi là phố đã đông sẵn như lúc vào game (không thì dòng xe chỉ sinh dần từ chỗ khuất mắt, con phố vắng tanh nửa phút đầu)
       camera.position.set(player.pos.x + Math.sin(cam.yaw) * 5, 3, player.pos.z + Math.cos(cam.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
       traffic.agents.length = 0; traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera, sky.hours); }

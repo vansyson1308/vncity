@@ -36,6 +36,11 @@ export const HEROES = [
   { name: 'Nhà tù Hỏa Lò', style: ST.PUBLIC, floors: 2, h: 7.5, wall: HC.stone, up: L.STONE, gnd: L.STONE, roof: ST.ROOF_TILE, age: 3, feat: { gate: { dir: [1, 0], text: 3 } } },
   // ----- phố cổ và phía bắc -----
   { name: 'Chợ Hàng Da', style: ST.PUBLIC, floors: 4, fh: 4.5, wall: HC.paleYellow, up: L.FR_UP2, gnd: L.MOD_GND, parapet: 1.2, roof: ST.ROOF_FLAT, roofTint: HC.slate, age: 1, feat: { domes: { n: 2, r: 3, col: [0.3, 0.32, 0.35] }, sign: { dir: [0, -1], text: 2 } } },
+  // Chợ Long Biên (chợ đầu mối): các dãy lán bán buôn bản đồ ghi là nhà thương mại (building=retail) nên từng dựng thành nhà kính văn
+  // phòng (QC vòng 4: "chợ trông như khu văn phòng"). Ngoài đời là lán một tầng mái tôn, cửa cuốn mở ra lối đi: kiểu mặt đứng chợ.
+  // Bốn lán không tên trong cùng khu chợ khoá theo tâm mặt bằng.
+  { name: ['Ngành hàng hoa quả', 'Ngành hàng trầu cau vỏ', 'Ngành hàng thuỷ sản'], style: ST.MARKET, roof: ST.ROOF_TIN, age: 2 },
+  ...[[-193.18, -1427.14], [-155.8, -1444.23], [-149.63, -1416.85], [-208.2, -1399.92]].map((at) => ({ at, r: 2, label: 'Chợ Long Biên: lán không tên', style: ST.MARKET, roof: ST.ROOF_TIN, age: 2 })),
   { name: 'Ga Long Biên', style: ST.PUBLIC, floors: 2, h: 9, wall: HC.ochre, up: L.PUB_UP, gnd: L.PUB_GND, roof: ST.ROOF_TILE, age: 2, feat: { sign: { dir: [0, 1], text: 1 } } },
   { name: 'Tháp nước Hàng Đậu', style: ST.CHURCH, floors: 3, h: 21, wall: HC.washed, up: L.CHURCH, gnd: L.STONE, parapet: 0, roof: ST.ROOF_FLAT, age: 3, feat: { cone: { h: 4.6, col: [0.15, 0.155, 0.16] } } }, // mái tôn sẫm cho tách khỏi nền trời mù
   { name: 'Cửa Bắc', style: ST.PUBLIC, floors: 2, h: 8.7, wall: HC.brick, up: L.STONE, gnd: L.STONE, parapet: 0.7, roof: ST.ROOF_FLAT, age: 3, feat: { arch: { dirs: [[0, 1], [0, -1]], w: 3.4, h: 5.2 }, pavilion: { w: 6, d: 4 } } },

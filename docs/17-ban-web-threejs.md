@@ -260,7 +260,14 @@ Các kỹ thuật chính:
    nơi nào thì dòng xe và người đi bộ ở đó được rải sẵn như lúc vào game.
 16. **Nhà ống theo từng lô.** Khối nhà liền dãy của OSM được cắt thành các lô rộng 2,9 đến 5,3 m, mỗi lô có số tầng, màu,
    tuổi nhà và kiểu mái riêng (`gen/buildings.js`); 47 lớp mặt đứng; biển hiệu theo quy tắc phố cổ (dải tầng trệt, cao
-   không quá 0,8 m, có biển vẫy). Bảng `gen/heroes.js` đặt chiều cao, màu và một nét nhận diện cho 28 toà nhà có tên.
+   không quá 0,8 m, có biển vẫy). Bảng `gen/heroes.js` đặt chiều cao, màu và một nét nhận diện cho 28 toà nhà có tên. Tám dãy
+   lán chợ Long Biên (bản đồ ghi là nhà thương mại nên trước dựng thành nhà kính văn phòng) dựng theo kiểu mặt đứng chợ: một tầng,
+   mái tôn, cửa cuốn. **Phố sách 19 Tháng 12** (`gen/bookstreet.js`): bản đồ chỉ có hai lối lát gạch kẹp dải cỏ, nên hai dãy gian
+   sách được dựng dọc mép ngoài hai lối (56 gian: ki-ốt 3,6 × 2,6 m cao 2,7 m, tường trắng, mái đua, biển SÁCH / VĂN PHÒNG PHẨM /
+   TRANH DÂN GIAN / CÀ PHÊ, giá sách bốn tầng gáy nhiều màu, quầy bày sách, áp phích bìa sách trên vách hông, đèn tuýp sáng buổi
+   tối), cách nhau 1,6 m, bỏ 9 m ở hai đầu phố, tránh gốc cây, cột đèn, nhà, lối đi; bốn vách có va chạm. Biển chỉ dùng chữ chung,
+   không tên nhà xuất bản hay nhãn hiệu thật. Bố cục gian là dựng theo mô tả chung của phố sách (dãy gian một tầng dưới tán cây),
+   chưa đối chiếu sơ đồ gian thật.
 17. **Không khí Hà Nội.** Trời mù trắng xám là mặc định, có bốn kiểu thời tiết (`?weather=mu|thu|he|nom`). Sương hoà mọi
    điểm ảnh ở xa vào đúng màu trời phía sau nó, ban đêm trời hửng nâu xám vì đèn thành phố nên cảnh xa không còn đen.
    Mặt hè đổi theo khu (đá granite quanh Hồ Gươm và khắp khu Lăng, quảng trường Ba Đình, Phủ Chủ tịch kể cả lối đi giữa các
@@ -376,6 +383,16 @@ thứ quyết định độ mượt và đo được khách quan. Nên chạy th
   thì hiện tên điểm cũ). Thẻ địa danh của chỗ cũ đóng lại. Trong lúc chờ dựng các ô ở nơi tới, nhân vật đứng yên tại chỗ: các ô quanh
   chỗ cũ có thể đã bị cất cùng các đoạn va chạm của chúng, xe còn trớn lăn tiếp thì trôi qua bờ hồ (fuzz hạt 2 vòng 4: lọt 1 cm xuống
   mép Hồ Gươm; tái hiện bằng cách bấm đi nhanh khi xe còn trớn 0,04 m/s sát bờ: bản cũ trôi 4,3 cm trong 141 khung chờ, bản mới 0).
+  Bảy điểm QC vòng 4 chê khung hình (đứng sát cửa đền Bạch Mã; tháp đồng hồ Bưu điện khuất sau tán cây; Hỏa Lò nhìn vào ngõ, không
+  thấy cổng; Bảo tàng Lịch sử nhìn dọc tường hông; phố sách không thấy gian sách; chợ Long Biên chung chung; Nhà thờ Lớn cụt tháp)
+  được dò lại bằng GPU: điểm mẫu đặt trên chính nét nhận biết (mặt tháp đồng hồ, mặt cổng MAISON CENTRALE, ba tầng mái bát giác, hai
+  tháp chuông, dãy cửa đền, dàn thép cầu), mỗi chỗ ứng viên tới thật trong game và thử năm độ ngẩng camera, đếm điểm thấy được (thử
+  độ sâu, tính cả tán lá), rồi xem ảnh từng chỗ tốt nhất mới ghim (`TUNE.pin` trong `tools/views.mjs`). `v` có thêm phần tử thứ tư
+  tuỳ chọn là độ ngẩng camera khi tới (Bưu điện -0,22, Nhà thờ Lớn -0,3: tháp cao 31,5–33,5 m, khung hình mặc định chỉ thấy tới
+  chừng 10 m ở khoảng cách 24 m); mọi lần đi nhanh khác đưa độ ngẩng về mặc định, như hướng camera vốn đã về sau lưng mỗi lần tới.
+  Bảo tàng Lịch sử: chỗ ngắm nhìn toà Louis Finot mái bát giác mà thẻ địa danh mô tả (toạ độ theo Wikipedia 21,0244; 105,8597 khớp
+  toà dựng mái bát giác trong vòng 30 m), cách điểm đóng dấu chừng 150 m; điểm đóng dấu lấy theo landmarks.json nằm ở toà phía bắc
+  của bảo tàng, giữ nguyên.
   **Chụp ảnh** (P): ẩn giao diện, Enter để lưu ảnh.
 - **Song ngữ** Việt, Anh (L hoặc ⚙️). **Điện thoại**: nửa trái màn hình là cần điều khiển, nửa phải để nhìn.
 - Tiến độ, vị trí, giờ và cài đặt lưu trong trình duyệt. Không quảng cáo, không thu thập dữ liệu.

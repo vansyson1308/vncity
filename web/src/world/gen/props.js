@@ -5,6 +5,7 @@ import { CS, CURB, K, ZONE, zoneAt, roadY, alongAt } from '../data.js';
 import { tree, streetLamp, parkLamp, TREES } from '../../models/street.js';
 import { decorate } from './decor.js';
 import { furnish } from './furniture.js';
+import { bookStalls } from './bookstreet.js';
 import { WHITE_UV } from '../signs.js';
 import { plateLayout } from '../streetnames.js';
 import { treePit } from './pits.js';
@@ -208,6 +209,7 @@ export function genProps(ctx, cx, cz, bld, opt = {}) {
   const env = { near, far, lamps, X0, Z0, X1, Z1, cx, cz, inChunk, free, onRoad, roads, bld, extra, nBikes: 0 };
   decorate(ctx, env);
   furnish(ctx, { ...env, plate, occ, treeList, lampPts, mark: opt.mark });
+  bookStalls(ctx, env, occ); // gian hàng phố sách 19 Tháng 12 (gen/bookstreet.js): sau cây, cột đèn, đồ đạc để tránh được chúng
   return { near: near.pack(), far: far.pack(), leaf: leaf.pack(), plate: plate.pack(), lamps: new Float32Array(lamps), extra };
 }
 export { hash2 };

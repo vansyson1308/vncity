@@ -28,12 +28,24 @@ const STREET = { pho_sach_dinh_le: ['Phố 19 Tháng 12'], con_duong_gom_su: ['�
 const TUNE = {
   thap_rua: { ideal: 60, water: true }, ho_truc_bach: { water: true, ideal: 30 },
   quang_truong_ba_dinh: { near: 40 }, bai_giua_song_hong: { near: 45 },
-  // pin: chỗ ngắm đã dò bằng GPU (đi tới từng chỗ ứng viên trong game, đếm điểm mẫu trên tường toà nhà thấy được), dùng khi phép thử
-  // va chạm không đủ (phố cổ chật, nhiều mái bạt, tán cây). Vẫn soát lại bằng va chạm như mọi chỗ khác; hỏng thì tự tính lại.
-  //  - đền Bạch Mã: vỉa hè đối diện trên phố Hàng Buồm, thấy trọn dãy cửa gỗ đỏ của đền (8 điểm mẫu, bề ngang 83% khung; chỗ tính
-  //    bằng va chạm nhìn dọc phố Hàng Giầy, GPU đo 0 điểm);
-  //  - Bưu điện Hà Nội: vỉa hè bờ hồ, nhìn sang toà nhà dài bên kia phố Đinh Tiên Hoàng (35 điểm mẫu, bề ngang 93% khung).
-  den_bach_ma: { pin: [-120.6, -761.9, -2.94] }, buu_dien_bo_ho: { pin: [121, 241.2, 1.25] },
+  // pin: [x, z, hướng mặt, độ ngẩng camera (tuỳ chọn)]: chỗ ngắm đã dò bằng GPU, dùng khi phép thử va chạm không đủ (phố cổ chật, mái
+  // bạt, tán cây) hay khi nét nhận biết cao hơn khung hình mặc định. Dò bằng scratchpad featsearch: tới từng chỗ ứng viên trong game,
+  // thử từng độ ngẩng, đếm điểm mẫu đặt trên chính nét nhận biết thấy được (thử độ sâu, tính cả tán lá) và nằm trong khung; xem ảnh
+  // từng chỗ tốt nhất rồi mới chọn. Vẫn soát lại bằng va chạm như mọi chỗ khác; hỏng thì tự tính lại. (QC vòng 4 chê năm chỗ cũ.)
+  //  - đền Bạch Mã: vỉa hè phía tây cửa đền trên phố Hàng Buồm, nhìn chéo dọc dãy cửa gỗ đỏ ra phố (cả 15 điểm mẫu trên mặt đền thấy được;
+  //    chỗ cũ đứng sát cửa 1,5 m, chỉ thấy cánh cửa);
+  //  - Bưu điện Hà Nội: bờ hồ bên kia phố Đinh Tiên Hoàng, ngẩng camera (-0,22): thấy tháp đồng hồ trên nóc và chữ BƯU ĐIỆN HÀ NỘI trên
+  //    tán cây ven phố (8/12 điểm mẫu trên tháp; chỗ cũ chỉ thấy tường dưới tán cây, tháp ngoài khung);
+  //  - Nhà thờ Lớn: giữa quảng trường trước nhà thờ, cách mặt tiền 24 m, ngẩng hết cỡ (-0,3): thấy trọn hai tháp chuông, thập giá, đồng hồ,
+  //    cửa hoa hồng (18/24 điểm mẫu trên hai tháp; chỗ cũ đứng lệch, tháp cụt, tán cây che nửa mặt tiền);
+  //  - Nhà tù Hỏa Lò: vỉa hè bên kia phố Hỏa Lò, nhìn thẳng vào cổng MAISON CENTRALE (16/20 điểm mẫu trên mặt cổng; chỗ cũ ở ngõ hẹp
+  //    giữa tường nhà tù và toà tháp, không thấy cổng);
+  //  - Bảo tàng Lịch sử Quốc gia: góc phố Tràng Tiền, nhìn qua ngã tư về toà nhà mái bát giác ba tầng (toà Louis Finot mà thẻ địa danh mô
+  //    tả, cách điểm đóng dấu ~150 m; điểm đóng dấu nằm ở toà phía bắc của bảo tàng). Chỗ cũ nhìn dọc tường hông của toà phía bắc.
+  den_bach_ma: { pin: [-128.1, -759.4, 2.03] }, buu_dien_bo_ho: { pin: [113.8, 257, 2.07, -0.22] }, nha_tho_lon: { pin: [-305.8, 20, -1.37, -0.3] },
+  //  - chợ Long Biên: đầu lối giữa các dãy lán, nhìn về phía nam: lán chợ mái tôn cửa cuốn hai bên, cuối lối là dàn thép cầu Long Biên
+  //    (chỗ cũ nhìn vào hai dãy lán trơn và toà kính A7, không có gì cho biết là chợ dưới chân cầu).
+  nha_tu_hoa_lo: { pin: [-568.1, 366.6, -1.89] }, bao_tang_lich_su_quoc_gia: { pin: [808, 400, -0.33] }, cho_long_bien: { pin: [-102, -1437, 0.03] },
 };
 
 // Toà nhà cần nhìn: theo tên (BUILDING, hay tên toà nhà trùng một phần tên địa danh, trong 200 m quanh toạ độ OSM; lấy toà lớn nhất),
