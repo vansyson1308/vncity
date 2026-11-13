@@ -133,7 +133,12 @@ Các kỹ thuật chính:
    40 về 0 trong 7,8 m...) và báo lỗi nếu lệch khỏi khoảng đo thực tế.
 10. **Lối đi được kiểm chứng.** Tường rào để hở ở cổng thật (nút cổng của OSM) và ở mọi chỗ có lối đi cắt qua. Công
    trình dựng tay khai báo lối phải thông (`paths`) và khối đặc (`solid`); công trình kín lấy mặt bằng của chính mô
-   hình làm va chạm. `tools/reach_check.mjs` loang trên lưới 0,4 m bằng đúng hàm va chạm của game để chắc rằng cả 44
+   hình làm va chạm (`landmarks/sites.js` modelOutline: chiếu mọi tam giác cắt tầm thân người 0,7 đến 3 m xuống lưới 1 m, đóng hình
+   bằng nở 2 m rồi lấp lòng rồi co lại để vỏ rỗng và cửa vòm không thành lối vào, lấy đường viền làm tường; đường viền cách thân mô
+   hình không quá 2 m ở cả 8 công trình kín). Khối nhà OSM bị thay bằng mô hình thì không vẽ và không còn va chạm: trước đây khối ẩn
+   vẫn giữ tường 12 m theo đa giác OSM, lệch mô hình tới 15 m, thành tường tàng hình trước cửa chợ Đồng Xuân (đi tới mặt tiền bị chặn
+   cách 4,4 đến 9 m), Nhà thờ Lớn, Nhà hát Lớn, ga Hà Nội; hộp bao chung của cả mô hình cũng chắn khoảng trống giữa thân Lăng và hai
+   khán đài. `tools/reach_check.mjs` loang trên lưới 0,4 m bằng đúng hàm va chạm của game để chắc rằng cả 44
    điểm hộ chiếu đều tới được từ mạng đường; `tools/build_places.mjs` dùng cùng thư viện đó để dời điểm đóng dấu về
    chỗ tới được và tính sẵn chỗ đứng thoáng cho chức năng đi nhanh.
 11. **Camera không vượt tường.** Tia từ đầu nhân vật tới vị trí camera (đã cộng độ lệch ngang) dừng trước mọi bức tường
@@ -237,7 +242,10 @@ Các kỹ thuật chính:
    ở trên một đoạn đóng mà không nằm trên lòng đường mở nào (`behindGate` trong `main.js`; trước đây chỉ hỏi "tim đường gần nhất là
    đoạn đóng", xe đi ngang miệng phố đóng ở nút giao bị chặn đứng: 62/112 vệt chạy thử → 0/112, mọi vệt đi vào vẫn dừng ở vạch rào); quảng trường Đông Kinh Nghĩa Thục có thêm sáu tuyến đi bộ cắt ngang lòng quảng trường
    (`actors/crowd.js` PLAZA_LINES: bản đồ không có lối nào trong lòng quảng trường nên trước đây người chỉ men theo mép), ngày
-   thường có người băng qua, đứng xem màn hình, tối phố đi bộ đông như phố đi bộ; xe của người chơi tới ranh phố đóng thì dừng như gặp rào (lời nhắc: xuống xe đi bộ vào), lỡ ở sẵn bên
+   thường có người băng qua, đứng xem màn hình, tối phố đi bộ đông như phố đi bộ; lúc phố đi bộ đang mở ở gần, đám đông gấp ba và
+   người đi trên các phố đi bộ được rải dày gấp mười (QC vòng 3: tối thứ Bảy lòng phố Đinh Tiên Hoàng chỉ 3 đến 4 người); phố bia
+   Tạ Hiện tối nào (18 giờ tới 0 giờ 30) cũng đông gấp 2,5, quá nửa là khách ngồi kín ghế các quán quanh ngã tư Tạ Hiện - Lương
+   Ngọc Quyến; xe của người chơi tới ranh phố đóng thì dừng như gặp rào (lời nhắc: xuống xe đi bộ vào), lỡ ở sẵn bên
    trong thì chỉ dắt ra được bằng tốc độ đi bộ, vào game bằng `?bike` giữa phố đóng thì không ngồi sẵn trên xe; cuốc xe ôm không đón
    trả trong khu (soát cả chỗ dừng xe thật, không chỉ toạ độ điểm đến). Bố trí lúc
    đóng phố (cạnh đóng, chiều cấm vào, chỗ rào) chỉ phụ thuộc mạng đường nên tính một lần lúc tải (`walkPlan`); bật, tắt lúc
@@ -254,6 +262,16 @@ Các kỹ thuật chính:
    Nhà bị bỏ vẫn giữ chỗ trong mảng (ghi số 0) và không đoạn đường nào bị xoá, vì chỉ số nhà, chỉ số đường là hạt giống của bộ sinh.
    Bước cuối soát mọi vòng nhà: vòng tự cắt (do làm gọn đỉnh hay nối mặt tiền) được gỡ trước khi ghi (Clipper; chỗ cắt sát một
    đỉnh mà Clipper không thấy thì cắt bỏ vòng con nhỏ hơn), vì tường, mái và lô nhà dựng theo vòng sẽ ra mặt chồng mặt.
+
+21. **Đám đông đứng đúng chỗ, xe lên cầu không ùn vô lý (tester và QC vòng 3).** Người đứng yên, khách quán cóc, người chờ
+   chỉ được đặt ngoài lòng đường xe chạy và khi từ mép vỉa hè tới chỗ đó không cắt bức tường nào (khách quán trên hè hẹp từng bị
+   đặt vào trong nhà); người đi bộ ngoài 22 m cũng soát tường (tám khung một lần) và dạt về phía mép đường khi vướng; bước va chạm
+   tường chạy trước bước đẩy người ra khỏi vòng 0,55 m quanh người chơi; người chơi ngồi trên xe thì người đi bộ bị đẩy ra khỏi hình
+   con nhộng bọc thân xe (đoạn ±0,85 m dọc xe) chứ không chỉ vòng quanh tâm (từng có người lướt qua cách trục xe 0,05 m); người
+   mặc áo tối màu không buộc tóc (không ai trùng hệt Minh). Tốp tập dưỡng sinh lúc rạng sáng: chỗ tập trong khung hình thật (tâm tốp
+   lệch hướng nhìn dưới 37°) được chọn trước khi rải người, hai tốp không đứng cách nhau dưới 12 m, hàng đầu cách mép nước ít nhất
+   1,2 m. Làn xe máy trên cầu chạy như phố cấp 3 (28 km/h) thay vì như ngõ nhỏ (20 km/h), làn hẹp dưới 4,5 m chỉ chứa nửa số xe của
+   hành lang phố người chơi: thử lên dốc cầu Long Biên giữ ga 60 giây, tốc độ trung bình 15,5 → 20,1 km/h.
 
 ## 5. Hiệu năng
 
