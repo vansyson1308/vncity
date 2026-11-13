@@ -212,6 +212,21 @@ export class Nav {
     return (px & 1) + (nx & 1) + (pz & 1) + (nz & 1) >= 3;
   }
 
+  // Như inSolid nhưng chỉ xét các bức tường trong vòng r quanh (x, z) (rẻ, gọi được mỗi giây vài lần): bốn tia dài r dọc trục, đếm chẵn lẻ
+  // số lần cắt tường cao từ 2,5 m (mỗi đoạn tính một lần dù nằm trong nhiều ô lưới); cần ít nhất ba tia lẻ. Toà nhà lớn hơn r thì có
+  // thể báo "ngoài" khi đang ở trong (sai về phía an toàn cho người gọi).
+  insideNear(x, z, r = 20) {
+    let px = 0, nx = 0, pz = 0, nz = 0; const seen = this._inSeen || (this._inSeen = new Map()); seen.clear();
+    this.eachSeg(x, z, r, (s, i) => {
+      let st = seen.get(s); if (!st) seen.set(s, (st = new Set())); if (st.has(i)) return; st.add(i);
+      if (!(s[i + 4] >= 2.5)) return;
+      const ax = s[i], az = s[i + 1], bx = s[i + 2], bz = s[i + 3];
+      if ((az > z) !== (bz > z)) { const xi = ax + ((z - az) * (bx - ax)) / (bz - az); if (Math.abs(xi - x) <= r) { if (xi > x) px++; else nx++; } }
+      if ((ax > x) !== (bx > x)) { const zi = az + ((x - ax) * (bz - az)) / (bx - ax); if (Math.abs(zi - z) <= r) { if (zi > z) pz++; else nz++; } }
+    });
+    return (px & 1) + (nx & 1) + (pz & 1) + (nz & 1) >= 3;
+  }
+
   // Tia từ (x,z) theo hướng ngang (dx,dz) dài tối đa max. Tia ở độ cao y tại gốc và lên/xuống ky mét mỗi mét ngang;
   // chỉ tính bức tường cao hơn tia ngay tại chỗ tia cắt tường. Trả về khoảng cách chạm đầu tiên.
   raycast(x, z, dx, dz, max, y = 0, ky = 0) {

@@ -268,9 +268,11 @@ Các kỹ thuật chính:
    đặt vào trong nhà); người đi bộ ngoài 22 m cũng soát tường (tám khung một lần) và dạt về phía mép đường khi vướng; bước va chạm
    tường chạy trước bước đẩy người ra khỏi vòng 0,55 m quanh người chơi; người chơi ngồi trên xe thì người đi bộ bị đẩy ra khỏi hình
    con nhộng bọc thân xe (đoạn ±0,85 m dọc xe) chứ không chỉ vòng quanh tâm (từng có người lướt qua cách trục xe 0,05 m); người
-   mặc áo tối màu không buộc tóc (không ai trùng hệt Minh). Tốp tập dưỡng sinh lúc rạng sáng: chỗ tập trong khung hình thật (tâm tốp
-   lệch hướng nhìn dưới 37°) được chọn trước khi rải người, hai tốp không đứng cách nhau dưới 12 m, hàng đầu cách mép nước ít nhất
-   1,2 m. Làn xe máy trên cầu chạy như phố cấp 3 (28 km/h) thay vì như ngõ nhỏ (20 km/h), làn hẹp dưới 4,5 m chỉ chứa nửa số xe của
+   mặc áo tối màu không buộc tóc (không ai trùng hệt Minh); lối đi bộ trong dữ liệu có khúc xuyên qua lòng nhà (lối không tên ở phố
+   Hàng Bạc) thì không sinh người ở khúc đó, người đi tới đó thì bỏ (`nav.insideNear`: đếm chẵn lẻ bốn tia 20 m, rẻ hơn `inSolid`);
+   người dạo phố đi bộ sinh trong 55 m, quá 70 m thì bỏ, nên cùng số người mà quanh người chơi đông hơn. Tốp tập dưỡng sinh lúc rạng
+   sáng: lúc rải người ban đầu, có chỗ tập trong khung hình thật (tâm tốp lệch hướng nhìn dưới 37°) thì chỉ chọn trong số đó; hai tốp
+   không đứng cách nhau dưới 12 m (tốp chỉ đặt được một người cũng giữ chỗ), hàng đầu cách mép nước ít nhất 1,2 m. Làn xe máy trên cầu chạy như phố cấp 3 (28 km/h) thay vì như ngõ nhỏ (20 km/h), làn hẹp dưới 4,5 m chỉ chứa nửa số xe của
    hành lang phố người chơi: thử lên dốc cầu Long Biên giữ ga 60 giây, tốc độ trung bình 15,5 → 20,1 km/h.
 
 ## 5. Hiệu năng

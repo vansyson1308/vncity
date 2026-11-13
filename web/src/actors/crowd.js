@@ -128,9 +128,13 @@ export class Crowd {
     const side = Math.random() < 0.5 ? -1 : 1, kerb = kind === KIND.vendor || kind === KIND.sweeper, mall = this.walkOn && !!path.r.walk && !kerb;
     const lat = path.foot || mall ? (Math.random() - 0.5) * Math.max(0.4, path.r.w - 0.8) : side * (path.r.w / 2 + (kerb ? 0.42 + Math.random() * 0.15 : 0.75 + Math.random() * 0.9));
     const x = o[0] - o[3] * lat, z = o[1] + o[2] * lat, d = Math.hypot(x - px, z - pz);
-    if (d < (this.warming ? 6 : 14) || d > 95) return false;
+    // người dạo phố đi bộ sinh trong 55 m, đi xa quá 70 m thì bỏ (cùng số người mà quanh người chơi đông hơn hẳn: QC vòng 3 thấy lòng
+    // phố Đinh Tiên Hoàng tối thứ Bảy thưa vì người rải khắp vùng 95 m)
+    if (d < (this.warming ? 6 : 14) || d > (mall ? 55 : 95)) return false;
     if (cam && !this.warming && d < 45 && (x - cam.x) * cam.fx + (z - cam.z) * cam.fz > 0 && Math.random() < 0.8) return false;
     const pt = this._pt; pt.x = x; pt.z = z; if (this.nav.collide(pt, 0.3) || this.nav.isWater(x, z)) return false;
+    // lối đi bộ trong dữ liệu có khúc chạy xuyên qua lòng nhà (lối không tên ở phố Hàng Bạc, tester vòng 3): không sinh người ở đó
+    if (path.foot && this.nav.insideNear(x, z)) return false;
     // người trên vỉa hè: từ mép đường tới chỗ đứng không cắt bức tường nào (hè hẹp thì làn đi xa mép đường đã nằm trong nhà)
     if (!path.foot && !mall && !this.nav.freeStep(o[0] - o[3] * Math.sign(lat) * (path.r.w / 2 + 0.2), o[1] + o[2] * Math.sign(lat) * (path.r.w / 2 + 0.2), x, z, 0.25)) return false;
     const a = this.person(kind, x, z, Math.random() * 6.28);
@@ -175,15 +179,19 @@ export class Crowd {
   spawnGroup(px, pz, cam, room) {
     if (!this.spots.length) return 0;
     // ưu tiên chỗ gần người chơi (trong 130 m), không có thì mới lấy chỗ xa hơn bên kia hồ
-    let sp = null, cnt = 0; const lim = Math.random() < 0.75 ? 130 : 240;
-    // lúc rải người ban đầu (vào game, đi nhanh tới nơi) chỗ tập nằm trong tầm mắt được chọn trước gấp bốn: ra tới bờ hồ lúc rạng sáng
-    // là thấy ngay các tốp tập, không phải quay camera tìm
+    let sp = null, cnt = 0, viewOnly = false; const lim = Math.random() < 0.75 ? 130 : 240;
+    // lúc rải người ban đầu (vào game, đi nhanh tới nơi) chỗ tập nằm trong khung hình được chọn trước: ra tới bờ hồ lúc rạng sáng là
+    // thấy ngay các tốp tập, không phải quay camera tìm
     // (chỗ tập cách một tốp đang tập dưới 12 m thì bỏ: hai tốp đứng sát nhau thì người hai tốp chồng lên nhau, tester vòng 3)
     const busy = this.spots.filter((q) => q.used && Math.abs(q.x - px) < lim + 12 && Math.abs(q.z - pz) < lim + 12);
     for (const q of this.spots) { if (q.used) continue; const d = Math.hypot(q.x - px, q.z - pz); if (d > lim || d < (this.warming ? 8 : 16) || busy.some((u) => (u.x - q.x) ** 2 + (u.z - q.z) ** 2 < 144)) continue;
       // trong khung hình: tâm tốp (lùi 3 m ra phía mặt nước) lệch hướng nhìn dưới 37° (nửa khung ngang chừng 44°), trong 60 m
       const gx = q.x + q.nx * 3, gz = q.z + q.nz * 3, gd = Math.hypot(gx - cam?.x, gz - cam?.z);
-      const w = this.warming && cam && gd < 60 && (gx - cam.x) * cam.fx + (gz - cam.z) * cam.fz > 0.8 * gd ? 6 : 1; cnt += w; if (Math.random() * cnt < w) sp = q; }
+      // lúc rải người ban đầu: có chỗ tập trong khung thì chỉ chọn trong số đó (trọng số thôi thì có lần không tốp nào lọt khung)
+      const inView = this.warming && cam && gd < 60 && (gx - cam.x) * cam.fx + (gz - cam.z) * cam.fz > 0.8 * gd;
+      if (inView && !viewOnly) { viewOnly = true; cnt = 0; sp = null; }
+      if (viewOnly && !inView) continue;
+      cnt += 1; if (Math.random() * cnt < 1) sp = q; }
     if (!sp || this.visible(sp.x, sp.z, px, pz, cam, 60)) return 0;
     const n = Math.min(room, 4 + Math.floor(Math.random() * 6)), cols = n > 6 ? 4 : 3, clip = Math.random() < 0.65 ? CLIP.taichi : CLIP.swing, phase = Math.random(), yaw = Math.atan2(sp.nx, sp.nz), tx = -sp.nz, tz = sp.nx; let made = 0;
     // hàng đầu (sát mặt nước) cách mép nước ít nhất 1,2 m (bờ hẹp thì cả tốp lùi vào phía lối dạo)
@@ -191,11 +199,14 @@ export class Crowd {
     const row0 = clamp(wd - 1.2, 1.5, 4.4);
     for (let k = 0; k < n; k++) {
       const c = k % cols, rw = Math.floor(k / cols), fw = Math.max(-1.2, row0 - rw * 1.5), x = sp.x + tx * (c - (cols - 1) / 2) * 1.5 + sp.nx * fw + (Math.random() - 0.5) * 0.25, z = sp.z + tz * (c - (cols - 1) / 2) * 1.5 + sp.nz * fw + (Math.random() - 0.5) * 0.25; // giữa lối dạo và mép nước
-      if (!this.ok(x, z)) continue;
-      const a = this.person(KIND.exercise, x, z, yaw + (Math.random() - 0.5) * 0.12); this.dress(a); a.y = this.nav.groundY(x, z); a.clip = clip; a.phase = phase + (Math.random() - 0.5) * 0.03; a.stat = true; a.v = 0; a.anchor = sp;
+      // vướng (gốc cây, ghế đá, mép nước) thì thử dịch 0,6 m sang hai bên hay lùi vào trước khi bỏ chỗ
+      let qx = x, qz = z, good = this.ok(x, z);
+      for (const [a2, b2] of [[0.6, 0], [-0.6, 0], [0, -0.6], [0.6, -0.6], [-0.6, -0.6]]) { if (good) break; qx = x + tx * a2 + sp.nx * b2; qz = z + tz * a2 + sp.nz * b2; good = this.ok(qx, qz); }
+      if (!good) continue;
+      const a = this.person(KIND.exercise, qx, qz, yaw + (Math.random() - 0.5) * 0.12); this.dress(a); a.y = this.nav.groundY(qx, qz); a.clip = clip; a.phase = phase + (Math.random() - 0.5) * 0.03; a.stat = true; a.v = 0; a.anchor = sp;
       this.people.push(a); made++;
     }
-    if (made >= 2) sp.used = true;
+    if (made) sp.used = true; // (kể cả tốp chỉ đặt được một người: không để tốp khác đứng chồng lên cùng chỗ)
     return made;
   }
 
@@ -222,7 +233,7 @@ export class Crowd {
     const gymOn = this.mix.gym > 0;
     for (let i = P.length - 1; i >= 0; i--) {
       const a = P[i], d = Math.hypot(a.x - px, a.z - pz);
-      if (d > (a.kind === KIND.exercise ? 250 : a.stat ? 118 : 105) || (a.kind === KIND.exercise && !gymOn && (d > 70 || (a.x - cam.x) * cam.fx + (a.z - cam.z) * cam.fz < 0))) { if (a.anchor) a.anchor.used = false; P[i] = P[P.length - 1]; P.pop(); continue; }
+      if (a.gone || d > (a.kind === KIND.exercise ? 250 : a.stat ? 118 : a.mall ? 70 : 105) || (a.kind === KIND.exercise && !gymOn && (d > 70 || (a.x - cam.x) * cam.fx + (a.z - cam.z) * cam.fz < 0))) { if (a.anchor) a.anchor.used = false; P[i] = P[P.length - 1]; P.pop(); continue; }
       if (a.kind === KIND.seated) seated++; else if (a.kind === KIND.exercise) gym++;
     }
     // sinh thêm cho đủ số theo giờ
@@ -259,17 +270,21 @@ export class Crowd {
         a.x += (gx - a.x) * k; a.z += (gz - a.z) * k;
         // va chạm tường: trong 22 m quanh người chơi hai khung một lần, xa hơn tám khung một lần (người ở xa từng đi lấn vào tường nhà
         // 0,2–2 m chỗ hè hẹp: tester vòng 3). Vướng tường thì làn đi dạt dần về phía mép đường (không thấp hơn mép vỉa hè + 0,4 m).
+        // đi theo lối bộ vào tới khúc xuyên lòng nhà (khuất trong tường, không ai thấy): bỏ người đó, bước sau sinh người khác
+        if (a.path.foot && (i + this.frame) % 16 === 0 && (nav.insideNear(a.x, a.z) || nav.insideNear(a.x + tx * 1.5, a.z + tz * 1.5))) a.gone = true;
         if ((i + this.frame) % (pd2 < 484 ? 2 : 8) === 0) { const pt = this._pt; pt.x = a.x; pt.z = a.z; if (nav.collide(pt, 0.28)) { a.x = pt.x; a.z = pt.z; if (!a.path.foot && !a.mall) { const m = a.path.r.w / 2 + 0.4, al = Math.abs(a.lat); if (al > m) a.lat = Math.sign(a.lat) * Math.max(m, al - 0.15); } } }
         // không đi xuyên qua người chơi (sau bước va chạm tường, để bước đó không đẩy người ngược vào vòng: QC vòng 3 đo được người lướt
         // qua cách tâm người chơi 0,436 m): đi bộ thì ai lọt vào vòng 0,55 m quanh người chơi bị đẩy ra mép vòng; ngồi trên xe thì đẩy ra
         // khỏi hình con nhộng bán kính 0,5 m bọc thân xe (đoạn ±0,85 m dọc hướng xe): vòng tròn quanh tâm không phủ hai đầu xe, người đi
         // ngang sát bánh trước, bánh sau từng lọt qua thân xe (tester vòng 3: 56 lượt-khung cách trục xe 0,05 m)
         if (Math.abs((player.y || 0) - a.y) < 1.5) {
-          const ex = a.x - px, ez = a.z - pz;
+          const ex = a.x - px, ez = a.z - pz, ox = a.x, oz = a.z;
           if (player.mode === 'bike') {
             const fx = Math.sin(player.yaw), fz = Math.cos(player.yaw), t = clamp(ex * fx + ez * fz, -0.85, 0.85), qx = px + fx * t, qz = pz + fz * t, rx = a.x - qx, rz = a.z - qz, e2 = rx * rx + rz * rz;
             if (e2 < 0.25) { const e = Math.sqrt(e2); if (e > 1e-3) { a.x = qx + (rx / e) * 0.5; a.z = qz + (rz / e) * 0.5; } else { const sd = -ex * fz + ez * fx >= 0 ? 1 : -1; a.x = qx - fz * sd * 0.5; a.z = qz + fx * sd * 0.5; } }
           } else { const e2 = ex * ex + ez * ez; if (e2 < 0.3025) { const e = Math.sqrt(e2) || 1e-3; a.x = px + (ex / e) * 0.55; a.z = pz + (ez / e) * 0.55; } }
+          // vừa bị đẩy thì soát tường lại (không bị đẩy vào tường nhà khi người chơi đứng sát hè hẹp)
+          if (a.x !== ox || a.z !== oz) { const pt = this._pt; pt.x = a.x; pt.z = a.z; if (nav.collide(pt, 0.28)) { a.x = pt.x; a.z = pt.z; } }
         }
         if (v > 0.05) a.yaw = dampAngle(a.yaw, Math.atan2(tx, tz), 6, dt);
         if (v <= 0.05) row = this.idleRow;
