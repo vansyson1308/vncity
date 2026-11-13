@@ -169,6 +169,16 @@ Các kỹ thuật chính:
      đó (cách vài mẩu ngắn) không làm mất vạch; vạch dọc tự chừa chỗ vạch sang đường. Trước đây 30/75 nút có đèn không có vạch
      sang đường nào và chỉ 94/300 nhánh có vạch; giờ cả 75 nút đều có, 272/300 nhánh (118 → 331 vạch); 28 nhánh còn lại ở nút
      phức tạp (đường đôi, vòng xoay) nơi vạch sẽ đè lên một lòng đường khác nên cố ý không kẻ.
+   - *Bảng vạch sang đường chung cho cả bản đồ* (`world/zebras.js`, tính một lần trong `junctionsOf`): `gen/ground.js` kẻ vạch,
+     vạch dừng, mũi tên theo bảng này, còn dòng xe lấy chỗ mũi xe dừng đèn đỏ (`a.line`) và chân cột đèn (`a.stop`) cũng từ đó.
+     Ở mỗi chỗ định kẻ, mọi góc của mọi vạch phải nằm trong lòng đường và không lấn quá 0,3 m vào lòng một đường xe khác lệch
+     hướng trên 25°; vạch không được chồng (cách dưới 0,3 m) hay nối đuôi (cùng phố, tâm cách dưới 12 m) một vạch đã kẻ. Vướng
+     thì vạch dời ra xa nút từng 0,5 m (tới max(6 m; nửa bề rộng phố)), đoạn sát nút quá ngắn thì thử kéo vào gần nút; vẫn vướng
+     thì không kẻ. Đường rộng xét trước. Mọi nhánh của nút có đèn đều được xét (kể cả khi nút con chỉ có hai đường lớn, nhánh
+     từ 5 m). Vạch dời bao nhiêu thì vạch dừng, chỗ xe dừng và cột đèn dời bấy nhiêu. Tester vòng 3 đo trên bản cũ 20/75 nút có
+     vạch lấn sang lòng đường khác hay chồng vạch khác (356 vạch, sâu tới 2,9 m), có nhánh kẻ hai vạch nối đuôi, 200/226 nhánh xe
+     vào nút có đèn có vạch; bảng mới: 0 vạch lấn (đo mọi góc của 1 116 vạch), 210/226 nhánh (92,9%); 16 nhánh còn lại không
+     có chỗ kẻ mà không lấn đường khác.
    - *Chia pha theo phương của nhánh, ít xung đột nhất*: thử mọi cách cắt vòng phương làm hai cung, phạt hai nhánh cùng pha
      mà cắt nhau và hai nhánh khác pha mà gần song song. Hai phố cắt nhau không bao giờ chung pha, hai nhánh chụm góc hẹp
      luôn chung pha (trước đây chia cứng ở ±45° quanh trục chính nên ngã năm có nhánh chạy trong khi nhánh sát bên đỏ).
@@ -274,16 +284,27 @@ thứ quyết định độ mượt và đo được khách quan. Nên chạy th
 - **Hộ chiếu**: 44 điểm chia năm trang (Hồ Gươm, Phố cổ, Khu phố Pháp, Ba Đình, Hồ Tây). Tới địa danh là đóng
   dấu và nhận 20k tiền mừng; đủ một trang thưởng 50k. Món ăn phải dừng lại bấm E và trả tiền (15k tới 45k).
   Điểm chưa tới có cột sáng trong mờ dẫn đường từ xa (địa danh 32 m, món ăn 20 m): lại gần thì cột tan dần (dưới 30 m gần
-  như không còn, từ 110 m rõ hẳn) để không che mặt Lăng, Quốc hội...; ban đêm chỉ sáng hơn ban ngày một chút; tắt hẳn được
-  trong ⚙️ (Cột đánh dấu điểm đến, lưu `hn-beacons`).
+  như không còn, từ 110 m rõ hẳn) để không che mặt công trình; ban đêm cột mờ hơn ban ngày một chút; ba điểm trang nghiêm (Lăng,
+  quảng trường Ba Đình, Phủ Chủ tịch) không có cột sáng (QC vòng 3: cột xanh trước Lăng lúc tối lạc lõng), vẫn có trên bản đồ và
+  trong sổ; tắt hẳn được trong ⚙️ (Cột đánh dấu điểm đến, lưu `hn-beacons`).
 - **Xe máy** (F): ga, phanh, lái; Shift tăng ga; Space bóp còi. Xe ở xa thì Minh tự dắt lại.
 - **Xe ôm**: khách đứng vẫy ở vòng vàng, tạt vào bấm E để đón, chở tới vòng xanh. Tiền công theo quãng đường,
   thưởng theo độ êm. Ba hạng: xe ôm phố cổ (3 cuốc), xe ôm thạo đường (10), thổ địa Hà Nội (25).
 - **Giờ trong ngày** chạy liên tục (một giờ game dài sáu phút); N để nhảy tới sáng, trưa, chiều vàng, đêm.
-- **Bản đồ** (M): bấm vào điểm đã có dấu để đi nhanh. Chỗ đứng tính sẵn thường sát bậc thềm, nên tới nơi game lùi người
-  chơi ra tới 24 m kể từ mốc (theo hướng từ mốc về chỗ đứng, nếu đường lùi thông, chỗ mới không ở lòng đường xe chạy và sau
-  lưng còn 4,6 m thông cho camera) rồi quay mặt về địa danh: Nhà hát Lớn 20 m, Nhà thờ Lớn 12 m thay vì 4 m nhìn vào chân tường;
-  thẻ địa danh của chỗ cũ đóng lại. **Chụp ảnh** (P): ẩn giao diện, Enter để lưu ảnh.
+- **Bản đồ** (M): bấm vào điểm đã có dấu để đi nhanh tới **chỗ đứng ngắm** của điểm đó (trường `v = [x, z, hướng]` của
+  places.json, `tools/views.mjs` tính lúc dựng dữ liệu bằng đúng va chạm của game): không ở lòng đường xe chạy (cách mép làn
+  ≥ 0,5 m), không trên làn cầu, đứng được, đi bộ ra được đường; camera 4,4 m sau lưng không vướng tường, không có gốc cây trong
+  dải 3,8 m quanh 7 m đầu tầm nhìn. Theo loại điểm: công trình dựng tay thì nhìn vào mặt tiền (nón ±60°), khoảng cách tới hộp bao
+  của mô hình chừng 1,15 × chiều cao; toà nhà không có mô hình riêng thì chọn đúng toà nhà theo tên trong dữ liệu (Phủ Chủ Tịch,
+  Nhà tù Hỏa Lò, Nhà thờ Cửa Bắc, Ga Long Biên...; Hoàng thành là Đoan Môn), lấy điểm mẫu trên mặt tường ngoài, chọn chỗ thấy
+  được nhiều điểm mẫu nhất trong khung (tia không bị tường, tán cây chắn) rồi quay mặt về giữa phần tường thấy được; hồ thì đứng
+  bờ nhìn ra phía nhiều mặt nước nhất (Tháp Rùa: bờ gần nhất cách tháp chừng 75 m); cầu Long Biên, Chương Dương thì đứng trên bãi
+  dưới cầu nhìn chếch dọc nhịp; phố và món ăn thì đứng trên vỉa hè sát mép (phố đi bộ thì đứng ngay trên phố, phố Đường Tàu thì
+  cạnh đường ray) nhìn dọc phố, đúng con phố theo tên (phố sách là phố 19 Tháng 12, không phải phố Đinh Lễ cách 550 m). Tester
+  vòng 3 đo trên bản cũ 9/44 điểm thả người chơi giữa lòng đường đang có xe, cầu Long Biên và Chương Dương thả lên làn xe máy,
+  điểm nào chỗ đứng trùng điểm đóng dấu thì tới nơi không quay mặt về địa danh (không thấy Tháp Rùa, quay lưng lại Lăng); bản
+  mới: 0/44 trong lòng đường. Lời nhắc "Xe ôm chở tới ..." thay ngay lời nhắc đi nhanh trước (trước đây đi nhanh hai lần liền
+  thì hiện tên điểm cũ). Thẻ địa danh của chỗ cũ đóng lại. **Chụp ảnh** (P): ẩn giao diện, Enter để lưu ảnh.
 - **Song ngữ** Việt, Anh (L hoặc ⚙️). **Điện thoại**: nửa trái màn hình là cần điều khiển, nửa phải để nhìn.
 - Tiến độ, vị trí, giờ và cài đặt lưu trong trình duyệt. Không quảng cáo, không thu thập dữ liệu.
 

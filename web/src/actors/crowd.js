@@ -17,6 +17,7 @@ const EARTH = [[0.2, 0.1, 0.07], [0.12, 0.08, 0.16], [0.05, 0.07, 0.16], [0.08, 
 const PASTEL = [[0.9, 0.9, 0.87], [0.9, 0.9, 0.87], [0.85, 0.62, 0.7], [0.62, 0.72, 0.85], [0.85, 0.8, 0.55], [0.7, 0.85, 0.74], [0.75, 0.2, 0.2]];
 const PACKS = [[0.05, 0.05, 0.06], [0.1, 0.2, 0.5], [0.55, 0.1, 0.1], [0.4, 0.35, 0.22], [0.75, 0.3, 0.5], [0.1, 0.35, 0.2]];
 const pick = (l) => l[Math.floor(Math.random() * l.length)];
+const BEER = [-31.2, -696.6]; // ngã tư Tạ Hiện - Lương Ngọc Quyến (điểm hộ chiếu pho_ta_hien, public/world/places.json)
 const KIND = { local: 0, office: 1, student: 2, tourist: 3, vendor: 4, sweeper: 5, jogger: 6, seated: 7, exercise: 8, idle: 9 };
 const CLIP = { walk: 0, idle: 1, sit: 2, sit2: 3, taichi: 4, swing: 5, jog: 6, carry: 7 };
 
@@ -45,7 +46,7 @@ export class Crowd {
   constructor(scene, world, nav, humanLod, quality, humanFar, humanFull) {
     this.nav = nav; this.world = world; this.max = quality.crowd; // max: số người vẽ đủ chi tiết; tổng số người gấp 3,2 lần (người ở xa là lưới 630 tam giác)
     const total = Math.round(quality.crowd * 3.2) + 2;
-    const cap = Math.round(total * 1.5); // tối phố đi bộ quanh hồ đông gấp rưỡi ngày thường
+    const cap = Math.round(total * 3); // tối phố đi bộ đông gấp ba ngày thường (step: boost)
     this.cast = new Cast(scene, humanLod, humanFar || humanLod, humanFull || humanLod, quality, { near: quality.crowd + 2, far: cap, kit: cap });
     this.nearR2 = (quality.name === 'high' ? 22 : quality.name === 'low' ? 11 : 16) ** 2;
     this.bake = this.cast.bake; this.idleRow = this.cast.rows.idle[0];
@@ -82,6 +83,7 @@ export class Crowd {
     this.people = []; this.near = []; this.nearT = 0; this.time = 0; this.frame = 0; this.mix = crowdMix(ZONE.old, 12, false); this.lake = false; this.hours = 12; this.seatMiss = 0; this.gymMiss = 0; this.seatOff = -1; this.gymOff = -1;
     this._o = [0, 0, 0, 0]; this._pt = { x: 0, z: 0 }; this._cam = { x: 0, z: 0, fx: 0, fz: 1 };
     this.walkOn = false; // phố đi bộ đang mở (lớp ngoài gán): trên các phố đó người đi cả dưới lòng đường
+    this.walkNear = false; this.beer = false; // đang ở gần phố đi bộ đang mở / phố bia Tạ Hiện buổi tối (tính lại 1,5 giây một lần)
   }
   lakeNear(x, z, pad) { for (const w of this.lakes) if (x > w.bb[0] - pad && x < w.bb[2] + pad && z > w.bb[1] - pad && z < w.bb[3] + pad) return true; return false; }
 
@@ -108,6 +110,9 @@ export class Crowd {
     else if (k === KIND.jogger) { a.tint = pick(BRIGHT); a.tint2 = DARK[0]; style = (r() < 0.65 ? STYLE.shorts : 0) | (r() < 0.6 ? STYLE.noTail : 0) | (r() < 0.25 ? T * 3 : 0); }
     else if (k === KIND.exercise) { a.tint = pick(PASTEL); a.tint2 = r() < 0.5 ? DARK[0] : PASTEL[0]; style = (r() < 0.7 ? STYLE.sleeve : 0) | (r() < 0.6 ? T * 3 : 0) | (r() < 0.5 ? STYLE.noTail : 0); a.scale = 0.88 + r() * 0.1; }
     else if (r() < 0.12) { a.props |= r() < 0.6 ? PROP.bag : PROP.cap; a.ptint = pick(PACKS); }
+    // Người chơi (Minh) mặc áo đen, buộc tóc, cùng mẫu người với đám đông: không cho người đi đường trùng đúng tổ hợp ấy (QC vòng 3 thấy
+    // một "bản sao" đứng ngay cạnh người chơi). Áo tối màu thì không buộc tóc.
+    if (a.tint && a.tint[0] * 0.3 + a.tint[1] * 0.59 + a.tint[2] * 0.11 < 0.2) style |= STYLE.noTail;
     a.style = style;
   }
 
@@ -126,13 +131,21 @@ export class Crowd {
     if (d < (this.warming ? 6 : 14) || d > 95) return false;
     if (cam && !this.warming && d < 45 && (x - cam.x) * cam.fx + (z - cam.z) * cam.fz > 0 && Math.random() < 0.8) return false;
     const pt = this._pt; pt.x = x; pt.z = z; if (this.nav.collide(pt, 0.3) || this.nav.isWater(x, z)) return false;
+    // người trên vỉa hè: từ mép đường tới chỗ đứng không cắt bức tường nào (hè hẹp thì làn đi xa mép đường đã nằm trong nhà)
+    if (!path.foot && !mall && !this.nav.freeStep(o[0] - o[3] * Math.sign(lat) * (path.r.w / 2 + 0.2), o[1] + o[2] * Math.sign(lat) * (path.r.w / 2 + 0.2), x, z, 0.25)) return false;
     const a = this.person(kind, x, z, Math.random() * 6.28);
     a.path = path; a.s = s; a.dir = Math.random() < 0.5 ? 1 : -1; a.lat = lat; a.mall = mall;
-    if ((kind === KIND.local || kind === KIND.tourist) && (path.plaza ? Math.random() < 0.3 : kind === KIND.local && !path.foot && Math.random() < 0.16)) { a.kind = KIND.idle; a.stat = true; a.v = 0; } // đứng chờ, đứng xem hàng, đứng chuyện trên quảng trường
+    // đứng chờ, đứng xem hàng, đứng chuyện trên quảng trường: chỉ khi chỗ đó không thuộc lòng đường xe chạy (lối đi bộ vẽ đè lên lòng
+    // đường, miệng nút giao loe rộng: tester vòng 3 thấy người đứng yên 0,6–0,7 m trong lòng đường Lê Thái Tổ, Hàng Trống)
+    if ((kind === KIND.local || kind === KIND.tourist) && (path.plaza ? Math.random() < 0.3 : kind === KIND.local && !path.foot && Math.random() < 0.16) && !this.onCarriage(x, z)) { a.kind = KIND.idle; a.stat = true; a.v = 0; }
     else { a.clip = kind === KIND.vendor ? CLIP.carry : kind === KIND.jogger ? CLIP.jog : CLIP.walk; a.v = kind === KIND.vendor ? 0.85 + Math.random() * 0.25 : kind === KIND.sweeper ? 0.5 + Math.random() * 0.2 : kind === KIND.jogger ? 2.3 + Math.random() * 0.7 : kind === KIND.tourist ? 0.8 + Math.random() * 0.3 : kind === KIND.student ? 1.1 + Math.random() * 0.4 : 0.9 + Math.random() * 0.5; }
     this.dress(a); this.people.push(a); return true;
   }
-  ok(x, z) { const pt = this._pt; pt.x = x; pt.z = z; return !this.nav.collide(pt, 0.32) && !this.nav.isWater(x, z) && !this.nav.onRoad(x, z); }
+  // chỗ đặt người đứng yên: không chạm tường, không dưới nước, không trong lòng đường; có (kx, kz) thì từ đó tới chỗ đứng không cắt
+  // tường (khách quán cóc trên hè hẹp từng bị đặt vào trong nhà: tester vòng 3, (−32,7; −486,5), (−26,1; −393,1))
+  ok(x, z, kx, kz) { const pt = this._pt; pt.x = x; pt.z = z; return !this.nav.collide(pt, 0.32) && !this.nav.isWater(x, z) && !this.nav.onRoad(x, z) && (kx === undefined || this.nav.freeStep(kx, kz, x, z, 0.2)); }
+  // (x, z) nằm trong lòng một đường xe chạy (mặt đường thấp hơn vỉa hè, hay cách tim một đường xe dưới nửa bề rộng + 0,2 m)
+  onCarriage(x, z) { if (this.nav.onRoad(x, z)) return true; const h = this.nav.nearestRoad(x, z, 15, (r) => r.veh && !r.elev); return !!h && h.d < h.r.w / 2 + 0.2; }
   visible(x, z, px, pz, cam, near) { const d = Math.hypot(x - px, z - pz); return !this.warming && cam && d < near && (x - cam.x) * cam.fx + (z - cam.z) * cam.fz > 0; }
   // Khách ngồi ghế đẩu cạnh một quán cóc: hai bên dãy bàn của quán, quay mặt vào nhau; có khi thêm một người đứng chờ.
   spawnStall(px, pz, cam) {
@@ -143,17 +156,18 @@ export class Crowd {
     if (!st) return 0;
     const rd = this.nav.nearestRoad(st.x, st.z, 22, (r) => r.veh && r.kind <= K.residential); if (!rd || rd.d < 0.5) { st.bad = true; return 0; }
     const ux = (st.x - rd.px) / rd.d, uz = (st.z - rd.pz) / rd.d, bx = rd.px + ux * (rd.r.w / 2 + 1.05), bz = rd.pz + uz * (rd.r.w / 2 + 1.05), tx = uz, tz = -ux; // tx,tz: dọc theo phố
+    const kx = rd.px + ux * (rd.r.w / 2 + 0.25), kz = rd.pz + uz * (rd.r.w / 2 + 0.25); // mép vỉa hè ngay trước quán
     // khách ngồi vào các chỗ quanh bàn của đúng quán này (cùng bố cục với bàn ghế dựng sẵn: world/stalls.js), quay mặt vào bàn
-    const lay = stallLayout(st.i * 3), seed = st.i * 131 + 7, red = lay.red, n = Math.min(lay.seats.length, 1 + Math.floor(hash(seed, 1) * 3.6)), first = Math.floor(hash(seed, 2) * lay.seats.length); let made = 0;
+    const lay = stallLayout(st.i * 3), seed = st.i * 131 + 7, red = lay.red, n = this.beer ? lay.seats.length : Math.min(lay.seats.length, 1 + Math.floor(hash(seed, 1) * 3.6)), first = Math.floor(hash(seed, 2) * lay.seats.length); let made = 0;
     for (let k = 0; k < n; k++) {
-      const [lx, lz, tbl] = lay.seats[(first + k) % lay.seats.length], x = bx + tx * lx + ux * lz, z = bz + tz * lx + uz * lz; if (!this.ok(x, z)) continue;
+      const [lx, lz, tbl] = lay.seats[(first + k) % lay.seats.length], x = bx + tx * lx + ux * lz, z = bz + tz * lx + uz * lz; if (!this.ok(x, z, kx + tx * lx, kz + tz * lx)) continue;
       const fx = tx * (tbl - lx) - ux * lz, fz = tz * (tbl - lx) - uz * lz; // hướng từ ghế tới bàn
       const a = this.person(KIND.seated, x, z, Math.atan2(fx, fz) + (hash(seed, 30 + k) - 0.5) * 0.5);
       a.kind = Math.random() < 0.25 ? KIND.tourist : Math.random() < 0.4 ? KIND.office : KIND.local; this.dress(a); a.kind = KIND.seated;
       a.props = (a.props & (PROP.cap | PROP.scarf)) | PROP.stool; a.ptint = red ? STOOL_RED : STOOL_BLUE; a.clip = hash(seed, 40 + k) < 0.4 ? CLIP.sit2 : CLIP.sit; a.stat = true; a.v = 0; a.anchor = st;
       this.people.push(a); made++;
     }
-    if (made && hash(seed, 3) < 0.4) { const x = bx + ux * 0.9 + tx * (hash(seed, 4) - 0.5) * 2, z = bz + uz * 0.9 + tz * (hash(seed, 4) - 0.5) * 2; if (this.ok(x, z)) { const a = this.person(KIND.idle, x, z, Math.atan2(-ux, -uz)); this.dress(a); a.stat = true; a.v = 0; a.anchor = st; this.people.push(a); made++; } }
+    if (made && hash(seed, 3) < 0.4) { const x = bx + ux * 0.9 + tx * (hash(seed, 4) - 0.5) * 2, z = bz + uz * 0.9 + tz * (hash(seed, 4) - 0.5) * 2; if (this.ok(x, z, kx + tx * (hash(seed, 4) - 0.5) * 2, kz + tz * (hash(seed, 4) - 0.5) * 2)) { const a = this.person(KIND.idle, x, z, Math.atan2(-ux, -uz)); this.dress(a); a.stat = true; a.v = 0; a.anchor = st; this.people.push(a); made++; } }
     if (made) st.used = true; else st.bad = true;
     return made;
   }
@@ -164,7 +178,9 @@ export class Crowd {
     let sp = null, cnt = 0; const lim = Math.random() < 0.75 ? 130 : 240;
     // lúc rải người ban đầu (vào game, đi nhanh tới nơi) chỗ tập nằm trong tầm mắt được chọn trước gấp bốn: ra tới bờ hồ lúc rạng sáng
     // là thấy ngay các tốp tập, không phải quay camera tìm
-    for (const q of this.spots) { if (q.used) continue; const d = Math.hypot(q.x - px, q.z - pz); if (d > lim || d < (this.warming ? 8 : 16)) continue;
+    // (chỗ tập cách một tốp đang tập dưới 12 m thì bỏ: hai tốp đứng sát nhau thì người hai tốp chồng lên nhau, tester vòng 3)
+    const busy = this.spots.filter((q) => q.used && Math.abs(q.x - px) < lim + 12 && Math.abs(q.z - pz) < lim + 12);
+    for (const q of this.spots) { if (q.used) continue; const d = Math.hypot(q.x - px, q.z - pz); if (d > lim || d < (this.warming ? 8 : 16) || busy.some((u) => (u.x - q.x) ** 2 + (u.z - q.z) ** 2 < 144)) continue;
       const w = this.warming && cam && d < 90 && (q.x - cam.x) * cam.fx + (q.z - cam.z) * cam.fz > 0.5 * Math.hypot(q.x - cam.x, q.z - cam.z) ? 4 : 1; cnt += w; if (Math.random() * cnt < w) sp = q; }
     if (!sp || this.visible(sp.x, sp.z, px, pz, cam, 60)) return 0;
     const n = Math.min(room, 4 + Math.floor(Math.random() * 6)), cols = n > 6 ? 4 : 3, clip = Math.random() < 0.65 ? CLIP.taichi : CLIP.swing, phase = Math.random(), yaw = Math.atan2(sp.nx, sp.nz), tx = -sp.nz, tz = sp.nx; let made = 0;
@@ -191,7 +207,10 @@ export class Crowd {
       this.nearT = 1.5; this.near.length = 0;
       const zone = zoneAt(px, pz); this.lake = this.lakeNear(px, pz, 150); this.mix = crowdMix(zone, hours, this.lake);
       const shoreBoost = this.lake && (hours < 7.6 || hours >= 17) ? 2.2 : 1;
-      for (const path of this.paths) { const b = path.r.bb; if (b[0] < px + 95 && b[2] > px - 95 && b[1] < pz + 95 && b[3] > pz - 95) { const n = Math.max(1, Math.round((path.len / 40) * (path.foot ? 2.5 * (path.shore ? shoreBoost : 1) : path.zone === ZONE.old ? 2 : path.r.kind >= K.residential ? 0.6 : 1))); for (let i = 0, m = this.walkOn && (path.r.walk || path.plaza) ? n * 5 : n; i < m; i++) this.near.push(path); } }
+      this.walkNear = false;
+      for (const path of this.paths) { const b = path.r.bb; if (b[0] < px + 95 && b[2] > px - 95 && b[1] < pz + 95 && b[3] > pz - 95) { const n = Math.max(1, Math.round((path.len / 40) * (path.foot ? 2.5 * (path.shore ? shoreBoost : 1) : path.zone === ZONE.old ? 2 : path.r.kind >= K.residential ? 0.6 : 1))); const mall = this.walkOn && (path.r.walk || path.plaza); if (mall && path.r.walk) this.walkNear = true; for (let i = 0, m = mall ? n * 10 : n; i < m; i++) this.near.push(path); } }
+      // phố bia Tạ Hiện (ngã tư Tạ Hiện - Lương Ngọc Quyến, toạ độ của điểm hộ chiếu pho_ta_hien): tối nào cũng kín ghế nhựa
+      this.beer = (hours >= 18 || hours < 0.5) && Math.hypot(px - BEER[0], pz - BEER[1]) < 160;
     }
     // huỷ người đã ra xa; tốp tập thể dục tan khi hết giờ (lúc khuất mắt)
     let seated = 0, gym = 0;
@@ -204,8 +223,12 @@ export class Crowd {
     // sinh thêm cho đủ số theo giờ
     // Phần ngồi quán và phần tập thể dục có suất riêng (không bị người đi bộ chiếm hết chỗ); quanh đây không có quán, không có bờ hồ
     // thì sau vài chục lần thử hụt, suất đó trả lại cho người đi bộ trong 20 giây.
-    const total = Math.round(this.max * 3.2 * (this.walkOn && this.lake ? 1.5 : 1)), N = Math.max(4, Math.round(total * this.mix.f)); // tối phố đi bộ quanh hồ đông hơn hẳn
-    const seatQ = T0 < this.seatOff ? 0 : Math.round(N * this.mix.seat), gymQ = T0 < this.gymOff ? 0 : Math.round(N * this.mix.gym), walkQ = N - Math.max(0, seatQ - seated) - Math.max(0, gymQ - gym);
+    // Tối phố đi bộ (phố đi bộ đang mở ở gần) đông gấp ba, phố bia Tạ Hiện buổi tối đông gấp 2,5 và quá nửa là khách ngồi quán (QC vòng
+    // 3: tối thứ Bảy lòng phố Đinh Tiên Hoàng chỉ 3–4 người, Hàng Đào chừng 5; Tạ Hiện 21 giờ thứ Tư gần như vắng). Người ở xa là lưới
+    // 630 tam giác dựng chung một lệnh vẽ, nên thêm người chủ yếu tốn phần cập nhật vị trí (chừng 3 µs một người mỗi khung).
+    const boost = this.walkNear ? 3 : this.beer ? 2.5 : this.walkOn && this.lake ? 1.5 : 1;
+    const total = Math.round(this.max * 3.2 * boost), N = Math.max(4, Math.round(total * this.mix.f));
+    const seatQ = T0 < this.seatOff ? 0 : Math.round(N * (this.beer ? Math.max(0.55, this.mix.seat) : this.mix.seat)), gymQ = T0 < this.gymOff ? 0 : Math.round(N * this.mix.gym), walkQ = N - Math.max(0, seatQ - seated) - Math.max(0, gymQ - gym);
     for (let k = 0; k < (this.warming ? 6 : 3); k++) {
       if (gym < gymQ && P.length < total) { const m = this.spawnGroup(px, pz, cam, Math.min(total - P.length, gymQ - gym + 3)); gym += m; if (m) this.gymMiss = 0; else if (++this.gymMiss > 30) { this.gymMiss = 0; this.gymOff = T0 + 20; } }
       if (seated < seatQ && P.length < total) { const m = this.spawnStall(px, pz, cam); seated += m; if (m) this.seatMiss = 0; else if (++this.seatMiss > 60) { this.seatMiss = 0; this.seatOff = T0 + 20; } }
@@ -229,9 +252,19 @@ export class Crowd {
         this.at(a.path, a.s, o);
         const tx = o[2] * a.dir, tz = o[3] * a.dir, gx = o[0] - tz * a.lat, gz = o[1] + tx * a.lat, k = 1 - Math.exp(-dt * 5);
         a.x += (gx - a.x) * k; a.z += (gz - a.z) * k;
-        // không đi xuyên qua người chơi: ai lọt vào vòng quanh người chơi (0,55 m đi bộ, 0,9 m trên xe) bị đẩy ra mép vòng
-        { const ex = a.x - px, ez = a.z - pz, rr = player.mode === 'bike' ? 0.9 : 0.55, e2 = ex * ex + ez * ez; if (e2 < rr * rr && Math.abs((player.y || 0) - a.y) < 1.5) { const e = Math.sqrt(e2) || 1e-3; a.x = px + (ex / e) * rr; a.z = pz + (ez / e) * rr; } }
-        if (pd2 < 484 && (i + this.frame) % 2 === 0) { const pt = this._pt; pt.x = a.x; pt.z = a.z; if (nav.collide(pt, 0.28)) { a.x = pt.x; a.z = pt.z; } }
+        // không đi xuyên qua người chơi: đi bộ thì ai lọt vào vòng 0,55 m quanh người chơi bị đẩy ra mép vòng; ngồi trên xe thì đẩy ra
+        // khỏi hình con nhộng bán kính 0,5 m bọc thân xe (đoạn ±0,85 m dọc hướng xe): vòng tròn quanh tâm không phủ hai đầu xe, người đi
+        // ngang sát bánh trước, bánh sau từng lọt qua thân xe (tester vòng 3: 56 lượt-khung cách trục xe 0,05 m)
+        if (Math.abs((player.y || 0) - a.y) < 1.5) {
+          const ex = a.x - px, ez = a.z - pz;
+          if (player.mode === 'bike') {
+            const fx = Math.sin(player.yaw), fz = Math.cos(player.yaw), t = clamp(ex * fx + ez * fz, -0.85, 0.85), qx = px + fx * t, qz = pz + fz * t, rx = a.x - qx, rz = a.z - qz, e2 = rx * rx + rz * rz;
+            if (e2 < 0.25) { const e = Math.sqrt(e2); if (e > 1e-3) { a.x = qx + (rx / e) * 0.5; a.z = qz + (rz / e) * 0.5; } else { const sd = -ex * fz + ez * fx >= 0 ? 1 : -1; a.x = qx - fz * sd * 0.5; a.z = qz + fx * sd * 0.5; } }
+          } else { const e2 = ex * ex + ez * ez; if (e2 < 0.3025) { const e = Math.sqrt(e2) || 1e-3; a.x = px + (ex / e) * 0.55; a.z = pz + (ez / e) * 0.55; } }
+        }
+        // va chạm tường: trong 22 m quanh người chơi hai khung một lần, xa hơn tám khung một lần (người ở xa từng đi lấn vào tường nhà
+        // 0,2–2 m chỗ hè hẹp: tester vòng 3). Vướng tường thì làn đi dạt dần về phía mép đường (không thấp hơn mép vỉa hè + 0,4 m).
+        if ((i + this.frame) % (pd2 < 484 ? 2 : 8) === 0) { const pt = this._pt; pt.x = a.x; pt.z = a.z; if (nav.collide(pt, 0.28)) { a.x = pt.x; a.z = pt.z; if (!a.path.foot && !a.mall) { const m = a.path.r.w / 2 + 0.4, al = Math.abs(a.lat); if (al > m) a.lat = Math.sign(a.lat) * Math.max(m, al - 0.15); } } }
         if (v > 0.05) a.yaw = dampAngle(a.yaw, Math.atan2(tx, tz), 6, dt);
         if (v <= 0.05) row = this.idleRow;
         else if (a.clip === CLIP.jog) row = R.jog[0] + Math.floor((((a.dist / (C.jogStride * a.scale) + a.phase) % 1) + 1) % 1 * JOG_FRAMES);

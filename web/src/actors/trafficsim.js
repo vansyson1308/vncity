@@ -125,7 +125,9 @@ export class TrafficSim {
       const p = r.p, cum = [0]; for (let i = 0; i < p.length - 2; i += 2) cum.push(cum[cum.length - 1] + Math.hypot(p[i + 2] - p[i], p[i + 3] - p[i + 1]));
       const mi = (p.length >> 2) << 1, zone = zoneAt(p[mi], p[mi + 1]);
       // tốc độ dòng xe của phố (m/s): phố cổ 15-30 km/h, trục chính 30-40 km/h
-      const vb = zone === ZONE.old ? (r.kind <= K.tertiary ? 6.6 : 5.4) : r.kind <= K.secondary ? 9.6 : r.kind === K.tertiary ? 7.8 : 5.6;
+      // làn xe máy trên cầu (Long Biên: dữ liệu ghi là đường nhỏ) không có ngõ, không có người qua đường: chạy như phố cấp 3 (28 km/h)
+      // chứ không như ngõ nhỏ 20 km/h (QC vòng 3: cả hàng xe lên dốc cầu Long Biên rì rì 7–18 km/h, người chơi kẹt phía sau)
+      const vb = zone === ZONE.old ? (r.kind <= K.tertiary ? 6.6 : 5.4) : r.kind <= K.secondary ? 9.6 : r.kind === K.tertiary || r.elev ? 7.8 : 5.6;
       const e = { r, p, cum, len: cum[cum.length - 1], w: r.w, kind: r.kind, oneway: r.flags & F_ONEWAY ? (r.flags & F_REVERSE ? -1 : 1) : 0, n0: find(key(p[0], p[1])), n1: find(key(p[p.length - 2], p[p.length - 1])), i: this.edges.length, zone, vb,
         route: ROUTE.has(world.names[r.name]) && r.w >= 6, cx: (r.bb[0] + r.bb[2]) / 2, cz: (r.bb[1] + r.bb[3]) / 2, wt: 0.5, wn: 0.5, cor: false };
       this.edges.push(e);
@@ -294,7 +296,9 @@ export class TrafficSim {
     }
     for (const e of this.near) {
       const lanes = (e.kind <= K.secondary ? 3 : e.kind === K.tertiary ? 2 : 1) * (e.w < 4.5 ? 0.3 : 1);
-      if (e.cor) { const d = Math.hypot(e.cx - px, e.cz - pz); e.wt = e.len * Math.max(1, e.w / 7) * (d > 200 ? 0.4 : 1); ctot += e.wt; cap += (e.len * Math.max(1, e.w - 1)) / (e.oneway ? 17 : 38); e.wn = 0; } // sức chứa tính bằng "xe máy quy đổi": phố hai chiều chứa ít hơn
+      // sức chứa tính bằng "xe máy quy đổi": phố hai chiều chứa ít hơn; làn hẹp dưới 4,5 m (làn xe máy trên cầu) chỉ một hàng xe, không
+      // có chỗ vượt: chứa một nửa (từng thành hàng xe nối đuôi kín dốc cầu Long Biên)
+      if (e.cor) { const d = Math.hypot(e.cx - px, e.cz - pz); e.wt = e.len * Math.max(1, e.w / 7) * (d > 200 ? 0.4 : 1); ctot += e.wt; cap += ((e.len * Math.max(1, e.w - 1)) / (e.oneway ? 17 : 38)) * (e.w < 4.5 ? 0.5 : 1); e.wn = 0; }
       else { const d = Math.hypot(e.cx - px, e.cz - pz); e.wn = e.len * lanes * (d < 60 ? 1 : Math.max(0.06, 1 - (d - 60) / 130)); tot += e.wn; e.wt = 0; }
     }
     this.nearW = tot; this.corW = ctot; this.hours = hours; this.density = densityAt(hours); this.corRoute = !!start && start.route;
