@@ -1,16 +1,17 @@
 // Kiểm tra lối đi: mỗi điểm đóng dấu hộ chiếu phải có chỗ đứng được trong bán kính đóng dấu, và từ chỗ đó phải đi bộ
-// ra được mạng đường xe chạy. Dùng đúng dữ liệu va chạm của game (tường nhà, tường rào, bờ nước, khối công trình,
+// ra được mạng đường xe chạy; chỗ đứng ngắm khi đi nhanh (v) phải đứng được, nối ra đường, ngoài lòng đường xe chạy. Dùng đúng dữ liệu va chạm của game (tường nhà, tường rào, bờ nước, khối công trình,
 // mặt cầu Thê Húc) và đúng hàm Nav.collide mà người chơi dùng, loang trên lưới 0,4 m.
 // Dùng: node tools/reach_check.mjs [id ...] [--verbose]    Mã thoát 1 nếu có điểm không tới được.
 import fs from 'node:fs';
-import { decodeWorld, CS, K } from '../src/world/data.js';
+import { decodeWorld, CS, K, CURB } from '../src/world/data.js';
 import { Nav } from '../src/world/nav.js';
 import { buildContext } from '../src/world/gen/context.js';
 import { genGround } from '../src/world/gen/ground.js';
 import { genBuildings } from '../src/world/gen/buildings.js';
 import { genProps } from '../src/world/gen/props.js';
-import { resolveSites, siteCollision, siteDecks } from '../src/world/landmarks/sites.js';
+import { resolveSites, siteCollision, siteDecks, modelPads } from '../src/world/landmarks/sites.js';
 import { G } from '../src/core/geo.js';
+import { STEP_UP } from '../src/actors/physics.js';
 
 const world = decodeWorld(JSON.parse(fs.readFileSync(new URL('../public/world/hanoi.json', import.meta.url), 'utf8')));
 const places = JSON.parse(fs.readFileSync(new URL('../public/world/places.json', import.meta.url), 'utf8')).items;
@@ -18,25 +19,39 @@ const sites = resolveSites(world), ctx = buildContext(world, sites), nav = new N
 for (const d of siteDecks(sites)) nav.addDeck(d);
 for (const s of sites) { // va chạm của công trình dựng tay, tính y như trong game (landmarks/index.js)
   const g = new G(); try { (await import(`../src/world/landmarks/${s.id}.js`)).build(g, { lf: new G() }); } catch (e) { console.warn('không dựng được', s.id, e.message); }
-  const col = siteCollision(s, g.pos); if (col.length) nav.addChunk('lm:' + s.id, col, new Float32Array(0));
+  const col = siteCollision(s, g.pos, g.idx); if (col.length) nav.addChunk('lm:' + s.id, col, new Float32Array(0));
+  const pads = modelPads(s, g.pos, g.idx, CURB + (s.lift || 0)); if (pads) nav.addPads(pads); // mặt bậc thềm, nền thấp (y như landmarks/index.js)
 }
 
 export const STEP = 0.4, R = 0.3;
 const loaded = new Set();
+// gốc cây của các ô đã nạp [x, z] (chọn chỗ đứng ngắm khi đi nhanh: tools/views.mjs tránh tán cây sát ống kính)
+export const trees = [];
+const mark = (k, x, z) => { if (k === 'tree') trees.push([x, z]); };
 function need(x, z) { // nạp va chạm của ô phố chứa (x,z) và các ô kề nếu ở sát mép
   for (const [dx, dz] of [[0, 0], [1.5, 0], [-1.5, 0], [0, 1.5], [0, -1.5]]) {
     const cx = Math.floor((x + dx - B.x0) / CS), cz = Math.floor((z + dz - B.z0) / CS), k = cx * 1000 + cz;
     if (loaded.has(k) || cx < 0 || cz < 0 || cx >= world.nx || cz >= world.nz) continue; loaded.add(k);
-    const b = genBuildings(ctx, cx, cz), p = genProps(ctx, cx, cz, b), g = genGround(ctx, cx, cz);
+    const b = genBuildings(ctx, cx, cz), p = genProps(ctx, cx, cz, b, { mark }), g = genGround(ctx, cx, cz);
     let walls = p.extra && p.extra.walls;
     if (g.ramp.length) { const w = new Float32Array((walls ? walls.length : 0) + g.ramp.length); if (walls) w.set(walls); w.set(g.ramp, walls ? walls.length : 0); walls = w; }
     nav.addChunk(k, b.col, g.shore, walls);
   }
 }
-// trong lòng khối đặc của một công trình dựng tay (các hình chữ nhật va chạm của nó)
-const modelRects = [];
-for (const c of nav.chunks) if (String(c[0]).startsWith('lm:')) { const sg = c[1].segs; for (let i = 0; i < sg.length; i += 20) modelRects.push([sg[i], sg[i + 1], sg[i + 5], sg[i + 6], sg[i + 10], sg[i + 11], sg[i + 15], sg[i + 16]]); }
-const inModel = (x, z) => modelRects.some((q) => { let s = 0; for (let k = 0; k < 4; k++) { const ax = q[k * 2], az = q[k * 2 + 1], bx = q[(k * 2 + 2) % 8], bz = q[(k * 2 + 3) % 8], c = (bx - ax) * (z - az) - (bz - az) * (x - ax); if (c > 0) s++; else if (c < 0) s--; } return Math.abs(s) === 4; });
+// nạp mọi ô phố phủ hình vuông cạnh 2r quanh (x, z)
+export function load(x, z, r) { for (let a = x - r; a <= x + r + 1e-6; a += CS / 2) for (let b = z - r; b <= z + r + 1e-6; b += CS / 2) need(a, b); need(x + r, z + r); }
+// trong lòng khối đặc của một công trình dựng tay: đếm chẵn lẻ số lần bốn tia dọc trục cắt các đoạn va chạm của công trình (đường viền
+// mặt bằng mô hình, hay các khối `solid`: vòng khép kín); cần ít nhất ba tia lẻ, như nav.inSolid
+const modelSegs = []; for (const [k, c] of nav.chunks) if (String(k).startsWith('lm:')) modelSegs.push(c.segs);
+const inModel = (x, z) => {
+  let px = 0, nx = 0, pz = 0, nz = 0;
+  for (const s of modelSegs) for (let i = 0; i < s.length; i += 5) {
+    const ax = s[i], az = s[i + 1], bx = s[i + 2], bz = s[i + 3];
+    if ((az > z) !== (bz > z)) { const xi = ax + ((z - az) * (bx - ax)) / (bz - az); if (xi > x) px++; else nx++; }
+    if ((ax > x) !== (bx > x)) { const zi = az + ((x - ax) * (bz - az)) / (bx - ax); if (zi > z) pz++; else nz++; }
+  }
+  return (px & 1) + (nx & 1) + (pz & 1) + (nz & 1) >= 3;
+};
 const pt = { x: 0, z: 0 };
 // Đứng được tại (x,z): không bị tường đẩy đi, không ở dưới nước (trừ khi đang trên mặt cầu đi bộ).
 export function standable(x, z) {
@@ -52,21 +67,32 @@ const onStreet = (x, z) => { const h = nav.nearestRoad(x, z, 12, (r) => r.veh &&
 // ----- liên thông với mạng đường -----
 // Lưới toàn cục bước 0,4 m. connected(x,z): từ ô này có đi bộ ra được lòng đường xe chạy không (loang một hạt giống,
 // nhớ kết quả theo từng vùng liên thông nên hỏi nhiều lần vẫn nhanh).
+// Người chơi đi từ a sang b được không theo cao độ: không bước lên gờ cao quá STEP_UP (như actors/player.js), dò từng 0,1 m.
+export function climbOK(xa, za, xb, zb) {
+  let y = nav.groundY(xa, za, 0);
+  for (let k = 1; k <= 4; k++) { const t = k / 4, h = nav.groundY(xa + (xb - xa) * t, za + (zb - za) * t, 0); if (h - y > STEP_UP) return false; y = h; }
+  return true;
+}
+// Loang ngược từ ô cần tới ra phía đường: ô kề n được thêm khi người chơi đi từ n sang ô đang xét được (bước xuống thì luôn được, bước
+// lên thì không quá STEP_UP). Lối đi có hướng nên chỉ nhớ "tới được" cho các ô nằm trên đường đi tìm thấy (đi từ đường tới chúng được),
+// còn khi không tìm thấy đường thì mọi ô đã loang đều không tới được (từ chúng đi tới ô đầu được, nên nếu đường tới được chúng thì cũng
+// tới được ô đầu).
 const gi = (v) => Math.round(v / STEP), gkey = (i, j) => i * 100003 + j, good = new Set(), bad = new Set();
 export function connected(x, z, maxR = 300) {
   const i0 = gi(x), j0 = gi(z), k0 = gkey(i0, j0);
   if (good.has(k0)) return true; if (bad.has(k0)) return false;
   if (!standable(i0 * STEP, j0 * STEP)) return false;
-  const seen = new Set([k0]), q = [i0, j0], lim = Math.floor(maxR / STEP); let ok = false;
+  const seen = new Map([[k0, -1]]), q = [i0, j0], lim = Math.floor(maxR / STEP); let ok = false, end = -1;
   for (let h = 0; h < q.length && !ok; h += 2) {
     const i = q[h], j = q[h + 1];
-    if (good.has(gkey(i, j)) || onStreet(i * STEP, j * STEP)) { ok = true; break; }
+    if (good.has(gkey(i, j)) || onStreet(i * STEP, j * STEP)) { ok = true; end = h; break; }
     for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
       const a = i + di, b = j + dj, k = gkey(a, b); if (seen.has(k) || bad.has(k) || Math.abs(a - i0) > lim || Math.abs(b - j0) > lim) continue;
-      seen.add(k); if (standable(a * STEP, b * STEP)) q.push(a, b);
+      if (standable(a * STEP, b * STEP) && climbOK(a * STEP, b * STEP, i * STEP, j * STEP)) { seen.set(k, h); q.push(a, b); }
     }
   }
-  const into = ok ? good : bad; for (let h = 0; h < q.length; h += 2) into.add(gkey(q[h], q[h + 1]));
+  if (ok) { for (let h = end; h >= 0; h = seen.get(gkey(q[h], q[h + 1]))) good.add(gkey(q[h], q[h + 1])); }
+  else for (let h = 0; h < q.length; h += 2) bad.add(gkey(q[h], q[h + 1]));
   return ok;
 }
 // Chỗ đứng thoáng: cả vòng tròn bán kính `clear` quanh điểm đều đứng được (để đặt người chơi khi đi nhanh).
@@ -117,6 +143,14 @@ if (process.argv[1] && import.meta.url.endsWith(process.argv[1].split('/').pop()
     // chỗ đặt người chơi khi đi nhanh: phải thoáng, nối ra đường (hoặc trên mặt cầu), và nằm trong bán kính đóng dấu
     if (!p.s) { fails++; console.error(`✗ ${p.id}: thiếu chỗ đứng khi đi nhanh (trường s)`); }
     else if (!(onBridge(p.s[0], p.s[1]) || (roomy(p.s[0], p.s[1], 0.6) && connected(p.s[0], p.s[1])))) { fails++; console.error(`✗ ${p.id}: chỗ đứng khi đi nhanh (${p.s}) bị kẹt hoặc không nối ra đường`); }
+    // chỗ đứng ngắm khi đi nhanh bằng bản đồ (tools/views.mjs): đứng được, đi bộ ra được đường, không ở lòng đường xe chạy, không trên làn cầu
+    if (!p.v) { fails++; console.error(`✗ ${p.id}: thiếu chỗ đứng ngắm (trường v)`); }
+    else {
+      // (nav.nearestRoad trả về cùng một đối tượng mỗi lần gọi, roomy/connected cũng gọi nó: chép khoảng cách ra trước)
+      const [vx, vz] = p.v; need(vx, vz); const h = nav.nearestRoad(vx, vz, 25, (r) => r.veh && !r.skip && !r.elev), inLane = !!h && h.d < h.r.w / 2 + 0.4;
+      const why = !(roomy(vx, vz, 0.45) && connected(vx, vz)) ? 'bị kẹt hoặc không nối ra đường' : nav.onRoad(vx, vz) || inLane ? 'nằm trong lòng đường xe chạy' : onBridge(vx, vz) ? 'nằm trên làn xe của cầu' : '';
+      if (why) { fails++; console.error(`✗ ${p.id}: chỗ đứng ngắm (${p.v}) ${why}`); }
+    }
   }
   console.log(`${places.length} điểm hộ chiếu, ${fails} lỗi (${((performance.now() - t0) / 1000).toFixed(1)} s)`);
   if (fails) process.exit(1);

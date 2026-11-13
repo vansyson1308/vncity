@@ -40,7 +40,11 @@ if (q.has('tags')) { // tô màu theo chất liệu để xem mặt nào đã g�
   geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
   mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
   scene.add(new THREE.HemisphereLight(0xffffff, 0x555555, 1.2));
-} else mesh = new THREE.Mesh(propGeometry(pack), isLm ? M.landmark : M.prop);
+} else {
+  // công trình khai mức đèn pha riêng (landmarks/lighting.js) thì soi bằng đúng mức ấy, như trong game (landmarks/index.js)
+  const fl = isLm ? (await mods[`../src/world/landmarks/${name.slice(3)}.js`]()).flood : 0;
+  mesh = new THREE.Mesh(propGeometry(pack), !isLm ? M.prop : fl ? M.makeProp({ side: THREE.DoubleSide, detail: true, flood: fl, cut: true }) : M.landmark);
+}
 mesh.castShadow = mesh.receiveShadow = true; scene.add(mesh);
 if (q.has('wire')) { const w = new THREE.LineSegments(new THREE.WireframeGeometry(mesh.geometry), new THREE.LineBasicMaterial({ color: 0x00ffaa, transparent: true, opacity: 0.35 })); scene.add(w); }
 if (lf.count) { const lm = new THREE.Mesh(propGeometry(lf.pack()), M.leaf); lm.castShadow = true; scene.add(lm); }

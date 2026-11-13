@@ -1,8 +1,9 @@
 // Chỉ mục không gian và các thuộc tính suy ra (số tầng, kiểu nhà) tính một lần khi worker khởi động.
 import ClipperLib from 'clipper-lib';
 import { hash, pointInRing, segDist2 } from '../../core/util.js';
-import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn, roadY } from '../data.js';
+import { CS, K, CAT, ST, ZONE, zoneAt, F_BRIDGE, isVehicle, isSolemn, roadY, alongAt, chuongDuongMid, CD_TRUSS_S } from '../data.js';
 import { sitePaths } from '../landmarks/sites.js';
+import { resolveHeroes } from './heroes.js';
 
 export const CL = ClipperLib;
 const PT = CL.PolyType, CT = CL.ClipType, FT = CL.PolyFillType;
@@ -45,8 +46,17 @@ class Grid {
   collect(x0, z0, x1, z1) { const s = new Set(); this.query(x0, z0, x1, z1, (v) => s.add(v)); return s; }
 }
 
+const MAX_H = 112; // trong khung bản đồ không có toà nào cao quá khoảng 110 m (docs/18, mục 3.5)
+// Mặt bằng mô hình của các công trình dựng tay kín (hộp bao trong toạ độ mô hình [x0, z0, x1, z1], mét, đo bằng tools/studio.mjs).
+// Mô hình có thềm, bậc tam cấp, sân rộng hơn khối nhà trong dữ liệu bản đồ: trong phạm vi này không trồng cây, không đặt đồ đạc phố.
+// Tháp Rùa không ghi ở đây (gò đảo có cây thật); công trình hở (cổng, cầu) tính theo các khối đặc `solid` trong landmarks/sites.js.
+const LM_FOOT = {
+  ly_thai_to: [-6.1, -6.1, 6.1, 6.8], nha_tho_lon: [-11.3, -32.6, 11.3, 33.8], nha_hat_lon: [-15.4, -43.9, 15.4, 43.5], cho_dong_xuan: [-36.8, -37.8, 36.8, 30.6],
+  ga_ha_noi: [-50.5, -11.5, 50.5, 14.4], lang_bac: [-41.2, -20.6, 41.2, 23.9], cot_co: [-21.3, -21.3, 21.3, 26.1], thap_tran_quoc: [-3.1, -2.7, 3.1, 2.7],
+};
 const FLOORS = {
-  [ZONE.old]: [2, 3, 3, 3, 4, 4, 5], [ZONE.french]: [2, 3, 3, 4, 4, 5], [ZONE.badinh]: [2, 2, 3, 3, 4], [ZONE.city]: [3, 4, 4, 5, 5, 6], [ZONE.bank]: [2, 3, 3, 4],
+  [ZONE.old]: [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6], // art bible 3.1: 2 tầng 25%, 3 tầng 30%, 4 tầng 25%, 5-6 tầng 20%
+  [ZONE.french]: [2, 3, 3, 4, 4, 5], [ZONE.badinh]: [2, 2, 3, 3, 4], [ZONE.city]: [3, 4, 4, 5, 5, 6], [ZONE.bank]: [2, 3, 3, 4],
 };
 
 // Khoảng cách nhỏ nhất giữa hai đoạn thẳng 2D (0 nếu cắt nhau).
@@ -97,6 +107,8 @@ export function buildContext(world, landmarks = []) {
 
   // ----- cầu nâng: đường bộ và đường sắt có cao độ (xem computeElevation trong data.js) -----
   ctx.elevRoads = roads.filter((r) => r.elev && !r.skip); ctx.elevRails = world.rails.filter((r) => r.elev);
+  // lòng giữa cầu Chương Dương và hoành độ chỗ dàn thép bắt đầu (bộ dựng mặt cầu đặt trụ theo nhịp dàn từ đó ra sông)
+  { const cd = chuongDuongMid(world); if (cd && cd.r.elev && cd.r.len > CD_TRUSS_S) { const o = [0, 0, 0, 0, 0]; alongAt(cd.r, cd.rev ? cd.r.len - CD_TRUSS_S : CD_TRUSS_S, o); ctx.cdMid = { r: cd.r, rev: cd.rev, x0: o[0] }; } else ctx.cdMid = null; }
   const elevAll = [...ctx.elevRoads, ...ctx.elevRails];
   // Cao độ mặt cầu cao nhất phủ lên điểm (x,z) (cộng lề pad), 0 nếu không có cầu. except: bỏ qua đoạn này.
   ctx.deckAt = (x, z, pad = 0, except = null, only = null) => {
@@ -164,11 +176,26 @@ export function buildContext(world, landmarks = []) {
     }
     return false;
   };
+  // Điểm (x,z) nằm trong phạm vi một công trình dựng tay (thềm Lăng, bậc Nhà hát Lớn, trụ cổng...): chỗ không được trồng cây, đặt đồ.
+  const lmBox = [];
+  for (const l of landmarks) {
+    const c = Math.cos(l.yaw), sn = Math.sin(l.yaw);
+    for (const [q, pad] of l.solid ? l.solid.map((q) => [q, 0.5]) : !l.open && LM_FOOT[l.id] ? [[LM_FOOT[l.id], 1]] : [])
+      lmBox.push({ x: l.x, z: l.z, c, sn, x0: q[0] - pad, z0: q[1] - pad, x1: q[2] + pad, z1: q[3] + pad, r2: (Math.max(-q[0], q[2]) + pad) ** 2 + (Math.max(-q[1], q[3]) + pad) ** 2 });
+  }
+  ctx.keepOut = (x, z) => {
+    for (const q of lmBox) { const dx = x - q.x, dz = z - q.z; if (dx * dx + dz * dz > q.r2) continue; const lx = dx * q.c - dz * q.sn, lz = dx * q.sn + dz * q.c; if (lx > q.x0 && lx < q.x1 && lz > q.z0 && lz < q.z1) return true; }
+    return false;
+  };
   ctx.bldGrid = new Grid(32);
   ctx.chunkBld = new Map();
   const { x0, z0 } = world.bounds;
+  // công trình có tên (bảng gen/heroes.js): ghi đè số tầng, màu, kiểu mặt đứng; nhà đã phá dỡ thì bỏ hẳn
+  const heroes = resolveHeroes(world); ctx.heroes = heroes; ctx.plazas = [];
   for (const b of buildings) {
     b.zone = zoneAt(b.cx, b.cz);
+    const hero = heroes.get(b) || null;
+    if (hero && hero.gone) { b.skip = true; b.ghost = false; b.height = 0; ctx.plazas.push({ b, hero }); continue; }
     // công trình có mô hình dựng tay thì bỏ khối nhà OSM tương ứng
     const lm = landmarks.find((l) => (l.names && l.names.includes(world.names[b.name])) || (l.clear && Math.hypot(b.cx - l.x, b.cz - l.z) < l.clear));
     b.skip = !!lm; b.ghost = lm && !lm.open;
@@ -195,26 +222,93 @@ export function buildContext(world, landmarks = []) {
         if (b.area < 22) floors = Math.min(floors, 2); else if (b.area > 260) floors = Math.min(Math.max(floors, 3), 5);
         const colonial = b.zone === ZONE.french ? 0.42 : b.zone === ZONE.badinh ? 0.55 : b.zone === ZONE.old ? 0.08 : 0.05;
         style = r2 < colonial ? ST.FRENCH : ST.TUBE; if (style === ST.FRENCH) { fh = 3.8; floors = Math.min(floors, 4); }
+        // nhà ống: mỗi nhà một chiều cao tầng; dãy nhà vẽ gộp thì nền chung chỉ 2 tầng, từng lô nhô cao riêng (gen/buildings.js)
+        else { fh = 3.05 + hash(b.i, 8) * 0.6; if (b.area > 140) floors = 2; }
       }
     }
     if (b.lv > 0) floors = b.lv;
     let h = b.h > 0 ? b.h : floors * fh + (style === ST.TEMPLE ? 0 : 0.4);
+    // nhà cao tầng: chiều cao ghi trong dữ liệu mà vượt 3,9 m mỗi tầng là ghi sai (hai toà ở Yên Phụ ghi 147 m cho 33 tầng):
+    // tính lại theo số tầng (3,3 m mỗi tầng, cộng 4 m khối đế)
+    if (b.lv >= 12 && b.h > b.lv * 3.9) h = b.lv * 3.3 + 4;
     if (b.h > 0 && !b.lv) floors = Math.max(1, Math.round(b.h / fh));
     b.solemn = isSolemn(b.cx, b.cz);
     if (b.solemn && (style === ST.TUBE || style === ST.APART || style === ST.MODERN)) { style = ST.FRENCH; fh = 3.8; floors = Math.min(floors, 3); h = b.h > 0 ? Math.min(b.h, 14) : floors * fh + 0.4; }
+    // Khu trang nghiêm: công trình nhỏ không tên, bản đồ không ghi số tầng (bốt gác, nhà phụ: dưới 30 m², hoặc dưới 60 m² nằm trên thảm cỏ,
+    // trong vườn) dựng thấp một tầng, kín đáo; trước đây mặt bằng 20 m² cũng thành "biệt thự Pháp" ba tầng. Nhà nhỏ trong vườn (dưới 140 m²,
+    // như nhà sàn) và nhà mặt bằng dưới 60 m² không quá hai tầng.
+    if (b.solemn && !hero && !b.lv && !(b.h > 0) && (b.cat === CAT.house || b.cat === CAT.small)) {
+      const garden = b.area < 140 && !!ctx.isGreen(b.cx, b.cz);
+      if (b.name < 0 && (b.area < 30 || (b.area < 60 && garden))) { style = ST.SMALL; fh = 3; floors = 1; h = 3.2; }
+      else if ((garden || b.area < 60) && floors > 2) { floors = 2; h = floors * fh + 0.4; } // mặt bằng dưới 60 m² mà cao ba, bốn tầng thì thành tháp
+    }
     if (b.cat === CAT.house && floors >= 9) style = ST.MODERN;       // nhà cao tầng gắn thẻ building=yes
     if (style === ST.MODERN && floors < 6 && b.area < 400) style = ST.TUBE; // khách sạn, cửa hàng trong nhà ống
-    b.style = style; b.floors = Math.max(1, Math.min(floors, 80)); b.height = Math.min(h, 260);
+    if (hero) { // bảng công trình có tên
+      if (hero.style !== undefined) style = hero.style;
+      if (hero.floors) floors = hero.floors;
+      if (hero.h) h = hero.h; else if (hero.floors) h = hero.floors * (hero.fh || fh) + 0.4;
+      b.hero = hero;
+    }
+    b.style = style; b.floors = Math.max(1, Math.min(floors, 80)); b.height = Math.min(h, MAX_H);
     // mái: nhà ống phố cổ hay lợp ngói dốc, nhà mới mái bằng hoặc tôn
     const r3 = hash(b.i, 3);
+    const leafy = b.zone === ZONE.french || b.zone === ZONE.badinh, rowTube = style === ST.TUBE && b.area > 140;
     b.roof = style === ST.TEMPLE || style === ST.CHURCH ? ST.ROOF_TILE
       : style === ST.MARKET || b.cat === CAT.roof ? ST.ROOF_TIN
-      : (style === ST.TUBE || style === ST.FRENCH) && b.floors <= 4 && r3 < (b.zone === ZONE.old ? 0.4 : b.zone === ZONE.french || b.zone === ZONE.badinh ? 0.5 : 0.15) ? ST.ROOF_TILE
+      : style === ST.FRENCH && b.floors <= 4 && r3 < (leafy ? 0.88 : 0.6) ? ST.ROOF_TILE       // biệt thự Pháp: mái ngói đỏ bốn mái
+      : style === ST.PUBLIC && leafy && b.floors <= 4 && b.area < 3000 && r3 < 0.62 ? ST.ROOF_TILE // công sở, trường học thời Pháp
+      : style === ST.TUBE && !rowTube && b.floors <= 4 && r3 < (b.zone === ZONE.old ? 0.4 : leafy ? 0.5 : 0.15) ? ST.ROOF_TILE
       : r3 > 0.86 ? ST.ROOF_TIN : ST.ROOF_FLAT;
+    if (hero && hero.roof !== undefined) b.roof = hero.roof;
     ctx.bldGrid.addBox(...b.bb, b);
     const k = Math.floor((b.cx - x0) / CS) * 1000 + Math.floor((b.cz - z0) / CS);
     let l = ctx.chunkBld.get(k); if (!l) ctx.chunkBld.set(k, (l = [])); l.push(b);
   }
+  // ----- nhà nằm lọt trong nhà khác -----
+  // Dữ liệu bản đồ hay vẽ một phần của toà nhà (khối đế, tầng mái, nhà phụ, sân trong có mái) thành một hình riêng nằm trong hình
+  // của toà chính, có cạnh trùng cạnh toà chính. Hai hình cùng dựng tường ở cạnh trùng thì hai mặt đứng nằm đúng một mặt phẳng và
+  // nhấp nháy (z-fighting, ví dụ mặt tiền Bưu điện Hà Nội). Nhà lọt hẳn trong một nhà lớn hơn mà không cao hơn nó quá 1 m thì bỏ:
+  // toà chính đã che hết, còn một hộp ló lên vài chục cm trên mái trông như lỗi. Nhà lọt trong mà cao hẳn hơn (tháp trên khối đế)
+  // thì giữ; tường ở cạnh trùng do ctx.coEdge dưới đây và gen/buildings.js xử lý.
+  const nearRing = (x, z, r, tol) => { for (let k = 0, n = r.length; k < n; k += 2) { const j = (k + 2) % n; if (segDist2(x, z, r[k], r[k + 1], r[j], r[j + 1]) < tol * tol) return true; } return false; };
+  const within = (b, a) => { let inn = 0; const n = b.p.length / 2; for (let k = 0; k < b.p.length; k += 2) if (pointInRing(b.p[k], b.p[k + 1], a.p) || nearRing(b.p[k], b.p[k + 1], a.p, 0.05)) inn++; return inn >= n * 0.9 && pointInRing(b.cx, b.cz, a.p); };
+  // ovl: các toà chồng hẳn lên toà này (không chỉ chạm mép như hai nhà liền vách): có điểm của toà này, lùi vào trong 0,3 m, nằm
+  // trong toà kia. Chỉ những toà như thế mới cần soát tường chung (ctx.coEdge), nên bộ sinh không phải tra lưới ở mọi bức tường.
+  // Điểm thử của mỗi toà (giữa từng cạnh, lùi vào 0,3 m, nằm trong chính toà đó) chỉ phụ thuộc toà đó nên tính một lần; với mỗi cặp
+  // chỉ còn thử điểm có nằm trong toà kia không (điểm ngoài hộp bao của toà kia thì bỏ qua ngay).
+  const probePts = (b) => {
+    if (b._pp) return b._pp;
+    const r = b.p, n = r.length, out = [];
+    for (let k = 0; k < n; k += 2) { const j = (k + 2) % n, x = (r[k] + r[j]) / 2, z = (r[k + 1] + r[j + 1]) / 2, ex = r[j] - r[k], ez = r[j + 1] - r[k + 1], l = Math.hypot(ex, ez) || 1;
+      for (let sg = 1; sg >= -1; sg -= 2) { const px = x - (ez / l) * 0.3 * sg, pz = z + (ex / l) * 0.3 * sg; if (pointInRing(px, pz, r)) out.push(px, pz); } }
+    return (b._pp = out);
+  };
+  const probe = (b, a) => { const P = probePts(b), q = a.bb; for (let k = 0; k < P.length; k += 2) { const px = P[k], pz = P[k + 1]; if (px >= q[0] && px <= q[2] && pz >= q[1] && pz <= q[3] && pointInRing(px, pz, a.p)) return true; } return false; };
+  for (const b of buildings) {
+    if (b.skip || b.cat === CAT.roof || !(b.height > 0)) continue;
+    let host = null;
+    ctx.bldGrid.query(b.bb[0], b.bb[1], b.bb[2], b.bb[3], (a) => {
+      if (a === b || a.skip || a.cat === CAT.roof || a.bb[0] > b.bb[2] - 0.2 || a.bb[2] < b.bb[0] + 0.2 || a.bb[1] > b.bb[3] - 0.2 || a.bb[3] < b.bb[1] + 0.2) return;
+      if (!b.hero && !host && a.area > b.area && !(b.bb[0] < a.bb[0] - 0.1 || b.bb[1] < a.bb[1] - 0.1 || b.bb[2] > a.bb[2] + 0.1 || b.bb[3] > a.bb[3] + 0.1) && within(b, a)) host = a;
+      if ((probe(b, a) || probe(a, b)) && !(b.ovl && b.ovl.includes(a))) (b.ovl || (b.ovl = [])).push(a);
+    });
+    if (host && b.height <= host.height + 1.0) { b.skip = true; b.ghost = false; b.coveredBy = host.i; }
+  }
+  for (const b of buildings) b._pp = undefined;
+  // Toà khác (chưa bị bỏ, chồng lên self) có một cạnh ngoài trùng với cạnh của self qua điểm giữa cạnh (mx, mz) và phủ lên phía
+  // trong của cạnh đó (điểm thử ix, iz cách cạnh vài chục cm vào trong self). Có nhiều toà thì lấy toà cao nhất.
+  ctx.coEdge = (mx, mz, ix, iz, self) => {
+    if (!self.ovl) return null;
+    let hit = null;
+    for (const b of self.ovl) {
+      if (b.skip || (hit && hit.height >= b.height)) continue;
+      if (ix < b.bb[0] || ix > b.bb[2] || iz < b.bb[1] || iz > b.bb[3] || !pointInRing(ix, iz, b.p) || !nearRing(mx, mz, b.p, 0.03)) continue;
+      hit = b;
+    }
+    return hit;
+  };
+
   // Toà nhà chứa điểm (x,z), bỏ qua toà `self`.
   ctx.buildingAt = (x, z, self) => {
     let hit = null;

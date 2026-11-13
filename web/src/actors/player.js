@@ -7,7 +7,12 @@ import { G } from '../core/geo.js';
 import { motorbike } from '../models/vehicles.js';
 import { propGeometry } from '../world/materials.js';
 import { bakePose, appendBaked } from './humans.js';
-import { BIKE, WALK, bikeMass, bikeStep, bikeCurvature, leanFor, wallHit, stepUp, approach } from './physics.js';
+import { BIKE, WALK, STEP_UP, bikeMass, bikeStep, bikeCurvature, leanFor, wallHit, stepUp, approach } from './physics.js';
+
+// (STEP_UP: bước lên cao nhất mỗi bước chân, physics.js)
+// Xe máy: nảy qua bó vỉa (0,15 m) được, nhưng không leo lên bậc thềm, nền cao của công trình (cao hơn mặt hè quá 0,1 m): tester vòng 5
+// thấy xe phóng 43 km/h lên bậc thềm 0,6 m của ga Hà Nội.
+const BIKE_UP = 0.2, BIKE_PAD = CURB + 0.1;
 
 // Tốc độ gốc của các đoạn hoạt hình (m/s), đo từ chuyển động gốc trong tệp mô hình.
 const CLIP_SPEED = { walk: 1.01, jog: 2.4, run: 2.9 };
@@ -32,6 +37,7 @@ export class Player {
     this.mode = 'walk'; this.lean = 0; this.steer = 0; this.wobble = 0; this.bump = 0; this.passenger = false;
     this.onCrash = null; this.onStep = null; this.onCurb = null; this.stepPhase = 0;
     this.noRide = null; // hàm (x,z) → true nếu khu vực cấm xe
+    this.noEnter = null; this.barred = false; // noEnter(x,z): khu xe không được chạy vào (phố đi bộ đang đóng): tới ranh là xe dừng như gặp rào
 
     this.root = new THREE.Group(); this.root.rotation.order = 'YXZ'; scene.add(this.root);
     this.model = gltf.scene; this.root.add(this.model);
@@ -66,8 +72,12 @@ export class Player {
 
   teleport(x, z, yaw = this.yaw, onDeck = true) {
     // onDeck: đặt lên mặt cầu nếu điểm đó có cầu (đi nhanh tới một điểm trên cầu); mặc định đặt xuống đất
+    if (!Number.isFinite(x) || !Number.isFinite(z)) return; // toạ độ hỏng thì đứng yên chỗ cũ
+    if (!Number.isFinite(yaw)) yaw = Number.isFinite(this.yaw) ? this.yaw : 0;
     this.pos.x = x; this.pos.z = z; this.yaw = yaw; this.speed = 0; this.vx = this.vz = 0; this.phi = 0; this.curv = 0; this.lean = 0; this.y = this.nav.groundY(x, z, onDeck ? Infinity : 0);
-    if (this.mode === 'walk') { this.bikePos.x = x + Math.cos(yaw) * 1.1; this.bikePos.z = z - Math.sin(yaw) * 1.1; this.bikePos.yaw = yaw; this.bikePos.y = undefined; }
+    this._good = { x, z, y: this.y, yaw }; // trạng thái tốt để quay về nếu số hỏng lọt vào sau này
+    // dựng xe cạnh người: bên trái nếu trống, không thì phía khác; không bao giờ đặt xe sang bên kia một bức tường hay xuống nước
+    if (this.mode === 'walk') { this.beside(x, z, yaw, 1.1, 0.4); this.bikePos.x = this._col.x; this.bikePos.z = this._col.z; this.bikePos.yaw = yaw; this.bikePos.y = undefined; }
     this.sync(0);
   }
 
@@ -75,19 +85,44 @@ export class Player {
     if (this.mode === 'bike') {
       if (Math.abs(this.speed) > 3) return 'fast';
       this.mode = 'walk'; this.bikePos.x = this.pos.x; this.bikePos.z = this.pos.z; this.bikePos.y = this.y; this.bikePos.yaw = this.yaw; this.speed = 0;
-      // bước xuống bên trái xe
-      const p = this._col; p.x = this.pos.x + Math.cos(this.yaw) * 0.75; p.z = this.pos.z - Math.sin(this.yaw) * 0.75; this.nav.collide(p, 0.3, false, this.y); this.pos.x = p.x; this.pos.z = p.z;
+      // bước xuống bên trái xe; bên trái là tường hay mép nước thì xuống phía còn trống, hết chỗ thì đứng tại chỗ xe
+      const p = this.beside(this.pos.x, this.pos.z, this.yaw, 0.75, 0.3); this.pos.x = p.x; this.pos.z = p.z;
       this.helmet.visible = false; return 'off';
     }
     if (this.noRide && this.noRide(this.pos.x, this.pos.z)) return 'forbidden';
-    // xe ở xa thì Minh dắt xe lại: đặt xe ngay chỗ đang đứng
+    // xe ở xa, hoặc bị tường hay mép nước ngăn cách, thì Minh dắt xe lại: đặt xe ngay chỗ đang đứng
     this.mode = 'bike'; this.speed = 0; this.lean = 0; this.phi = 0; this.curv = 0; this.pitch = 0; this.helmet.visible = true;
-    if (Math.hypot(this.bikePos.x - this.pos.x, this.bikePos.z - this.pos.z) < 4) { this.pos.x = this.bikePos.x; this.pos.z = this.bikePos.z; this.yaw = this.bikePos.yaw; }
+    const bp = this.bikePos;
+    if (Math.hypot(bp.x - this.pos.x, bp.z - this.pos.z) < 4 && (this.onHigh(this.pos.x, this.pos.z) || this.nav.freeStep(this.pos.x, this.pos.z, bp.x, bp.z, 0.3))) { this.pos.x = bp.x; this.pos.z = bp.z; this.yaw = bp.yaw; }
     return 'on';
+  }
+
+  // đang ở trên mặt cầu nâng: tường nhà dưới gầm cầu không tính, lan can cầu do `collide` giữ
+  onHigh(x, z) { const n = this.nav; return n.hasElev && this.y > 0.7 && !!n.elevatedAt(x, z, this.y, 3) && n.eY > 0.7; }
+
+  // Bước tới (x, z) được không, khi chân đang ở mặt cao g0: tâm không bước lên quá STEP_UP; trong tám điểm quanh thân (cách tâm
+  // 0,25 m), số điểm nằm trên mặt cao quá STEP_UP không được tăng so với chỗ đang đứng (lấn sâu thêm vào gờ thì số đó tăng).
+  stepOK(x, z, g0) {
+    const n = this.nav, y = this.y; if (n.groundY(x, z, y) - g0 > STEP_UP) return false;
+    if (!n.pads.length) return true;
+    let c1 = 0, c0 = 0;
+    for (let k = 0; k < 8; k++) { const ax = Math.cos(k * 0.785) * 0.25, az = Math.sin(k * 0.785) * 0.25; if (n.groundY(x + ax, z + az, y) - g0 > STEP_UP) c1++; if (n.groundY(this.pos.x + ax, this.pos.z + az, y) - g0 > STEP_UP) c0++; }
+    return c1 <= c0;
+  }
+
+  // Chỗ trống cạnh điểm (x,z) hướng yaw, cách d mét, cho vòng tròn bán kính r (kết quả ở this._col).
+  beside(x, z, yaw, d, r) {
+    const p = this._col;
+    if (this.onHigh(x, z)) { p.x = x + Math.cos(yaw) * d; p.z = z - Math.sin(yaw) * d; this.nav.collide(p, r, false, this.y); return p; }
+    this.nav.besideFree(x, z, yaw, d, r, p); return p;
   }
 
   update(dt, input, camYaw) {
     if (this.mode === 'bike') this.updateBike(dt, input, camYaw); else this.updateWalk(dt, input, camYaw);
+    // phòng số hỏng (NaN, vô cực) lọt vào toạ độ: quay về trạng thái tốt gần nhất thay vì làm hỏng cả khung hình
+    const G = this._good || (this._good = { x: this.pos.x, z: this.pos.z, y: this.y, yaw: this.yaw });
+    if (Number.isFinite(this.pos.x) && Number.isFinite(this.pos.z) && Number.isFinite(this.y) && Number.isFinite(this.yaw) && Number.isFinite(this.speed)) { G.x = this.pos.x; G.z = this.pos.z; G.y = this.y; G.yaw = this.yaw; }
+    else { this.pos.x = G.x; this.pos.z = G.z; this.y = G.y; this.yaw = G.yaw; this.speed = 0; this.phi = 0; this.curv = 0; this.lean = 0; this.pitch = 0; this.accel = 0; }
     this.sync(dt);
   }
 
@@ -104,6 +139,15 @@ export class Player {
     const p = this._col, step = this.speed * dt;
     p.x = this.pos.x + Math.sin(this.yaw) * step; p.z = this.pos.z + Math.cos(this.yaw) * step;
     if (this.nav.collide(p, 0.3, false, this.y)) this.speed = Math.min(this.speed, Math.hypot(p.x - this.pos.x, p.z - this.pos.z) / Math.max(dt, 1e-4) + 0.3); // bị tường cản: chỉ còn phần trượt dọc tường
+    // Gờ cao quá một bậc trước mặt: như gặp tường, chỉ còn phần trượt dọc gờ (thử từng trục), không thì đứng lại. Xét cả thân người
+    // (tám điểm cách tâm 0,25 m): không lấn sâu thêm vào gờ cao (đứng ở chân bệ tượng mà nửa thân lọt vào trong bệ là "lún chân"), còn
+    // đi dọc gờ hay đi ra xa gờ thì được.
+    const g0 = this.nav.groundY(this.pos.x, this.pos.z, this.y);
+    if (!this.stepOK(p.x, p.z, g0)) {
+      if (this.stepOK(p.x, this.pos.z, g0)) p.z = this.pos.z;
+      else if (this.stepOK(this.pos.x, p.z, g0)) p.x = this.pos.x;
+      else { p.x = this.pos.x; p.z = this.pos.z; this.speed = Math.min(this.speed, 0.3); }
+    }
     this.pos.x = p.x; this.pos.z = p.z;
     this.y = damp(this.y, this.nav.groundY(p.x, p.z, this.y), 14, dt);
     this.lean = 0; this.pitch = 0; this.accel = 0;
@@ -143,6 +187,12 @@ export class Player {
         const tx = -this.nav.nz, tz = this.nav.nx, side = Math.sin(this.yaw) * tx + Math.cos(this.yaw) * tz >= 0 ? 1 : -1;
         this.yaw = dampAngle(this.yaw, Math.atan2(tx * side, tz * side), 6 * into, dt);
       }
+      // phố đi bộ đang đóng: xe đang ở ngoài thì dừng ở ranh như gặp rào (muốn vào thì xuống xe đi bộ); xe lỡ ở sẵn bên trong lúc
+      // phố đóng thì vẫn dắt ra được (giới hạn tốc độ của noRide ở dưới)
+      if (this.noEnter && this.noEnter(p.x, p.z) && !this.noEnter(this.pos.x, this.pos.z)) { v = 0; this.barred = true; break; }
+      // bậc thềm, nền cao trước bánh trước: như đâm vào tường thẳng góc (xe khựng lại, nhanh thì nảy và rung)
+      { const g0 = this.nav.groundY(this.pos.x, this.pos.z, this.y), g1 = this.nav.groundY(p.x, p.z, this.y);
+        if (g1 - g0 > BIKE_UP || (g1 > BIKE_PAD && g1 - g0 > 0.05 && this.nav.padY(p.x, p.z) >= g1 - 1e-3)) { const [nv, vn] = wallHit(v, 1); if (vn > 2.2) hitN = Math.max(hitN, vn); v = nv; break; } }
       this.pos.x = p.x; this.pos.z = p.z;
     }
     if (hitN > 0) { this.wobble = Math.min(1, hitN / 6); this.phi *= 0.3; this.onCrash && this.onCrash(hitN); }

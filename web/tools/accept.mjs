@@ -2,15 +2,17 @@
 //   a1  đi bộ từ trước cổng đền qua cổng, lên cầu Thê Húc, sang đảo; phải nhận đủ hai dấu cau_the_huc và den_ngoc_son
 //   a2  ép nhân vật vào tường ở các điểm từng bị đen màn hình rồi xoay camera đủ 360°: không khung hình nào đen
 //   a3  đi nhanh lần lượt tới cả 44 điểm: không kẹt trong vật thể, không đen màn hình
+//   d1  hướng đi theo phím ở 4 góc camera, camera hồi phục sau khi sát tường, thông báo khi không có WebGL2
 //   b1  (gồm cả B2, B4, C3, C5 đến C10) khách ngồi sau, HUD ở 1140 × 670, âm thanh và hai công tắc, các lỗi nhẹ
+//   w1  phố đi bộ tối cuối tuần: rào, không xe, không lên xe được, người đi dưới lòng đường, đồng hồ có thứ
 // Dùng: node tools/accept.mjs [a1] [a2] [a3] [thư mục ảnh]     (CHROME_PATH để chỉ định trình duyệt)
 import { chromium } from 'playwright';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const args = process.argv.slice(2), want = (k) => !args.some((a) => /^[a-c]\d+$/.test(a)) || args.includes(k);
-const DIST = path.resolve('dist'), OUT = path.resolve(args.find((a) => !/^[a-c]\d+$/.test(a)) || 'shots');
+const args = process.argv.slice(2), want = (k) => !args.some((a) => /^[a-dw]\d+$/.test(a)) || args.includes(k);
+const DIST = path.resolve('dist'), OUT = path.resolve(args.find((a) => !/^[a-dw]\d+$/.test(a)) || 'shots');
 fs.mkdirSync(OUT, { recursive: true });
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary', '.woff2': 'font/woff2', '.woff': 'font/woff', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg' };
 const server = http.createServer((req, res) => {
@@ -126,6 +128,117 @@ if (want('a3')) {
   if (!bad) ok(`A3: đi nhanh tới cả ${ids.length} điểm, không kẹt, không đen màn hình, đứng trong tầm đóng dấu`);
   await page.close();
 }
+// ----- D (đợt QC thứ hai): hướng đi theo phím, camera hồi phục, báo lỗi khi không có WebGL -----
+if (want('d1')) {
+  const page = await open('d1', '&at=150,-150');
+  // D1: ở bốn góc camera, W đi ra xa ống kính, S đi về phía ống kính, D sang phải màn hình, A sang trái màn hình
+  const r = await page.evaluate(async () => {
+    const g = window.__game, P = g.player, out = [], sleep = (ms) => new Promise((r2) => setTimeout(r2, ms));
+    window.__norender = true;
+    { const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, 0, false); await window.__push(0, 800, false); } // chạy đà: bỏ khung hình đầu sau khi tắt vẽ
+    for (const deg of [0, 90, 180, 270]) for (const key of ['w', 's', 'd', 'a', 'arrowup', 'arrowdown', 'arrowright', 'arrowleft']) {
+      const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, 0, false); const yaw = (deg * Math.PI) / 180;
+      // nhân vật ban đầu quay mặt về hướng nam: có hướng phải quay người 180° rồi mới đi, nên bỏ 0,9 giây đầu và đo 1 giây sau đó
+      // (đo theo giờ trong game G.t, không theo giờ thật: máy chậm thì mỗi khung hình chỉ tính tối đa 0,05 s)
+      let x0 = P.pos.x, z0 = P.pos.z, marked = false; const t0 = g.G.t, w0 = performance.now(); g.input.keys.add(key);
+      while (g.G.t - t0 < 1.9 && performance.now() - w0 < 30000) { g.cam.yaw = yaw; g.input.lastLook = performance.now(); await sleep(30); if (!marked && g.G.t - t0 > 0.9) { marked = true; x0 = P.pos.x; z0 = P.pos.z; } }
+      g.input.keys.delete(key); await sleep(120);
+      const mx = P.pos.x - x0, mz = P.pos.z - z0, len = Math.hypot(mx, mz) || 1;
+      // camera ở phía (sin yaw, cos yaw) của nhân vật: hướng nhìn là (-sin, -cos), bên phải màn hình là (cos, -sin)
+      const fwd = (mx * -Math.sin(yaw) + mz * -Math.cos(yaw)) / len, right = (mx * Math.cos(yaw) + mz * -Math.sin(yaw)) / len;
+      out.push({ deg, key, len: +len.toFixed(2), fwd: +fwd.toFixed(2), right: +right.toFixed(2) });
+    }
+    window.__norender = false; return out;
+  });
+  const want2 = { w: ['fwd', 1], arrowup: ['fwd', 1], s: ['fwd', -1], arrowdown: ['fwd', -1], d: ['right', 1], arrowright: ['right', 1], a: ['right', -1], arrowleft: ['right', -1] };
+  const wrong = r.filter((q) => q.len < 0.3 || q[want2[q.key][0]] * want2[q.key][1] < 0.9);
+  wrong.length ? fail(`D1: hướng đi sai ở ${wrong.length}/${r.length} trường hợp: ${JSON.stringify(wrong.slice(0, 4))}`) : ok(`D1: ${r.length} trường hợp (4 góc camera × 8 phím) đều đi đúng hướng so với màn hình`);
+  // D4: lớp sự kiện bàn phím. Phím thật qua trình duyệt, rồi các biến thể của phím W mà người dùng Việt hay gặp: Caps Lock,
+  // bộ gõ đang ghép chữ (key = "Process"), Telex biến W thành "ư". Cả bốn phải đi tới như nhau vì game đọc theo vị trí phím.
+  {
+    const run = async (press, release) => {
+      await page.evaluate(async () => { const g = window.__game, P = g.player, spot = { x: 150, z: -150 }; window.__norender = true; g.input.keys.clear(); g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, Math.PI, false); g.cam.yaw = 0; await new Promise((r2) => setTimeout(r2, 200)); });
+      await press();
+      const d = await page.evaluate(async () => { const g = window.__game, P = g.player, t0 = performance.now(); let x0 = P.pos.x, z0 = P.pos.z, m = false; while (performance.now() - t0 < 1700) { g.cam.yaw = 0; g.input.lastLook = performance.now(); await new Promise((r2) => setTimeout(r2, 30)); if (!m && performance.now() - t0 > 700) { m = true; x0 = P.pos.x; z0 = P.pos.z; } } return { fwd: -(P.pos.z - z0), side: P.pos.x - x0, held: [...g.input.keys] }; });
+      await release();
+      const left = await page.evaluate(() => { const k = [...window.__game.input.keys]; window.__norender = false; return k; });
+      return { ...d, left };
+    };
+    const synth = (type, key, code) => page.evaluate(([t, k, c]) => { window.dispatchEvent(new KeyboardEvent(t, { key: k, code: c, bubbles: true })); }, [type, key, code]);
+    const cases = [
+      ['phím W thật', () => page.keyboard.down('KeyW'), () => page.keyboard.up('KeyW')],
+      ['mũi tên lên thật', () => page.keyboard.down('ArrowUp'), () => page.keyboard.up('ArrowUp')],
+      ['Caps Lock (key = W)', () => synth('keydown', 'W', 'KeyW'), () => synth('keyup', 'W', 'KeyW')],
+      ['bộ gõ đang ghép (key = Process)', () => synth('keydown', 'Process', 'KeyW'), () => synth('keyup', 'w', 'KeyW')],
+      ['Telex (key = ư)', () => synth('keydown', 'ư', 'KeyW'), () => synth('keyup', 'ư', 'KeyW')],
+      ['sự kiện chỉ có key = w, không có code (công cụ tự động)', () => synth('keydown', 'w', ''), () => synth('keyup', 'w', '')],
+    ];
+    const bad = [];
+    for (const [name, press, release] of cases) { const q = await run(press, release); if (!(q.fwd > 0.5 && Math.abs(q.side) < q.fwd * 0.3) || q.left.length) bad.push(`${name}: tiến ${q.fwd.toFixed(2)} m, lệch ${q.side.toFixed(2)} m, phím còn kẹt [${q.left}]`); }
+    bad.length ? fail('D4: lớp bàn phím: ' + bad.join('; ')) : ok(`D4: ${cases.length} cách nhấn phím tiến (phím thật, Caps Lock, bộ gõ đang ghép, Telex, sự kiện không có mã phím) đều đi tới, nhả phím là dừng`);
+    // bộ gõ nuốt phím (ký tự có dấu tới mà không kèm mã phím): hiện lời nhắc đúng một lần
+    const hint = await page.evaluate(async () => { const has = () => /W A S D/.test(document.body.innerText); const before = has(); window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ư', code: '', bubbles: true })); window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ư', code: '', bubbles: true })); await new Promise((r2) => setTimeout(r2, 2500)); return { before, after: has(), keys: [...window.__game.input.keys] }; });
+    !hint.before && hint.after && !hint.keys.length ? ok('D4: bộ gõ nuốt phím thì game nhắc tắt bộ gõ hoặc dùng phím mũi tên') : fail('D4: không thấy lời nhắc về bộ gõ tiếng Việt: ' + JSON.stringify(hint));
+  }
+  // D5: giữ phím lâu mà KHÔNG ép góc camera (như người chơi chỉ dùng bàn phím). Chạy lùi về phía ống kính và chạy ngang phải đi
+  // thẳng: nếu camera tự xoay theo thì hướng trên màn hình xoay theo từng khung hình và nhân vật chạy thành vòng tròn.
+  {
+    const hold = (keys, secs, bike = false, faceCam = false) => page.evaluate(async ([ks, T, bk, fc]) => {
+      const g = window.__game, P = g.player, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true; g.input.keys.clear();
+      // chờ theo giờ trong game (máy chậm thì mỗi khung hình chỉ tính tối đa 0,05 s nên giờ thật không đo được quãng chạy)
+      const gwait = async (sec) => { const t = g.G.t, w = performance.now(); while (g.G.t - t < sec && performance.now() - w < 60000) await sleep(20); };
+      if (P.mode === 'bike') { P.speed = 0; P.toggleBike(); }
+      const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4);
+      // nhân vật quay mặt về phía camera (fc) hoặc quay lưng lại camera; camera ở phía (sin, cos) của góc cam.yaw
+      g.cam.yaw = 0.6; P.teleport(spot.x, spot.z, fc ? 0.6 : 0.6 + Math.PI, false); g.input.lastLook = 0; await gwait(0.15);
+      if (bk) { P.toggleBike(); await gwait(0.1); }
+      for (const k of ks) g.input.keys.add(k);
+      const pts = [], yaws = [], t0 = g.clock ? g.clock() : 0; let steps = 0, path = 0, px = P.pos.x, pz = P.pos.z; const f0 = window.__info ? window.__info.frame : 0;
+      const g0 = g.G.t, w0 = performance.now();
+      while (g.G.t - g0 < T && performance.now() - w0 < T * 30000) { await sleep(40); steps++; path += Math.hypot(P.pos.x - px, P.pos.z - pz); px = P.pos.x; pz = P.pos.z; pts.push([px, pz]); yaws.push(g.cam.yaw); }
+      for (const k of ks) g.input.keys.delete(k);
+      const a = pts[0], b = pts[pts.length - 1], net = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      // hướng đi ở 30% cuối so với camera lúc đó: tiến (ra xa ống kính) và phải màn hình
+      const i0 = Math.floor(pts.length * 0.7), c = pts[i0], cy = g.cam.yaw, mx = b[0] - c[0], mz = b[1] - c[1], ml = Math.hypot(mx, mz) || 1;
+      let turn = 0, turnTail = 0; for (let i = 1; i < yaws.length; i++) { const d = yaws[i] - yaws[i - 1], q = Math.atan2(Math.sin(d), Math.cos(d)); turn += q; if (i > yaws.length * 0.5) turnTail += q; }
+      void t0; void f0; void steps;
+      const out = { net: +net.toFixed(2), path: +path.toFixed(2), turn: +turn.toFixed(2), turnTail: +turnTail.toFixed(2), fwd: +((mx * -Math.sin(cy) + mz * -Math.cos(cy)) / ml).toFixed(2), right: +((mx * Math.cos(cy) + mz * -Math.sin(cy)) / ml).toFixed(2), tail: +ml.toFixed(2), speed: +P.speed.toFixed(2) };
+      if (P.mode === 'bike') { P.speed = 0; P.toggleBike(); } window.__norender = false; return out;
+    }, [keys, secs, bike, faceCam]);
+    const bad = [];
+    const back = await hold(['s', 'shift'], 6), side = await hold(['d', 'shift'], 6), diag = await hold(['w', 'd', 'shift'], 6);
+    if (!(back.path > 4 && back.net > back.path * 0.9 && Math.abs(back.turn) < 0.25)) bad.push('chạy lùi (S) không thẳng hoặc camera tự xoay: ' + JSON.stringify(back));
+    if (!(side.path > 4 && side.net > side.path * 0.9 && Math.abs(side.turn) < 0.25)) bad.push('chạy ngang (D) không thẳng hoặc camera tự xoay: ' + JSON.stringify(side));
+    if (!(diag.path > 4 && diag.right > 0.2 && diag.fwd > 0.2)) bad.push('chạy chéo (W + D) không đi về phía phải-trước của màn hình: ' + JSON.stringify(diag));
+    // lên xe khi nhân vật đang quay mặt về phía ống kính (vừa đi lùi về phía camera rồi bấm lên xe): camera phải ra sau lưng xe,
+    // giữ W thì xe chạy ra xa ống kính; W + D thì xe vòng sang phải màn hình
+    const ride = await hold(['w'], 5, true, true), rideR = await hold(['w', 'd'], 4, true, true);
+    if (!(ride.path > 6 && ride.fwd > 0.9)) bad.push('lên xe lúc xe quay mặt về camera, giữ W: xe không chạy ra xa ống kính: ' + JSON.stringify(ride));
+    if (!(rideR.path > 3 && rideR.fwd > 0.3 && rideR.turnTail < -0.2)) bad.push('đi xe, W + D: xe không vòng sang phải: ' + JSON.stringify(rideR));
+    bad.length ? fail('D5: ' + bad.join('; ')) : ok(`D5: giữ phím lâu không đụng chuột: chạy lùi thẳng ${back.net} m, chạy ngang thẳng ${side.net} m (camera không tự xoay), chạy chéo vòng dần; lên xe lúc quay mặt về camera rồi giữ W thì xe chạy ra xa ống kính (${ride.fwd}), W + D vòng phải`);
+  }
+  // D2: ép vào tường cho camera áp sát rồi đi ra chỗ trống, camera phải tự giãn ra lại; không có toạ độ hỏng
+  const c = await page.evaluate(async () => {
+    const g = window.__game, P = g.player, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true;
+    const p = { x: 88, z: -217 }; g.nav.collide(p, 0.3); P.teleport(p.x, p.z, 0, false);
+    let minClose = 9; for (let k = 0; k < 24; k++) { g.cam.yaw = (k / 24) * 6.2832; g.input.lastLook = performance.now(); await sleep(120); minClose = Math.min(minClose, g.cam.close); }
+    const spot = { x: 150, z: -150 }; g.nav.collide(spot, 0.4); P.teleport(spot.x, spot.z, 0, false); await sleep(2500);
+    const cp = g.camera.position; window.__norender = false;
+    return { minClose: +minClose.toFixed(2), after: +g.cam.close.toFixed(2), finite: [cp.x, cp.y, cp.z, g.cam.yaw, g.cam.pitch, P.pos.x, P.pos.z].every(Number.isFinite), near: g.camera.near };
+  });
+  console.log('d2', JSON.stringify(c));
+  c.after > 3 && c.finite ? ok(`D2: sát tường camera thu về ${c.minClose} m, ra chỗ trống tự giãn lại ${c.after} m, không có toạ độ hỏng`) : fail(`D2: camera không hồi phục: ${JSON.stringify(c)}`);
+  await page.close();
+  // D3: trình duyệt không tạo được WebGL2 thì màn hình tải nói rõ nguyên nhân và cách khắc phục
+  const p2 = await browser.newPage({ viewport: { width: 960, height: 540 } });
+  await p2.addInitScript(() => { const orig = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function (type, ...a) { return /webgl/.test(type) ? null : orig.call(this, type, ...a); }; });
+  await p2.goto(`http://localhost:${port}/?fresh&lang=vi`);
+  await p2.waitForFunction(() => window.__bootError !== undefined, null, { timeout: 120000 }).catch(() => {});
+  const e = await p2.evaluate(() => ({ code: window.__bootError, text: document.getElementById('loadtext').textContent }));
+  e.code === 'NO_WEBGL2' && /WebGL2/.test(e.text) && /Tăng tốc phần cứng/.test(e.text) && !/is not a function/.test(e.text) ? ok('D3: không có WebGL2 thì báo rõ nguyên nhân và cách khắc phục') : fail(`D3: thông báo lỗi chưa đúng: ${JSON.stringify(e)}`);
+  await p2.screenshot({ path: path.join(OUT, 'd3_no_webgl.png') }); await p2.close();
+}
+
 // ----- B và C: khách ngồi sau, HUD, âm thanh, các lỗi nhẹ -----
 if (want('b1') || want('b2') || want('b4') || want('c1')) {
   const page = await open('bc', '&at=121,-211&lang=vi');
@@ -166,7 +279,7 @@ if (want('b1') || want('b2') || want('b4') || want('c1')) {
       P.teleport(F.dest.x, F.dest.z, P.yaw, false); P.speed = 0;
       let res = null; const old = F.onEvent; F.onEvent = (ev, f, done) => { if (ev === 'drop') res = done; old && old(ev, f, done); };
       for (let i = 0; i < 50 && !res; i++) await sleep(100);
-      await sleep(1000); window.__norender = false;
+      { const t1 = g.G.t, w1 = performance.now(); while (g.G.t - t1 < 1 && performance.now() - w1 < 30000) await sleep(50); } window.__norender = false; // 1 giây trong game cho khách bước xuống
       return { seated, comfort, stars: res && res.stars, hits: res && res.hits, after: { visible: !!(P.guest && P.guest.visible), passenger: P.passenger } };
     });
     console.log('b1/c10', JSON.stringify(r));
@@ -197,7 +310,7 @@ if (want('b1') || want('b2') || want('b4') || want('c1')) {
   }
   // C3 + C7: bảng Cài đặt hiện số khung hình đo lúc đang chơi; bấm lại mức chất lượng đang chọn không tải lại trang
   {
-    const r = await page.evaluate(async () => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__mark = 1; g.input.press('settings'); await sleep(1500); const perf = document.getElementById('s-perf').textContent; document.querySelector('#s-quality button.on').click(); await sleep(800); const still = window.__mark === 1, open = g.hud.modal; g.hud.close(); return { perf, fpsPlay: g.G.fpsPlay, still, open }; });
+    const r = await page.evaluate(async () => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__mark = 1; g.input.press('settings'); for (let i = 0; i < 600 && g.hud.modal !== 'settings'; i++) await sleep(50); await sleep(200); const perf = document.getElementById('s-perf').textContent; document.querySelector('#s-quality button.on').click(); await sleep(800); const still = window.__mark === 1, open = g.hud.modal; g.hud.close(); return { perf, fpsPlay: g.G.fpsPlay, still, open }; });
     console.log('c3/c7', JSON.stringify(r));
     r.fpsPlay > 0 && r.perf.includes(String(Math.round(r.fpsPlay))) ? ok(`C3: bảng Cài đặt ghi số đo lúc đang chơi ("${r.perf}")`) : fail(`C3: bảng ghi "${r.perf}" trong khi đo được ${r.fpsPlay}`);
     r.still ? ok('C7: bấm lại mức chất lượng đang chọn không tải lại trang') : fail('C7: trang bị tải lại');
@@ -209,12 +322,60 @@ if (want('b1') || want('b2') || want('b4') || want('c1')) {
   }
   // C9: bảng Hộ chiếu và Bản đồ vừa khung 1140 × 670, không phải cuộn
   for (const [id, key] of [['book', null], ['map', 'map']]) {
-    const r = await page.evaluate(async ([id, key]) => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); if (key) { g.hud.close(); await sleep(100); g.input.press(key); await sleep(600); } const p = document.querySelector(`#${id} .paper`), b = p.getBoundingClientRect(); return { h: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: p.scrollHeight - p.clientHeight, vh: innerHeight }; }, [id, key]);
+    const r = await page.evaluate(async ([id, key]) => { const g = window.__game, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); g.hud.close(); await sleep(100); if (key) g.input.press(key); else g.hud.open(id); for (let i = 0; i < 600 && g.hud.modal !== id; i++) await sleep(50); await sleep(400); const p = document.querySelector(`#${id} .paper`), b = p.getBoundingClientRect(); return { h: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: p.scrollHeight - p.clientHeight, vh: innerHeight }; }, [id, key]);
     console.log('c9', id, JSON.stringify(r));
-    r.top >= 0 && r.bottom <= r.vh && r.scroll <= 1 ? ok(`C9: bảng ${id} cao ${r.h} px, vừa khung ${r.vh} px, không cuộn`) : fail(`C9: bảng ${id} không vừa khung: ${JSON.stringify(r)}`);
+    r.h > 200 && r.top >= 0 && r.bottom <= r.vh && r.scroll <= 1 ? ok(`C9: bảng ${id} cao ${r.h} px, vừa khung ${r.vh} px, không cuộn`) : fail(`C9: bảng ${id} không vừa khung: ${JSON.stringify(r)}`);
     await page.screenshot({ path: path.join(OUT, `c9_${id}.png`), timeout: SLOW });
   }
   await page.evaluate(() => { window.__game.hud.close(); });
+  await page.close();
+}
+// ---------------- W1: phố đi bộ quanh Hồ Gươm tối cuối tuần ----------------
+if (want('w1')) {
+  // tối thứ Bảy, đứng giữa phố Đinh Tiên Hoàng: phố đã đóng, có rào, không xe, không lên xe được, người đi dưới lòng đường
+  // (open() luôn cố định giờ ở 10:00 bằng tham số h; giờ của từng phép thử đặt lại bằng sky.setHours ngay sau khi vào game)
+  let page = await open('w1', '&day=5&street=Ph%E1%BB%91%20%C4%90inh%20Ti%C3%AAn%20Ho%C3%A0ng&along=0.45');
+  const sat = await page.evaluate(async () => {
+    const g = window.__game, P = g.player, T = g.traffic, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true; g.sky.setHours(20.2);
+    // xe đang chạy trong khu lúc đóng phố phải tự ra hết (chờ tối đa 80 giây), người đi bộ dần tràn xuống lòng đường
+    for (let k = 0; k < 320; k++) { await sleep(250); if (k > 24 && T.walk && T.agents.every((a) => a.x > 1e8 || !a.e.closed) && g.crowd.people.filter((a) => a.mall).length >= 3) break; }
+    const mesh = g.scene.getObjectByName('walkstreet'), inZone = T.agents.filter((a) => a.x < 1e8 && a.e.closed).length;
+    const near = T.agents.filter((a) => a.x < 1e8 && Math.hypot(a.x - P.pos.x, a.z - P.pos.z) < 60).length;
+    if (P.mode === 'bike') P.toggleBike(); const mount = P.toggleBike(); if (P.mode === 'bike') P.toggleBike();
+    const onRoad = g.crowd.people.filter((a) => a.mall).length;
+    const out = { walk: T.walk, gates: T.gates.length, mesh: !!mesh && mesh.visible, inZone, near, mount, onRoad, clock: document.getElementById('clock').textContent.trim(), noRide: P.noRide(P.pos.x, P.pos.z) };
+    window.__norender = false; return out;
+  });
+  console.log('w1 sat', JSON.stringify(sat));
+  sat.walk && sat.gates >= 20 && sat.mesh ? ok(`W1: tối thứ Bảy phố đi bộ đang đóng, ${sat.gates} cửa rào được dựng`) : fail('W1: tối thứ Bảy không thấy phố đi bộ: ' + JSON.stringify(sat));
+  sat.inZone === 0 && sat.near === 0 ? ok('W1: không còn xe nào trong phố đi bộ') : fail(`W1: còn ${sat.inZone} xe trong phố đã đóng, ${sat.near} xe trong 60 m quanh người chơi`);
+  sat.mount === 'forbidden' && sat.noRide ? ok('W1: trong phố đi bộ không lên xe được') : fail('W1: vẫn lên xe được trong phố đi bộ: ' + JSON.stringify(sat));
+  sat.onRoad >= 3 ? ok(`W1: ${sat.onRoad} người đang đi dưới lòng đường`) : fail('W1: không có người đi dưới lòng đường của phố đi bộ: ' + sat.onRoad);
+  /T7|Sat/.test(sat.clock) ? ok(`W1: đồng hồ ghi thứ trong tuần ("${sat.clock}")`) : fail('W1: đồng hồ không ghi thứ: ' + sat.clock);
+  await page.screenshot({ path: path.join(OUT, 'w1_sat.png'), timeout: SLOW });
+  await page.close();
+  // tối thứ Năm cùng chỗ, cùng giờ: phố thông xe bình thường, không rào, lên xe được
+  page = await open('w1', '&day=3&street=Ph%E1%BB%91%20%C4%90inh%20Ti%C3%AAn%20Ho%C3%A0ng&along=0.45');
+  const thu = await page.evaluate(async () => {
+    const g = window.__game, P = g.player, T = g.traffic, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true; g.sky.setHours(20.2); await sleep(4000);
+    const mesh = g.scene.getObjectByName('walkstreet'); if (P.mode === 'bike') P.toggleBike(); const mount = P.toggleBike();
+    const out = { walk: T.walk, mesh: !!mesh && mesh.visible, near: T.agents.filter((a) => a.x < 1e8 && Math.hypot(a.x - P.pos.x, a.z - P.pos.z) < 90).length, mount, onRoad: g.crowd.people.filter((a) => a.mall).length };
+    if (P.mode === 'bike') P.toggleBike(); window.__norender = false; return out;
+  });
+  console.log('w1 thu', JSON.stringify(thu));
+  !thu.walk && !thu.mesh && thu.near >= 3 && thu.mount === 'on' && thu.onRoad === 0 ? ok(`W1: tối thứ Năm phố thông xe bình thường (${thu.near} xe quanh đó), không rào`) : fail('W1: tối thứ Năm phố không bình thường: ' + JSON.stringify(thu));
+  // chuyển giờ: 18:59 thứ Sáu, chờ qua 19:00 thì phố đóng, có lời báo, xe còn sót chạy ra hết; tua giờ sang hôm sau thì thứ tăng lên
+  const tr = await page.evaluate(async () => {
+    const g = window.__game, T = g.traffic, sleep = (ms) => new Promise((r2) => setTimeout(r2, ms)); window.__norender = true;
+    // trang thử cố định giờ, nên tự đẩy đồng hồ từng nấc nhỏ (mỗi 250 ms thêm 0,3 phút game) như thời gian đang trôi
+    g.sky.day = 4; g.sky.setHours(18.98); const t0 = performance.now(); let onAt = -1;
+    while (performance.now() - t0 < 110000) { await sleep(250); g.sky.setHours(g.sky.hours + 0.005); if (onAt < 0 && T.walk) onAt = g.sky.hours; if (onAt >= 0 && g.sky.hours > onAt + 0.05 && T.agents.every((a) => a.x > 1e8 || !a.e.closed)) break; }
+    const left = T.agents.filter((a) => a.x < 1e8 && a.e.closed).length, d0 = g.sky.day; g.sky.setHours(8, true); const d1 = g.sky.day; g.sky.setHours(9, true);
+    const out = { onAt, left, hours: g.sky.hours, d0, d1, d2: g.sky.day, walkMorning: false }; await sleep(800); out.walkMorning = T.walk; window.__norender = false; return out;
+  });
+  console.log('w1 tr', JSON.stringify(tr));
+  tr.onAt >= 19 && tr.onAt < 19.03 && tr.left === 0 ? ok(`W1: đúng 19:00 thứ Sáu phố đóng lại, xe còn sót chạy ra hết`) : fail('W1: chuyển giờ sang phố đi bộ không đúng: ' + JSON.stringify(tr));
+  tr.d0 === 4 && tr.d1 === 5 && tr.d2 === 5 && !tr.walkMorning ? ok('W1: tua giờ qua nửa đêm thì sang thứ Bảy, buổi sáng phố thông xe lại') : fail('W1: thứ trong tuần không tăng đúng khi tua giờ: ' + JSON.stringify(tr));
   await page.close();
 }
 await browser.close(); server.close();

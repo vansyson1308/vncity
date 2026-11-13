@@ -1,0 +1,90 @@
+<!doctype html><meta charset="utf-8"><title>Người và xe</title><link rel="icon" href="data:,">
+<body style="margin:0;background:#1b1d22;overflow:hidden;font:13px/1.45 ui-monospace,Menlo,monospace;color:#e8e4d8">
+<canvas id="c"></canvas>
+<div id="info" style="position:fixed;left:10px;top:8px;background:#000a;padding:8px 11px;border-radius:8px;white-space:pre-wrap"></div>
+<script type="module">
+// Xưởng soi người và xe: dựng đúng lưới, vật liệu của dòng xe (actors/fleet.js) và đám đông (actors/cast.js) như trong game,
+// xếp thành hàng mẫu đủ mọi dáng vẻ để soi nhanh, khỏi phải nạp cả thành phố.
+//   /dev/life.html?set=bikes|cars|slow|lod|people   &h=15.5 giờ   &ang=0.6&el=0.18&d=1 góc máy   &t=x,y,z điểm ngắm   &r=bán kính khung hình
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { Sky, skyU } from '../src/engine/sky.js';
+import { QUALITY } from '../src/config.js';
+import { Fleet, MESH } from '../src/actors/fleet.js';
+import { VT, BIT } from '../src/actors/trafficsim.js';
+
+const q = new URLSearchParams(location.search), set = q.get('set') || 'bikes';
+const canvas = document.getElementById('c');
+const r = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true }); r.setSize(innerWidth, innerHeight); r.setPixelRatio(1);
+r.toneMapping = THREE.ACESFilmicToneMapping; r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.1, 2000);
+const Q = { ...QUALITY.high, fog: 0.0002, shadowRange: 16, traffic: 60, cars: 12, crowd: 40 };
+const sky = new Sky(scene, cam, Q); sky.setHours(+(q.get('h') || 15.5));
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 400).rotateX(-Math.PI / 2), new THREE.MeshLambertMaterial({ color: 0x4a4b4e })); floor.receiveShadow = true; scene.add(floor);
+const grid = new THREE.GridHelper(40, 40, 0x888888, 0x5a5a5a); grid.position.y = 0.004; scene.add(grid);
+const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
+const [far, lod, full] = await Promise.all(['human_far', 'human_lod', 'human'].map((n) => loader.loadAsync(`/models/${n}.glb`)));
+const info = document.getElementById('info'); let update = () => {}, target = new THREE.Vector3(0, 0.9, 0), radius = 4;
+
+const C = { red: [0.5, 0.03, 0.03], black: [0.02, 0.02, 0.025], white: [0.72, 0.72, 0.7], blue: [0.05, 0.12, 0.4], grey: [0.42, 0.43, 0.45], green: [0.02, 0.5, 0.2], yellow: [0.92, 0.7, 0.03], teal: [0.02, 0.56, 0.52], orange: [0.95, 0.36, 0.03], navy: [0.04, 0.07, 0.2], pink: [0.85, 0.62, 0.7], brown: [0.3, 0.2, 0.12], cream: [0.8, 0.8, 0.78] };
+if (set !== 'people') {
+  const fleet = new Fleet(scene, far, Q, { bikes: 60, cars: 12 });
+  let id = 1; const A = [];
+  const add = (type, x, z, o = {}) => { const a = { id: id++, type, x, z, y: 0, yaw: o.yaw ?? Math.PI / 2, lean: o.lean || 0, bits: 0, tint: C.grey, tint2: C.navy, tint3: C.cream, pill: 0, ptint2: C.pink, ptint3: C.white, pbits: 0, d2: 1, ...o }; A.push(a); return a; };
+  if (set === 'bikes') {
+    add(VT.wave, 0, -4.5, { tint: C.red, tint2: C.black, tint3: C.cream, bits: BIT.exhaust | BIT.sleeve });
+    add(VT.wave, 0, -3, { tint: C.black, tint2: C.cream, tint3: C.red, bits: BIT.exhaust | BIT.mask });
+    add(VT.scooter, 0, -1.5, { tint: C.white, tint2: C.pink, tint3: C.pink, bits: BIT.exhaust | BIT.hood | BIT.mask | BIT.sleeve });
+    add(VT.scooter, 0, 0, { tint: C.grey, tint2: C.green, tint3: C.green, bits: BIT.exhaust | BIT.sleeve | BIT.maskDark, pill: 1, ptint2: C.cream, ptint3: C.green, pbits: BIT.sleeve | BIT.mask });
+    add(VT.scooter, 0, 1.5, { tint: C.teal, tint2: C.teal, tint3: C.teal, bits: BIT.sleeve });
+    add(VT.wave, 0, 3, { tint: C.blue, tint2: C.orange, tint3: C.orange, bits: BIT.exhaust | BIT.sleeve | BIT.box | BIT.mask });
+    add(VT.wave, 0, 4.5, { tint: C.black, tint2: C.yellow, tint3: C.yellow, bits: BIT.exhaust | BIT.sleeve, pill: 1, ptint2: C.navy, ptint3: C.yellow });
+    add(VT.cub, 0, 6, { tint: C.blue, tint2: C.brown, tint3: [0.2, 0.26, 0.14], bits: BIT.exhaust | BIT.sleeve });
+    add(VT.scooter, 0, 7.5, { tint: C.red, tint2: C.grey, tint3: C.black, bits: BIT.exhaust | BIT.sleeve | BIT.mask, pill: 2, ptint2: C.pink, ptint3: C.pink });
+    target.set(0, 0.8, 1.5); radius = 6.6;
+  } else if (set === 'cars') {
+    add(VT.hatch, 0, -6, { tint: [0.005, 0.5, 0.45], tint3: [1.05, 0.62, 0.02], bits: BIT.roof });
+    add(VT.sedan, 0, -3.5, { tint: [0.01, 0.27, 0.075], tint3: [1.05, 0.62, 0.02], bits: BIT.roof });
+    add(VT.sedan, 0, -1, { tint: [0.8, 0.8, 0.79], tint3: [1, 1, 1] });
+    add(VT.hatch, 0, 1.5, { tint: C.black, tint3: [0.05, 0.16, 0.62] });
+    add(VT.bus, 0, 5, { tint: [0.76, 0.38, 0.01], tint2: [0.55, 0.02, 0.02] });
+    add(VT.bus, 0, 8.5, { tint: [0.03, 0.42, 0.16], tint2: [0.8, 0.8, 0.78] });
+    target.set(0, 1.2, 1.5); radius = 9.5;
+  } else if (set === 'slow') {
+    add(VT.cyclo, 0, -4.5, { tint: C.pink, tint2: C.navy, tint3: [0.2, 0.26, 0.14], bits: BIT.guest | BIT.sleeve });
+    add(VT.cyclo, 0, -2.8, { tint2: [0.06, 0.06, 0.07], tint3: [0.2, 0.26, 0.14], bits: BIT.sleeve });
+    add(VT.bicycle, 0, -1.3, { tint: [0.08, 0.18, 0.42], tint2: [0.2, 0.1, 0.07], tint3: C.cream, bits: BIT.tray | BIT.flowers | BIT.nonla | BIT.sleeve });
+    add(VT.bicycle, 0, 0.2, { tint: [0.3, 0.31, 0.33], tint2: [0.12, 0.1, 0.2], bits: BIT.tray | BIT.fruit | BIT.nonla | BIT.sleeve });
+    add(VT.bicycle, 0, 1.6, { tint: [0.75, 0.78, 0.74], tint2: C.white, tint3: C.blue, bits: BIT.basket | BIT.cap });
+    add(VT.ecart, 0, 4, { tint: C.pink, tint2: C.navy, tint3: C.yellow, bits: BIT.row2 | BIT.row3 });
+    target.set(0, 1, 0); radius = 6.4;
+  } else { // lod: cùng một xe ở ba mức chi tiết
+    const far2 = fleet.mid2 + 10, mid2 = fleet.near2 + 10;
+    [0, mid2, far2].forEach((d2, k) => {
+      add(VT.scooter, k * 2.6 - 2.6, -2, { yaw: 0, d2, tint: C.red, tint2: C.green, tint3: C.green, bits: BIT.exhaust | BIT.sleeve | BIT.box });
+      add(VT.wave, k * 2.6 - 2.6, 1.5, { yaw: 0, d2, tint: C.black, tint2: C.cream, tint3: C.blue, bits: BIT.exhaust, pill: 1, ptint2: C.orange });
+    });
+    add(VT.sedan, 6, 0, { yaw: 0, d2: 1, tint: C.white }); add(VT.sedan, 9, 0, { yaw: 0, d2: fleet.car2 + 5, tint: C.white });
+    target.set(2, 0.8, 0); radius = 7;
+  }
+  update = () => { fleet.begin(); const lit = skyU.uLit.value > 0.02; for (const a of A) fleet.add(a, a.d2, lit); fleet.end(skyU.uLit.value); };
+  const names = Object.keys(MESH);
+  info.textContent = 'tam giác mỗi lưới: ' + names.map((n) => `${n} ${fleet.tris[MESH[n]]}`).join(', ');
+  window.__tris = Object.fromEntries(names.map((n) => [n, fleet.tris[MESH[n]]]));
+} else {
+  const { buildCastPreview } = await import('../src/actors/cast.js');
+  const res = buildCastPreview(scene, lod, far, full, Q, q); update = res.update; target.copy(res.target); radius = res.radius; info.textContent = res.info;
+}
+if (q.get('t')) target.set(...q.get('t').split(',').map(Number)); if (q.get('r')) radius = +q.get('r');
+const ang = +(q.get("ang") || 0.7), el = +(q.get("el") || 0.2), D = (radius / Math.tan((cam.fov * Math.PI) / 360)) * +(q.get("d") || 1) * 0.42;
+cam.position.set(target.x + Math.sin(ang) * Math.cos(el) * D, target.y + Math.sin(el) * D, target.z + Math.cos(ang) * Math.cos(el) * D); cam.lookAt(target); cam.updateMatrixWorld();
+let n = 0, last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+  update(dt); sky.update(0, target); skyU.uTime.value += dt; r.shadowMap.needsUpdate = true; r.toneMappingExposure = sky.exposure; r.render(scene, cam);
+  if (++n === 5) { document.title = 'ready'; window.__ready = true; }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>

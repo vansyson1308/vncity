@@ -20,7 +20,7 @@ Bản 1 (tháng 10/2026) giật và "không giống Hà Nội". Nguyên nhân v�
 |---|---|
 | Tải 21 MB mô hình, ảnh từ repo khác (craft-anything) | Không tải ảnh nào. Mọi chất liệu, nhà, cây, xe, công trình đều dựng thủ tục khi chạy. Tổng tải khoảng 2,6 MB (bản đồ 0,7 MB nén, mã 0,3 MB, ba bản mô hình người 1,6 MB) |
 | Dựng 15.000 nhà trên luồng chính lúc tải, đứng hình vài giây | Thành phố chia ô 128 m. Một Web Worker sinh lưới cho từng ô quanh người chơi (gần trước, xa sau), luồng chính chỉ nạp mảng vào GPU. Vòng lặp vẽ không bao giờ dừng để tính hình học |
-| Bóng 4096² vẽ lại toàn cảnh mỗi khung hình, 12 đèn điểm ban đêm, hậu kỳ toàn màn hình ở tỉ lệ điểm ảnh 1,75 | Bóng 2048² chỉ phủ 75 m quanh người chơi, cập nhật cách khung. Đèn đêm là phát sáng + vệt sáng cộng màu (một lệnh vẽ), không có đèn điểm. Độ phân giải động giữ 60 khung hình/giây, kèm bộ điều tiết giảm dần mật độ cảnh khi máy yếu |
+| Bóng 4096² vẽ lại toàn cảnh mỗi khung hình, 12 đèn điểm ban đêm, hậu kỳ toàn màn hình ở tỉ lệ điểm ảnh 1,75 | Bóng 2048² chỉ phủ 75 m quanh người chơi, cập nhật cách khung. Đèn đêm là phát sáng + một bản đồ ánh sáng nhìn từ trên xuống (mọi cột đèn, cửa hàng cộng vào một texture quanh người chơi; mặt đất và đồ vật nhân độ sáng với nó, tổng được nén mềm nên không cháy), không có đèn điểm. Độ phân giải động giữ 60 khung hình/giây, kèm bộ điều tiết giảm dần mật độ cảnh khi máy yếu |
 | Mỗi xe máy, mỗi người là một lưới có xương riêng | Mỗi loại xe một `InstancedMesh` (người lái nướng sẵn vào lưới xe). Người đi bộ dùng skinning trên GPU từ texture hoạt hình, ba lệnh vẽ cho cả đám đông |
 | Chỉ có quận Hoàn Kiếm, mặt tiền là ảnh dán lặp quanh khối nhà, 4 công trình có mô hình | 12 km² trung tâm: Hồ Gươm, 36 phố phường, khu phố Pháp, Ba Đình, Văn Miếu, mép nam Hồ Tây, đầu cầu Long Biên. 29.637 toà nhà đúng vị trí, mặt tiền chia gian theo kiểu nhà ống, biển hiệu theo đúng nghề của từng phố, 15 công trình dựng tay |
 | Mặt đất phẳng, đường là dải vẽ đè lên nền | Lòng đường thấp hơn vỉa hè 16 cm, có bó vỉa đá, góc phố bo tròn, kè hồ, vạch sơn, vạch sang đường |
@@ -83,12 +83,29 @@ Các kỹ thuật chính:
 1. **Mặt đất bằng phép toán đa giác.** Mỗi đoạn đường được đệm theo bề rộng rồi gộp lại (Clipper); phần còn
    lại của ô là khối phố. Nhờ đó vỉa hè nâng 16 cm, bó vỉa, góc phố bo tròn và kè hồ đều là hình học thật. Bề
    rộng đường được thu theo khoảng trống thật giữa hai dãy nhà (`build_world.mjs`) nên đường không ăn vào mặt tiền.
-2. **Mặt tiền nhà ống trong một lệnh vẽ.** 30 lớp mặt đứng (một gian × một tầng: ban công sắt, cửa chớp,
+2. **Mặt tiền nhà ống trong một lệnh vẽ.** 47 lớp mặt đứng (một gian × một tầng: ban công sắt, cửa chớp,
    chuồng cọp, cửa cuốn, quán phở, biệt thự Pháp, tập thể...) vẽ bằng canvas, gói thành `sampler2DArray`. Worker
    chia tường mặt phố thành từng gian và chọn lớp, màu vôi, màu biển cho từng gian; shader chỉ việc vẽ theo.
-   Tường giáp nhà bên là tường trơn; khuất hẳn sau nhà cao hơn thì không sinh ra.
+   Tầng trệt cửa hàng có 15 lớp, chọn theo biển của gian (`shopLayer` trong `gen/buildings.js`): ngoài quán ăn, cà phê,
+   sảnh khách sạn, cửa kính, cửa cuốn, cửa gỗ nhà cổ còn bảy kiểu theo nghề: hàng vải quần áo (áo dài, sơ mi treo sào, cây
+   vải cuộn; cả giặt là), tranh thêu và đồ lưu niệm (tường treo kín khung tranh), hàng khô tạp hoá (gói nhỏ xếp kín kệ, lọ thuỷ
+   tinh, bao tải), hàng mã (đèn lồng treo kín trần, giấy đỏ vàng; cả đồ thờ), tiệm sửa xe (lốp treo tường, bảng dụng cụ),
+   tiệm cắt tóc (gương, ghế), hàng hoa cây cảnh. Lớp kệ hàng nhiều màu chỉ còn cho hiệu sách, văn phòng phẩm và vài nghề bày
+   hàng lên kệ; phòng khám, hiệu thuốc, tiệm vàng, đổi tiền luôn là cửa kính (trước đây gần như mọi cửa hàng, kể cả hàng lụa,
+   tiệm cắt tóc, sửa xe, đều bày một kiểu kệ như hiệu sách: QC vòng 2). Hàng bày được hoán kênh màu theo gian; hàng mã chỉ
+   ngả vàng cam hay đỏ thắm để vẫn giữ tông đỏ vàng.
+   Tường giáp nhà bên là tường trơn và luôn được dựng, từ mặt đất lên, kể cả khi khuất sau nhà cao hơn: mỗi toà là một khối
+   kín. Hai hình nhà liền vách trên bản đồ ít khi khít nhau từng đỉnh; trước đây tường chung bị bỏ nên qua khe vài chục cm
+   giữa hai lô ở mặt phố, đứng sát mặt tiền là nhìn xuyên cả dãy nhà (ban công, cục nóng điều hoà, tầng trên nhà cao hơn treo
+   giữa trời: QC vòng 2, phố Hàng Đào). Hai tường chung trùng nhau quay lưng vào nhau nên không nhấp nháy; số tam giác nhà mỗi
+   ô 853 → 950. Va chạm thì từ trước đã có ở mọi cạnh ngoài: phép loang trên toàn bản đồ (lưới 0,5 m, bán kính người 0,3 m,
+   xuất phát từ 23 873 đỉnh tim đường) đi được 6,66 km² và không lọt vào lòng nhà nào.
 3. **Hai mức chi tiết cho đồ vật.** Mỗi ô có lưới "gần" (cây đủ tán lá, biển hiệu nổi, ban công, dây điện, xe
-   đỗ) và lưới "xa" (cây một khối, cột đèn bốn cạnh). Xe trong dòng xe cũng có bản xa vài khối hộp.
+   đỗ) và lưới "xa" (cây một khối, cột đèn bốn cạnh). Xe trong dòng xe cũng có bản xa vài khối hộp. Biển số có chữ theo
+   kiểu biển Việt Nam (xe máy hai dòng "29-B1 / 123.45", ô tô biển dài một dòng ở mũi, biển ngắn hai dòng ở đuôi, xe buýt
+   biển vàng): xe của người chơi, ô tô, xe buýt vẽ từng ký tự bằng nét kiểu bảy đoạn; xe máy trong dòng xe và xe đỗ (hàng
+   trăm chiếc) chỉ có mỗi nhóm ký tự một vạch xám (`plateText` trong `models/vehicles.js`); ô tô, buýt trong dòng xe vì thế
+   nặng hơn khoảng 150 tam giác mỗi chiếc (ô tô 394 → 548), không đáng kể với tối đa 14 ô tô.
 4. **Ánh sáng không cần bản đồ môi trường.** Kính, mặt hồ, nước sơn xe tự tính phản chiếu trời từ cùng bộ
    uniform với vòm trời, nên đổi giờ không tốn khung hình nào để dựng cubemap.
 5. **Nền trước, chi tiết sau.** Ô ở xa chỉ có nền (mặt đất, nhà, đồ vật bản xa); lưới chi tiết chỉ được worker gửi khi
@@ -116,16 +133,231 @@ Các kỹ thuật chính:
    40 về 0 trong 7,8 m...) và báo lỗi nếu lệch khỏi khoảng đo thực tế.
 10. **Lối đi được kiểm chứng.** Tường rào để hở ở cổng thật (nút cổng của OSM) và ở mọi chỗ có lối đi cắt qua. Công
    trình dựng tay khai báo lối phải thông (`paths`) và khối đặc (`solid`); công trình kín lấy mặt bằng của chính mô
-   hình làm va chạm. `tools/reach_check.mjs` loang trên lưới 0,4 m bằng đúng hàm va chạm của game để chắc rằng cả 44
+   hình làm va chạm (`landmarks/sites.js` modelOutline: chiếu mọi tam giác cắt tầm thân người 0,7 đến 2,1 m xuống lưới 0,25 m, đóng
+   hình bằng nở 2 m rồi lấp lòng rồi co lại để vỏ rỗng và cửa vòm hẹp dưới 4 m không thành lối vào, lấy đường viền làm tường; nở và co
+   tính bằng biến đổi khoảng cách Euclid chính xác nên cả 14 công trình chỉ mất chừng 0,2 s lúc tải). Mái, ô văng, dầm cửa cao hơn
+   2,1 m không chắn lối: người chơi đi vào được dưới ô văng ga Hà Nội. Tester vòng 4 đo trên lưới 1 m cũ: đứng ở chỗ va chạm chặn,
+   mặt mô hình gần nhất trong quạt ±30° còn cách 1–1,85 m (tường tàng hình). Đo lại trong Node bằng 96 tia từ ngoài vào ở ba độ cao,
+   cùng cách tính của tester: trung vị 0,4–0,66 m kể cả bán kính 0,3 m của người chơi (trước 0,7–2,2 m; Tháp Rùa không tính: gò đất
+   thoải nên mặt gò ở tầm ngực nằm sau chỗ gò cao 0,7 m vài mét), tia quá 1 m: Nhà hát Lớn
+   78 → 1, chợ Đồng Xuân 88 → 1, Nhà thờ Lớn 62 → 2, Lăng 25 → 3, Cột cờ 96 → 2, tượng Lý Thái Tổ 96 → 0, tháp Trấn Quốc 64 → 0;
+   ga Hà Nội 85 → 17 (hốc sảnh lùi giữa các lam bê tông rộng 2,8 m vẫn bị lấp, như mọi khe dưới 4 m); không tia nào lọt qua mặt mô
+   hình. Bài đi bộ thẳng vào mặt tiền của tester (12 hướng mỗi công trình, trình duyệt): công trình không còn lượt tường tàng hình nào
+   0/8 → 7/8 (Nhà hát Lớn 2 → 0, Nhà thờ Lớn 1 → 0, chợ Đồng Xuân 5 → 0, Lăng 3 → 0, Cột cờ 1 → 0, Tháp Rùa 4 → 0, ga Hà Nội 4 → 3),
+   lượt đi xuyên mặt mô hình ở tháp Trấn Quốc 2 → 0. Bậc thềm, nền thấp, dốc thoải của mô hình (mặt ngửa lên, dốc dưới 53°, cao tới 0,7 m) có cao độ thật: `modelPads` ghi mặt
+   cao nhất phủ lên TÂM mỗi ô của lưới 0,125 m và `nav.groundY` lấy cao độ đó, nên người, xe đứng trên bậc thay vì lún chân vào trong bậc (tester vòng 4:
+   bậc thềm ga Hà Nội che chân tới gối; nay đứng ở 0,61 m, đúng mặt bậc trên cùng). Bản trước lấy mặt cao nhất chạm vào bất kỳ chỗ nào
+   trong ô 0,25 m nên ở mép bệ người đứng ngoài mép mà chân lơ lửng tới 0,3 m (tester vòng 5: bệ tháp Trấn Quốc, tượng Lý Thái Tổ).
+   Người chơi không bước lên gờ cao quá 0,32 m một bước (`STEP_UP`, actors/physics.js): bậc thang 0,15 m đi được, mép bệ tượng, mép nền
+   0,45–0,9 m chặn như tường (trượt dọc gờ); tám điểm quanh thân người cách tâm 0,25 m cũng không được lấn thêm vào gờ cao, để người
+   không đứng nửa thân lọt vào trong bệ. Trước đó người chơi "bật" thẳng lên gờ 0,44–0,5 m trong 0,25 s (tester vòng 5: 20 lượt ở bốn
+   công trình). Xe máy nảy qua bó vỉa được nhưng không leo lên bậc thềm, nền cao hơn mặt hè quá 0,1 m (đâm vào như tường): trước đó xe
+   phóng 43 km/h lên bậc 0,6 m của ga Hà Nội. Mặt cầu Thê Húc ở hai đầu cao 0,35 m trên mặt hè, nên mô hình có thêm hai bậc đá (0,12 và
+   0,24 m) ở mỗi đầu cầu, và vùng mặt cầu trong va chạm bắt đầu đúng ở đầu cầu (trước đây thò ra 0,9 m, người đứng lơ lửng trên đoạn
+   đó). Bài bậc thềm của tester (12 công trình × 12 hướng đi bộ, 5 công trình × 12 lượt xe máy hết ga): lún 0, lơ lửng 0, bật lên gờ 0,
+   xe leo bậc 0 (bản ea025d0: lơ lửng ở 3 công trình, bật lên gờ 20 lượt, xe leo bậc 4 lượt). `tools/reach_check.mjs` nạp mặt bậc như
+   trong game và loang lối đi theo đúng luật bước lên (đi từ ô kề sang ô đang xét không bước lên quá 0,32 m, dò từng 0,1 m): cả 44 điểm
+   vẫn tới được. Khối nhà OSM bị thay bằng mô hình thì không vẽ và không còn va chạm: trước đây khối ẩn
+   vẫn giữ tường 12 m theo đa giác OSM, lệch mô hình tới 15 m, thành tường tàng hình trước cửa chợ Đồng Xuân (đi tới mặt tiền bị chặn
+   cách 4,4 đến 9 m), Nhà thờ Lớn, Nhà hát Lớn, ga Hà Nội; hộp bao chung của cả mô hình cũng chắn khoảng trống giữa thân Lăng và hai
+   khán đài. `tools/reach_check.mjs` loang trên lưới 0,4 m bằng đúng hàm va chạm của game để chắc rằng cả 44
    điểm hộ chiếu đều tới được từ mạng đường; `tools/build_places.mjs` dùng cùng thư viện đó để dời điểm đóng dấu về
    chỗ tới được và tính sẵn chỗ đứng thoáng cho chức năng đi nhanh.
 11. **Camera không vượt tường.** Tia từ đầu nhân vật tới vị trí camera (đã cộng độ lệch ngang) dừng trước mọi bức tường
    0,35 m; camera còn được đẩy như một vòng tròn 0,5 m để mặt cắt gần của ống kính không cắt vào nhà; bị dồn vào góc
-   thì áp sát đầu nhân vật và nhân vật được ẩn đi. Cột cổng, thân cây, mái hiên chắn giữa camera và nhân vật thì bị
-   đục lỗ lấm tấm ngay trong shader để vẫn thấy nhân vật.
+   thì áp sát đầu nhân vật và nhân vật được ẩn đi. Cột cổng, thân cây, mái hiên, tán lá chắn giữa camera và nhân vật thì
+   mờ đi ngay trong shader (mẫu chấm Bayer đều, bám theo màn hình) để vẫn thấy nhân vật; đồ vật và lá áp sát ống kính
+   cũng tan đi trong một bán kính nhỏ quanh camera, nên không bao giờ có một chiếc lá che kín màn hình
+   (`world/materials.js`, mục CUT).
 12. **Âm thanh tổng hợp.** Không tải tệp âm thanh nào: tiếng máy theo vòng tua và hộp số bốn cấp, gió, phanh, bước
    chân, nền phố ngày và đêm, nhạc ngũ cung tự sáng tác với ba âm sắc gợi đàn bầu, đàn tranh, sáo trúc
    (`audio/audio.js`, ghi công trong `CREDITS.md`).
+13. **Biển tên phố bằng tên thật.** Cả 761 tên đường trong bản đồ được vẽ một lần lúc khởi động vào một atlas một kênh
+   (4096², mức Nhẹ 2048²); vị trí từng ô tính từ danh sách tên đã sắp xếp nên worker và luồng chính luôn ra cùng kết
+   quả mà không phải truyền gì cho nhau (`world/streetnames.js`, `streetatlas.js`). Mỗi ô phố chi tiết có thêm đúng một
+   lưới cho biển tên, đèn tín hiệu và các bảng chữ của đồ đạc phố (`gen/furniture.js`).
+14. **Một nguồn sự thật cho đèn tín hiệu.** `world/junctions.js` tính một lần nút nào có đèn, nhánh nào thuộc pha nào và
+   chu kỳ (xanh 23, vàng 3, đỏ 30 giây). Shader vẽ bóng đèn và số đếm ngược, còn dòng xe (`actors/trafficsim.js`) hỏi
+   đúng hàm đó với cùng đồng hồ, nên xe dừng khi người chơi thấy đèn đỏ. Ba điều giữ cho việc đó đúng ở mọi nút:
+   - *Vạch dừng là một chỗ trên mặt đường*, không phải thuộc tính của một cạnh đồ thị. Bản đồ cắt đường quanh nút giao thành
+     nhiều mẩu ngắn, nên dòng xe lập sẵn bảng `ahead`: với mỗi (cạnh, chiều) trong tầm 18 m sau vạch dừng, chạy hết cạnh rồi
+     còn bao nhiêu mét nữa tới nút và vào theo pha nào. Xe ở đâu cũng tính quãng tới vạch theo cùng một cách. Xe lỡ qua vạch
+     lúc đèn vừa đỏ mà còn kịp thì dừng trước vạch sang đường và đứng đó; không kịp thì đi nốt cho thoát nút. Chỗ dừng và
+     chân cột đèn tính theo từng nhánh (`arm.line`, `arm.stop`), đúng công thức `gen/ground.js` kẻ vạch ở đầu đoạn đó: theo bề
+     rộng lớn nhất ở chính nút con mà nhánh chạm vào và bề rộng của chính đoạn đường. Ở nút gộp, một số chung cho cả nút lệch
+     với vạch sơn tới 6 m.
+   - *Đèn không nhảy pha lúc vào game*: lúc rải xe ban đầu (27,2 s mô phỏng) đồng hồ đèn chạy lùi từ đồng hồ shader sao cho
+     rải xong thì khớp đúng giờ shader (`prewarm(…, clockEnd)`).
+   - *Hai nút có đèn nối nhau bằng quãng ngắn hơn 24 m* (không đủ chỗ cho vạch dừng và vài xe xếp hàng) gộp thành một nút
+     chung pha; các nút phụ trên quãng nối thành lòng nút.
+   - *Đèn xanh không có nghĩa là cứ vào nút.* Mỗi xe qua vạch dừng được ghi là đang ở trong lòng nút đó (`boxSg`, kèm nhóm pha
+     của nhánh nó vào) cho tới khi trên cạnh ra đã đi quá chân cột đèn. Xe tới vạch lúc đèn mình xanh mà (1) trong lòng nút còn xe
+     của dòng kia chưa thoát (vào lúc vàng, sót từ pha trước; `boxBusy`), hoặc (2) lối ra ngay sau nút đang ứ: có xe đứng đúng vệt
+     mình sẽ đi, hay đủ max(2, nửa bề rộng phố) xe máy đứng dàn ngang trong quãng mình phải chiếm khi đã qua hết lòng nút, và các
+     xe đó đang xếp hàng thật (chờ đèn phía trước hoặc mới dừng dưới 4 giây; `exitFull`), thì dừng ở vạch như chờ đèn đỏ. Chờ xe
+     trong lòng nút quá 8 giây thì thôi, đi như cũ cho khỏi tắc vĩnh viễn. Trước đó hai dòng cắt nhau khoá cứng giữa nút: tester
+     vòng 4 thấy 14 xe đứng trong lòng nút Lý Thường Kiệt × Quán Sứ. Đo trong Node theo cách đo của bộ thử `tools/qa/traffic.mjs`
+     (đứng trên hè cạnh từng nút trong 75 nút có đèn, 20 s rồi 14 lần × 8 s, hai hạt giống): tổng xe-lượt đứng yên trong lòng nút
+     755/842 → 636/646, lượt đo có quá 8 xe 14/23 → 12/10 (số nút có ít nhất một lượt như thế 7/7 → 8/9), nhiều nhất 22/27 → 13/15
+     xe, lượt xe đứng trong lòng nút quá 5 giây lúc đèn nhánh mình đỏ 101/130 → 64/59; lưu lượng qua vạch dừng 8275/8150 → 8038/8096
+     lượt (giảm 1–3%: xe chờ ở vạch thay vì chui vào nút). Lúc đầu luật (1) chờ mọi xe dòng kia trong lòng nút: ở nút lớn hàng chờ dài
+     gấp đôi, lưu lượng lúc xanh còn một nửa (Nguyễn Du × Trần Bình Trọng 97 → 31, Cửa Nam 169 → 77 lượt trên bộ thử của kho); nay
+     chỉ chờ xe nằm trên đúng vệt mình sẽ đi (từ chỗ đứng tới tim nút rồi 12 m theo cạnh ra). Hai xe đứng yên mà thân lồng sâu (cùng
+     chiều: hai trục cách nhau dưới 60% tổng nửa bề ngang mà không còn chỗ dạt ngang; chéo hay đối đầu: lồng quá 0,3 m) thì xe có thân
+     xe kia ở trước mũi dắt lùi 0,8 m/s cho tới khi hết lồng (giữ hướng đầu xe; không lùi vào người chơi đứng sau đuôi; lùi ra sau
+     vạch dừng thì thôi tính là ở trong lòng nút): cặp lồng sâu quá 2 giây trên cùng 75 nút × 2 hạt 44/70 → 18/20. Phần còn lại
+     phần lớn là lúc luật gỡ thế khoá cho một xe lách qua xe đứng chắn. Bộ thử `tools/qa/traffic.mjs` (phần a1 và quét a3) giờ đếm
+     vượt đỏ ở chân cột đèn của chính nhánh xe đi vào (`arm.stop`) thay vì chân cột chung của nút: ở nhánh có vạch sang đường dời xa
+     nút, cột chung nằm sâu trong lòng nút nên xe vào lúc vàng đi tới đó khi đèn đã đỏ hơn 1 giây bị đếm nhầm (vòng 4: nhánh Nguyễn
+     Thái Học của nút Cửa Nam, cột nhánh 16,6 m, cột chung 10,6 m). Trong 226 nhánh vào nút có đèn, 190 nhánh hai cột trùng nhau,
+     23 nhánh cột nhánh xa nút hơn (nhiều nhất 6 m), 13 nhánh gần nút hơn (ở đó phép thử chặt hơn trước). Xe đang chạy trên chính một
+     nhánh vào của nút thì được tính theo nhánh đó: làn rẽ không tên tách khỏi Trần Quang Khải chạy sát lòng đường chính, xe lấn mép trái
+     làn rẽ (đi theo đèn xanh của làn rẽ) từng bị gán vào nhánh Trần Quang Khải đang đỏ (4/4 lượt "vượt đỏ" còn lại của phép quét 75 nút
+     là loại này). Tester vòng 5 vẫn thấy kẹt lòng nút, có lúc 22 xe đứng 30–60 giây trong nút Điện Biên Phủ × Nguyễn Tri Phương. Lần
+     theo chuỗi "xe đang chắn" (trường `blk` của từng xe) tới đầu chuỗi: ở chỗ Điện Biên Phủ tách thành hai cạnh một chiều (cách nút
+     23 m), một xe buýt chiều tây nam đứng trong hàng chờ đèn đỏ định quay đầu sang cạnh chiều đông bắc; luật nhập làn ("xe gần nút hơn
+     đi trước") bắt cả dòng xe đông bắc vừa ra khỏi nút nhường nó, mà nó không đi được, nên hàng dồn ngược vào lòng nút. Sửa hai chỗ:
+     (1) không nhường xe đang đứng trong hàng chờ đèn (đèn của nó đỏ, hay xếp sau xe chờ đèn); thân xe kia nếu chắn thật thì luật bám
+     đuôi, luật xe cắt ngang vẫn chặn; (2) 18 m cuối cạnh một chiều sắp vào cạnh hai chiều thì dạt dần về nửa bên phải, vì hai tim
+     đường một chiều gặp tim đường hai chiều ở cùng một điểm, xe vào đường hai chiều ở vệt bên trái là đối đầu dòng ngược chiều ngay
+     đầu cạnh. Đo bằng bộ đo độc lập của reviewer (75 nút × 90 s × 5 hạt, cùng hạt giống như tester; trung bình so với bản ea025d0 và
+     ae01f7b): xe đứng trong lòng nút quá 5 s 173 → 141 lượt (ae01f7b: 241), quá 15 s 20,4 → 9,4 (13,8), đứng lâu nhất 40,7 → 23,4 s
+     (31,7), lưu lượng qua vạch 7276 → 7953 lượt (+9%), cặp xe chồng nhau quá 2 s 513 → 406, xe đứng yên quá 15 s gần người chơi
+     245 → 85 lượt; vượt đỏ 3 → 4 lượt trên khoảng 38 nghìn lượt qua vạch. Nút còn xe đứng quá 15 s ở cả 5 hạt là Đinh Tiên Hoàng
+     (119; −278): hai nút có đèn cách nhau 36,6 m, hàng chờ đèn đỏ của nút sau dồn ngược vào lòng nút trước rồi tan khi đèn xanh (không
+     phải thế khoá). Bộ thử `tools/qa/traffic.mjs`: a2 và phần đếm hàng chờ cũng đo theo vạch của chính nhánh như a1 (tester vòng 5:
+     đo theo cột chung thì ở nhánh có vạch dời xa nút xe đứng trên vạch sang đường lúc đỏ không bị đếm, ở nhánh có cột gần hơn thì xe
+     đứng đúng vạch lại bị đếm); a1 và quét a3 chỉ tính vượt đỏ khi mũi xe qua vạch dừng sau lúc đèn đã đỏ: xe đã qua vạch lúc vàng
+     rồi đứng chờ trước vạch sang đường không tính, dù mũi xe nhích qua mốc vạch − 1 m sau đó (toạ độ vẽ của xe trễ hơn vị trí trên
+     đường một chút, xe vừa phanh xong vẫn nhích thêm: ba lượt "vượt đỏ" của xe máy đứng yên mà tester vòng 5 thấy); xe chưa từng
+     thấy ở sau vạch vẫn tính là vượt.
+   - *Vạch sang đường theo khoảng cách từ tâm nút*, không theo độ dài mẩu đường: mẩu sát nút ngắn hơn chỗ kẻ vạch thì vạch
+     nằm trên mẩu nối tiếp (kéo thẳng theo hướng nhánh từ tâm nút, chỉ nhận khi đầu kia của mẩu là nút nhỏ và chỗ đó nằm trên
+     tim một đoạn đường xe cùng bề rộng, cùng hướng); miệng ngõ, phố nhỏ đổ vào ngay chỗ kẻ vạch và phần kéo dài của chính phố
+     đó (cách vài mẩu ngắn) không làm mất vạch; vạch dọc tự chừa chỗ vạch sang đường. Trước đây 30/75 nút có đèn không có vạch
+     sang đường nào và chỉ 94/300 nhánh có vạch; giờ cả 75 nút đều có, 272/300 nhánh (118 → 331 vạch); 28 nhánh còn lại ở nút
+     phức tạp (đường đôi, vòng xoay) nơi vạch sẽ đè lên một lòng đường khác nên cố ý không kẻ.
+   - *Bảng vạch sang đường chung cho cả bản đồ* (`world/zebras.js`, tính một lần trong `junctionsOf`): `gen/ground.js` kẻ vạch,
+     vạch dừng, mũi tên theo bảng này, còn dòng xe lấy chỗ mũi xe dừng đèn đỏ (`a.line`) và chân cột đèn (`a.stop`) cũng từ đó.
+     Ở mỗi chỗ định kẻ, mọi góc của mọi vạch phải nằm trong lòng đường và không lấn quá 0,3 m vào lòng một đường xe khác lệch
+     hướng trên 25°; vạch không được chồng (cách dưới 0,3 m) hay nối đuôi (cùng phố, tâm cách dưới 12 m) một vạch đã kẻ. Vướng
+     thì vạch dời ra xa nút từng 0,5 m (tới max(6 m; nửa bề rộng phố)), đoạn sát nút quá ngắn thì thử kéo vào gần nút; vẫn vướng
+     thì không kẻ. Đường rộng xét trước. Mọi nhánh của nút có đèn đều được xét (kể cả khi nút con chỉ có hai đường lớn, nhánh
+     từ 5 m). Vạch dời bao nhiêu thì vạch dừng, chỗ xe dừng và cột đèn dời bấy nhiêu. Vạch dừng đi kèm cũng qua đúng các phép thử
+     ấy dọc cả chiều dài vạch (mỗi ≤ 1 m, hai mép); không có chỗ nào vừa cả vạch sang đường lẫn vạch dừng thì kẻ vạch sang đường ở
+     chỗ đầu tiên đạt và không sơn vạch dừng (reviewer vòng 4: 9 vạch dừng lấn sang đường cắt ngang, sâu tới 3 m, ở Trần Phú ×
+     Hoàng Diệu, Nguyễn Tri Phương...; nay 0). `gen/ground.js` kẻ đúng mọi vạch trong bảng, kể cả ở nhánh có đèn của phố cấp
+     dân sinh hay rộng 5–5,5 m (trước đây bảng có 19 vạch mà mặt đường không kẻ: xe dừng đèn đỏ theo vạch không sơn). Bảng
+     tra theo lưới từng đoạn đường (ô 16 m) và không cấp phát trong vòng lặp: tính bảng từ ~0,5 s CPU xuống ~0,1–0,25 s; phép thử
+     "tâm vạch nằm trong lòng đường khác" xét mọi đường quanh đó, không chỉ đường gần nhất, nên không tuỳ thứ tự duyệt. Tester vòng 3 đo trên bản cũ 20/75 nút có
+     vạch lấn sang lòng đường khác hay chồng vạch khác (356 vạch, sâu tới 2,9 m), có nhánh kẻ hai vạch nối đuôi, 200/226 nhánh xe
+     vào nút có đèn có vạch; bảng mới: 0 vạch lấn (đo mọi góc của 1 116 vạch), 210/226 nhánh (92,9%); 16 nhánh còn lại không
+     có chỗ kẻ mà không lấn đường khác.
+   - *Chia pha theo phương của nhánh, ít xung đột nhất*: thử mọi cách cắt vòng phương làm hai cung, phạt hai nhánh cùng pha
+     mà cắt nhau và hai nhánh khác pha mà gần song song. Hai phố cắt nhau không bao giờ chung pha, hai nhánh chụm góc hẹp
+     luôn chung pha (trước đây chia cứng ở ±45° quanh trục chính nên ngã năm có nhánh chạy trong khi nhánh sát bên đỏ).
+15. **Dòng xe tách ba lớp.** `trafficsim.js` là mô phỏng thuần (chạy được trong Node, có bài thử bằng số
+   `tools/traffic_check.mjs`: cơ cấu xe theo khu và giờ, tốc độ, số xe kẹt, xe đè lên nhau, xe né người qua đường);
+   `fleet.js` vẽ bằng instancing (mỗi loại xe và mỗi mức chi tiết một lệnh vẽ, quầng đèn đêm của mọi xe chung một lệnh
+   vẽ); `traffic.js` nối hai bên. Đường mang thêm hai cờ lấy từ thẻ OSM: cấm ô tô (ngõ nhỏ, cầu Long Biên, làn xe máy
+   cầu Chương Dương) và cấm xe máy (lòng giữa cầu Chương Dương). Để nút giao không khoá cứng: xe không rẽ vào và không được
+   sinh ra trên các "chiều chạy vô nghĩa" (mẩu đường hai chiều chỉ dẫn tới đường một chiều ngược lại, ngõ cụt ngắn hơn 60 m),
+   tính riêng cho từng nhóm xe (`badC`: lối đi tiếp phải hợp với chính loại xe đó, nên ô tô, buýt, xích lô không chạy vào một
+   đường một chiều mà cuối đường chỉ còn ngõ xe máy rồi biến mất ở đó);
+   trên đường hai chiều chỉ lấn sang phần đường ngược chiều khi bên đó thoáng và không ở sát nút; xe chạy chậm không vào nút
+   khi không kịp qua trước lúc dòng cắt ngang được đi, hoặc khi xe ngay trước còn nằm trong nút; hai xe đứng chắn mũi nhau thì
+   xe có số thứ tự nhỏ hơn lách qua sau 1,2 giây. Để xe không nằm đè lên nhau: mỗi khung hình lập "sổ nhập làn" cho từng
+   (cạnh, chiều), gồm các xe đang ở đầu cạnh và các xe sắp rẽ vào nó; xe không rẽ vào chỗ đang có xe, và trong các xe cùng rẽ
+   vào một phố thì xe xa nút hơn nhường (lưới tìm xe lân cận chỉ thấy xe ngay trước mũi theo hướng đang chạy, không thấy xe
+   sau góc rẽ); xe đứng yên trong hàng chờ không trượt ngang (xe đang chờ người đi bộ chắn trước mũi thì vẫn dắt ngang lách
+   qua); hai thân xe lỡ lồng vào nhau thì bị tách ra ngay: cùng chiều thì tách ngang; cắt chéo hay đối đầu thì mỗi xe dạt theo
+   phương ngang của chính nó phần độ lồng chiếu lên phương đó (trục tách ngắn nhất của hai hình chữ nhật, SAT), xe nhẹ nhường xe
+   nặng, và không bao giờ bị đẩy về phía người chơi đứng sát bên; luật này không huỷ bước tiến nào nên không gây tắc (công cụ soát
+   của reviewer, 75 nút × 60 s, ba hạt giống: cặp lồng nhau quá 2 giây 1006/931/871 → 503/591/485, trong khung nhìn của camera
+   294/269/192 → 127/139/109, lưu lượng qua vạch gần như không đổi). Xe bám đuôi giữ thêm khoảng cách bằng 0,35 giây chạy (trước
+   đây ở mọi tốc độ chỉ cách xe trước chừng 0,7 m nên xe trước phanh gấp là đâm vào đuôi): cùng ba hạt giống, cặp lồng nhau
+   503/591/485 → 413/484/347, trong khung nhìn 127/139/109 → 90/71/103. Mỗi xe nhớ xe đang chắn mình; khi chuỗi "ai chắn
+   ai" khép thành vòng (hai xe đứng cạnh nhau ở chỗ đường tách đôi, mỗi xe coi xe kia là xe trước), xe có số thứ tự nhỏ nhất
+   trong vòng đi trước. Cờ "đang chờ đèn đỏ" (không tính là kẹt) được truyền dọc hàng xe nhưng phải lần về được một xe đang thật sự
+   chờ đèn (`redD`: số xe tính từ xe đó); hai xe là "xe trước" của nhau ở chỗ nhập làn chéo từng giữ cờ đỏ cho nhau mãi nên luật gỡ
+   kẹt không chạy: trong vòng như thế `redD` tăng mỗi khung hình, quá 40 thì luật vòng chờ nhau chạy ngay (xe số nhỏ nhất đi trước),
+   không qua bộ đếm kẹt và các luật lách vốn để thân xe lồng vào nhau (đồng hồ game, 75 nút × 60 s, hai hạt giống có vòng như thế:
+   xe đứng quá 15 s trong lòng nút 42 → 20, lâu nhất 51,9 → 32,4 s; cặp lồng nhau trong khung nhìn 220 → 237; ba hạt khác không đổi). Xe ma quay đầu (bị người chơi chắn quá 8 giây trong phố đóng) xoay đầu tối đa 0,8 rad/s, đi chậm trong 4 giây. Xe cắt ngang đang chạy tới từ bên hông được đoán trước tới 2 giây: nó sẽ vào vệt đường của mình trước lúc
+   mình tới chỗ đó thì nhả ga như gặp xe đứng ở đúng chỗ nó cắt qua, mình tới trước thì đi. Đường bị cắt
+   ở mép bản đồ là lối ra: xe tới đó rời khỏi bản đồ chứ không quay đầu. Giờ cao điểm cả dòng xe chạy chậm lại; đi nhanh tới
+   nơi nào thì dòng xe và người đi bộ ở đó được rải sẵn như lúc vào game.
+16. **Nhà ống theo từng lô.** Khối nhà liền dãy của OSM được cắt thành các lô rộng 2,9 đến 5,3 m, mỗi lô có số tầng, màu,
+   tuổi nhà và kiểu mái riêng (`gen/buildings.js`); 47 lớp mặt đứng; biển hiệu theo quy tắc phố cổ (dải tầng trệt, cao
+   không quá 0,8 m, có biển vẫy). Bảng `gen/heroes.js` đặt chiều cao, màu và một nét nhận diện cho 28 toà nhà có tên. Tám dãy
+   lán chợ Long Biên (bản đồ ghi là nhà thương mại nên trước dựng thành nhà kính văn phòng) dựng theo kiểu mặt đứng chợ: một tầng,
+   mái tôn, cửa cuốn. **Phố sách 19 Tháng 12** (`gen/bookstreet.js`): bản đồ chỉ có hai lối lát gạch kẹp dải cỏ, nên hai dãy gian
+   sách được dựng dọc mép ngoài hai lối (56 gian: ki-ốt 3,6 × 2,6 m cao 2,7 m, tường trắng, mái đua, biển SÁCH / VĂN PHÒNG PHẨM /
+   TRANH DÂN GIAN / CÀ PHÊ, giá sách bốn tầng gáy nhiều màu, quầy bày sách, áp phích bìa sách trên vách hông, đèn tuýp sáng buổi
+   tối), cách nhau 1,6 m, bỏ 9 m ở hai đầu phố, tránh gốc cây, cột đèn, nhà, lối đi; bốn vách có va chạm. Biển chỉ dùng chữ chung,
+   không tên nhà xuất bản hay nhãn hiệu thật. Bố cục gian là dựng theo mô tả chung của phố sách (dãy gian một tầng dưới tán cây),
+   chưa đối chiếu sơ đồ gian thật.
+17. **Không khí Hà Nội.** Trời mù trắng xám là mặc định, có bốn kiểu thời tiết (`?weather=mu|thu|he|nom`). Sương hoà mọi
+   điểm ảnh ở xa vào đúng màu trời phía sau nó, ban đêm trời hửng nâu xám vì đèn thành phố nên cảnh xa không còn đen.
+   Mặt hè đổi theo khu (đá granite quanh Hồ Gươm và khắp khu Lăng, quảng trường Ba Đình, Phủ Chủ tịch kể cả lối đi giữa các
+   ô cỏ; đá xanh xám ở phố chính, gạch đỏ hoặc terrazzo ở nơi khác), bó vỉa
+   vát có rãnh và miệng thu nước, ô cây, nắp hố ga, vạch sơn mòn; miếng vá nhựa và vệt dầu không nằm đè lên vạch sang đường, vạch
+   dừng (tester vòng 4: mảng vá tối che nửa dải vạch ở một nút giao); trạm biến áp trên hè lùi vào cách bó vỉa 1 m để người quét
+   rác, người gánh hàng đi men bó vỉa không lọt vào lòng trạm (soát toàn bản đồ, 880 nghìn điểm trên làn men bó vỉa: trước lọt vào khối đồ đạc
+   phố khép kín ở 165 chỗ, nay 0); vũng sáng dưới đèn làm sáng chất liệu mặt đất thay
+   vì phủ trắng lên nó (`engine/sky.js`, `world/textures.js`, `gen/ground.js`, `gen/pits.js`). Cây đổi lá, ra hoa theo
+   mùa của thời tiết (mặc định `mu` là đông: phượng, bằng lăng chỉ còn lá, bàng lá đỏ; `he` là hè: phượng đỏ, bằng lăng
+   tím); cây sát mép nước ngả tán ra mặt hồ, gốc vẫn trên bờ (`models/street.js` SEASON, `gen/props.js`).
+18. **Cầu Chương Dương đúng mặt cắt.** Bộ dựng bản đồ nắn ba tuyến của cầu thành lòng ô tô 10,4 m ở giữa và hai làn xe
+   máy 3,4 m hai bên, chừa khe 0,4 m cho hai mặt phẳng dàn thép (`landmarks/cau_chuong_duong.js`); trụ cầu đứng đúng
+   đầu mỗi nhịp dàn. Người chơi không đi xuyên dàn được vì hai mặt cầu không liền nhau.
+19. **Phố đi bộ tối cuối tuần.** Game có thứ trong tuần (mở đầu là chiều thứ Năm, đồng hồ ghi thứ; tua giờ qua nửa đêm thì
+   sang ngày mới). Từ 19 giờ tới nửa đêm thứ Sáu, thứ Bảy, Chủ nhật, vòng quanh Hồ Gươm, các phố nhỏ phía đông hồ và trục chợ
+   đêm Hàng Đào - Đồng Xuân đóng lại (`world/walkzone.js`): dòng xe không vào, chiều chạy nào chỉ dẫn tới rào cũng không nhận
+   xe (để không dồn ứ trước rào), xe còn sót tự chạy ra (bị người chơi hay chiếc xe
+   người chơi dựng giữa phố chắn quá 8 giây thì quay đầu ra lối khác); rào chắn dựng ở 45 chỗ (`world/walkstreet.js`): đầu ngoài của
+   mọi đoạn đóng chạm đường còn mở, và mọi chỗ phố đi bộ gặp một đường khác kể cả phố nhánh đóng theo; người đi bộ đi cả dưới lòng
+   đường và đông gấp rưỡi; rào đặt cách nút ít nhất nửa bề rộng đường mở lớn nhất ở nút cộng 1,5 m (tối thiểu 4,5 m), nên rào không
+   bao giờ đứng trên làn phố mở; xe của người chơi chỉ bị coi là "sau rào" khi qua đúng vạch rào (trong bề ngang rào), hoặc khi
+   ở trên một đoạn đóng mà không nằm trên lòng đường mở nào (`behindGate` trong `main.js`; trước đây chỉ hỏi "tim đường gần nhất là
+   đoạn đóng", xe đi ngang miệng phố đóng ở nút giao bị chặn đứng: 62/112 vệt chạy thử → 0/112, mọi vệt đi vào vẫn dừng ở vạch rào;
+   trong vòng 12 m quanh một rào, cả vỉa hè phố mở tới 2,5 m ngoài mép đường cũng là phố mở: reviewer vòng 4 đo 13/56 vệt chạy
+   trên hè cách mép 1 m bị chặn ở 9 nút, nay 8, đều là vệt đi qua đúng vạch rào thật); quảng trường Đông Kinh Nghĩa Thục có thêm sáu tuyến đi bộ cắt ngang lòng quảng trường
+   (`actors/crowd.js` PLAZA_LINES: bản đồ không có lối nào trong lòng quảng trường nên trước đây người chỉ men theo mép), ngày
+   thường có người băng qua, đứng xem màn hình, tối phố đi bộ đông như phố đi bộ; lúc phố đi bộ đang mở ở gần, đám đông gấp ba và
+   người đi trên các phố đi bộ được rải dày gấp mười (QC vòng 3: tối thứ Bảy lòng phố Đinh Tiên Hoàng chỉ 3 đến 4 người); phố bia
+   Tạ Hiện tối nào (18 giờ tới 0 giờ 30) cũng đông gấp 2,5, quá nửa là khách ngồi kín ghế các quán quanh ngã tư Tạ Hiện - Lương
+   Ngọc Quyến; xe của người chơi tới ranh phố đóng thì dừng như gặp rào (lời nhắc: xuống xe đi bộ vào), lỡ ở sẵn bên
+   trong thì chỉ dắt ra được bằng tốc độ đi bộ, vào game bằng `?bike` giữa phố đóng thì không ngồi sẵn trên xe; cuốc xe ôm không đón
+   trả trong khu (soát cả chỗ dừng xe thật, không chỉ toạ độ điểm đến). Bố trí lúc
+   đóng phố (cạnh đóng, chiều cấm vào, chỗ rào) chỉ phụ thuộc mạng đường nên tính một lần lúc tải (`walkPlan`); bật, tắt lúc
+   chơi chỉ còn gán lại (0,2 ms thay vì khựng 50 đến 140 ms lúc 19 giờ).
+
+20. **Nhà và đường khớp nhau ngay từ dữ liệu.** `tools/build_world.mjs` sửa hình nhà, đường trước khi ghi `hanoi.json`, để lưới nhà, va
+   chạm, bản đồ nhỏ và `places.json` dùng chung một hình: ngõ cụt đâm vào nhà bị cắt ngắn; phần nhà nằm trong lòng đường xe chạy bị
+   cắt đi (kể cả lối xuyên nhà, thành lối hở); trong khu 36 phố phường (đa giác `OLD_Q` trong `world/data.js`: Phùng Hưng, Hàng Đậu, đê,
+   Hàng Bông - Hàng Gai - Cầu Gỗ) lòng đường về 5,5 đến 7 m và mặt tiền được nối dài ra tới mép hè 1,5 đến 2,4 m, mỗi nhà lệch nhau vài
+   chục cm; ngõ hẹp dưới 4 m giữa hai dãy nhà mang cờ 64 (`F_FLUSH`), `gen/ground.js` vẽ thành một mặt bê tông liền từ tường tới tường,
+   không bó vỉa (đầu ngõ cắt phẳng, dải bê tông hai bên ngõ dừng cách mặt nhựa của phố 1,4 m để bó vỉa của phố rẽ vào miệng ngõ); cây
+   do bộ sinh trồng dọc phố (`gen/props.js`) bỏ đi nếu tán sẽ đâm vào tường nhà quanh gốc, vì hè phố cổ chỉ còn 1,5 đến 2,4 m; công
+   trình nhỏ không tên trên sân quảng trường Ba Đình và nhà máy học vẽ trong khu đã giải toả phía đông Hồ Gươm bị bỏ.
+   Nhà bị bỏ vẫn giữ chỗ trong mảng (ghi số 0) và không đoạn đường nào bị xoá, vì chỉ số nhà, chỉ số đường là hạt giống của bộ sinh.
+   Bước cuối soát mọi vòng nhà: vòng tự cắt (do làm gọn đỉnh hay nối mặt tiền) được gỡ trước khi ghi (Clipper; chỗ cắt sát một
+   đỉnh mà Clipper không thấy thì cắt bỏ vòng con nhỏ hơn), vì tường, mái và lô nhà dựng theo vòng sẽ ra mặt chồng mặt.
+
+21. **Đám đông đứng đúng chỗ, xe lên cầu không ùn vô lý (tester và QC vòng 3).** Người đứng yên, khách quán cóc, người chờ
+   chỉ được đặt ngoài lòng đường xe chạy và khi từ mép vỉa hè tới chỗ đó không cắt bức tường nào (khách quán trên hè hẹp từng bị
+   đặt vào trong nhà); người đi bộ ngoài 22 m cũng soát tường (tám khung một lần) và dạt về phía mép đường khi vướng; bước va chạm
+   tường chạy trước bước đẩy người ra khỏi vòng 0,55 m quanh người chơi; người chơi ngồi trên xe thì người đi bộ bị đẩy ra khỏi hình
+   con nhộng bọc thân xe (đoạn ±0,85 m dọc xe) chứ không chỉ vòng quanh tâm (từng có người lướt qua cách trục xe 0,05 m); người
+   mặc áo tối màu không buộc tóc (không ai trùng hệt Minh); lối đi bộ trong dữ liệu có khúc xuyên qua lòng nhà (lối không tên ở phố
+   Hàng Bạc) thì không sinh người ở khúc đó, người đi tới đó thì bỏ (`nav.insideNear`: đếm chẵn lẻ số lần đoạn thẳng từ người tới tim
+   hai đường xe gần nhất cắt tường cao từ 2,5 m, cả hai lẻ mới là trong nhà; bản đầu đếm bốn tia dọc trục 20 m, tia cụt giữa một khối
+   lớn nên 1,5 % điểm lối đi bộ ngoài trời bị báo nhầm là trong nhà, người bị xoá ngay trước mắt; nay khớp phép thử chính xác theo
+   mặt bằng nhà ở cả 1 913 điểm quanh phố cổ, 11 µs một lần);
+   người dạo phố đi bộ sinh trong 55 m, quá 70 m thì bỏ, nên cùng số người mà quanh người chơi đông hơn. Tốp tập dưỡng sinh lúc rạng
+   sáng: lúc rải người ban đầu, có chỗ tập trong khung hình thật (tâm tốp lệch hướng nhìn dưới 37°) thì chỉ chọn trong số đó; hai tốp
+   không đứng cách nhau dưới 12 m (tốp chỉ đặt được một người cũng giữ chỗ), hàng đầu cách mép nước ít nhất 1,2 m. Làn xe máy trên cầu lấy tốc độ dòng của phố cấp 3 (28 km/h lúc đường vắng) thay vì của ngõ nhỏ (20 km/h); ban ngày cả dòng xe chậm đi 15% (10 giờ) tới 25% (giờ cao điểm) và mỗi xe nhanh chậm khác nhau chừng ±20%, nên trên mặt cầu Long Biên tester vòng 4 đo được trung vị 18,5–22 km/h, p90 23–26 km/h lúc 10 giờ và 17 giờ 30 (con số 28 km/h là tốc độ dòng, không phải tốc độ đo được). Làn hẹp dưới 4,5 m chỉ chứa nửa số xe của
+   hành lang phố người chơi: thử lên dốc cầu Long Biên giữ ga 60 giây, tốc độ trung bình 15,5 → 20,1 km/h.
 
 ## 5. Hiệu năng
 
@@ -151,15 +383,52 @@ Giới hạn của phép đo: môi trường dựng và CI không có GPU (Chrom
 ở đó mức Nhẹ đạt 1 đến 5 khung hình/giây), nên số khung hình/giây trên máy thật chưa được đo ở đây. Các con số trên là số lệnh vẽ, số tam giác và thời gian JavaScript, là những
 thứ quyết định độ mượt và đo được khách quan. Nên chạy thử trên vài máy và điện thoại thật trước khi quảng bá.
 
+Bộ nhớ khi đi nhanh nhiều lần (`tools/qa/leak.mjs`): ô phố nạp trong tầm nhìn (mức Nhẹ 444 m), chỉ gỡ khi cách người chơi quá 598 m
+(vùng đệm, để đi tới đi lui không nạp lại). Về một chỗ từ nơi gần thì các ô của nơi đó nằm trong vùng đệm vẫn còn: tester vòng 5 thấy
+"ô phố 38 → 44, đoạn va chạm +40%" sau khi về từ phố Bát Đàn cách 782 m, đếm lại đúng bằng 6 ô của Bát Đàn nằm trong vùng đệm (về từ
+cầu Chương Dương cách 1,3 km thì 0); số geometry trên GPU còn tuỳ bản gần, bản xa của từng ô đã từng được vẽ chưa. Đi lại sáu lượt giữa
+hai nơi cách 2 km thì các số đó đứng yên (phần r3). Bài r1 giờ đo ở nơi đầu lần nào cũng sau khi tới từ cùng một nơi xa, kể cả lần đo
+đầu. Ô đặt dựng ở chỗ cũ mà tới nơi khi người chơi đã đi nhanh đi xa thì bỏ luôn (`world/chunks.js`), không thêm vào cảnh.
+
 ## 6. Lối chơi
 
 - **Hộ chiếu**: 44 điểm chia năm trang (Hồ Gươm, Phố cổ, Khu phố Pháp, Ba Đình, Hồ Tây). Tới địa danh là đóng
   dấu và nhận 20k tiền mừng; đủ một trang thưởng 50k. Món ăn phải dừng lại bấm E và trả tiền (15k tới 45k).
+  Điểm chưa tới có cột sáng trong mờ dẫn đường từ xa (địa danh 32 m, món ăn 20 m): lại gần thì cột tan dần (dưới 30 m gần
+  như không còn, từ 110 m rõ hẳn) để không che mặt công trình; ban đêm cột mờ hơn ban ngày một chút; ba điểm trang nghiêm (Lăng,
+  quảng trường Ba Đình, Phủ Chủ tịch) không có cột sáng (QC vòng 3: cột xanh trước Lăng lúc tối lạc lõng), vẫn có trên bản đồ và
+  trong sổ; tắt hẳn được trong ⚙️ (Cột đánh dấu điểm đến, lưu `hn-beacons`).
 - **Xe máy** (F): ga, phanh, lái; Shift tăng ga; Space bóp còi. Xe ở xa thì Minh tự dắt lại.
 - **Xe ôm**: khách đứng vẫy ở vòng vàng, tạt vào bấm E để đón, chở tới vòng xanh. Tiền công theo quãng đường,
   thưởng theo độ êm. Ba hạng: xe ôm phố cổ (3 cuốc), xe ôm thạo đường (10), thổ địa Hà Nội (25).
 - **Giờ trong ngày** chạy liên tục (một giờ game dài sáu phút); N để nhảy tới sáng, trưa, chiều vàng, đêm.
-- **Bản đồ** (M): bấm vào điểm đã có dấu để đi nhanh. **Chụp ảnh** (P): ẩn giao diện, Enter để lưu ảnh.
+- **Bản đồ** (M): bấm vào điểm đã có dấu để đi nhanh tới **chỗ đứng ngắm** của điểm đó (trường `v = [x, z, hướng]` của
+  places.json, `tools/views.mjs` tính lúc dựng dữ liệu bằng đúng va chạm của game): không ở lòng đường xe chạy (cách mép làn
+  ≥ 0,5 m), không trên làn cầu, đứng được, đi bộ ra được đường; camera 4,4 m sau lưng không vướng tường, không có gốc cây trong
+  dải 3,8 m quanh 7 m đầu tầm nhìn. Theo loại điểm: công trình dựng tay thì nhìn vào mặt tiền (nón ±60°), khoảng cách tới hộp bao
+  của mô hình chừng 1,15 × chiều cao; toà nhà không có mô hình riêng thì chọn đúng toà nhà theo tên trong dữ liệu (Phủ Chủ Tịch,
+  Nhà tù Hỏa Lò, Nhà thờ Cửa Bắc, Ga Long Biên...; Hoàng thành là Đoan Môn), lấy điểm mẫu trên mặt tường ngoài, chọn chỗ thấy
+  được nhiều điểm mẫu nhất trong khung (tia không bị tường, tán cây chắn) rồi quay mặt về giữa phần tường thấy được; hồ thì đứng
+  bờ nhìn ra phía nhiều mặt nước nhất (Tháp Rùa: bờ gần nhất cách tháp chừng 75 m); cầu Long Biên, Chương Dương thì đứng trên bãi
+  dưới cầu nhìn chếch dọc nhịp; phố và món ăn thì đứng trên vỉa hè sát mép (phố đi bộ thì đứng ngay trên phố, phố Đường Tàu thì
+  cạnh đường ray) nhìn dọc phố, đúng con phố theo tên (phố sách là phố 19 Tháng 12, không phải phố Đinh Lễ cách 550 m). Tester
+  vòng 3 đo trên bản cũ 9/44 điểm thả người chơi giữa lòng đường đang có xe, cầu Long Biên và Chương Dương thả lên làn xe máy,
+  điểm nào chỗ đứng trùng điểm đóng dấu thì tới nơi không quay mặt về địa danh (không thấy Tháp Rùa, quay lưng lại Lăng); bản
+  mới: 0/44 trong lòng đường. Lời nhắc "Xe ôm chở tới ..." thay ngay lời nhắc đi nhanh trước (trước đây đi nhanh hai lần liền
+  thì hiện tên điểm cũ). Thẻ địa danh của chỗ cũ đóng lại. Trong lúc chờ dựng các ô ở nơi tới, nhân vật đứng yên tại chỗ: các ô quanh
+  chỗ cũ có thể đã bị cất cùng các đoạn va chạm của chúng, xe còn trớn lăn tiếp thì trôi qua bờ hồ (fuzz hạt 2 vòng 4: lọt 1 cm xuống
+  mép Hồ Gươm; tái hiện bằng cách bấm đi nhanh khi xe còn trớn 0,04 m/s sát bờ: bản cũ trôi 4,3 cm trong 141 khung chờ, bản mới 0).
+  Bảy điểm QC vòng 4 chê khung hình (đứng sát cửa đền Bạch Mã; tháp đồng hồ Bưu điện khuất sau tán cây; Hỏa Lò nhìn vào ngõ, không
+  thấy cổng; Bảo tàng Lịch sử nhìn dọc tường hông; phố sách không thấy gian sách; chợ Long Biên chung chung; Nhà thờ Lớn cụt tháp)
+  được dò lại bằng GPU: điểm mẫu đặt trên chính nét nhận biết (mặt tháp đồng hồ, mặt cổng MAISON CENTRALE, ba tầng mái bát giác, hai
+  tháp chuông, dãy cửa đền, dàn thép cầu), mỗi chỗ ứng viên tới thật trong game và thử năm độ ngẩng camera, đếm điểm thấy được (thử
+  độ sâu, tính cả tán lá), rồi xem ảnh từng chỗ tốt nhất mới ghim (`TUNE.pin` trong `tools/views.mjs`). `v` có thêm phần tử thứ tư
+  tuỳ chọn là độ ngẩng camera khi tới (Bưu điện -0,22, Nhà thờ Lớn -0,3: tháp cao 31,5–33,5 m, khung hình mặc định chỉ thấy tới
+  chừng 10 m ở khoảng cách 24 m); mọi lần đi nhanh khác đưa độ ngẩng về mặc định, như hướng camera vốn đã về sau lưng mỗi lần tới.
+  Bảo tàng Lịch sử: chỗ ngắm nhìn toà Louis Finot mái bát giác mà thẻ địa danh mô tả (toạ độ theo Wikipedia 21,0244; 105,8597 khớp
+  toà dựng mái bát giác trong vòng 30 m), cách điểm đóng dấu chừng 150 m; điểm đóng dấu lấy theo landmarks.json nằm ở toà phía bắc
+  của bảo tàng, giữ nguyên.
+  **Chụp ảnh** (P): ẩn giao diện, Enter để lưu ảnh.
 - **Song ngữ** Việt, Anh (L hoặc ⚙️). **Điện thoại**: nửa trái màn hình là cần điều khiển, nửa phải để nhìn.
 - Tiến độ, vị trí, giờ và cài đặt lưu trong trình duyệt. Không quảng cáo, không thu thập dữ liệu.
 
@@ -174,6 +443,7 @@ npm run build      # ra web/dist
 node tools/smoke.mjs   # kiểm thử khói trong Chromium (đặt CHROME_PATH nếu Playwright không có sẵn trình duyệt)
 npm run lint           # biến chưa khai báo, khai báo trùng
 npm run physics        # 25 phép thử vật lý so với số đo ngoài đời
+node tools/traffic_check.mjs   # dòng xe bằng số: cơ cấu, tốc độ, kẹt, xe đè lên nhau, né người qua đường
 npm run reach          # cả 44 điểm hộ chiếu có lối đi tới
 node tools/accept.mjs  # nghiệm thu trên trình duyệt: đi bộ qua cầu Thê Húc, xoay camera sát tường, đi nhanh 44 điểm,
                        # khách ngồi sau, HUD 1140 × 670, âm thanh và hai công tắc, các lỗi nhẹ (chạy lâu, không nằm trong CI)
@@ -189,8 +459,11 @@ npm run assets                         # sau khi đổi viewer/assets/walker.glb
 ```
 
 Tham số đường dẫn để chụp ảnh và dò lỗi: `?q=low|medium|high`, `?h=17.2` (cố định giờ), `?street=Phố Hàng Mã`,
-`?at=x,z` (mét, gốc ở Hồ Gươm, x hướng đông, z hướng nam), `?yaw=`, `?bike`, `?lang=en`, `?fresh` (bỏ vị trí đã
-lưu), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình).
+`?at=x,z` (mét, gốc ở Hồ Gươm, x hướng đông, z hướng nam), `?yaw=`, `?bike`, `?lang=en`, `?fresh` (vào trắng: không nạp
+tiến độ; bản lưu cũ được cất sang `hn-save-v2-bak` và bảng Cài đặt có nút khôi phục), `?shot` (bỏ màn hình chào), `?debug` (hiện số liệu khung hình), `?site=id` (đứng trước một công trình),
+`?weather=mu|thu|he|nom`, `?day=0..6` (thứ trong tuần, 0 là thứ Hai; `?day=5&h=20` là tối thứ Bảy có phố đi bộ). `node tools/shot.mjs out.png "h=17.2&street=Phố Hàng Đào"` chụp ảnh trong game không cần build;
+`node tools/hours.mjs` chụp 24 giờ tại một chỗ để soát màu trời. Tham số số thiếu, rỗng hay không phải số thì dùng giá trị mặc
+định, có thì kẹp vào khoảng hợp lệ (`pnum` trong `main.js`): đường dẫn hỏng không làm toạ độ thành NaN.
 
 ### Xưởng vẽ: công cụ dựng và soát mô hình
 
@@ -220,8 +493,8 @@ node tools/studio.mjs --shots out/ lm:thap_rua # chụp bảng 6 góc: 3/4, chí
 | `engine/` | renderer + hậu kỳ + độ phân giải động, bầu trời và giờ trong ngày, camera góc ba, điều khiển (bàn phím, chuột, cảm ứng, tay cầm), bộ điều tiết |
 | `world/` | giải mã bản đồ và cao độ cầu (`data.js`), worker và các bộ sinh `gen/`, chất liệu vẽ thủ tục, chất liệu chi tiết (`detail.js`), mặt đứng, biển hiệu, quản lý ô phố, va chạm |
 | `world/landmarks/` | 15 công trình dựng tay (14 đặt theo `sites.js`, cầu Long Biên dựng dọc tuyến cầu) |
-| `models/` | cây, đèn, xe máy, ô tô, xe buýt, xích lô |
-| `actors/` | Minh, dòng xe, người đi bộ, nướng hoạt hình |
+| `models/` | cây, đèn, đồ đạc phố (cột biển, đèn tín hiệu, tủ điện, nhà chờ, rào công trường), xe máy, ô tô, xe buýt, xe đạp, xích lô, xe điện du lịch |
+| `actors/` | Minh, dòng xe (`trafficsim.js`, `fleet.js`, `traffic.js`), người đi bộ theo vai (`crowd.js`, `cast.js`), nướng hoạt hình |
 | `game/` | hộ chiếu, cuốc xe ôm |
 | `ui/`, `audio/` | giao diện DOM, bản đồ, chữ song ngữ; âm thanh tổng hợp bằng WebAudio |
 | `../dev/`, `../tools/studio.mjs` | xưởng vẽ: trang soi mô hình, bộ soát lỗi, danh mục mô hình |
@@ -233,8 +506,9 @@ node tools/studio.mjs --shots out/ lm:thap_rua # chụp bảng 6 góc: 3/4, chí
   chi tiết của từng ngôi nhà.
 - Mọi người đi bộ và người lái xe dùng chung một mô hình (khác màu áo, chiều cao, nón); chưa có nữ, trẻ em,
   người già riêng.
-- Cầu đã có độ cao thật nhưng kết cấu còn giản lược: cầu Chương Dương chưa có dàn thép, trụ cầu là trụ tường đơn
-  giản đặt đều; mặt cầu Long Biên là bản đặc chứ chưa phải sàn thép hở; dốc cầu gãy góc nhẹ ở đỉnh dốc. Cầu cạn đường
+- Cầu đã có độ cao thật nhưng kết cấu còn giản lược: dàn thép Chương Dương dựng theo ước lượng (nhịp 89 m, cao 10 m,
+  chưa đối chiếu bản vẽ), trụ cầu là trụ tường đơn giản; mặt cầu Long Biên là bản đặc chứ chưa phải sàn thép hở; dốc
+  cầu gãy góc nhẹ ở đỉnh dốc. Cầu cạn đường
   sắt qua phố Phùng Hưng (ngoài đoạn dẫn lên cầu Long Biên) chưa dựng. Người đi bộ chưa lên cầu. Bản đồ dừng ở giữa
   sông: chạy hết cầu là gặp mép bản đồ.
 - Chưa có giọng nói, tiếng rao thật; mọi âm thanh và nhạc nền là tổng hợp (không tìm được bản thu nào vừa hợp vừa có

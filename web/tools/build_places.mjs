@@ -23,7 +23,7 @@ const lm = JSON.parse(fs.readFileSync(path.resolve('../game/content/world/landma
 for (const l of lm) {
   const [x, z] = XZ(l.location.lat, l.location.lon);
   if (x < x0 + 40 || x > x1 - 40 || z < z0 + 40 || z > z1 - 40) continue;
-  items.push({ id: l.id, kind: l.kind === 'street' ? 'culture' : 'landmark', type: l.kind, icon: ICON[l.kind] || '📍', name: l.name, desc: l.description, year: l.built_year || null, x: +x.toFixed(1), z: +z.toFixed(1), page: page(x, z), solemn: SOLEMN.has(l.id) || undefined });
+  items.push({ id: l.id, kind: l.kind === 'street' ? 'culture' : 'landmark', type: l.kind, icon: ICON[l.kind] || '📍', name: l.name, desc: l.description, year: l.built_year || null, x: +x.toFixed(1), z: +z.toFixed(1), page: page(x, z), solemn: SOLEMN.has(l.id) || undefined, _o: [x, z] });
 }
 const foods = JSON.parse(fs.readFileSync(path.resolve('content/foods.json'), 'utf8')).items;
 const roads = world.roads.map((r) => { const p = []; let x = 0, z = 0; for (let i = 0; i < r[5].length; i += 2) { x += r[5][i]; z += r[5][i + 1]; p.push([x / 10, z / 10]); } return { name: world.names[r[3]], p }; });
@@ -63,6 +63,9 @@ for (const f of foods) {
     if (q && Math.hypot(it.s[0] - it.x, it.s[1] - it.z) > radius - 2) { console.log(`  dời ${it.id} về trước mặt công trình (${it.s})`); set(fwd({ x: it.s[0], z: it.s[1], yaw: q.yaw }, -4).map((v) => +v.toFixed(1))); moved++; }
   }
   console.log(moved, 'điểm được dời về chỗ tới được');
+  // chỗ đứng ngắm khi đi nhanh bằng bản đồ (tools/views.mjs): v = [x, z, hướng]
+  const V = await (await import('./views.mjs')).makeViews(R, items, (it) => it._o);
+  for (const it of items) { it.v = V.get(it.id); delete it._o; }
 }
 fs.writeFileSync(path.resolve('public/world/places.json'), JSON.stringify({ pages: ['hoguom', 'phoco', 'phophap', 'badinh', 'hotay'], items }));
 const by = {}; for (const i of items) by[i.page] = (by[i.page] || 0) + 1;

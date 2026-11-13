@@ -35,7 +35,7 @@ export class Fares {
     return null;
   }
   offer(player) {
-    const c = this.curbside(player.pos.x, player.pos.z, 35, 110); if (!c) return;
+    const c = this.curbside(player.pos.x, player.pos.z, 35, 110); if (!c || (this.avoid && this.avoid(c.x, c.z))) return; // avoid(x, z): chỗ xe không tới được (phố đi bộ đang hoặc sắp đóng)
     const k = Math.floor(Math.random() * FACES.length);
     this.cust = { ...c, k, face: FACES[k] }; this.state = 'offer';
     this.pickRing.position.set(c.x, 0.06, c.z); this.pickBeam.position.set(c.x, 0, c.z); this.pickRing.visible = this.pickBeam.visible = true;
@@ -45,9 +45,13 @@ export class Fares {
   name(l) { return NAMES[l][this.cust.k]; }
   pickup(player) {
     // điểm trả: cạnh một điểm chưa đóng dấu, cách đây 250 m trở lên nếu có
-    const P = this.passport, cands = P.items.filter((i) => !P.visited.has(i.id) && !i.solemn).map((i) => ({ i, d: Math.hypot(i.x - player.pos.x, i.z - player.pos.z) })).filter((c) => c.d > 220).sort((a, b) => a.d - b.d);
-    const target = cands.length ? cands[Math.floor(Math.random() * Math.min(4, cands.length))].i : P.items[Math.floor(Math.random() * P.items.length)];
-    const c = this.curbside(target.x, target.z, 8, 40) || { x: target.x, z: target.z };
+    const P = this.passport, cands = P.items.filter((i) => !P.visited.has(i.id) && !i.solemn && !(this.avoid && this.avoid(i.x, i.z))).map((i) => ({ i, d: Math.hypot(i.x - player.pos.x, i.z - player.pos.z) })).filter((c) => c.d > 220).sort((a, b) => a.d - b.d);
+    const open = P.items.filter((i) => !i.solemn && !(this.avoid && this.avoid(i.x, i.z))), any = open.length ? open : P.items;
+    // chỗ dừng xe thật (lề đường gần điểm đến) cũng không được nằm trong phố đi bộ: điểm đến nằm sâu trong phố đóng thì thử điểm khác
+    const order = cands.length ? [...cands.slice(0, 4).sort(() => Math.random() - 0.5), ...cands.slice(4)].map((q) => q.i) : [...any].sort(() => Math.random() - 0.5);
+    let target = order[0], c = null;
+    for (const it of order) { const q = this.curbside(it.x, it.z, 8, 40) || { x: it.x, z: it.z }; if (this.avoid && this.avoid(q.x, q.z)) continue; target = it; c = q; break; }
+    if (!c) c = this.curbside(target.x, target.z, 8, 40) || { x: target.x, z: target.z };
     this.dest = { x: c.x, z: c.z, place: target }; this.state = 'ride'; this.comfort = 1; this.penalty = 0; this.hits = 0; this.total = Math.hypot(c.x - player.pos.x, c.z - player.pos.z); this.start = { x: player.pos.x, z: player.pos.z };
     this.pickRing.visible = this.pickBeam.visible = false; this.dropRing.position.set(c.x, 0.06, c.z); this.dropBeam.position.set(c.x, 0, c.z); this.dropRing.visible = this.dropBeam.visible = true;
     this.crowd.setGuest(null); player.passenger = true;

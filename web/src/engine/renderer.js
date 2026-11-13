@@ -6,6 +6,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 
+const BLOOM_MAX = 6; // trần độ sáng (trước phơi sáng) của một điểm ảnh khi làm nguồn bloom
 const FinalShader = {
   uniforms: { tDiffuse: { value: null }, uExposure: { value: 1 }, uVignette: { value: 0.32 }, uSat: { value: 1.08 }, uTint: { value: new THREE.Vector3(1, 1, 1) } },
   vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
@@ -21,7 +22,7 @@ const FinalShader = {
     void main(){
       vec3 c = texture2D(tDiffuse, vUv).rgb * uTint;
       c = hnAces(c);
-      float l = dot(c, vec3(0.2126, 0.7152, 0.0722)); c = mix(vec3(l), c, uSat);
+      float l = dot(c, vec3(0.2126, 0.7152, 0.0722)); c = max(mix(vec3(l), c, uSat), 0.0); // tăng bão hoà có thể đẩy kênh màu xuống dưới 0: pow ở dưới sẽ ra NaN
       vec2 q = vUv - 0.5; c *= 1.0 - uVignette * smoothstep(0.25, 0.95, dot(q, q) * 2.2);
       c = mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
       // nhiễu hạt rất nhẹ để xoá dải màu trên nền trời
@@ -33,13 +34,26 @@ const FinalShader = {
 export class Renderer {
   constructor(canvas, quality, params) {
     this.q = quality;
-    const r = this.r = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', stencil: false, preserveDrawingBuffer: params.has('shot') });
+    // Tự tạo ngữ cảnh WebGL2 trước rồi mới đưa cho three.js, thử lần lượt vài cấu hình (máy dùng card tích hợp có thể từ chối
+    // "high-performance"). Nếu không cấu hình nào được thì báo lỗi rõ ràng (mã NO_WEBGL2) để màn hình tải hướng dẫn người chơi.
+    // Lý do không để three.js tự tạo: bản 0.181 có lỗi trong khối catch (biến `error` che mất hàm ghi log cùng tên), khiến
+    // người chơi chỉ thấy "A is not a function" thay vì nguyên nhân thật.
+    const preserve = params.has('shot'), base = { alpha: false, depth: true, stencil: false, antialias: false, premultipliedAlpha: true, preserveDrawingBuffer: preserve, failIfMajorPerformanceCaveat: false };
+    let why = ''; const onErr = (e) => { why = e.statusMessage || why; }; canvas.addEventListener('webglcontextcreationerror', onErr);
+    let gl = null;
+    for (const extra of [{ powerPreference: 'high-performance' }, { powerPreference: 'default' }, { powerPreference: 'low-power' }]) {
+      try { gl = canvas.getContext('webgl2', { ...base, ...extra }); } catch (e) { why = e.message || why; }
+      if (gl) break;
+    }
+    canvas.removeEventListener('webglcontextcreationerror', onErr);
+    if (!gl) throw Object.assign(new Error(why || 'WebGL2 context could not be created'), { code: 'NO_WEBGL2' });
+    const r = this.r = new THREE.WebGLRenderer({ canvas, context: gl, antialias: false, stencil: false, preserveDrawingBuffer: preserve });
     r.shadowMap.enabled = quality.shadow > 0; r.shadowMap.type = quality.name === 'high' ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
     r.shadowMap.autoUpdate = false;
     r.toneMapping = THREE.ACESFilmicToneMapping; r.outputColorSpace = THREE.SRGBColorSpace;
     r.info.autoReset = false;
     this.maxDpr = Math.min(window.devicePixelRatio || 1, quality.dpr); this.dpr = this.maxDpr; this.minDpr = Math.min(quality.minDpr, this.maxDpr);
-    this.fixedDpr = params.has('shot') || params.has('dpr'); if (params.has('dpr')) this.dpr = +params.get('dpr');
+    const dp = params.has('dpr') ? Number(params.get('dpr')) : NaN, dpOk = Number.isFinite(dp) && dp > 0; this.fixedDpr = params.has('shot') || dpOk; if (dpOk) this.dpr = Math.min(3, Math.max(0.25, dp));
     this.frame = 0; this.avg = 16; this.cool = 0;
     this.scene = null; this.camera = null;
   }
@@ -53,6 +67,16 @@ export class Renderer {
       this.composer = new EffectComposer(r, rt);
       this.composer.addPass(new RenderPass(scene, camera));
       this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x / 2, size.y / 2), 0.2, 0.55, 1.0);
+      // Bloom của three.js lấy nguyên giá trị HDR của điểm ảnh vượt ngưỡng: chỉ cần vài điểm ảnh sáng gấp trăm lần (một chỗ cộng
+      // dồn ánh sáng quá tay) là quầng sáng loang trắng cả màn hình. Chặn nguồn bloom ở BLOOM_MAX: đèn vẫn có quầng, nhưng không
+      // nguồn sáng nào tự nó nhuộm trắng được khung hình. (max với 0 để một điểm ảnh âm hay hỏng không lan ra thành mảng đen.)
+      this.bloom.materialHighPassFilter.fragmentShader = /* glsl */`
+        uniform sampler2D tDiffuse; uniform vec3 defaultColor; uniform float defaultOpacity, luminosityThreshold, smoothWidth; varying vec2 vUv;
+        void main(){
+          vec4 texel = texture2D(tDiffuse, vUv); texel.rgb = clamp(texel.rgb, vec3(0.0), vec3(${BLOOM_MAX.toFixed(1)}));
+          float v = dot(texel.rgb, vec3(0.2126, 0.7152, 0.0722));
+          gl_FragColor = mix(vec4(defaultColor, defaultOpacity), texel, smoothstep(luminosityThreshold, luminosityThreshold + smoothWidth, v));
+        }`;
       this.composer.addPass(this.bloom);
       this.final = new ShaderPass(FinalShader); this.composer.addPass(this.final);
     }

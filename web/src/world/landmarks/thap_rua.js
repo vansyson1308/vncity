@@ -4,6 +4,10 @@
 // từ nền gò lên đỉnh 8,8 m. Hai tầng dưới cửa vòm nhọn (ba cửa mặt dài, hai cửa mặt ngắn), tầng ba mỗi mặt một cửa vòm tròn.
 import { hash } from '../../core/util.js';
 import { MAT } from '../../core/geo.js';
+import { floodlit } from './lighting.js';
+
+// Ban đêm tháp được rọi đèn vàng ấm từ chân tháp (art bible mục 7): mức đèn pha riêng cao hơn mức chung của các công trình khác.
+export const flood = 1.1;
 
 const s2l = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 const lin = (h) => [s2l(((h >> 16) & 255) / 255), s2l(((h >> 8) & 255) / 255), s2l((h & 255) / 255)];
@@ -161,7 +165,7 @@ export function build(g) {
   islet(g);
 
   g.push().move(0, TOP - 0.06, 0);
-  // Ban đêm tháp được rọi đèn tự động như mọi công trình (không tự phát sáng).
+  const tower0 = g.count;
 
   // nền móng hai cấp
   let from = g.count;
@@ -207,6 +211,8 @@ export function build(g) {
   g.color(WALL_HI).shade(0.9); g.cube(0, y5 + 0.14, 0, 0.5, 0.2, 0.5);
   g.color(TRIM); g.cyl(0, y5 + 0.34, 0, 0.13, 0.04, 0.3, 6);
   weather(g, from, y5, y5 + 0.6, 9, 0.2, 0.7);
+  // đèn rọi từ chân tháp hắt lên: thân tháp sáng nhất ở tầng một, dịu dần lên đỉnh (cộng với lớp đèn pha vàng ấm `flood` ở trên)
+  floodlit(g, tower0, g.count, (x, y) => 0.16 * (1 - 0.7 * Math.min(1, Math.max(0, (y - TOP) / 8.8))));
 
   g.glow(0).mat().pop();
 

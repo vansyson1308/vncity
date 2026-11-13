@@ -38,6 +38,8 @@ jobs:
         run: npx eslint src dev tools
       - name: Vật lý xe và người khớp số đo ngoài đời
         run: node tools/physics_check.mjs
+      - name: Dòng xe (cơ cấu, tốc độ, kẹt, đè lên nhau)
+        run: node tools/traffic_check.mjs
       - name: Cả 44 điểm hộ chiếu đều có lối đi tới và chỗ đứng khi đi nhanh
         run: node tools/reach_check.mjs
       - name: Bộ sinh thành phố dựng được mọi ô phố, trong ngân sách tam giác

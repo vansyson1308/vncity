@@ -4,8 +4,9 @@ export const lerp = (a, b, t) => a + (b - a) * t;
 export const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
 export const TAU = Math.PI * 2;
 export const wrapAngle = (a) => { a = (a + Math.PI) % TAU; if (a < 0) a += TAU; return a - Math.PI; };
-export const damp = (cur, target, rate, dt) => lerp(cur, target, 1 - Math.exp(-rate * dt));
-export const dampAngle = (cur, target, rate, dt) => cur + wrapAngle(target - cur) * (1 - Math.exp(-rate * dt));
+// (dt âm hay NaN thì đứng yên: với dt < 0 hệ số 1 − e^(−rate·dt) âm rất lớn, giá trị bị đẩy ra xa hàng nghìn lần)
+export const damp = (cur, target, rate, dt) => (dt > 0 ? lerp(cur, target, 1 - Math.exp(-rate * dt)) : cur);
+export const dampAngle = (cur, target, rate, dt) => (dt > 0 ? cur + wrapAngle(target - cur) * (1 - Math.exp(-rate * dt)) : cur);
 
 // Băm số nguyên → [0,1). Tất định, dùng để nhà nào cũng ra cùng màu, cùng số tầng ở mọi lần chơi.
 export function hash(i, k = 0) {

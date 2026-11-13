@@ -4,21 +4,41 @@ import { clamp } from '../core/util.js';
 
 const KEYMAP = { e: 'interact', enter: 'interact', f: 'mount', ' ': 'horn', h: 'horn', m: 'map', n: 'time', b: 'book', p: 'photo', l: 'lang', escape: 'back', tab: 'book', c: 'camera', r: 'reset', v: 'camera', g: 'job' };
 
+// Phím được nhận theo VỊ TRÍ trên bàn phím (e.code), không theo ký tự (e.key): bố cục bàn phím khác, Caps Lock hay bộ gõ tiếng
+// Việt đều không làm lệch điều khiển (gõ Telex thì phím W cho ra "ư", còn trình duyệt báo e.key = "Process" khi đang ghép chữ).
+// Phím không có trong bảng thì mới xét theo ký tự. Bộ gõ kiểu Unikey nuốt hẳn phím gốc rồi gửi ký tự đã ghép (e.code rỗng):
+// trường hợp đó trang web không giữ phím được, nên chỉ báo cho người chơi biết (onIme) để tắt bộ gõ hoặc dùng phím mũi tên.
+// Phím đi lại và phím chức năng không in chữ: luôn theo vị trí. Phím tắt bằng chữ cái (E, M, B...): theo chữ in trên phím (đúng với
+// cả Dvorak, Colemak, AZERTY); chỉ khi ký tự tới không phải chữ thường ASCII (bộ gõ đang ghép chữ) mới lấy theo vị trí.
+const MOVE = { KeyW: 'w', KeyA: 'a', KeyS: 's', KeyD: 'd', Space: ' ', ShiftLeft: 'shift', ShiftRight: 'shift', ArrowUp: 'arrowup', ArrowDown: 'arrowdown', ArrowLeft: 'arrowleft', ArrowRight: 'arrowright',
+  Enter: 'enter', NumpadEnter: 'enter', Escape: 'escape', Tab: 'tab' };
+const LETTER = { KeyE: 'e', KeyF: 'f', KeyH: 'h', KeyM: 'm', KeyN: 'n', KeyB: 'b', KeyP: 'p', KeyL: 'l', KeyC: 'c', KeyR: 'r', KeyV: 'v', KeyG: 'g' };
+const VI = { ư: 'w', đ: 'd', â: 'a', ă: 'a', ê: 'e', ô: 'o', ơ: 'o' };
+export const keyToken = (e) => {
+  const m = MOVE[e.code]; if (m) return m;
+  const k = (e.key || '').toLowerCase();
+  if (k.length === 1 && k >= 'a' && k <= 'z') return k === 'w' || k === 'a' || k === 's' || k === 'd' ? (e.code ? '' : k) : k; // chữ W A S D nằm ở phím khác (bàn phím không phải QWERTY): không phải phím đi lại
+  return LETTER[e.code] || VI[k] || k;
+};
+// ký tự tiếng Việt đã ghép tới mà không kèm mã phím: dấu hiệu của bộ gõ đang nuốt phím
+const imeEaten = (e) => !e.code && typeof e.key === 'string' && e.key.length === 1 && e.key.charCodeAt(0) > 127;
+
 export class Input {
   constructor(canvas) {
     this.canvas = canvas; this.keys = new Set(); this.pressed = new Set();
     this.move = { x: 0, y: 0 }; this.look = { x: 0, y: 0 }; this.run = false; this.zoom = 0;
     this.touch = matchMedia('(pointer: coarse)').matches; this.locked = false; this.enabled = false; this.lastLook = 0;
     this.stick = { id: null, cx: 0, cy: 0, x: 0, y: 0 }; this.lookTouch = null; this.runToggle = false; this.dragging = false;
-    this.onFirstGesture = null;
+    this.onFirstGesture = null; this.onIme = null; this.held = new Map(); // held: mã phím đang giữ → tên phím đã ghi nhận lúc nhấn
 
     addEventListener('keydown', (e) => {
-      if (e.repeat) return; const k = e.key.toLowerCase(); this.keys.add(k);
+      if (imeEaten(e) && this.onIme) { this.onIme(); this.onIme = null; }
+      if (e.repeat) return; const k = keyToken(e); this.keys.add(k); if (e.code) this.held.set(e.code, k);
       if (!this.enabled && !['escape', 'enter', 'e', ' ', 'm', 'b', 'tab'].includes(k)) return; // đang mở hộp thoại: chỉ nhận phím đóng
       if (KEYMAP[k]) { this.pressed.add(KEYMAP[k]); if (k === 'tab' || k === ' ') e.preventDefault(); }
     });
-    addEventListener('keyup', (e) => this.keys.delete(e.key.toLowerCase()));
-    addEventListener('blur', () => this.keys.clear());
+    addEventListener('keyup', (e) => { const k = (e.code && this.held.get(e.code)) || keyToken(e); this.held.delete(e.code); this.keys.delete(k); });
+    addEventListener('blur', () => { this.keys.clear(); this.held.clear(); });
     // chuột: bấm vào khung hình để khoá con trỏ (nhìn tự do như game góc ba); không khoá được thì kéo để nhìn
     canvas.addEventListener('pointerdown', (e) => {
       this.gesture();

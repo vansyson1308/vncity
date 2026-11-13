@@ -21,6 +21,7 @@ export class Nav {
     this.hasElev = world.roads.some((r) => r.elev);
     this.chunks = new Map(); // khoá ô → { segs, cells }
     this.decks = [];         // mặt cầu đi bộ được (cầu Thê Húc): { ax, az, bx, bz, w, y(t) }
+    this.pads = [];          // bậc thềm, nền thấp của công trình dựng tay (landmarks/sites.js modelPads): lưới cao độ { x0, z0, x1, z1, c, nz, h }
     this._t = [0]; this.hit = { r: null, seg: 0, t: 0, d: 0, px: 0, pz: 0 };
   }
 
@@ -42,11 +43,17 @@ export class Nav {
   }
 
   addDeck(d) { d.len = Math.hypot(d.bx - d.ax, d.bz - d.az); this.decks.push(d); }
+  addPads(p) { this.pads.push(p); }
+  // Mặt bậc thềm cao nhất tại (x,z) (m, cao độ thế giới), 0 nếu không có
+  padY(x, z) {
+    for (const p of this.pads) { if (x < p.x0 || z < p.z0 || x >= p.x1 || z >= p.z1) continue; const h = p.h[Math.floor((x - p.x0) / p.c) * p.nz + Math.floor((z - p.z0) / p.c)]; if (h) return h / 100; }
+    return 0;
+  }
   // Mặt cầu tại (x,z), nếu có. Kết quả: this.deckT (0..1 dọc cầu), this.deckS (lệch ngang, m).
-  deckAt(x, z, pad = 0) {
+  deckAt(x, z, pad = 0, tm = 0.02) {
     for (const d of this.decks) {
       const ux = (d.bx - d.ax) / d.len, uz = (d.bz - d.az) / d.len, t = ((x - d.ax) * ux + (z - d.az) * uz) / d.len, s = (x - d.ax) * uz - (z - d.az) * ux;
-      if (t > -0.02 && t < 1.02 && Math.abs(s) < d.w / 2 + pad) { this.deckT = Math.min(1, Math.max(0, t)); this.deckS = s; return d; }
+      if (t > -tm && t < 1 + tm && Math.abs(s) < d.w / 2 + pad) { this.deckT = Math.min(1, Math.max(0, t)); this.deckS = s; return d; }
     }
     return null;
   }
@@ -76,10 +83,11 @@ export class Nav {
   // Cao độ mặt đất: 0 trong lòng đường, CURB trên vỉa hè, chuyển mượt 25 cm ở mép; trên cầu thì theo mặt cầu.
   // y: cao độ hiện tại của người/xe (mặc định là đang ở dưới đất), để phân biệt đang chạy trên cầu hay đi dưới gầm cầu.
   groundY(x, z, y = 0) {
-    if (this.decks.length) { const d = this.deckAt(x, z, 0.3); if (d) return CURB + d.y(this.deckT); }
+    // (mặt cầu chỉ tính từ đúng đầu cầu: trước đây tính thêm 2% chiều dài, người đứng lơ lửng 0,35 m trên đoạn 0,9 m trước đầu cầu)
+    if (this.decks.length) { const d = this.deckAt(x, z, 0.3, 0.002); if (d) return CURB + d.y(this.deckT); }
     if (this.hasElev && this.elevatedAt(x, z, y) && this.eY > 0.45) return this.eY;
     let best = 1e9, lift = 0; const gc = this.gc, t = this._t;
-    const l = this.grid.get(Math.floor(x / gc) * 65537 + Math.floor(z / gc)); if (!l) return CURB;
+    const l = this.grid.get(Math.floor(x / gc) * 65537 + Math.floor(z / gc)); if (!l) return this.pads.length ? Math.max(CURB, this.padY(x, z)) : CURB;
     for (let k = 0; k < l.length; k += 2) {
       const r = l[k]; if (!(r.veh || r.kind === K.pedestrian)) continue;
       const i = l[k + 1], p = r.p, d = Math.sqrt(segDist2(x, z, p[i], p[i + 1], p[i + 2], p[i + 3], t)) - r.w / 2;
@@ -88,8 +96,10 @@ export class Nav {
       if (r.elev) { ey = roadY(r, r.cum[i / 2] + t[0] * (r.cum[i / 2 + 1] - r.cum[i / 2])); if (ey > 0.45) continue; } // khúc cầu đã lên cao: bên dưới là vỉa hè, mặt nước
       best = d; lift = ey;
     }
-    const k = clamp(best / 0.25, 0, 1);
-    return k * CURB + (1 - k) * lift; // chân dốc lên cầu: lòng đường nhô dần lên
+    const k = clamp(best / 0.25, 0, 1), gy = k * CURB + (1 - k) * lift; // chân dốc lên cầu: lòng đường nhô dần lên
+    // bậc thềm của công trình dựng tay: đứng trên mặt bậc, không lún chân vào trong (tester vòng 4: bậc thềm ga Hà Nội che chân tới gối)
+    if (this.pads.length) { const h = this.padY(x, z); if (h > gy) return h; }
+    return gy;
   }
   onRoad(x, z) { return this.groundY(x, z) < CURB * 0.5; }
 
@@ -123,6 +133,7 @@ export class Nav {
   // Đẩy vòng tròn bán kính r tại p {x,z} ra khỏi các bức tường. Trả về số lần chạm; pháp tuyến va chạm cuối ở this.nx, this.nz.
   collide(p, r, skipWater = false, y = 0) {
     let hits = 0; const t = this._t; this.nx = 0; this.nz = 0;
+    if (!(Number.isFinite(p.x) && Number.isFinite(p.z))) return 0; // toạ độ hỏng: không đụng tới, nơi gọi tự khôi phục
     // trên mặt cầu nâng (cao hơn 0,7 m): không va vào nhà bên dưới, chỉ bị lan can giữ lại
     if (this.hasElev && y > 0.7) {
       const er = this.elevatedAt(p.x, p.z, y, 3);
@@ -159,6 +170,97 @@ export class Nav {
     if (p.x < b.x0 + m) { p.x = b.x0 + m; hits++; this.nx = 1; } else if (p.x > b.x1 - m) { p.x = b.x1 - m; hits++; this.nx = -1; }
     if (p.z < b.z0 + m) { p.z = b.z0 + m; hits++; this.nz = 1; } else if (p.z > b.z1 - m) { p.z = b.z1 - m; hits++; this.nz = -1; }
     return hits;
+  }
+
+  // Vòng tròn bán kính r tại (x,z) có trống không: không chạm bức tường nào cao từ y trở lên (bờ nước không tính).
+  clearAt(x, z, r, y = 0) {
+    let ok = true; const r2 = r * r;
+    this.eachSeg(x, z, r + 0.05, (s, i) => { if (ok && s[i + 4] >= y && s[i + 4] >= 0 && segDist2(x, z, s[i], s[i + 1], s[i + 2], s[i + 3]) < r2) ok = false; });
+    return ok;
+  }
+
+  // Bước thẳng từ (x0,z0) tới (x1,z1) có thông không: không cắt bức tường hay bờ nước nào, chỗ tới không phải mặt nước và đủ
+  // rộng cho vòng tròn bán kính r. Dùng khi đặt người xuống cạnh xe, dựng xe cạnh người: `collide` chỉ đẩy ra khỏi đoạn tường
+  // gần nhất nên một điểm đã lọt sang bên kia tường sẽ bị đẩy sâu thêm vào lòng nhà.
+  freeStep(x0, z0, x1, z1, r) {
+    if (!(Number.isFinite(x1) && Number.isFinite(z1))) return false;
+    if (this.isWater(x1, z1) && !(this.decks.length && this.deckAt(x1, z1, 0.6))) return false;
+    const b = this.b, m = 6; if (x1 < b.x0 + m || x1 > b.x1 - m || z1 < b.z0 + m || z1 > b.z1 - m) return false;
+    let ok = true; const dx = x1 - x0, dz = z1 - z0, r2 = r * r;
+    this.eachSeg((x0 + x1) / 2, (z0 + z1) / 2, Math.hypot(dx, dz) / 2 + r + 0.1, (s, i) => {
+      if (!ok) return;
+      const ax = s[i], az = s[i + 1], ex = s[i + 2] - ax, ez = s[i + 3] - az, den = dx * ez - dz * ex;
+      if (Math.abs(den) > 1e-9) { const t = ((ax - x0) * ez - (az - z0) * ex) / den, u = ((ax - x0) * dz - (az - z0) * dx) / den; if (t >= 0 && t <= 1 && u >= 0 && u <= 1) { ok = false; return; } }
+      if (segDist2(x1, z1, ax, az, s[i + 2], s[i + 3]) < r2) ok = false;
+    });
+    return ok;
+  }
+
+  // Chỗ đứng trống cạnh điểm (x,z) của một vật quay mặt hướng yaw: thử bên trái, bên phải, chéo trước, phía trước, rồi mới tới chéo
+  // sau, phía sau (phía sau là chỗ camera đứng: dựng xe ở đó thì camera chui vào xe), mỗi phía ở khoảng cách d rồi 0,7 d. Không có
+  // chỗ nào thông thì trả về chính (x,z). Kết quả ở out {x,z}.
+  besideFree(x, z, yaw, d, r, out) {
+    const c = Math.cos(yaw), s = Math.sin(yaw), q = Math.SQRT1_2;
+    for (const k of [1, 0.7]) for (const [lx, lz] of [[c, -s], [-c, s], [(c + s) * q, (c - s) * q], [(s - c) * q, (s + c) * q], [s, c], [(c - s) * q, (-s - c) * q], [(-c - s) * q, (s - c) * q], [-s, -c]]) {
+      const px = x + lx * d * k, pz = z + lz * d * k;
+      if (this.freeStep(x, z, px, pz, r)) { out.x = px; out.z = pz; return true; }
+    }
+    out.x = x; out.z = z; return false;
+  }
+
+  // Điểm (x,z) có nằm trong lòng một khối đặc (nhà, khối giữ chỗ của công trình) không: đếm chẵn lẻ số lần bốn tia dọc trục cắt
+  // các bức tường cao từ 2,5 m của những ô đã nạp (tường nhà là vòng khép kín, xếp trọn vào một ô); cần ít nhất ba tia lẻ.
+  // Duyệt hết mọi đoạn tường nên chỉ gọi khi cần (lúc khôi phục vị trí đã lưu), không gọi mỗi khung hình.
+  inSolid(x, z) {
+    let px = 0, nx = 0, pz = 0, nz = 0;
+    for (const c of this.chunks.values()) { const s = c.segs; for (let i = 0; i < s.length; i += 5) {
+      if (!(s[i + 4] >= 2.5)) continue;
+      const ax = s[i], az = s[i + 1], bx = s[i + 2], bz = s[i + 3];
+      if ((az > z) !== (bz > z)) { const xi = ax + ((z - az) * (bx - ax)) / (bz - az); if (xi > x) px++; else nx++; }
+      if ((ax > x) !== (bx > x)) { const zi = az + ((x - ax) * (bz - az)) / (bx - ax); if (zi > z) pz++; else nz++; }
+    } }
+    return (px & 1) + (nx & 1) + (pz & 1) + (nz & 1) >= 3;
+  }
+
+  // Như inSolid nhưng rẻ (gọi được mỗi giây vài lần): đếm chẵn lẻ số lần đoạn thẳng từ (x, z) tới tim đường xe gần nhất cắt tường cao
+  // từ 2,5 m (tim đường xe nằm ngoài mọi nhà: lẻ là đang trong nhà), làm lại với đường xe gần thứ hai; cả hai lẻ mới là trong nhà
+  // (một khối nhà OSM trùm lên tim đường thì chỉ làm sót, không báo nhầm). Không còn đường xe nào trong vòng r: coi là ngoài.
+  // Trước đây đếm trên bốn tia dọc trục dài 20 m: tia bị cắt cụt giữa một khối nhà lớn chỉ đếm được bức tường gần, nên điểm ở sân
+  // hẹp hay lối đi giữa các khối lớn bị báo nhầm là trong nhà (reviewer vòng 4: 1,5 % điểm lối đi bộ quanh phố cổ, cách nhà gần nhất
+  // 4,6–8,6 m); tia dài hơn thì lại hay dừng giữa lòng một nhà ở xa, còn nhầm hơn.
+  insideNear(x, z, r = 60) {
+    const veh = this._vehF || (this._vehF = (q) => q.veh && !q.elev);
+    const h = this.nearestRoad(x, z, r, veh); if (!h) return false;
+    const r1 = h.r; // (nearestRoad trả về cùng một đối tượng mỗi lần gọi: đọc xong mới gọi tiếp)
+    if (!this.oddCross(x, z, h.px, h.pz)) return false;
+    const h2 = this.nearestRoad(x, z, r, (q) => q !== r1 && veh(q));
+    return !h2 || this.oddCross(x, z, h2.px, h2.pz);
+  }
+  // Đoạn thẳng (x, z) → (qx, qz) cắt tường cao từ 2,5 m một số lẻ lần? Mỗi bức tường chỉ đếm một lần, ở ô lưới chứa giao điểm (đoạn
+  // tường nằm trong nhiều ô không bị đếm hai lần); đỉnh tường nằm đúng trên đường thẳng tính theo quy tắc nửa mở (hai bức tường chung
+  // đỉnh đó được đếm đúng một hay hai lần, không bao giờ một rưỡi).
+  oddCross(x, z, qx, qz) {
+    const dx = qx - x, dz = qz - z, L2 = dx * dx + dz * dz; if (L2 < 1e-6) return false;
+    const mx0 = Math.min(x, qx), mx1 = Math.max(x, qx), mz0 = Math.min(z, qz), mz1 = Math.max(z, qz);
+    const cx0 = Math.floor(mx0 / CELL), cx1 = Math.floor(mx1 / CELL), cz0 = Math.floor(mz0 / CELL), cz1 = Math.floor(mz1 / CELL);
+    let n = 0;
+    for (const c of this.chunks.values()) {
+      const s = c.segs;
+      for (let cx = cx0; cx <= cx1; cx++) for (let cz = cz0; cz <= cz1; cz++) {
+        const l = c.cells.get(cx * 65537 + cz); if (!l) continue;
+        for (let k = 0; k < l.length; k++) {
+          const i = l[k]; if (!(s[i + 4] >= 2.5)) continue;
+          const ax = s[i], az = s[i + 1], bx = s[i + 2], bz = s[i + 3], sa = dx * (az - z) - dz * (ax - x), sb = dx * (bz - z) - dz * (bx - x);
+          if (sa > 0 === sb > 0) continue; // hai đầu tường cùng một phía đường thẳng
+          const u = sa / (sa - sb), ix = ax + (bx - ax) * u, iz = az + (bz - az) * u, t = ((ix - x) * dx + (iz - z) * dz) / L2;
+          if (t < 0 || t >= 1) continue;
+          // ô của giao điểm (kẹp vào hộp bao của cả tường lẫn đoạn thẳng: sai số làm tròn không đẩy được nó sang ô tường không ghi tên)
+          const cx2 = Math.floor(clamp(clamp(ix, Math.min(ax, bx), Math.max(ax, bx)), mx0, mx1) / CELL), cz2 = Math.floor(clamp(clamp(iz, Math.min(az, bz), Math.max(az, bz)), mz0, mz1) / CELL);
+          if (cx2 === cx && cz2 === cz) n++;
+        }
+      }
+    }
+    return (n & 1) === 1;
   }
 
   // Tia từ (x,z) theo hướng ngang (dx,dz) dài tối đa max. Tia ở độ cao y tại gốc và lên/xuống ky mét mỗi mét ngang;

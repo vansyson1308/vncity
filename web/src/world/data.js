@@ -1,13 +1,14 @@
 // Giải mã bản đồ world/hanoi.json (xem tools/build_world.mjs) thành cấu trúc dùng trong game.
 // Dùng chung cho luồng chính (đường, mặt nước, va chạm) và worker (dựng hình).
-import { hash } from '../core/util.js';
+import { hash, pointInRing } from '../core/util.js';
 
 export const CS = 128;        // cạnh một ô phố (m)
 export const CURB = 0.16;     // vỉa hè cao hơn lòng đường (m)
 export const WATER_Y = -0.55; // mặt nước hồ thấp hơn bờ kè
 export const K = { primary: 0, secondary: 1, tertiary: 2, residential: 3, service: 4, pedestrian: 5, footway: 6, path: 7, steps: 8, track: 9 };
 export const CAT = { house: 0, apart: 1, modern: 2, public: 3, temple: 4, church: 5, roof: 6, small: 7, station: 8, market: 9 };
-export const F_ONEWAY = 1, F_BRIDGE = 2, F_PASSAGE = 4, F_REVERSE = 8;
+export const F_ONEWAY = 1, F_BRIDGE = 2, F_PASSAGE = 4, F_REVERSE = 8, F_NOCAR = 16, F_NOBIKE = 32, F_FLUSH = 64; // 16: cấm ô tô, 32: cấm xe máy
+// 64: ngõ lát liền từ tường tới tường, không hè, không bó vỉa (bề rộng ghi trong dữ liệu là khoảng cách giữa hai dãy tường)
 
 // Kiểu mặt đứng (khớp với shader trong world/facades.js)
 export const ST = { ROOF_FLAT: 0, ROOF_TILE: 1, ROOF_TIN: 2, TUBE: 10, ALLEY: 11, BLANK: 12, FRENCH: 13, MODERN: 14, APART: 15, PUBLIC: 16, TEMPLE: 17, CHURCH: 18, MARKET: 19, SMALL: 20 };
@@ -22,10 +23,16 @@ export const ZONE = { city: 0, old: 1, french: 2, badinh: 3, bank: 4 };
 export const SOLEMN = [[-1790, -885, 340], [-1845, -1163, 210]];
 export const isSolemn = (x, z) => SOLEMN.some((s) => (x - s[0]) ** 2 + (z - s[1]) ** 2 < s[2] * s[2]);
 export const dikeX = (z) => 193 + (z < -820 ? 0.906 : 0.43) * (z + 820);
+// Khu 36 phố phường (docs/18 mục 3.1): tây là phố Phùng Hưng, bắc là Hàng Đậu, đông là đê (Trần Nhật Duật, Trần Quang Khải), nam là
+// Hàng Bông - Hàng Gai - Cầu Gỗ - Hàng Thùng. Khu phố xoay chéo so với trục bản đồ nên phải là đa giác (khung chữ nhật cũ bỏ sót cả
+// góc tây nam: Hàng Bông, Hàng Da, Yên Thái, Tạm Thương, và dải phía đông sát đê). Ranh nam lấy rộng ra: tính cả dãy nhà mặt phố phía nam
+// Hàng Bông, Hàng Gai (22 m) và mấy phố sát bờ bắc Hồ Gươm (Lò Sũ, Hàng Dầu, đầu Đinh Tiên Hoàng) vốn cùng một kiểu phố.
+const OLD_Q = [-781, 4, -792, -15, -775, -131, -742, -282, -719, -405, -696, -528, -674, -644, -652, -760, -631, -870, -615, -949, -588, -1095, -568, -1203,
+  -522, -1227, -378, -1270, -238, -1314, 700, -1314, 700, -290, -285, -290, -307, -259, -730, -24];
 export function zoneAt(x, z) {
   // ngoài đê sông Hồng: phía đông trục Yên Phụ - Trần Nhật Duật - Trần Quang Khải (gấp khúc ở đầu cầu Chương Dương)
   if (x > dikeX(z) + 22) return ZONE.bank;
-  if (x > -700 && x < 250 && z > -1300 && z < -290) return ZONE.old;          // 36 phố phường
+  if (x > -800 && z > -1320 && z < 10 && pointInRing(x, z, OLD_Q)) return ZONE.old; // 36 phố phường
   if (x > -700 && x < 950 && z >= 120 && z < 1100) return ZONE.french;         // khu phố Pháp phía nam hồ
   if (x <= -700 && x > -2000 && z > -1750 && z < 250) return ZONE.badinh;      // Ba Đình, biệt thự và công sở
   return ZONE.city;
@@ -53,13 +60,15 @@ export function decodeWorld(W, { withBuildings = true } = {}) {
 
   computeElevation(world);
   if (withBuildings) {
+    // phần tử 0 là nhà đã bỏ lúc dựng dữ liệu (giữ chỗ để chỉ số i, hạt giống của bộ sinh, không xê dịch)
     world.buildings = W.buildings.map((b, i) => {
+      if (!b) return null;
       const p = dec(b[4]); let cx = 0, cz = 0;
       for (let k = 0; k < p.length; k += 2) { cx += p[k]; cz += p[k + 1]; }
       cx /= p.length / 2; cz /= p.length / 2;
       let a = 0; for (let k = 0, n = p.length; k < n; k += 2) { const j = (k + 2) % n; a += p[k] * p[j + 1] - p[j] * p[k + 1]; }
       return { i, cat: b[0], lv: b[1], h: b[2] / 10, name: b[3], p, holes: (b[5] || []).map(dec), cx, cz, area: Math.abs(a) / 2, bb: bbox(p), seed: Math.floor(hash(i, 11) * 256) };
-    });
+    }).filter(Boolean);
   }
   return world;
 }
@@ -137,5 +146,14 @@ export function subPath(r, s0, s1) {
   for (let i = 1; i < r.cum.length - 1; i++) if (r.cum[i] > s0 + 0.05 && r.cum[i] < s1 - 0.05) out.push(r.p[i * 2], r.p[i * 2 + 1]);
   alongAt(r, s1, o); out.push(o[0], o[1]); return out;
 }
-// Dàn thép cầu Long Biên bắt đầu từ mép đê (x > LB_TRUSS_X); phía trong là cầu dẫn bằng đá.
-export const LB_TRUSS_X = 420;
+// Dàn thép cầu Long Biên bắt đầu từ mép đê, ngay sau khi vượt đường Trần Nhật Duật và đường Hồng Hà (x > LB_TRUSS_X), rồi đi
+// trên bãi Phúc Tân ra sông; phía trong đê là cầu dẫn bằng đá.
+export const LB_TRUSS_X = -102;
+// Dàn thép cầu Chương Dương: bắt đầu cách đầu cầu phía phố CD_TRUSS_S mét (phần trước đó là cầu dẫn bê tông), nhịp CD_SPAN mét.
+export const CD_TRUSS_S = 290, CD_SPAN = 89.28;
+// Lòng giữa cầu Chương Dương (tuyến hai chiều dài nhất mang tên cầu), hướng từ phố ra sông: { r, rev } hoặc null.
+export function chuongDuongMid(world) {
+  let best = null;
+  for (const r of world.roads) if ((r.flags & F_BRIDGE) && !(r.flags & F_ONEWAY) && r.len > 300 && world.names[r.name] === 'Cầu Chương Dương' && (!best || r.len > best.len)) best = r;
+  return best ? { r: best, rev: best.p[0] > best.p[best.p.length - 2] } : null;
+}

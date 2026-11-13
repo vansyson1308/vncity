@@ -34,61 +34,77 @@
     <div class="keys hidden" id="keys-touch">
       <div><b>👆</b> <span data-i18n="t_move">nửa trái: di chuyển</span></div><div><b>👉</b> <span data-i18n="t_look">nửa phải: nhìn quanh</span></div>
     </div>
-    <div class="row">
+    <!-- hàng nút luôn dính ở mép dưới tờ giấy: khung thấp thì phần chữ phía trên cuộn, nút Bắt đầu vẫn nằm trọn trong khung -->
+    <div class="row actions">
       <button id="play" class="primary" data-i18n="play">Bắt đầu dạo phố</button>
       <button id="lang" class="ghost">English</button>
     </div>
-    <p class="muted small" data-i18n="credit">Bản đồ © OpenStreetMap (ODbL) và Overture Maps. Nhân vật: Microsoft Rocketbox (MIT). Không quảng cáo, không thu thập dữ liệu.</p>
+    <p class="muted small credit" data-i18n="credit">Bản đồ © OpenStreetMap (ODbL) và Overture Maps. Nhân vật: Microsoft Rocketbox (MIT). Không quảng cáo, không thu thập dữ liệu.</p>
   </div>
 </div>
 
+<!-- HUD: hàng trên (ô đếm, la bàn, nút) rồi tới thân chia vùng bằng lưới (ui.css). Mỗi khối nằm trong một vùng riêng nên không
+     khối nào đè lên khối nào, ở mọi cỡ màn hình. -->
 <div id="hud" class="hidden">
-  <div id="topleft">
-    <button id="b-book" class="chip" title="B"><span>🛂</span> <b id="count">0/0</b></button>
-    <div class="chip" id="wallet"><span>💵</span> <b id="money">0</b></div>
-    <div class="chip" id="clock"><span id="clock-icon">🌇</span> <b id="clock-time">17:10</b></div>
+  <div id="hud-top">
+    <div id="topleft">
+      <button id="b-book" class="chip" title="B"><span>🛂</span> <b id="count">0/0</b></button>
+      <div class="chip" id="wallet"><span>💵</span> <b id="money">0</b></div>
+      <div class="chip" id="clock"><span id="clock-icon">🌇</span> <span id="clock-day"></span> <b id="clock-time">17:10</b></div>
+    </div>
+    <div id="compass"></div>
+    <div id="topright">
+      <button id="b-map" class="round" title="M">🗺️</button>
+      <button id="b-photo" class="round" title="P">📷</button>
+      <button id="b-time" class="round" title="N">🌗</button>
+      <button id="b-set" class="round">⚙️</button>
+    </div>
   </div>
-  <div id="compass"></div>
-  <div id="topright">
-    <button id="b-map" class="round" title="M">🗺️</button>
-    <button id="b-photo" class="round" title="P">📷</button>
-    <button id="b-time" class="round" title="N">🌗</button>
-    <button id="b-set" class="round">⚙️</button>
+  <div id="hud-body">
+    <!-- lời nhắn và thẻ địa danh: khối ngoài giữ chỗ trong lưới (đứng yên), khối trong mang hình và hoạt hình hiện ra -->
+    <div id="toast" class="hidden"><div class="toastin"><span id="toast-face">🧓</span><div><b id="toast-who"></b><span id="toast-text"></span></div></div></div>
+    <div id="card" class="hidden">
+      <div class="paper cardin">
+        <button class="ghost small" id="c-close">✕</button>
+        <div class="stampmark" id="stampmark">ĐÃ ĐẾN</div>
+        <p class="kind" id="c-kind"></p>
+        <h2 id="c-name"></h2>
+        <p id="c-desc"></p>
+        <p class="muted small" id="c-extra"></p>
+        <p class="next small" id="c-next"></p>
+        <p class="muted small" id="c-hint"></p>
+      </div>
+    </div>
+    <div id="prompt" class="hidden"></div>
+    <div id="mapbox"><canvas id="minimap" width="360" height="360"></canvas><div id="street"></div></div>
+    <div id="hud-right">
+      <div id="fare" class="paper hidden">
+        <div class="farehead"><span id="fare-face">🙋</span><div><b id="fare-name"></b><div class="muted small" id="fare-dest"></div></div></div>
+        <div class="farerow"><span id="fare-dist"></span><b id="fare-money"></b></div>
+        <div class="comfort"><div id="fare-comfort"></div></div>
+      </div>
+      <div id="drive">
+        <div id="speedo" class="hidden"><b id="kmh">0</b><span>km/h</span></div>
+        <div id="touchbtns" class="hidden">
+          <button id="t-run" class="round big">🏃</button>
+          <button id="t-horn" class="round big">📣</button>
+          <button id="t-use" class="round big">🅴</button>
+          <button id="t-bike" class="round big">🛵</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <canvas id="minimap" width="360" height="360"></canvas>
-  <div id="street"></div>
-  <div id="speedo" class="hidden"><b id="kmh">0</b><span>km/h</span></div>
-  <div id="fare" class="paper hidden">
-    <div class="farehead"><span id="fare-face">🙋</span><div><b id="fare-name"></b><div class="muted small" id="fare-dest"></div></div></div>
-    <div class="farerow"><span id="fare-dist"></span><b id="fare-money"></b></div>
-    <div class="comfort"><div id="fare-comfort"></div></div>
-  </div>
-  <div id="card" class="paper hidden">
-    <div class="stampmark" id="stampmark">ĐÃ ĐẾN</div>
-    <p class="kind" id="c-kind"></p>
-    <h2 id="c-name"></h2>
-    <p id="c-desc"></p>
-    <p class="muted small" id="c-extra"></p>
-    <p class="next small" id="c-next"></p>
-    <div class="cardfoot"><span class="muted small" id="c-hint"></span><button class="ghost small" id="c-close">✕</button></div>
-  </div>
-  <div id="prompt" class="hidden"></div>
-  <div id="toast" class="hidden"><span id="toast-face">🧓</span><div><b id="toast-who"></b><span id="toast-text"></span></div></div>
   <div id="bubble" class="hidden"></div>
+  <!-- chế độ chụp ảnh: cả HUD ẩn đi, chỉ còn thanh này (lời nhắc, nút chụp, nút thoát) để máy cảm ứng cũng chụp và thoát được -->
+  <div id="photobar"><span id="photo-hint"></span><button id="ph-shoot" class="round" title="P">📷</button><button id="ph-exit" class="round" title="Esc">✕</button></div>
   <div id="stick"><div id="knob"></div></div>
-  <div id="touchbtns" class="hidden">
-    <button id="t-run" class="round big">🏃</button>
-    <button id="t-horn" class="round big">📣</button>
-    <button id="t-use" class="round big">🅴</button>
-    <button id="t-bike" class="round big">🛵</button>
-  </div>
 </div>
 <div id="flash"></div>
 
 <div id="map" class="modal hidden">
   <div class="paper wide">
     <div class="modalhead"><h2 data-i18n="map">Bản đồ Hà Nội</h2><button class="ghost" data-close>✕</button></div>
-    <p class="muted small" data-i18n="maphelp">Bấm vào một điểm đã có dấu để xe ôm chở tới ngay. Điểm chưa đến hiện dấu hỏi.</p>
+    <p class="muted small maphelp" data-i18n="maphelp">Bấm vào một điểm đã có dấu để xe ôm chở tới ngay. Điểm chưa đến hiện dấu hỏi.</p>
     <div class="mapwrap"><canvas id="bigmap"></canvas></div>
   </div>
 </div>
@@ -106,8 +122,10 @@
   <div class="paper">
     <div class="modalhead"><h2 data-i18n="settings">Cài đặt</h2><button class="ghost" data-close>✕</button></div>
     <div class="setrow"><span data-i18n="s_quality">Chất lượng hình</span><div class="seg" id="s-quality"><button data-q="low" data-i18n="q_low">Nhẹ</button><button data-q="medium" data-i18n="q_medium">Vừa</button><button data-q="high" data-i18n="q_high">Đẹp</button></div></div>
-    <div class="setrow"><span data-i18n="s_sound">Âm thanh</span><div class="seg" id="s-sound"><button data-v="1" data-i18n="on">Bật</button><button data-v="0" data-i18n="off">Tắt</button></div></div>
+    <div class="setrow"><span data-i18n="s_sound">Hiệu ứng âm thanh</span><div class="seg" id="s-sound"><button data-v="1" data-i18n="on">Bật</button><button data-v="0" data-i18n="off">Tắt</button></div></div>
     <div class="setrow"><span data-i18n="s_music">Nhạc nền</span><div class="seg" id="s-music"><button data-v="1" data-i18n="on">Bật</button><button data-v="0" data-i18n="off">Tắt</button></div></div>
+    <div class="setrow"><span data-i18n="s_beacons">Cột đánh dấu điểm đến</span><div class="seg" id="s-beacons"><button data-v="1" data-i18n="on">Bật</button><button data-v="0" data-i18n="off">Tắt</button></div></div>
+    <div class="setrow hidden" id="s-restore-row"><span data-i18n="s_restore">Tiến độ cũ</span><div class="seg"><button id="s-restore"></button></div></div>
     <div class="setrow"><span data-i18n="s_lang">Ngôn ngữ</span><div class="seg" id="s-lang"><button data-l="vi">Tiếng Việt</button><button data-l="en">English</button></div></div>
     <p class="muted small" id="s-perf"></p>
     <p class="muted small" data-i18n="credits_audio">Âm thanh và nhạc nền do game tự tổng hợp, không dùng bản ghi của ai. Chi tiết trong CREDITS.md.</p>
