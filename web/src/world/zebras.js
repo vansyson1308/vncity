@@ -10,7 +10,9 @@
 //  2. bốn góc và điểm giữa hai mép ngoài của dải vạch: không lấn quá 0,3 m vào lòng một đường xe khác lệch hướng > 25°, và không ra
 //     ngoài lòng đường;
 //  3. không chồng lên (cách dưới 0,3 m) một vạch sang đường hay vạch dừng đã kẻ, không nối đuôi một vạch đã kẻ trên cùng con phố
-//     (cùng hướng, tâm cách dưới 12 m dọc phố).
+//     (cùng hướng, tâm cách dưới 12 m dọc phố);
+//  4. vạch dừng đi kèm (nhánh có vạch dừng) cũng qua phép thử 2 và 3, dọc cả chiều dài vạch. Không chỗ nào vừa cả vạch sang đường
+//     lẫn vạch dừng thì kẻ vạch sang đường ở chỗ đầu tiên đạt, không sơn vạch dừng.
 // Đường lớn được xét trước (rộng hơn trước), nên ở nút chụm nhánh vạch của trục chính được giữ.
 import { K, F_ONEWAY, F_REVERSE, alongAt, isVehicle } from './data.js';
 import { segDist2 } from '../core/util.js';
@@ -28,38 +30,65 @@ export function zebraPlan(world, sig = [], debug = null) {
   // ----- nút: số đường lớn và bề rộng lớn nhất (như ctx.nodes của gen/context.js) -----
   const nodes = new Map();
   for (const r of roads) for (const e of [0, r.p.length - 2]) { const k = nk(r.p[e], r.p[e + 1]); let n = nodes.get(k); if (!n) nodes.set(k, (n = { major: 0, maxW: 0 })); if (r.kind <= K.residential) n.major++; n.maxW = Math.max(n.maxW, r.w); }
-  // ----- lưới tra đường (ô 32 m) -----
-  const G = 32, grid = new Map();
+  // ----- lưới đoạn thẳng (ô 16 m): mỗi đoạn của một đường xe (không cầu nâng) ghi vào mọi ô mà hộp bao của nó, nới nửa bề rộng
+  //       đường + 0,5 m, chạm tới; các đoạn của cùng một đường nằm liền nhau trong danh sách mỗi ô. Tra theo đoạn chứ không theo cả con đường:
+  //       bảng vạch gọi các phép tra dưới đây hàng trăm nghìn lần lúc tải (reviewer vòng 4: 0,5 s CPU; nay 0,1–0,25 s) -----
+  const C = 16, sg = new Map();
   for (const r of roads) {
     if (r.elev) continue;
-    const b = r.bb, pad = r.w / 2 + 1;
-    for (let i = Math.floor((b[0] - pad) / G); i <= Math.floor((b[2] + pad) / G); i++) for (let j = Math.floor((b[1] - pad) / G); j <= Math.floor((b[3] + pad) / G); j++) { const k = i * 65537 + j; let l = grid.get(k); if (!l) grid.set(k, (l = [])); l.push(r); }
+    const p = r.p, pad = r.w / 2 + 0.5;
+    for (let s = 0; s < p.length - 2; s += 2) {
+      const x0 = Math.floor((Math.min(p[s], p[s + 2]) - pad) / C), x1 = Math.floor((Math.max(p[s], p[s + 2]) + pad) / C), z0 = Math.floor((Math.min(p[s + 1], p[s + 3]) - pad) / C), z1 = Math.floor((Math.max(p[s + 1], p[s + 3]) + pad) / C);
+      for (let i = x0; i <= x1; i++) for (let j = z0; j <= z1; j++) { const k = i * 65537 + j; let l = sg.get(k); if (!l) sg.set(k, (l = [])); l.push(r, s); }
+    }
   }
-  const t = [0], seen = new Set();
+  const t = [0];
   // đường xe (không cầu nâng) gần (x,z) nhất trong bán kính max thoả filter: { r, seg, d, px, pz } (đối tượng mới mỗi lần)
   const nearest = (x, z, max, filter) => {
-    let bd = max * max, br = null, bs = 0; seen.clear();
-    for (let i = Math.floor((x - max) / G); i <= Math.floor((x + max) / G); i++) for (let j = Math.floor((z - max) / G); j <= Math.floor((z + max) / G); j++) {
-      const l = grid.get(i * 65537 + j); if (!l) continue;
-      for (const r of l) {
-        if (seen.has(r)) continue; seen.add(r); if (filter && !filter(r)) continue;
-        const p = r.p; for (let s = 0; s < p.length - 2; s += 2) { const d = segDist2(x, z, p[s], p[s + 1], p[s + 2], p[s + 3], t); if (d < bd) { bd = d; br = r; bs = s; } }
+    let bd = max * max, br = null, bs = 0;
+    for (let i = Math.floor((x - max) / C); i <= Math.floor((x + max) / C); i++) for (let j = Math.floor((z - max) / C); j <= Math.floor((z + max) / C); j++) {
+      const l = sg.get(i * 65537 + j); if (!l) continue;
+      let last = null, ok = false;
+      for (let k = 0; k < l.length; k += 2) {
+        const r = l[k]; if (r !== last) { last = r; ok = !filter || filter(r); } if (!ok) continue;
+        const p = r.p, s = l[k + 1], d = segDist2(x, z, p[s], p[s + 1], p[s + 2], p[s + 3], t); if (d < bd) { bd = d; br = r; bs = s; }
       }
     }
     if (!br) return null;
     const p = br.p; segDist2(x, z, p[bs], p[bs + 1], p[bs + 2], p[bs + 3], t);
     return { r: br, seg: bs, d: Math.sqrt(bd), px: p[bs] + (p[bs + 2] - p[bs]) * t[0], pz: p[bs + 1] + (p[bs + 3] - p[bs + 1]) * t[0] };
   };
-  // mọi đường xe có lòng phủ điểm (x,z) (cách tim dưới w/2 - pad), trả về danh sách [đường, hướng đoạn x, z]
-  const covering = (x, z, pad) => {
-    const out = []; seen.clear();
-    const l = grid.get(Math.floor(x / G) * 65537 + Math.floor(z / G)); if (!l) return out;
-    for (const r of l) {
-      if (seen.has(r)) continue; seen.add(r);
-      const p = r.p; let bd = 1e9, bs = 0; for (let s = 0; s < p.length - 2; s += 2) { const d = segDist2(x, z, p[s], p[s + 1], p[s + 2], p[s + 3], t); if (d < bd) { bd = d; bs = s; } }
-      if (Math.sqrt(bd) < r.w / 2 - pad) { const sx = p[bs + 2] - p[bs], sz = p[bs + 3] - p[bs + 1], sl = Math.hypot(sx, sz) || 1; out.push([r, sx / sl, sz / sl]); }
+  // Gọi fn(đường, khoảng cách tới tim, đoạn gần nhất) cho mỗi đường xe có tim cách (x,z) dưới nửa bề rộng + 0,5 m (và có thể vài đường
+  // xa hơn), tới khi fn trả về true (khi đó trả về true). Không phụ thuộc thứ tự: mọi đường như thế đều được gọi.
+  const eachRoadAt = (x, z, fn) => {
+    const l = sg.get(Math.floor(x / C) * 65537 + Math.floor(z / C)); if (!l) return false;
+    let cur = null, bd = 0, bs = 0;
+    for (let k = 0; k <= l.length; k += 2) {
+      const r = k < l.length ? l[k] : null;
+      if (r !== cur) { if (cur && fn(cur, Math.sqrt(bd), bs)) return true; if (!r) break; cur = r; bd = 1e18; }
+      const p = r.p, s = l[k + 1], d = segDist2(x, z, p[s], p[s + 1], p[s + 2], p[s + 3], t); if (d < bd) { bd = d; bs = s; }
     }
-    return out;
+    return false;
+  };
+  // Phép thử một điểm của dải sơn (vạch sang đường hay vạch dừng) trên đường hướng (dx,dz): 1 nếu điểm ra ngoài lòng mọi đường xe,
+  // 2 nếu điểm nằm sâu quá 0,3 m trong lòng một đường xe khác (không thuộc skip) lệch hướng quá 25° (hướng của đoạn gần điểm nhất
+  // trên đường đó), 0 nếu được. Đoạn gần nhất của một đường cách điểm dưới nửa bề rộng thì chắc chắn có trong ô chứa điểm.
+  const probe = (x, z, dx, dz, skip) => {
+    const l = sg.get(Math.floor(x / C) * 65537 + Math.floor(z / C)); if (!l) return 1;
+    let on = false, cur = null, bd = 0, bs = 0;
+    for (let k = 0; k <= l.length; k += 2) {
+      const r = k < l.length ? l[k] : null;
+      if (r !== cur) {
+        if (cur) {
+          const d = Math.sqrt(bd), h = cur.w / 2;
+          if (d < h) { on = true; if (d < h - 0.3 && !skip.has(cur)) { const p = cur.p, sx = p[bs + 2] - p[bs], sz = p[bs + 3] - p[bs + 1], sl = Math.hypot(sx, sz) || 1; if (Math.abs((sx * dx + sz * dz) / sl) < 0.906) return 2; } }
+        }
+        if (!r) break;
+        cur = r; bd = 1e18;
+      }
+      const p = r.p, s = l[k + 1], d = segDist2(x, z, p[s], p[s + 1], p[s + 2], p[s + 3], t); if (d < bd) { bd = d; bs = s; }
+    }
+    return on ? 0 : 1;
   };
 
   // ----- các chỗ cần xét: đầu đoạn chạm nút lớn, đoạn xe rộng từ 5,5 m, đường tới cấp 3 -----
@@ -77,10 +106,22 @@ export function zebraPlan(world, sig = [], debug = null) {
   }
   jobs.sort((a, b) => b[0].w - a[0].w || a[0].i - b[0].i || a[1] - b[1]);
   const plan = new Map(), list = [], o5 = [0, 0, 0, 0, 0, null];
-  // chồng lên một vạch đã kẻ (hình chữ nhật quay, cách dưới 0,3 m): kiểm tra bằng các góc của cả hai
-  const rect = (x, z, dx, dz, hl, hw) => [[x + dx * hl - dz * hw, z + dz * hl + dx * hw], [x + dx * hl + dz * hw, z + dz * hl - dx * hw], [x - dx * hl + dz * hw, z - dz * hl - dx * hw], [x - dx * hl - dz * hw, z - dz * hl + dx * hw], [x, z]];
+  // chồng lên một vạch đã kẻ (hình chữ nhật quay, cách dưới 0,3 m): tâm hay một góc của hình này nằm trong hình kia, hay ngược lại
   const inRect = (px, pz, q, m) => { const lx = (px - q.x) * q.dx + (pz - q.z) * q.dz, ly = -(px - q.x) * q.dz + (pz - q.z) * q.dx; return Math.abs(lx) < q.hl + m && Math.abs(ly) < q.hw + m; };
-  const hits = (a) => list.some((q) => Math.abs(q.x - a.x) < 40 && Math.abs(q.z - a.z) < 40 && (rect(a.x, a.z, a.dx, a.dz, a.hl, a.hw).some(([px, pz]) => inRect(px, pz, q, 0.3)) || rect(q.x, q.z, q.dx, q.dz, q.hl, q.hw).some(([px, pz]) => inRect(px, pz, a, 0.3))));
+  const cornerIn = (a, q, m) => {
+    if (inRect(a.x, a.z, q, m)) return true;
+    for (let k = 0; k < 4; k++) { const u = k & 1 ? a.hl : -a.hl, v = k & 2 ? a.hw : -a.hw; if (inRect(a.x + a.dx * u - a.dz * v, a.z + a.dz * u + a.dx * v, q, m)) return true; }
+    return false;
+  };
+  // các vạch đã kẻ theo ô 20 m (tâm vạch): tra mọi vạch có tâm cách dưới 40 m theo mỗi trục
+  const LG = new Map(), add = (q) => { list.push(q); const k = Math.floor(q.x / 20) * 65537 + Math.floor(q.z / 20); let l = LG.get(k); if (!l) LG.set(k, (l = [])); l.push(q); };
+  const near40 = (x, z, fn) => {
+    for (let i = Math.floor((x - 40) / 20); i <= Math.floor((x + 40) / 20); i++) for (let j = Math.floor((z - 40) / 20); j <= Math.floor((z + 40) / 20); j++) {
+      const l = LG.get(i * 65537 + j); if (l) for (const q of l) if (Math.abs(q.x - x) < 40 && Math.abs(q.z - z) < 40 && fn(q)) return true;
+    }
+    return false;
+  };
+  const hits = (a) => near40(a.x, a.z, (q) => cornerIn(a, q, 0.3) || cornerIn(q, a, 0.3));
   for (const [r, end, jr, node, farN] of jobs) {
     const p = r.p, zl = r.w >= 12 ? 2 : 1.6, base = jr + 1.2 + zl;
     // Điểm cách tâm nút sd mét theo nhánh này (y như trước trong gen/ground.js): đoạn đủ dài thì lấy trên chính đoạn; không thì kéo
@@ -98,7 +139,21 @@ export function zebraPlan(world, sig = [], debug = null) {
       out[0] = x; out[1] = z; out[2] = end ? -ux : ux; out[3] = end ? -uz : uz; out[5] = q.r; return true;
     };
     const nodeK = end ? nk(p[p.length - 2], p[p.length - 1]) : nk(p[0], p[1]);
-    let got = null, why = '';
+    // vạch dừng: chỉ ở nút lớn, trên phần đường của chiều xe đi tới nút, cách mép ngoài vạch sang đường 2,4 m
+    const oneway = r.flags & F_ONEWAY ? (r.flags & F_REVERSE ? -1 : 1) : 0, toward = end ? 1 : -1;
+    const wantStop = !(node.maxW < 9 || r.w < 7 || (oneway && oneway !== toward));
+    // Vạch dừng của vạch sang đường có tâm cách tâm nút at0: null nếu không có chỗ kẻ (đoạn hết trước đó), false nếu vạch dừng ra ngoài
+    // lòng đường, lấn quá 0,3 m vào lòng một đường xe khác lệch hướng > 25° hay chồng một vạch đã kẻ. Soát cả vạch dừng đi kèm vạch sang
+    // đường, không chỉ vạch dừng đứng một mình (reviewer vòng 4: 9 vạch dừng lấn sang đường cắt ngang, sâu tới 3 m, ở Trần Phú ×
+    // Hoàng Diệu...). Phép thử chạy dọc vạch mỗi ≤ 1 m ở hai mép (vạch rộng 0,4 m), hướng so là hướng con đường mang vạch.
+    const stopAt = (at0) => {
+      const sd = at0 + zl + 2.6; if (!(sd > 4 && P(sd, o5))) return null;
+      const sw = o5[5] ? Math.min(r.w, o5[5].w) : r.w, half = oneway ? sw / 2 - 0.25 : sw / 4 - 0.12, oc = oneway ? 0 : (toward * sw) / 4;
+      const st = { x: o5[0] - o5[3] * oc, z: o5[1] + o5[2] * oc, dx: o5[2], dz: o5[3], half, oc }, skip = new Set([r, o5[5]]), n = Math.max(1, Math.ceil(half * 2));
+      for (let k = 0; k <= n; k++) for (const v of [-0.2, 0.2]) { const u = -half + (2 * half * k) / n; if (probe(st.x + st.dx * v - st.dz * u, st.z + st.dz * v + st.dx * u, st.dx, st.dz, skip)) return false; }
+      return hits({ x: st.x, z: st.z, dx: st.dx, dz: st.dz, hl: 0.2, hw: half }) ? false : st;
+    };
+    let got = null, alt = null, why = '';
     // thứ tự thử: dời ra xa nút từng 0,5 m (tới max(6 m; nửa bề rộng)); đoạn sát nút quá ngắn (đầu kia là một nút lớn khác) thì
     // thử kéo vào gần nút từng 0,5 m, tới jr × 0,7 + zl (phép thử góc vẫn chặn mọi chỗ lấn sang lòng đường cắt ngang)
     const tries = []; for (let k = 0; k <= Math.max(12, Math.round(r.w)); k++) tries.push(base + k * 0.5);
@@ -112,59 +167,46 @@ export function zebraPlan(world, sig = [], debug = null) {
       const ends = new Set();
       for (const q of cont ? [r, cont] : [r]) for (const i of [0, q.p.length - 2]) { const kk = nk(q.p[i], q.p[i + 1]); if (kk !== nodeK) ends.add(kk); }
       const mouth = (q) => { for (const i of [0, q.p.length - 2]) { const kk = nk(q.p[i], q.p[i + 1]); if (ends.has(kk)) { const nd = nodes.get(kk); return !nd || nd.major < 3; } } return false; };
+      // (mọi đường có tim cách tâm vạch dưới nửa bề rộng + 0,3 m đều xét, không chỉ đường gần nhất: hai đường chung một nút cách tâm
+      // vạch đúng bằng nhau thì kết quả không được tuỳ vào thứ tự duyệt)
       const skipQ = new Set([r, cont]);
-      let other = null;
-      for (let tt = 0; tt < 4; tt++) {
-        other = nearest(x, z, r.w / 2 + 4, (q) => !skipQ.has(q) && !mouth(q));
-        if (!other || other.d >= other.r.w / 2 + 0.3) break;
-        const op = other.r.p, sx = op[other.seg + 2] - op[other.seg], sz = op[other.seg + 3] - op[other.seg + 1], sl = Math.hypot(sx, sz) || 1;
-        const lat = Math.abs(((x - op[other.seg]) * sz - (z - op[other.seg + 1]) * sx) / sl);
-        if (Math.abs((sx * dx + sz * dz) / sl) > 0.94 && lat < 1 && Math.abs(other.r.w - r.w) <= Math.max(1.6, r.w * 0.15)) { skipQ.add(other.r); other = null; continue; }
-        break;
-      }
-      if (other && other.d < other.r.w / 2 + 0.3) { why = 'tâm trong đường khác'; continue; }
+      const inOther = eachRoadAt(x, z, (q, d, s) => {
+        if (skipQ.has(q) || d >= q.w / 2 + 0.3 || mouth(q)) return false;
+        const op = q.p, sx = op[s + 2] - op[s], sz = op[s + 3] - op[s + 1], sl = Math.hypot(sx, sz) || 1, lat = Math.abs(((x - op[s]) * sz - (z - op[s + 1]) * sx) / sl);
+        if (Math.abs((sx * dx + sz * dz) / sl) > 0.94 && lat < 1 && Math.abs(q.w - r.w) <= Math.max(1.6, r.w * 0.15)) { skipQ.add(q); return false; }
+        return true;
+      });
+      if (inOther) { why = 'tâm trong đường khác'; continue; }
       // 2. mép ngoài dải vạch: không lấn vào lòng đường khác, không ra ngoài lòng đường
       const cw = cont ? Math.min(r.w, cont.w) : r.w, nS = Math.max(2, Math.floor(cw - 0.9) + 1), hw = (nS - 1) / 2 + 0.2;
-      let bad = false;
-      for (let s = 0; s < nS && !bad; s++) for (const l of [-0.2, 0.2]) for (const a of [-zl, zl]) { // bốn góc của từng vạch
-        const o = s - (nS - 1) / 2 + l, px = x + dx * a - dz * o, pz = z + dz * a + dx * o;
-        if (!covering(px, pz, 0).length) { bad = 'ngoài lòng đường'; break; }
-        for (const [q, qx, qz] of covering(px, pz, 0.3)) if (!skipQ.has(q) && Math.abs(qx * dx + qz * dz) < 0.906) { bad = 'lấn đường khác'; break; }
-        if (bad) break;
+      let bad = 0;
+      for (let s = 0; s < nS && !bad; s++) for (let k = 0; k < 4 && !bad; k++) { // bốn góc của từng vạch
+        const o = s - (nS - 1) / 2 + (k & 1 ? 0.2 : -0.2), a = k & 2 ? zl : -zl;
+        bad = probe(x + dx * a - dz * o, z + dz * a + dx * o, dx, dz, skipQ);
       }
-      if (bad) { why = bad; continue; }
+      if (bad) { why = bad === 1 ? 'ngoài lòng đường' : 'lấn đường khác'; continue; }
       // 3. không chồng, không nối đuôi một vạch đã kẻ
       const z0 = { x, z, dx, dz, hl: zl, hw };
       if (hits(z0)) { why = 'chồng vạch khác'; continue; }
-      if (list.some((q) => q.zebra && Math.abs(q.dx * dx + q.dz * dz) > 0.9 && Math.abs((q.x - x) * dx + (q.z - z) * dz) < 12 && Math.abs(-(q.x - x) * dz + (q.z - z) * dx) < Math.max(q.hw, hw))) { why = 'nối đuôi vạch khác'; continue; }
-      got = { x, z, dx, dz, zl, cw, nS, hw, at0, jr, cont, stop: null };
+      if (near40(x, z, (q) => q.zebra && Math.abs(q.dx * dx + q.dz * dz) > 0.9 && Math.abs((q.x - x) * dx + (q.z - z) * dz) < 12 && Math.abs(-(q.x - x) * dz + (q.z - z) * dx) < Math.max(q.hw, hw))) { why = 'nối đuôi vạch khác'; continue; }
+      const c = { x, z, dx, dz, zl, cw, nS, hw, at0, jr, cont, stop: null };
+      // 4. vạch dừng đi kèm cũng phải kẻ được; không thì thử chỗ xa hơn. Không chỗ nào vừa cả hai thì giữ chỗ vạch sang đường đầu tiên
+      //    đạt và bỏ vạch dừng sơn (xe vẫn dừng trước vạch sang đường: junctions.js tính chỗ dừng theo at0)
+      const st = wantStop ? stopAt(at0) : null;
+      if (st === false) { alt = alt || c; why = 'vạch dừng lấn đường khác'; continue; }
+      if (st === null && alt) break; // dời xa hơn chỉ để hết chỗ kẻ vạch dừng: không hơn gì chỗ gần nút đã đạt
+      c.stop = st; got = c;
     }
+    if (!got && alt) got = alt;
     if (debug && !got) debug.push([r, end, why]);
     // Nhánh vào nút có đèn mà không kẻ được vạch sang đường: vẫn kẻ vạch dừng ở chỗ mặc định (xe dừng đèn đỏ đúng ở đó: junctions.js
     // giữ a.line mặc định), nếu vạch dừng không lấn đường khác, không chồng vạch đã kẻ (reviewer: 8 nhánh có đèn không có vạch dừng)
     const lone = !got && sigKey.has(r.i * 2 + end);
     if (!got && !lone) continue;
-    // vạch dừng: chỉ ở nút lớn, trên phần đường của chiều xe đi tới nút
-    const oneway = r.flags & F_ONEWAY ? (r.flags & F_REVERSE ? -1 : 1) : 0, toward = end ? 1 : -1;
-    let stop = null;
-    if (!(node.maxW < 9 || r.w < 7 || (oneway && oneway !== toward))) {
-      const sd = (got ? got.at0 : base) + zl + 2.6;
-      if (sd > 4 && P(sd, o5)) {
-        const sw = o5[5] ? Math.min(r.w, o5[5].w) : r.w, half = oneway ? sw / 2 - 0.25 : sw / 4 - 0.12, oc = oneway ? 0 : (toward * sw) / 4;
-        stop = { x: o5[0] - o5[3] * oc, z: o5[1] + o5[2] * oc, dx: o5[2], dz: o5[3], half, oc };
-        if (lone) { // vạch dừng đứng một mình: soát lấn đường khác, chồng vạch như với vạch sang đường
-          const skipQ = new Set([r, o5[5]]);
-          const bad = rect(stop.x, stop.z, stop.dx, stop.dz, 0.2, half).some(([px, pz]) => !covering(px, pz, 0).length || covering(px, pz, 0.3).some(([q, qx, qz]) => !skipQ.has(q) && Math.abs(qx * stop.dx + qz * stop.dz) < 0.906));
-          if (bad || hits({ x: stop.x, z: stop.z, dx: stop.dx, dz: stop.dz, hl: 0.2, hw: half })) stop = null;
-        }
-      }
-    }
-    if (lone && !stop) continue;
-    if (lone) got = { x: stop.x, z: stop.z, dx: stop.dx, dz: stop.dz, zl, cw: 0, nS: 0, hw: 0, at0: base, jr, cont: null, stop, lone: true };
-    else got.stop = stop;
+    if (lone) { const stop = wantStop ? stopAt(base) : null; if (!stop) continue; got = { x: stop.x, z: stop.z, dx: stop.dx, dz: stop.dz, zl, cw: 0, nS: 0, hw: 0, at0: base, jr, cont: null, stop, lone: true }; }
     let e = plan.get(r); if (!e) plan.set(r, (e = [null, null])); e[end] = got;
-    if (!lone) list.push({ x: got.x, z: got.z, dx: got.dx, dz: got.dz, hl: zl, hw: got.hw, zebra: true, rw: got.cw / 2 });
-    if (got.stop) list.push({ x: got.stop.x, z: got.stop.z, dx: got.stop.dx, dz: got.stop.dz, hl: 0.2, hw: got.stop.half + 0.1 });
+    if (!lone) add({ x: got.x, z: got.z, dx: got.dx, dz: got.dz, hl: zl, hw: got.hw, zebra: true, rw: got.cw / 2 });
+    if (got.stop) add({ x: got.stop.x, z: got.stop.z, dx: got.stop.dx, dz: got.stop.dz, hl: 0.2, hw: got.stop.half + 0.1 });
   }
   return { plan, list };
 }

@@ -96,22 +96,24 @@ async function boot() {
   const walkStreet = new WalkStreet(scene, mats);
   // Sau rào: đường xe gần nhất là đoạn đang đóng, và điểm không nằm trước vạch của một rào gần đó (phía phố còn mở). Ở nút giao,
   // một điểm trên làn của phố còn mở có thể gần tim đoạn phố đóng hơn tim phố mở (reviewer vòng 3: xe người chơi bị chặn đứng khi chỉ
-  // đi ngang miệng Đinh Lễ trên Ngô Quyền); rào đặt cách nút 4,5 m vào trong phố đóng (trafficsim walkPlan), nên xe chỉ dừng khi qua
-  // đúng vạch rào nhìn thấy.
+  // đi ngang miệng Đinh Lễ trên Ngô Quyền); rào đặt trong phố đóng, cách nút max(4,5 m; nửa bề rộng lớn nhất của các đường còn mở ở
+  // nút + 1,5 m) (trafficsim walkPlan), nên xe chỉ dừng khi qua đúng vạch rào nhìn thấy.
   // Trong bề ngang một rào: qua vạch (tới 6 m) là sau rào, trước vạch là phía phố mở. Ngoài mọi rào thì chỉ tính là sau rào khi điểm
-  // không nằm trên lòng một đường đang mở (đi sát lề phố mở ngang qua miệng phố đóng vẫn là đi trên phố mở).
+  // không nằm trên lòng một đường đang mở (đi sát lề phố mở ngang qua miệng phố đóng vẫn là đi trên phố mở); trong vòng 12 m quanh
+  // một rào thì cả vỉa hè phố mở (tới 2,5 m ngoài mép đường) cũng là phố mở: chạy trên hè phố mở ngang góc phố đóng không bị chặn
+  // (reviewer vòng 4: 13/56 vệt cách mép đường 1 m bị chặn ở 9 nút).
   const behindGate = (x, z) => {
-    let front = false;
+    let front = false, near = false;
     for (const g of traffic.gates) {
       const dx = x - g.x, dz = z - g.z, along = dx * g.tx + dz * g.tz, side = -dx * g.tz + dz * g.tx;
-      if (Math.abs(side) < g.w / 2 + 1.5 && along > -6 && along < 6) { if (along >= 0) return true; front = true; }
+      if (Math.abs(side) < g.w / 2 + 1.5 && along > -6 && along < 6) { if (along >= 0) return true; front = true; } else if (dx * dx + dz * dz < 144) near = true;
     }
     if (front) return false;
     const h = nav.nearestRoad(x, z, 16, (rd) => rd.veh); if (!h || !h.r.shut) return false;
-    // nằm trên lòng một trong ba đường đang mở gần nhất (tim gần nhất có khi là một ngõ hẹp bên cạnh, không phải phố đang đi)
-    // (nav.nearestRoad trả về cùng một đối tượng mỗi lần gọi: đọc h xong mới gọi tiếp)
-    const seen = new Set();
-    for (let i = 0; i < 3; i++) { const o = nav.nearestRoad(x, z, 16, (rd) => rd.veh && !rd.shut && !seen.has(rd)); if (!o) break; if (o.d < o.r.w / 2 + 0.3) return false; seen.add(o.r); }
+    // nằm trên lòng (hay vỉa hè, gần rào) một trong ba đường đang mở gần nhất (tim gần nhất có khi là một ngõ hẹp bên cạnh, không phải
+    // phố đang đi) (nav.nearestRoad trả về cùng một đối tượng mỗi lần gọi: đọc h xong mới gọi tiếp)
+    const seen = new Set(), pad = near ? 2.5 : 0.3;
+    for (let i = 0; i < 3; i++) { const o = nav.nearestRoad(x, z, 16, (rd) => rd.veh && !rd.shut && !seen.has(rd)); if (!o) break; if (o.d < o.r.w / 2 + pad) return false; seen.add(o.r); }
     return true;
   };
   const inSolemn = (x, z) => solemn.some((s) => (x - s.x) ** 2 + (z - s.z) ** 2 < s.r * s.r);

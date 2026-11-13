@@ -180,7 +180,13 @@ Các kỹ thuật chính:
      hướng trên 25°; vạch không được chồng (cách dưới 0,3 m) hay nối đuôi (cùng phố, tâm cách dưới 12 m) một vạch đã kẻ. Vướng
      thì vạch dời ra xa nút từng 0,5 m (tới max(6 m; nửa bề rộng phố)), đoạn sát nút quá ngắn thì thử kéo vào gần nút; vẫn vướng
      thì không kẻ. Đường rộng xét trước. Mọi nhánh của nút có đèn đều được xét (kể cả khi nút con chỉ có hai đường lớn, nhánh
-     từ 5 m). Vạch dời bao nhiêu thì vạch dừng, chỗ xe dừng và cột đèn dời bấy nhiêu. Tester vòng 3 đo trên bản cũ 20/75 nút có
+     từ 5 m). Vạch dời bao nhiêu thì vạch dừng, chỗ xe dừng và cột đèn dời bấy nhiêu. Vạch dừng đi kèm cũng qua đúng các phép thử
+     ấy dọc cả chiều dài vạch (mỗi ≤ 1 m, hai mép); không có chỗ nào vừa cả vạch sang đường lẫn vạch dừng thì kẻ vạch sang đường ở
+     chỗ đầu tiên đạt và không sơn vạch dừng (reviewer vòng 4: 9 vạch dừng lấn sang đường cắt ngang, sâu tới 3 m, ở Trần Phú ×
+     Hoàng Diệu, Nguyễn Tri Phương...; nay 0). `gen/ground.js` kẻ đúng mọi vạch trong bảng, kể cả ở nhánh có đèn của phố cấp
+     dân sinh hay rộng 5–5,5 m (trước đây bảng có 19 vạch mà mặt đường không kẻ: xe dừng đèn đỏ theo vạch không sơn). Bảng
+     tra theo lưới từng đoạn đường (ô 16 m) và không cấp phát trong vòng lặp: tính bảng từ ~0,5 s CPU xuống ~0,1–0,25 s; phép thử
+     "tâm vạch nằm trong lòng đường khác" xét mọi đường quanh đó, không chỉ đường gần nhất, nên không tuỳ thứ tự duyệt. Tester vòng 3 đo trên bản cũ 20/75 nút có
      vạch lấn sang lòng đường khác hay chồng vạch khác (356 vạch, sâu tới 2,9 m), có nhánh kẻ hai vạch nối đuôi, 200/226 nhánh xe
      vào nút có đèn có vạch; bảng mới: 0 vạch lấn (đo mọi góc của 1 116 vạch), 210/226 nhánh (92,9%); 16 nhánh còn lại không
      có chỗ kẻ mà không lấn đường khác.
@@ -240,7 +246,9 @@ Các kỹ thuật chính:
    đường và đông gấp rưỡi; rào đặt cách nút ít nhất nửa bề rộng đường mở lớn nhất ở nút cộng 1,5 m (tối thiểu 4,5 m), nên rào không
    bao giờ đứng trên làn phố mở; xe của người chơi chỉ bị coi là "sau rào" khi qua đúng vạch rào (trong bề ngang rào), hoặc khi
    ở trên một đoạn đóng mà không nằm trên lòng đường mở nào (`behindGate` trong `main.js`; trước đây chỉ hỏi "tim đường gần nhất là
-   đoạn đóng", xe đi ngang miệng phố đóng ở nút giao bị chặn đứng: 62/112 vệt chạy thử → 0/112, mọi vệt đi vào vẫn dừng ở vạch rào); quảng trường Đông Kinh Nghĩa Thục có thêm sáu tuyến đi bộ cắt ngang lòng quảng trường
+   đoạn đóng", xe đi ngang miệng phố đóng ở nút giao bị chặn đứng: 62/112 vệt chạy thử → 0/112, mọi vệt đi vào vẫn dừng ở vạch rào;
+   trong vòng 12 m quanh một rào, cả vỉa hè phố mở tới 2,5 m ngoài mép đường cũng là phố mở: reviewer vòng 4 đo 13/56 vệt chạy
+   trên hè cách mép 1 m bị chặn ở 9 nút, nay 8, đều là vệt đi qua đúng vạch rào thật); quảng trường Đông Kinh Nghĩa Thục có thêm sáu tuyến đi bộ cắt ngang lòng quảng trường
    (`actors/crowd.js` PLAZA_LINES: bản đồ không có lối nào trong lòng quảng trường nên trước đây người chỉ men theo mép), ngày
    thường có người băng qua, đứng xem màn hình, tối phố đi bộ đông như phố đi bộ; lúc phố đi bộ đang mở ở gần, đám đông gấp ba và
    người đi trên các phố đi bộ được rải dày gấp mười (QC vòng 3: tối thứ Bảy lòng phố Đinh Tiên Hoàng chỉ 3 đến 4 người); phố bia
@@ -269,7 +277,10 @@ Các kỹ thuật chính:
    tường chạy trước bước đẩy người ra khỏi vòng 0,55 m quanh người chơi; người chơi ngồi trên xe thì người đi bộ bị đẩy ra khỏi hình
    con nhộng bọc thân xe (đoạn ±0,85 m dọc xe) chứ không chỉ vòng quanh tâm (từng có người lướt qua cách trục xe 0,05 m); người
    mặc áo tối màu không buộc tóc (không ai trùng hệt Minh); lối đi bộ trong dữ liệu có khúc xuyên qua lòng nhà (lối không tên ở phố
-   Hàng Bạc) thì không sinh người ở khúc đó, người đi tới đó thì bỏ (`nav.insideNear`: đếm chẵn lẻ bốn tia 20 m, rẻ hơn `inSolid`);
+   Hàng Bạc) thì không sinh người ở khúc đó, người đi tới đó thì bỏ (`nav.insideNear`: đếm chẵn lẻ số lần đoạn thẳng từ người tới tim
+   hai đường xe gần nhất cắt tường cao từ 2,5 m, cả hai lẻ mới là trong nhà; bản đầu đếm bốn tia dọc trục 20 m, tia cụt giữa một khối
+   lớn nên 1,5 % điểm lối đi bộ ngoài trời bị báo nhầm là trong nhà, người bị xoá ngay trước mắt; nay khớp phép thử chính xác theo
+   mặt bằng nhà ở cả 1 913 điểm quanh phố cổ, 11 µs một lần);
    người dạo phố đi bộ sinh trong 55 m, quá 70 m thì bỏ, nên cùng số người mà quanh người chơi đông hơn. Tốp tập dưỡng sinh lúc rạng
    sáng: lúc rải người ban đầu, có chỗ tập trong khung hình thật (tâm tốp lệch hướng nhìn dưới 37°) thì chỉ chọn trong số đó; hai tốp
    không đứng cách nhau dưới 12 m (tốp chỉ đặt được một người cũng giữ chỗ), hàng đầu cách mép nước ít nhất 1,2 m. Làn xe máy trên cầu chạy như phố cấp 3 (28 km/h) thay vì như ngõ nhỏ (20 km/h), làn hẹp dưới 4,5 m chỉ chứa nửa số xe của

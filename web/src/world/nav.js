@@ -212,19 +212,45 @@ export class Nav {
     return (px & 1) + (nx & 1) + (pz & 1) + (nz & 1) >= 3;
   }
 
-  // Như inSolid nhưng chỉ xét các bức tường trong vòng r quanh (x, z) (rẻ, gọi được mỗi giây vài lần): bốn tia dài r dọc trục, đếm chẵn lẻ
-  // số lần cắt tường cao từ 2,5 m (mỗi đoạn tính một lần dù nằm trong nhiều ô lưới); cần ít nhất ba tia lẻ. Toà nhà lớn hơn r thì có
-  // thể báo "ngoài" khi đang ở trong (sai về phía an toàn cho người gọi).
-  insideNear(x, z, r = 20) {
-    let px = 0, nx = 0, pz = 0, nz = 0; const seen = this._inSeen || (this._inSeen = new Map()); seen.clear();
-    this.eachSeg(x, z, r, (s, i) => {
-      let st = seen.get(s); if (!st) seen.set(s, (st = new Set())); if (st.has(i)) return; st.add(i);
-      if (!(s[i + 4] >= 2.5)) return;
-      const ax = s[i], az = s[i + 1], bx = s[i + 2], bz = s[i + 3];
-      if ((az > z) !== (bz > z)) { const xi = ax + ((z - az) * (bx - ax)) / (bz - az); if (Math.abs(xi - x) <= r) { if (xi > x) px++; else nx++; } }
-      if ((ax > x) !== (bx > x)) { const zi = az + ((x - ax) * (bz - az)) / (bx - ax); if (Math.abs(zi - z) <= r) { if (zi > z) pz++; else nz++; } }
-    });
-    return (px & 1) + (nx & 1) + (pz & 1) + (nz & 1) >= 3;
+  // Như inSolid nhưng rẻ (gọi được mỗi giây vài lần): đếm chẵn lẻ số lần đoạn thẳng từ (x, z) tới tim đường xe gần nhất cắt tường cao
+  // từ 2,5 m (tim đường xe nằm ngoài mọi nhà: lẻ là đang trong nhà), làm lại với đường xe gần thứ hai; cả hai lẻ mới là trong nhà
+  // (một khối nhà OSM trùm lên tim đường thì chỉ làm sót, không báo nhầm). Không còn đường xe nào trong vòng r: coi là ngoài.
+  // Trước đây đếm trên bốn tia dọc trục dài 20 m: tia bị cắt cụt giữa một khối nhà lớn chỉ đếm được bức tường gần, nên điểm ở sân
+  // hẹp hay lối đi giữa các khối lớn bị báo nhầm là trong nhà (reviewer vòng 4: 1,5 % điểm lối đi bộ quanh phố cổ, cách nhà gần nhất
+  // 4,6–8,6 m); tia dài hơn thì lại hay dừng giữa lòng một nhà ở xa, còn nhầm hơn.
+  insideNear(x, z, r = 60) {
+    const veh = this._vehF || (this._vehF = (q) => q.veh && !q.elev);
+    const h = this.nearestRoad(x, z, r, veh); if (!h) return false;
+    const r1 = h.r; // (nearestRoad trả về cùng một đối tượng mỗi lần gọi: đọc xong mới gọi tiếp)
+    if (!this.oddCross(x, z, h.px, h.pz)) return false;
+    const h2 = this.nearestRoad(x, z, r, (q) => q !== r1 && veh(q));
+    return !h2 || this.oddCross(x, z, h2.px, h2.pz);
+  }
+  // Đoạn thẳng (x, z) → (qx, qz) cắt tường cao từ 2,5 m một số lẻ lần? Mỗi bức tường chỉ đếm một lần, ở ô lưới chứa giao điểm (đoạn
+  // tường nằm trong nhiều ô không bị đếm hai lần); đỉnh tường nằm đúng trên đường thẳng tính theo quy tắc nửa mở (hai bức tường chung
+  // đỉnh đó được đếm đúng một hay hai lần, không bao giờ một rưỡi).
+  oddCross(x, z, qx, qz) {
+    const dx = qx - x, dz = qz - z, L2 = dx * dx + dz * dz; if (L2 < 1e-6) return false;
+    const mx0 = Math.min(x, qx), mx1 = Math.max(x, qx), mz0 = Math.min(z, qz), mz1 = Math.max(z, qz);
+    const cx0 = Math.floor(mx0 / CELL), cx1 = Math.floor(mx1 / CELL), cz0 = Math.floor(mz0 / CELL), cz1 = Math.floor(mz1 / CELL);
+    let n = 0;
+    for (const c of this.chunks.values()) {
+      const s = c.segs;
+      for (let cx = cx0; cx <= cx1; cx++) for (let cz = cz0; cz <= cz1; cz++) {
+        const l = c.cells.get(cx * 65537 + cz); if (!l) continue;
+        for (let k = 0; k < l.length; k++) {
+          const i = l[k]; if (!(s[i + 4] >= 2.5)) continue;
+          const ax = s[i], az = s[i + 1], bx = s[i + 2], bz = s[i + 3], sa = dx * (az - z) - dz * (ax - x), sb = dx * (bz - z) - dz * (bx - x);
+          if (sa > 0 === sb > 0) continue; // hai đầu tường cùng một phía đường thẳng
+          const u = sa / (sa - sb), ix = ax + (bx - ax) * u, iz = az + (bz - az) * u, t = ((ix - x) * dx + (iz - z) * dz) / L2;
+          if (t < 0 || t >= 1) continue;
+          // ô của giao điểm (kẹp vào hộp bao của cả tường lẫn đoạn thẳng: sai số làm tròn không đẩy được nó sang ô tường không ghi tên)
+          const cx2 = Math.floor(clamp(clamp(ix, Math.min(ax, bx), Math.max(ax, bx)), mx0, mx1) / CELL), cz2 = Math.floor(clamp(clamp(iz, Math.min(az, bz), Math.max(az, bz)), mz0, mz1) / CELL);
+          if (cx2 === cx && cz2 === cz) n++;
+        }
+      }
+    }
+    return (n & 1) === 1;
   }
 
   // Tia từ (x,z) theo hướng ngang (dx,dz) dài tối đa max. Tia ở độ cao y tại gốc và lên/xuống ky mét mỗi mét ngang;

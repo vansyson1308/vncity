@@ -101,8 +101,6 @@ export async function makeViews(R, items, osmOf) {
   const onDeck = (x, z) => !!nav.elevatedAt(x, z, Infinity) && nav.eY > 0.7;
   const inMap = (x, z) => x > B.x0 + 12 && x < B.x1 - 12 && z > B.z0 + 12 && z < B.z1 - 12;
   const ground = (x, z) => inMap(x, z) && !nav.isWater(x, z) && !onDeck(x, z) && !nav.onRoad(x, z) && !vehAt(x, z, 0.5);
-  // chỗ đứng nằm bên con phố có tên ấy (trong lòng đường hay trên vỉa hè hai bên, tới 6 m ngoài mép đường)
-  const onNamed = (x, z, name) => { const h = nav.nearestRoad(x, z, 20, (r) => world.names[r.name] === name); return !!h && h.d < h.r.w / 2 + 6; };
   const stand = (x, z, clear = 0.6) => R.roomy(x, z, clear) && R.connected(x, z);
   // hai bên ống kính (lệch ±26°, ±45°) thông ít nhất 2,5 m ở độ cao camera: không có bức tường, cột nhà chắn nửa khung hình (trả về số tia vướng)
   const sideBlock = (cx, cz, ux, uz) => { let n = 0; for (const a of [-0.78, -0.45, 0.45, 0.78]) { const c = Math.cos(a), sn = Math.sin(a), dx = ux * c - uz * sn, dz = uz * c + ux * sn; if (nav.raycast(cx, cz, dx, dz, 2.5, CAM_Y, 0) < 2.5) n++; } return n; };
@@ -217,7 +215,6 @@ export async function makeViews(R, items, osmOf) {
         let ux = T.x - x, uz = T.z - z; const dT = Math.hypot(ux, uz) || 1; ux /= dT; uz /= dT;
         if (lake) { let bw = -1; for (let q = 0; q < 16; q++) { const b = (q / 16) * 6.2832, w = wetAhead(x, z, Math.sin(b), Math.cos(b)); if (w > bw) { bw = w; ux = Math.sin(b); uz = Math.cos(b); } } }
         const wet = tune.water || lake ? wetAhead(x, z, ux, uz) : 0; if ((tune.water || lake) && wet < 0.5) continue;
-        if (tune.street && !onNamed(x, z, tune.street)) continue;
         let sc = (lake ? 0 : Math.abs((T.near ? T.near(x, z) : dT) - T.ideal) * 0.6) - wet * 10 + Math.hypot(x - it.x, z - it.z) * 0.04;
         if (T.f) { const fd = ((x - T.x) / dT) * T.f[0] + ((z - T.z) / dT) * T.f[1]; sc += (1 - Math.max(0, fd)) * 60 + (fd < 0.5 ? 40 : 0); } // nhìn thẳng vào mặt tiền
         cand.push([sc, x, z, ux, uz, dT]);
