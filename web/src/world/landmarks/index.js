@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { G } from '../../core/geo.js';
 import { CURB, roadY, alongAt, LB_TRUSS_X, CD_TRUSS_S, CD_SPAN, chuongDuongMid } from '../data.js';
 import { segDist2 } from '../../core/util.js';
-import { siteCollision } from './sites.js';
+import { siteCollision, modelPads } from './sites.js';
 import { propGeometry } from '../materials.js';
 
 const modules = import.meta.glob('./*.js');
@@ -96,6 +96,7 @@ export async function buildLandmarks(scene, sites, mats, nav, world) {
     // va chạm cho các khối đặc khai báo trong sites.js (toạ độ cục bộ)
     // va chạm: khối khai trong sites.js, hoặc mặt bằng của chính mô hình nếu là công trình kín
     { const col = siteCollision({ ...s, y: 0 }, g.pos, g.idx); if (col.length) nav.addChunk('lm:' + s.id, col, new Float32Array(0)); }
+    { const pads = modelPads(s, g.pos, g.idx, CURB + (s.lift || 0)); if (pads) nav.addPads(pads); }
   }
   return out;
 }

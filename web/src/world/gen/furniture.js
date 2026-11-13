@@ -182,10 +182,12 @@ export function furnish(ctx, env) {
             far.push().move(qx - X0, CURB, qz - Z0).rotY(yaw).rgb(0.42, 0.47, 0.5).box(-2.3, 2.3, -0.85, 2.3, 2.5, 0.9, 'xXYzZ').rgb(0.5, 0.55, 0.57).box(-2.16, 0.45, -0.72, 0.9, 2.1, -0.7, 'zZ').pop();
           }
         } else if (h1 >= 0.02 && h1 < 0.028) { // --- trạm biến áp kiosk 2 × 1,5 × 2 m: chỉ ở vỉa hè rộng, có va chạm ---
-          const [qx, qz] = at(1.15); if (depthAt(kx, kz, nx, nz, 4) < 3.8 || ctx.isGreen(qx, qz) || onRoad(...at(3.4), 0.3) || nearWall(qx, qz, 2) || !clear(qx, qz, 1.7)) continue;
-          if (depthAt(...at(0, 1.1), nx, nz, 3.5) < 3.5 || depthAt(...at(0, -1.1), nx, nz, 3.5) < 3.5) continue;
+          // lùi vào trong hè, chừa một lối 0,9 m sát bó vỉa: người quét rác, người gánh hàng đi men bó vỉa (cách mép 0,42–0,57 m) không
+          // lọt vào lòng trạm (tester vòng 4: một người quét rác đi trong khối trạm biến áp đầu phố Lê Thái Tổ)
+          const [qx, qz] = at(1.75); if (depthAt(kx, kz, nx, nz, 4.5) < 4.5 || ctx.isGreen(qx, qz) || onRoad(...at(4), 0.3) || nearWall(qx, qz, 2) || !clear(qx, qz, 1.7)) continue;
+          if (depthAt(...at(0, 1.1), nx, nz, 4) < 4 || depthAt(...at(0, -1.1), nx, nz, 4) < 4) continue;
           const yaw = Math.atan2(nx, nz); kiosk(near, pg, qx - X0, qz - Z0, CURB, yaw, seed, L.warn); hold(qx, qz, 1.5); mark('kiosk', qx, qz);
-          const c = [at(0.4, -1), at(0.4, 1), at(1.9, 1), at(1.9, -1)];
+          const c = [at(1, -1), at(1, 1), at(2.5, 1), at(2.5, -1)];
           for (let i = 0; i < 4; i++) walls.push(c[i][0], c[i][1], c[(i + 1) % 4][0], c[(i + 1) % 4][1]);
           far.push().move(qx - X0, CURB, qz - Z0).rotY(yaw).rgb(0.3, 0.33, 0.32).box(-1, 0, -0.75, 1, 2.1, 0.75, 'xXYzZ').pop();
         } else if (h1 >= 0.04 && h1 < 0.072) { // --- tủ điện xám kem sát bó vỉa, khoảng 100 m một cái ---

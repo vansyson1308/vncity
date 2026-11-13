@@ -21,6 +21,7 @@ export class Nav {
     this.hasElev = world.roads.some((r) => r.elev);
     this.chunks = new Map(); // khoá ô → { segs, cells }
     this.decks = [];         // mặt cầu đi bộ được (cầu Thê Húc): { ax, az, bx, bz, w, y(t) }
+    this.pads = [];          // bậc thềm, nền thấp của công trình dựng tay (landmarks/sites.js modelPads): lưới cao độ { x0, z0, x1, z1, c, nz, h }
     this._t = [0]; this.hit = { r: null, seg: 0, t: 0, d: 0, px: 0, pz: 0 };
   }
 
@@ -42,6 +43,12 @@ export class Nav {
   }
 
   addDeck(d) { d.len = Math.hypot(d.bx - d.ax, d.bz - d.az); this.decks.push(d); }
+  addPads(p) { this.pads.push(p); }
+  // Mặt bậc thềm cao nhất tại (x,z) (m, cao độ thế giới), 0 nếu không có
+  padY(x, z) {
+    for (const p of this.pads) { if (x < p.x0 || z < p.z0 || x >= p.x1 || z >= p.z1) continue; const h = p.h[Math.floor((x - p.x0) / p.c) * p.nz + Math.floor((z - p.z0) / p.c)]; if (h) return h / 100; }
+    return 0;
+  }
   // Mặt cầu tại (x,z), nếu có. Kết quả: this.deckT (0..1 dọc cầu), this.deckS (lệch ngang, m).
   deckAt(x, z, pad = 0) {
     for (const d of this.decks) {
@@ -79,7 +86,7 @@ export class Nav {
     if (this.decks.length) { const d = this.deckAt(x, z, 0.3); if (d) return CURB + d.y(this.deckT); }
     if (this.hasElev && this.elevatedAt(x, z, y) && this.eY > 0.45) return this.eY;
     let best = 1e9, lift = 0; const gc = this.gc, t = this._t;
-    const l = this.grid.get(Math.floor(x / gc) * 65537 + Math.floor(z / gc)); if (!l) return CURB;
+    const l = this.grid.get(Math.floor(x / gc) * 65537 + Math.floor(z / gc)); if (!l) return this.pads.length ? Math.max(CURB, this.padY(x, z)) : CURB;
     for (let k = 0; k < l.length; k += 2) {
       const r = l[k]; if (!(r.veh || r.kind === K.pedestrian)) continue;
       const i = l[k + 1], p = r.p, d = Math.sqrt(segDist2(x, z, p[i], p[i + 1], p[i + 2], p[i + 3], t)) - r.w / 2;
@@ -88,8 +95,10 @@ export class Nav {
       if (r.elev) { ey = roadY(r, r.cum[i / 2] + t[0] * (r.cum[i / 2 + 1] - r.cum[i / 2])); if (ey > 0.45) continue; } // khúc cầu đã lên cao: bên dưới là vỉa hè, mặt nước
       best = d; lift = ey;
     }
-    const k = clamp(best / 0.25, 0, 1);
-    return k * CURB + (1 - k) * lift; // chân dốc lên cầu: lòng đường nhô dần lên
+    const k = clamp(best / 0.25, 0, 1), gy = k * CURB + (1 - k) * lift; // chân dốc lên cầu: lòng đường nhô dần lên
+    // bậc thềm của công trình dựng tay: đứng trên mặt bậc, không lún chân vào trong (tester vòng 4: bậc thềm ga Hà Nội che chân tới gối)
+    if (this.pads.length) { const h = this.padY(x, z); if (h > gy) return h; }
+    return gy;
   }
   onRoad(x, z) { return this.groundY(x, z) < CURB * 0.5; }
 

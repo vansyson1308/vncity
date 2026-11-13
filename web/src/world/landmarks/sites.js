@@ -72,42 +72,92 @@ export function modelFootprint(pos) {
   return x1 > x0 ? [x0, z0, x1, z1] : null;
 }
 // Đoạn va chạm của công trình s có lưới đỉnh pos: theo `solid` nếu có khai, không thì theo mặt bằng mô hình (công trình kín).
-// Mặt bằng khối đặc của mô hình theo đúng hình dạng: chiếu mọi tam giác cắt tầm thân người (0,7 đến 3 m) xuống lưới 1 m, lấy đường
-// viền các ô đã phủ (sau khi đóng hình, xem dưới; cạnh thẳng hàng liền nhau gộp làm một) làm tường va chạm, toạ độ mô hình
-// [ax, az, bx, bz] × n. Một hộp bao chung
-// cho cả mô hình chắn luôn những góc trống của mặt bằng chữ T, chữ L (Lăng: thân lăng với hai khán đài, tường tàng hình tới 15 m).
-export function modelOutline(pos, idx) {
-  const cells = new Set(), O = 32768, K = (i, j) => (i + O) * 65536 + (j + O), at = (v) => [pos[v * 3], pos[v * 3 + 1], pos[v * 3 + 2]];
-  for (let t = 0; t < idx.length; t += 3) {
-    const a = at(idx[t]), b = at(idx[t + 1]), d = at(idx[t + 2]);
-    if (Math.max(a[1], b[1], d[1]) < 0.7 || Math.min(a[1], b[1], d[1]) > 3) continue;
-    const L = Math.max(Math.hypot(b[0] - a[0], b[2] - a[2]), Math.hypot(d[0] - a[0], d[2] - a[2]), Math.hypot(d[0] - b[0], d[2] - b[2])), st = 1 / Math.max(1, Math.ceil(L / 0.5));
-    for (let u = 0; u <= 1 + 1e-9; u += st) for (let v = 0; u + v <= 1 + 1e-9; v += st) cells.add(K(Math.floor(a[0] + (b[0] - a[0]) * u + (d[0] - a[0]) * v), Math.floor(a[2] + (b[2] - a[2]) * u + (d[2] - a[2]) * v)));
-  }
-  // Đóng hình: lòng nhà rỗng (mô hình chỉ có vỏ) và khe dưới 4 m (cửa vòm, ô cửa) không thành lối vào. Nở 2 ô, loang từ ngoài vào
-  // phần chưa phủ, rồi lấy mọi ô cách phần bên ngoài quá 2 ô (= nở rồi co lại, lấp cả lỗ bên trong).
-  if (cells.size) {
-    let i0 = 1e9, i1 = -1e9, j0 = 1e9, j1 = -1e9; for (const k of cells) { const i = Math.floor(k / 65536) - O, j = (k % 65536) - O; i0 = Math.min(i0, i); i1 = Math.max(i1, i); j0 = Math.min(j0, j); j1 = Math.max(j1, j); }
-    const R = 2, X0 = i0 - R - 1, Z0 = j0 - R - 1, NX = i1 - i0 + 2 * R + 3, NZ = j1 - j0 + 2 * R + 3, near = new Uint8Array(NX * NZ), out = new Uint8Array(NX * NZ);
-    for (const k of cells) { const i = Math.floor(k / 65536) - O - X0, j = (k % 65536) - O - Z0; for (let di = -R; di <= R; di++) for (let dj = -R; dj <= R; dj++) if (di * di + dj * dj <= R * R) near[(i + di) * NZ + j + dj] = 1; }
-    const q = [0]; out[0] = 1;
-    while (q.length) { const c = q.pop(), i = Math.floor(c / NZ), j = c % NZ; for (const [a, b] of [[i + 1, j], [i - 1, j], [i, j + 1], [i, j - 1]]) { if (a < 0 || b < 0 || a >= NX || b >= NZ) continue; const n = a * NZ + b; if (!out[n] && !near[n]) { out[n] = 1; q.push(n); } } }
-    const far = new Uint8Array(NX * NZ); // cách phần bên ngoài quá R ô
-    for (let i = 0; i < NX; i++) for (let j = 0; j < NZ; j++) { let ok = true; for (let di = -R; di <= R && ok; di++) for (let dj = -R; dj <= R; dj++) { if (di * di + dj * dj > R * R) continue; const a = i + di, b = j + dj; if (a < 0 || b < 0 || a >= NX || b >= NZ || out[a * NZ + b]) { ok = false; break; } } far[i * NZ + j] = ok ? 1 : 0; }
-    for (let i = 0; i < NX; i++) for (let j = 0; j < NZ; j++) if (far[i * NZ + j]) cells.add(K(i + X0, j + Z0));
-  }
-  // cạnh biên: ngang (theo x) ở z = j hoặc j + 1, dọc (theo z) ở x = i hoặc i + 1; gom theo hàng rồi nối đoạn liền nhau
-  const H = new Map(), V = new Map(), push = (M, k, v) => { let l = M.get(k); if (!l) M.set(k, (l = [])); l.push(v); };
-  for (const k of cells) {
-    const i = Math.floor(k / 65536) - O, j = (k % 65536) - O;
-    if (!cells.has(K(i, j - 1))) push(H, j, i); if (!cells.has(K(i, j + 1))) push(H, j + 1, i);
-    if (!cells.has(K(i - 1, j))) push(V, i, j); if (!cells.has(K(i + 1, j))) push(V, i + 1, j);
-  }
-  const out = [];
-  for (const [line, l] of H) { l.sort((p, q) => p - q); let s0 = l[0], e = l[0] + 1; for (let n = 1; n <= l.length; n++) { if (n < l.length && l[n] === e) { e++; continue; } out.push([s0, line, e, line]); if (n < l.length) { s0 = l[n]; e = l[n] + 1; } } }
-  for (const [line, l] of V) { l.sort((p, q) => p - q); let s0 = l[0], e = l[0] + 1; for (let n = 1; n <= l.length; n++) { if (n < l.length && l[n] === e) { e++; continue; } out.push([line, s0, line, e]); if (n < l.length) { s0 = l[n]; e = l[n] + 1; } } }
-  return out;
+// Mặt bằng khối đặc của mô hình theo đúng hình dạng: chiếu mọi tam giác cắt tầm thân người (0,7 đến 2,1 m: mái, ô văng, dầm cửa cao
+// hơn đầu người không chắn lối) xuống lưới 0,25 m, lấy đường viền các ô đã phủ (sau khi đóng hình, xem dưới; cạnh thẳng hàng liền
+// nhau gộp làm một) làm tường va chạm, toạ độ mô hình [ax, az, bx, bz] × n. Một hộp bao chung cho cả mô hình chắn luôn những góc trống
+// của mặt bằng chữ T, chữ L (Lăng: thân lăng với hai khán đài, tường tàng hình tới 15 m). Lưới 1 m trước đây để tường tàng hình tới
+// 1 m trước mặt tường thật, và cả dải ô văng trên cửa ga Hà Nội thành tường (tester vòng 4: 1–1,85 m).
+// Bình phương khoảng cách (tính bằng ô) từ mỗi ô tới ô `on` gần nhất (biến đổi khoảng cách Euclid chính xác, Felzenszwalb–Huttenlocher).
+function sqDist(on, NX, NZ) {
+  const INF = 1e12, n = Math.max(NX, NZ), f = new Float64Array(n), g = new Float64Array(n), v = new Int32Array(n), zk = new Float64Array(n + 1), D = new Float64Array(NX * NZ);
+  const pass = (len) => { // f → g theo một hàng
+    let k = 0; v[0] = 0; zk[0] = -INF; zk[1] = INF;
+    for (let q = 1; q < len; q++) {
+      let s = (f[q] + q * q - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]);
+      while (s <= zk[k]) { k--; s = (f[q] + q * q - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]); }
+      k++; v[k] = q; zk[k] = s; zk[k + 1] = INF;
+    }
+    k = 0; for (let q = 0; q < len; q++) { while (zk[k + 1] < q) k++; g[q] = (q - v[k]) * (q - v[k]) + f[v[k]]; }
+  };
+  for (let i = 0; i < NX; i++) { for (let j = 0; j < NZ; j++) f[j] = on[i * NZ + j] ? 0 : INF; pass(NZ); for (let j = 0; j < NZ; j++) D[i * NZ + j] = g[j]; }
+  for (let j = 0; j < NZ; j++) { for (let i = 0; i < NX; i++) f[i] = D[i * NZ + j]; pass(NX); for (let i = 0; i < NX; i++) D[i * NZ + j] = g[i]; }
+  return D;
 }
+export function modelOutline(pos, idx, C = 0.25) {
+  const LO = 0.7, HI = 2.1, R = Math.round(2 / C), M = R + 3; // R: đóng khe dưới 4 m; M: lề lưới
+  let x0 = 1e9, z0 = 1e9, x1 = -1e9, z1 = -1e9;
+  const keep = (t) => { const ya = pos[idx[t] * 3 + 1], yb = pos[idx[t + 1] * 3 + 1], yd = pos[idx[t + 2] * 3 + 1]; return !(Math.max(ya, yb, yd) < LO || Math.min(ya, yb, yd) > HI); };
+  for (let t = 0; t < idx.length; t += 3) { if (!keep(t)) continue; for (let k = 0; k < 3; k++) { const x = pos[idx[t + k] * 3], z = pos[idx[t + k] * 3 + 2]; if (x < x0) x0 = x; if (x > x1) x1 = x; if (z < z0) z0 = z; if (z > z1) z1 = z; } }
+  if (!(x1 >= x0)) return [];
+  const I0 = Math.floor(x0 / C) - M, J0 = Math.floor(z0 / C) - M, NX = Math.floor(x1 / C) - I0 + M + 1, NZ = Math.floor(z1 / C) - J0 + M + 1, occ = new Uint8Array(NX * NZ);
+  const mark = (x, z) => { occ[(Math.floor(x / C) - I0) * NZ + Math.floor(z / C) - J0] = 1; };
+  for (let t = 0; t < idx.length; t += 3) {
+    if (!keep(t)) continue;
+    const ax = pos[idx[t] * 3], az = pos[idx[t] * 3 + 2], bx = pos[idx[t + 1] * 3], bz = pos[idx[t + 1] * 3 + 2], dx = pos[idx[t + 2] * 3], dz = pos[idx[t + 2] * 3 + 2];
+    const L = Math.max(Math.hypot(bx - ax, bz - az), Math.hypot(dx - ax, dz - az), Math.hypot(dx - bx, dz - bz)), area = Math.abs((bx - ax) * (dz - az) - (dx - ax) * (bz - az));
+    if (area < L * C * 0.1) { // mặt đứng (chiếu xuống gần thành một đường): chỉ vạch ba cạnh
+      for (const [px, pz, qx, qz] of [[ax, az, bx, bz], [bx, bz, dx, dz], [dx, dz, ax, az]]) { const n = Math.max(1, Math.ceil(Math.hypot(qx - px, qz - pz) / (C * 0.4))); for (let k = 0; k <= n; k++) mark(px + ((qx - px) * k) / n, pz + ((qz - pz) * k) / n); }
+      continue;
+    }
+    const st = 1 / Math.max(1, Math.ceil(L / (C * 0.45)));
+    for (let u = 0; u <= 1 + 1e-9; u += st) for (let v = 0; u + v <= 1 + 1e-9; v += st) mark(ax + (bx - ax) * u + (dx - ax) * v, az + (bz - az) * u + (dz - az) * v);
+  }
+  // Đóng hình: lòng nhà rỗng (mô hình chỉ có vỏ) và khe dưới 4 m (cửa vòm, ô cửa) không thành lối vào. Nở R ô, loang từ ngoài vào
+  // phần chưa phủ, rồi lấy mọi ô cách phần bên ngoài quá R ô (= nở rồi co lại, lấp cả lỗ bên trong).
+  const N = NX * NZ, dOcc = sqDist(occ, NX, NZ), out = new Uint8Array(N), q = [0]; out[0] = 1;
+  while (q.length) { const c = q.pop(), i = Math.floor(c / NZ), j = c % NZ; for (const [a, b] of [[i + 1, j], [i - 1, j], [i, j + 1], [i, j - 1]]) { if (a < 0 || b < 0 || a >= NX || b >= NZ) continue; const n = a * NZ + b; if (!out[n] && dOcc[n] > R * R) { out[n] = 1; q.push(n); } } }
+  const dOut = sqDist(out, NX, NZ), cell = new Uint8Array(N); for (let c = 0; c < N; c++) cell[c] = occ[c] || dOut[c] > R * R ? 1 : 0;
+  // cạnh biên: ngang (theo x) ở z = j hoặc j + 1, dọc (theo z) ở x = i hoặc i + 1; gom theo hàng rồi nối đoạn liền nhau
+  const H = new Map(), V = new Map(), push = (Mp, k, v) => { let l = Mp.get(k); if (!l) Mp.set(k, (l = [])); l.push(v); }, has = (i, j) => i >= 0 && j >= 0 && i < NX && j < NZ && cell[i * NZ + j] === 1;
+  for (let i = 0; i < NX; i++) for (let j = 0; j < NZ; j++) {
+    if (!cell[i * NZ + j]) continue;
+    if (!has(i, j - 1)) push(H, j, i); if (!has(i, j + 1)) push(H, j + 1, i);
+    if (!has(i - 1, j)) push(V, i, j); if (!has(i + 1, j)) push(V, i + 1, j);
+  }
+  const res = [], X = (i) => (i + I0) * C, Z = (j) => (j + J0) * C;
+  for (const [line, l] of H) { l.sort((p, r) => p - r); let s0 = l[0], e = l[0] + 1; for (let n = 1; n <= l.length; n++) { if (n < l.length && l[n] === e) { e++; continue; } res.push([X(s0), Z(line), X(e), Z(line)]); if (n < l.length) { s0 = l[n]; e = l[n] + 1; } } }
+  for (const [line, l] of V) { l.sort((p, r) => p - r); let s0 = l[0], e = l[0] + 1; for (let n = 1; n <= l.length; n++) { if (n < l.length && l[n] === e) { e++; continue; } res.push([X(line), Z(s0), X(line), Z(e)]); if (n < l.length) { s0 = l[n]; e = l[n] + 1; } } }
+  return res;
+}
+// Bậc thềm, nền thấp, dốc thoải của mô hình: các mặt ngửa lên (dốc dưới 53°) cao tới 0,7 m so với chân mô hình (cao hơn thì đã là
+// tường có va chạm, xem modelOutline). Ghi vào lưới 0,25 m theo trục thế giới, mỗi ô giữ cao độ cao nhất của các mặt phủ ô đó (cm, cao độ
+// thế giới, theo đúng độ dốc của mặt); nav.groundY lấy cao độ đó, nên người, xe đứng trên mặt bậc chứ không lún chân vào trong bậc
+// (tester vòng 4: bậc thềm ga Hà Nội che chân tới gối). base: cao độ chân mô hình.
+export function modelPads(s, pos, idx, base) {
+  const c = Math.cos(s.yaw), sn = Math.sin(s.yaw), C = 0.25, W = (lx, lz) => [s.x + lx * c + lz * sn, s.z - lx * sn + lz * c], tris = [];
+  let x0 = 1e9, z0 = 1e9, x1 = -1e9, z1 = -1e9;
+  for (let t = 0; t < idx.length; t += 3) {
+    const a = idx[t] * 3, b = idx[t + 1] * 3, d = idx[t + 2] * 3, ya = pos[a + 1], yb = pos[b + 1], yd = pos[d + 1], hi = Math.max(ya, yb, yd);
+    if (hi < 0.06 || hi > 0.7 || Math.min(ya, yb, yd) < -0.01) continue;
+    const ux = pos[b] - pos[a], uy = yb - ya, uz = pos[b + 2] - pos[a + 2], vx = pos[d] - pos[a], vy = yd - ya, vz = pos[d + 2] - pos[a + 2];
+    const ny = uz * vx - ux * vz, nl = Math.hypot(uy * vz - uz * vy, ny, ux * vy - uy * vx); if (!(nl > 1e-6) || Math.abs(ny) < 0.6 * nl) continue; // mặt đứng, dốc gắt
+    const P = [W(pos[a], pos[a + 2]), W(pos[b], pos[b + 2]), W(pos[d], pos[d + 2])];
+    tris.push(P, [ya, yb, yd]); for (const q of P) { x0 = Math.min(x0, q[0]); z0 = Math.min(z0, q[1]); x1 = Math.max(x1, q[0]); z1 = Math.max(z1, q[1]); }
+  }
+  if (!tris.length) return null;
+  x0 = Math.floor(x0 / C) * C - C; z0 = Math.floor(z0 / C) * C - C;
+  const nx = Math.ceil((x1 - x0) / C) + 2, nz = Math.ceil((z1 - z0) / C) + 2, h = new Uint8Array(nx * nz);
+  for (let k = 0; k < tris.length; k += 2) {
+    const [A, B, D] = tris[k], [ya, yb, yd] = tris[k + 1];
+    const L = Math.max(Math.hypot(B[0] - A[0], B[1] - A[1]), Math.hypot(D[0] - A[0], D[1] - A[1]), Math.hypot(D[0] - B[0], D[1] - B[1])), st = 1 / Math.max(1, Math.ceil(L / (C * 0.45)));
+    for (let u = 0; u <= 1 + 1e-9; u += st) for (let v = 0; u + v <= 1 + 1e-9; v += st) {
+      const i = Math.floor((A[0] + (B[0] - A[0]) * u + (D[0] - A[0]) * v - x0) / C), j = Math.floor((A[1] + (B[1] - A[1]) * u + (D[1] - A[1]) * v - z0) / C), q = i * nz + j;
+      const y = Math.min(255, Math.round((base + ya + (yb - ya) * u + (yd - ya) * v) * 100)); if (y > h[q]) h[q] = y;
+    }
+  }
+  return { x0, z0, x1: x0 + nx * C, z1: z0 + nz * C, c: C, nz, h };
+}
+
 // Đoạn va chạm của công trình s (mô hình có đỉnh pos, chỉ số tam giác idx): theo `solid` nếu có khai, không thì theo mặt bằng mô hình
 // (công trình kín). Khối nhà OSM tương ứng không giữ va chạm nữa (gen/buildings.js): mặt bằng OSM lệch mô hình tới 15 m, thành tường
 // tàng hình trước cửa chợ Đồng Xuân, Nhà thờ Lớn, Nhà hát Lớn.

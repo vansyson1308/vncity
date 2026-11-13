@@ -310,7 +310,9 @@ async function boot() {
       camera.position.set(player.pos.x + Math.sin(cam.yaw) * 5, 3, player.pos.z + Math.cos(cam.yaw) * 5); camera.lookAt(player.pos.x, 1.5, player.pos.z); camera.updateMatrixWorld();
       traffic.agents.length = 0; traffic.prewarm(player, camera, sky.hours); crowd.prewarm(player, camera, sky.hours); }
     const wasX = player.pos.x, wasZ = player.pos.z;
-    player.update(dt, input, cam.yaw);
+    // đang chờ dựng các ô ở nơi đi nhanh tới: nhân vật đứng yên tại chỗ. Các ô quanh chỗ cũ có thể đã bị cất (cùng các đoạn va chạm
+    // của chúng), xe còn trớn mà lăn tiếp thì trôi qua bờ hồ, qua tường (tester vòng 4, fuzz hạt 2: lọt 1 cm xuống mép Hồ Gươm).
+    if (warpTo) { player.speed = 0; player.sync(dt); } else player.update(dt, input, cam.yaw);
     traffic.day = sky.day; traffic.update(dt, player, camera, sky.hours);
     if (traffic.walk !== G.walk) { G.walk = traffic.walk; crowd.walkOn = G.walk; walkStreet.set(G.walk, traffic.gates); if (G.walk && G.started && !fixedTime) hud.toast(T('g_walk_on'), 10); } // phố đi bộ vừa đóng hoặc mở: dựng hoặc cất rào
     crowd.update(dt, player, camera, sky.hours);

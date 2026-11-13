@@ -369,6 +369,19 @@ export function genGround(ctx, cx, cz) {
   // vạch sang đường, vạch dừng của cả bản đồ quanh ô này (kể cả vạch thuộc ô bên cạnh): vạch dọc tránh chúng
   const ZP = junctionsOf(ctx.world).zebras;
   for (const q of ZP.list) if (q.x > X0 - 30 && q.x < X1 + 30 && q.z > Z0 - 30 && q.z < Z1 + 30) zr.push([q.x, q.z, q.dx, q.dz, q.hl, q.zebra ? q.rw : q.hw]);
+  // hình chữ nhật quay tâm (x,z), trục dọc (ux,uz), nửa dài hl, nửa rộng hw có chạm (cách dưới 0,2 m) vạch sang đường, vạch dừng nào
+  // không (phép thử trục tách của hai hình chữ nhật)
+  const onPaint = (x, z, ux, uz, hl, hw) => {
+    for (const q of zr) {
+      const ex = x - q[0], ez = z - q[1], qa = q[4] + 0.2, qb = q[5] + 0.2; let sep = false;
+      for (const [ax, az] of [[q[2], q[3]], [-q[3], q[2]], [ux, uz], [-uz, ux]]) {
+        const rq = qa * Math.abs(q[2] * ax + q[3] * az) + qb * Math.abs(-q[3] * ax + q[2] * az), rp = hl * Math.abs(ux * ax + uz * az) + hw * Math.abs(-uz * ax + ux * az);
+        if (Math.abs(ex * ax + ez * az) > rq + rp) { sep = true; break; }
+      }
+      if (!sep) return true;
+    }
+    return false;
+  };
   const onZebra = (x, z, ux, uz, h) => { for (const q of zr) { const lx = (x - q[0]) * q[2] + (z - q[1]) * q[3], ly = -(x - q[0]) * q[3] + (z - q[1]) * q[2], c = Math.abs(ux * q[2] + uz * q[3]); if (Math.abs(lx) < q[4] + h * c + 0.3 && Math.abs(ly) < q[5] + h * (1 - c) + 0.3) return true; } return false; };
   for (const r of roads) {
     if (!r.veh || r.kind > K.tertiary || r.w < 5.5) continue;
@@ -440,11 +453,12 @@ export function genGround(ctx, cx, cz) {
       } else if (t < 0.8) { // miếng vá: dải đào rãnh cáp chạy dọc hoặc cắt ngang đường, hoặc mảng vá ổ gà
         const across = H(k * 5 + 3) < 0.22 && r.w < 9, hl = across ? r.w / 2 - 0.5 : 1 + H(k * 5 + 4) * 3.2, hw = across ? 0.35 + H(k * 5 + 4) * 0.3 : 0.4 + H(k * 5 + 3) * 0.7;
         const o = across ? 0 : side * Math.max(0, Math.min(r.w / 2 - hw - 0.55, r.w * (0.1 + H(k * 5 + 2) * 0.28))), [x, z] = at(o);
-        if (inChunk(x, z) && (across ? onAsphalt(x, z, 0.3) : onAsphalt(x - dx * hl, z - dz * hl, hw + 0.5) && onAsphalt(x + dx * hl, z + dz * hl, hw + 0.5)))
+        // không vá đè lên vạch sang đường, vạch dừng (tester vòng 4: mảng vá tối che nửa dải vạch ở cả ba nhánh một nút giao)
+        if (inChunk(x, z) && (across ? onAsphalt(x, z, 0.3) : onAsphalt(x - dx * hl, z - dz * hl, hw + 0.5) && onAsphalt(x + dx * hl, z + dz * hl, hw + 0.5)) && !onPaint(x, z, across ? -dz : dx, across ? dx : dz, hl, hw))
           gb.decal(H(k * 5 + 4) < 0.5 ? DECAL.patchNew : DECAL.patchOld, x, z, across ? -dz : dx, across ? dx : dz, hl, hw, DECAL_Y - 0.004, DECAL_Y - 0.004, LAYER.asphalt, 0.86, 0.86);
       } else if (t < 0.9) { // vệt dầu máy loang sát mép đường, chỗ xe hay dừng đỗ
         const hs = 0.5 + H(k * 5 + 3) * 0.6, [x, z] = at(side * (r.w / 2 - 0.5 - hs));
-        if (inChunk(x, z) && onAsphalt(x, z, hs + 0.3)) gb.decal(DECAL.oil, x, z, dx, dz, hs * 1.3, hs, DECAL_Y - 0.005, DECAL_Y - 0.005, LAYER.asphalt, 0.8, 0.8);
+        if (inChunk(x, z) && onAsphalt(x, z, hs + 0.3) && !onPaint(x, z, dx, dz, hs * 1.3, hs)) gb.decal(DECAL.oil, x, z, dx, dz, hs * 1.3, hs, DECAL_Y - 0.005, DECAL_Y - 0.005, LAYER.asphalt, 0.8, 0.8);
       } else if (r.kind <= K.residential) { // nắp bể cáp viễn thông chữ nhật trên vỉa hè, sát bó vỉa
         const [x, z] = at(side * (r.w / 2 + 0.85));
         if (inChunk(x, z) && freePave(x, z, 0.7) && zoneAt(x, z) !== ZONE.bank)

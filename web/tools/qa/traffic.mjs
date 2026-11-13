@@ -72,8 +72,13 @@ if (want('sweep')) {
     for (let f = 0; f < 60 * 132; f++) { sim.step(1 / 60, player, null, 17.5); if (f < 1200) continue; const t = sim.time;
       for (const a of sim.agents) { if (a.x > 1e8 || (a.x - s.x) ** 2 + (a.z - s.z) ** 2 > 6400) continue; const hx = Math.sin(a.yaw), hz = Math.cos(a.yaw); let k = -1, best = -0.85, d = 0;
         for (let q = 0; q < s.arms.length; q++) { const m = s.arms[q]; if (!m.inbound) continue; const rx = a.x - m.x, rz = a.z - m.z, dd = rx * m.dx + rz * m.dz, ll = rx * m.dz - rz * m.dx; if (dd < -3 || dd > 45 || Math.abs(ll) > m.w / 2 + 0.6) continue; const dot = hx * m.dx + hz * m.dz; if (dot < best) { best = dot; k = q; d = dd; } }
+        // xe đang chạy trên chính một nhánh vào của nút (đoạn đường mang cột đèn): tính theo nhánh đó, kể cả khi thân xe lọt vào hành lang
+        // của nhánh bên cạnh (làn rẽ tách khỏi Trần Quang Khải chạy sát lòng đường chính: xe lấn mép trái làn rẽ bị gán nhầm vào nhánh
+        // chính đang đỏ trong khi đi theo đèn xanh của làn rẽ)
+        if (k >= 0) { const own = s.arms.findIndex((m) => m.inbound && m.r === a.e.r); if (own >= 0 && own !== k) { const m = s.arms[own]; k = own; d = (a.x - m.x) * m.dx + (a.z - m.z) * m.dz; } }
         if (k < 0) continue; const m = s.arms[k], front = d - a.hl, key = a.id * 16 + k, st = signalState(t, m.grp, s.off), pv = prev.get(key), p = pv !== undefined && pv[1] === f - 1 && pv[0] - front < 1 ? pv[0] : undefined;
-        if (p !== undefined && p > s.stop - 1 && front <= s.stop - 1) { n++; if (st === 3) green++; if (st === 1) { let redFor = 0; while (redFor < 40 && signalState(t - redFor - 0.1, m.grp, s.off) === 1) redFor += 0.1; if (redFor > 1) red.push({ arm: w4.names[m.r.name] || '?', len: +m.r.len.toFixed(1), cls: a.cls, v: +a.v.toFixed(1), attached: a.sg !== null }); } }
+        // (vạch của chính nhánh, m.stop: xem phần a1)
+        if (p !== undefined && p > m.stop - 1 && front <= m.stop - 1) { n++; if (st === 3) green++; if (st === 1) { let redFor = 0; while (redFor < 40 && signalState(t - redFor - 0.1, m.grp, s.off) === 1) redFor += 0.1; if (redFor > 1) red.push({ arm: w4.names[m.r.name] || '?', len: +m.r.len.toFixed(1), cls: a.cls, v: +a.v.toFixed(1), attached: a.sg !== null }); } }
         prev.set(key, [front, f]); } }
     rows.push({ names: [...new Set(s.arms.map((a) => w4.names[a.r.name] || '?'))].join(' × '), at: [fx(s.x, 0), fx(s.z, 0)], stop: s.stop, n, green, red, shortArms: s.arms.filter((a) => a.inbound && a.r.len < s.stop + 0.95 + 4).length });
   }
@@ -90,7 +95,7 @@ const J = junctionsOf(world), allSigs = [...new Set(J.signalNode.values())];
 // trong đó có nút Hàng Khay - Tràng Tiền - Đinh Tiên Hoàng ở đầu nam Hồ Gươm, nơi người chơi nào cũng đi qua
 const PICK = [[-735, 431], [-819, 993], [459, 624], [-460, -1245], [449, -279], [-932, 52], [-1577, -1115], [109, 366], [-1412, -263]];
 const sigs = PICK.map(([x, z]) => allSigs.reduce((p, q) => (Math.hypot(q.x - x, q.z - z) < Math.hypot(p.x - x, p.z - z) ? q : p))).map((s) => ({ x: s.x, z: s.z, off: s.off, stop: s.stop, names: [...new Set(s.arms.map((a) => world.names[a.r.name] || '?'))].join(' × '), zone: zoneAt(s.x, s.z),
-  arms: s.arms.map((a) => ({ x: a.x, z: a.z, dx: a.dx, dz: a.dz, w: a.w, grp: a.grp, inbound: a.inbound, len: a.r.len, name: world.names[a.r.name] || '?' })) }));
+  arms: s.arms.map((a) => ({ x: a.x, z: a.z, dx: a.dx, dz: a.dz, w: a.w, grp: a.grp, inbound: a.inbound, len: a.r.len, stop: a.stop, ri: a.r.i, name: world.names[a.r.name] || '?' })) }));
 
 const browser = await launch();
 const { page, errors } = await openGame(browser, 'q=medium&fresh&lang=vi&h=17.5', { init: invariantHelper, norender: true, seed: 20261112 });
@@ -122,12 +127,17 @@ await page.evaluate(([fnSrc, SIG]) => {
         // khớp với mũi xe nhất (hai nhánh chụm nhau một góc hẹp chồng lên nhau ở sát nút; phải lệch hướng dưới 32° mới tính).
         let k = -1, bestDot = -0.85, d = 0, lat = 0;
         for (let q = 0; q < s.arms.length; q++) { const m = s.arms[q]; if (!m.inbound) continue; const rx = a.x - m.x, rz = a.z - m.z, dd = rx * m.dx + rz * m.dz, ll = rx * m.dz - rz * m.dx; if (dd < -3 || dd > 45 || Math.abs(ll) > m.w / 2 + 0.6) continue; const dot = hx * m.dx + hz * m.dz; if (dot < bestDot) { bestDot = dot; k = q; d = dd; lat = ll; } }
+        // xe đang chạy trên chính một nhánh vào của nút: tính theo nhánh đó (xem phần quét a3)
+        if (k >= 0) { const own = s.arms.findIndex((m) => m.inbound && m.ri === a.e.r.i); if (own >= 0 && own !== k) { const m = s.arms[own], rx = a.x - m.x, rz = a.z - m.z; k = own; d = rx * m.dx + rz * m.dz; lat = rx * m.dz - rz * m.dx; } }
         if (k < 0) continue;
         {
           const m = s.arms[k];
           const front = d - a.hl, key = a.id * 16 + k, st = signalState(t, m.grp, s.off), pv = X.prev.get(key), prev = pv !== undefined && pv[1] === I.frames - 1 && pv[0] - front < 1 ? pv[0] : undefined; // chỉ so với khung hình liền trước, cùng nhánh
           if (st === 1 && a.v < 0.3 && front >= s.stop - 1 && front < s.stop + 30) queue++;
-          if (prev !== undefined && prev > s.stop - 1 && front <= s.stop - 1) {
+          // vạch dừng của chính nhánh này (chân cột đèn của nhánh, m.stop): nhánh có vạch sang đường dời xa nút (zebras.js) thì chân cột
+          // đèn chung của nút (s.stop) nằm sâu trong lòng nút, xe vào lúc đèn vàng đi tới đó khi đèn đã đỏ hơn 1 giây bị đếm nhầm là vượt đỏ
+          // (vòng 4: một lượt ở nhánh Nguyễn Thái Học của nút Cửa Nam, cột đèn nhánh ở 16,6 m, cột chung 10,6 m)
+          if (prev !== undefined && prev > m.stop - 1 && front <= m.stop - 1) {
             // mũi xe vừa vượt quá vạch dừng 1 m. Đèn đã đỏ được bao lâu?
             let redFor = 0; if (st === 1) while (redFor < 40 && signalState(t - redFor - 0.1, m.grp, s.off) === 1) redFor += 0.1;
             X.ev.push({ j: s.names, arm: m.name, armLen: +m.len.toFixed(1), type: NAME[a.type], cls: a.cls, st, redFor: +redFor.toFixed(1), v: +a.v.toFixed(1), lat: +lat.toFixed(1), id: a.id, x: +a.x.toFixed(1), z: +a.z.toFixed(1), t: +t.toFixed(1) });
