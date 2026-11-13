@@ -4,6 +4,7 @@
 import { K, CS, F_ONEWAY, F_REVERSE, F_BRIDGE, roadY } from './data.js';
 import { hash } from '../core/util.js';
 import { isPlateName, isAlleyName } from './streetnames.js';
+import { zebraPlan } from './zebras.js';
 
 export const nodeKey = (x, z) => Math.round(x * 10) * 100003 + Math.round(z * 10);
 
@@ -196,5 +197,13 @@ function build(world) {
     if (sig.arms.filter((a) => a.inbound).length < 2) continue;
     bucket(s.x, s.z).signals.push(sig); for (const k of keys) signalNode.set(k, sig);
   }
-  return { nodes, byChunk, signalNode, signals: new Set(signalNode.values()).size };
+  // Vạch sang đường của cả bản đồ (zebras.js, dùng chung với gen/ground.js). Ở nút giao chéo, vạch có thể phải dời ra xa nút cho khỏi
+  // lấn sang lòng đường khác: chân cột đèn (a.stop) và chỗ mũi xe dừng đèn đỏ (a.line, ngay trước vạch dừng cách vạch sang đường 2,6 m)
+  // dời theo đúng vạch đã kẻ. Nhánh không kẻ được vạch thì giữ hai số mặc định ở trên.
+  const sigs = [...new Set(signalNode.values())], zebras = zebraPlan(world, sigs.flatMap((s) => s.arms));
+  for (const s of sigs) for (const a of s.arms) {
+    const z = (zebras.plan.get(a.r) || [])[a.e ? 1 : 0]; if (!z) continue;
+    a.stop = z.at0 - z.zl + 3.8; a.line = z.at0 + z.zl + 2.6 + 0.4;
+  }
+  return { nodes, byChunk, signalNode, signals: sigs.length, zebras };
 }
