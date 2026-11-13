@@ -104,6 +104,8 @@ export async function makeViews(R, items, osmOf) {
   // chỗ đứng nằm bên con phố có tên ấy (trong lòng đường hay trên vỉa hè hai bên, tới 6 m ngoài mép đường)
   const onNamed = (x, z, name) => { const h = nav.nearestRoad(x, z, 20, (r) => world.names[r.name] === name); return !!h && h.d < h.r.w / 2 + 6; };
   const stand = (x, z, clear = 0.6) => R.roomy(x, z, clear) && R.connected(x, z);
+  // hai bên ống kính (lệch ±26°, ±45°) thông ít nhất 2,5 m ở độ cao camera: không có bức tường, cột nhà chắn nửa khung hình (trả về số tia vướng)
+  const sideBlock = (cx, cz, ux, uz) => { let n = 0; for (const a of [-0.78, -0.45, 0.45, 0.78]) { const c = Math.cos(a), sn = Math.sin(a), dx = ux * c - uz * sn, dz = uz * c + ux * sn; if (nav.raycast(cx, cz, dx, dz, 2.5, CAM_Y, 0) < 2.5) n++; } return n; };
   // camera sau lưng: đoạn người → camera không vướng tường, chỗ camera thoáng 0,4 m
   // (camera của game tự rút ngắn khi vướng, nên chỉ cần thông 3 m; chỗ nào thông đủ 4,4 m thì được ưu tiên hơn: camRoom)
   const camOK = (x, z, ux, uz) => { const cx = x - ux * 3, cz = z - uz * 3; return nav.freeStep(x, z, cx, cz, 0.3) || (nav.raycast(x, z, -ux, -uz, 3.4, 1.6, 0.15) >= 3.4 && nav.clearAt(cx, cz, 0.35, 1.5)); };
@@ -197,7 +199,8 @@ export async function makeViews(R, items, osmOf) {
       // đẹp theo chiều cao (thấy được gần hết thân công trình); điểm ngắm trên mặt tiền
       T = { x: m.x, z: m.z, r: m.r, f: [m.fx, m.fz], pts: [], ideal: Math.min(45, Math.max(12, m.h * 1.15)), near: m.dist, hit: (x, z) => m.dist(x, z) < 1.5 };
       const [bx0, , bx1, bz1] = m.box;
-      for (const h of [0.25, 0.6]) for (const t of [0.2, 0.5, 0.8]) { const [wx, wz] = m.world(bx0 + (bx1 - bx0) * t, bz1); T.pts.push([wx, Math.max(1.5, m.h * h), wz]); }
+      // (phần giữa mặt tiền: công trình rộng như chợ Đồng Xuân, ga Hà Nội thì hai đầu khuất sau nhà bên cạnh khi nhìn thẳng từ phố)
+      for (const h of [0.25, 0.6]) for (const t of [0.35, 0.5, 0.65]) { const [wx, wz] = m.world(bx0 + (bx1 - bx0) * t, bz1); T.pts.push([wx, Math.max(1.5, m.h * h), wz]); }
     } else if (bld) {
       const bb = bld.bb, r = Math.min(40, Math.hypot(bb[2] - bb[0], bb[3] - bb[1]) / 2);
       T = { x: (bb[0] + bb[2]) / 2, z: (bb[1] + bb[3]) / 2, r, fac: facade(bld), ideal: Math.min(55, Math.max(14, r * 1.4 + 6)) };
@@ -216,7 +219,7 @@ export async function makeViews(R, items, osmOf) {
         const wet = tune.water || lake ? wetAhead(x, z, ux, uz) : 0; if ((tune.water || lake) && wet < 0.5) continue;
         if (tune.street && !onNamed(x, z, tune.street)) continue;
         let sc = (lake ? 0 : Math.abs((T.near ? T.near(x, z) : dT) - T.ideal) * 0.6) - wet * 10 + Math.hypot(x - it.x, z - it.z) * 0.04;
-        if (T.f) { const fd = ((x - T.x) / dT) * T.f[0] + ((z - T.z) / dT) * T.f[1]; sc += (1 - Math.max(0, fd)) * 30 + (fd < 0.5 ? 40 : 0); } // nhìn vào mặt tiền
+        if (T.f) { const fd = ((x - T.x) / dT) * T.f[0] + ((z - T.z) / dT) * T.f[1]; sc += (1 - Math.max(0, fd)) * 60 + (fd < 0.5 ? 40 : 0); } // nhìn thẳng vào mặt tiền
         cand.push([sc, x, z, ux, uz, dT]);
       }
     }
@@ -247,7 +250,7 @@ export async function makeViews(R, items, osmOf) {
     return choose(cand, ([, x, z, ux, uz, dT]) => {
       const cx = x - ux * CAM, cz = z - uz * CAM, vis = T.pts.length ? sight(cx, cz, T.pts, T.hit) : 1; if (vis < 0.5) { if (st) st.vis++; return null; }
       const [nearT, midT] = treeHits(cx, cz, ux, uz, lake ? 30 : Math.max(8, dT - T.r)); if (nearT) { if (st) st.tree++; return null; }
-      return (1 - vis) * 40 + midT * 6;
+      return (1 - vis) * 40 + midT * 6 + sideBlock(cx, cz, ux, uz) * 4;
     });
   }
 
@@ -313,8 +316,9 @@ export async function makeViews(R, items, osmOf) {
           const k = Math.cos(ang), q = Math.sin(ang), ux = tx * dir * k - nx * q, uz = tz * dir * k - nz * q;
           const cx = x - ux * CAM, cz = z - uz * CAM, [nearT, midT] = treeHits(cx, cz, ux, uz, 30);
           if (nearT) continue;
+          const sb = sideBlock(cx, cz, ux, uz);
           // gần mép vỉa hè (0,6–0,9 m) và chếch 7,5°: camera sau lưng nằm ngoài tầm mái bạt, biển hiệu chìa ra từ mặt tiền
-          best.push([-far * 0.3 + midT * 2 + Math.abs(off - (kind === 'veh' ? 0.75 : 0)) * 3 + Math.abs(a) * 0.2 + Math.abs(ang - 0.13) * 10, x, z, ux, uz]);
+          best.push([-far * 0.3 + midT * 2 + Math.abs(off - (kind === 'veh' ? 0.75 : 0)) * 3 + Math.abs(a) * 0.2 + Math.abs(ang - 0.13) * 10 + sb * 4, x, z, ux, uz]);
         }
       }
     }
