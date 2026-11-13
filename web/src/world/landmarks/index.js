@@ -95,7 +95,7 @@ export async function buildLandmarks(scene, sites, mats, nav, world) {
     scene.add(mesh); out.push({ site: s, mesh });
     // va chạm cho các khối đặc khai báo trong sites.js (toạ độ cục bộ)
     // va chạm: khối khai trong sites.js, hoặc mặt bằng của chính mô hình nếu là công trình kín
-    { const col = siteCollision({ ...s, y: 0 }, g.pos); if (col.length) nav.addChunk('lm:' + s.id, col, new Float32Array(0)); }
+    { const col = siteCollision({ ...s, y: 0 }, g.pos, g.idx); if (col.length) nav.addChunk('lm:' + s.id, col, new Float32Array(0)); }
   }
   return out;
 }

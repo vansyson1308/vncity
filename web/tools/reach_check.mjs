@@ -18,7 +18,7 @@ const sites = resolveSites(world), ctx = buildContext(world, sites), nav = new N
 for (const d of siteDecks(sites)) nav.addDeck(d);
 for (const s of sites) { // va chạm của công trình dựng tay, tính y như trong game (landmarks/index.js)
   const g = new G(); try { (await import(`../src/world/landmarks/${s.id}.js`)).build(g, { lf: new G() }); } catch (e) { console.warn('không dựng được', s.id, e.message); }
-  const col = siteCollision(s, g.pos); if (col.length) nav.addChunk('lm:' + s.id, col, new Float32Array(0));
+  const col = siteCollision(s, g.pos, g.idx); if (col.length) nav.addChunk('lm:' + s.id, col, new Float32Array(0));
 }
 
 export const STEP = 0.4, R = 0.3;
@@ -38,10 +38,18 @@ function need(x, z) { // nạp va chạm của ô phố chứa (x,z) và các ô
 }
 // nạp mọi ô phố phủ hình vuông cạnh 2r quanh (x, z)
 export function load(x, z, r) { for (let a = x - r; a <= x + r + 1e-6; a += CS / 2) for (let b = z - r; b <= z + r + 1e-6; b += CS / 2) need(a, b); need(x + r, z + r); }
-// trong lòng khối đặc của một công trình dựng tay (các hình chữ nhật va chạm của nó)
-const modelRects = [];
-for (const c of nav.chunks) if (String(c[0]).startsWith('lm:')) { const sg = c[1].segs; for (let i = 0; i < sg.length; i += 20) modelRects.push([sg[i], sg[i + 1], sg[i + 5], sg[i + 6], sg[i + 10], sg[i + 11], sg[i + 15], sg[i + 16]]); }
-const inModel = (x, z) => modelRects.some((q) => { let s = 0; for (let k = 0; k < 4; k++) { const ax = q[k * 2], az = q[k * 2 + 1], bx = q[(k * 2 + 2) % 8], bz = q[(k * 2 + 3) % 8], c = (bx - ax) * (z - az) - (bz - az) * (x - ax); if (c > 0) s++; else if (c < 0) s--; } return Math.abs(s) === 4; });
+// trong lòng khối đặc của một công trình dựng tay: đếm chẵn lẻ số lần bốn tia dọc trục cắt các đoạn va chạm của công trình (đường viền
+// mặt bằng mô hình, hay các khối `solid`: vòng khép kín); cần ít nhất ba tia lẻ, như nav.inSolid
+const modelSegs = []; for (const [k, c] of nav.chunks) if (String(k).startsWith('lm:')) modelSegs.push(c.segs);
+const inModel = (x, z) => {
+  let px = 0, nx = 0, pz = 0, nz = 0;
+  for (const s of modelSegs) for (let i = 0; i < s.length; i += 5) {
+    const ax = s[i], az = s[i + 1], bx = s[i + 2], bz = s[i + 3];
+    if ((az > z) !== (bz > z)) { const xi = ax + ((z - az) * (bx - ax)) / (bz - az); if (xi > x) px++; else nx++; }
+    if ((ax > x) !== (bx > x)) { const zi = az + ((x - ax) * (bz - az)) / (bx - ax); if (zi > z) pz++; else nz++; }
+  }
+  return (px & 1) + (nx & 1) + (pz & 1) + (nz & 1) >= 3;
+};
 const pt = { x: 0, z: 0 };
 // Đứng được tại (x,z): không bị tường đẩy đi, không ở dưới nước (trừ khi đang trên mặt cầu đi bộ).
 export function standable(x, z) {

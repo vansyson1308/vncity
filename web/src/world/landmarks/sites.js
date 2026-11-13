@@ -72,9 +72,52 @@ export function modelFootprint(pos) {
   return x1 > x0 ? [x0, z0, x1, z1] : null;
 }
 // Đoạn va chạm của công trình s có lưới đỉnh pos: theo `solid` nếu có khai, không thì theo mặt bằng mô hình (công trình kín).
-export function siteCollision(s, pos) {
+// Mặt bằng khối đặc của mô hình theo đúng hình dạng: chiếu mọi tam giác cắt tầm thân người (0,7 đến 3 m) xuống lưới 1 m, lấy đường
+// viền các ô đã phủ (sau khi đóng hình, xem dưới; cạnh thẳng hàng liền nhau gộp làm một) làm tường va chạm, toạ độ mô hình
+// [ax, az, bx, bz] × n. Một hộp bao chung
+// cho cả mô hình chắn luôn những góc trống của mặt bằng chữ T, chữ L (Lăng: thân lăng với hai khán đài, tường tàng hình tới 15 m).
+export function modelOutline(pos, idx) {
+  const cells = new Set(), O = 32768, K = (i, j) => (i + O) * 65536 + (j + O), at = (v) => [pos[v * 3], pos[v * 3 + 1], pos[v * 3 + 2]];
+  for (let t = 0; t < idx.length; t += 3) {
+    const a = at(idx[t]), b = at(idx[t + 1]), d = at(idx[t + 2]);
+    if (Math.max(a[1], b[1], d[1]) < 0.7 || Math.min(a[1], b[1], d[1]) > 3) continue;
+    const L = Math.max(Math.hypot(b[0] - a[0], b[2] - a[2]), Math.hypot(d[0] - a[0], d[2] - a[2]), Math.hypot(d[0] - b[0], d[2] - b[2])), st = 1 / Math.max(1, Math.ceil(L / 0.5));
+    for (let u = 0; u <= 1 + 1e-9; u += st) for (let v = 0; u + v <= 1 + 1e-9; v += st) cells.add(K(Math.floor(a[0] + (b[0] - a[0]) * u + (d[0] - a[0]) * v), Math.floor(a[2] + (b[2] - a[2]) * u + (d[2] - a[2]) * v)));
+  }
+  // Đóng hình: lòng nhà rỗng (mô hình chỉ có vỏ) và khe dưới 4 m (cửa vòm, ô cửa) không thành lối vào. Nở 2 ô, loang từ ngoài vào
+  // phần chưa phủ, rồi lấy mọi ô cách phần bên ngoài quá 2 ô (= nở rồi co lại, lấp cả lỗ bên trong).
+  if (cells.size) {
+    let i0 = 1e9, i1 = -1e9, j0 = 1e9, j1 = -1e9; for (const k of cells) { const i = Math.floor(k / 65536) - O, j = (k % 65536) - O; i0 = Math.min(i0, i); i1 = Math.max(i1, i); j0 = Math.min(j0, j); j1 = Math.max(j1, j); }
+    const R = 2, X0 = i0 - R - 1, Z0 = j0 - R - 1, NX = i1 - i0 + 2 * R + 3, NZ = j1 - j0 + 2 * R + 3, near = new Uint8Array(NX * NZ), out = new Uint8Array(NX * NZ);
+    for (const k of cells) { const i = Math.floor(k / 65536) - O - X0, j = (k % 65536) - O - Z0; for (let di = -R; di <= R; di++) for (let dj = -R; dj <= R; dj++) if (di * di + dj * dj <= R * R) near[(i + di) * NZ + j + dj] = 1; }
+    const q = [0]; out[0] = 1;
+    while (q.length) { const c = q.pop(), i = Math.floor(c / NZ), j = c % NZ; for (const [a, b] of [[i + 1, j], [i - 1, j], [i, j + 1], [i, j - 1]]) { if (a < 0 || b < 0 || a >= NX || b >= NZ) continue; const n = a * NZ + b; if (!out[n] && !near[n]) { out[n] = 1; q.push(n); } } }
+    const far = new Uint8Array(NX * NZ); // cách phần bên ngoài quá R ô
+    for (let i = 0; i < NX; i++) for (let j = 0; j < NZ; j++) { let ok = true; for (let di = -R; di <= R && ok; di++) for (let dj = -R; dj <= R; dj++) { if (di * di + dj * dj > R * R) continue; const a = i + di, b = j + dj; if (a < 0 || b < 0 || a >= NX || b >= NZ || out[a * NZ + b]) { ok = false; break; } } far[i * NZ + j] = ok ? 1 : 0; }
+    for (let i = 0; i < NX; i++) for (let j = 0; j < NZ; j++) if (far[i * NZ + j]) cells.add(K(i + X0, j + Z0));
+  }
+  // cạnh biên: ngang (theo x) ở z = j hoặc j + 1, dọc (theo z) ở x = i hoặc i + 1; gom theo hàng rồi nối đoạn liền nhau
+  const H = new Map(), V = new Map(), push = (M, k, v) => { let l = M.get(k); if (!l) M.set(k, (l = [])); l.push(v); };
+  for (const k of cells) {
+    const i = Math.floor(k / 65536) - O, j = (k % 65536) - O;
+    if (!cells.has(K(i, j - 1))) push(H, j, i); if (!cells.has(K(i, j + 1))) push(H, j + 1, i);
+    if (!cells.has(K(i - 1, j))) push(V, i, j); if (!cells.has(K(i + 1, j))) push(V, i + 1, j);
+  }
+  const out = [];
+  for (const [line, l] of H) { l.sort((p, q) => p - q); let s0 = l[0], e = l[0] + 1; for (let n = 1; n <= l.length; n++) { if (n < l.length && l[n] === e) { e++; continue; } out.push([s0, line, e, line]); if (n < l.length) { s0 = l[n]; e = l[n] + 1; } } }
+  for (const [line, l] of V) { l.sort((p, q) => p - q); let s0 = l[0], e = l[0] + 1; for (let n = 1; n <= l.length; n++) { if (n < l.length && l[n] === e) { e++; continue; } out.push([line, s0, line, e]); if (n < l.length) { s0 = l[n]; e = l[n] + 1; } } }
+  return out;
+}
+// Đoạn va chạm của công trình s (mô hình có đỉnh pos, chỉ số tam giác idx): theo `solid` nếu có khai, không thì theo mặt bằng mô hình
+// (công trình kín). Khối nhà OSM tương ứng không giữ va chạm nữa (gen/buildings.js): mặt bằng OSM lệch mô hình tới 15 m, thành tường
+// tàng hình trước cửa chợ Đồng Xuân, Nhà thờ Lớn, Nhà hát Lớn.
+export function siteCollision(s, pos, idx = null) {
   if (s.solid) return siteSolids(s);
   if (s.open) return new Float32Array(0);
+  if (idx && idx.length) {
+    const L = modelOutline(pos, idx);
+    if (L.length) { const c = Math.cos(s.yaw), sn = Math.sin(s.yaw), col = []; for (const [ax, az, bx, bz] of L) col.push(s.x + ax * c + az * sn, s.z - ax * sn + az * c, s.x + bx * c + bz * sn, s.z - bx * sn + bz * c, 8); return new Float32Array(col); }
+  }
   const f = modelFootprint(pos); return f ? siteSolids({ ...s, solid: [f] }) : new Float32Array(0);
 }
 

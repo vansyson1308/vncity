@@ -259,7 +259,9 @@ export function genBuildings(ctx, cx, cz) {
   const bb = new BB(X0, Z0), col = [], fronts = [], roofs = [], heroes = [], doors = [];
   const list = ctx.chunkBld.get(cx * 1000 + cz) || [];
   for (const b of list) {
-    if (b.ghost) { for (let k = 0, n = b.p.length; k < n; k += 2) col.push(b.p[k], b.p[k + 1], b.p[(k + 2) % n], b.p[(k + 3) % n], 12); continue; }
+    // khối nhà OSM đã thay bằng mô hình dựng tay: không vẽ, không giữ va chạm (mô hình có va chạm riêng theo đúng mặt bằng của nó,
+    // landmarks/sites.js siteCollision; mặt bằng OSM lệch mô hình tới 15 m từng thành tường tàng hình)
+    if (b.ghost) continue;
     if (b.skip) continue; // nhà nằm lọt trong một toà lớn hơn (gen/context.js): toà kia đã che hết
     // công sở, trường học, nhà có tên mà bản đồ xếp chung loại với nhà ở: mặt đứng công sở, không chia lô, không cửa hàng
     const civ = b.cat === CAT.roof ? 0 : civicOf(ctx, b), h = b.height, st = civ === 1 && b.style === ST.TUBE ? ST.PUBLIC : b.style, seed = b.seed, fl = b.floors, hero = b.hero || null, zone = b.zone;
