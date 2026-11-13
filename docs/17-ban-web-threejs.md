@@ -145,8 +145,19 @@ Các kỹ thuật chính:
    hình. Bài đi bộ thẳng vào mặt tiền của tester (12 hướng mỗi công trình, trình duyệt): công trình không còn lượt tường tàng hình nào
    0/8 → 7/8 (Nhà hát Lớn 2 → 0, Nhà thờ Lớn 1 → 0, chợ Đồng Xuân 5 → 0, Lăng 3 → 0, Cột cờ 1 → 0, Tháp Rùa 4 → 0, ga Hà Nội 4 → 3),
    lượt đi xuyên mặt mô hình ở tháp Trấn Quốc 2 → 0. Bậc thềm, nền thấp, dốc thoải của mô hình (mặt ngửa lên, dốc dưới 53°, cao tới 0,7 m) có cao độ thật: `modelPads` ghi mặt
-   cao nhất vào lưới 0,25 m và `nav.groundY` lấy cao độ đó, nên người, xe đứng trên bậc thay vì lún chân vào trong bậc (tester vòng 4:
-   bậc thềm ga Hà Nội che chân tới gối; nay đứng ở 0,61 m, đúng mặt bậc trên cùng). Khối nhà OSM bị thay bằng mô hình thì không vẽ và không còn va chạm: trước đây khối ẩn
+   cao nhất phủ lên TÂM mỗi ô của lưới 0,125 m và `nav.groundY` lấy cao độ đó, nên người, xe đứng trên bậc thay vì lún chân vào trong bậc (tester vòng 4:
+   bậc thềm ga Hà Nội che chân tới gối; nay đứng ở 0,61 m, đúng mặt bậc trên cùng). Bản trước lấy mặt cao nhất chạm vào bất kỳ chỗ nào
+   trong ô 0,25 m nên ở mép bệ người đứng ngoài mép mà chân lơ lửng tới 0,3 m (tester vòng 5: bệ tháp Trấn Quốc, tượng Lý Thái Tổ).
+   Người chơi không bước lên gờ cao quá 0,32 m một bước (`STEP_UP`, actors/physics.js): bậc thang 0,15 m đi được, mép bệ tượng, mép nền
+   0,45–0,9 m chặn như tường (trượt dọc gờ); tám điểm quanh thân người cách tâm 0,25 m cũng không được lấn thêm vào gờ cao, để người
+   không đứng nửa thân lọt vào trong bệ. Trước đó người chơi "bật" thẳng lên gờ 0,44–0,5 m trong 0,25 s (tester vòng 5: 20 lượt ở bốn
+   công trình). Xe máy nảy qua bó vỉa được nhưng không leo lên bậc thềm, nền cao hơn mặt hè quá 0,1 m (đâm vào như tường): trước đó xe
+   phóng 43 km/h lên bậc 0,6 m của ga Hà Nội. Mặt cầu Thê Húc ở hai đầu cao 0,35 m trên mặt hè, nên mô hình có thêm hai bậc đá (0,12 và
+   0,24 m) ở mỗi đầu cầu, và vùng mặt cầu trong va chạm bắt đầu đúng ở đầu cầu (trước đây thò ra 0,9 m, người đứng lơ lửng trên đoạn
+   đó). Bài bậc thềm của tester (12 công trình × 12 hướng đi bộ, 5 công trình × 12 lượt xe máy hết ga): lún 0, lơ lửng 0, bật lên gờ 0,
+   xe leo bậc 0 (bản ea025d0: lơ lửng ở 3 công trình, bật lên gờ 20 lượt, xe leo bậc 4 lượt). `tools/reach_check.mjs` nạp mặt bậc như
+   trong game và loang lối đi theo đúng luật bước lên (đi từ ô kề sang ô đang xét không bước lên quá 0,32 m, dò từng 0,1 m): cả 44 điểm
+   vẫn tới được. Khối nhà OSM bị thay bằng mô hình thì không vẽ và không còn va chạm: trước đây khối ẩn
    vẫn giữ tường 12 m theo đa giác OSM, lệch mô hình tới 15 m, thành tường tàng hình trước cửa chợ Đồng Xuân (đi tới mặt tiền bị chặn
    cách 4,4 đến 9 m), Nhà thờ Lớn, Nhà hát Lớn, ga Hà Nội; hộp bao chung của cả mô hình cũng chắn khoảng trống giữa thân Lăng và hai
    khán đài. `tools/reach_check.mjs` loang trên lưới 0,4 m bằng đúng hàm va chạm của game để chắc rằng cả 44
@@ -202,7 +213,24 @@ Các kỹ thuật chính:
      23 nhánh cột nhánh xa nút hơn (nhiều nhất 6 m), 13 nhánh gần nút hơn (ở đó phép thử chặt hơn trước). Xe đang chạy trên chính một
      nhánh vào của nút thì được tính theo nhánh đó: làn rẽ không tên tách khỏi Trần Quang Khải chạy sát lòng đường chính, xe lấn mép trái
      làn rẽ (đi theo đèn xanh của làn rẽ) từng bị gán vào nhánh Trần Quang Khải đang đỏ (4/4 lượt "vượt đỏ" còn lại của phép quét 75 nút
-     là loại này).
+     là loại này). Tester vòng 5 vẫn thấy kẹt lòng nút, có lúc 22 xe đứng 30–60 giây trong nút Điện Biên Phủ × Nguyễn Tri Phương. Lần
+     theo chuỗi "xe đang chắn" (trường `blk` của từng xe) tới đầu chuỗi: ở chỗ Điện Biên Phủ tách thành hai cạnh một chiều (cách nút
+     23 m), một xe buýt chiều tây nam đứng trong hàng chờ đèn đỏ định quay đầu sang cạnh chiều đông bắc; luật nhập làn ("xe gần nút hơn
+     đi trước") bắt cả dòng xe đông bắc vừa ra khỏi nút nhường nó, mà nó không đi được, nên hàng dồn ngược vào lòng nút. Sửa hai chỗ:
+     (1) không nhường xe đang đứng trong hàng chờ đèn (đèn của nó đỏ, hay xếp sau xe chờ đèn); thân xe kia nếu chắn thật thì luật bám
+     đuôi, luật xe cắt ngang vẫn chặn; (2) 18 m cuối cạnh một chiều sắp vào cạnh hai chiều thì dạt dần về nửa bên phải, vì hai tim
+     đường một chiều gặp tim đường hai chiều ở cùng một điểm, xe vào đường hai chiều ở vệt bên trái là đối đầu dòng ngược chiều ngay
+     đầu cạnh. Đo bằng bộ đo độc lập của reviewer (75 nút × 90 s × 5 hạt, cùng hạt giống như tester; trung bình so với bản ea025d0 và
+     ae01f7b): xe đứng trong lòng nút quá 5 s 173 → 141 lượt (ae01f7b: 241), quá 15 s 20,4 → 9,4 (13,8), đứng lâu nhất 40,7 → 23,4 s
+     (31,7), lưu lượng qua vạch 7276 → 7953 lượt (+9%), cặp xe chồng nhau quá 2 s 513 → 406, xe đứng yên quá 15 s gần người chơi
+     245 → 85 lượt; vượt đỏ 3 → 4 lượt trên khoảng 38 nghìn lượt qua vạch. Nút còn xe đứng quá 15 s ở cả 5 hạt là Đinh Tiên Hoàng
+     (119; −278): hai nút có đèn cách nhau 36,6 m, hàng chờ đèn đỏ của nút sau dồn ngược vào lòng nút trước rồi tan khi đèn xanh (không
+     phải thế khoá). Bộ thử `tools/qa/traffic.mjs`: a2 và phần đếm hàng chờ cũng đo theo vạch của chính nhánh như a1 (tester vòng 5:
+     đo theo cột chung thì ở nhánh có vạch dời xa nút xe đứng trên vạch sang đường lúc đỏ không bị đếm, ở nhánh có cột gần hơn thì xe
+     đứng đúng vạch lại bị đếm); a1 và quét a3 chỉ tính vượt đỏ khi mũi xe qua vạch dừng sau lúc đèn đã đỏ: xe đã qua vạch lúc vàng
+     rồi đứng chờ trước vạch sang đường không tính, dù mũi xe nhích qua mốc vạch − 1 m sau đó (toạ độ vẽ của xe trễ hơn vị trí trên
+     đường một chút, xe vừa phanh xong vẫn nhích thêm: ba lượt "vượt đỏ" của xe máy đứng yên mà tester vòng 5 thấy); xe chưa từng
+     thấy ở sau vạch vẫn tính là vượt.
    - *Vạch sang đường theo khoảng cách từ tâm nút*, không theo độ dài mẩu đường: mẩu sát nút ngắn hơn chỗ kẻ vạch thì vạch
      nằm trên mẩu nối tiếp (kéo thẳng theo hướng nhánh từ tâm nút, chỉ nhận khi đầu kia của mẩu là nút nhỏ và chỗ đó nằm trên
      tim một đoạn đường xe cùng bề rộng, cùng hướng); miệng ngõ, phố nhỏ đổ vào ngay chỗ kẻ vạch và phần kéo dài của chính phố
@@ -354,6 +382,13 @@ Ba lớp bảo vệ khung hình, theo thứ tự:
 Giới hạn của phép đo: môi trường dựng và CI không có GPU (Chromium chạy SwiftShader, tức là CPU tự vẽ từng điểm ảnh;
 ở đó mức Nhẹ đạt 1 đến 5 khung hình/giây), nên số khung hình/giây trên máy thật chưa được đo ở đây. Các con số trên là số lệnh vẽ, số tam giác và thời gian JavaScript, là những
 thứ quyết định độ mượt và đo được khách quan. Nên chạy thử trên vài máy và điện thoại thật trước khi quảng bá.
+
+Bộ nhớ khi đi nhanh nhiều lần (`tools/qa/leak.mjs`): ô phố nạp trong tầm nhìn (mức Nhẹ 444 m), chỉ gỡ khi cách người chơi quá 598 m
+(vùng đệm, để đi tới đi lui không nạp lại). Về một chỗ từ nơi gần thì các ô của nơi đó nằm trong vùng đệm vẫn còn: tester vòng 5 thấy
+"ô phố 38 → 44, đoạn va chạm +40%" sau khi về từ phố Bát Đàn cách 782 m, đếm lại đúng bằng 6 ô của Bát Đàn nằm trong vùng đệm (về từ
+cầu Chương Dương cách 1,3 km thì 0); số geometry trên GPU còn tuỳ bản gần, bản xa của từng ô đã từng được vẽ chưa. Đi lại sáu lượt giữa
+hai nơi cách 2 km thì các số đó đứng yên (phần r3). Bài r1 giờ đo ở nơi đầu lần nào cũng sau khi tới từ cùng một nơi xa, kể cả lần đo
+đầu. Ô đặt dựng ở chỗ cũ mà tới nơi khi người chơi đã đi nhanh đi xa thì bỏ luôn (`world/chunks.js`), không thêm vào cảnh.
 
 ## 6. Lối chơi
 

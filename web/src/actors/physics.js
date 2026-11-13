@@ -24,6 +24,10 @@ export const BIKE = {
   reverse: 1.2,       // lùi xe bằng chân (m/s)
 };
 export const WALK = { speed: 1.45, run: 4.4, accel: 3.5, decel: 5.5 }; // người lớn: đi bộ 5,2 km/h, chạy 16 km/h
+// Bước lên cao nhất mỗi bước chân (m): bậc thang 0,15–0,2 m đi được, gờ bệ tượng, mép nền 0,45–0,9 m thì không (tester vòng 5: người
+// chơi "bật" thẳng lên gờ 0,44–0,5 m trong 0,25 s ở bệ tượng Lý Thái Tổ, nền Lăng). Bước xuống thì không giới hạn. Dùng chung cho người
+// chơi (actors/player.js) và phép loang lối đi của tools/reach_check.mjs.
+export const STEP_UP = 0.32;
 
 export const bikeMass = (passenger) => BIKE.mass + BIKE.rider + (passenger ? BIKE.passenger : 0);
 

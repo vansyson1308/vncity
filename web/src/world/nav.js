@@ -50,10 +50,10 @@ export class Nav {
     return 0;
   }
   // Mặt cầu tại (x,z), nếu có. Kết quả: this.deckT (0..1 dọc cầu), this.deckS (lệch ngang, m).
-  deckAt(x, z, pad = 0) {
+  deckAt(x, z, pad = 0, tm = 0.02) {
     for (const d of this.decks) {
       const ux = (d.bx - d.ax) / d.len, uz = (d.bz - d.az) / d.len, t = ((x - d.ax) * ux + (z - d.az) * uz) / d.len, s = (x - d.ax) * uz - (z - d.az) * ux;
-      if (t > -0.02 && t < 1.02 && Math.abs(s) < d.w / 2 + pad) { this.deckT = Math.min(1, Math.max(0, t)); this.deckS = s; return d; }
+      if (t > -tm && t < 1 + tm && Math.abs(s) < d.w / 2 + pad) { this.deckT = Math.min(1, Math.max(0, t)); this.deckS = s; return d; }
     }
     return null;
   }
@@ -83,7 +83,8 @@ export class Nav {
   // Cao độ mặt đất: 0 trong lòng đường, CURB trên vỉa hè, chuyển mượt 25 cm ở mép; trên cầu thì theo mặt cầu.
   // y: cao độ hiện tại của người/xe (mặc định là đang ở dưới đất), để phân biệt đang chạy trên cầu hay đi dưới gầm cầu.
   groundY(x, z, y = 0) {
-    if (this.decks.length) { const d = this.deckAt(x, z, 0.3); if (d) return CURB + d.y(this.deckT); }
+    // (mặt cầu chỉ tính từ đúng đầu cầu: trước đây tính thêm 2% chiều dài, người đứng lơ lửng 0,35 m trên đoạn 0,9 m trước đầu cầu)
+    if (this.decks.length) { const d = this.deckAt(x, z, 0.3, 0.002); if (d) return CURB + d.y(this.deckT); }
     if (this.hasElev && this.elevatedAt(x, z, y) && this.eY > 0.45) return this.eY;
     let best = 1e9, lift = 0; const gc = this.gc, t = this._t;
     const l = this.grid.get(Math.floor(x / gc) * 65537 + Math.floor(z / gc)); if (!l) return this.pads.length ? Math.max(CURB, this.padY(x, z)) : CURB;

@@ -80,6 +80,11 @@ export function build(g) {
   g.color(PLANK).shade(0.8);
   beam(g, -HW, HW, 0, 0.01, deckY(0) - 0.13, deckY(0) - 0.13, 0.13, 'z');
   beam(g, -HW, HW, L - 0.01, L, deckY(L) - 0.13, deckY(L) - 0.13, 0.13, 'Z');
+  // hai bậc đá ở mỗi đầu cầu: mặt ván ở đầu cầu cao 0,35 m trên mặt hè, bước thẳng một bước lên là quá cao (người chơi không bước lên
+  // gờ cao quá 0,32 m: actors/player.js). Bậc cao 0,12 và 0,24 m, sâu 0,5 m, là mặt bậc thật (modelPads) cho người đi bộ.
+  g.gloss(0.05).mat(MAT.stone);
+  for (const [za, zb, h, k] of [[-1.0, -0.5, 0.12, 0.94], [-0.5, 0, 0.24, 1], [L, L + 0.5, 0.24, 1], [L + 0.5, L + 1.0, 0.12, 0.94]]) g.color(0x77736b).shade(k).box(-HW, -0.05, za, HW, h, zb, 'xXYzZ');
+  g.gloss(0.3).mat(MAT.lacquer);
 
   // ----- lan can: trụ ở mỗi vì, tay vịn, hai thanh ngang, hàng con tiện mảnh -----
   g.gloss(0.35).glow(0.06).mat(MAT.lacquer);

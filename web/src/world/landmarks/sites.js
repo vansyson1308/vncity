@@ -134,7 +134,7 @@ export function modelOutline(pos, idx, C = 0.25) {
 // thế giới, theo đúng độ dốc của mặt); nav.groundY lấy cao độ đó, nên người, xe đứng trên mặt bậc chứ không lún chân vào trong bậc
 // (tester vòng 4: bậc thềm ga Hà Nội che chân tới gối). base: cao độ chân mô hình.
 export function modelPads(s, pos, idx, base) {
-  const c = Math.cos(s.yaw), sn = Math.sin(s.yaw), C = 0.25, W = (lx, lz) => [s.x + lx * c + lz * sn, s.z - lx * sn + lz * c], tris = [];
+  const c = Math.cos(s.yaw), sn = Math.sin(s.yaw), C = 0.125, W = (lx, lz) => [s.x + lx * c + lz * sn, s.z - lx * sn + lz * c], tris = [];
   let x0 = 1e9, z0 = 1e9, x1 = -1e9, z1 = -1e9;
   for (let t = 0; t < idx.length; t += 3) {
     const a = idx[t] * 3, b = idx[t + 1] * 3, d = idx[t + 2] * 3, ya = pos[a + 1], yb = pos[b + 1], yd = pos[d + 1], hi = Math.max(ya, yb, yd);
@@ -147,12 +147,19 @@ export function modelPads(s, pos, idx, base) {
   if (!tris.length) return null;
   x0 = Math.floor(x0 / C) * C - C; z0 = Math.floor(z0 / C) * C - C;
   const nx = Math.ceil((x1 - x0) / C) + 2, nz = Math.ceil((z1 - z0) / C) + 2, h = new Uint8Array(nx * nz);
+  // Cao độ của mỗi ô lấy tại TÂM ô (mặt cao nhất phủ lên tâm ô), không lấy mặt cao nhất chạm vào bất kỳ chỗ nào trong ô: lấy theo cả
+  // ô thì ô ở mép bệ, mép bậc chỉ chạm mép mặt trên một chút cũng mang cao độ mặt trên, người đứng ngoài mép bệ mà chân lơ lửng tới
+  // 0,3 m (tester vòng 5: mép bệ tháp Trấn Quốc, tượng Lý Thái Tổ). Ô 0,125 m, lấy theo tâm ô thì mép mặt bậc lệch thật nhiều nhất
+  // 6 cm; mặt bậc nào cũng sâu hơn một ô nên bậc thang không bị sót bậc. (Cả bản đồ chừng 470 KB.)
   for (let k = 0; k < tris.length; k += 2) {
     const [A, B, D] = tris[k], [ya, yb, yd] = tris[k + 1];
-    const L = Math.max(Math.hypot(B[0] - A[0], B[1] - A[1]), Math.hypot(D[0] - A[0], D[1] - A[1]), Math.hypot(D[0] - B[0], D[1] - B[1])), st = 1 / Math.max(1, Math.ceil(L / (C * 0.45)));
-    for (let u = 0; u <= 1 + 1e-9; u += st) for (let v = 0; u + v <= 1 + 1e-9; v += st) {
-      const i = Math.floor((A[0] + (B[0] - A[0]) * u + (D[0] - A[0]) * v - x0) / C), j = Math.floor((A[1] + (B[1] - A[1]) * u + (D[1] - A[1]) * v - z0) / C), q = i * nz + j;
-      const y = Math.min(255, Math.round((base + ya + (yb - ya) * u + (yd - ya) * v) * 100)); if (y > h[q]) h[q] = y;
+    const e1x = B[0] - A[0], e1z = B[1] - A[1], e2x = D[0] - A[0], e2z = D[1] - A[1], det = e1x * e2z - e2x * e1z; if (Math.abs(det) < 1e-9) continue;
+    const i0 = Math.max(0, Math.floor((Math.min(A[0], B[0], D[0]) - x0) / C)), i1 = Math.min(nx - 1, Math.floor((Math.max(A[0], B[0], D[0]) - x0) / C));
+    const j0 = Math.max(0, Math.floor((Math.min(A[1], B[1], D[1]) - z0) / C)), j1 = Math.min(nz - 1, Math.floor((Math.max(A[1], B[1], D[1]) - z0) / C));
+    for (let i = i0; i <= i1; i++) for (let j = j0; j <= j1; j++) {
+      const px = x0 + (i + 0.5) * C - A[0], pz = z0 + (j + 0.5) * C - A[1], u = (px * e2z - e2x * pz) / det, v = (e1x * pz - px * e1z) / det;
+      if (u < -1e-6 || v < -1e-6 || u + v > 1 + 1e-6) continue;
+      const q = i * nz + j, y = Math.min(255, Math.round((base + ya + (yb - ya) * u + (yd - ya) * v) * 100)); if (y > h[q]) h[q] = y;
     }
   }
   return { x0, z0, x1: x0 + nx * C, z1: z0 + nz * C, c: C, nz, h };

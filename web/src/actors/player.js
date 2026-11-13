@@ -7,7 +7,12 @@ import { G } from '../core/geo.js';
 import { motorbike } from '../models/vehicles.js';
 import { propGeometry } from '../world/materials.js';
 import { bakePose, appendBaked } from './humans.js';
-import { BIKE, WALK, bikeMass, bikeStep, bikeCurvature, leanFor, wallHit, stepUp, approach } from './physics.js';
+import { BIKE, WALK, STEP_UP, bikeMass, bikeStep, bikeCurvature, leanFor, wallHit, stepUp, approach } from './physics.js';
+
+// (STEP_UP: bước lên cao nhất mỗi bước chân, physics.js)
+// Xe máy: nảy qua bó vỉa (0,15 m) được, nhưng không leo lên bậc thềm, nền cao của công trình (cao hơn mặt hè quá 0,1 m): tester vòng 5
+// thấy xe phóng 43 km/h lên bậc thềm 0,6 m của ga Hà Nội.
+const BIKE_UP = 0.2, BIKE_PAD = CURB + 0.1;
 
 // Tốc độ gốc của các đoạn hoạt hình (m/s), đo từ chuyển động gốc trong tệp mô hình.
 const CLIP_SPEED = { walk: 1.01, jog: 2.4, run: 2.9 };
@@ -95,6 +100,16 @@ export class Player {
   // đang ở trên mặt cầu nâng: tường nhà dưới gầm cầu không tính, lan can cầu do `collide` giữ
   onHigh(x, z) { const n = this.nav; return n.hasElev && this.y > 0.7 && !!n.elevatedAt(x, z, this.y, 3) && n.eY > 0.7; }
 
+  // Bước tới (x, z) được không, khi chân đang ở mặt cao g0: tâm không bước lên quá STEP_UP; trong tám điểm quanh thân (cách tâm
+  // 0,25 m), số điểm nằm trên mặt cao quá STEP_UP không được tăng so với chỗ đang đứng (lấn sâu thêm vào gờ thì số đó tăng).
+  stepOK(x, z, g0) {
+    const n = this.nav, y = this.y; if (n.groundY(x, z, y) - g0 > STEP_UP) return false;
+    if (!n.pads.length) return true;
+    let c1 = 0, c0 = 0;
+    for (let k = 0; k < 8; k++) { const ax = Math.cos(k * 0.785) * 0.25, az = Math.sin(k * 0.785) * 0.25; if (n.groundY(x + ax, z + az, y) - g0 > STEP_UP) c1++; if (n.groundY(this.pos.x + ax, this.pos.z + az, y) - g0 > STEP_UP) c0++; }
+    return c1 <= c0;
+  }
+
   // Chỗ trống cạnh điểm (x,z) hướng yaw, cách d mét, cho vòng tròn bán kính r (kết quả ở this._col).
   beside(x, z, yaw, d, r) {
     const p = this._col;
@@ -124,6 +139,15 @@ export class Player {
     const p = this._col, step = this.speed * dt;
     p.x = this.pos.x + Math.sin(this.yaw) * step; p.z = this.pos.z + Math.cos(this.yaw) * step;
     if (this.nav.collide(p, 0.3, false, this.y)) this.speed = Math.min(this.speed, Math.hypot(p.x - this.pos.x, p.z - this.pos.z) / Math.max(dt, 1e-4) + 0.3); // bị tường cản: chỉ còn phần trượt dọc tường
+    // Gờ cao quá một bậc trước mặt: như gặp tường, chỉ còn phần trượt dọc gờ (thử từng trục), không thì đứng lại. Xét cả thân người
+    // (tám điểm cách tâm 0,25 m): không lấn sâu thêm vào gờ cao (đứng ở chân bệ tượng mà nửa thân lọt vào trong bệ là "lún chân"), còn
+    // đi dọc gờ hay đi ra xa gờ thì được.
+    const g0 = this.nav.groundY(this.pos.x, this.pos.z, this.y);
+    if (!this.stepOK(p.x, p.z, g0)) {
+      if (this.stepOK(p.x, this.pos.z, g0)) p.z = this.pos.z;
+      else if (this.stepOK(this.pos.x, p.z, g0)) p.x = this.pos.x;
+      else { p.x = this.pos.x; p.z = this.pos.z; this.speed = Math.min(this.speed, 0.3); }
+    }
     this.pos.x = p.x; this.pos.z = p.z;
     this.y = damp(this.y, this.nav.groundY(p.x, p.z, this.y), 14, dt);
     this.lean = 0; this.pitch = 0; this.accel = 0;
@@ -166,6 +190,9 @@ export class Player {
       // phố đi bộ đang đóng: xe đang ở ngoài thì dừng ở ranh như gặp rào (muốn vào thì xuống xe đi bộ); xe lỡ ở sẵn bên trong lúc
       // phố đóng thì vẫn dắt ra được (giới hạn tốc độ của noRide ở dưới)
       if (this.noEnter && this.noEnter(p.x, p.z) && !this.noEnter(this.pos.x, this.pos.z)) { v = 0; this.barred = true; break; }
+      // bậc thềm, nền cao trước bánh trước: như đâm vào tường thẳng góc (xe khựng lại, nhanh thì nảy và rung)
+      { const g0 = this.nav.groundY(this.pos.x, this.pos.z, this.y), g1 = this.nav.groundY(p.x, p.z, this.y);
+        if (g1 - g0 > BIKE_UP || (g1 > BIKE_PAD && g1 - g0 > 0.05 && this.nav.padY(p.x, p.z) >= g1 - 1e-3)) { const [nv, vn] = wallHit(v, 1); if (vn > 2.2) hitN = Math.max(hitN, vn); v = nv; break; } }
       this.pos.x = p.x; this.pos.z = p.z;
     }
     if (hitN > 0) { this.wobble = Math.min(1, hitN / 6); this.phi *= 0.3; this.onCrash && this.onCrash(hitN); }

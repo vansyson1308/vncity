@@ -34,6 +34,10 @@ export class Chunks {
   build(m) {
     const key = m.cx * 1000 + m.cz; this.pending.delete(key);
     if (this.loaded.has(key)) return;
+    // Ô đặt dựng ở chỗ cũ mà tới nơi khi người chơi đã đi nhanh đi xa: bỏ luôn. Việc gỡ ô xa chỉ chạy khi người chơi đi thêm vài mét, nên
+    // trước đây những ô tới muộn này nằm lại cùng các đoạn va chạm của chúng tới khi người chơi rời chỗ (tester vòng 5, tools/qa/leak.mjs:
+    // về lại nơi đầu sau 42 lần đi nhanh còn thừa 6 ô phố, đoạn va chạm +40%).
+    { const wb = this.world.bounds, R = this.q.view + CS * 0.5; if (Math.hypot(wb.x0 + (m.cx + 0.5) * CS - this.last.x, wb.z0 + (m.cz + 0.5) * CS - this.last.z) > R + CS * 1.2) return; }
     const b = this.world.bounds, X0 = b.x0 + m.cx * CS, Z0 = b.z0 + m.cz * CS, M = this.mats;
     const c = { key, cx: m.cx, cz: m.cz, x: X0 + CS / 2, z: Z0 + CS / 2, meshes: [], lamps: m.lamps, near: null, far: null, leaf: null, plate: null, lod: -1, detail: false, detailPending: false };
     const place = (mesh, order = 0) => { mesh.position.set(X0, 0, Z0); mesh.updateMatrix(); mesh.matrixAutoUpdate = false; mesh.renderOrder = order; this.group.add(mesh); c.meshes.push(mesh); return mesh; };

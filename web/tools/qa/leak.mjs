@@ -26,14 +26,19 @@ await page.evaluate(async () => {
 
 if (want('r1')) {
   const tour = await page.evaluate(() => { const g = window.__game, its = g.passport.items; const out = []; for (let i = 0; i < 30; i++) { const it = its[(i * 7 + 3) % its.length]; out.push([(it.s || [it.x, it.z])[0], (it.s || [it.x, it.z])[1], it.id]); } return out; });
-  const home = [114, -212];
+  // Cách đo: mỗi lần đo ở nơi đầu đều tới từ cùng một nơi xa (cách 2 km, ngoài vùng giữ ô của nơi đầu). Ô phố đã nạp chỉ bị gỡ khi cách
+  // người chơi quá tầm nhìn + 1,7 ô (vùng đệm, để đi tới đi lui không nạp lại), nên về từ một nơi gần thì các ô của nơi đó nằm trong
+  // vùng đệm vẫn còn: tester vòng 5 đo "ô phố 38 → 44, đoạn va chạm +40%" sau khi về từ phố Bát Đàn cách 782 m, đúng bằng 6 ô của Bát
+  // Đàn nằm trong vùng đệm của nơi đầu (về từ cầu Chương Dương cách 1,3 km thì 0). Lần đo đầu cũng sau một lượt đi xa rồi về: số geometry
+  // trên GPU còn tuỳ bản gần, bản xa của từng ô đã từng được vẽ chưa (xem r3), lần đầu vào game chưa vẽ bản nào nên thấp hơn hẳn.
+  const home = [114, -212], far = [-1700, -880], back = async () => { await page.evaluate(([x, z]) => window.__lk.go(x, z), far); await page.evaluate(([x, z]) => window.__lk.go(x, z), home); };
   const s = [];
-  await page.evaluate(([x, z]) => window.__lk.go(x, z), home); s.push(await page.evaluate(() => window.__lk.stat()));
+  await page.evaluate(([x, z]) => window.__lk.go(x, z), home); await back(); s.push(await page.evaluate(() => window.__lk.stat()));
   for (let round = 1; round <= 2; round++) {
     let peak = { geo: 0, tex: 0, nodes: 0 };
     // vòng hai ngắn hơn (12 nơi): chỉ để xem có tăng tiếp không
     let nth = 0; for (const [x, z] of (round === 1 ? tour : tour.slice(0, 12))) { await page.evaluate(([x, z]) => window.__lk.go(x, z), [x, z]); const q = await page.evaluate(() => window.__lk.stat()); for (const k of Object.keys(peak)) if (q[k] > peak[k]) peak[k] = q[k]; if (++nth % 10 === 0) console.log(`   … vòng ${round}: ${nth} nơi, geometry ${q.geo}, texture ${q.tex}, nút cảnh ${q.nodes}`); }
-    await page.evaluate(([x, z]) => window.__lk.go(x, z), home); const q = await page.evaluate(() => window.__lk.stat()); q.peak = peak; s.push(q);
+    await back(); const q = await page.evaluate(() => window.__lk.stat()); q.peak = peak; s.push(q);
     console.log(`   vòng ${round}: về nơi đầu ${JSON.stringify(q)}`);
   }
   console.log('   lần đầu: ' + JSON.stringify(s[0]));

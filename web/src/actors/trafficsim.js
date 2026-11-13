@@ -699,6 +699,11 @@ export class TrafficSim {
         const I = this.mlistAt(c4 + 2);
         if (I !== null) for (let i = 0; i < I.n; i++) { const b = I.a[i]; if (b === a) continue; const rb2 = b.e.len - b.s, d = rem - rb2; if (d < 0 || (d < 1e-3 && b.id > a.id) || d > a.hl + b.hl + 0.5 + a.v * 0.4) continue;
           if (Math.abs(la - this.entryLat(b, ne)) >= a.r + b.r + 0.1) continue;
+          // Xe kia đang đứng trong hàng chờ đèn (đèn của nó đỏ, hay xếp sau xe chờ đèn) thì chưa vào được: không nhường nó. Tester vòng 5:
+          // ở chỗ Điện Biên Phủ tách thành hai cạnh một chiều, một xe buýt chiều tây nam đứng trong hàng chờ đèn đỏ định quay đầu sang
+          // cạnh chiều đông bắc; cả dòng xe đông bắc đi ra khỏi nút Nguyễn Tri Phương cứ nhường nó, hàng dồn ngược vào lòng nút, 22 xe
+          // đứng trong nút tới 60 giây. Thân xe kia nếu chắn thật trước mũi thì luật bám đuôi, luật xe cắt ngang ở trên vẫn chặn.
+          if (b.red && b.v < 0.3) continue;
           // xe kia cùng cạnh và đang ở ngay trước mũi thì luật bám đuôi thường đã lo; ở đây lo trường hợp chạy song song hoặc tới từ cạnh khác
           if (b.v < 0.3 && (a.stuck > 0.8 || a.redD > 40) && this.cycle(a, b)) continue;
           const t2 = Math.max(0, b.v + (d - a.hl - b.hl - 0.3) * 1.2 - 0.3); if (t2 < target) { target = t2; a.blk = b; } blocked = true; }
@@ -767,7 +772,13 @@ export class TrafficSim {
       if (a.stuck > 7) { const d2 = (a.x - px) ** 2 + (a.z - pz) ** 2; const back = cam && (a.x - cam.x) * cam.fx + (a.z - cam.z) * cam.fz < -2; if (this.blind || (d2 > 200 && back) || d2 > 32400 || (d2 > 1600 && (!cam || a.stuck > 25 || (this.occluded && this.occluded(a.x, a.z))))) { a.x = 1e9; continue; } } // ở xa mà kẹt quá 25 giây thì gỡ cả khi đang trong tầm nhìn, kẻo nút thắt tồn tại mãi
       a.honk -= dt;
       // lách: dịch vị trí ngang mong muốn, rồi trôi dần về làn quen; xe máy lạng nhẹ qua lại
-      const hw = e.w / 2 - a.r - 0.15, lo = e.oneway ? -hw : a.over > 0 ? -hw * 0.75 : bike ? 0.5 : a.cls === 3 ? 0.4 : a.cls === 2 ? 1.36 : 1.0;
+      const hw = e.w / 2 - a.r - 0.15;
+      let lo = e.oneway ? -hw : a.over > 0 ? -hw * 0.75 : bike ? 0.5 : a.cls === 3 ? 0.4 : a.cls === 2 ? 1.36 : 1.0;
+      // Cuối cạnh một chiều mà sắp vào cạnh hai chiều (đường đôi có dải phân cách nhập lại thành một đường hai chiều: hai tim đường một
+      // chiều gặp tim đường hai chiều ở cùng một điểm): 18 m cuối dạt dần về nửa bên phải, để lúc vào cạnh mới đã ở đúng nửa đường của
+      // mình. Không thì xe vào đường hai chiều ở vệt bên trái, đối đầu dòng ngược chiều ngay đầu cạnh (tester vòng 5: Điện Biên Phủ chỗ
+      // nhập hai cạnh một chiều, xe con và xe buýt chắn mũi nhau giữa tim đường, hàng xe dồn ngược vào lòng nút Nguyễn Tri Phương).
+      if (e.oneway && a.ne !== null && !a.ne.oneway && rem < 18) lo = Math.min(hw, a.r + 0.25);
       if (a.over > 0 && lead && !shift) shift = -1;
       if (((shift < 0 && lb) || (shift > 0 && rb)) && !(pblock && a.wait > 0.5)) shift = 0; // bị người chơi chắn lâu thì cứ ép sang, xe bên cạnh sẽ dạt ra
       // mép trái phần đường của mình; đang có xe đứng sát bên phải (vừa vượt lên đầu hàng chờ) thì không ép dạt về đè lên xe đó

@@ -68,7 +68,7 @@ if (want('sweep')) {
   for (const s of sg4) {
     let px = s.x + 14, pz = s.z + 14; find: for (let d = 10; d < 46; d += 3) for (let k = 0; k < 16; k++) { const a = (k / 16) * 6.283 + 0.4, x = s.x + Math.cos(a) * d, z = s.z + Math.sin(a) * d; let ok = nav4.groundY(x, z) > 0.14; for (let q = 0; q < 8 && ok; q++) if (nav4.groundY(x + Math.cos(q * 0.785) * 2.5, z + Math.sin(q * 0.785) * 2.5) <= 0.14) ok = false; if (ok) { px = x; pz = z; break find; } }
     const sim = new TrafficSim(w4, { traffic: 100, cars: 9 }), player = { pos: { x: px, z: pz }, y: 0.16, yaw: 0, speed: 0, mode: 'walk', passenger: false, wobble: 0 };
-    sim.prewarm(player, null, 17.5); const prev = new Map(); let n = 0, green = 0; const red = [];
+    sim.prewarm(player, null, 17.5); const prev = new Map(), behind = new Map(); let n = 0, green = 0, held = 0; const red = [];
     for (let f = 0; f < 60 * 132; f++) { sim.step(1 / 60, player, null, 17.5); if (f < 1200) continue; const t = sim.time;
       for (const a of sim.agents) { if (a.x > 1e8 || (a.x - s.x) ** 2 + (a.z - s.z) ** 2 > 6400) continue; const hx = Math.sin(a.yaw), hz = Math.cos(a.yaw); let k = -1, best = -0.85, d = 0;
         for (let q = 0; q < s.arms.length; q++) { const m = s.arms[q]; if (!m.inbound) continue; const rx = a.x - m.x, rz = a.z - m.z, dd = rx * m.dx + rz * m.dz, ll = rx * m.dz - rz * m.dx; if (dd < -3 || dd > 45 || Math.abs(ll) > m.w / 2 + 0.6) continue; const dot = hx * m.dx + hz * m.dz; if (dot < best) { best = dot; k = q; d = dd; } }
@@ -77,14 +77,16 @@ if (want('sweep')) {
         // chính đang đỏ trong khi đi theo đèn xanh của làn rẽ)
         if (k >= 0) { const own = s.arms.findIndex((m) => m.inbound && m.r === a.e.r); if (own >= 0 && own !== k) { const m = s.arms[own]; k = own; d = (a.x - m.x) * m.dx + (a.z - m.z) * m.dz; } }
         if (k < 0) continue; const m = s.arms[k], front = d - a.hl, key = a.id * 16 + k, st = signalState(t, m.grp, s.off), pv = prev.get(key), p = pv !== undefined && pv[1] === f - 1 && pv[0] - front < 1 ? pv[0] : undefined;
-        // (vạch của chính nhánh, m.stop: xem phần a1)
-        if (p !== undefined && p > m.stop - 1 && front <= m.stop - 1) { n++; if (st === 3) green++; if (st === 1) { let redFor = 0; while (redFor < 40 && signalState(t - redFor - 0.1, m.grp, s.off) === 1) redFor += 0.1; if (redFor > 1) red.push({ arm: w4.names[m.r.name] || '?', len: +m.r.len.toFixed(1), cls: a.cls, v: +a.v.toFixed(1), attached: a.sg !== null }); } }
+        // (vạch của chính nhánh, m.stop: xem phần a1; behind: lần cuối mũi xe còn ở sau vạch dừng, xem phần a1)
+        if (front > m.stop) behind.set(key, t);
+        if (p !== undefined && p > m.stop - 1 && front <= m.stop - 1) { n++; if (st === 3) green++; if (st === 1) { let redFor = 0; while (redFor < 40 && signalState(t - redFor - 0.1, m.grp, s.off) === 1) redFor += 0.1; const lb = behind.get(key);
+          if (redFor > 1 && (lb === undefined || lb >= t - redFor)) red.push({ arm: w4.names[m.r.name] || '?', len: +m.r.len.toFixed(1), cls: a.cls, v: +a.v.toFixed(1), attached: a.sg !== null }); else if (redFor > 1) held++; } }
         prev.set(key, [front, f]); } }
-    rows.push({ names: [...new Set(s.arms.map((a) => w4.names[a.r.name] || '?'))].join(' × '), at: [fx(s.x, 0), fx(s.z, 0)], stop: s.stop, n, green, red, shortArms: s.arms.filter((a) => a.inbound && a.r.len < s.stop + 0.95 + 4).length });
+    rows.push({ names: [...new Set(s.arms.map((a) => w4.names[a.r.name] || '?'))].join(' × '), at: [fx(s.x, 0), fx(s.z, 0)], stop: s.stop, n, green, red, held, shortArms: s.arms.filter((a) => a.inbound && a.r.len < s.stop + 0.95 + 4).length });
   }
   Math.random = realRandom;
   const bad = rows.filter((r) => r.red.length > 0).sort((a, b) => b.red.length - a.red.length), tot = rows.reduce((a, r) => a + r.n, 0), totRed = rows.reduce((a, r) => a + r.red.length, 0), un = bad.flatMap((r) => r.red).filter((e) => !e.attached).length;
-  R.check(`a3: (quét ${rows.length} nút có đèn bằng mô phỏng của game trong Node, 2 chu kỳ mỗi nút) không nút nào có xe vượt đèn đỏ`, bad.length === 0, `${bad.length}/${rows.length} nút có xe vượt đèn đỏ; ${totRed}/${tot} lượt qua vạch (${fx((totRed / Math.max(1, tot)) * 100, 1)}%); ${un}/${totRed} lượt là xe KHÔNG được gắn đèn (a.sg = null); nặng nhất: ${bad.slice(0, 8).map((r) => `${r.names.slice(0, 40)} (${r.at}) ${r.red.length}/${r.n} [${[...new Set(r.red.map((e) => `${e.arm} dài ${e.len} m`))].slice(0, 3).join('; ')}]`).join(' | ')}`);
+  R.check(`a3: (quét ${rows.length} nút có đèn bằng mô phỏng của game trong Node, 2 chu kỳ mỗi nút) không nút nào có xe vượt đèn đỏ`, bad.length === 0, `${bad.length}/${rows.length} nút có xe vượt đèn đỏ; ${totRed}/${tot} lượt qua vạch (${fx((totRed / Math.max(1, tot)) * 100, 1)}%); xe đã qua vạch lúc vàng rồi nhích qua mốc lúc đỏ (không tính): ${rows.reduce((q, r) => q + r.held, 0)}; ${un}/${totRed} lượt là xe KHÔNG được gắn đèn (a.sg = null); nặng nhất: ${bad.slice(0, 8).map((r) => `${r.names.slice(0, 40)} (${r.at}) ${r.red.length}/${r.n} [${[...new Set(r.red.map((e) => `${e.arm} dài ${e.len} m`))].slice(0, 3).join('; ')}]`).join(' | ')}`);
   R.note(`a3: số nút có ít nhất một nhánh vào ngắn hơn (vạch dừng + 4,95 m): ${rows.filter((r) => r.shortArms > 0).length}/${rows.length}; trong số nút có xe vượt đèn đỏ: ${bad.filter((r) => r.shortArms > 0).length}/${bad.length}`);
 }
 if (!['sig', 'bridge', 'mix', 'plates'].some(want)) process.exit(R.finish());
@@ -114,7 +116,7 @@ await page.evaluate(([fnSrc, SIG]) => {
   const nearNode = (x, z) => { let best = 1e9; for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) { const l = nodeGrid.get((Math.floor(x / 32) + i) * 65537 + Math.floor(z / 32) + j); if (l) for (const n of l) { const d = Math.hypot(n[0] - x, n[1] - z); if (d < best) best = d; } } return best; };
   const NAME = ['wave', 'scooter', 'cub', 'sedan', 'hatch', 'bus', 'bicycle', 'cyclo', 'ecart'];
   const X = (window.__tr = {
-    signalState, sig: null, ev: [], prev: new Map(), q: { maxQueue: 0, redStopSamples: 0, inBox: new Map(), boxLong: [] },
+    signalState, sig: null, ev: [], prev: new Map(), behind: new Map(), q: { maxQueue: 0, redStopSamples: 0, inBox: new Map(), boxLong: [] },
     tot: { vehSecs: 0, movingSamples: 0 }, walk: new Map(), walkLong: [], walkSamples: 0, walkBad: 0, inside: [], insideAll: [], insideN: 0, insideChecked: 0, pairs: new Map(), overlapLong: [], overlapNow: 0,
     seen: new Map(), // id → { cls, type, taxi, teal, zone }
     // (a) mỗi khung hình: xe nào vừa đưa mũi qua vạch dừng của một nhánh vào nút, lúc đó đèn của nhánh là gì
@@ -133,17 +135,25 @@ await page.evaluate(([fnSrc, SIG]) => {
         {
           const m = s.arms[k];
           const front = d - a.hl, key = a.id * 16 + k, st = signalState(t, m.grp, s.off), pv = X.prev.get(key), prev = pv !== undefined && pv[1] === I.frames - 1 && pv[0] - front < 1 ? pv[0] : undefined; // chỉ so với khung hình liền trước, cùng nhánh
-          if (st === 1 && a.v < 0.3 && front >= s.stop - 1 && front < s.stop + 30) queue++;
+          if (st === 1 && a.v < 0.3 && front >= m.stop - 1 && front < m.stop + 30) queue++;
           // vạch dừng của chính nhánh này (chân cột đèn của nhánh, m.stop): nhánh có vạch sang đường dời xa nút (zebras.js) thì chân cột
           // đèn chung của nút (s.stop) nằm sâu trong lòng nút, xe vào lúc đèn vàng đi tới đó khi đèn đã đỏ hơn 1 giây bị đếm nhầm là vượt đỏ
           // (vòng 4: một lượt ở nhánh Nguyễn Thái Học của nút Cửa Nam, cột đèn nhánh ở 16,6 m, cột chung 10,6 m)
+          // Vượt đỏ là mũi xe qua vạch dừng SAU KHI đèn đã đỏ. Xe đã qua vạch lúc đèn vàng (mũi xe ở trước vạch từ trước lúc đèn chuyển
+          // đỏ) rồi đứng chờ trước vạch sang đường thì không phải vượt đỏ, dù mũi xe nhích qua mốc vạch − 1 m sau đó (toạ độ vẽ của xe
+          // trễ hơn vị trí trên đường một chút nên xe vừa phanh xong vẫn nhích thêm; tester vòng 5: ba lượt xe máy đứng yên v = 0 "vượt
+          // đỏ" lúc đèn đỏ 1,2–1,4 s). behind: lần cuối mũi xe còn ở sau vạch dừng; chưa từng thấy xe ở sau vạch thì vẫn tính là vượt.
+          if (front > m.stop) X.behind.set(key, t);
           if (prev !== undefined && prev > m.stop - 1 && front <= m.stop - 1) {
             // mũi xe vừa vượt quá vạch dừng 1 m. Đèn đã đỏ được bao lâu?
             let redFor = 0; if (st === 1) while (redFor < 40 && signalState(t - redFor - 0.1, m.grp, s.off) === 1) redFor += 0.1;
-            X.ev.push({ j: s.names, arm: m.name, armLen: +m.len.toFixed(1), type: NAME[a.type], cls: a.cls, st, redFor: +redFor.toFixed(1), v: +a.v.toFixed(1), lat: +lat.toFixed(1), id: a.id, x: +a.x.toFixed(1), z: +a.z.toFixed(1), t: +t.toFixed(1) });
+            const lb = X.behind.get(key), held = st === 1 && lb !== undefined && lb < t - redFor;
+            X.ev.push({ j: s.names, arm: m.name, armLen: +m.len.toFixed(1), type: NAME[a.type], cls: a.cls, st, redFor: +redFor.toFixed(1), held, v: +a.v.toFixed(1), lat: +lat.toFixed(1), id: a.id, x: +a.x.toFixed(1), z: +a.z.toFixed(1), t: +t.toFixed(1) });
           }
-          // đứng yên bên trong vạch (trên vạch sang đường hoặc trong lòng nút) khi đèn của nhánh mình đang đỏ
-          if (st === 1 && a.v < 0.3 && front < s.stop - 1.5 && d > 0) { const n = (X.q.inBox.get(a.id) || 0) + 1; X.q.inBox.set(a.id, n); if (n === 300) X.q.boxLong.push({ j: s.names, arm: m.name, type: NAME[a.type], front: +front.toFixed(1), stop: +s.stop.toFixed(1), x: +a.x.toFixed(1), z: +a.z.toFixed(1) }); }
+          // đứng yên bên trong vạch (trên vạch sang đường hoặc trong lòng nút) khi đèn của nhánh mình đang đỏ. Cũng đo theo vạch của chính
+          // nhánh như a1 (tester vòng 5: đo theo cột chung thì ở nhánh có vạch dời xa nút, xe đứng trên vạch sang đường lúc đỏ không bị
+          // đếm; ở nhánh có cột gần hơn cột chung, xe đứng đúng vạch lại bị đếm)
+          if (st === 1 && a.v < 0.3 && front < m.stop - 1.5 && d > 0) { const n = (X.q.inBox.get(a.id) || 0) + 1; X.q.inBox.set(a.id, n); if (n === 300) X.q.boxLong.push({ j: s.names, arm: m.name, type: NAME[a.type], front: +front.toFixed(1), stop: +m.stop.toFixed(1), x: +a.x.toFixed(1), z: +a.z.toFixed(1) }); }
           X.prev.set(key, [front, I.frames]);
         }
       }
@@ -195,16 +205,16 @@ if (want('sig')) {
   const per = [];
   for (const s of sigs) {
     const at = await page.evaluate(([x, z]) => window.__tr.go(x, z), [s.x, s.z]); if (at.maxSegH > maxSegH) maxSegH = at.maxSegH;
-    const r = await page.evaluate(async ([s, zone]) => { const X = window.__tr, Q = window.__qa; X.run(20 * 60, zone); await Q.yield(); X.sig = s; X.prev.clear(); const e0 = X.ev.length; X.q.maxQueue = 0; X.q.inBox.clear();
+    const r = await page.evaluate(async ([s, zone]) => { const X = window.__tr, Q = window.__qa; X.run(20 * 60, zone); await Q.yield(); X.sig = s; X.prev.clear(); X.behind.clear(); const e0 = X.ev.length; X.q.maxQueue = 0; X.q.inBox.clear();
       const box = []; // số xe đứng yên trong lòng nút (cách tim nút dưới vạch dừng − 1,5 m), đo mỗi 8 giây
       for (let k = 0; k < 14; k++) { X.run(8 * 60, zone); let n = 0; for (const a of window.__game.traffic.agents) if (a.x < 1e8 && a.v < 0.3 && Math.hypot(a.x - s.x, a.z - s.z) < s.stop - 1.5) n++; box.push(n); await Q.yield(); } // 112 giây = 2 chu kỳ đèn
-      X.sig = null; const ev = X.ev.slice(e0); return { n: ev.length, green: ev.filter((e) => e.st === 3).length, amber: ev.filter((e) => e.st === 2).length, redEarly: ev.filter((e) => e.st === 1 && e.redFor <= 1).length, red: ev.filter((e) => e.st === 1 && e.redFor > 1), maxQueue: X.q.maxQueue, agents: window.__game.traffic.agents.length, box }; }, [s, s.zone]);
-    per.push({ nut: s.names, at: [fx(s.x, 0), fx(s.z, 0)], nguoiDungCachMepDuong: at.clear, nhanhVao: s.arms.filter((a) => a.inbound).length, vach: fx(s.stop, 1), quaVach: r.n, xanh: r.green, vang: r.amber, doDuoi1s: r.redEarly, DO: r.red.length, hangChoDaiNhat: r.maxQueue, dungYenTrongNut: r.box, viDu: r.red.slice(0, 3), theoNhanh: Object.entries(r.red.reduce((m, e) => { const k = `${e.arm} (dài ${e.armLen} m)`; m[k] = (m[k] || 0) + 1; return m; }, {})).map(([k, v]) => `${k}: ${v}`).join('; ') });
+      X.sig = null; const ev = X.ev.slice(e0); return { n: ev.length, green: ev.filter((e) => e.st === 3).length, amber: ev.filter((e) => e.st === 2).length, redEarly: ev.filter((e) => e.st === 1 && e.redFor <= 1).length, red: ev.filter((e) => e.st === 1 && e.redFor > 1 && !e.held), held: ev.filter((e) => e.st === 1 && e.redFor > 1 && e.held).length, maxQueue: X.q.maxQueue, agents: window.__game.traffic.agents.length, box }; }, [s, s.zone]);
+    per.push({ nut: s.names, at: [fx(s.x, 0), fx(s.z, 0)], nguoiDungCachMepDuong: at.clear, nhanhVao: s.arms.filter((a) => a.inbound).length, vach: fx(s.stop, 1), quaVach: r.n, xanh: r.green, vang: r.amber, doDuoi1s: r.redEarly, DO: r.red.length, quaVachLucVang: r.held, hangChoDaiNhat: r.maxQueue, dungYenTrongNut: r.box, viDu: r.red.slice(0, 3), theoNhanh: Object.entries(r.red.reduce((m, e) => { const k = `${e.arm} (dài ${e.armLen} m)`; m[k] = (m[k] || 0) + 1; return m; }, {})).map(([k, v]) => `${k}: ${v}`).join('; ') });
     console.log('   nút ' + JSON.stringify(per[per.length - 1]));
   }
-  const tot = per.reduce((a, p) => ({ n: a.n + p.quaVach, red: a.red + p.DO, green: a.green + p.xanh }), { n: 0, red: 0, green: 0 });
+  const tot = per.reduce((a, p) => ({ n: a.n + p.quaVach, red: a.red + p.DO, green: a.green + p.xanh, held: a.held + p.quaVachLucVang }), { n: 0, red: 0, green: 0, held: 0 });
   R.check('a0: phép đo có nghĩa: mỗi nút có ≥ 10 lượt xe qua vạch lúc đèn xanh và có xe xếp hàng chờ lúc đèn đỏ', per.every((p) => p.xanh >= 10 && p.hangChoDaiNhat >= 1), per.map((p) => `${p.nut.slice(0, 28)}: ${p.xanh} xanh, hàng chờ ${p.hangChoDaiNhat}`).join(' | '));
-  R.check(`a1: tại ${per.length} nút có đèn, 2 chu kỳ mỗi nút: không xe nào đưa mũi quá vạch dừng 1 m khi đèn nhánh mình đã đỏ hơn 1 giây`, tot.red === 0, `${tot.red}/${tot.n} lượt qua vạch là vượt đèn đỏ (xanh ${tot.green}); theo nút: ${per.map((p) => `${p.nut.slice(0, 24)} ${p.DO}/${p.quaVach}${p.theoNhanh ? ' [' + p.theoNhanh + ']' : ''}`).join(' | ')}; ví dụ: ${JSON.stringify(per.flatMap((p) => p.viDu).slice(0, 5))}`);
+  R.check(`a1: tại ${per.length} nút có đèn, 2 chu kỳ mỗi nút: không xe nào đưa mũi quá vạch dừng 1 m khi đèn nhánh mình đã đỏ hơn 1 giây (trừ xe đã qua vạch dừng lúc đèn vàng)`, tot.red === 0, `${tot.red}/${tot.n} lượt qua vạch là vượt đèn đỏ (xanh ${tot.green}; xe đã qua vạch lúc vàng rồi nhích qua mốc lúc đỏ: ${tot.held}); theo nút: ${per.map((p) => `${p.nut.slice(0, 24)} ${p.DO}/${p.quaVach}${p.theoNhanh ? ' [' + p.theoNhanh + ']' : ''}`).join(' | ')}; ví dụ: ${JSON.stringify(per.flatMap((p) => p.viDu).slice(0, 5))}`);
   // kẹt cứng trong lòng nút: vài xe chờ rẽ trái là bình thường; hàng chục xe đứng im giữa nút là kẹt
   const jam = per.filter((p) => Math.max(...p.dungYenTrongNut) > 8);
   R.check('a4: lòng nút giao không bị kẹt cứng: ở mọi thời điểm đo (mỗi 8 giây) không quá 8 xe đứng yên bên trong vạch dừng', jam.length === 0, `${jam.length}/${per.length} nút bị kẹt; số xe đứng yên trong lòng nút theo thời gian: ${per.map((p) => `${p.nut.slice(0, 22)}: ${p.dungYenTrongNut.join(' ')}`).join(' | ')}`);
